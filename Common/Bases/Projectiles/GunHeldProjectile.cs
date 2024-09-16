@@ -46,6 +46,20 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public abstract GunHeldProjectileData GunHeldProjectileData { get; }
 
+
+        /// <summary>
+        /// Allows you to modify this GunHeldProjectileItem's shooting mechanism. Return false to prevent vanilla's shooting code from running. Returns true by default.<br/>
+        /// This method is called after the <see cref="ModifyShootStats"/> hook has had a chance to adjust the spawn parameters.
+        /// </summary>
+        /// <param name="player"> The player using the GunHeldProjectileItem. </param>
+        /// <param name="source"> The shot projectile source's information. </param>
+        /// <param name="position"> The center position of the shot projectile. </param>
+        /// <param name="velocity"> The velocity of the shot projectile. </param>
+        /// <param name="type"> The ID of the shot projectile. </param>
+        /// <param name="damage"> The damage of the shot projectile. </param>
+        /// <param name="knockback"> The knockback of the shot projectile. </param>
+        /// <param name="heldProjectile"> The gun's associated held projectile </param>
+        /// <returns></returns>
         public virtual bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
         {
             return true;

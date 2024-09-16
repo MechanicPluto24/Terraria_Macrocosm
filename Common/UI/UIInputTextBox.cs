@@ -30,7 +30,7 @@ namespace Macrocosm.Common.UI
 
         public float TextScale { get; set; } = 1f;
 
-        public int TextMaxLenght { get; set; } = 20;
+        public int TextMaxLength { get; set; } = 20;
 
         public bool HasFocus { get; set; }
         public string FocusContext { get; set; }
@@ -65,7 +65,7 @@ namespace Macrocosm.Common.UI
             textField.OnTextChange += (_, _) => { OnTextChange.Invoke(); };
 
             textField.FormatText = FormatText;
-            textField.TextMaxLenght = TextMaxLenght;
+            textField.TextMaxLength = TextMaxLength;
 
             OnLeftClick += (_, _) => { HasFocus = true; };
 

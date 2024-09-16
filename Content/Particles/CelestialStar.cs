@@ -12,7 +12,6 @@ namespace Macrocosm.Content.Particles
         public override string TexturePath => Macrocosm.EmptyTexPath;
 
         public float Alpha = 0.3f;
-        public Color Color = Color.White;
         public Color? SecondaryColor = Color.White;
 
         public BlendState BlendStateOverride = null;
@@ -23,7 +22,7 @@ namespace Macrocosm.Content.Particles
 
         public override void OnSpawn()
         {
-            defScale = Scale;
+            defScale = Scale.X;
             actualScale = 0.5f;
             Alpha = 1f;
         }
@@ -59,7 +58,7 @@ namespace Macrocosm.Content.Particles
                 spriteBatch.Begin(BlendStateOverride, state);
             }
 
-            spriteBatch.DrawStar(Position - screenPosition, 2, Color * (actualScale / defScale), actualScale, Rotation);
+            Utility.DrawStar(Position - screenPosition, 2, Color * (actualScale / defScale), actualScale, Rotation);
 
             if (BlendStateOverride is not null)
             {

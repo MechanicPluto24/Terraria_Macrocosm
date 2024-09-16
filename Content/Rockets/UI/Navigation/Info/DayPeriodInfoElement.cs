@@ -18,7 +18,8 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 
             value = MathF.Round(value, 2);
 
-            return Language.GetText("Mods.Macrocosm.UI.Rocket.DayPeriod.Unit" + units);
+            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation" +
+                ".DayPeriod.Unit" + units);
         }
 
     }

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using System.IO;
@@ -49,7 +50,7 @@ namespace Macrocosm.Content.Rockets
                 packet.Write((byte)rocket.WhoAmI);
                 rocket.NetWriteFields(packet);
 
-                if (rocket.ActiveInCurrentWorld)
+                if (rocket.CurrentWorld == MacrocosmSubworld.CurrentID)
                 {
                     if (SubworldSystem.AnyActive())
                         SubworldSystem.SendToMainServer(Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());

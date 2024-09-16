@@ -11,7 +11,7 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Content.Rockets.UI.Customization
 {
-    public class UIRocketPreviewLarge : UIPanel, IRocketUIDataConsumer, IConsistentUpdateable
+    public class UIRocketPreviewLarge : UIPanel, IRocketUIDataConsumer, IFixedUpdateable
     {
         public Rocket Rocket { get; set; }
         public Rocket RocketDummy { get; set; }
@@ -128,7 +128,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         }
 
         // Use for animation
-        public void Update()
+        public void FixedUpdate()
         {
             if (animationCounter >= 1f)
                 animationActive = false;

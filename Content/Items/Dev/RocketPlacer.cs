@@ -1,5 +1,6 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Common.Global.Items;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using Terraria;
 using Terraria.ID;
@@ -7,10 +8,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Dev
 {
-    class RocketPlacer : ModItem, IDevItem
+    class RocketPlacer : ModItem
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.DeveloperItem[Type] = true;
         }
 
         public override void SetDefaults()

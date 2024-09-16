@@ -1,8 +1,10 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -27,13 +29,13 @@ namespace Macrocosm.Common.Drawing.Particles
         public static List<Type> Types { get; private set; }
         public static List<Particle> Particles { get; private set; }
 
-        public static List<Texture2D> Textures;
+        public static List<Asset<Texture2D>> Textures;
 
         public override void Load()
         {
             Types = new List<Type>();
             Particles = new List<Particle>();
-            Textures = new List<Texture2D>();
+            Textures = new List<Asset<Texture2D>>();
 
             On_Main.DrawBlack += DrawParticles_Tiles;
             On_Main.DrawProjectiles += DrawParticles_Projectiles;

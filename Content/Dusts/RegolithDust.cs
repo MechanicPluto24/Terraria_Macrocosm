@@ -19,11 +19,9 @@ namespace Macrocosm.Content.Dusts
             dust.scale -= 0.02f;
             dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
-
             if (dust.scale < 0f)
-            {
                 dust.active = false;
-            }
+
             return false;
         }
 

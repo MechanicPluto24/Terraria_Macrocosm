@@ -9,8 +9,13 @@ namespace Macrocosm.Content.Trails
     {
         public override MiscShaderData TrailShader => GameShaders.Misc["FlameLash"];
         public override float Saturation => -1.4f;
-
         public override int StartIndex => 0;
+
+        private int trailStartWidth;
+        public DianiteMeteorTrail(int trailStartWidth)
+        {
+            this.trailStartWidth = trailStartWidth;
+        }
 
         public override Color TrailColors(float progressOnStrip)
         {
@@ -22,14 +27,9 @@ namespace Macrocosm.Content.Trails
 
         public override float TrailWidths(float progressOnStrip)
         {
-            if (Owner is Projectile projectile)
-            {
-                float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
-                lerpValue = 1f - (1f - lerpValue) * (1f - lerpValue);
-                return MathHelper.Lerp(projectile.width * 1f, projectile.width * 0.2f, progressOnStrip) * lerpValue;
-            }
-
-            return 1f;
+            float lerpValue = Utils.GetLerpValue(0f, 0.06f + 1.115f * 0.01f, progressOnStrip, clamped: true);
+            lerpValue = 1f - (1f - lerpValue) * (1f - lerpValue);
+            return MathHelper.Lerp(trailStartWidth * 1f, trailStartWidth * 0.2f, progressOnStrip) * lerpValue;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Content.Buffs.Minions;
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 
         public override void SetDefaults()
         {
-            Item.damage = 100;
+            Item.damage = 80;
             Item.knockBack = 3f;
             Item.mana = 10;
             Item.width = 32;

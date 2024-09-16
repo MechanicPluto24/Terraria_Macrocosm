@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Materials.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
         {
             player.maxMinions += 1;
             player.GetDamage<SummonDamageClass>() += 0.25f;
-            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1.5f;
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)

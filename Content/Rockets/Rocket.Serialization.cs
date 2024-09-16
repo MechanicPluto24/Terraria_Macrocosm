@@ -24,12 +24,10 @@ namespace Macrocosm.Content.Rockets
 
                 tag[nameof(CurrentWorld)] = CurrentWorld;
                 tag[nameof(Position)] = Position;
-                tag[nameof(worldExitSpeed)] = worldExitSpeed;
                 tag[nameof(Fuel)] = Fuel;
                 tag[nameof(FuelCapacity)] = FuelCapacity;
 
-                if (HasInventory)
-                    tag[nameof(Inventory)] = Inventory;
+                tag[nameof(Inventory)] = Inventory;
 
                 if (Launched) tag[nameof(Launched)] = true;
                 if (Landing) tag[nameof(Landing)] = true;
@@ -62,9 +60,6 @@ namespace Macrocosm.Content.Rockets
 
                 if (tag.ContainsKey(nameof(Position)))
                     rocket.Position = tag.Get<Vector2>(nameof(Position));
-
-                if (tag.ContainsKey(nameof(worldExitSpeed)))
-                    rocket.worldExitSpeed = tag.GetFloat(nameof(worldExitSpeed));
 
                 if (tag.ContainsKey(nameof(Fuel)))
                     rocket.Fuel = tag.GetFloat(nameof(Fuel));

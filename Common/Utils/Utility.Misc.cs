@@ -69,6 +69,45 @@ namespace Macrocosm.Common.Utils
             return text;
         }
 
+        public static void PrintTime()
+        {
+            string am_pm = Language.GetTextValue("GameUI.TimeAtMorning");
+            double time = Main.time;
+            if (!Main.dayTime)
+                time += 54000.0;
+
+            time = time / 86400.0 * 24.0;
+            double num40 = 7.5;
+            time = time - num40 - 12.0;
+            if (time < 0.0)
+                time += 24.0;
+
+            if (time >= 12.0)
+                am_pm = Language.GetTextValue("GameUI.TimePastMorning");
+
+            int hh = (int)time;
+            double mm = (int)((time - (double)hh) * 60.0);
+            string text = string.Concat(mm);
+            if (mm < 10.0)
+                text = "0" + text;
+
+            if (hh > 12)
+                hh -= 12;
+
+            if (hh == 0)
+                hh = 12;
+
+            Main.NewText(Language.GetTextValue("Game.Time", hh + ":" + text + " " + am_pm), byte.MaxValue, 240, 20);
+        }
+
+        /// <summary> Max absolute value of <see cref="Main.windSpeedCurrent"> </summary>
+        public const float MaxWindSpeedAbsolute = maxValue_Main_windSpeedTarget * (1f + 5f / 9f * maxValue_Main_maxRaining);
+        private const float maxValue_Main_windSpeedTarget = 0.8f;
+        private const float maxValue_Main_maxRaining = 0.9f;
+
+        /// <summary> Scaled value of <see cref="Main.windSpeedCurrent"/> in between <c>[-1; 1]</c> </summary>
+        public static float WindSpeedScaled => Main.windSpeedCurrent / MaxWindSpeedAbsolute;
+
         public enum MessageSeverity { Info, Warn, Error, Fatal }
         public static void LogChatMessage(string message, MessageSeverity severity = MessageSeverity.Info)
         {

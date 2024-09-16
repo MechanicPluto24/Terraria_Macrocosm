@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.Utilities;
 
@@ -18,6 +19,7 @@ namespace Macrocosm.Common.Utils
         public static T GetRandom<T>(this IList<T> list, UnifiedRandom random = null)
         {
             random ??= Main.rand;
+            if (list.Count == 0) throw new InvalidOperationException("Sequence contains no elements");
             return list[random.Next(list.Count)];
         }
 

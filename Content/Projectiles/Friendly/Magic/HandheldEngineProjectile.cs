@@ -2,7 +2,7 @@ using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs;
+using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -25,6 +25,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private static Asset<Texture2D> glowmask;
         private static Asset<Texture2D> flame;
         private static Asset<Texture2D> warning;
+        private static Asset<Effect> colorGradientSquare;
 
         public ref float AI_Overheat => ref Projectile.ai[0];
         public ref float AI_UseCounter => ref Projectile.ai[1];
@@ -155,7 +156,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     {
                         p.Position = position;
                         p.Velocity = velocity;
-                        p.Scale = Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp);
+                        p.Scale = new(Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp));
                         p.Rotation = Projectile.rotation;
                         p.ColorOnSpawn = Color.White;
                         p.ColorOnDespawn = Color.Lerp(new Color(89, 151, 193), new Color(255, 177, 65), AI_Overheat);
@@ -221,11 +222,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 positions[i] += Utility.PolarVector(4f * i, Projectile.rotation);
 
             var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-                            .UseProjectionMatrix(doUse: true)
-                            .UseSaturation(-2.4f)
-                            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
-                            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
+                .UseProjectionMatrix(doUse: true)
+                .UseSaturation(-2.4f)
+                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
 
             shader.Apply();
 
@@ -240,9 +241,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state1);
 
-            Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorGradientSquare", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
             Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 
+            colorGradientSquare ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorGradientSquare", AssetRequestMode.ImmediateLoad);
+            Effect effect = colorGradientSquare.Value;
             effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));
             effect.Parameters["uImageSize0"].SetValue(TextureAssets.Projectile[Type].Size());
 
@@ -307,12 +309,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 return tracker.IsActiveAndInGame();
             });
 
-            if (!OwnerHasMana )
+            if (!OwnerHasMana)
             {
                 SoundEngine.PlaySound(SFX.HandheldThrusterOverheat with
                 {
                     Volume = 0.3f,
-                    MaxInstances = 1,   
+                    MaxInstances = 1,
                     SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
                 },
                 Projectile.position, updateCallback: (sound) =>

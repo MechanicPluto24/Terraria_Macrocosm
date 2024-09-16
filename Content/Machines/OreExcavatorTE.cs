@@ -8,13 +8,12 @@ using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks.Sands;
 using Macrocosm.Content.Items.Blocks.Terrain;
-using Macrocosm.Content.Items.Materials.Ores;
+using Macrocosm.Content.Items.Ores;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -22,6 +21,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
+    // TODO: redesign blacklisting
     public class OreExcavatorTE : MachineTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Machines
 
 
         protected int checkTimer;
-        protected List<int> blacklistedIds = null;
+        public List<int> BlacklistedItems = new();
 
         public override void OnFirstUpdate()
         {
@@ -50,18 +50,10 @@ namespace Macrocosm.Content.Machines
             // Generate loot table based on current subworld and biome
             Loot = new();
             PopulateItemLoot();
-
-            // Read blacklist if found on world load
-            if (blacklistedIds is not null)
-                foreach (var blacklistable in Loot.BlacklistableEntries)
-                    if (blacklistedIds.Contains(blacklistable.ItemID))
-                        blacklistable.Blacklisted = true;
         }
 
         public override void MachineUpdate()
         {
-            blacklistedIds = Loot.BlacklistableEntries.Where((entry) => entry.Blacklisted).Select((entry) => entry.ItemID).ToList();
-
             ConsumedPower = 1f;
 
             if (Operating)
@@ -81,9 +73,9 @@ namespace Macrocosm.Content.Machines
             SceneData scene = new(Position);
             //scene.Scan();
 
-            switch (MacrocosmSubworld.CurrentID)
+            switch (MacrocosmSubworld.SanitizeID(MacrocosmSubworld.CurrentID))
             {
-                case "Macrocosm/Moon":
+                case nameof(Moon):
 
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Regolith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Protolith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
@@ -195,19 +187,14 @@ namespace Macrocosm.Content.Machines
             }
         }
 
-        // TODO: some way of syncing the blacklist from the client with the server-owned TE
         public override void NetSend(BinaryWriter writer)
         {
+            Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
 
-            #region Serialize blacklist
-            if (blacklistedIds is not null && blacklistedIds.Count > 0)
-            {
-                writer.Write(blacklistedIds.Count);
-                foreach (int itemId in blacklistedIds)
-                    writer.Write(itemId);
-            }
-            #endregion
+            writer.Write(BlacklistedItems.Count);
+            foreach (int itemId in BlacklistedItems)
+                writer.Write(itemId);
         }
 
         public override void NetReceive(BinaryReader reader)
@@ -215,22 +202,16 @@ namespace Macrocosm.Content.Machines
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
-            #region Deserialize blacklist
             int blacklistedCount = reader.ReadInt32();
-            blacklistedIds = new(blacklistedCount);
+            BlacklistedItems = new(blacklistedCount);
             for (int i = 0; i < blacklistedCount; i++)
-                blacklistedIds[i] = reader.ReadInt32();
-            #endregion
+                BlacklistedItems.Add(reader.ReadInt32());
         }
 
         public override void SaveData(TagCompound tag)
         {
             tag[nameof(Inventory)] = Inventory;
-
-            #region Serialize blacklist
-            if (blacklistedIds is not null && blacklistedIds.Count > 0)
-                tag[nameof(blacklistedIds)] = blacklistedIds;
-            #endregion
+            tag[nameof(BlacklistedItems)] = BlacklistedItems;
         }
 
         public override void LoadData(TagCompound tag)
@@ -238,10 +219,8 @@ namespace Macrocosm.Content.Machines
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 
-            #region Deserialize blacklist
-            if (tag.ContainsKey(nameof(blacklistedIds)))
-                blacklistedIds = tag.GetList<int>(nameof(blacklistedIds)) as List<int>;
-            #endregion
+            if (tag.ContainsKey(nameof(BlacklistedItems)))
+                BlacklistedItems = tag.GetList<int>(nameof(BlacklistedItems)) as List<int>;
         }
     }
 }

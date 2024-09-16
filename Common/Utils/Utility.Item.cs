@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Bases.Items;
-using Macrocosm.Content.Items.Global;
+﻿using Macrocosm.Common.Global.Items;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -149,82 +148,5 @@ namespace Macrocosm.Common.Utils
             float rarity = (1f - dropRateInfo.dropRate) * (1f / (averageStack + 1f));
             return rarity;
         }
-
-        public static bool IsTorch(int itemId) => ItemID.Sets.Torches[itemId];
-        public static bool IsTorch(this Item item) => IsTorch(item.type);
-
-        public static bool IsRubblemaker(int itemId) => itemId is ItemID.RubblemakerSmall or ItemID.RubblemakerMedium or ItemID.RubblemakerLarge;
-        public static bool IsRubblemaker(this Item item) => IsRubblemaker(item.type);
-
-        public static bool IsChest(int itemId)
-        {
-            if (ContentSamples.ItemsByType[itemId].ModItem is IChest)
-                return true;
-
-            switch (itemId)
-            {
-                case ItemID.Chest:
-                case ItemID.GoldChest:
-                case ItemID.FrozenChest:
-                case ItemID.IvyChest:
-                case ItemID.LihzahrdChest:
-                case ItemID.LivingWoodChest:
-                case ItemID.MushroomChest:
-                case ItemID.RichMahoganyChest:
-                case ItemID.DesertChest:
-                case ItemID.SkywareChest:
-                case ItemID.WaterChest:
-                case ItemID.WebCoveredChest:
-                case ItemID.GraniteChest:
-                case ItemID.MarbleChest:
-                case ItemID.ShadowChest:
-                case ItemID.GoldenChest:
-                case ItemID.CorruptionChest:
-                case ItemID.CrimsonChest:
-                case ItemID.HallowedChest:
-                case ItemID.IceChest:
-                case ItemID.JungleChest:
-                case ItemID.DungeonDesertChest:
-                case ItemID.GolfChest:
-                case ItemID.NebulaChest:
-                case ItemID.SolarChest:
-                case ItemID.StardustChest:
-                case ItemID.VortexChest:
-                case ItemID.BoneChest:
-                case ItemID.LesionChest:
-                case ItemID.FleshChest:
-                case ItemID.GlassChest:
-                case ItemID.HoneyChest:
-                case ItemID.SlimeChest:
-                case ItemID.SteampunkChest:
-                case ItemID.AshWoodChest:
-                case ItemID.BalloonChest:
-                case ItemID.BambooChest:
-                case ItemID.BlueDungeonChest:
-                case ItemID.BorealWoodChest:
-                case ItemID.CactusChest:
-                case ItemID.CrystalChest:
-                case ItemID.DynastyChest:
-                case ItemID.EbonwoodChest:
-                case ItemID.GreenDungeonChest:
-                case ItemID.MartianChest:
-                case ItemID.MeteoriteChest:
-                case ItemID.ObsidianChest:
-                case ItemID.PalmWoodChest:
-                case ItemID.PinkDungeonChest:
-                case ItemID.PumpkinChest:
-                case ItemID.CoralChest:
-                case ItemID.ShadewoodChest:
-                case ItemID.SpiderChest:
-                case ItemID.SpookyChest:
-                    return true;
-
-                default:
-                    return false;
-            }
-        }
-
-        public static bool IsChest(this Item item) => IsChest(item.type);
-
     }
 }

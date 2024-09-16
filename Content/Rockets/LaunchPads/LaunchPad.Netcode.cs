@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
             LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
             if (existingLaunchPad is null)
-                LaunchPadManager.Add(subworldId, launchPad);
+                LaunchPadManager.Add(subworldId, launchPad, notify: true);
 
             if (Main.netMode == NetmodeID.Server)
             {

@@ -67,28 +67,33 @@ namespace Macrocosm.Common.Storage
         {
             string ownerType = reader.ReadString();
             int ownerSerializationIndex = reader.ReadInt32();
+            int newSize = reader.ReadUInt16();
+            int interactingPlayer = reader.ReadByte();
+
+            Item[] items = new Item[newSize];
+            for (int i = 0; i < newSize; i++)
+                items[i] = ItemIO.Receive(reader, readStack: true, readFavorite: true);
 
             IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-
-            Inventory inventory;
-            int newSize = reader.ReadUInt16();
-
-            if (owner.Inventory is not null)
-                inventory = owner.Inventory;
-            else
-                owner.Inventory = inventory = new(newSize, owner);
-
-            if (inventory.Size != newSize)
-                inventory.OnResize(inventory.Size, newSize);
-
-            inventory.interactingPlayer = reader.ReadByte();
-
-            for (int i = 0; i < inventory.Size; i++)
-                inventory[i] = ItemIO.Receive(reader, readStack: true, readFavorite: true);
-
-            if (Main.netMode == NetmodeID.Server)
+            if (owner is not null)
             {
-                inventory.SyncEverything(ignoreClient: sender);
+                Inventory inventory;
+
+                //if (owner.Inventory is not null)
+                inventory = owner.Inventory;
+                //else
+                //    owner.Inventory = inventory = new(newSize, owner);
+
+                if (inventory.Size != newSize)
+                    inventory.OnResize(inventory.Size, newSize);
+
+                inventory.interactingPlayer = interactingPlayer;
+
+                for (int i = 0; i < inventory.Size; i++)
+                    inventory[i] = items[i].Clone();
+
+                if (Main.netMode == NetmodeID.Server)
+                    inventory.SyncEverything(ignoreClient: sender);
             }
         }
 
@@ -112,27 +117,20 @@ namespace Macrocosm.Common.Storage
         {
             string ownerType = reader.ReadString();
             int ownerSerializationIndex = reader.ReadInt32();
+            int newSize = reader.ReadUInt16();
 
             IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
             Inventory inventory = owner.Inventory;
 
-            // FIXME: inventory is sometimes already null ?!?!
-            int newSize = reader.ReadUInt16();
-
-            if (owner.Inventory is not null)
+            if (owner is not null)
             {
                 int oldSize = inventory.Size;
 
                 if (oldSize != newSize)
                     inventory.OnResize(oldSize, newSize);
 
-                if (newSize <= 0)
-                    owner.Inventory = null;
-
                 if (Main.netMode == NetmodeID.Server)
-                {
                     inventory.SyncSize(ignoreClient: sender);
-                }
             }
         }
 
@@ -163,17 +161,17 @@ namespace Macrocosm.Common.Storage
         {
             string ownerType = reader.ReadString();
             int ownerSerializationIndex = reader.ReadInt32();
+            int itemIndex = reader.ReadUInt16();
+            Item item = ItemIO.Receive(reader, readStack: true, readFavorite: false);
 
             IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-            Inventory inventory = owner.Inventory;
-
-            int index = reader.ReadUInt16();
-
-            inventory[index] = ItemIO.Receive(reader, readStack: true, readFavorite: false);
-
-            if (Main.netMode == NetmodeID.Server)
+            if (owner is not null)
             {
-                inventory.SyncItem(index, ignoreClient: sender);
+                Inventory inventory = owner.Inventory;
+                inventory[itemIndex] = item;
+
+                if (Main.netMode == NetmodeID.Server)
+                    inventory.SyncItem(itemIndex, ignoreClient: sender);
             }
         }
 
@@ -197,15 +195,16 @@ namespace Macrocosm.Common.Storage
         {
             string ownerType = reader.ReadString();
             int ownerSerializationIndex = reader.ReadInt32();
+            int interactingPlayer = reader.ReadByte();
 
             IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-            Inventory inventory = owner.Inventory;
-
-            inventory.interactingPlayer = reader.ReadByte();
-
-            if (Main.netMode == NetmodeID.Server)
+            if (owner is not null)
             {
-                inventory.SyncInteraction(ignoreClient: sender);
+                Inventory inventory = owner.Inventory;
+                inventory.interactingPlayer = interactingPlayer;
+
+                if (Main.netMode == NetmodeID.Server)
+                    inventory.SyncInteraction(ignoreClient: sender);
             }
         }
     }

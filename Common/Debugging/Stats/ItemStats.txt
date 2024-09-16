@@ -214,367 +214,23 @@ SteelLeggings
 		Anvil
 
 
-MercurianBanner
-	Value: 5 silver
-	Research count: 1
-
-CoalBrick
-	Value: No value
-	Research count: 100
-	Recipes:
-		Coal x 2
-		at
-		Furnace
-
-
-IrradiatedBrick
-	Value: No value
-	Research count: 100
-	Recipes:
-		Irradiated Rock x 2
-		at
-		Work Bench
-
-
-RegolithBrick
-	Value: No value
-	Research count: 100
-	Recipes:
-		Regolith x 2
-		at
-		Work Bench
-
-
-LexanGlass
-	Value: No value
-	Research count: 100
-	Recipes:
-		Plastic x 2
-		Glass x 1
-		at
-		Glass Kiln
-
-
-MoonBasePlating
-	Value: No value
-	Research count: 100
-
-SilicaCrimsand
-	Value: No value
-	Research count: 200
-
-SilicaEbonsand
-	Value: No value
-	Research count: 200
-
-SilicaPearlsand
-	Value: No value
-	Research count: 200
-
-SilicaSand
-	Value: No value
-	Research count: 200
-
-IrradiatedRock
-	Value: No value
-	Research count: 100
-
-Protolith
-	Value: No value
-	Research count: 100
-
-Regolith
-	Value: No value
-	Research count: 100
-
-CraterDemonBossBag
-	Value: No value
-	Research count: 3
-
-CraterDemonSummon
-	Value: No value
-	Research count: 3
-	Recipes:
-		Alien Residue x 50
-		Space Dust x 10
-		Alien Residue x 20
-		at
-		Ancient Manipulator
-
-
-MoonPhaseGlobe
-	Value: 75 gold
-	Research count: 1
-
-HelixPatternDesign
-	Value: No value
-	Research count: 5
-
-AdamantiteLoom
-	Value: 5 silver
-	Research count: 1
-
-Fabricator
-	Value: 5 silver
-	Research count: 1
-
-TitaniumLoom
-	Value: 5 silver
-	Research count: 1
-
-Moonstone
-	Value: 7 silver 50 copper
-	Research count: 100
-
-BanHammer
+CraterDemonMask
 	Value: 1 gold
 	Research count: 1
 
-DevPick
-	Value: 1 gold
-	Research count: 1
-
-RocketPlacer
-	Value: No value
-	Research count: 1
-
-Teleporter
+EmployeeBoots
 	Value: 10 gold
 	Research count: 1
 
-ConstructionLight
-	Value: 5 silver
+EmployeeSuit
+	Value: 7 gold 50 silver
 	Research count: 1
 
-EarthGlobe
-	Value: 5 silver
+EmployeeVisor
+	Value: 10 gold
 	Research count: 1
 
-MoonBaseBed
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 15
-		Silk x 5
-		at
-		Fabricator
-
-
-MoonBaseBulkhead
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 10
-		at
-		Fabricator
-
-
-MoonBaseCandle
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 4
-		at
-		Fabricator
-
-
-MoonBaseChair
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		at
-		Fabricator
-
-
-MoonBaseChairSleek
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		at
-		Fabricator
-
-
-MoonBaseChest
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		Iron Bar x 1
-		at
-		Fabricator
-
-
-MoonBaseChestElectronic
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Storage Unit x 1
-		Printed Circuit Board x 1
-		at
-		Fabricator
-
-
-MoonBaseConsole
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		Printed Circuit Board x 1
-		Glass x 1
-		at
-		Fabricator
-
-
-MoonBaseCrate
-	Value: 5 silver
-	Research count: 10
-
-MoonBaseDeskLamp
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		at
-		Fabricator
-
-
-MoonBaseDoor
-	Value: 1 silver 50 copper
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		at
-		Fabricator
-
-
-MoonBaseGurney
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 12
-		at
-		Fabricator
-
-
-MoonBaseLamp
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 3
-		at
-		Fabricator
-
-
-MoonBaseLantern
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 3
-		at
-		Fabricator
-
-
-MoonBaseLocker
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 8
-		at
-		Fabricator
-
-
-MoonBaseNeonTube
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 4
-		at
-		Fabricator
-
-
-MoonBasePlatform
-	Value: No value
-	Research count: 200
-	Recipes:
-		Moon Base Plating x 1
-			=> x2
-
-
-MoonBaseSofa
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 5
-		Silk x 2
-		at
-		Fabricator
-
-
-MoonBaseTable
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 12
-		at
-		Fabricator
-
-
-MoonBaseWorkbench
-	Value: 5 silver
-	Research count: 1
-	Recipes:
-		Moon Base Plating x 6
-		at
-		Fabricator
-
-
-SpaceTeddy
-	Value: 5 silver
-	Research count: 1
-
-TeddyBear
-	Value: 5 silver
-	Research count: 1
-
-XFLR6
-	Value: 5 silver
-	Research count: 1
-
-MeteoricChunk
-	Value: 5 silver
-	Research count: 10
-
-NebulaChunk
-	Value: 5 silver
-	Research count: 10
-
-SolarChunk
-	Value: 5 silver
-	Research count: 10
-
-StardustChunk
-	Value: 5 silver
-	Research count: 10
-
-VortexChunk
-	Value: 5 silver
-	Research count: 10
-
-OilRefinery
-	Value: 5 silver
-	Research count: 1
-
-OreExcavator
-	Value: 5 silver
-	Research count: 1
-
-SolarPanelLarge
-	Value: 5 silver
-	Research count: 1
-
-SolarPanelSmall
+MercurianBanner
 	Value: 5 silver
 	Research count: 1
 
@@ -640,6 +296,175 @@ SteelBar
 			=> x3
 
 
+CoalBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Coal x 2
+		at
+		Furnace
+
+
+GothicCoalBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Coal x 2
+		at
+		Heavy Work Bench
+
+
+IrradiatedBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Irradiated Rock x 2
+		at
+		Work Bench
+
+
+RegolithBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Regolith x 2
+		at
+		Work Bench
+
+
+CheeseBlock
+	Value: No value
+	Research count: 100
+	Recipes:
+		Cheese x 1
+			=> x10
+
+
+IndustrialPlating
+	Value: No value
+	Research count: 100
+
+LexanGlass
+	Value: No value
+	Research count: 100
+	Recipes:
+		Plastic x 2
+		Glass x 1
+		at
+		Glass Kiln
+
+
+SilicaCrimsand
+	Value: No value
+	Research count: 200
+
+SilicaEbonsand
+	Value: No value
+	Research count: 200
+
+SilicaPearlsand
+	Value: No value
+	Research count: 200
+
+SilicaSand
+	Value: No value
+	Research count: 200
+
+Cynthalith
+	Value: No value
+	Research count: 100
+
+IrradiatedRock
+	Value: No value
+	Research count: 100
+
+Protolith
+	Value: No value
+	Research count: 100
+
+Regolith
+	Value: No value
+	Research count: 100
+
+CraterDemonBossBag
+	Value: No value
+	Research count: 3
+
+CraterDemonSummon
+	Value: No value
+	Research count: 3
+	Recipes:
+		Alien Residue x 7
+		Space Dust x 5
+		Luminite Bar x 10
+		at
+		Irradiated Altar
+
+
+AntiRadiationPills
+	Value: 50 silver
+	Research count: 20
+
+Medkit
+	Value: 1 gold
+	Research count: 20
+
+LunarCrystal
+	Value: 10 gold
+	Research count: 1
+
+MoonPhaseGlobe
+	Value: 75 gold
+	Research count: 1
+
+HelixPatternDesign
+	Value: No value
+	Research count: 5
+
+AdamantiteLoom
+	Value: 5 silver
+	Research count: 1
+
+Fabricator
+	Value: 5 silver
+	Research count: 1
+
+TitaniumLoom
+	Value: 5 silver
+	Research count: 1
+
+KyaniteScarabCritter
+	Value: 1 silver 50 copper
+	Research count: 1
+
+Moonstone
+	Value: 7 silver 50 copper
+	Research count: 100
+
+BanHammer
+	Value: 1 gold
+	Research count: 1
+
+DevOmnitool
+	Value: No value
+	Research count: 1
+
+DevPick
+	Value: 1 gold
+	Research count: 1
+
+IrradiatedAltar
+	Value: No value
+	Research count: 0
+
+RocketPlacer
+	Value: No value
+	Research count: 1
+
+Teleporter
+	Value: 10 gold
+	Research count: 1
+
 AlienResidue
 	Value: 5 silver
 	Research count: 25
@@ -659,9 +484,1333 @@ DeliriumPlating
 SpaceDust
 	Value: 1 silver
 	Research count: 25
+	Recipes:
+		Fallen Star x 1
+			=> x5
+
+
+CapstoneRush
+	Value: 2 gold 50 silver
+	Research count: 5
+
+Cheese
+	Value: 2 gold 50 silver
+	Research count: 5
+
+AstraBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Astra Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+AstraCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Astra Brick x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+AstraCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Astra Brick x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+AstraChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Astra Brick x 20
+		at
+		Mythril Anvil
+
+
+AstraChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Astra Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+AstraClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Astra Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+AstraLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+AstraToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Astra Brick x 6
+		at
+		Mythril Anvil
+
+
+Boombox
+	Value: 5 silver
+	Research count: 1
+
+CheeseBathtub
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 14
+		at
+		Work Bench
+
+
+CheeseBed
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 15
+		Silk x 5
+		at
+		Work Bench
+
+
+CheeseBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 20
+		Book x 10
+		at
+		Work Bench
+
+
+CheeseCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 5
+		Torch x 3
+		at
+		Work Bench
+
+
+CheeseCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 4
+		Torch x 1
+		at
+		Work Bench
+
+
+CheeseChair
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 4
+		at
+		Work Bench
+
+
+CheeseChandelier
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 4
+		Torch x 4
+		Chain x 1
+		at
+		Work Bench
+
+
+CheeseChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 8
+		Iron Bar x 2
+		at
+		Work Bench
+
+
+CheeseClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 16
+		Iron Bar x 3
+		at
+		Work Bench
+
+
+CheeseDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		at
+		Work Bench
+
+
+CheeseDresser
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 16
+		at
+		Work Bench
+
+
+CheeseLamp
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 3
+		Torch x 1
+		at
+		Work Bench
+
+
+CheeseLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		Torch x 1
+		at
+		Work Bench
+
+
+CheesePiano
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 15
+		Bone x 4
+		Book x 1
+		at
+		Work Bench
+
+
+CheeseSink
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		Water Bucket x 1
+		at
+		Work Bench
+
+
+CheeseSofa
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 5
+		Silk x 2
+		at
+		Work Bench
+
+
+CheeseTable
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 8
+		at
+		Work Bench
+
+
+CheeseToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		at
+		Work Bench
+
+
+CheeseWorkbench
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 10
+
+
+ConstructionLight
+	Value: 5 silver
+	Research count: 1
+
+CosmicEmberBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+CosmicEmberCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+CosmicEmberCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+CosmicEmberChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 20
+		at
+		Mythril Anvil
+
+
+CosmicEmberChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+CosmicEmberClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+CosmicEmberLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+CosmicEmberToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 6
+		at
+		Mythril Anvil
+
+
+CryocoreBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+CryocoreCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+CryocoreCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+CryocoreChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 20
+		at
+		Mythril Anvil
+
+
+CryocoreChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+CryocoreClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+CryocoreLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+CryocoreToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 6
+		at
+		Mythril Anvil
+
+
+DarkCelestialBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+DarkCelestialCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+DarkCelestialCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+DarkCelestialChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 20
+		at
+		Mythril Anvil
+
+
+DarkCelestialChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+DarkCelestialClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+DarkCelestialLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+DarkCelestialToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 6
+		at
+		Mythril Anvil
+
+
+DisplayScreen
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Plastic x 5
+		Aluminum Bar x 2
+		Printed Circuit Board x 1
+		Glass x 10
+		at
+		Fabricator
+
+
+EarthGlobe
+	Value: 5 silver
+	Research count: 1
+
+Fridge
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Iron Bar x 8
+		at
+		Work Bench
+
+
+HeavenforgeBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+HeavenforgeCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+HeavenforgeCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+HeavenforgeChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 20
+		at
+		Mythril Anvil
+
+
+HeavenforgeChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+HeavenforgeClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+HeavenforgeLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+HeavenforgeToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 6
+		at
+		Mythril Anvil
+
+
+IndustrialBathtub
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 14
+		at
+		Fabricator
+
+
+IndustrialBed
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 15
+		Silk x 5
+		at
+		Fabricator
+
+
+IndustrialBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 20
+		Book x 10
+
+
+IndustrialBulkhead
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 10
+		at
+		Fabricator
+
+
+IndustrialCandle
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 4
+		at
+		Fabricator
+
+
+IndustrialCeilingMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
+		at
+		Fabricator
+
+
+IndustrialChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		at
+		Fabricator
+
+
+IndustrialChairSleek
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		at
+		Fabricator
+
+
+IndustrialChest
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Iron Bar x 1
+		at
+		Fabricator
+
+
+IndustrialChestElectronic
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Storage Unit x 1
+		Printed Circuit Board x 1
+		at
+		Fabricator
+
+
+IndustrialControlPanel
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
+		at
+		Fabricator
+
+
+IndustrialControlStation
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 10
+		Printed Circuit Board x 2
+		Glass x 4
+		at
+		Fabricator
+
+
+IndustrialCrate
+	Value: 5 silver
+	Research count: 10
+
+IndustrialDeskClock
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 2
+		Printed Circuit Board x 1
+		at
+		Fabricator
+
+
+IndustrialDeskLamp
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		at
+		Fabricator
+
+
+IndustrialDeskMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
+		at
+		Fabricator
+
+
+IndustrialDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		at
+		Fabricator
+
+
+IndustrialDresser
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 16
+
+
+IndustrialGurney
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 12
+		at
+		Fabricator
+
+
+IndustrialLamp
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 3
+		at
+		Fabricator
+
+
+IndustrialLantern
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 3
+		at
+		Fabricator
+
+
+IndustrialLocker
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		at
+		Fabricator
+
+
+IndustrialNeonTube
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 4
+		at
+		Fabricator
+
+
+IndustrialPiano
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 15
+		Bone x 4
+		Printed Circuit Board x 1
+		at
+		Fabricator
+
+
+IndustrialPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Industrial Plating x 1
+			=> x2
+
+
+IndustrialServer
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 12
+		Printed Circuit Board x 2
+		at
+		Fabricator
+
+
+IndustrialSink
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cheese Block x 6
+		Water Bucket x 1
+		at
+		Work Bench
+
+
+IndustrialSofa
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 5
+		Silk x 2
+		at
+		Fabricator
+
+
+IndustrialTable
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 12
+		at
+		Fabricator
+
+
+IndustrialToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Industrial Plating x 6
+
+
+IndustrialWallMonitor
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 8
+		Printed Circuit Board x 1
+		Glass x 1
+		at
+		Fabricator
+
+
+IndustrialWorkbench
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Industrial Plating x 6
+		at
+		Fabricator
+
+
+IVPole
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Plastic x 4
+		Aluminum Bar x 2
+		at
+		Work Bench
+
+
+LuminiteBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+LuminiteCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+LuminiteCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+LuminiteChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Luminite Brick x 20
+		at
+		Mythril Anvil
+
+
+LuminiteChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+LuminiteClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+LuminiteLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+LuminiteToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 6
+		at
+		Mythril Anvil
+
+
+LunarRustBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+LunarRustCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+LunarRustCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+LunarRustChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 20
+		at
+		Mythril Anvil
+
+
+LunarRustChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+LunarRustClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+LunarRustLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+LunarRustToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 6
+		at
+		Mythril Anvil
+
+
+MercuryBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+MercuryCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+MercuryCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+MercuryChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Mercury Brick x 20
+		at
+		Mythril Anvil
+
+
+MercuryChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+MercuryClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+MercuryLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+MercuryToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 6
+		at
+		Mythril Anvil
+
+
+SpaceTeddy
+	Value: 5 silver
+	Research count: 1
+
+SpookyDookie
+	Value: 1 silver 50 copper
+	Research count: 1
+
+StarRoyaleBookcase
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 20
+		Book x 10
+		at
+		Mythril Anvil
+
+
+StarRoyaleCandelabra
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 5
+		Torch x 3
+		at
+		Mythril Anvil
+
+
+StarRoyaleCandle
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 4
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+StarRoyaleChair
+	Value: 5 silver
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 20
+		at
+		Mythril Anvil
+
+
+StarRoyaleChest
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 8
+		Iron Bar x 2
+		at
+		Mythril Anvil
+
+
+StarRoyaleClock
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 20
+		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+StarRoyaleLantern
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 6
+		Torch x 1
+		at
+		Mythril Anvil
+
+
+StarRoyaleToilet
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 6
+		at
+		Mythril Anvil
+
+
+TeddyBear
+	Value: 5 silver
+	Research count: 1
+
+XFLR6
+	Value: 5 silver
+	Research count: 1
+
+MeteoricChunk
+	Value: 5 silver
+	Research count: 10
+
+NebulaChunk
+	Value: 5 silver
+	Research count: 10
+
+SolarChunk
+	Value: 5 silver
+	Research count: 10
+
+StardustChunk
+	Value: 5 silver
+	Research count: 10
+
+VortexChunk
+	Value: 5 silver
+	Research count: 10
+
+XaocKey
+	Value: 2 silver
+	Research count: 1
 
 ZombieFinger
 	Value: 2 silver
+	Research count: 1
+
+BurnerGenerator
+	Value: 5 silver
+	Research count: 1
+
+OilRefinery
+	Value: 5 silver
+	Research count: 1
+
+OreExcavator
+	Value: 5 silver
+	Research count: 1
+
+SolarPanelLarge
+	Value: 5 silver
+	Research count: 1
+
+SolarPanelSmall
+	Value: 5 silver
+	Research count: 1
+
+WindTurbineLarge
+	Value: 5 silver
+	Research count: 1
+
+WindTurbineSmall
+	Value: 5 silver
+	Research count: 1
+
+SpaceShuttle
+	Value: 3 silver
+	Research count: 1
+
+DeadworldMusicBox
+	Value: 10 gold
+	Research count: 1
+
+RequiemMusicBox
+	Value: 10 gold
+	Research count: 1
+
+SpaceInvaderMusicBox
+	Value: 10 gold
+	Research count: 1
+
+StygiaMusicBox
+	Value: 10 gold
 	Research count: 1
 
 AluminumOre
@@ -700,6 +1849,58 @@ Silicon
 	Value: 7 silver 50 copper
 	Research count: 100
 
+Apollo115
+	Value: No value
+	Research count: 1
+
+BloodSunRising
+	Value: No value
+	Research count: 1
+
+DarkFortress
+	Value: No value
+	Research count: 1
+
+Empress
+	Value: No value
+	Research count: 1
+
+Freedomfaller
+	Value: No value
+	Research count: 1
+
+InANutshell
+	Value: No value
+	Research count: 1
+
+Overlord
+	Value: No value
+	Research count: 1
+
+Retributor
+	Value: No value
+	Research count: 1
+
+ShoresOfOblivion
+	Value: No value
+	Research count: 1
+
+WeCanDoItBlue
+	Value: No value
+	Research count: 1
+
+WeCanDoItYellow
+	Value: 5 silver
+	Research count: 1
+
+WhenDayBreaks
+	Value: No value
+	Research count: 1
+
+CraterDemonPet
+	Value: No value
+	Research count: 1
+
 Plastic
 	Value: 1 silver
 	Research count: 100
@@ -718,6 +1919,23 @@ SpacesuitFabric
 		Silk x 2
 		at
 		Industrial Loom
+
+
+CraterDemonRelic
+	Value: 5 gold
+	Research count: 1
+
+LaunchPadMarker
+	Value: 5 silver
+	Research count: 1
+
+AirVent
+	Value: 1 silver
+	Research count: 5
+	Recipes:
+		Steel Bar x 2
+		at
+		Anvil
 
 
 Battery
@@ -767,7 +1985,7 @@ EngineComponent
 		Fabricator
 
 
-FuelTank
+FuelCanister
 	Value: 1 silver
 	Research count: 100
 	Recipes:
@@ -902,74 +2120,6 @@ RocketPlating
 		Fabricator
 			=> x2
 
-
-SpaceShuttle
-	Value: 3 silver
-	Research count: 1
-
-DeadworldMusicBox
-	Value: 10 gold
-	Research count: 1
-
-RequiemMusicBox
-	Value: 10 gold
-	Research count: 1
-
-SpaceInvaderMusicBox
-	Value: 10 gold
-	Research count: 1
-
-StygiaMusicBox
-	Value: 10 gold
-	Research count: 1
-
-Apollo115
-	Value: No value
-	Research count: 1
-
-BloodSunRising
-	Value: No value
-	Research count: 1
-
-DarkFortress
-	Value: No value
-	Research count: 1
-
-Empress
-	Value: No value
-	Research count: 1
-
-Freedomfaller
-	Value: No value
-	Research count: 1
-
-Overlord
-	Value: No value
-	Research count: 1
-
-Retributor
-	Value: No value
-	Research count: 1
-
-ShoresOfOblivion
-	Value: No value
-	Research count: 1
-
-WhenDayBreaks
-	Value: No value
-	Research count: 1
-
-CraterDemonPet
-	Value: No value
-	Research count: 1
-
-CraterDemonRelic
-	Value: 5 gold
-	Research count: 1
-
-LaunchPadMarker
-	Value: 5 silver
-	Research count: 1
 
 MoonGoldCrescent
 	Value: No value
@@ -1135,6 +2285,10 @@ SelenitePickaxe
 		Ancient Manipulator
 
 
+Sledgehammer
+	Value: 1 gold
+	Research count: 1
+
 SteelHamaxe
 	Value: 2 gold 50 silver
 	Research count: 1
@@ -1155,15 +2309,105 @@ SteelPickaxe
 		Anvil
 
 
+WiringKit
+	Value: 1 gold
+	Research count: 1
+
 CraterDemonTrophy
 	Value: 1 gold
 	Research count: 1
 
-CraterDemonMask
-	Value: 1 gold
-	Research count: 1
+IndustrialHazardWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialHazardWallUnsafe
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialPlatingWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialPlatingWallUnsafe
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialSquarePaneledWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialSquarePaneledWallUnsafe
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialTrimmingWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
+
+IndustrialTrimmingWallUnsafe
+	Value: No value
+	Research count: 400
+	Recipes:
+		Industrial Plating x 1
+		at
+		Work Bench
+			=> x4
+
 
 IrradiatedBrickWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Irradiated Brick x 1
+		at
+		Work Bench
+			=> x4
+
+
+IrradiatedBrickWallUnsafe
 	Value: No value
 	Research count: 400
 	Recipes:
@@ -1183,63 +2427,37 @@ IrradiatedRockWall
 			=> x4
 
 
-MoonBaseHazardWall
+IrradiatedRockWallUnsafe
 	Value: No value
 	Research count: 400
 	Recipes:
-		Moon Base Plating x 1
+		Irradiated Rock x 1
 		at
 		Work Bench
 			=> x4
 
 
-MoonBaseHazardWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBasePlatingWall
+LexanGlassWall
 	Value: No value
 	Research count: 400
 	Recipes:
-		Moon Base Plating x 1
+		Lexan Glass x 1
 		at
 		Work Bench
 			=> x4
 
-
-MoonBasePlatingWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBaseSquarePaneledWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseSquarePaneledWallUnsafe
-	Value: No value
-	Research count: 400
-
-MoonBaseTrimmingWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Moon Base Plating x 1
-		at
-		Work Bench
-			=> x4
-
-
-MoonBaseTrimmingWallUnsafe
-	Value: No value
-	Research count: 400
 
 ProtolithWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Protolith x 1
+		at
+		Work Bench
+			=> x4
+
+
+ProtolithWallUnsafe
 	Value: No value
 	Research count: 400
 	Recipes:
@@ -1259,7 +2477,27 @@ RegolithBrickWall
 			=> x4
 
 
+RegolithBrickWallUnsafe
+	Value: No value
+	Research count: 400
+	Recipes:
+		Regolith Brick x 1
+		at
+		Work Bench
+			=> x4
+
+
 RegolithWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Regolith x 1
+		at
+		Work Bench
+			=> x4
+
+
+RegolithWallUnsafe
 	Value: No value
 	Research count: 400
 	Recipes:
@@ -1287,12 +2525,38 @@ DianiteTome
 		Ancient Manipulator
 
 
+FrigorianGaze
+	Value: 1 gold
+	Research count: 1
+
 HandheldEngine
 	Value: 35 gold
 	Research count: 1
 
 ImbriumJewel
 	Value: 1 platinum
+	Research count: 1
+
+Micronova
+	Value: 10 gold
+	Research count: 1
+
+WaveGunBlue
+	Value: 25 gold
+	Research count: 1
+
+WaveGunDual
+	Value: 50 gold
+	Research count: 1
+	Recipes:
+		Blue Zap Gun x 1
+		Red Zap Gun x 1
+		at
+		Ancient Manipulator
+
+
+WaveGunRed
+	Value: 25 gold
 	Research count: 1
 
 AluminumBroadsword
@@ -1348,6 +2612,14 @@ ClawWrench
 	Value: No value
 	Research count: 1
 
+CrescentMoon
+	Value: 15 silver 50 copper
+	Research count: 1
+
+CrescentScripture
+	Value: 1 platinum
+	Research count: 1
+
 Crucible
 	Value: 1 gold
 	Research count: 1
@@ -1376,6 +2648,10 @@ SteelZweihander
 		at
 		Work Bench
 
+
+StopSign
+	Value: 1 platinum
+	Research count: 1
 
 AluminumBow
 	Value: 13 silver
@@ -1406,6 +2682,17 @@ NWARocketLauncher
 	Value: 1 gold
 	Research count: 1
 
+RocheChakram
+	Value: 20 silver
+	Research count: 1
+	Recipes:
+		Selenite Bar x 1
+		Luminite Bar x 1
+		at
+		Ancient Manipulator
+			=> x20
+
+
 SeleniteBow
 	Value: 1 gold
 	Research count: 1
@@ -1423,6 +2710,10 @@ SeleniteMagnum
 		at
 		Ancient Manipulator
 
+
+StarDestroyer
+	Value: 1 gold
+	Research count: 1
 
 SteelCrossbow
 	Value: 2 gold 50 silver
@@ -1458,7 +2749,12 @@ ChandriumWhip
 		Ancient Manipulator
 
 
-CopperWire
-	Value: 10 copper
-	Research count: 100
+Totality
+	Value: No value
+	Research count: 1
+	Recipes:
+		Chandrium Bar x 12
+		at
+		Ancient Manipulator
+
 

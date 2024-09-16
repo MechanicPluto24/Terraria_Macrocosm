@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
 using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Tiles.Furniture;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

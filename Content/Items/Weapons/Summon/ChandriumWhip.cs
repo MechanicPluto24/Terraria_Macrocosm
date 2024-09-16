@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Items.Materials.Bars;
+﻿using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Terraria;
@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 
         public override void SetDefaults()
         {
-            Item.DefaultToWhip(ModContent.ProjectileType<ChandriumWhipProjectile>(), 220, 2, 4);
+            Item.DefaultToWhip(ModContent.ProjectileType<ChandriumWhipProjectile>(), 180, 2, 4);
 
             Item.shootSpeed = 4;
             Item.rare = ModContent.RarityType<MoonRarityT1>();

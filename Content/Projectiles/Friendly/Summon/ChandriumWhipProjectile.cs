@@ -101,7 +101,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
 
         /// <summary> Spawn dusts on hit, called on the owner client </summary>
-        public void SpawnDusts(NPC target, bool empowered, bool update = false)
+        public void HitEffect(Entity target, bool empowered, bool update = false)
         {
             if (empowered)
             {
@@ -109,10 +109,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 {
                     Vector2 velocity = Main.rand.NextVector2Circular(2.5f, 2.5f);
                     Dust dust;
-                    if (i % 20 == 0)
-                        Particle.CreateParticle<ChandriumCrescentMoon>(target.position, velocity, scale: Main.rand.NextFloat(0.5f, 0.9f));
 
-                    // chandrium dust 
+                    if (i % 20 == 0)
+                    {
+                        Particle.CreateParticle<ChandriumCrescentMoon>(target.position, velocity, scale: Main.rand.NextFloat(0.5f, 0.9f));
+                    }
 
                     dust = Dust.NewDustDirect(target.position, target.width, target.height, ModContent.DustType<ChandriumBrightDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
                     dust.noGravity = true;
@@ -147,12 +148,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         {
             if (onHitEffect)
             {
-                SpawnDusts(Main.npc[hitNpcId], empoweredHit);
+                HitEffect(Main.npc[hitNpcId], empoweredHit);
                 onHitEffect = false;
             }
-        }
 
-        Particle sparkle;
+            if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>()))
+            {
+                Lighting.AddLight(WhipTipPosition, new Vector3(0.607f, 0.258f, 0.847f));
+            }
+        }
 
         public override void OnKill(int timeLeft)
         {
@@ -164,54 +168,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     if (HitStacks >= 3)
                     {
                         HitStacks = 0;
-                        ChandriumWhipBuff.KillParticle();
                     }
 
                     if (HitStacks == 2)
                     {
-                        sparkle = Particle.CreateParticle<ChandriumSparkle>(particle =>
-                        {
-                            Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ChandriumWhipBuff>(), 60 * 5);
-
-                            particle.Position = WhipTipPosition;
-                            particle.Owner = (byte)Projectile.owner;
-                            particle.Scale = 0.7f;
-                        }, shouldSync: true);
-                    }
-
-                    if (HitStacks == 0 && HitNPC && sparkle is not null)
-                    {
-                        sparkle.Kill(shouldSync: true);
+                        Main.player[Projectile.owner].AddBuff(ModContent.BuffType<ChandriumWhipBuff>(), 60 * 5);
                     }
                 }
             }
         }
 
-        private int frameWidth = 14;
-        private int frameHeight = 26;
-
-        // This method draws a line between all points of the whip, in case there's empty space between the sprites.
-        private void DrawLine(List<Vector2> list)
-        {
-            Texture2D texture = TextureAssets.FishingLine.Value;
-            Rectangle frame = texture.Frame();
-            Vector2 origin = new(frame.Width / 2, 2);
-
-            Vector2 pos = list[0];
-            for (int i = 0; i < list.Count - 1; i++)
-            {
-                Vector2 element = list[i];
-                Vector2 diff = list[i + 1] - element;
-
-                float rotation = diff.ToRotation() - MathHelper.PiOver2;
-                Color color = Lighting.GetColor(element.ToTileCoordinates(), new Color(60, 27, 120, byte.MaxValue));
-                Vector2 scale = new(1, (diff.Length() + 2) / frame.Height);
-
-                Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, SpriteEffects.None, 0);
-
-                pos += diff;
-            }
-        }
+        private readonly int frameWidth = 14;
+        private readonly int frameHeight = 26;
 
         public override bool PreDraw(ref Color lightColor)
         {
@@ -225,10 +193,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Main.instance.LoadProjectile(Type);
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-            Vector2 pos = list[0];
+            bool empowered = Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>());
 
-            float tipRotation = 0f;
-            float tipScale = 1f;
+            Vector2 pos = list[0];
 
             for (int i = 0; i < list.Count - 1; i++)
             {
@@ -247,13 +214,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 if (tip)
                 {
                     frame.Y = 4 * frameHeight;
-                    tipRotation = rotation;
 
                     // For a more impactful look, this scales the tip of the whip up when fully extended, and down when curled up.
                     Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int _, out float _);
                     float t = Timer / timeToFlyOut;
                     scale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, t, true) * Utils.GetLerpValue(0.9f, 0.7f, t, true));
-                    tipScale = scale * 0.8f;
+
+                    if (empowered)
+                        Utility.DrawStar(Vector2.Lerp(list[^1], list[^2], 0.8f) - Main.screenPosition, 1, new Color(177, 107, 219, 0), scale * 0.7f, rotation, flip, entity: true);
 
                     WhipTipPosition = pos;
 
@@ -264,32 +232,44 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     if (dustChance > 0.5f && Main.rand.NextFloat() < dustChance * 0.7f)
                     {
                         Vector2 outwardsVector = list[^2].DirectionTo(list[^1]).SafeNormalize(Vector2.Zero);
-                        Dust dust = Dust.NewDustDirect(list[^1] - texture.Size() / 2, texture.Width, texture.Height, ModContent.DustType<ChandriumDust>(), 0f, 0f, 100, default, Main.rand.NextFloat(1f, 1.5f));
 
+                        Dust dust = Dust.NewDustDirect(list[^1] - texture.Size() / 2, texture.Width, texture.Height, ModContent.DustType<ChandriumDust>(), 0f, 0f, 100, default, Main.rand.NextFloat(1f, 1.5f));
                         dust.noGravity = true;
                         dust.velocity *= Main.rand.NextFloat() * 0.8f;
-                        dust.velocity += outwardsVector * 0.8f;
+                        dust.velocity += outwardsVector * 0.1f;
+
+                        if (empowered)
+                        {
+                            Dust dust2 = Dust.NewDustDirect(list[^1] - texture.Size() / 2, texture.Width, texture.Height, ModContent.DustType<ChandriumBrightDust>(), 0f, 0f, 100, default, Main.rand.NextFloat(1f, 1.5f));
+                            dust2.noGravity = true;
+                            dust2.velocity *= Main.rand.NextFloat() * 0.8f;
+                            dust2.velocity += outwardsVector * 0.1f;
+                        }
                     }
                 }
                 else if (i >= 19)
+                {
                     frame.Y = 3 * frameHeight;
+                }
                 else if (i >= 10)
+                {
                     frame.Y = 2 * frameHeight;
+                }
                 else if (i >= 1)
+                {
                     frame.Y = frameHeight;
+                }
                 else
+                {
                     frame.Y = 0;
+                }
+
+                if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>()) && !tip)
+                    Utility.DrawStar(pos - Main.screenPosition, 1, new Color(177, 107, 219, 20), scale * 0.4f, rotation, flip, entity: true);
 
                 Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
 
                 pos += diff;
-            }
-
-            // Shine whip tip
-            if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>()))
-            {
-                Main.spriteBatch.DrawStar(Vector2.Lerp(list[^1], list[^2], 0.5f) - Main.screenPosition, 2, new Color(177, 107, 219, 80), tipScale, tipRotation, flip, entity: true);
-                Lighting.AddLight(pos, new Vector3(0.607f, 0.258f, 0.847f));
             }
 
             return false;

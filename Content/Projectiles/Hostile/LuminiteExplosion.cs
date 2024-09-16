@@ -19,14 +19,14 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private int sizeScale;
         public override void SetDefaults()
         {
-            sizeScale = 15;
+            sizeScale = 4;
             defWidth = defHeight = 4;
             Projectile.width = defWidth;
             Projectile.height = defHeight;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 8;
+            Projectile.timeLeft = 10;
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
         }
@@ -41,13 +41,15 @@ namespace Macrocosm.Content.Projectiles.Hostile
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare3").Value;
-            float progress = MathHelper.Clamp(AI_Timer / Projectile.timeLeft, 0f, 1f);
+            float progress = Utility.BounceEaseInOut(MathHelper.Clamp(AI_Timer / 10f, 0f, 1f));
 
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, LuminiteSlime.EffectColor, 0f, texture.Size() / 2f, progress, SpriteEffects.None, 0f);
+            texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star8").Value;
+            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(213, 155, 148, 80), 0f, texture.Size() / 2f, progress * 0.4f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
-using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
 
@@ -19,16 +18,17 @@ namespace Macrocosm.Common.Debugging.Stats
 
         public override void PostSetupRecipes()
         {
-            #if DEBUG
+#if DEBUG
             try
             {
-                Analyze(Mod);
+                if (!Main.dedServ)
+                    Analyze(Mod);
             }
             catch
             {
                 Utility.LogChatMessage("Failed to generate content stats", Utility.MessageSeverity.Warn);
-            }          
-            #endif
+            }
+#endif
         }
 
         public static void Analyze(Mod mod)
@@ -38,10 +38,10 @@ namespace Macrocosm.Common.Debugging.Stats
             foreach (ILoadable content in mod.GetContent())
             {
                 if (content is ModItem modItem)
-                     AnalyzeItem(itemWriter, modItem);
- 
+                    AnalyzeItem(itemWriter, modItem);
+
                 if (content is ModNPC modNPC)
-                     AnalyzeNPC(npcWriter, modNPC);
+                    AnalyzeNPC(npcWriter, modNPC);
             }
         }
 
@@ -84,7 +84,7 @@ namespace Macrocosm.Common.Debugging.Stats
                         writer.WriteLine($"\t\t{tileName}");
                     }
 
-                    if(recipe.createItem.stack > 1)
+                    if (recipe.createItem.stack > 1)
                         writer.WriteLine($"\t\t\t=> x{recipe.createItem.stack}");
 
                     writer.WriteLine();
@@ -110,7 +110,7 @@ namespace Macrocosm.Common.Debugging.Stats
                 if (!alreadyFoundDropsForThisNPC)
                 {
                     writer.WriteLine("\tDrops:");
-                    alreadyFoundDropsForThisNPC = true; 
+                    alreadyFoundDropsForThisNPC = true;
                 }
 
                 List<DropRateInfo> dropRates = new();

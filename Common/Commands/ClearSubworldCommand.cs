@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
@@ -13,10 +14,10 @@ namespace Macrocosm.Common.Commands
 
         public override void Action(CommandCaller caller, string input, string[] args)
         {
-            #if !DEBUG
+#if !DEBUG
                 Main.NewText("You must be in debug mode to use this!");
 			    return;
-            #endif
+#endif
 
             if (args.Length == 0)
             {
@@ -24,7 +25,13 @@ namespace Macrocosm.Common.Commands
                 return;
             }
 
-            string subworldDirectory = Main.worldPathName[..^4];
+            if (SubworldSystem.AnyActive())
+            {
+                Main.NewText("You must be on the main world to use this command.", Color.Red);
+                return;
+            }
+
+            string subworldDirectory = Path.Combine(Main.WorldPath, Main.ActiveWorldFileData.UniqueId.ToString());
             if (Directory.Exists(subworldDirectory))
             {
                 void DeleteWorldWithExtensionIfExists(string extension)

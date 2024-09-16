@@ -1,21 +1,22 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Armor.Vanity.BossMasks;
 using Macrocosm.Content.Items.Consumables.BossBags;
 using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Items.Materials.Drops;
+using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Furniture;
 using Macrocosm.Content.Items.Pets;
 using Macrocosm.Content.Items.Relics;
 using Macrocosm.Content.Items.Trophies;
-using Macrocosm.Content.Items.Vanity.BossMasks;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
-using Macrocosm.Content.NPCs.Friendly.TownNPCs;
-using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Content.NPCs.TownNPCs;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,13 +28,15 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
+using Terraria.Graphics.Effects;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
     [AutoloadBossHead]
-    public class CraterDemon : ModNPC, IMoonEnemy
+    public class CraterDemon : ModNPC
     {
         private struct AttackInfo
         {
@@ -93,7 +96,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     {
                         p.Position = info.center + Main.rand.NextVector2CircularEdge(140, 140) * info.scale * Main.rand.NextFloat(0.5f, 1f);
                         p.Velocity = Vector2.One * 24;
-                        p.Scale = (0.14f + Main.rand.NextFloat(0.1f)) * info.scale;
+                        p.Scale = new((0.14f + Main.rand.NextFloat(0.1f)) * info.scale);
                         p.Color = new Color(92, 206, 130);
                         p.TargetCenter = info.center;
                         p.CustomDrawer = owner;
@@ -260,7 +263,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 			 // Scaled element on :             NM1,  NM2,  EM1,   EM2,   MM1,   MM2,   FTW1,  FTW2
 			 /*AttackDurationScaling      */ { 1.25f, 1.1f, 1f, 0.8f, 0.75f, 0.65f, 0.6f, 0.55f },
 															    
-			 /*ChargeSpeed                */ { 20f, 36f, 24f, 38f, 30f, 40f, 34f, 42f },
+			 /*ChargeSpeed                */ { 20f, 30f, 24f, 34f, 26f, 36f, 30f, 40f },
 			 /*ChargeSlowdownFactor       */ { 1.8f, 2.2f, 1.9f, 2.3f, 2f, 2.4f, 2.1f, 2.5f },
 			 /*ChargeTargetSpeed          */ { 4.5f, 6.5f, 4.5f, 6.5f, 4.5f, 6.5f, 4.5f, 6.5f },
 																									   
@@ -396,11 +399,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[NPC.type] = 6;
-            NPCID.Sets.TrailCacheLength[NPC.type] = 5;
-            NPCID.Sets.TrailingMode[NPC.type] = 3;
+            Main.npcFrameCount[Type] = 6;
+            NPCID.Sets.TrailCacheLength[Type] = 5;
+            NPCID.Sets.TrailingMode[Type] = 3;
             NPCID.Sets.MPAllowedEnemies[Type] = true;
             NPCID.Sets.BossBestiaryPriority.Add(Type);
+
+            // For the meteors
+            NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type] = true;
 
             NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
 
@@ -411,8 +417,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             };
 
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
-        }
 
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = false;
+        }
 
         public override void SetDefaults()
         {
@@ -422,7 +430,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             NPC.defense = 150;
             NPC.damage = 80;
-            NPC.lifeMax = 45000;
+            NPC.lifeMax = 100000;
 
             NPC.boss = true;
             NPC.noGravity = true;
@@ -433,18 +441,22 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.aiStyle = -1;
 
             NPC.npcSlots = 40f;
-
             NPC.HitSound = SoundID.NPCHit2;
 
             if (!Main.dedServ)
                 Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
         }
 
+        public override bool CanBeHitByNPC(NPC attacker)
+        {
+            return attacker.type == ModContent.NPCType<FlamingMeteor>() && attacker.dontTakeDamage;
+        }
+
         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             //For comparison, Moon Lord's scale factor is 0.7f
-            NPC.ScaleHealthBy(0.75f, balance, bossAdjustment);
-            NPC.damage = (int)(NPC.damage * 0.75f * bossAdjustment);
+            NPC.ScaleHealthBy(0.55f, balance, bossAdjustment);
+            NPC.damage = (int)(NPC.damage * 0.6f * bossAdjustment);
         }
 
         private void ScaleDamage()
@@ -469,8 +481,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             potionType = ItemID.SuperHealingPotion;
         }
 
-        bool IMoonEnemy.DropMoonstone => false;
-
         public override void ModifyNPCLoot(NPCLoot npcLoot)
         {
             // common drops (non-boss bag)
@@ -490,6 +500,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 30, 60));
             notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<DeliriumPlating>(), 1, 30, 90));
 
+            notExpertRule.OnSuccess(ItemDropRule.Common(ModContent.ItemType<SpookyDookie>(), 14));
+
             notExpertRule.OnSuccess(ItemDropRule.OneFromOptions(1,
                 ModContent.ItemType<CalcicCane>(),
                 ModContent.ItemType<Cruithne>(),
@@ -502,14 +514,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void OnKill()
         {
-            if (!WorldDataSystem.Instance.DownedCraterDemon)
+            if (!WorldFlags.DownedCraterDemon)
                 NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
 
-            WorldDataSystem.Instance.DownedCraterDemon = true;
-        }
-
-        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
-        {
+            WorldFlags.SetFlag(ref WorldFlags.DownedCraterDemon);
         }
 
         private void UpdateScale(float newScale)
@@ -1153,11 +1161,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     }
 
                     SetAttack(setAttack);
+
                 }
 
                 NPC.netUpdate = true;
             }
         }
+
         private void AI_SummonMeteors(Player player)
         {
             FloatTowardsTarget(player);
@@ -1176,7 +1186,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         float posY = orig.Y + Main.rand.NextFloat(-3f, -1f) * 30 * 16;
                         Vector2 velocity = new Vector2(MathF.Abs((new Vector2(posX, posY) - player.Center).ToRotation()) > MathHelper.PiOver2 ? 1 : -1, 1).RotatedByRandom(MathHelper.ToRadians(30)) * Main.rand.NextFloat(8f, 16f);
                         int damage = Utility.TrueDamage(Main.masterMode ? 240 : Main.expertMode ? 120 : 60);
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), new Vector2(posX, posY), velocity, ModContent.ProjectileType<FlamingMeteor>(), damage, 0f, Main.myPlayer);
+                        NPC meteor = NPC.NewNPCDirect(NPC.GetSource_FromAI(), (int)posX, (int)posY, ModContent.NPCType<FlamingMeteor>());
+                       
+                        meteor.velocity = velocity;
+                        meteor.netUpdate = true;
                     }
                 }
 
@@ -1242,7 +1255,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                             damage = (int)(damage * 1.2f);
                         }
 
-                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, velocity, type, damage, 1f, Main.myPlayer, ai0: player.whoAmI);
+                        Projectile.NewProjectile(NPC.GetSource_FromAI(), spawn, velocity, type, damage, 1f, Main.myPlayer, ai0: player.whoAmI, ai2: NPC.whoAmI);
                     }
 
                     SoundEngine.PlaySound(SoundID.Zombie93, NPC.Center);
@@ -1836,6 +1849,17 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             }
 
             return drawColor * (1f - targetAlpha / 255f);
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            if (Main.rand.NextBool(20))
+            {
+                // Can't use info.DamageSource = PlayerDeathReason.ByCustomReason(...) here:
+                // HurtInfo is a value type and a DamageSource reassignment won't be reflected outside this method
+                // Called on the hit player client, will be synced and message will be broadcasted by the server 
+                info.DamageSource.SourceCustomReason = this.GetLocalization("FunnyDeathMessage").Format(target.name);
+            }
         }
 
         public override bool? CanBeHitByItem(Player player, Item item)

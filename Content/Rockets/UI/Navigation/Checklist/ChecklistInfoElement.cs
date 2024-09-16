@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
 
         protected override LocalizedColorScaleText GetText()
         {
-            string key = "Mods.Macrocosm.UI.Rocket.Checklist." + KeySelector + "Display";
+            string key = "Mods.Macrocosm.UI.Rocket.Navigation.Checklist." + KeySelector + "Display";
             LocalizedText text = Language.GetText(key);
 
             if (text.Value is "" or "default" || text.Value == key)
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
 
         protected override LocalizedText GetHoverText()
         {
-            string key = "Mods.Macrocosm.UI.Rocket.Checklist." + KeySelector + "Hover";
+            string key = "Mods.Macrocosm.UI.Rocket.Navigation.Checklist." + KeySelector + "Hover";
             LocalizedText hoverText = Language.GetText(key);
 
             if (hoverText.Value is "" or "default" || hoverText.Value == key)

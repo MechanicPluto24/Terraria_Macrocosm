@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -17,6 +18,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetStaticDefaults()
         {
+            ProjectileSets.HitsTiles[Type] = true;
         }
 
         public override void SetProjectileDefaults()

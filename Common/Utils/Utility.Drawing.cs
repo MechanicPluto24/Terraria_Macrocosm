@@ -1,4 +1,5 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -44,9 +45,22 @@ namespace Macrocosm.Common.Utils
         /// <param name="endWidth"> The trail width at its end </param>
         /// <param name="startColor"> The trail color near the NPC </param>
         /// <param name="endColor"> The trail color at its end </param>
-        public static void DrawSimpleTrail(this NPC npc, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+        public static void DrawMagicPixelTrail(this NPC npc, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
         {
             DrawMagicPixelTrail(npc.Size / 2f, npc.oldPos, npc.oldRot, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
+        }
+
+        /// <summary>
+        /// Draw a MagicPixel trail behind a particle, with length based on the trail cache length  
+        /// </summary>
+        /// <param name="rotatableOffsetFromCenter"> offset from projectile center when rotation is 0 </param>
+        /// <param name="startWidth"> The trail width near the projectile </param>
+        /// <param name="endWidth"> The trail width at its end </param>
+        /// <param name="startColor"> The trail color near the projectile  </param>
+        /// <param name="endColor"> The trail color at its end </param>
+        public static void DrawMagicPixelTrail(this Particle particle, Vector2 rotatableOffsetFromCenter, float startWidth, float endWidth, Color startColor, Color? endColor = null)
+        {
+            DrawMagicPixelTrail(particle.Size / 2f, particle.OldPositions, particle.OldRotations, rotatableOffsetFromCenter, startWidth, endWidth, startColor, endColor);
         }
 
         /// <summary> Adapted from Terraria.Main.DrawTrail </summary>
@@ -73,7 +87,20 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        /// <summary>
+        /// <paramref name="lineFraming"/> is a delegate found in <see cref="Terraria.Utils"/>
+        /// <br/> See example implementations in: 
+        /// <br/> <see cref="DelegateMethods.RainbowLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
+        /// <br/> <see cref="DelegateMethods.TurretLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
+        /// <br/> <see cref="DelegateMethods.LightningLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
+        /// </summary>
+        public static void DrawBeam(Texture2D texture, Vector2 startPosition, Vector2 endPosition, Vector2 drawScale, Color beamColor, Terraria.Utils.LaserLineFraming lineFraming)
+        {
+            DelegateMethods.c_1 = beamColor; // c_1 is an unnamed decompiled variable which is the render color of the beam drawn by the lineFraming delegate.
+            Terraria.Utils.DrawLaser(Main.spriteBatch, texture, startPosition, endPosition, drawScale, lineFraming);
+        }
+
+        public static void DrawStar(Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             float rotationStep = MathHelper.Pi / points;
@@ -88,12 +115,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 
@@ -105,12 +132,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, Vector2 scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, int points, Color color, Vector2 scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             float rotationStep = MathHelper.Pi / points;
@@ -125,12 +152,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, Vector2 scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, List<float> rotations, Color color, Vector2 scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 
@@ -142,7 +169,7 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
@@ -157,8 +184,28 @@ namespace Macrocosm.Common.Utils
             Vector2 scaleX = new Vector2(fatness.X * 0.5f, scale.X) * fade;
             _ = new Vector2(fatness.Y * 0.5f, scale.Y) * fade;
 
-            Main.spriteBatch.DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
-            Main.spriteBatch.DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
+            DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
+            DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
+        }
+
+        public static void DrawPrettyStarSparkle(float opacity, SpriteEffects dir, Vector2 drawPos, Color drawColor, Color shineColor, float flareCounter, float fadeInStart, float fadeInEnd, float fadeOutStart, float fadeOutEnd, float rotation, Vector2 scale, Vector2 fatness)
+        {
+            Texture2D sparkleTexture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
+            Color bigColor = shineColor * opacity * 0.5f;
+            bigColor.A = 0;
+            Vector2 origin = sparkleTexture.Size() / 2f;
+            Color smallColor = drawColor * 0.5f;
+            float lerpValue = Terraria.Utils.GetLerpValue(fadeInStart, fadeInEnd, flareCounter, clamped: true) * Terraria.Utils.GetLerpValue(fadeOutEnd, fadeOutStart, flareCounter, clamped: true);
+            Vector2 scaleLeftRight = new Vector2(fatness.X * 0.5f, scale.X) * lerpValue;
+            Vector2 scaleUpDown = new Vector2(fatness.Y * 0.5f, scale.Y) * lerpValue;
+            bigColor *= lerpValue;
+            smallColor *= lerpValue;
+            // Bright, large part
+            Main.EntitySpriteDraw(sparkleTexture, drawPos, null, bigColor, MathHelper.PiOver2 + rotation, origin, scaleLeftRight, dir);
+            Main.EntitySpriteDraw(sparkleTexture, drawPos, null, bigColor, 0f + rotation, origin, scaleUpDown, dir);
+            // Dim, small part
+            Main.EntitySpriteDraw(sparkleTexture, drawPos, null, smallColor, MathHelper.PiOver2 + rotation, origin, scaleLeftRight * 0.6f, dir);
+            Main.EntitySpriteDraw(sparkleTexture, drawPos, null, smallColor, 0f + rotation, origin, scaleUpDown * 0.6f, dir);
         }
 
         /// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
@@ -180,7 +227,7 @@ namespace Macrocosm.Common.Utils
             Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
         }
 
-        // TODO: - Add variation based on current subworld's day/night lenghts 
+        // TODO: - Add variation based on current subworld's day/night lengths
         //		 - Remove magic numbers lol 
         /// <summary> Used for linear brightness scaling along an entire day/night cycle  </summary>
         public static float GetProgressNoonToMidnight(float minBrightness, float maxBrightness)

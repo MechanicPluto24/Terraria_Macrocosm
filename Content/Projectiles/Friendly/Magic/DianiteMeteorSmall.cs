@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity + Main.rand.NextVector2Circular(10f, 10f);
                 p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
-                p.Scale = 0.6f;
+                p.Scale = new(0.6f);
                 p.NumberOfInnerReplicas = 4;
                 p.ReplicaScalingFactor = 0.3f;
             });

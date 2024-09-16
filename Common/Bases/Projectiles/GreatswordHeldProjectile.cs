@@ -15,10 +15,10 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public virtual GreatswordSwingStyle SwingStyle => new DefaultGreatswordSwingStyle();
         /// <summary>
-        /// The lenght of the sword used for collision. <br/>
-        /// If set to <c>null</c> the lenght will be taken from the sword's texture.
+        /// The length of the sword used for collision. <br/>
+        /// If set to <c>null</c> the length will be taken from the sword's texture.
         /// </summary>
-        public virtual float? SwordLenght => null;
+        public virtual float? SwordLength => null;
         public virtual float SwordWidth => 10;
         public virtual int MaxCharge => 33;
         public virtual (float min, float max) ChargeBasedDamageRatio => (0.2f, 1f);
@@ -58,7 +58,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public Texture2D GreatswordTexture { get; private set; }
         public float SwordWidth { get; set; }
-        public float SwordLenght { get; set; }
+        public float SwordLength { get; set; }
         public (float min, float max) ChargeBasedDashAmount { get; set; }
         public (float min, float max) ChargeBasedDamageRatio { get; set; }
         public Vector2 SpriteHandlePosition { get; set; }
@@ -82,7 +82,7 @@ namespace Macrocosm.Common.Bases.Projectiles
                     GreatswordTexture = greatswordHeldProjectileItem.HeldProjectileTexture;
 
                 SwingStyle = greatswordHeldProjectileItem.SwingStyle;
-                SwordLenght = greatswordHeldProjectileItem.SwordLenght ?? 0.8f * MathF.Sqrt(
+                SwordLength = greatswordHeldProjectileItem.SwordLength ?? 0.8f * MathF.Sqrt(
                     MathF.Pow(greatswordHeldProjectileItem.HeldProjectileTexture.Width, 2)
                     + MathF.Pow(greatswordHeldProjectileItem.HeldProjectileTexture.Height, 2)
                 );
@@ -174,7 +174,7 @@ namespace Macrocosm.Common.Bases.Projectiles
                 Projectile.Center,
                 Projectile.Center + (
                     (Projectile.rotation - MathHelper.PiOver4) * Player.direction + (Player.direction == -1 ? MathHelper.Pi : 0f)
-                ).ToRotationVector2() * SwordLenght,
+                ).ToRotationVector2() * SwordLength,
                 SwordWidth,
                 ref _
             );

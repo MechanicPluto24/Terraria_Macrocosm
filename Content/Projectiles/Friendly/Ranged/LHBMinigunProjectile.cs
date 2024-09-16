@@ -6,7 +6,6 @@ using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;

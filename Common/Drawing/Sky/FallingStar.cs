@@ -7,7 +7,7 @@ using Terraria;
 namespace Macrocosm.Common.Drawing.Sky
 {
     /// <summary> Falling "star". Adapted from Terraria.Star </summary>
-    internal class FallingStar : MacrocosmStar
+    public class FallingStar : MacrocosmStar
     {
         private float fallTime = 0.0f;
         private bool falling = false;

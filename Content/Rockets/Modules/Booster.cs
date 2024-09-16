@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.Graphics;
@@ -17,18 +18,19 @@ namespace Macrocosm.Content.Rockets.Modules
         protected abstract Vector2 LandingLegDrawOffset { get; }
 
         private SpriteBatchState state1, state2;
+        private Asset<Texture2D> landingLegTexture;
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            // Draw the booster module with the base logic
+            // Draw the booster module with the base drawcode
             base.Draw(spriteBatch, position);
 
             state1.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state1);
 
-            Texture2D tex = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg").Value;
-            spriteBatch.Draw(tex, position + LandingLegDrawOffset, tex.Frame(1, NumberOfFrames, frameY: CurrentFrame), Color.White);
+            landingLegTexture ??= ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad);
+            spriteBatch.Draw(landingLegTexture.Value, position + LandingLegDrawOffset, landingLegTexture.Frame(1, NumberOfFrames, frameY: CurrentFrame), Color.White);
 
             spriteBatch.End();
             spriteBatch.Begin(state1);
@@ -70,11 +72,11 @@ namespace Macrocosm.Content.Rockets.Modules
                 positions[i] += new Vector2(0f, 4f * i);
 
             var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-                            .UseProjectionMatrix(doUse: false)
-                            .UseSaturation(-2.2f)
-                            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"))
-                            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
+                .UseProjectionMatrix(doUse: false)
+                .UseSaturation(-2.2f)
+                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
 
             shader.Apply();
 

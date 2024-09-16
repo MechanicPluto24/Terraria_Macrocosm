@@ -18,6 +18,10 @@ namespace Macrocosm.Content.Sounds
         public static readonly SoundStyle RocketLoop = new(SFXPath + "RocketLoop");
         public static readonly SoundStyle RocketLaunch = new(SFXPath + "RocketLaunch");
         public static readonly SoundStyle RocketLandingLeg = new(SFXPath + "RocketLandingLeg");
+        public static readonly SoundStyle WaveGunJoin = new(SFXPath + "WaveGunJoin");
+        public static readonly SoundStyle WaveGunSplit = new(SFXPath + "WaveGunSplit");
+        public static readonly SoundStyle WaveGunShot = new(SFXPath + "WaveGunShot");
+        public static readonly SoundStyle WaveGunShotRifle = new(SFXPath + "WaveGunShotRifle");
 
     }
 }

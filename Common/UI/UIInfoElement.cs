@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.UI.Themes;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;

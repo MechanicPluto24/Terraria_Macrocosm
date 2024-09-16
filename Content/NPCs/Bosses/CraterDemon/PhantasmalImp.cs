@@ -20,6 +20,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             get => Projectile.ai[1] > 0f;
             set => Projectile.ai[1] = value ? 1f : 0f;
         }
+        public int Parent
+        {
+            get => (int)Projectile.ai[2];
+            set => Projectile.ai[2] = (int)value;
+        }
 
         public override void SetStaticDefaults()
         {
@@ -27,7 +32,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
-        private static int spawnTimeLeft = 3 * 60;
+        private static int spawnTimeLeft = 15 * 60;
         public override void SetDefaults()
         {
             Projectile.width = 66;
@@ -49,7 +54,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         //bool spawned = false;
         public override void AI()
         {
-            if (!TargetPlayer.active)
+            if (!TargetPlayer.active || (!Main.npc[Parent].active || Main.npc[Parent].type != ModContent.NPCType<CraterDemon>()) && !SpawnedFromPortal)
                 Projectile.Kill();
 
             if (!spawned)
@@ -59,6 +64,63 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 spawned = true;
             }
 
+            if (!SpawnedFromPortal)
+                AI_SpawnedFromCD();
+            else
+                AI_SpawnedFromPortal();
+
+            Projectile.direction = Math.Sign(Projectile.velocity.X);
+            Projectile.spriteDirection = Projectile.direction;
+            Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
+
+            flashTimer++;
+        }
+
+        public Vector2 Direction = Vector2.UnitY.RotatedByRandom(MathHelper.Pi * 2);
+
+        public float Speed = 10f;
+        int Counter = 0;
+        public bool launched = false;
+
+        private void AI_SpawnedFromCD()
+        {
+            if (Main.npc[Parent].ai[0] == 3 && launched == false)
+            {
+                if (Speed < 20f)
+                    Speed += 0.06f;
+
+                if (Projectile.Distance(Main.npc[Parent].Center) < 170f)
+                {
+                    Direction = Direction.RotatedBy(-0.04f * Math.Sin(Counter / 10));
+                }
+                else
+                {
+                    Vector2 notDirection = Main.npc[Parent].Center - Projectile.Center;
+                    Direction = ((Direction + (notDirection * 0.002f)).SafeNormalize(Vector2.UnitX));
+                }
+
+                Direction = Direction.SafeNormalize(Vector2.UnitY);
+                Projectile.velocity = Direction * Speed;
+                Counter++;
+            }
+            else
+            {
+                launched = true;
+                if (Speed < 30f)
+                    Speed += 0.5f;
+
+                if (Counter != -1)
+                {
+                    Counter = -1;
+                    Direction = (TargetPlayer.Center - Projectile.Center).RotatedByRandom(MathHelper.Pi / 3);
+                }
+                Direction = Direction.SafeNormalize(Vector2.UnitY);
+                Projectile.velocity = Direction * Speed;
+            }
+        }
+
+        private void AI_SpawnedFromPortal()
+        {
             Vector2 direction = TargetPlayer.Center - Projectile.Center;
             float distance = direction.Length();
             direction.Normalize();
@@ -72,18 +134,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             float accelerateDistance = 30f * 16;
             float speed = Projectile.velocity.Length() + (distance > accelerateDistance ? distance / accelerateDistance * 0.1f : 0f);
             Projectile.velocity = adjustedDirection * speed;
-
-            Projectile.direction = Math.Sign(Projectile.velocity.X);
-            Projectile.spriteDirection = Projectile.direction;
-            Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
-
-            if (Projectile.timeLeft < (int)(0.33f * spawnTimeLeft) && Projectile.alpha < 255)
-                Projectile.alpha += 6;
-
-            if (Projectile.alpha >= 255)
-                Projectile.active = false;
-
-            flashTimer++;
         }
 
         public override Color? GetAlpha(Color lightColor) => Color.White.WithOpacity(1f);

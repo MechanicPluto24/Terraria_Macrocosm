@@ -4,7 +4,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials.Drops;
+using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
@@ -81,7 +81,7 @@ namespace Macrocosm.Content.Items.Accessories
         {
             Particle.CreateParticle<CelestialBulwarkDashParticle>(p =>
             {
-                p.Scale = 0.35f;
+                p.Scale = new(0.35f);
                 p.Position = player.Center;
                 p.PlayerID = player.whoAmI;
                 p.Rotation = player.velocity.ToRotation() - MathHelper.PiOver2;

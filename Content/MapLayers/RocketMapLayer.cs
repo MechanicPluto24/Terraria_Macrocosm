@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets;
+﻿using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

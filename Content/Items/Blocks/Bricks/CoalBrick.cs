@@ -1,5 +1,4 @@
-using Macrocosm.Content.Items.Blocks.Terrain;
-using Macrocosm.Content.Items.Materials.Ores;
+using Macrocosm.Content.Items.Ores;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

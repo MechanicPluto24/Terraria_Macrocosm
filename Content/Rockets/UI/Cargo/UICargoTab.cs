@@ -33,11 +33,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private UIListScrollablePanel crewPanel;
 
-        private UIPanel fuelPanel;
-        private UIPanel fuelTankPanel;
-        private UILiquid fuelLiquid;
-        private Item ItemInFuelTankSlot => Rocket.Inventory[Rocket.SpecialInventorySlot_FuelTank];
-        private UIInventorySlot fuelTankItemSlot;
+        private UIFuelPanel fuelPanel;
 
         private Player commander = Main.LocalPlayer;
         private Player prevCommander = Main.LocalPlayer;
@@ -46,18 +42,6 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public UICargoTab()
         {
-        }
-
-        public void OnRocketChanged()
-        {
-            cacheSize = InventorySize;
-            this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
-        }
-
-        public void OnTabOpen()
-        {
-            cacheSize = InventorySize;
-            this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
         }
 
         public override void OnInitialize()
@@ -72,7 +56,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
             BorderColor = UITheme.Current.TabStyle.BorderColor;
 
-            fuelPanel = CreateFuelPanel();
+            fuelPanel = new();
             Append(fuelPanel);
 
             inventoryPanel = CreateInventoryPanel();
@@ -81,6 +65,20 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             crewPanel = CreateCrewPanel();
             Append(crewPanel);
+        }
+
+        public void OnRocketChanged()
+        {
+            cacheSize = InventorySize;
+            this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
+            fuelPanel.RefreshItemSlot();
+        }
+
+        public void OnTabOpen()
+        {
+            cacheSize = InventorySize;
+            this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
+            fuelPanel.RefreshItemSlot();
         }
 
         public override void Update(GameTime gameTime)
@@ -124,10 +122,10 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 crewPanel.Deactivate();
                 crewPanel.ClearList();
 
-                crewPanel.Add(new UIPlayerInfoElement(commander));
-                crew.ForEach(player => crewPanel.Add(new UIPlayerInfoElement(player)));
+                crewPanel.Add(new UIPlayerInfoElement(commander, large: false));
+                crew.ForEach(player => crewPanel.Add(new UIPlayerInfoElement(player, large: false)));
 
-                if (crew.Any())
+                if (crew.Count > 0)
                     crewPanel.OfType<UIPlayerInfoElement>().LastOrDefault().LastInList = true;
 
                 prevCommander = commander;
@@ -155,7 +153,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
             }
 
-            if (Rocket is not null && Rocket.HasInventory && Main.netMode == NetmodeID.MultiplayerClient)
+            if (Rocket is not null && Main.netMode == NetmodeID.MultiplayerClient)
             {
                 if (Rocket.Inventory.CanInteract)
                     requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryOpen"));
@@ -214,79 +212,73 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private UIPanel CreateInventoryPanel()
         {
-            if (Rocket.HasInventory)
-            {
-                inventoryPanel = Rocket.Inventory.ProvideUI
-                (
-                    out var slots,
-                    out var lootAllButton,
-                    out var depositAllButton,
-                    out var quickStackButton,
-                    out var restockInventoryButton,
-                    out var sortInventoryButton,
-                    start: Rocket.SpecialInventorySlot_Count,
-                    iconsPerRow: 10,
-                    rowsWithoutScrollbar: 5
-                );
-                inventoryPanel.Width = new(0, 0.596f);
-                inventoryPanel.Height = new(0, 0.535f);
-                inventoryPanel.Left = new(0, 0.405f);
-                inventoryPanel.Top = new(0, 0);
-                inventoryPanel.HAlign = 0f;
-                inventoryPanel.SetPadding(0f);
-                inventoryPanel.PaddingLeft = 2f;
+            inventoryPanel = Rocket.Inventory.ProvideUI
+            (
+                out var slots,
+                out var lootAllButton,
+                out var depositAllButton,
+                out var quickStackButton,
+                out var restockInventoryButton,
+                out var sortInventoryButton,
+                start: Rocket.SpecialInventorySlot_Count,
+                iconsPerRow: 10,
+                rowsWithoutScrollbar: 5
+            );
+            inventoryPanel.Width = new(0, 0.596f);
+            inventoryPanel.Height = new(0, 0.535f);
+            inventoryPanel.Left = new(0, 0.405f);
+            inventoryPanel.Top = new(0, 0);
+            inventoryPanel.HAlign = 0f;
+            inventoryPanel.SetPadding(0f);
+            inventoryPanel.PaddingLeft = 2f;
 
-                inventoryPanel.Append(new UIHorizontalSeparator()
+            inventoryPanel.Append(new UIHorizontalSeparator()
+            {
+                Top = new(0, 0.12f),
+                Width = new(0, 0.995f),
+                Left = new(0, 0),
+                HAlign = 0f,
+                Color = UITheme.Current.SeparatorColor
+            });
+
+            slots.SetTitle(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Inventory"), scale: 1.2f));
+            slots.Width = new(0, 1f);
+            slots.Height = new(0, 0.9f);
+            slots.Top = new(0, 0);
+            slots.SetPadding(0f);
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                requestAccessButton = new
+                (
+                    ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryOpen", AssetRequestMode.ImmediateLoad),
+                    ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
+                    ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
+                    ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
+                )
                 {
-                    Width = new(0, 0.99f),
-                    Top = new(0, 0.12f),
-                    HAlign = 0.5f,
-                    Color = UITheme.Current.SeparatorColor
+                    Top = new(0, 0.85f),
+                    Left = new(0, 0.195f),
+                    BackPanelColor = new Color(45, 62, 115),
+                    HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Inventory.OpenInventory")
+                };
+                requestAccessButton.OnLeftClick += (_, _) => Rocket.Inventory.InteractingPlayer = Main.myPlayer;
+                requestAccessButton.CheckInteractible = () => Rocket.Inventory.InteractingPlayer != Main.myPlayer;
+                inventoryPanel.Append(requestAccessButton);
+
+                inventoryPanel.Append(new UIVerticalSeparator()
+                {
+                    Top = new(0, 0.85f),
+                    Left = new(0, 0.2981f),
+                    Height = new(0, 0.13f),
+                    Color = UITheme.Current.SeparatorColor,
                 });
 
-                slots.SetTitle(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Inventory"), scale: 1.2f));
-                slots.Width = new(0, 1f);
-                slots.Height = new(0, 0.9f);
-                slots.Top = new(0, 0);
-                slots.SetPadding(0f);
-
-                if (Main.netMode == NetmodeID.MultiplayerClient)
-                {
-                    requestAccessButton = new
-                    (
-                        ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryOpen", AssetRequestMode.ImmediateLoad),
-                        ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
-                        ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
-                        ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
-                    )
-                    {
-                        Top = new(0, 0.85f),
-                        Left = new(0, 0.195f),
-                        BackPanelColor = new Color(45, 62, 115),
-                        HoverText = Language.GetText("Mods.Macrocosm.UI.Rocket.Inventory.OpenInventory")
-                    };
-                    requestAccessButton.OnLeftClick += (_, _) => Rocket.Inventory.InteractingPlayer = Main.myPlayer;
-                    requestAccessButton.CheckInteractible = () => Rocket.Inventory.InteractingPlayer != Main.myPlayer;
-                    inventoryPanel.Append(requestAccessButton);
-
-                    inventoryPanel.Append(new UIVerticalSeparator()
-                    {
-                        Top = new(0, 0.85f),
-                        Left = new(0, 0.2981f),
-                        Height = new(0, 0.13f),
-                        Color = UITheme.Current.SeparatorColor,
-                    });
-
-                    lootAllButton.Left.Percent = 0.32f;
-                    depositAllButton.Left.Percent = 0.42f;
-                    quickStackButton.Left.Percent = 0.52f;
-                    restockInventoryButton.Left.Percent = 0.62f;
-                    sortInventoryButton.Left.Percent = 0.72f;
-                }
-            }
-            else
-            {
-                inventoryPanel = new();
+                lootAllButton.Left.Percent = 0.32f;
+                depositAllButton.Left.Percent = 0.42f;
+                quickStackButton.Left.Percent = 0.52f;
+                restockInventoryButton.Left.Percent = 0.62f;
+                sortInventoryButton.Left.Percent = 0.72f;
             }
 
             return inventoryPanel;
@@ -316,7 +308,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             };
 
             if (Main.netMode == NetmodeID.SinglePlayer)
-                crewPanel.Add(new UIPlayerInfoElement(Main.LocalPlayer));
+                crewPanel.Add(new UIPlayerInfoElement(Main.LocalPlayer, large: false));
 
             return crewPanel;
         }

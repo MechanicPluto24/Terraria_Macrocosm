@@ -1,8 +1,8 @@
-﻿using Macrocosm.Common.Bases.Tiles;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
@@ -14,14 +14,15 @@ namespace Macrocosm.Common.Systems
         public int RegolithCount { get; private set; } = 0;
         public int IrradiatedRockCount { get; private set; } = 0;
         public int GraveyardModTileCount { get; private set; } = 0;
-
+        public int MonolithCount { get; private set; } = 0;
         private int[] graveyardTileTypes;
 
         public override void PostSetupContent()
         {
             List<int> graveyardtypes = new();
-            foreach (var tile in ModContent.GetContent<ModTile>().Where(item => item is ITombstoneTile))
-                graveyardtypes.Add(tile.Type);
+            for (int type = 0; type < TileLoader.TileCount; type++)
+                if (TileSets.GraveyardTile[type])
+                    graveyardtypes.Add(type);
             graveyardTileTypes = graveyardtypes.ToArray();
         }
 
@@ -29,13 +30,10 @@ namespace Macrocosm.Common.Systems
         {
             RegolithCount = tileCounts[ModContent.TileType<Regolith>()];
             IrradiatedRockCount = tileCounts[ModContent.TileType<IrradiatedRock>()];
+            MonolithCount = tileCounts[ModContent.TileType<Monolith>()];
 
             foreach (int type in graveyardTileTypes)
-            {
-                ModTile tile = TileLoader.GetTile(type);
-                if (tile is ITombstoneTile tombstone && tombstone.AllowGrayeyardOnEarth)
-                    GraveyardModTileCount += tileCounts[type];
-            }
+                GraveyardModTileCount += tileCounts[type];
         }
 
         public override void ResetNearbyTileEffects()
@@ -43,6 +41,7 @@ namespace Macrocosm.Common.Systems
             RegolithCount = 0;
             IrradiatedRockCount = 0;
             GraveyardModTileCount = 0;
+            MonolithCount = 0;
         }
     }
 }

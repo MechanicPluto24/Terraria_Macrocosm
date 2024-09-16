@@ -1,8 +1,8 @@
+using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
@@ -13,18 +13,19 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class LuminiteSlime : ModNPC, IMoonEnemy
+    public class LuminiteSlime : ModNPC
     {
         public static Color EffectColor => new Color(92, 228, 162);
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()
         {
-            base.SetDefaults();
-
             NPC.width = 36;
             NPC.height = 22;
             NPC.damage = 80;
@@ -37,7 +38,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.aiStyle = -1;
             AnimationType = NPCID.BlueSlime;
 
-            SpawnModBiomes = [ModContent.GetInstance<UndergroundMoonBiome>().Type];
+            SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
 
         protected readonly float attackTime = 280f;
@@ -97,10 +98,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int i = 0; i < Main.rand.Next(3, 7); i++)
+                for (int i = 0; i < Main.rand.Next(3, 5); i++)
                 {
-                    Vector2 projVelocity = Utility.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
-                    Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 1.35f)), 1f, Main.myPlayer, ai1: NPC.target);
+                    Vector2 projVelocity = Utility.PolarVector(8f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
+                    Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 1.35f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 1f);
                     proj.netUpdate = true;
                 }
             }
@@ -113,7 +114,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             for (int i = 0; i < count; i++)
             {
                 Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
-                Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
+                Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteBrightDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
             }
         }
     }

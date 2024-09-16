@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -109,7 +108,7 @@ namespace Macrocosm.Content.Menus
                 Eris
             ];
 
-            planetsWithMoons = 
+            planetsWithMoons =
             [
                 Earth,
                 Mars,
@@ -138,7 +137,7 @@ namespace Macrocosm.Content.Menus
         }
 
         private bool drawOldLogo = false;
-        public override Asset<Texture2D> Logo => !drawOldLogo? logo : logoOld;
+        public override Asset<Texture2D> Logo => !drawOldLogo ? logo : logoOld;
         public override Asset<Texture2D> SunTexture => Macrocosm.EmptyTex;
         public override Asset<Texture2D> MoonTexture => Macrocosm.EmptyTex;
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld");
@@ -263,7 +262,7 @@ namespace Macrocosm.Content.Menus
 
             plutoBarycenter.SetOrbitParent(Sun, new Vector2(760, 620), 0.28f, Rand(), 0.00022f);
             plutoBarycenter.AddOrbitChild(Pluto, 4, 0f, 0.005f);
-            Pluto.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
+            plutoBarycenter.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
 
             Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
         }
@@ -308,11 +307,11 @@ namespace Macrocosm.Content.Menus
 
             spriteBatch.Begin(BlendState.AlphaBlend, state2);
 
-            spriteBatch.Draw(sunCorona1.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona2.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona3.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona4.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona5.Value, Sun.Center, null, (new Color(127,127,127,127) * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona1.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona2.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona3.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona4.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona5.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
@@ -364,7 +363,7 @@ namespace Macrocosm.Content.Menus
         {
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
 
-            Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height()/2);
+            Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height() / 2);
             Vector2 position = saturn.Center;
             spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(sourceRect.Width / 2, sourceRect.Height), saturn.Scale, default, 0f);
 
@@ -398,7 +397,7 @@ namespace Macrocosm.Content.Menus
             intensity = -1f;
             float rotationProgress = Math.Abs(MathF.Cos((rotation + MathHelper.Pi)));
             float offsetRadius = MathHelper.Lerp(-0.45f, -0.4f, Utility.QuadraticEaseInOut(rotationProgress));
-            offset = Utility.PolarVector(offsetRadius, rotation + MathHelper.Pi/8);
+            offset = Utility.PolarVector(offsetRadius, rotation + MathHelper.Pi / 8);
             radius = MathHelper.Lerp(0.35f, 0.4f, Utility.QuadraticEaseInOut(rotationProgress));
         }
 
@@ -419,7 +418,7 @@ namespace Macrocosm.Content.Menus
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
             Vector2 position = ouranos.Center + new Vector2(0, 0);
-            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, MathHelper.PiOver2, new Vector2(rings.Height() / 2f, 0), ouranos.Scale * 1f, default, 0f); 
+            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, MathHelper.PiOver2, new Vector2(rings.Height() / 2f, 0), ouranos.Scale * 1f, default, 0f);
 
             spriteBatch.End();
         }
@@ -446,7 +445,7 @@ namespace Macrocosm.Content.Menus
             {
                 foreach (var celestialBody in interactible)
                 {
-                    if(celestialBody.Hitbox.Contains(Main.mouseX, Main.mouseY) && Main.mouseLeft)
+                    if (celestialBody.Hitbox.Contains(Main.mouseX, Main.mouseY) && Main.mouseLeft)
                     {
                         grabbed = celestialBody;
                         break;
@@ -481,7 +480,7 @@ namespace Macrocosm.Content.Menus
                 if (!Main.mouseLeft || forceRelease)
                 {
                     if (!released.ContainsKey(grabbed))
-                        released.Add(grabbed, 30);
+                        released.Add(grabbed, /*30*/ 1);
                     grabbed = null;
                 }
             }

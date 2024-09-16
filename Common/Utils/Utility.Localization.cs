@@ -17,6 +17,8 @@ namespace Macrocosm.Common.Utils
             return (text.Value == key) ? LocalizedText.Empty : text;
         }
 
+        public static LocalizedText[] FindAllThatStartWith(string prefix) => Language.FindAll(new LanguageSearchFilter((key, _) => key.StartsWith(prefix)));
+
         public static string TrimTrailingZeroesAndDot(string decimalNumberText) => string.Format("{0:n}", decimalNumberText).TrimEnd('0').TrimEnd('.');
 
         public static string PrettyPrintName(string name) => Regex.Replace(name, "([A-Z])", " $1").Trim();

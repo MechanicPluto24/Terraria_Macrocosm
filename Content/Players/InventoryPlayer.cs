@@ -1,9 +1,7 @@
 ﻿using Macrocosm.Common.Storage;
-using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using Microsoft.CodeAnalysis;
-using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria;
@@ -82,9 +80,9 @@ namespace Macrocosm.Content.Players
                     }
                 }
 
-                foreach(var kvp in TileEntity.ByPosition)
+                foreach (var kvp in TileEntity.ByPosition)
                 {
-                    TileEntity entity = kvp.Value; 
+                    TileEntity entity = kvp.Value;
                     Point16 tileCoordinates = kvp.Key;
 
                     if (entity is IInventoryOwner inventoryOwner &&

@@ -1,9 +1,9 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class LuminiteSlimeVolatile : LuminiteSlime
@@ -18,7 +18,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return base.SpawnChance(spawnInfo);
+            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.04f : 0f;
         }
 
         public override void HitEffect(NPC.HitInfo hit)
@@ -46,24 +46,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void OnKill()
         {
-            Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, default, ModContent.ProjectileType<LuminiteExplosion>(), (int)(NPC.damage * 0.65f), 3, Main.myPlayer);
+            Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, default, ModContent.ProjectileType<LuminiteExplosion>(), (int)(NPC.damage * 0.35f), 3, Main.myPlayer);
 
             for (int i = 0; i < 5; i++)
-            {
-                Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(5f, 10f), ModContent.ProjectileType<LuminiteShard>(), (int)(NPC.damage * 0.5f), 1f, Main.myPlayer, ai1: -1, ai2: 1);
-            }
+                Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(5f, 10f), ModContent.ProjectileType<LuminiteShard>(), (int)(NPC.damage * 0.25f), 1f, Main.myPlayer, ai1: -1, ai2: 1);
+
+            SpawnDusts(20);
         }
 
         protected override void ProjectileAttack()
         {
-            for (int i = 0; i < Main.rand.Next(3, 7); i++)
-            {
-                Vector2 projVelocity = Utility.PolarVector(2.6f, Main.rand.NextFloat(-MathHelper.Pi + MathHelper.PiOver4, -MathHelper.PiOver4));
-                Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteStar>(), Utility.TrueDamage((int)(NPC.damage * 1.5f)), 1f, Main.myPlayer, ai1: NPC.target);
-                proj.netUpdate = true;
-            }
-
-            SpawnDusts(5);
         }
     }
 }

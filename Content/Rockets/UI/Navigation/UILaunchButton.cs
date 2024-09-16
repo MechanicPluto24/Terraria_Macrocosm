@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             // TODO: add dynamic scaling
             float textScale = 0.9f;
 
-            text = Language.GetText("Mods.Macrocosm.UI.Rocket.LaunchButton." + ButtonState.ToString());
+            text = Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.LaunchButton." + ButtonState.ToString());
 
             switch (ButtonState)
             {

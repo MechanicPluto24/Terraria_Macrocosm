@@ -11,24 +11,26 @@ namespace Macrocosm.Content.Particles
     public class PortalSwirl : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override int SpawnTimeLeft => 150;
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
-
-        public Color Color { get; set; } = Color.White;
 
         public Vector2 TargetCenter { get; set; }
 
         public override void OnSpawn()
         {
-            float speed = Velocity.Length();
-            Vector2 toCenter = (TargetCenter - Position).SafeNormalize(Vector2.One);
-            Vector2 tangential = new(-toCenter.Y, toCenter.X);
-            Velocity = tangential * speed;
+            TimeToLive = 150;
+
+            if (TargetCenter != default)
+            {
+                float speed = Velocity.Length();
+                Vector2 toCenter = (TargetCenter - Position).SafeNormalize(Vector2.One);
+                Vector2 tangential = new(-toCenter.Y, toCenter.X);
+                Velocity = tangential * speed;
+            }
         }
 
         public override void AI()
         {
-            if (Scale < 0.1f)
+            if (Scale.X < 0.1f)
                 Kill();
 
             if (Velocity.LengthSquared() < 0.5f)

@@ -1,8 +1,8 @@
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Weapons.Ranged;
-using Macrocosm.Content.NPCs.Global;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
@@ -16,7 +16,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-    public class ZombieSecurity : ModNPC, IMoonEnemy
+    public class ZombieSecurity : ModNPC
     {
         public enum ActionState
         {
@@ -57,6 +57,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 32;
+
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()
@@ -70,15 +73,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = -1;
+            SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
             Banner = Item.NPCtoBanner(NPCID.Zombie);
             BannerItem = Item.BannerToItem(Banner);
-
-            //SpawnModBiomes = new int[1] { ModContent.GetInstance<MoonBaseBiome>() }
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime ? .08f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? .08f : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)

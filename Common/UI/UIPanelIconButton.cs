@@ -5,15 +5,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Configuration;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
+    // TODO: a way to resize it and use UIPanel logic??
+    // Currently it's only fixed size, using the textures found in Assets/Textures/UI: SmallPanel, LargePanel, WidePanel
+    /// <summary>
+    /// Panel with button functionality, fixed size depending on panel texture.
+    /// Has an image icon, border highlighting, hover text, and the possibility to add text on it.
+    /// </summary>
     public class UIPanelIconButton : UIHoverImageButton
     {
         public Color IconColor { get; set; } = Color.White;
@@ -31,6 +35,8 @@ namespace Macrocosm.Common.UI
         private Asset<Texture2D> backPanelBorderTexture;
 
         private UIText uIText;
+        private Color baseTextColor;
+        private bool darkenTextIfNotInteractible;
 
         public UIPanelIconButton() : this(Macrocosm.EmptyTex) { }
 
@@ -75,16 +81,34 @@ namespace Macrocosm.Common.UI
 
         public Func<CalculatedStyle, Vector2> GetIconPosition { get; set; } = (dimensions) => dimensions.Center();
 
-        public void SetText(LocalizedColorScaleText text, float align = 0.5f)
+        public void SetText(LocalizedColorScaleText text, float align = 0.5f, bool darkenTextIfNotInteractible = false)
         {
             if (uIText is not null && HasChild(uIText))
                 RemoveChild(uIText);
+
+            baseTextColor = text.Color;
+            this.darkenTextIfNotInteractible = darkenTextIfNotInteractible;
 
             uIText = text.ProvideUIText();
             uIText.HAlign = align;
             uIText.VAlign = 0.5f;
 
             Append(uIText);
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (uIText is not null && HasChild(uIText))
+            {
+                uIText.TextColor = baseTextColor;
+
+                if (darkenTextIfNotInteractible && !CheckInteractible())
+                {
+                    uIText.TextColor *= 0.5f;
+                }
+            }
         }
 
         SpriteBatchState state;

@@ -5,8 +5,7 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials.Drops;
-using Macrocosm.Content.Items.Materials.Tech;
+using Macrocosm.Content.Items.Tech;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;
@@ -14,19 +13,15 @@ using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
-using ReLogic.Utilities;
-using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent.Golf;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using XPT.Core.Audio.MP3Sharp;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -64,10 +59,13 @@ namespace Macrocosm.Content.Rockets
         private LaunchPad targetLaunchPad;
 
         /// <summary> The amount of fuel currently stored in the rocket, as an absolute value </summary>
-        [NetSync] public float Fuel;
+        [NetSync] public float Fuel = 0f;
 
-        /// <summary> The rocket's fuel capacity as an absoulute value </summary>
-        [NetSync] public float FuelCapacity = 1000f;
+        /// <summary> The rocket's fuel capacity as an absolute value </summary>
+        [NetSync] public float FuelCapacity = DefaultFuelCapacity;
+
+        /// <summary> The default fuel capacity </summary>
+        public const float DefaultFuelCapacity = 1000f;
 
         /// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
         [NetSync] public string CurrentWorld = "";
@@ -75,10 +73,8 @@ namespace Macrocosm.Content.Rockets
         /// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
         public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
 
-        /// <summary> Number of ticks of the launch countdown (seconds * 60 ticks/sec) </summary>
+        /// <summary> Number of ticks of the launch countdown (seconds * 60 ticks/sec). Includes <see cref="StaticFire"/> </summary>
         public int LiftoffTime = 3 * 60;
-
-        public float MaxFlightSpeed = 25f;
 
         /// <summary> Whether this rocket is currently in flight </summary>
         public bool InFlight => FlightTime >= LiftoffTime;
@@ -118,16 +114,22 @@ namespace Macrocosm.Content.Rockets
         public string DisplayName
             => Nameplate.IsValid() ? Nameplate.Text : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
 
-        /// <summary> Dictionary of all the rocket's modules by name, in their order found in ModuleNames </summary>
+        /// <summary> Dictionary of all the rocket's modules, by name, in the order found in <see cref="ModuleNames"/> </summary>
         public Dictionary<string, RocketModule> Modules = new();
 
+        /// <summary> The rocket's modules ordered by their <see cref="RocketModule.DrawPriority"/> </summary>
         public List<RocketModule> ModulesByDrawPriority => Modules.Values.OrderBy(module => module.DrawPriority).ToList();
 
         /// <summary> List of the module names, in the customization access order </summary>
         public List<string> ModuleNames => Modules.Keys.ToList();
 
-        public int StaticFireBeginTime = 120;
+        /// <summary> The time (in ticks) after launch for the <see cref="StaticFire"/> </summary>
+        public const int StaticFireBeginTime = 120;
+
+        /// <summary> Whether the rocket is in the static fire part of the launch sequence </summary>
         public bool StaticFire => StaticFireProgress > 0f && FlightTime < LiftoffTime;
+
+        /// <summary> The progress of the <see cref="StaticFire"/> </summary>
         public float StaticFireProgress => Utility.InverseLerp(LiftoffTime - StaticFireBeginTime, LiftoffTime, FlightTime, clamped: true);
 
         /// <summary> The flight sequence progress </summary>
@@ -138,7 +140,6 @@ namespace Macrocosm.Content.Rockets
         public float LandingProgress { get; set; }
         private float EasedLandingProgress => Utility.QuadraticEaseOut(LandingProgress);
 
-        private float worldExitSpeed;
         private bool ranFirstUpdate;
         private bool canAnimate = true;
 
@@ -174,7 +175,6 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public bool HasInventory => Inventory is not null;
         public Inventory Inventory { get; set; }
 
         public const int DefaultGeneralInventorySize = 50;
@@ -253,9 +253,6 @@ namespace Macrocosm.Content.Rockets
             Velocity = GetCollisionVelocity();
             Position += Velocity;
 
-            // Testing
-            Fuel = 1000f;
-
             Movement();
             Effects();
             PlaySound();
@@ -266,7 +263,7 @@ namespace Macrocosm.Content.Rockets
                 LookForCommander();
             }
 
-            if (Launched && Position.Y < WorldExitPositionY + 1)
+            if (CheckPlayerInRocket(Main.myPlayer) && Launched && Position.Y < WorldExitPositionY + 1)
             {
                 FlightTime = 0;
                 FlightProgress = 0f;
@@ -309,19 +306,17 @@ namespace Macrocosm.Content.Rockets
                 }
             }
 
-            if (Active && HasInventory)
-            {
-                Inventory.Size = 0;
-                Inventory.SyncSize();
+            bool sync = Main.netMode != NetmodeID.SinglePlayer;
+            bool fromClient = Main.netMode == NetmodeID.MultiplayerClient;
+            Inventory.DropAllItems(Center, sync, fromClient);
 
-                Inventory = null;
-            }
-
-            CurrentWorld = "";
             Active = false;
-            NetSync();
+
+            if (sync)
+                NetSync();
         }
 
+        // Gets the position of a module with respect to the provided origin
         private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin)
         {
             var commandPod = Modules["CommandPod"];
@@ -351,7 +346,7 @@ namespace Macrocosm.Content.Rockets
         }
 
         /// <summary> Gets the RocketPlayer bound to the provided player ID </summary>
-        /// <param name="playerID"> The player ID </param>
+        /// <param name="playerID"> The player whoAmI </param>
         public RocketPlayer GetRocketPlayer(int playerID) => Main.player[playerID].GetModPlayer<RocketPlayer>();
 
         /// <summary> Gets the commander of this rocket </summary>
@@ -376,15 +371,15 @@ namespace Macrocosm.Content.Rockets
         }
 
         /// <summary> Checks whether the provided player ID is on this rocket </summary>
-        /// <param name="playerID"> The player ID </param>
+        /// <param name="playerID"> The player whoAmI </param>
         public bool CheckPlayerInRocket(int playerID) => Main.player[playerID].active && GetRocketPlayer(playerID).InRocket && GetRocketPlayer(playerID).RocketID == WhoAmI;
 
         /// <summary> Checks whether the provided player ID is a commander on this rocket </summary>
-        /// <param name="playerID"> The player ID </param>
+        /// <param name="playerID"> The player whoAmI </param>
         public bool CheckPlayerCommander(int playerID) => Main.player[playerID].active && GetRocketPlayer(playerID).IsCommander && GetRocketPlayer(playerID).RocketID == WhoAmI;
 
         /// <summary> Checks whether this rocket has a commander </summary>
-        /// <param name="playerID"> The commander player ID </param>
+        /// <param name="playerID"> The commander player whoAmI </param>
         public bool TryFindingCommander(out int playerID)
         {
             for (int i = 0; i < Main.maxPlayers; i++)
@@ -691,7 +686,7 @@ namespace Macrocosm.Content.Rockets
                 Center, updateCallback: (sound) =>
                 {
                     sound.Position = Center;
-                    return true;
+                    return ActiveInCurrentWorld;
                 });
             }
 
@@ -722,7 +717,7 @@ namespace Macrocosm.Content.Rockets
                 int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor * StaticFireProgress);
                 SpawnSmokeExhaustTrail(countPerTick: count);
 
-                if(Main.rand.NextFloat() < StaticFireProgress)
+                if (Main.rand.NextFloat() < StaticFireProgress)
                     SpawnTileDust(closestTile, 1);
             }
 
@@ -735,7 +730,7 @@ namespace Macrocosm.Content.Rockets
                 SpawnSmokeExhaustTrail(countPerTick: count);
 
                 if (EasedFlightProgress < 0.1f)
-                     SpawnTileDust(closestTile, 2);
+                    SpawnTileDust(closestTile, 2);
             }
 
             if (Landing)
@@ -746,9 +741,9 @@ namespace Macrocosm.Content.Rockets
                 int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor);
                 SpawnSmokeExhaustTrail(countPerTick: count, speed: 2f * (1.2f - EasedLandingProgress));
 
-                if(EasedLandingProgress > 0.9f)
-                     SpawnTileDust(closestTile, 2);
- 
+                if (EasedLandingProgress > 0.9f)
+                    SpawnTileDust(closestTile, 2);
+
                 if (LandingProgress >= 1f - 0.03f)
                 {
                     SpawnTileDust(closestTile, 15);
@@ -780,7 +775,7 @@ namespace Macrocosm.Content.Rockets
                 {
                     p.Position = position;
                     p.Velocity = velocity * speed;
-                    p.Scale = Main.rand.NextFloat(1.2f, 1.6f);
+                    p.Scale = new(Main.rand.NextFloat(1.2f, 1.6f));
                     p.Rotation = 0f;
                     p.FadeIn = true;
                     p.FadeOut = true;
@@ -788,7 +783,7 @@ namespace Macrocosm.Content.Rockets
                     p.FadeOutSpeed = 15;
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.001f;
-                    p.Deceleration = 0.995f;
+                    p.Acceleration = new(0.995f);
                     p.DrawColor = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
@@ -807,14 +802,14 @@ namespace Macrocosm.Content.Rockets
 
 
                 Vector2 velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4));
-                if(Landing)
+                if (Landing)
                     velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 12));
 
                 var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
                 {
                     p.Position = position;
                     p.Velocity = velocity * speed;
-                    p.Scale = Main.rand.NextFloat(0.6f, 0.9f);
+                    p.Scale = new(Main.rand.NextFloat(0.6f, 0.9f));
                     p.Rotation = 0f;
                     p.FadeIn = true;
                     p.FadeOut = true;
@@ -822,7 +817,7 @@ namespace Macrocosm.Content.Rockets
                     p.FadeOutSpeed = 12;
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.0015f;
-                    p.Deceleration = 0.993f;
+                    p.Acceleration = new(0.993f);
                     p.DrawColor = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
@@ -837,12 +832,12 @@ namespace Macrocosm.Content.Rockets
                 {
                     p.Position = tileCoords.ToWorldCoordinates();
                     p.Velocity = new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-0.1f, -1f));
-                    p.Scale = Main.rand.NextFloat(0.5f, 1.2f);
+                    p.Scale = new(Main.rand.NextFloat(0.5f, 1.2f));
                     p.Rotation = Utility.RandomRotation();
-                    p.DrawColor = Smoke.GetTileHitColor(tileCoords);
+                    p.Color = Smoke.GetTileHitColor(tileCoords);
                     p.FadeIn = true;
                     p.Opacity = 0f;
-                    p.ExpansionRate = 0.0075f;
+                    p.ScaleVelocity = new(0.0075f);
                 });
             }
         }
@@ -851,7 +846,7 @@ namespace Macrocosm.Content.Rockets
         {
             for (int x = -8; x < 8; x++)
             {
-                if(x is < -6 or > -2 and < 2 or > 6 && !Utility.CoordinatesOutOfBounds(tileCoords.X - x, tileCoords.Y))
+                if (x is < -6 or > -2 and < 2 or > 6 && !Utility.CoordinatesOutOfBounds(tileCoords.X - x, tileCoords.Y))
                     WorldGen.KillTile_MakeTileDust(tileCoords.X - x, tileCoords.Y, Main.tile[tileCoords.X - x, tileCoords.Y]);
             }
         }
@@ -872,8 +867,8 @@ namespace Macrocosm.Content.Rockets
                     sound.Pitch = MathHelper.Lerp(-1f, 0, StaticFireProgress);
                     sound.Volume = intensity;
                     sound.Position = Center;
-                    return FlightTime < LiftoffTime;
-                }); 
+                    return FlightTime < LiftoffTime && ActiveInCurrentWorld;
+                });
             }
 
             if (FlightTime == LiftoffTime)
@@ -887,7 +882,7 @@ namespace Macrocosm.Content.Rockets
                 Center, updateCallback: (sound) =>
                 {
                     sound.Position = Center;
-                    return InFlight;
+                    return InFlight && ActiveInCurrentWorld;
                 });
             }
 
@@ -904,7 +899,7 @@ namespace Macrocosm.Content.Rockets
                 {
                     sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                     sound.Position = Center;
-                    return InFlight;
+                    return InFlight && ActiveInCurrentWorld;
                 });
             }
 
@@ -922,7 +917,7 @@ namespace Macrocosm.Content.Rockets
                     sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                     sound.Volume = LandingProgress < 0.8f ? 1f : (1f - LandingProgress) * 5f;
                     sound.Position = Center;
-                    return Landing;
+                    return Landing && ActiveInCurrentWorld;
                 });
             }
         }
@@ -930,10 +925,15 @@ namespace Macrocosm.Content.Rockets
         // Handles the subworld travel
         private void Travel()
         {
-            bool samePlanet = CurrentWorld == TargetWorld;
-            CurrentWorld = TargetWorld;
-
             RocketPlayer commander = GetCommander();
+
+            bool samePlanet = CurrentWorld == TargetWorld;
+
+            if (Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                CurrentWorld = TargetWorld;
+                NetSync();
+            }
 
             // Determine the landing location.
             // Set as default if no launchpad has been selected (i.e. the World Spawn option) 
@@ -967,17 +967,8 @@ namespace Macrocosm.Content.Rockets
             }
             else
             {
-                if (Main.netMode == NetmodeID.Server)
-                    return;
-
                 if (CheckPlayerInRocket(Main.myPlayer))
-                {
-                    if (!MacrocosmSubworld.Travel(TargetWorld, this))
-                    {
-                        CurrentWorld = MacrocosmSubworld.CurrentID;
-                        NetSync();
-                    }
-                }
+                    MacrocosmSubworld.Travel(TargetWorld, this);
             }
         }
     }

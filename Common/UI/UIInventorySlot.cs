@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -6,8 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -18,7 +15,6 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using static Macrocosm.Content.Tiles.Furniture.MoonBase.MoonBaseChest;
 using static Terraria.UI.ItemSlot;
 
 namespace Macrocosm.Common.UI
@@ -57,7 +53,7 @@ namespace Macrocosm.Common.UI
         private Func<Item, bool> checkReserved;
         private LocalizedText reservedTooltip;
         private Asset<Texture2D> reservedTexture;
-        
+
         public UIInventorySlot(Inventory inventory, int itemIndex, int itemSlotContext = Context.ChestItem, float scale = default)
         {
             this.inventory = inventory;
@@ -117,7 +113,7 @@ namespace Macrocosm.Common.UI
             this.reservedTexture = reservedTexture;
         }
 
-        public void AddReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null) 
+        public void AddReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
             => AddReserved((item) => item.type == itemType, reservedTooltip, reservedTexture);
 
         public void Consume(int amount)
@@ -130,7 +126,7 @@ namespace Macrocosm.Common.UI
 
         protected virtual void HandleItemSlotLogic()
         {
-            if (IsMouseHovering && inventory.CanInteract)
+            if (IsMouseHovering && (inventory.CanInteract || CanInteract))
             {
                 Item inv = inventory[itemIndex];
                 HandleCursor(ref inv);
@@ -279,7 +275,6 @@ namespace Macrocosm.Common.UI
 
             if (!Main.mouseRight)
                 return;
-
 
             if (item.maxStack == 1)
             {
@@ -432,7 +427,7 @@ namespace Macrocosm.Common.UI
                 spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * Main.inventoryScale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
             }
 
-            if (Utility.IsRubblemaker(item.type))
+            if (item.type is ItemID.RubblemakerSmall or ItemID.RubblemakerMedium or ItemID.RubblemakerLarge)
             {
                 Texture2D texture = TextureAssets.Extra[ExtrasID.RubbleMakerIndicator].Value;
                 Vector2 offset = new Vector2(2f, -6f) * Main.inventoryScale;
