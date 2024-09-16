@@ -67,7 +67,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
              if (Timer % 30 == 5)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi / 4) * 7f, ModContent.ProjectileType<ChampionsBladeSlash>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, ai0: 0f, ai1: 22f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi / 16) * 7f, ModContent.ProjectileType<ChampionsBladeSlash>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, ai0: 0f, ai1: 22f);
             }
             Projectile.scale = 0.9f + progress * MathHelper.SmoothStep(0, 1, progress) * 1.4f;
 
@@ -154,9 +154,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
-                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Velocity = -Vector2.UnitY * 0.8f;
                 p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
+                p.RotationVelocity = Main.rand.NextFloat(0.1f, 0.3f) * Main.rand.NextFloatDirection();
+                p.StarPointCount = 2;
+                p.FadeInNormalizedTime = 0.5f;
+                p.FadeOutNormalizedTime = 0.5f;
+                p.TimeToLive = 20;
+                p.Color = new Color(30, 255, 105) * 1.4f;
             }, shouldSync: true
             );
         }
@@ -168,9 +174,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
-                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Velocity = -Vector2.UnitY * 0.8f;
                 p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
+                p.RotationVelocity = Main.rand.NextFloat(0.1f, 0.3f) * Main.rand.NextFloatDirection();
+                p.StarPointCount = 2;
+                p.FadeInNormalizedTime = 0.5f;
+                p.FadeOutNormalizedTime = 0.5f;
+                p.TimeToLive = 20;
+                p.Color = new Color(30, 255, 105) * 1.4f;
             }, shouldSync: true
             );
         }

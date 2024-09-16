@@ -66,6 +66,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             if (Timer >= 30 && Speed < 45f)
                 Speed *= 1.2f;
 
+            for(int i = 0; i < 4; i++)
+                Particle.Create<ArtemiteStar>((p) =>
+                {
+                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 80);
+                    p.Velocity = Projectile.velocity * Main.rand.NextFloat(0.4f, 0.9f);
+                    p.StarPointCount = 1;
+                    p.Scale = new Vector2(Main.rand.NextFloat(1f, 2f));
+                    p.Rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+                    p.FadeInNormalizedTime = 0.1f;
+                    p.FadeOutNormalizedTime = 0.7f;
+                    p.Color = new Color(30, 255, 105) * 0.8f;
+                    p.TimeToLive = 300;
+                });
+
             Timer++;
         }
 
@@ -83,9 +97,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
-                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Velocity = -Vector2.UnitY * 0.8f;
                 p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
+                p.RotationVelocity = Main.rand.NextFloat(0.1f, 0.3f) * Main.rand.NextFloatDirection();
+                p.StarPointCount = 2;
+                p.FadeInNormalizedTime = 0.5f;
+                p.FadeOutNormalizedTime = 0.5f;
+                p.TimeToLive = 20;
+                p.Color = new Color(30, 255, 105) * 1.4f;
             }, shouldSync: true
             );
         }
@@ -95,9 +115,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
-                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Velocity = -Vector2.UnitY * 0.8f;
                 p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
+                p.RotationVelocity = Main.rand.NextFloat(0.1f, 0.3f) * Main.rand.NextFloatDirection();
+                p.StarPointCount = 2;
+                p.FadeInNormalizedTime = 0.5f;
+                p.FadeOutNormalizedTime = 0.5f;
+                p.TimeToLive = 20;
+                p.Color = new Color(30, 255, 105) * 1.4f;
             }, shouldSync: true
             );
         }

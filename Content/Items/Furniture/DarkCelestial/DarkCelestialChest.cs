@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Furniture.DarkCelestial
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChest>(), (int)LuminiteStyle.DarkCelestial * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChest>(), (int)LuminiteStyle.DarkCelestial );
             Item.width = 32;
             Item.height = 24;
             Item.value = 150;

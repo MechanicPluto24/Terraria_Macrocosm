@@ -168,8 +168,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
                 Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
 
-
-
                 pos += diff;
             }
 
