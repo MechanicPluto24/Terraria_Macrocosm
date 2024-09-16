@@ -20,13 +20,13 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <returns> The particle instance </returns>
         public static T CreateParticle<T>(Vector2 position, Vector2 velocity, Vector2 scale, float rotation = 0f, bool shouldSync = false) where T : Particle
         {
-            return CreateParticle<T>(particle =>
+            return CreateParticle((Action<T>)(particle =>
             {
                 particle.Position = position;
                 particle.Velocity = velocity;
                 particle.Rotation = rotation;
-                particle.ScaleV = scale;
-            }, shouldSync);
+                particle.Scale = scale;
+            }), shouldSync);
         }
 
         /// <summary>
@@ -41,13 +41,13 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <returns> The particle instance </returns>
         public static T CreateParticle<T>(Vector2 position, Vector2 velocity, float scale = 1f, float rotation = 0f, bool shouldSync = false) where T : Particle
         {
-            return CreateParticle<T>(particle =>
+            return CreateParticle((Action<T>)(particle =>
             {
                 particle.Position = position;
                 particle.Velocity = velocity;
                 particle.Rotation = rotation;
-                particle.ScaleV = new Vector2(scale);
-            }, shouldSync);
+                particle.Scale = new Vector2(scale);
+            }), shouldSync);
         }
 
         /// <summary>
@@ -63,8 +63,6 @@ namespace Macrocosm.Common.Drawing.Particles
             ParticleManager.Particles.Add(particle);
 
             particleAction.Invoke(particle);
-
-            particle.OnSpawn();
 
             if (shouldSync)
                 particle.NetSync();

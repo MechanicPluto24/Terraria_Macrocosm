@@ -149,12 +149,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         {
                             p.Position = NPC.Center;
                             p.Velocity = NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(1.0f, 15.0f);
-                            p.Scale = 1f;
+                            p.Scale = new(1f);
                             p.Rotation = 0f;
-                            p.DrawColor = Smoke.GetTileHitColor(Utility.GetClosestTile(NPC.Center, -1, addTile: (t) => Main.tileSolid[t.TileType] && !t.IsActuated));
+                            p.Color = Smoke.GetTileHitColor(Utility.GetClosestTile(NPC.Center, -1, addTile: (t) => Main.tileSolid[t.TileType] && !t.IsActuated));
                             p.FadeIn = true;
                             p.Opacity = 0f;
-                            p.ExpansionRate = 0.0075f;
+                            p.ScaleVelocity = new(0.0075f);
                         });
                     }
                 }

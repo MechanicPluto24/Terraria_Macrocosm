@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     {
                         p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 0.2f;
                         p.Velocity = Vector2.One * 6;
-                        p.Scale = (0.1f + Main.rand.NextFloat(0.1f));
+                        p.Scale = new((0.1f + Main.rand.NextFloat(0.1f)));
                         p.Color = new Color(255, 170, 33) * 0.6f;
                         p.TargetCenter = Projectile.Center;
                     });
@@ -131,7 +131,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 1.6f * progress;
                     p.Velocity = Vector2.One * 18;
-                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
+                    p.Scale = new((0.1f + Main.rand.NextFloat(0.1f)) * progress);
                     p.Color = new Color(255, 170, 33) * 0.6f;
                     p.TargetCenter = Projectile.Center;
                 });

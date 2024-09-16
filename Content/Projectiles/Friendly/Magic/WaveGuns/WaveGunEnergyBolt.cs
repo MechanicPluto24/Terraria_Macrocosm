@@ -137,18 +137,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 {
                     p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
                     p.Velocity = Main.rand.NextVector2Circular(8, 8);
-                    p.Scale = Main.rand.NextFloat(0.1f, 1f);
+                    p.Scale = new(Main.rand.NextFloat(0.1f, 1f));
                     p.FadeOutNormalizedTime = 0.5f;
-                    p.DrawColor = color.WithAlpha((byte)Main.rand.Next(0, 64));
-                    p.ScaleVelocity = 0.01f;
+                    p.Color = color.WithAlpha((byte)Main.rand.Next(0, 64));
+                    p.ScaleVelocity = new(0.01f);
                 });
             }
 
             Particle.CreateParticle<TintableFlash>((p) =>
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
-                p.Scale = 0.05f;
-                p.ScaleIncr = 0.08f;
+                p.Scale = new(0.05f);
+                p.ScaleVelocity = new(0.08f);
                 p.Color = color.WithAlpha(127);
             });
 
