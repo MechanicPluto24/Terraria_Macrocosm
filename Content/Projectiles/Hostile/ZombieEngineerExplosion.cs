@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         {
             if (AI_Timer == 0)
             {
-                Particle.CreateParticle<TintableExplosion>(p =>
+                Particle.Create<TintableExplosion>(p =>
                 {
                     p.Position = Projectile.Center;
                     p.Color = (new Color(25, 25, 25, 128));
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
                     p.ReplicaScalingFactor = 1f;
                 });
 
-                Particle.CreateParticle<TintableExplosion>(p =>
+                Particle.Create<TintableExplosion>(p =>
                 {
                     p.Position = Projectile.Center;
                     p.Color = (new Color(255, 180, 100, 200));

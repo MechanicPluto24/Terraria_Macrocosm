@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Items.Accessories
 
         private void StartDashVisuals(Player player)
         {
-            Particle.CreateParticle<CelestialBulwarkDashParticle>(p =>
+            Particle.Create<CelestialBulwarkDashParticle>(p =>
             {
                 p.Scale = new(0.35f);
                 p.Position = player.Center;
@@ -114,7 +114,7 @@ namespace Macrocosm.Content.Items.Accessories
 
             for (int i = 0; i < count; i++)
             {
-                var star = Particle.CreateParticle<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width / 2, npc.height / 2), npc.velocity + Main.rand.NextVector2Circular(2, 2), scale: 1.2f);
+                var star = Particle.Create<CelestialStar>(npc.Center + Main.rand.NextVector2Circular(npc.width / 2, npc.height / 2), npc.velocity + Main.rand.NextVector2Circular(2, 2), scale: new(1.2f));
                 GetEffectColor(player, out star.Color, out Color? secondaryColor, out star.BlendStateOverride, out _, out bool rainbow);
 
                 if (secondaryColor.HasValue && ParticleManager.Particles.IndexOf(star) % 2 == 0)

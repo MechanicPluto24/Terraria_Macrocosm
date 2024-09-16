@@ -75,7 +75,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                 dust.noGravity = true;
             }
 
-            var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+            var explosion = Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center;
                 p.Color = (new Color(120, 120, 120)).WithOpacity(0.8f);

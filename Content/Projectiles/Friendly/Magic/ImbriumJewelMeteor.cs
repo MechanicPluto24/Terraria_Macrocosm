@@ -45,7 +45,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if (Main.rand.NextFloat() < 0.5f)
             {
-                var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: 0.6f);
+                var star = Particle.Create<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: new(0.6f));
                 star.Opacity = 0.8f;
             }
 
@@ -92,14 +92,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             SoundEngine.PlaySound(SoundID.Item89, Projectile.position);
             for (int i = 0; i < 10; i++)
             {
-                var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(1f, 1f), scale: 0.8f);
+                var star = Particle.Create<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(1f, 1f), scale: new(0.8f));
                 star.Opacity = 0.8f;
             }
 
             for (int j = 0; j < ProjectileID.Sets.TrailCacheLength[Type]; j++)
             {
                 float progress = 1f - (j / (float)ProjectileID.Sets.TrailCacheLength[Type]);
-                var star = Particle.CreateParticle<ImbriumStar>(Projectile.oldPos[j] + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(0.1f, 0.1f), scale: 0.4f * progress);
+                var star = Particle.Create<ImbriumStar>(Projectile.oldPos[j] + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(0.1f, 0.1f), scale: new(0.4f * progress));
                 star.Opacity = 0.8f * progress;
             }
         }

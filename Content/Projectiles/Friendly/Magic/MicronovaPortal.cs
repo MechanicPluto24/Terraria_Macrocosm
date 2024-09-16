@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             for (int i = 0; i < count; i++)
             {
                 float progress = (1f - Projectile.alpha / 255f);
-                Particle.CreateParticle<PortalSwirl>(p =>
+                Particle.Create<PortalSwirl>(p =>
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 180).RotatedBy(shootAim.ToRotation() + MathHelper.PiOver4) * 0.4f * progress;
                     p.Velocity = Vector2.One * 12;

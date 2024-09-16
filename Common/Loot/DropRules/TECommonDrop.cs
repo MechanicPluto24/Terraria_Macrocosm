@@ -59,7 +59,7 @@ namespace Macrocosm.Common.Loot.DropRules
                     Item item = new(itemId, stack);
                     inventoryOwner.Inventory.TryPlacingItem(item, sound: false);
 
-                    Particle.CreateParticle<ItemTransferParticle>((p) =>
+                    Particle.Create<ItemTransferParticle>((p) =>
                     {
                         p.StartPosition = position + Main.rand.NextVector2Circular(32, 16);
                         p.EndPosition = position + new Vector2(0, -96) + Main.rand.NextVector2Circular(16, 16);

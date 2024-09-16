@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -7,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -55,6 +58,59 @@ namespace Macrocosm.Common.Drawing.Particles
             On_Main.DrawNPCs -= DrawParticles_NPCs;
         }
 
+        /// <summary>
+        /// Creates a new particle with the specified action. Sync only when absolutely necessary.
+        /// </summary>
+        /// <typeparam name="T">Type of the particle.</typeparam>
+        /// <param name="particleAction">Action to invoke on the newly created particle.</param>
+        /// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
+        /// <returns> The particle instance </returns>
+        public static T CreateParticle<T>(Action<T> particleAction, bool shouldSync = false) where T : Particle
+        {
+            T particle;
+
+            if (ParticlePools.TryGetValue(typeof(T), out var pool) && pool.Count > 0)
+                particle = (T)pool.Pop();
+            else
+                particle = (T)Activator.CreateInstance(typeof(T));
+
+            particle.Reset();
+            particle.Active = true;
+            particleAction.Invoke(particle);
+
+            if (!Particles.Contains(particle))
+                Particles.Add(particle);
+
+            if (shouldSync)
+                particle.NetSync();
+
+            return particle;
+        }
+
+        public static Particle CreateParticle(Type particleType, Action<Particle> particleAction = null, bool shouldSync = false)
+        {
+            Particle particle;
+
+            if (ParticlePools.TryGetValue(particleType, out var pool) && pool.Count > 0)
+                particle = pool.Pop();
+            else
+                particle = (Particle)Activator.CreateInstance(particleType);
+
+            particle.Reset();
+            particle.Active = true;
+            particleAction?.Invoke(particle);
+
+            if (!Particles.Contains(particle))
+                Particles.Add(particle);
+
+            if (shouldSync)
+                particle.NetSync();
+
+            return particle;
+        }
+
+
+
         public override void ClearWorld()
         {
             ClearAllParticles();
@@ -100,7 +156,7 @@ namespace Macrocosm.Common.Drawing.Particles
             Particles.Remove(particle);
 
             var type = particle.GetType();
-            if (ParticlePools.TryGetValue(type, out var pool))
+            if (ParticlePools.TryGetValue(type, out var pool) && pool.Count < particle.MaxPoolCount)
                 pool.Push(particle);
         }
 

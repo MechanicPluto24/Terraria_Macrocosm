@@ -158,7 +158,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 for (int i = 0; i < 24; i++)
                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 4).RotatedByRandom(MathHelper.TwoPi), 16);
 
-                Particle.CreateParticle<TintableExplosion>(p =>
+                Particle.Create<TintableExplosion>(p =>
                 {
                     p.Position = Projectile.Center;
                     p.Color = color.WithOpacity(0.1f) * 0.4f;

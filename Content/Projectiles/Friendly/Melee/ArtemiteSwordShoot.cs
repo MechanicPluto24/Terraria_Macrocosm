@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 }
 
                 if(speedUp || i % 3 == 0)
-                    Particle.CreateParticle<ArtemiteStar>((p) =>
+                    Particle.Create<ArtemiteStar>((p) =>
                     {
                         p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 80);
                         p.Velocity = speedUp ? Projectile.velocity * Main.rand.NextFloat(0.4f, 0.9f) : Vector2.Zero;
@@ -109,7 +109,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
@@ -121,7 +121,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;

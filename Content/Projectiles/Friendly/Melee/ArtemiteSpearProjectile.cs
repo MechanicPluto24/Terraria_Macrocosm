@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = Projectile.Center;
                 p.Velocity = new Vector2(3f, 0).RotatedBy(Projectile.velocity.ToRotation());
