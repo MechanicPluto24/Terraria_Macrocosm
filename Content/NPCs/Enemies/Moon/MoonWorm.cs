@@ -1,4 +1,3 @@
-using Macrocosm.Common.Bases;
 using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
@@ -56,7 +55,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override bool UseSmoothening => true;
         public override void ModifyNPCLoot(NPCLoot loot)
         {
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1, 4, 10));  
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 1, 4, 10));
         }
 
 
@@ -74,7 +73,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 200 ? .01f : 0f;
         }
 
-        public override void Init() 
+        public override void Init()
         {
             // Set the segment variance
             // If you want the segment length to be constant, set these two properties to the same value
@@ -137,7 +136,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     // Spawn debris
                     for (int i = 0; i < 50; i++)
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(1.0f, 30.0f), ModContent.ProjectileType<RegolithDebris>(), 0, 0f, -1);
-                                       
+
                     // Spawn damaging rubble
                     for (int i = 0; i < 10; i++)
                         Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, NPC.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi) * (float)Main.rand.NextFloat(10.0f, 20.0f), ModContent.ProjectileType<MoonRubble>(), 50, 0f, -1);
@@ -259,10 +258,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             // Ensure that the tile range is within the world bounds
             if (minTilePosX < 0)
                 minTilePosX = 0;
+
             if (maxTilePosX > Main.maxTilesX)
                 maxTilePosX = Main.maxTilesX;
+
             if (minTilePosY < 0)
                 minTilePosY = 0;
+
             if (maxTilePosY > Main.maxTilesY)
                 maxTilePosY = Main.maxTilesY;
 
@@ -291,18 +293,19 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             return collision;
         }
-        float SmoothFallSpeed=0f;
+
+        float SmoothFallSpeed = 0f;
         public override void CustomBodyAI(Worm worm)
         {
-            if(!CheckCollision())
-                SmoothFallSpeed+=0.1f;
+            if (!CheckCollision())
+                SmoothFallSpeed += 0.1f;
             else
-                SmoothFallSpeed-=0.1f;
-            if(SmoothFallSpeed>3f)
-                SmoothFallSpeed=3f;
-            if(SmoothFallSpeed<0f)
-                SmoothFallSpeed=0f;
-            NPC.position.Y+=SmoothFallSpeed;
+                SmoothFallSpeed -= 0.1f;
+            if (SmoothFallSpeed > 3f)
+                SmoothFallSpeed = 3f;
+            if (SmoothFallSpeed < 0f)
+                SmoothFallSpeed = 0f;
+            NPC.position.Y += SmoothFallSpeed;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -334,7 +337,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.aiStyle = -1;
             NPC.npcSlots = 0f;
         }
-          private bool CheckCollision()
+        private bool CheckCollision()
         {
             int minTilePosX = (int)(NPC.Left.X / 16) - 1;
             int maxTilePosX = (int)(NPC.Right.X / 16) + 2;
@@ -376,18 +379,18 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             return collision;
         }
-        float SmoothFallSpeed=0f;
+        float SmoothFallSpeed = 0f;
         public override void CustomTailAI(Worm worm)
         {
-            if(!CheckCollision())
-                SmoothFallSpeed+=0.1f;
+            if (!CheckCollision())
+                SmoothFallSpeed += 0.1f;
             else
-                SmoothFallSpeed-=0.1f;
-            if(SmoothFallSpeed>3f)
-                SmoothFallSpeed=3f;
-            if(SmoothFallSpeed<0f)
-                SmoothFallSpeed=0f;
-            NPC.position.Y+=SmoothFallSpeed;
+                SmoothFallSpeed -= 0.1f;
+            if (SmoothFallSpeed > 3f)
+                SmoothFallSpeed = 3f;
+            if (SmoothFallSpeed < 0f)
+                SmoothFallSpeed = 0f;
+            NPC.position.Y += SmoothFallSpeed;
         }
         public override void HitEffect(NPC.HitInfo hit)
         {

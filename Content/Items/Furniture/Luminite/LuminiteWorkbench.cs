@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteWorkbench>(),(int)LuminiteStyle.Luminite * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteWorkbench>(),(int)LuminiteStyle.Luminite);
             Item.width = 28;
             Item.height = 16;
             Item.value = 150;

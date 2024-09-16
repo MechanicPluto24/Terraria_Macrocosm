@@ -61,7 +61,7 @@ namespace Macrocosm.Common.Bases.NPCs
 
         public NPC GetFollowerSegment()
             => NPC.ai[1] >= Main.maxNPCs ? null : FollowerNPC;
-       
+
 
         private bool startDespawning;
 
@@ -226,10 +226,10 @@ namespace Macrocosm.Common.Bases.NPCs
             HeadAI_SpawnSegments();
 
             HeadBehaviour();
-            if(UseSmoothening)
+            if (UseSmoothening)
             {
                 NPC follower = this.GetFollowerSegment();
-                NPC.rotation = (NPC.velocity.SafeNormalize(Vector2.UnitX)-(follower.Center-NPC.Center).SafeNormalize(Vector2.UnitX)).ToRotation() + MathHelper.PiOver2;
+                NPC.rotation = (NPC.velocity.SafeNormalize(Vector2.UnitX) - (follower.Center - NPC.Center).SafeNormalize(Vector2.UnitX)).ToRotation() + MathHelper.PiOver2;
             }
         }
         public virtual void HeadBehaviour()
@@ -602,7 +602,7 @@ namespace Macrocosm.Common.Bases.NPCs
 
     public abstract class WormBody : Worm
     {
-        public override bool CheckActive()=>false;
+        public override bool CheckActive() => false;
         public sealed override WormSegmentType SegmentType => WormSegmentType.Body;
 
         public override void SetStaticDefaults()
@@ -617,7 +617,7 @@ namespace Macrocosm.Common.Bases.NPCs
             CustomBodyAI(this);
             CommonAI_BodyTail(this);
             FlipBodyTail(this);
-            
+
 
         }
 
@@ -673,7 +673,7 @@ namespace Macrocosm.Common.Bases.NPCs
     // Since the body and tail segments share the same AI
     public abstract class WormTail : Worm
     {
-        public override bool CheckActive()=>false;
+        public override bool CheckActive() => false;
         public sealed override WormSegmentType SegmentType => WormSegmentType.Tail;
 
         public override void SetStaticDefaults()

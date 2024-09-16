@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.Mercury
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteWorkbench>(),(int)LuminiteStyle.Mercury * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteWorkbench>(),(int)LuminiteStyle.Mercury);
             Item.width = 28;
             Item.height = 16;
             Item.value = 150;

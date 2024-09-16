@@ -5116,7 +5116,7 @@ namespace Macrocosm.Common.Utils
                 if (npc.velocity.X < 0f && npc.direction == -1 || npc.velocity.X > 0f && npc.direction == 1)
                 {
                     //...attempt to jump if needed.
-                    Vector2 newVec = AttemptJump(npc.position, npc.velocity, npc.width, npc.height, npc.direction,Main.player[npc.target].Center, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, ignoreJumpTiles);
+                    Vector2 newVec = AttemptJump(npc.position, npc.velocity, npc.width, npc.height, npc.direction, Main.player[npc.target].Center, npc.directionY, maxJumpTilesX, maxJumpTilesY, velMax, jumpUpPlatforms, ignoreJumpTiles);
                     if (!npc.noTileCollide)
                     {
                         newVec = Collision.TileCollision(npc.position, newVec, npc.width, npc.height);
@@ -5502,7 +5502,7 @@ namespace Macrocosm.Common.Utils
          *  tileDistX/tileDistY : the tile amounts the object can jump across and over, respectively.
          *  float maxSpeedX : The maximum speed of the npc.
          */
-        
+
         public static Vector2 AttemptJump(Vector2 position, Vector2 velocity, int width, int height, int direction, Vector2 target, float directionY = 0, int tileDistX = 3, int tileDistY = 4, float maxSpeedX = 1f, bool jumpUpPlatforms = false, bool ignoreTiles = false)
         {
             try
