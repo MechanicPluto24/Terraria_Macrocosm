@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    public class Explosion : ModProjectile
+    public class ZombieEngineerExplosion : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
         public ref float AI_Timer => ref Projectile.ai[0];
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.width = defWidth;
             Projectile.height = defHeight;
             Projectile.hostile = true;
-            Projectile.friendly = false;
+            Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 25;
             Projectile.penetrate = -1;
