@@ -1,9 +1,5 @@
-﻿using Macrocosm.Content.Backgrounds.Moon;
-using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
-using SubworldLibrary;
+﻿using SubworldLibrary;
 using Terraria;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes

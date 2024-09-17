@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Netcode;
-using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;

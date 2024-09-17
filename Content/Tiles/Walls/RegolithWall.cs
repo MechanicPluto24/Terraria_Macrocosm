@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Tiles.Walls
     {
         public override void SetStaticDefaults()
         {
-            Main.wallHouse[Type] = true; 
+            Main.wallHouse[Type] = true;
             AddMapEntry(new Color(45, 45, 45));
 
             DustType = ModContent.DustType<RegolithDust>();

@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Microsoft.Xna.Framework;
 using Terraria;

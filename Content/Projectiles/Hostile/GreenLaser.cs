@@ -1,10 +1,7 @@
-using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -19,7 +16,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
             ProjectileSets.HitsTiles[Type] = true;
         }
-        
+
         public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.BulletDeadeye);
@@ -27,8 +24,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.width = 4;
             Projectile.height = 4;
         }
-        public  Color colour =new Color(100, 255, 255,0);
-       
+        public Color colour = new Color(100, 255, 255, 0);
+
         public override bool PreAI()
         {
 

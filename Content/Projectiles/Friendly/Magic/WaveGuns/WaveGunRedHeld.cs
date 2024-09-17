@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                         Projectile.Kill();
 
                     SoundEngine.PlaySound(SFX.WaveGunShot, Projectile.position);
-                    
+
                     GunRotation += 0.3f;
                 }
 

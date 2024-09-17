@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
                     float shootSpeed = baseShootSpeed + Main.rand.NextFloat(-shootDeviation, shootDeviation);
                     Projectile.velocity = Vector2.Lerp(Projectile.velocity, Utility.PolarVector(shootSpeed, aimAngle), 0.08f);
 
-                    if(AI_Timer >= 60)
+                    if (AI_Timer >= 60)
                         launched = true;
                 }
                 else if (!Fall && AI_Timer > AI_FloatTime * Main.rand.NextFloat(1.5f, 3f))

@@ -1,7 +1,7 @@
-﻿using Terraria;
-using Terraria.ModLoader;
+﻿using Macrocosm.Common.Enums;
+using Terraria;
 using Terraria.ID;
-using Macrocosm.Common.Enums;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Heavenforge
 {
@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.Heavenforge
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteWorkbench>(),(int)LuminiteStyle.Heavenforge);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteWorkbench>(), (int)LuminiteStyle.Heavenforge);
             Item.width = 28;
             Item.height = 16;
             Item.value = 150;

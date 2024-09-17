@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Blocks;
 using Macrocosm.Content.Items.Refined;
 using Terraria;
 using Terraria.ID;

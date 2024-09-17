@@ -1,6 +1,5 @@
 using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Furniture.Industrial;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;

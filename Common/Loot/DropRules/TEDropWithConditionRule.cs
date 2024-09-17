@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Systems.Power;
-using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 
 namespace Macrocosm.Common.Loot.DropRules

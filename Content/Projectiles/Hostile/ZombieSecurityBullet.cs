@@ -1,4 +1,3 @@
-using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Sounds;

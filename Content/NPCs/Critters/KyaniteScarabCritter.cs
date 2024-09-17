@@ -1,10 +1,8 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.NPCs.Enemies.Moon;
 
 namespace Macrocosm.Content.NPCs.Critters
 {
@@ -65,12 +63,6 @@ namespace Macrocosm.Content.NPCs.Critters
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteCritterGore1").Type);
                 Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("KyaniteCritterGore2").Type);
             }
-        }
-        public override bool CanBeHitByNPC(NPC 	attacker){
-            if (attacker.type == ModContent.NPCType<KyaniteScarabSmall>())
-                return false;
-
-            return true;
         }
     }
 }

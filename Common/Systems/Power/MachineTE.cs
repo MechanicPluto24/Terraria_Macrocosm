@@ -2,12 +2,10 @@
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -164,13 +162,13 @@ namespace Macrocosm.Common.Systems.Power
 
                 switch (wireType)
                 {
-                    case VanillaWireType.Red: 
+                    case VanillaWireType.Red:
                         if (currentTile.RedWire && checkTile.RedWire)
                             if (CheckForConnection(checkX, checkY, other, visited, wireType))
                                 return true;
                         break;
 
-                    case VanillaWireType.Blue:  
+                    case VanillaWireType.Blue:
                         if (currentTile.BlueWire && checkTile.BlueWire)
                             if (CheckForConnection(checkX, checkY, other, visited, wireType))
                                 return true;

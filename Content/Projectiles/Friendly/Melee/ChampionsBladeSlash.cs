@@ -66,7 +66,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             if (Timer >= 30 && Speed < 45f)
                 Speed *= 1.2f;
 
-            for(int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++)
                 Particle.Create<ArtemiteStar>((p) =>
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 80);

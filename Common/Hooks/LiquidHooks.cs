@@ -25,7 +25,7 @@ namespace Macrocosm.Common.Hooks
                 foreach (int liquidType in evaporatingLiquidTypes)
                 {
                     Tile tile = Main.tile[self.x, self.y];
-                    if(tile.LiquidType == liquidType && tile.LiquidAmount > 0)
+                    if (tile.LiquidType == liquidType && tile.LiquidAmount > 0)
                     {
                         byte amount = 2;
                         if (tile.LiquidAmount < amount)

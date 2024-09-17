@@ -1,6 +1,5 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Global.NPCs;
-using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;

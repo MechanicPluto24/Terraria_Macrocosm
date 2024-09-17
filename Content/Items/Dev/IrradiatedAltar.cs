@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Sets;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 

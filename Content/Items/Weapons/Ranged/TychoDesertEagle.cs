@@ -1,7 +1,6 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;

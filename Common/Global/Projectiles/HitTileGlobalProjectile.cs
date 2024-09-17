@@ -1,4 +1,3 @@
-using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Sets;
 using Microsoft.Xna.Framework;
 using Terraria;

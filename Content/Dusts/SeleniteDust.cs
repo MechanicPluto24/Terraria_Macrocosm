@@ -20,17 +20,10 @@ namespace Macrocosm.Content.Dusts
             dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
             if (dust.scale < 0f)
-            {
                 dust.active = false;
-            }
+
             return false;
         }
-
-        public override bool MidUpdate(Dust dust)
-        {
-            return true;
-        }
-
         public override Color? GetAlpha(Dust dust, Color lightColor)
         {
             return new Color(lightColor.R, lightColor.G, lightColor.B, 255);

@@ -1,7 +1,4 @@
-using Macrocosm.Common.Global.Items;
-using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Rarities;
-using StructureHelper.GUI;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -52,8 +49,8 @@ namespace Macrocosm.Content.Items.Tools
                     for (int j = wY - 1; j <= wY + 1; j++)
                     {
                         if (
-                            Main.tile[i, j].WallType > 0 && 
-                            (!Main.tile[i, j].HasTile || wX != Player.tileTargetX || wY != Player.tileTargetY || (!Main.tileHammer[Main.tile[i, j].TileType] && !player.poundRelease)) && 
+                            Main.tile[i, j].WallType > 0 &&
+                            (!Main.tile[i, j].HasTile || wX != Player.tileTargetX || wY != Player.tileTargetY || (!Main.tileHammer[Main.tile[i, j].TileType] && !player.poundRelease)) &&
                             player.toolTime == 0 && player.itemAnimation > 0 && player.controlUseItem && item.hammer > 0 && Player.CanPlayerSmashWall(i, j)
                         )
                         {

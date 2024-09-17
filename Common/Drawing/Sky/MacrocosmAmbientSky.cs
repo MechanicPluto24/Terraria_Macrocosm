@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
+using System;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.Ambience;
-using Terraria.GameContent.Skies;
-using Terraria.Graphics;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;

@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-        
+
 
             Item.staff[Type] = true;
         }

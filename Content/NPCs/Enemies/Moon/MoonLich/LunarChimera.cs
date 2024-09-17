@@ -79,7 +79,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             {
                 for (int i = 0; i < 30; i++)
                 {
-                    int dustType = Utils.SelectRandom<int>(Main.rand, ModContent.DustType<XaocGreenDust>(), DustID.Blood);
+                    int dustType = Utils.SelectRandom<int>(Main.rand, ModContent.DustType<GreenBrightDust>(), DustID.Blood);
 
                     Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, dustType);
                     dust.velocity.X *= (dust.velocity.X + +Main.rand.Next(0, 100) * 0.015f) * hit.HitDirection;

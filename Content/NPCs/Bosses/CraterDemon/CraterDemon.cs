@@ -28,9 +28,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
@@ -1187,7 +1185,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         Vector2 velocity = new Vector2(MathF.Abs((new Vector2(posX, posY) - player.Center).ToRotation()) > MathHelper.PiOver2 ? 1 : -1, 1).RotatedByRandom(MathHelper.ToRadians(30)) * Main.rand.NextFloat(8f, 16f);
                         int damage = Utility.TrueDamage(Main.masterMode ? 240 : Main.expertMode ? 120 : 60);
                         NPC meteor = NPC.NewNPCDirect(NPC.GetSource_FromAI(), (int)posX, (int)posY, ModContent.NPCType<FlamingMeteor>());
-                       
+
                         meteor.velocity = velocity;
                         meteor.netUpdate = true;
                     }

@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global.Items;
 using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ID;
