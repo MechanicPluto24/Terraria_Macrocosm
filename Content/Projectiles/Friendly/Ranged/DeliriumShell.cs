@@ -1,7 +1,5 @@
-using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -46,8 +44,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override bool PreAI()
         {
             if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
-                 Projectile.PrepareBombToBlow();
- 
+                Projectile.PrepareBombToBlow();
+
             Lighting.AddLight(Projectile.Center, new Color(101, 242, 139).ToVector3());
 
             if (auraAlpha < 1f)
@@ -58,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 // spawn some dusts as "muzzle flash"
                 for (int i = 0; i < 55; i++)
                 {
-                    Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<XaocGreenDust>(), Scale: 1.8f);
+                    Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<GreenBrightDust>(), Scale: 1.8f);
                     dust.velocity = (Projectile.velocity.SafeNormalize(Vector2.UnitX) * Main.rand.NextFloat(1.4f, 12f)).RotatedByRandom(MathHelper.ToRadians(18)) + Main.player[Projectile.owner].velocity;
                     dust.noLight = false;
                     dust.noGravity = false;
@@ -69,7 +67,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             // spawn dust trail 
             for (int i = 0; i < 3; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<XaocGreenDust>(), Projectile.velocity.X * 0.4f, Projectile.velocity.Y * 0.4f, Scale: 1.2f);
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GreenBrightDust>(), Projectile.velocity.X * 0.4f, Projectile.velocity.Y * 0.4f, Scale: 1.2f);
                 dust.noLight = false;
                 dust.noGravity = false;
             }
@@ -87,8 +85,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void PrepareBombToBlow()
         {
-            Projectile.tileCollide = false; 
-            Projectile.alpha = 255; 
+            Projectile.tileCollide = false;
+            Projectile.alpha = 255;
             Projectile.Resize(100, 100);
             Projectile.knockBack = 4f;
         }
@@ -114,7 +112,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             //spawn dust explosion on kill
             for (int i = 0; i < 40; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<XaocGreenDust>(), Scale: 2.4f);
+                Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<GreenBrightDust>(), Scale: 2.4f);
                 dust.velocity = (Vector2.UnitX * Main.rand.NextFloat(2f, 6f)).RotatedByRandom(MathHelper.TwoPi);
                 dust.noLight = false;
                 dust.noGravity = false;

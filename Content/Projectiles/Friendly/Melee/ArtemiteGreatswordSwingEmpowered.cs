@@ -71,12 +71,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             for (int i = 0; i < 2; i++)
             {
                 Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 2 * Projectile.velocity.Length() * progress), 0).RotatedBy(Projectile.rotation * Projectile.direction) + Main.player[Projectile.owner].velocity;
-                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(94f * Projectile.scale * Main.rand.NextFloat(0.4f, 1f), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(1.2f, 2f));
+                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(102f * Projectile.scale * Main.rand.NextFloat(0.4f, 1f), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.4f));
                 dust.noGravity = true;
 
                 if (Main.rand.NextBool(4))
                 {
-                    dust = Dust.NewDustDirect(player.Center + new Vector2(94f * Projectile.scale * Main.rand.NextFloat(0.4f, 1f), 0).RotatedBy(Projectile.rotation), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                    dust = Dust.NewDustDirect(player.Center + new Vector2(102f * Projectile.scale * Main.rand.NextFloat(0.4f, 1f), 0).RotatedBy(Projectile.rotation), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
                     dust.noGravity = true;
                 }
             }

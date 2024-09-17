@@ -34,7 +34,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <param name="particleAction">Action to invoke on the newly created particle.</param>
         /// <param name="shouldSync"> Whether to sync the particle spawn and its <see cref="Common.Netcode.NetSyncAttribute"> NetSync </see> fields </param>
         /// <returns> The particle instance </returns>
-        public static T Create<T>(Action<T> particleAction, bool shouldSync = false) where T : Particle 
+        public static T Create<T>(Action<T> particleAction, bool shouldSync = false) where T : Particle
             => ParticleManager.CreateParticle(particleAction, shouldSync);
 
         /// <summary>

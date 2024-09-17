@@ -1,20 +1,12 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Subworlds;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using SubworldLibrary;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -84,11 +76,11 @@ namespace Macrocosm.Common.Systems
                 {
                     townNPCTypes.Add(npc.type);
 
-                    if (NPCSets.MoonNPC[type]) 
+                    if (NPCSets.MoonNPC[type])
                         homeSubworldByNPCPersistentID.Add(persistentID, Moon.Instance.ID);
                     //else if(NPCSets.MarsNPC[type])
                     //  homeSubworldByNPCTypeName.Add(persistentID, ModContent.GetInstance<Mars>().ID);
-                    else 
+                    else
                         homeSubworldByNPCPersistentID.Add(persistentID, Earth.ID);
                 }
             }
@@ -279,7 +271,7 @@ namespace Macrocosm.Common.Systems
             {
                 NPC npc = ContentSamples.NpcsByNetId[Type];
                 if (npc.ModNPC != null && npc.townNPC)
-                     return !IsTownNPCAllowedToSpawnHere(Type); // If not allowed to spawn, the method returns true
+                    return !IsTownNPCAllowedToSpawnHere(Type); // If not allowed to spawn, the method returns true
             }
 
             return result;

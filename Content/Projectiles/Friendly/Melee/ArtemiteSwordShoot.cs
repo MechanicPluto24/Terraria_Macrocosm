@@ -68,15 +68,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             for (int i = 0; i < (int)(8f * Projectile.Opacity); i++)
             {
-                if(i % 3 == 0)
+                if (i % 3 == 0 && speedUp)
                 {
-                    Dust dust = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(75, 75), ModContent.DustType<ArtemiteBrightDust>(), default, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
-                    dust.velocity = speedUp ? Projectile.velocity : Vector2.Zero;
+                    Dust dust = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(35, 75).RotatedBy(Projectile.rotation), ModContent.DustType<ArtemiteBrightDust>(), default, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                    dust.velocity = Projectile.velocity ;
                     dust.color = Color.White.WithAlpha((byte)Main.rand.Next(255)) * Main.rand.NextFloat();
                     dust.noGravity = true;
                 }
 
-                if(speedUp || i % 3 == 0)
+                if (speedUp || i % 3 == 0)
                     Particle.Create<ArtemiteStar>((p) =>
                     {
                         p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 80);

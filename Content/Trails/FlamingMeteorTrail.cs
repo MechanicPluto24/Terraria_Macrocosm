@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Trails
             Width = 40;
         }
 
-        public FlamingMeteorTrail(Color color, int width) 
+        public FlamingMeteorTrail(Color color, int width)
         {
             Color = color;
             Width = width;

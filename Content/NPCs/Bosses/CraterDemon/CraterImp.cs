@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Global.NPCs;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -79,7 +78,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.HitSound = SoundID.NPCHit2;
             NPC.DeathSound = SoundID.NPCDeath2;
         }
-         public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
+        public override void ApplyDifficultyAndPlayerScaling(int numPlayers, float balance, float bossAdjustment)
         {
             //For comparison, Moon Lord's scale factor is 0.7f
             NPC.ScaleHealthBy(0.4f, balance, bossAdjustment);
@@ -100,7 +99,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 CycleAnimation();
         }
 
-       
+
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {

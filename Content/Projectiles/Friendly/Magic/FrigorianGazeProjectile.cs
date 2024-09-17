@@ -1,6 +1,5 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -120,7 +119,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 Projectile.frame = BounceCounter;
 
-                if(!Main.dedServ && BounceCounter > 0)
+                if (!Main.dedServ && BounceCounter > 0)
                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, Mod.Find<ModGore>($"FrigorianGore{BounceCounter}").Type);
             }
 
@@ -137,12 +136,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     dust.noGravity = true;
                 }
 
-                 SoundEngine.PlaySound(SoundID.Item107 with
+                SoundEngine.PlaySound(SoundID.Item107 with
                 {
                     Volume = 0.5f * bounceFactor,
                     Pitch = 0.25f + 0.35f * bounceFactor
                 },
-                Projectile.position);
+               Projectile.position);
 
                 if (Projectile.velocity.X != oldVelocity.X)
                     Projectile.velocity.X = oldVelocity.X * -bounceFactor;

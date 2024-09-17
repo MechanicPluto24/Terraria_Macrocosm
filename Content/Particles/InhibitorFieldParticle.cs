@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-    public class PlasmaBall : Particle
+    public class InhibitorFieldParticle : Particle
     {
         private static Asset<Texture2D> glow;
         public override int TrailCacheLength => 7;
@@ -27,13 +27,13 @@ namespace Macrocosm.Content.Particles
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6");
-            spriteBatch.Draw(glow.Value, Center - screenPosition, null, new Color(89, 151, 193, 127) * FadeFactor, 0f, glow.Size()/2f, 0.0425f * Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(glow.Value, Center - screenPosition, null, new Color(89, 151, 193, 127) * FadeFactor, 0f, glow.Size() / 2f, 0.0425f * Scale, SpriteEffects.None, 0f);
             return true;
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            this.DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255, 15), new Color(104, 255, 255, 255));
+            this.DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255, 15), new Color(0, 0, 0, 0));
             spriteBatch.Draw(Texture.Value, Center - screenPosition, null, Color.White * FadeFactor, Rotation, Size / 2, Scale, SpriteEffects.None, 0f);
         }
 

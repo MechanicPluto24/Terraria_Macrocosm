@@ -5,7 +5,6 @@ using ReLogic.Content;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Ambience;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 

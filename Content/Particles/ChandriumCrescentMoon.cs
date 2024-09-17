@@ -3,7 +3,6 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.IO;
 
 namespace Macrocosm.Content.Particles
 {

@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
         public int AI_FireRate
         {
-            get => (int)Projectile.ai[0]; 
+            get => (int)Projectile.ai[0];
             set => Projectile.ai[0] = value;
         }
 

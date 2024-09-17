@@ -1,6 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Common.Global.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

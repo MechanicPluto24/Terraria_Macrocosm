@@ -1,10 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using Terraria.DataStructures;
-using Terraria.Utilities;
-using Terraria;
+﻿using Macrocosm.Common.Drawing.Sky;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.Drawing.Sky;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using Terraria;
+using Terraria.Utilities;
 
 namespace Macrocosm.Content.Skies.Ambience.Moon
 {

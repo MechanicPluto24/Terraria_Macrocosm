@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;

@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;

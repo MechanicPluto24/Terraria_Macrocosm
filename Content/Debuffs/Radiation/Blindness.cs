@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Debuffs.Radiation
         public override void Update(Player player, ref int buffIndex)
         {
             // No hp regen
-            player.bleed = true; 
+            player.bleed = true;
 
             // Blacken the screen
             player.blackout = true;

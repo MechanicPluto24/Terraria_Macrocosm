@@ -4,10 +4,8 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Consumables.Throwable;
-using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -172,7 +170,7 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
         public override void ModifyActiveShop(string shopName, Item[] items)
         {
-            foreach(Item item in items)
+            foreach (Item item in items)
             {
                 if (item is not null && item.type == ModContent.ItemType<LunarCrystal>())
                     item.stack = 20;

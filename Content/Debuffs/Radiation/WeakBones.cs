@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Debuffs.Radiation
         public override void Update(Player player, ref int buffIndex)
         {
             // Reduced defense
-            player.statDefense *= 1f * (1 / (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel + 1f)); 
+            player.statDefense *= 1f * (1 / (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel + 1f));
         }
     }
 }

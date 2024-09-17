@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Sets;
-using Macrocosm.Common.Sets.Items;
 using Macrocosm.Content.Liquids;
 using Terraria;
 using Terraria.ID;

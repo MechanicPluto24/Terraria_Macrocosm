@@ -25,13 +25,13 @@ namespace Macrocosm.Common.Global.NPCs
                 modifiers.FinalDamage *= 0.5f;
 
             if (projectile.type == ProjectileID.StardustDragon1 || projectile.type == ProjectileID.StardustDragon2 || projectile.type == ProjectileID.StardustDragon3 || projectile.type == ProjectileID.StardustDragon4)
-                modifiers.FinalDamage *= 0.5f; 
+                modifiers.FinalDamage *= 0.5f;
 
             if (projectile.type == ProjectileID.Terrarian || projectile.type == ProjectileID.TerrarianBeam)
-                modifiers.FinalDamage *= 0.5f;  
+                modifiers.FinalDamage *= 0.5f;
 
             if (projectile.type == ProjectileID.NebulaBlaze1 || projectile.type == ProjectileID.NebulaBlaze2)
-                modifiers.FinalDamage *= 0.5f; 
+                modifiers.FinalDamage *= 0.5f;
 
             if (projectile.type == ProjectileID.Meowmere)
                 modifiers.FinalDamage *= 0.6f;
@@ -40,12 +40,12 @@ namespace Macrocosm.Common.Global.NPCs
                 modifiers.FinalDamage *= 0.6f;
 
             if (projectile.type == ProjectileID.LunarFlare)
-                modifiers.FinalDamage *= 0.96f;  
+                modifiers.FinalDamage *= 0.96f;
 
             // Buffs
 
             if (projectile.type == ProjectileID.EmpressBlade)
-                modifiers.FinalDamage *= 1.01f; 
+                modifiers.FinalDamage *= 1.01f;
         }
 
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref NPC.HitModifiers modifiers)

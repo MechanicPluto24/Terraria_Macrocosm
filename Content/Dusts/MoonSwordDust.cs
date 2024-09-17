@@ -9,16 +9,15 @@ namespace Macrocosm.Content.Dusts
     {
         public override bool Update(Dust dust)
         {
-
             dust.position += dust.velocity;
             dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f;
 
-            float clampedScale = dust.scale;
-            if (clampedScale > 1f)
-                clampedScale = 1f;
+            float scale = dust.scale;
+            if (scale > 1f)
+                scale = 1f;
 
             if (!dust.noLight)
-                Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), clampedScale * 0.2f, clampedScale * 0.725f, clampedScale * 0.51f);
+                Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), scale * 0.2f, scale * 0.725f, scale * 0.51f);
 
             if (dust.noGravity)
                 dust.velocity *= 0.93f;

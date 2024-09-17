@@ -1,12 +1,9 @@
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using System.IO;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -66,9 +63,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Lighting.AddLight(Projectile.Center, 0.407f, 1f, 1f);
 
             if (Projectile.timeLeft == 2)
-                 SpawnParticles();
+                SpawnParticles();
 
-            if(Projectile.timeLeft > 3)
+            if (Projectile.timeLeft > 3)
             {
                 float gravity = 0.6f * MacrocosmSubworld.CurrentGravityMultiplier;
 
@@ -86,7 +83,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Projectile.rotation += Projectile.velocity.X * 0.05f;
 
                 if (Main.rand.NextBool(2))
-                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.PlasmaBallDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
+                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.InhibitorFieldDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
             }
         }
 
@@ -131,7 +128,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
                 Vector2 velocity = Utility.PolarVector(speed, theta);
 
-                var p = Particle.Create<PlasmaBall>(Projectile.Center + netOffset, velocity, scale: new(Main.rand.NextFloat(0.4f, 1.2f)));
+                var p = Particle.Create<InhibitorFieldParticle>(Projectile.Center + netOffset, velocity, scale: new(Main.rand.NextFloat(0.4f, 1.2f)));
                 p.AllowNegativeScale = true;
                 p.FadeInNormalizedTime = 0f;
                 p.FadeOutNormalizedTime = Main.rand.NextFloat(0.2f, 0.9f);

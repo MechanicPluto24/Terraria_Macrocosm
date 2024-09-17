@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.LunarRust
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteLantern>(), (int)LuminiteStyle.LunarRust );
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteLantern>(), (int)LuminiteStyle.LunarRust);
             Item.width = 14;
             Item.height = 28;
             Item.value = 150;

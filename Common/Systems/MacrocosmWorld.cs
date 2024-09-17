@@ -206,7 +206,7 @@ namespace Macrocosm.Common.Systems
         public override void PreUpdateWorld()
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
-                 MacrocosmSubworld.Current.PreUpdateWorld();
+                MacrocosmSubworld.Current.PreUpdateWorld();
         }
 
         public override void PostUpdateWorld()
