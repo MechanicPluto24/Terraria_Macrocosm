@@ -11,32 +11,38 @@ namespace Macrocosm.Content.Particles
     public class PlasmaBall : Particle
     {
         private static Asset<Texture2D> glow;
-
-        public override int SpawnTimeLeft => 135;
         public override int TrailCacheLength => 7;
+        public override int MaxPoolCount => 1500;
+
+        public override void SetDefaults()
+        {
+            TimeToLive = 135;
+            ScaleVelocity = new Vector2(-0.008f);
+        }
+
+        public override void OnSpawn()
+        {
+        }
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6");
-            spriteBatch.Draw(glow.Value, Center - screenPosition, null, new Color(89, 151, 193, 127), 0f, glow.Size()/2f, 0.0425f * ScaleV, SpriteEffects.None, 0f);
+            spriteBatch.Draw(glow.Value, Center - screenPosition, null, new Color(89, 151, 193, 127) * FadeFactor, 0f, glow.Size()/2f, 0.0425f * Scale, SpriteEffects.None, 0f);
             return true;
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             this.DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255, 15), new Color(104, 255, 255, 255));
-            spriteBatch.Draw(Texture.Value, Center - screenPosition, null, Color.White, Rotation, Size / 2, ScaleV, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Center - screenPosition, null, Color.White * FadeFactor, Rotation, Size / 2, Scale, SpriteEffects.None, 0f);
         }
 
         public override void AI()
         {
-            Lighting.AddLight(Center, new Vector3(0.407f, 1f, 1f) * Scale * 0.5f);
+            Lighting.AddLight(Center, new Vector3(0.407f, 1f, 1f) * Scale.X * 0.5f);
 
-            float decelerationFactor = ((float)SpawnTimeLeft - TimeLeft) / SpawnTimeLeft;
+            float decelerationFactor = ((float)TimeToLive - TimeLeft) / TimeToLive;
             Velocity *= MathHelper.Lerp(0.9f, 0.85f, decelerationFactor);
-
-            if (Scale >= 0)
-                Scale -= 0.008f;
         }
     }
 }

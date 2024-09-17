@@ -158,13 +158,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 for (int i = 0; i < 24; i++)
                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 4).RotatedByRandom(MathHelper.TwoPi), 16);
 
-                Particle.CreateParticle<TintableExplosion>(Explosion =>
+                Particle.Create<TintableExplosion>(p =>
                 {
-                    Explosion.Position = Projectile.Center;
-                    Explosion.DrawColor = color.WithOpacity(0.1f) * 0.4f;
-                    Explosion.Scale = 1f;
-                    Explosion.NumberOfInnerReplicas = 6;
-                    Explosion.ReplicaScalingFactor = 2.6f;
+                    p.Position = Projectile.Center;
+                    p.Color = color.WithOpacity(0.1f) * 0.4f;
+                    p.Scale = new(1f);
+                    p.NumberOfInnerReplicas = 6;
+                    p.ReplicaScalingFactor = 2.6f;
                 });
             }
         }

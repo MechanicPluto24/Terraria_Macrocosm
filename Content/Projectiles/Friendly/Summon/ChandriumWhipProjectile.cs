@@ -111,9 +111,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     Dust dust;
 
                     if (i % 20 == 0)
-                    {
-                        Particle.CreateParticle<ChandriumCrescentMoon>(target.position, velocity, scale: Main.rand.NextFloat(0.5f, 0.9f));
-                    }
+                        Particle.Create<ChandriumCrescentMoon>(target.position, velocity, scale: new(Main.rand.NextFloat(0.5f, 0.9f)));
 
                     dust = Dust.NewDustDirect(target.position, target.width, target.height, ModContent.DustType<ChandriumBrightDust>(), velocity.X, velocity.Y, Scale: Main.rand.NextFloat(0.8f, 1.2f));
                     dust.noGravity = true;
@@ -221,7 +219,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     scale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, t, true) * Utils.GetLerpValue(0.9f, 0.7f, t, true));
 
                     if (empowered)
-                        Main.spriteBatch.DrawStar(Vector2.Lerp(list[^1], list[^2], 0.8f) - Main.screenPosition, 1, new Color(177, 107, 219, 0), scale * 0.7f, rotation, flip, entity: true);
+                        Utility.DrawStar(Vector2.Lerp(list[^1], list[^2], 0.8f) - Main.screenPosition, 1, new Color(177, 107, 219, 0), scale * 0.7f, rotation, flip, entity: true);
 
                     WhipTipPosition = pos;
 
@@ -265,7 +263,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 }
 
                 if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>()) && !tip)
-                    Main.spriteBatch.DrawStar(pos - Main.screenPosition, 1, new Color(177, 107, 219, 20), scale * 0.4f, rotation, flip, entity: true);
+                    Utility.DrawStar(pos - Main.screenPosition, 1, new Color(177, 107, 219, 20), scale * 0.4f, rotation, flip, entity: true);
 
                 Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
 

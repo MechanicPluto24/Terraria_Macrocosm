@@ -29,10 +29,10 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 600;
+            Projectile.timeLeft = 300;
             Projectile.penetrate = -1;
 
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
         }
 
         private SpriteBatchState state;
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 2, colour, 0.4f, Projectile.rotation, entity: true);
+            Utility.DrawStar(Projectile.Center - Main.screenPosition, 2, colour, 0.4f, Projectile.rotation, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

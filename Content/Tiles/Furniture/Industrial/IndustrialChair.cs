@@ -36,15 +36,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
-
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChair>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChairSleek>(), 2, 3);
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)

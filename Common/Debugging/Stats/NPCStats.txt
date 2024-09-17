@@ -205,10 +205,10 @@ MoonWormTail
 	Damage: 100
 
 MoonZombie
-	Life: 500
+	Life: 600
 	Defense: 65
 	KB resist: 0.5
-	Damage: 70
+	Damage: 80
 	Drops:
 		Moonstone, (1-5) 10%
 
@@ -239,7 +239,7 @@ Shade
 		Moonstone, (1-5) 10%
 
 ZombieEngineer
-	Life: 550
+	Life: 1000
 	Defense: 60
 	KB resist: 0.01
 	Damage: 80

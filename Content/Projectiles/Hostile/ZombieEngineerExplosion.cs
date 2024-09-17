@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Hostile
 {
-    public class Explosion : ModProjectile
+    public class ZombieEngineerExplosion : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
         public ref float AI_Timer => ref Projectile.ai[0];
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.width = defWidth;
             Projectile.height = defHeight;
             Projectile.hostile = true;
-            Projectile.friendly = false;
+            Projectile.friendly = true;
             Projectile.tileCollide = false;
             Projectile.timeLeft = 25;
             Projectile.penetrate = -1;
@@ -35,20 +35,20 @@ namespace Macrocosm.Content.Projectiles.Hostile
         {
             if (AI_Timer == 0)
             {
-                Particle.CreateParticle<TintableExplosion>(p =>
+                Particle.Create<TintableExplosion>(p =>
                 {
                     p.Position = Projectile.Center;
-                    p.DrawColor = (new Color(25, 25, 25, 128));
-                    p.Scale = 1.6f;
+                    p.Color = (new Color(25, 25, 25, 128));
+                    p.Scale = new(1.6f);
                     p.NumberOfInnerReplicas = 1;
                     p.ReplicaScalingFactor = 1f;
                 });
 
-                Particle.CreateParticle<TintableExplosion>(p =>
+                Particle.Create<TintableExplosion>(p =>
                 {
                     p.Position = Projectile.Center;
-                    p.DrawColor = (new Color(255, 180, 100, 200));
-                    p.Scale = 1.5f;
+                    p.Color = (new Color(255, 180, 100, 200));
+                    p.Scale = new(1.5f);
                     p.NumberOfInnerReplicas = 8;
                     p.ReplicaScalingFactor = 0.1f;
                 });

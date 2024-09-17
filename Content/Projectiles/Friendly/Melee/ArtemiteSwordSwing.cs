@@ -147,11 +147,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             hit.HitDirection = (Main.player[Projectile.owner].Center.X < target.Center.X) ? 1 : (-1);
 
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );
@@ -161,11 +161,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             info.HitDirection = (Main.player[Projectile.owner].Center.X < target.Center.X) ? 1 : (-1);
 
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );

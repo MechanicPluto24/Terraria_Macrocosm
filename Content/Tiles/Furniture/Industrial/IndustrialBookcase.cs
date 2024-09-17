@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Bookcase"));
 
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialBookcase>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialBookcase>(), 0, 1, 2);
         }
     }
 }

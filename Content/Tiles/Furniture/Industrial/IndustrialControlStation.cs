@@ -38,8 +38,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
-
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialControlStation>(), 0, 1);
         }
 
         public override void HitWire(int i, int j)

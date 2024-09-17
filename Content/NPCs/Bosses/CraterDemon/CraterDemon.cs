@@ -92,11 +92,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    Particle.CreateParticle<PortalSwirl>(p =>
+                    Particle.Create<PortalSwirl>(p =>
                     {
                         p.Position = info.center + Main.rand.NextVector2CircularEdge(140, 140) * info.scale * Main.rand.NextFloat(0.5f, 1f);
                         p.Velocity = Vector2.One * 24;
-                        p.Scale = (0.14f + Main.rand.NextFloat(0.1f)) * info.scale;
+                        p.Scale = new((0.14f + Main.rand.NextFloat(0.1f)) * info.scale);
                         p.Color = new Color(92, 206, 130);
                         p.TargetCenter = info.center;
                         p.CustomDrawer = owner;

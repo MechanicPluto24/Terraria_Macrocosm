@@ -94,13 +94,13 @@ namespace Macrocosm.Common.Utils
         /// <br/> <see cref="DelegateMethods.TurretLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
         /// <br/> <see cref="DelegateMethods.LightningLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
         /// </summary>
-        public static void DrawBeam(SpriteBatch spriteBatch, Texture2D texture, Vector2 startPosition, Vector2 endPosition, Vector2 drawScale, Color beamColor, Terraria.Utils.LaserLineFraming lineFraming)
+        public static void DrawBeam(Texture2D texture, Vector2 startPosition, Vector2 endPosition, Vector2 drawScale, Color beamColor, Terraria.Utils.LaserLineFraming lineFraming)
         {
             DelegateMethods.c_1 = beamColor; // c_1 is an unnamed decompiled variable which is the render color of the beam drawn by the lineFraming delegate.
-            Terraria.Utils.DrawLaser(spriteBatch, texture, startPosition, endPosition, drawScale, lineFraming);
+            Terraria.Utils.DrawLaser(Main.spriteBatch, texture, startPosition, endPosition, drawScale, lineFraming);
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             float rotationStep = MathHelper.Pi / points;
@@ -115,12 +115,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 
@@ -132,12 +132,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, Vector2 scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, int points, Color color, Vector2 scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             float rotationStep = MathHelper.Pi / points;
@@ -152,12 +152,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, Vector2 scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, List<float> rotations, Color color, Vector2 scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 
@@ -169,7 +169,7 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
@@ -184,13 +184,13 @@ namespace Macrocosm.Common.Utils
             Vector2 scaleX = new Vector2(fatness.X * 0.5f, scale.X) * fade;
             _ = new Vector2(fatness.Y * 0.5f, scale.Y) * fade;
 
-            Main.spriteBatch.DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
-            Main.spriteBatch.DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
+            DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
+            DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
         }
 
         public static void DrawPrettyStarSparkle(float opacity, SpriteEffects dir, Vector2 drawPos, Color drawColor, Color shineColor, float flareCounter, float fadeInStart, float fadeInEnd, float fadeOutStart, float fadeOutEnd, float rotation, Vector2 scale, Vector2 fatness)
         {
-            Texture2D sparkleTexture = TextureAssets.Extra[98].Value;
+            Texture2D sparkleTexture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             Color bigColor = shineColor * opacity * 0.5f;
             bigColor.A = 0;
             Vector2 origin = sparkleTexture.Size() / 2f;

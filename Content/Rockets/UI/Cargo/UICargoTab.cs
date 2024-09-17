@@ -159,7 +159,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                     requestAccessButton.SetImage(ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Inventory/InventoryClosed"));
             }
         }
-
+    
         private UIPanel CreateInventoryPanel()
         {
             inventoryPanel = Rocket.Inventory.ProvideUI
@@ -262,5 +262,6 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             return crewPanel;
         }
+
     }
 }

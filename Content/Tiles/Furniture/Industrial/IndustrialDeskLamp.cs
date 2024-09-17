@@ -28,8 +28,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             TileObjectData.newTile.DrawYOffset = 2;
 
-            // To ensure the right-facing style is properly registered, not the left-facing style "turned off" frame
-            TileObjectData.newTile.StyleMultiplier = 2;
+            TileObjectData.newTile.StyleMultiplier = 4;
             TileObjectData.newTile.StyleWrapLimit = 4;
 
             // Place right alternate
@@ -45,9 +44,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
-
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialDeskLamp>(), 0, 1);
-
         }
 
         public override void HitWire(int i, int j)

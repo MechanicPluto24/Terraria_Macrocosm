@@ -27,6 +27,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
@@ -41,8 +42,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
-
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialControlPanel>(), 0, 1);
         }
 
         public override void HitWire(int i, int j)

@@ -180,6 +180,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             Main.blockInput = false;
             AllLoseFocus();
+            Rocket.Inventory.DropItem(Rocket.SpecialInventorySlot_CustomizationUnlock, Rocket.Center, sync: false, fromClient: true);
         }
 
         public override void Update(GameTime gameTime)

@@ -60,7 +60,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (AITimer == 20)
             {
                 int damage = Projectile.damage;
-                Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center + shootAim, shootAim, ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, ai1: shootAim.X, ai2: shootAim.Y);
+                if(Projectile.owner == Main.myPlayer)
+                    Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center + shootAim, shootAim, ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, ai1: shootAim.X, ai2: shootAim.Y);
             }
 
             if (AITimer % 16 == 0)
@@ -84,11 +85,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             for (int i = 0; i < count; i++)
             {
                 float progress = (1f - Projectile.alpha / 255f);
-                Particle.CreateParticle<PortalSwirl>(p =>
+                Particle.Create<PortalSwirl>(p =>
                 {
                     p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 180).RotatedBy(shootAim.ToRotation() + MathHelper.PiOver4) * 0.4f * progress;
                     p.Velocity = Vector2.One * 12;
-                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * progress;
+                    p.Scale = new((0.1f + Main.rand.NextFloat(0.1f)) * progress);
                     p.Color = new Color(0, 170, 200) * 0.6f;
                     p.TargetCenter = Projectile.Center;
                 });

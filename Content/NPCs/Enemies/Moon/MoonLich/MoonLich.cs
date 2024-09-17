@@ -25,6 +25,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
         private int timer;
         private bool summoned = false;
 
+        public ref float AI_Speed => ref NPC.ai[0];
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 4;
@@ -47,6 +49,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             NPC.knockBackResist = 0f;
             NPC.noGravity = true;
             NPC.noTileCollide = true;
+            AI_Speed = 5f;
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
@@ -72,30 +75,69 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             offsetY = (float)(Math.Sin(timer / 10) * 7);
             timer++;
             if (timer % 5 == 0)
-                Particle.CreateParticle<TintableFire>(p =>
+                Particle.Create<TintableFire>(p =>
                 {
                     p.Position = NPC.position;
                     p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                    p.DrawColor = new Color(100, 255, 255, 0);
-                    p.Scale = 0.1f;
+                    p.Color = new Color(100, 255, 255, 0);
+                    p.Scale = new(0.1f);
                 });
 
             if (clearLineOfSight && player.active && !player.dead)
             {
-                NPC.Move(player.Center, Vector2.Zero, 5, 0.1f);
+                NPC.Move(player.Center, Vector2.Zero, AI_Speed, 0.1f);
                 NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * MathF.Sin(Main.GameUpdateCount * 0.05f);
-            }
 
-            if (timer % 80 == 79)
-            {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (timer % 120 > 80)
                 {
-                    Vector2 projVelocity = Main.player[NPC.target].Center - NPC.Center;
-                    projVelocity = projVelocity.SafeNormalize(Vector2.UnitX);
-                    projVelocity = (projVelocity + Main.player[NPC.target].velocity * 0.1f).SafeNormalize(Vector2.UnitX);
-                    Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
+                    Dust.NewDust(NPC.Center + new Vector2(35f, 50f + offsetY), 0, 0, ModContent.DustType<LuminiteBrightDust>());
+                    Dust.NewDust(NPC.Center + new Vector2(-35f, 50f + offsetY), 0, 0, ModContent.DustType<LuminiteBrightDust>());
+                }
+
+                if (timer % 120 == 119)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        if (Main.rand.NextBool(5))
+                        {
+                            for (int i = -1; i < 2; i++)
+                            {
+                                Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(35f, 50f + offsetY), (Main.player[NPC.target].Center - (NPC.Center + new Vector2(35f, 50f + offsetY))).SafeNormalize(Vector2.UnitX).RotatedBy((MathHelper.PiOver4 / 2) * i) * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
+                            }
+                            for (int i = -1; i < 2; i++)
+                            {
+                                Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-35f, 50f + offsetY), (Main.player[NPC.target].Center - (NPC.Center + new Vector2(-35f, 50f + offsetY))).SafeNormalize(Vector2.UnitX).RotatedBy((MathHelper.PiOver4 / 2) * i) * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
+                            }
+                        }
+                        else
+                        {
+                            Vector2 projVelocity = Main.player[NPC.target].Center - (NPC.Center + new Vector2(35f, 50f + offsetY));
+                            projVelocity = projVelocity.SafeNormalize(Vector2.UnitX);
+                            projVelocity = (projVelocity + Main.player[NPC.target].velocity * 0.1f).SafeNormalize(Vector2.UnitX);
+                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(35f, 50f + offsetY), projVelocity * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
+                            Vector2 projVelocity2 = Main.player[NPC.target].Center - (NPC.Center + new Vector2(-35f, 50f + offsetY));
+                            projVelocity2 = projVelocity2.SafeNormalize(Vector2.UnitX);
+                            projVelocity2 = (projVelocity2 + Main.player[NPC.target].velocity * 0.1f).SafeNormalize(Vector2.UnitX);
+                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-35f, 50f + offsetY), projVelocity2 * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
+                        }
+                    }
                 }
             }
+            else
+            {
+                NPC.velocity *= 0.8f;
+            }
+
+            if (Vector2.Distance(NPC.Center, player.Center) < 300f)
+                AI_Speed *= 0.95f;
+            else
+                AI_Speed *= 1.05f;
+
+            if (AI_Speed > 5f)
+                AI_Speed = 5f;
+
+            if (AI_Speed < 0.05f)
+                AI_Speed = 0.05f;
 
             if (clearLineOfSight && player.active && !player.dead && summoned == false)
             {
@@ -125,8 +167,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
             return true;
         }
-
-
 
         public override void FindFrame(int frameHeight)
         {

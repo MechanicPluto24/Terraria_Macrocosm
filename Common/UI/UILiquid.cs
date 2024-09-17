@@ -58,11 +58,11 @@ namespace Macrocosm.Common.UI
             {
                 if (macrocosmLiquidType.Value == LiquidType.RocketFuel)
                 {
-                    Particle.CreateParticle<RocketFuelBubble>((p) =>
+                    Particle.Create<RocketFuelBubble>((p) =>
                     {
                         p.Position = new(fillArea.X + Main.rand.NextFloat(fillArea.Width), fillArea.Bottom);
                         p.Velocity = new Vector2(Main.rand.NextFloat(-0.1f, 0.1f), Main.rand.NextFloat(0.5f, 2.2f) * -1f * LiquidLevel);
-                        p.Scale = Main.rand.NextFloat(0.3f, 0.7f);
+                        p.Scale = new(Main.rand.NextFloat(0.3f, 0.7f));
                         p.CustomDrawer = this;
                     });
                 }

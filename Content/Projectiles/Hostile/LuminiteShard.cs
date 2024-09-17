@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 1, LuminiteSlime.EffectColor, 0.6f, Projectile.rotation + MathHelper.PiOver2, entity: true);
+            Utility.DrawStar(Projectile.Center - Main.screenPosition, 1, LuminiteSlime.EffectColor, 0.6f, Projectile.rotation + MathHelper.PiOver2, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
