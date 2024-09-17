@@ -430,7 +430,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             NPC.defense = 150;
             NPC.damage = 80;
-            NPC.lifeMax = 100000;
+            NPC.lifeMax = 80000;
 
             NPC.boss = true;
             NPC.noGravity = true;
