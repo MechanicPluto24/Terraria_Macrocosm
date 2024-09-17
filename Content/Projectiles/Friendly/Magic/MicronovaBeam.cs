@@ -118,7 +118,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             for(int i = 0; i < 3; i++)
             {
                 Vector2 visualStartPosition = startPosition + new Vector2(0, Main.rand.NextFloat(-10f, 4f)).RotatedBy(Projectile.velocity.ToRotation());
-                Utility.DrawBeam(Main.spriteBatch, texture, visualStartPosition, endPosition, drawScale, color, new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
+                Utility.DrawBeam(texture, visualStartPosition, endPosition, drawScale, color, new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
             }
 
             Main.spriteBatch.End();

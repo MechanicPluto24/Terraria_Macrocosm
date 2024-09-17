@@ -74,7 +74,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             if (player.AltFunction())
             {
-                if (bladeCharge >= 100)
+                if (bladeCharge >= 300)
                 {
                     bladeCharge = 0;
                     powerTime = 300;

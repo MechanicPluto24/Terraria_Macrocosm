@@ -593,12 +593,12 @@ AluminumShortsword: {
 
 ArtemiteGreatsword: {
 	DisplayName: Artemite Greatsword
-	Tooltip: ""
+	Tooltip: Hold <right> for a charged up swing
 }
 
 ArtemiteSpear: {
 	DisplayName: Artemite Spear
-	Tooltip: ""
+	Tooltip: <right> to throw the spear
 }
 
 ArtemiteSword: {
@@ -642,12 +642,12 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Copernicus
-	Tooltip: ""
+	Tooltip: Occasionally shoots Inhibitor Field Grenades
 }
 
 Cruithne: {
 	DisplayName: Cruithne-3753
-	Tooltip: ""
+	Tooltip: Shoots slugs and a Delirium shell
 }
 
 LHBMinigun: {
@@ -771,7 +771,7 @@ SteelPickaxe: {
 
 SteelZweihander: {
 	DisplayName: Steel Zweihander
-	Tooltip: ""
+	Tooltip: Hold <right> for a charged up swing
 }
 
 SteelCrossbow: {
@@ -1951,5 +1951,50 @@ CrescentScripture: {
 
 Totality: {
 	DisplayName: Totality
+	Tooltip: ""
+}
+
+AstraWorkbench: {
+	DisplayName: Astra Workbench
+	Tooltip: ""
+}
+
+CosmicEmberWorkbench: {
+	DisplayName: Cosmic Ember Workbench
+	Tooltip: ""
+}
+
+CryocoreWorkbench: {
+	DisplayName: Cryocore Workbench
+	Tooltip: ""
+}
+
+DarkCelestialWorkbench: {
+	DisplayName: Dark Celestial Workbench
+	Tooltip: ""
+}
+
+HeavenforgeWorkbench: {
+	DisplayName: Heavenforge Workbench
+	Tooltip: ""
+}
+
+LuminiteWorkbench: {
+	DisplayName: Luminite Workbench
+	Tooltip: ""
+}
+
+LunarRustWorkbench: {
+	DisplayName: Lunar Rust Workbench
+	Tooltip: ""
+}
+
+MercuryWorkbench: {
+	DisplayName: Mercury Workbench
+	Tooltip: ""
+}
+
+StarRoyaleWorkbench: {
+	DisplayName: Star Royale Workbench
 	Tooltip: ""
 }

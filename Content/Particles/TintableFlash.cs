@@ -1,11 +1,7 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.NPCs.Enemies.Moon;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
@@ -13,12 +9,10 @@ namespace Macrocosm.Content.Particles
     {
         public override string TexturePath => Macrocosm.TextureEffectsPath + "Flare2";
 
-        public Color Color;
-        public int ScaleVelocity;
-        public float ScaleIncr;
-        public int TimeToLive;
-
-        public override int SpawnTimeLeft => 6;
+        public override void SetDefaults()
+        {
+            TimeToLive = 6;
+        }
 
         public override void OnSpawn()
         {
@@ -26,7 +20,6 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
-            Scale += ScaleIncr;
             Lighting.AddLight(Position, Color.ToVector3());
         }
 

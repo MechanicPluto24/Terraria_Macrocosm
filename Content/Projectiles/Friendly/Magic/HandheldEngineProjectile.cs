@@ -121,11 +121,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                         Dust.NewDust(pos, 1, 1, DustID.Smoke, newColor: Color.DarkGray);
 
                         if (i % 5 == 0)
-                            Particle.CreateParticle<RocketExhaustSmoke>(p =>
+                            Particle.Create<RocketExhaustSmoke>(p =>
                             {
                                 p.Position = Projectile.position;
                                 p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                                p.DrawColor = Color.DarkGray;
+                                p.Color = Color.DarkGray;
                             });
                     }
                 }
@@ -152,11 +152,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Vector2 position = rotPoint1 + Main.rand.NextVector2Circular(12, 20);
                     Vector2 velocity = (Utility.PolarVector(36 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.15f) + Player.velocity;
 
-                    Particle.CreateParticle<EngineSpark>(p =>
+                    Particle.Create<EngineSpark>(p =>
                     {
                         p.Position = position;
                         p.Velocity = velocity;
-                        p.Scale = Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp);
+                        p.Scale = new(Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp));
                         p.Rotation = Projectile.rotation;
                         p.ColorOnSpawn = Color.White;
                         p.ColorOnDespawn = Color.Lerp(new Color(89, 151, 193), new Color(255, 177, 65), AI_Overheat);

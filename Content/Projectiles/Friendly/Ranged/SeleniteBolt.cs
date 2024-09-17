@@ -92,8 +92,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             for (int i = 0; i < 30; i++)
             {
-                Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(9, 2), 5f, 0f);
-                Particle.CreateParticle<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(2, 9), 5f, 0f);
+                Particle.Create<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(9, 2), new(5f), 0f);
+                Particle.Create<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(2, 9), new(5f), 0f);
             }
 
             float count = Projectile.oldVelocity.LengthSquared() * trailMultiplier;
@@ -123,7 +123,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * 0.4f;
                 Color color = new Color(177, 230, 204) * (0.8f - (float)n / count);
-                spriteBatch.DrawStar(trailPosition - Main.screenPosition, 1, color, Projectile.scale * 0.65f, Projectile.rotation, entity: true);
+                Utility.DrawStar(trailPosition - Main.screenPosition, 1, color, Projectile.scale * 0.65f, Projectile.rotation, entity: true);
             }
 
             spriteBatch.End();

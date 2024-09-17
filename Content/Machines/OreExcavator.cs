@@ -221,16 +221,16 @@ namespace Macrocosm.Content.Machines
                         int count = atmoDensity < 1f ? 1 : 2;
                         for (int s = 0; s < count; s++)
                         {
-                            Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
+                            Smoke smoke = Particle.Create<Smoke>((p) =>
                             {
                                 p.Position = new Vector2(i, j) * 16f + new Vector2(1f, 16f);
                                 p.Velocity = new Vector2(0, -1.1f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
-                                p.Scale = 0.3f;
+                                p.Scale = new(0.3f);
                                 p.Rotation = 0f;
-                                p.DrawColor = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
+                                p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
-                                p.ExpansionRate = 0.0075f;
+                                p.ScaleVelocity = new(0.0075f);
                                 p.WindFactor = 0.01f;
                             });
                         }
@@ -253,16 +253,16 @@ namespace Macrocosm.Content.Machines
                         for (int s = 0; s < 2; s++)
                         {
                             Point hitTile = new(i + 1, j + 2 + s);
-                            Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
+                            Smoke smoke = Particle.Create<Smoke>((p) =>
                             {
                                 p.Position = hitTile.ToWorldCoordinates();
                                 p.Velocity = new Vector2(Main.rand.NextFloat(-0.7f, 0.7f), Main.rand.NextFloat(-0.1f, -0.25f));
-                                p.Scale = 0.3f;
+                                p.Scale = new(0.3f);
                                 p.Rotation = 0f;
-                                p.DrawColor = Smoke.GetTileHitColor(hitTile);
+                                p.Color = Smoke.GetTileHitColor(hitTile);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
-                                p.ExpansionRate = 0.0075f;
+                                p.ScaleVelocity = new(0.0075f);
                             });
                         }
                     }

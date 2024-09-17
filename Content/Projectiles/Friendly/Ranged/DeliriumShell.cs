@@ -102,11 +102,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnKill(int timeLeft)
         {
-            var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+            var explosion = Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity;
-                p.DrawColor = new Color(96, 237, 134) * 0.6f;
-                p.Scale = 1.2f;
+                p.Color = new Color(96, 237, 134) * 0.6f;
+                p.Scale = new(1.2f);
                 p.NumberOfInnerReplicas = 6;
                 p.ReplicaScalingFactor = 0.5f;
             });

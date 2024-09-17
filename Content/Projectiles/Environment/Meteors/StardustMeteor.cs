@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                 Vector2 position = Projectile.Center + Projectile.Size.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
                 Vector2 velocity = new(Main.rand.NextFloat(-10, 10), Main.rand.NextFloat(0f, -20f));
 
-                Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
+                Particle.Create(ParticleOrchestraType.StardustPunch, position, velocity);
             }
         }
 
