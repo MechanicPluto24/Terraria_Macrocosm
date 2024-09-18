@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
-            Item.damage = 300;
+            Item.damage = 258;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 10;
 

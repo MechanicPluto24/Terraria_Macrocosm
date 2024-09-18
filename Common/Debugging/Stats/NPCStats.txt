@@ -1,5 +1,5 @@
 CraterDemon
-	Life: 100000
+	Life: 80000
 	Defense: 150
 	KB resist: 0
 	Damage: 80
