@@ -24,11 +24,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.value = Item.sellPrice(gold: 1);
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.useAnimation = 14;
-            Item.useTime = 14;
+            Item.useAnimation = 13;
+            Item.useTime = 13;
             Item.UseSound = SoundID.Item71;
             Item.autoReuse = true;
-            Item.damage = 225;
+            Item.damage = 220;
             Item.knockBack = 6.5f;
             Item.noUseGraphic = true;
             Item.DamageType = DamageClass.MeleeNoSpeed;
