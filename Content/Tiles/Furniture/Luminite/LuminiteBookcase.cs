@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -29,7 +28,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             DustType = DustID.LunarOre;
 
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
-                 AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.Bookcase"));
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.Bookcase"));
         }
 
         public override bool CreateDust(int i, int j, ref int type)

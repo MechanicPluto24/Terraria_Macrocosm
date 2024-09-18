@@ -1,4 +1,3 @@
-using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns;
 using Macrocosm.Content.Rarities;
@@ -110,14 +109,14 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             if (player.AltFunction())
             {
                 fireRate = int.MaxValue;
-                timer = int.MaxValue/2;
+                timer = int.MaxValue / 2;
             }
 
             if (RifleMode)
                 Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunRifleHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer);
             else
                 Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunDualHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer, ai2: shotCount);
-          
+
             return false;
         }
 
@@ -128,7 +127,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
                 spriteBatch.Draw(rifleTexture.Value, position - new Vector2(3, 0), null, drawColor, 0f, origin, scale, SpriteEffects.None, 0);
                 return false;
             }
-          
+
             return true;
         }
 
@@ -136,7 +135,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         {
             if (RifleMode)
             {
-                spriteBatch.Draw(rifleTexture.Value, Item.position - Main.screenPosition, null, lightColor, rotation, rifleTexture.Size()/2f, scale, SpriteEffects.None, 0);
+                spriteBatch.Draw(rifleTexture.Value, Item.position - Main.screenPosition, null, lightColor, rotation, rifleTexture.Size() / 2f, scale, SpriteEffects.None, 0);
                 return false;
             }
 
@@ -155,7 +154,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SaveData(TagCompound tag)
         {
-            if(RifleMode)
+            if (RifleMode)
                 tag[nameof(RifleMode)] = true;
         }
 

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-    public class XaocGreenDust : ModDust
+    public class GreenBrightDust : ModDust
     {
         public override Color? GetAlpha(Dust dust, Color lightColor) => Color.White.WithAlpha((byte)dust.alpha);
 

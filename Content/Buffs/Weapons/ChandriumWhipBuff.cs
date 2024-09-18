@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Players;
+﻿using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -21,18 +22,18 @@ namespace Macrocosm.Content.Buffs.Weapons
 
             if (player.HandPosition.HasValue)
             {
-                Vector2 vector = player.HandPosition.Value - player.velocity;
+                Vector2 handPosition = player.HandPosition.Value - player.velocity;
                 for (int i = 0; i < 4; i++)
                 {
-                    Dust dust = Main.dust[Dust.NewDust(player.Center, 0, 0, DustID.PinkTorch, player.direction * 2, 0f, 150, default, 1.3f)];
-                    dust.position = vector;
+                    Dust dust = Dust.NewDustDirect(player.Center, 0, 0, ModContent.DustType<ChandriumBrightDust>(), player.direction * 2, 0f, 150, default, 1.3f);
+                    dust.position = handPosition;
                     dust.velocity *= 0f;
                     dust.noGravity = true;
                     dust.fadeIn = 1f;
                     dust.velocity += player.velocity;
                     if (Main.rand.NextBool(2))
                     {
-                        dust.position += Utils.RandomVector2(Main.rand, -4f, 4f);
+                        dust.position += Main.rand.NextVector2Circular(-4, 4);
                         dust.scale += Main.rand.NextFloat();
                         if (Main.rand.NextBool(2))
                             dust.customData = this;

@@ -1,9 +1,4 @@
 ﻿using SubworldLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,7 +9,7 @@ namespace Macrocosm.Common.Hooks
     {
         public void Load(Mod mod)
         {
-            On_Item.DespawnIfMeetingConditions += On_Item_DespawnIfMeetingConditions;      
+            On_Item.DespawnIfMeetingConditions += On_Item_DespawnIfMeetingConditions;
         }
 
         public void Unload()

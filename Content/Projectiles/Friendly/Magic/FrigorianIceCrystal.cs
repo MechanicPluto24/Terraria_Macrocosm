@@ -1,9 +1,7 @@
 ﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -26,7 +24,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.rotation += Projectile.velocity.X * 0.1f;
             Projectile.velocity.Y += 0.5f * MacrocosmSubworld.CurrentGravityMultiplier;
 
-            if(Main.rand.NextBool(12))
+            if (Main.rand.NextBool(12))
                 Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FrigorianDust>());
 
             if (Projectile.timeLeft < 50 && Projectile.alpha < 255)

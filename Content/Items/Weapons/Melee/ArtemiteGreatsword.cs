@@ -6,7 +6,6 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
-using Mono.Cecil;
 using System;
 using Terraria;
 using Terraria.DataStructures;

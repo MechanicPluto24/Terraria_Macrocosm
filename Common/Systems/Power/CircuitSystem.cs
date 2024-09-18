@@ -175,9 +175,9 @@ namespace Macrocosm.Common.Systems.Power
 
         public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
         {
-            if(messageType is MessageID.TileManipulation or MessageID.TileSquare or MessageID.MassWireOperation)
-                 SearchCircuits();
- 
+            if (messageType is MessageID.TileManipulation or MessageID.TileSquare or MessageID.MassWireOperation)
+                SearchCircuits();
+
             return false;
         }
     }

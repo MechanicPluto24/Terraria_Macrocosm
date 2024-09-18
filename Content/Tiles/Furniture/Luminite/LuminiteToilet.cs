@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -49,7 +48,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
                 AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Toilet"));
 
-           }
+        }
 
         public override bool CreateDust(int i, int j, ref int type)
         {

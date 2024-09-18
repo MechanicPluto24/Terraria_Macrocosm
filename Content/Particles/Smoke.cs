@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Particles
         public override bool SetRandomFrameOnSpawn => true;
 
         public float WindFactor { get; set; }
-        public float Opacity { get; set; }  
+        public float Opacity { get; set; }
         public bool FadeIn { get; set; }
         private bool fadedIn;
 

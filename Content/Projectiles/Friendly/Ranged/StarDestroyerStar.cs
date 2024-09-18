@@ -15,8 +15,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class StarDestroyerStar : ModProjectile
     {
-        public enum StarVariant 
-        { 
+        public enum StarVariant
+        {
             /// <summary> Blue stars penetrate enemies </summary>
             Blue,
             /// <summary> Yellow stars explode and have AoE </summary>
@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             if (StarType is StarVariant.Yellow && Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
                 Projectile.PrepareBombToBlow();
 
-            if(StarType is StarVariant.Blue && Projectile.penetrate < 3)
+            if (StarType is StarVariant.Blue && Projectile.penetrate < 3)
             {
                 NPC closestNPC = Utility.GetClosestNPC(Projectile.Center, 9000f);
                 if (closestNPC != null)

@@ -1,9 +1,7 @@
 ﻿using Macrocosm.Common.Systems.UI;
-using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 

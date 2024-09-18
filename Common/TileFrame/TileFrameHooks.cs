@@ -38,7 +38,7 @@ namespace Macrocosm.Common.TileFrame
             int up = 0;
             int down = 0;
             int left = 0;
-            int right = 0; 
+            int right = 0;
             int upLeft = 0;
             int upRight = 0;
             int downLeft = 0;
@@ -51,14 +51,14 @@ namespace Macrocosm.Common.TileFrame
                     i => i.OpCode == OpCodes.Ldsfld && i.Operand is FieldReference field && field.Name == "tileMerge", // ldsfld bool[][] Terraria.Main::tileMerge
                     i => i.OpCode == OpCodes.Ldloc_3, // ldloc.3
                     i => i.OpCode == OpCodes.Ldelem_Ref, // ldelem.ref
-                    i => i.MatchLdloca(out up), 
-                    i => i.MatchLdloca(out down),  
-                    i => i.MatchLdloca(out left),  
-                    i => i.MatchLdloca(out right), 
-                    i => i.MatchLdloca(out upLeft),  
-                    i => i.MatchLdloca(out upRight), 
-                    i => i.MatchLdloca(out downLeft),  
-                    i => i.MatchLdloca(out downRight),  
+                    i => i.MatchLdloca(out up),
+                    i => i.MatchLdloca(out down),
+                    i => i.MatchLdloca(out left),
+                    i => i.MatchLdloca(out right),
+                    i => i.MatchLdloca(out upLeft),
+                    i => i.MatchLdloca(out upRight),
+                    i => i.MatchLdloca(out downLeft),
+                    i => i.MatchLdloca(out downRight),
                     i => i.MatchCall("Terraria.WorldGen", "TileMergeAttempt")
                 ))
             {

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Content.Liquids;
 using Terraria.ID;
 
 namespace Macrocosm.Common.Sets
