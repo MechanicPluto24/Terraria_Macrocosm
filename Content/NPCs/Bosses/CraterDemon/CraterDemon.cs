@@ -441,6 +441,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.npcSlots = 40f;
             NPC.HitSound = SoundID.NPCHit2;
 
+            NPC.BossBar = ModContent.GetInstance<CraterDemonBossBar>();
+
             if (!Main.dedServ)
                 Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
         }

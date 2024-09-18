@@ -270,6 +270,23 @@ DianiteBar
 		Ancient Manipulator
 
 
+InvarBar
+	Value: 1 gold 75 silver
+	Research count: 25
+	Recipes:
+		Iron Bar x 1
+		Nickel Ore x 1
+		at
+		Hellforge
+			=> x3
+
+		Lead Bar x 8
+		Nickel Ore x 1
+		at
+		Hellforge
+			=> x3
+
+
 SeleniteBar
 	Value: 7 silver 50 copper
 	Research count: 25
@@ -1897,6 +1914,10 @@ DianiteOre
 	Research count: 100
 
 LithiumOre
+	Value: 7 silver 50 copper
+	Research count: 100
+
+NickelOre
 	Value: 7 silver 50 copper
 	Research count: 100
 
