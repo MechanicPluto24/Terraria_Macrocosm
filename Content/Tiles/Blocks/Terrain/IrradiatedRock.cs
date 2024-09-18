@@ -2,7 +2,6 @@ using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

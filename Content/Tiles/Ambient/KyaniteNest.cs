@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 
         public override void RandomUpdate(int i, int j)
         {
-            if(Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 int npcType = Main.rand.NextBool(4) ? ModContent.NPCType<KyaniteScarabSmall>() : ModContent.NPCType<KyaniteScarabCritter>();
                 NPC.NewNPCDirect(Entity.GetSource_NaturalSpawn(), new Vector2(i, j) * 16f, npcType);

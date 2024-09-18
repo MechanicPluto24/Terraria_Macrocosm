@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Global.NPCs
                 modifiers.FinalDamage *= 0.37f;  
 
             if (projectile.type == ProjectileID.NebulaBlaze1 || projectile.type == ProjectileID.NebulaBlaze2)
-                modifiers.FinalDamage *= 0.5f; 
+                modifiers.FinalDamage *= 0.5f;
 
             if (projectile.type == ProjectileID.Meowmere)
                 modifiers.FinalDamage *= 0.6f;
@@ -44,11 +44,6 @@ namespace Macrocosm.Common.Global.NPCs
 
             if (projectile.type == ProjectileID.EmpressBlade)
                 modifiers.FinalDamage *= 0.65f;
-
-
-            // Buffs
-
-
         }
 
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref NPC.HitModifiers modifiers)

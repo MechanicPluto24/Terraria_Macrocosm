@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Global.Items;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;

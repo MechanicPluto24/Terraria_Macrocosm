@@ -1,19 +1,17 @@
-﻿using Terraria.Audio;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Keys;
+using System;
+using System.Collections;
+using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using Macrocosm.Content.Dusts;
-using Microsoft.Xna.Framework;
-using Terraria.Enums;
-using Macrocosm.Content.Items.Keys;
-using Macrocosm.Common.Enums;
-using Macrocosm.Common.Utils;
-using System;
-using System.Collections;
 
 namespace Macrocosm.Content.Tiles.Furniture.Luminite
 {
@@ -108,11 +106,11 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Tile tile = Main.tile[i, j];
 
             if (tile.TileFrameX % 36 != 0)
-                 left--;
- 
+                left--;
+
             if (tile.TileFrameY != 0)
-                 top--;
- 
+                top--;
+
             int chest = Chest.FindChest(left, top);
             if (chest < 0)
                 return Language.GetTextValue("LegacyChestType.0");
@@ -188,7 +186,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                     if (player.HasItemInInventoryOrOpenVoidBag(key) && Chest.Unlock(left, top) && player.ConsumeItem(key, includeVoidBag: true))
                     {
                         if (Main.netMode == NetmodeID.MultiplayerClient)
-                             NetMessage.SendData(MessageID.LockAndUnlock, -1, -1, null, player.whoAmI, 1f, left, top);
+                            NetMessage.SendData(MessageID.LockAndUnlock, -1, -1, null, player.whoAmI, 1f, left, top);
                     }
                 }
                 else
@@ -247,8 +245,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                     player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
                     if (Main.tile[left, top].TileFrameX / 36 % 2 == 1)
-                         player.cursorItemIconID = ModContent.ItemType<XaocKey>();
- 
+                        player.cursorItemIconID = ModContent.ItemType<XaocKey>();
+
                     player.cursorItemIconText = "";
                 }
             }

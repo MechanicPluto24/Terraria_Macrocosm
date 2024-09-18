@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Debuffs.Radiation
         public override void Update(Player player, ref int buffIndex)
         {
             // DoT
-            player.lifeRegen = -10; 
+            player.lifeRegen = -10;
 
             // Slow
             player.moveSpeed *= 0.3f;

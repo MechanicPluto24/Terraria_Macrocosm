@@ -118,7 +118,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
             if (Main.tile[i, j].TileFrameX / 18 < 2)
-                 player.cursorItemIconReversed = true;
+                player.cursorItemIconReversed = true;
         }
 
         public override void HitWire(int i, int j)

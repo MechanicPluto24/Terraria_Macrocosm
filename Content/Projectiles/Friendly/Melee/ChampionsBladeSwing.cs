@@ -58,13 +58,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Timer++; // Current time that the projectile has been alive.
             Player player = Main.player[Projectile.owner];
             float progress = Timer / MaxTime; // The current time over the max time.
-           
+
             float velocityRotation = Projectile.velocity.ToRotation();
             float adjustedRotation = MathHelper.Pi * SwingDirection * progress + velocityRotation + SwingDirection * MathHelper.Pi + player.fullRotation;
 
             Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
             Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) - Projectile.velocity;
-             if (Timer % 30 == 5)
+            if (Timer % 30 == 5)
             {
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(MathHelper.Pi / 16) * 7f, ModContent.ProjectileType<ChampionsBladeSlash>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, ai0: 0f, ai1: 22f);

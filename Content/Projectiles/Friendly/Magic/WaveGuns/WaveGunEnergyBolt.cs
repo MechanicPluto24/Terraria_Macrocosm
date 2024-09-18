@@ -1,15 +1,13 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
-using Terraria.GameContent.Drawing;
-using Terraria.Graphics.Renderers;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -67,7 +65,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         {
             if (!spawned)
             {
-                if(BeamType == BeamVariant.Blue)
+                if (BeamType == BeamVariant.Blue)
                 {
                     Projectile.penetrate = 1;
                     color = new Color(75, 75, 255, 0);
@@ -110,24 +108,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         {
             for (int i = 0; i < (BeamType is BeamVariant.Purple ? 120 : 60); i++)
             {
-                Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
-                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, DustID.Electric, velocity, Scale: Main.rand.NextFloat(0.2f, 0.6f));
-                dust.noGravity = i % 2 == 0;
-                dust.noLight = true;
-                dust.shader = GameShaders.Armor.GetShaderFromItemId(ItemID.BlueDye).UseColor(color.ToVector3());
-            }
-
-            for (int i = 0; i < Projectile.oldPos.Length; i++)
-            {
-                for (int j = 0; j < (BeamType is BeamVariant.Purple ? 10 : 5); j++)
-                {
-                    float progress = (float)i / (float)Projectile.oldPos.Length;
-                    Vector2 pos = Projectile.oldPos[i];
-                    Dust dust = Dust.NewDustDirect(pos, 20, 20, DustID.Electric, 0f, 0f, Scale: Main.rand.NextFloat(0.2f, 0.6f) * (1f - progress));
-                    dust.noGravity = true;
-                    dust.noLight = true;
-                    dust.shader = GameShaders.Armor.GetShaderFromItemId(ItemID.BlueDye).UseColor(lightColor);
-                }
+                Vector2 velocity = (BeamType is BeamVariant.Purple ? new Vector2(3f) : new Vector2(2f)).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, ModContent.DustType<ElectricSparkDust>(), velocity, Scale: Main.rand.NextFloat(0.1f, 0.6f));
+                dust.noGravity = false;
+                dust.color = color;
+                dust.alpha = Main.rand.Next(60);
             }
 
             for (int i = 0; i < (BeamType is BeamVariant.Purple ? 18 : 12); i++)
@@ -157,7 +142,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + $"Trace{Main.rand.Next(2,5).ToString()}").Value;
+            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + $"Trace{Main.rand.Next(2, 5).ToString()}").Value;
             state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
@@ -170,7 +155,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Main.spriteBatch.Begin(state);
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.velocity.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 0.25f, SpriteEffects.None, 0f);
-            
+
             return false;
         }
     }

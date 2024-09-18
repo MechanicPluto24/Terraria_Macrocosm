@@ -113,7 +113,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
         {
             if (GetState(i, j) is not State.Locked)
-                return false; 
+                return false;
 
             dustType = DustType;
             return true;

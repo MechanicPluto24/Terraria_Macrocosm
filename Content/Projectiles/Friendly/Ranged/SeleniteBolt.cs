@@ -1,7 +1,5 @@
-using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;

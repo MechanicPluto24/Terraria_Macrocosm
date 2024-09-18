@@ -105,16 +105,16 @@ namespace Macrocosm.Content.Players
 
             if (IrradiationLevel >= 4f)
             {
-                if (Main.rand.NextFloat() <= 0.5f)   
+                if (Main.rand.NextFloat() <= 0.5f)
                     buffType = severeDebuffs.GetRandom();
-                else if (Main.rand.NextFloat() <= 0.7f)   
-                     buffType = moderateDebuffs.GetRandom();
+                else if (Main.rand.NextFloat() <= 0.7f)
+                    buffType = moderateDebuffs.GetRandom();
                 else
-                     buffType = mildDebuffs.GetRandom();
+                    buffType = mildDebuffs.GetRandom();
             }
             else if (IrradiationLevel >= 2.5f)
             {
-                if (Main.rand.NextFloat() <= 0.7f) 
+                if (Main.rand.NextFloat() <= 0.7f)
                     buffType = moderateDebuffs.GetRandom();
                 else
                     buffType = mildDebuffs.GetRandom();

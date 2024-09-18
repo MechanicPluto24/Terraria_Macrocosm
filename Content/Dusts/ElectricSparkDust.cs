@@ -1,13 +1,17 @@
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-    public class LuminiteSparkDust : ModDust
+    public class ElectricSparkDust : ModDust
     {
         public override void OnSpawn(Dust dust)
         {
@@ -16,29 +20,39 @@ namespace Macrocosm.Content.Dusts
         public override bool Update(Dust dust)
         {
             dust.position += dust.velocity;
-            //dust.rotation += dust.dustIndex % 2 == 0 ? 0.5f : -0.5f; 
+            dust.rotation += dust.dustIndex % 2 == 0 ? 0.2f : -0.2f;
 
             float scale = dust.scale;
             if (scale > 1f)
                 scale = 1f;
 
             if (!dust.noLight)
-                Lighting.AddLight((int)(dust.position.X / 16f), (int)(dust.position.Y / 16f), scale * 0.2f, scale * 0.725f, scale * 0.51f);
+                Lighting.AddLight(dust.position, dust.color.ToVector3() * scale);
 
             if (dust.noGravity)
+            {
                 dust.velocity *= 0.93f;
+                if (dust.fadeIn == 0f)
+                    dust.scale += 0.0025f;
+            }
+            else
+            {
+                dust.velocity.Y += 0.035f;
+            }
+
+            dust.velocity *= new Vector2(0.97f, 0.99f);
+
+            if (dust.customData != null && dust.customData is Player player)
+                dust.position += player.position - player.oldPosition;
 
             dust.scale -= 0.01f;
-            if (dust.scale < 0.2f)
+            if (dust.scale < 0.1f)
                 dust.active = false;
 
             return false;
         }
 
-        public override bool MidUpdate(Dust dust) => false;
-
-        public override Color? GetAlpha(Dust dust, Color lightColor)
-                => Color.White.WithOpacity(0.5f);
+        public override Color? GetAlpha(Dust dust, Color lightColor) => dust.color.WithAlpha((byte)dust.alpha);
 
         public override bool PreDraw(Dust dust)
         {

@@ -12,17 +12,20 @@ namespace Macrocosm.Content.Dusts
             dust.position += dust.velocity;
             dust.rotation += dust.dustIndex % 2 == 0 ? 0.2f : -0.2f;
 
-            float clampedScale = dust.scale;
-            if (clampedScale > 1f)
-                clampedScale = 1f;
+            float scale = dust.scale;
+            if (scale > 1f)
+                scale = 1f;
 
             if (!dust.noLight)
-                Lighting.AddLight(dust.position, new Color(255, 146, 0).ToVector3() * clampedScale * 0.8f);
+                Lighting.AddLight(dust.position, new Color(248, 137, 0).ToVector3() * scale);
 
             if (dust.noGravity)
                 dust.velocity *= 0.92f;
             else
                 dust.velocity.Y += 0.1f;
+
+            if (dust.customData != null && dust.customData is Player player)
+                dust.position += player.position - player.oldPosition;
 
             dust.scale -= 0.03f;
             if (dust.scale < 0.2f)
@@ -34,23 +37,6 @@ namespace Macrocosm.Content.Dusts
         public override bool MidUpdate(Dust dust) => false;
 
         public override Color? GetAlpha(Dust dust, Color lightColor)
-            => Color.White.WithOpacity(0.5f);
-
-        public override bool PreDraw(Dust dust)
-        {
-            //float count = Math.Abs(dust.velocity.X) + Math.Abs(dust.velocity.Y) * 3f;
-            //if (count > 10f)
-            //	count = 10f;
-            //
-            //for (int n = 0; n < count; n++)
-            //{
-            //	Vector2 trailPosition = dust.position - dust.velocity * n;
-            //	float scale = dust.scale * (1f - n / 10f);
-            //	Color color = Lighting.GetColor((int)(dust.position.X + 4.0) / 16, (int)(dust.position.Y + 4.0) / 16);
-            //	Main.spriteBatch.Draw(dust.GetTexture(), trailPosition - Main.screenPosition, dust.frame, dust.GetAlpha(color), dust.rotation, new Vector2(4f, 4f), scale, SpriteEffects.None, 0f);
-            //}
-
-            return true;
-        }
+            => Color.White.WithAlpha(127);
     }
 }

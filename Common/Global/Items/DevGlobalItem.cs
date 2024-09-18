@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Content.Rarities;
 using System.Collections.Generic;
-using System.Drawing;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;

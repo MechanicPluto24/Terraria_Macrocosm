@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Particles
         {
             FadeIn = false;
             FadeOut = true;
-        }    
+        }
 
         public override void OnSpawn()
         {

@@ -5,15 +5,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-    public class PlasmaBallDust : ModDust
+    public class InhibitorFieldDust : ModDust
     {
-
-        float vanishSpeed;
+        private float scaleDownSpeed;
 
         public override void OnSpawn(Dust dust)
         {
             dust.scale = Main.rand.NextFloat(1, 1.35f);
-            vanishSpeed = Main.rand.NextFloat(0.04f, 0.01f);
+            scaleDownSpeed = Main.rand.NextFloat(0.04f, 0.01f);
         }
 
         public override bool Update(Dust dust)
@@ -38,9 +37,9 @@ namespace Macrocosm.Content.Dusts
             dust.position += dust.velocity;
 
             if (!hasOwner || ownerActive == false)
-                dust.scale -= vanishSpeed * 3f;
+                dust.scale -= scaleDownSpeed * 3f;
             else
-                dust.scale -= vanishSpeed * 0.7f;
+                dust.scale -= scaleDownSpeed * 0.7f;
 
             if (dust.scale < 0.2f)
                 dust.active = false;

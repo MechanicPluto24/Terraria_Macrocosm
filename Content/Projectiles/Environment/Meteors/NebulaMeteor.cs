@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                         new Vector2(Projectile.position.X, Projectile.position.Y),
                         Projectile.width,
                         Projectile.height,
-                        DustID.UndergroundHallowedEnemies,  
+                        DustID.UndergroundHallowedEnemies,
                         0f,
                         0f,
                         Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)

@@ -1,13 +1,11 @@
-﻿using Macrocosm.Content.Backgrounds.Moon;
-using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {
-    public class MoonNightBiome : ModBiome 
+    public class MoonNightBiome : ModBiome
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
         public override float GetWeight(Player player) => 0.6f;

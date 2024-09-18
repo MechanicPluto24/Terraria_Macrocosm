@@ -1,9 +1,7 @@
 ﻿using Macrocosm.Common.WorldGeneration;
-using Macrocosm.Content.Tiles.Ores;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 {

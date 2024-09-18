@@ -1,12 +1,6 @@
-﻿using Macrocosm.Common.Sets;
-using Macrocosm.Content.Buffs.Potions;
-using Macrocosm.Content.Players;
-using Macrocosm.Content.Rarities;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Consumables.Potions
@@ -27,7 +21,7 @@ namespace Macrocosm.Content.Items.Consumables.Potions
             Item.useTurn = true;
             Item.useTime = 17;
             Item.useAnimation = 17;
-            Item.useStyle = ItemUseStyleID.DrinkLong;  
+            Item.useStyle = ItemUseStyleID.DrinkLong;
             Item.UseSound = SoundID.Item3;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.value = Item.buyPrice(silver: 50);

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Content.NPCs.Enemies.Moon;
-using Macrocosm.Content.Rarities;
+﻿using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

@@ -9,7 +9,6 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Map;
-using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Utils
@@ -236,7 +235,7 @@ namespace Macrocosm.Common.Utils
                             else
                             {
                                 Vector2 top = GetMultitileTopLeft(x2, y2).ToVector2();
-                                x2 = (int)top.X; 
+                                x2 = (int)top.X;
                                 y2 = (int)top.Y;
                             }
                             pos = new(x2, y2);

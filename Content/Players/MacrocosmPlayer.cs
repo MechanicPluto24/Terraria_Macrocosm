@@ -1,10 +1,8 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Buffs.Potions;
 using Macrocosm.Content.Debuffs.Environment;
-using Macrocosm.Content.Debuffs.Radiation;
 using Macrocosm.Content.Items.Consumables.Potions;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;

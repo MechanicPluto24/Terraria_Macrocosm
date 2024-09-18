@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -33,7 +32,7 @@ namespace Macrocosm.Common.WorldGeneration
             public int tileStyle = tileStyle;
             public int wallType = wallType;
             public int objectID = objectID;
-            public int liquidType = liquidType;  
+            public int liquidType = liquidType;
             public int liquidAmount = liquidAmount;
             public int slopeID = slopeID;
             public int wireType = wireType;
