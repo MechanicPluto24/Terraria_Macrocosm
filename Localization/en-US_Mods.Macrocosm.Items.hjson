@@ -1998,3 +1998,13 @@ StarRoyaleWorkbench: {
 	DisplayName: Star Royale Workbench
 	Tooltip: ""
 }
+
+InvarBar: {
+	DisplayName: Invar Bar
+	Tooltip: ""
+}
+
+NickelOre: {
+	DisplayName: Nickel Ore
+	Tooltip: ""
+}
