@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Tiles.Ambient
             TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type] = true;
 
             Main.tileNoAttach[Type] = true;
-            DustType = ModContent.DustType<GreenBrightDust>();
+            DustType = ModContent.DustType<IrradiatedDust>();
 
             MinPick = 9999; // Very hard to break.
             Main.tileLighted[Type] = true;
