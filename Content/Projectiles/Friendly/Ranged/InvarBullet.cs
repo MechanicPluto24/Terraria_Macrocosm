@@ -1,5 +1,6 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -18,6 +19,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetStaticDefaults()
         {
+            Main.projFrames[Type] = 2;
             ProjectileSets.HitsTiles[Type] = true;
         }
 
@@ -26,6 +28,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.width = 4;
             Projectile.height = 4;
             Projectile.timeLeft = 600;
+            Projectile.extraUpdates = 3;
+        }
+
+        private bool spawned = false;
+        public override void AI()
+        {
+            if (!spawned)
+            {
+                Projectile.frame = Main.rand.Next(2);
+                spawned = true;
+            }
         }
 
         public override bool CanRicochet()
@@ -65,6 +78,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             for (int i = 0; i < Main.rand.Next(10, 20); i++)
                 Dust.NewDustPerfect(Projectile.position + Projectile.oldVelocity * 1.2f, ModContent.DustType<InvarBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.2f, 0.3f), Scale: 2.4f);
+
+            return true;
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if(Projectile.frame == 0)
+                Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(52, 37, 3) * lightColor.GetBrightness(), Color.Transparent);
+            else if (Projectile.frame == 1)
+                Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(52, 37, 3) * lightColor.GetBrightness(), Color.Transparent);
 
             return true;
         }
