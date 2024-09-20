@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             ProjectileID.Sets.TrailingMode[Type] = 0;
         }
         //Similar to the luminite star.
-        Color colour = new Color(100, 255, 255);
+        Color colour =new Color(34, 221, 151, 0);
 
 
         public override void SetDefaults()
