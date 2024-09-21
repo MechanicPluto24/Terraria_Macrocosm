@@ -153,7 +153,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            
             Vector2 drawPos = (NPC.Center + new Vector2(35f, 50f + offsetY)) - Main.screenPosition;
             Color colour = NPC.GetAlpha(drawColor);
 
@@ -161,7 +160,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             handTexture ??= ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/MoonLich/MoonLichHand");
 
             spriteBatch.Draw(handTexture.Value, drawPos, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, SpriteEffects.FlipHorizontally, 0f);
-           
+
             Vector2 drawPos2 = (NPC.Center + new Vector2(-25f, 50f + offsetY)) - Main.screenPosition;
             spriteBatch.Draw(handTexture.Value, drawPos2, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, SpriteEffects.None, 0f);
 
@@ -181,9 +180,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                 NPC.frame.Y += frameHeight;
 
                 if (NPC.frame.Y >= Main.npcFrameCount[Type] * frameHeight)
-                {
                     NPC.frame.Y = 0;
-                }
             }
         }
 
