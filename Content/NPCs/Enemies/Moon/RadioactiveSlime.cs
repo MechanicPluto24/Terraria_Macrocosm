@@ -3,9 +3,12 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using System;
+using ReLogic.Content;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,6 +16,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class RadioactiveSlime : ModNPC
     {
+        private static Asset<Texture2D> Glow;
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
@@ -56,12 +60,25 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
 
         }
+        public override bool PreAI(){
+        Player player = Main.LocalPlayer;
+        float distance =Vector2.Distance(player.Center,NPC.Center);
+        if (distance<100f)
+            player.GetModPlayer<IrradiationPlayer>().IrradiationLevel += 0.02f * (1f - distance / 100f);
+
+        if(Main.rand.NextBool(12)){
+            Vector2 Pos=NPC.Center+(new Vector2(1,0).RotatedByRandom(MathHelper.TwoPi)*Main.rand.NextFloat(1f,100f));
+           Dust.NewDustDirect(Pos,0, 0, ModContent.DustType<IrradiatedDust>(), Main.rand.NextFloat(0,0.03f),Main.rand.NextFloat(0,0.03f));
+        }
+        return true;
+
+        }
 
         public override void HitEffect(NPC.HitInfo hit)
         {
             for (int i = 0; i < 10; i++)
             {
-                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<LuminiteBrightDust>());
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, ModContent.DustType<IrradiatedDust>());
                 Dust dust = Main.dust[dustIndex];
                 dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
                 dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
@@ -76,9 +93,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private SpriteBatchState state;
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
+            Glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle7");
+            spriteBatch.Draw(Glow.Value, NPC.Center-Main.screenPosition, null, new Color(48,237,74,0), 0f, Glow.Size() / 2, 0.2f, SpriteEffects.None, 0f);
             state.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state);
+            
 
             return true;
         }
