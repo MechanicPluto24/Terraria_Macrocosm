@@ -5424,7 +5424,7 @@ namespace Macrocosm.Common.Utils
         //Code Excerpts are pieces of code from vanilla AI that were converted into standalone methods.
 
         /// <summary> Code based on vanilla halfbrick walkup code, checks for and attempts to walk over half tiles. </summary>
-        public static void WalkupHalfBricks(NPC npc)
+        public static void WalkupHalfBricks(this NPC npc)
         {
             WalkupHalfBricks(npc, ref npc.gfxOffY, ref npc.stepSpeed);
         }

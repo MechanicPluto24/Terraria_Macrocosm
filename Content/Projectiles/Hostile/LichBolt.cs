@@ -18,9 +18,9 @@ namespace Macrocosm.Content.Projectiles.Hostile
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
             ProjectileID.Sets.TrailingMode[Type] = 0;
         }
-        //Similar to the luminite star.
-        Color colour =new Color(34, 221, 151, 0);
 
+        // Similar to the luminite star.
+        private Color colour = new(34, 221, 151, 0);
 
         public override void SetDefaults()
         {
@@ -48,7 +48,6 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
-
 
             return false;
         }

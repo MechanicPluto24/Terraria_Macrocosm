@@ -9,14 +9,12 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
-
 {
-    public class InhibitorFieldGrenadeItem : ModItem
+    public class InhibitorFieldGrenade : ModItem
     {
         public override void SetStaticDefaults()
         {
             ItemID.Sets.SkipsInitialUseSound[Type] = true;
-
         }
 
         public override void SetDefaults()
@@ -35,13 +33,13 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.DamageType = DamageClass.Ranged;
             Item.noMelee = true;
             Item.shootSpeed = 15f;
-            Item.shoot = ModContent.ProjectileType<InhibitorFieldGrenade>();
+            Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Ranged.InhibitorFieldGrenade>();
             Item.maxStack = 9999;
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<InhibitorFieldGrenade>(), damage, knockback, Main.myPlayer,ai0: 450, ai1: 200);
+            Projectile.NewProjectile(source, position, velocity, Item.shoot, damage, knockback, Main.myPlayer,ai0: 450, ai1: 200);
             return false;
         }
 
