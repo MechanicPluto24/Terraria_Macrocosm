@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, LuminiteSlime.EffectColor, LuminiteSlime.EffectColor.WithOpacity(0f));
+            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, LuminiteSlime.EffectColor, LuminiteSlime.EffectColor * 0f);
 
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();

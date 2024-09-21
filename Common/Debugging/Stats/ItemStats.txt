@@ -278,13 +278,11 @@ InvarBar
 		Nickel Ore x 1
 		at
 		Hellforge
-			=> x3
 
-		Lead Bar x 8
+		Lead Bar x 1
 		Nickel Ore x 1
 		at
 		Hellforge
-			=> x3
 
 
 SeleniteBar
@@ -2756,6 +2754,10 @@ Copernicus
 
 Cruithne
 	Value: 1 gold
+	Research count: 1
+
+InhibitorFieldGrenade
+	Value: 20 silver
 	Research count: 1
 
 LHBMinigun
