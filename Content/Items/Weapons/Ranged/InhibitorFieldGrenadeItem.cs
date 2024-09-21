@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -9,8 +9,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
+
 {
-    public class RocheChakram : ModItem
+    public class InhibitorFieldGrenadeItem : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -20,27 +21,27 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarityT2>();
             Item.value = Item.sellPrice(silver: 4);
             Item.useStyle = ItemUseStyleID.Swing;
-            Item.useAnimation = 15;
-            Item.useTime = 15;
+            Item.useAnimation = 30;
+            Item.useTime = 30;
             Item.consumable = true;
-            Item.UseSound = SoundID.Item71;
+            Item.UseSound = SoundID.Item7;
             Item.autoReuse = true;
-            Item.damage = 265;
-            Item.knockBack = 0.5f;
+            Item.damage = 340;
+            Item.knockBack = 1f;
             Item.noUseGraphic = true;
             Item.DamageType = DamageClass.Ranged;
             Item.noMelee = true;
-            Item.shootSpeed = 20f;
-            Item.shoot = ModContent.ProjectileType<RocheChakramProjectile>();
+            Item.shootSpeed = 15f;
+            Item.shoot = ModContent.ProjectileType<InhibitorFieldGrenade>();
             Item.maxStack = 9999;
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<RocheChakramProjectile>(), damage, knockback, Main.myPlayer, ai0: 0f);
+            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<InhibitorFieldGrenade>(), damage, knockback, Main.myPlayer,ai0: 450, ai1: 200);
             return false;
         }
 
@@ -52,13 +53,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             return null;
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe(20)
-            .AddIngredient<SeleniteBar>(1)
-            .AddIngredient(ItemID.LunarBar, 1)
-            .AddTile(TileID.LunarCraftingStation)
-            .Register();
-        }
+      
     }
 }
