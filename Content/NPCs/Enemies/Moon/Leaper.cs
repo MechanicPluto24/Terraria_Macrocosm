@@ -135,10 +135,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     leaper.Jumping = true;
                 }
 
-                if (Utility.HitTileOnSide(npc, 0) || Utility.HitTileOnSide(npc, 1) && (leaper.Jumping == true && leaper.Fear == false && npc.velocity.X == 0))
+                if ((leaper.CheckRight()||leaper.CheckLeft())&&leaper.Fear == false&&!leaper.CheckUnder()&&leaper.TimeSinceLastJump<1)
                 {
                     leaper.PreformingWallAnimation = true;
                     npc.frame.Y = 1056;
+                    npc.velocity = Vector2.Zero;
                 }
                 else
                     leaper.PreformingWallAnimation = false;
@@ -149,7 +150,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.Player.ZoneRockLayerHeight ? .1f : 0f;
         }
-
+        public int TimeSinceLastJump=0;
         public float LightValueFlee = 0.1f; //This light value causes the leaper to flee.
         public float LightValueRage = 0.5f; //This light value causes the leaper to enrage faster.
         public float RageThreshold = 12f; //Determines the switch between fleeing and hostility.
@@ -166,6 +167,23 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 return 0.09f; //Becomes enrages quickly while in bright light
             else
                 return 0f; //I dont think this will be useful but you never know.
+        }
+        public bool CheckRight()
+        {
+            float Dist1=Utility.CastLength(NPC.Center+new Vector2(0,NPC.height/2), new Vector2(1,0),40f, false);
+            float Dist2=Utility.CastLength(NPC.Center-new Vector2(0,NPC.height/2), new Vector2(1,0),40f, false);
+            return Dist2<18f&&Dist1<18f;
+        }
+        public bool CheckLeft()
+        {
+            float Dist1=Utility.CastLength(NPC.Center+new Vector2(0,NPC.height/2), new Vector2(-1,0),40f, false);
+            float Dist2=Utility.CastLength(NPC.Center-new Vector2(0,NPC.height/2), new Vector2(-1,0),40f, false);
+            return Dist2<18f&&Dist1<18f;
+        }
+        public bool CheckUnder()
+        {
+            float Dist1=Utility.CastLength(NPC.Center, new Vector2(0,1),40f, false);
+            return Dist1<30f;
         }
 
         public override void AI()
@@ -204,6 +222,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (NPC.velocity.Y < 0f)
                 NPC.velocity.Y += 0.1f;
+            TimeSinceLastJump--;
         }
 
         // frames 0 - 9: idle 
@@ -236,6 +255,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 {
                     PreformingWallAnimation = false;
                     NPC.velocity = (Main.player[NPC.target].Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 15f;
+                    TimeSinceLastJump=60;
                 }
                 if (Utility.HitTileOnSide(NPC, 0))
                 {

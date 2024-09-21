@@ -84,7 +84,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                     {
                         p.Position = Projectile.position + new Vector2(0, Projectile.height / 2);
                         p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(1f, 5f);
-                        p.Color = new Color(100, 255, 255, 0);
+                        p.Color = new Color(34, 221, 151, 0);
                         p.Scale = new(0.16f);
                     });
                 }

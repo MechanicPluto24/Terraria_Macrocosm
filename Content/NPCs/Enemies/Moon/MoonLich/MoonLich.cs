@@ -37,7 +37,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override void SetDefaults()
         {
-            NPC.width = 40;
+            NPC.width = 46;
             NPC.height = 46;
             NPC.lifeMax = 14000;
             NPC.damage = 60;
@@ -79,7 +79,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                 {
                     p.Position = NPC.position;
                     p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                    p.Color = new Color(100, 255, 255, 0);
+                    p.Color = new Color(34, 221, 151, 0);
                     p.Scale = new(0.1f);
                 });
 
@@ -91,7 +91,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                 if (timer % 120 > 80)
                 {
                     Dust.NewDust(NPC.Center + new Vector2(35f, 50f + offsetY), 0, 0, ModContent.DustType<LuminiteBrightDust>());
-                    Dust.NewDust(NPC.Center + new Vector2(-35f, 50f + offsetY), 0, 0, ModContent.DustType<LuminiteBrightDust>());
+                    Dust.NewDust(NPC.Center + new Vector2(-25f, 50f + offsetY), 0, 0, ModContent.DustType<LuminiteBrightDust>());
                 }
 
                 if (timer % 120 == 119)
@@ -106,7 +106,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                             }
                             for (int i = -1; i < 2; i++)
                             {
-                                Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-35f, 50f + offsetY), (Main.player[NPC.target].Center - (NPC.Center + new Vector2(-35f, 50f + offsetY))).SafeNormalize(Vector2.UnitX).RotatedBy((MathHelper.PiOver4 / 2) * i) * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
+                                Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-25f, 50f + offsetY), (Main.player[NPC.target].Center - (NPC.Center + new Vector2(-25f, 50f + offsetY))).SafeNormalize(Vector2.UnitX).RotatedBy((MathHelper.PiOver4 / 2) * i) * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
                             }
                         }
                         else
@@ -115,10 +115,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
                             projVelocity = projVelocity.SafeNormalize(Vector2.UnitX);
                             projVelocity = (projVelocity + Main.player[NPC.target].velocity * 0.1f).SafeNormalize(Vector2.UnitX);
                             Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(35f, 50f + offsetY), projVelocity * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
-                            Vector2 projVelocity2 = Main.player[NPC.target].Center - (NPC.Center + new Vector2(-35f, 50f + offsetY));
+                            Vector2 projVelocity2 = Main.player[NPC.target].Center - (NPC.Center + new Vector2(-25f, 50f + offsetY));
                             projVelocity2 = projVelocity2.SafeNormalize(Vector2.UnitX);
                             projVelocity2 = (projVelocity2 + Main.player[NPC.target].velocity * 0.1f).SafeNormalize(Vector2.UnitX);
-                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-35f, 50f + offsetY), projVelocity2 * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
+                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + new Vector2(-25f, 50f + offsetY), projVelocity2 * 14f, ModContent.ProjectileType<LichBolt>(), Utility.TrueDamage((int)(NPC.damage * 1.15f)), 1f, Main.myPlayer, ai1: NPC.target);
                         }
                     }
                 }
@@ -153,17 +153,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            SpriteEffects effects = NPC.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            
             Vector2 drawPos = (NPC.Center + new Vector2(35f, 50f + offsetY)) - Main.screenPosition;
             Color colour = NPC.GetAlpha(drawColor);
 
             //Right
             handTexture ??= ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/MoonLich/MoonLichHand");
 
-            spriteBatch.Draw(handTexture.Value, drawPos, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, effects, 0f);
-
-            Vector2 drawPos2 = (NPC.Center + new Vector2(-35f, 50f + offsetY)) - Main.screenPosition;
-            spriteBatch.Draw(handTexture.Value, drawPos2, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, effects, 0f);
+            spriteBatch.Draw(handTexture.Value, drawPos, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, SpriteEffects.FlipHorizontally, 0f);
+           
+            Vector2 drawPos2 = (NPC.Center + new Vector2(-25f, 50f + offsetY)) - Main.screenPosition;
+            spriteBatch.Draw(handTexture.Value, drawPos2, null, colour, NPC.rotation, NPC.Size / 2, NPC.scale, SpriteEffects.None, 0f);
 
             return true;
         }
@@ -171,7 +171,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
         public override void FindFrame(int frameHeight)
         {
             NPC.spriteDirection = -NPC.direction;
-            int frameSpeed = 20;
+            int frameSpeed = 9;
 
             NPC.frameCounter++;
 
