@@ -33,7 +33,5 @@ namespace Macrocosm.Common.Global.Items
 
             return true;
         }
-
-
     }
 }

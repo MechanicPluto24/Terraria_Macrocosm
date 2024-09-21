@@ -2008,3 +2008,8 @@ NickelOre: {
 	DisplayName: Nickel Ore
 	Tooltip: ""
 }
+
+InhibitorFieldGrenade: {
+	DisplayName: Inhibitor Field Grenade
+	Tooltip: ""
+}

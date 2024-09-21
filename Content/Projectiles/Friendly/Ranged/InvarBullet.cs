@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using System.Linq;
 using Terraria;
 using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
@@ -20,6 +21,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 2;
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileSets.HitsTiles[Type] = true;
         }
 
@@ -29,6 +32,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.height = 4;
             Projectile.timeLeft = 600;
             Projectile.extraUpdates = 3;
+            Projectile.frame = 0;
         }
 
         private bool spawned = false;
@@ -36,7 +40,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             if (!spawned)
             {
-                Projectile.frame = Main.rand.Next(2);
+                //Projectile.frame = Main.rand.Next(2); // second frame is ugly
                 spawned = true;
             }
         }
@@ -84,11 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            if(Projectile.frame == 0)
-                Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(52, 37, 3) * lightColor.GetBrightness(), Color.Transparent);
-            else if (Projectile.frame == 1)
-                Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(52, 37, 3) * lightColor.GetBrightness(), Color.Transparent);
-
+            Projectile.DrawMagicPixelTrail(new Vector2(0, 40), 2.1f, 0.5f, new Color(121, 92, 18) * Projectile.Opacity, new Color(203, 179, 73, 0) * Projectile.Opacity);
             return true;
         }
     }

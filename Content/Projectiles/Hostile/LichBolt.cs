@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         }
 
         // Similar to the luminite star.
-        private Color colour = new(34, 221, 151, 0);
+        private Color colour = new(34, 221, 151, 255);
 
         public override void SetDefaults()
         {
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, colour, colour.WithOpacity(0f));
+            Projectile.DrawMagicPixelTrail(Vector2.Zero, 4f, 0.1f, colour.WithAlpha(0), Color.Transparent);
 
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
