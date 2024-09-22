@@ -44,6 +44,10 @@ namespace Macrocosm.Common.Global.NPCs
 
             if (projectile.type == ProjectileID.EmpressBlade)
                 modifiers.FinalDamage *= 0.65f;
+
+            if (projectile.type == ProjectileID.MoonlordArrow || projectile.type == ProjectileID.MoonlordArrowTrail)
+                modifiers.FinalDamage *= 0.88f; // apparently luminite arrows are a beast on the moon, but are only used by one moon weapon and no ml weapons
+
         }
 
         public override void ModifyHitByItem(NPC npc, Player player, Item item, ref NPC.HitModifiers modifiers)

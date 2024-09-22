@@ -88,8 +88,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.CloneDefaults(NPCID.DiggerHead);
             NPC.damage = 175;
-            NPC.lifeMax = 3250;
-            NPC.defense = 63;
+            NPC.lifeMax = 9000;
+            NPC.defense = 180;
             FlipSprite = true;
             NPC.width = 86;
             NPC.height = 86;
