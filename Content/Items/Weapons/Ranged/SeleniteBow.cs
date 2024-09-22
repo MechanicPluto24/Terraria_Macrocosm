@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         {
             Item.DefaultToBow(25, 20, true);
 
-            Item.damage = 115;
+            Item.damage = 110;
             Item.knockBack = 4;
 
             Item.width = 32;
