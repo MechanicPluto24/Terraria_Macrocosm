@@ -76,6 +76,9 @@ namespace Macrocosm.Content.Particles
                 dust.noLightEmittence = NoLightEmittence;
                 dust.customData = CustomData;
             }
+
+            if (!dust.active)
+                Kill();
         }
 
         public override void OnKill()

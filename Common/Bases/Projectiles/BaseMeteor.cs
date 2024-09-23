@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         public float ScreenshakeIntensity;
 
         public float RotationMultiplier;
-        public float BlastRadiusMultiplier = 1f;
+        public int BlastRadius = 128;
 
         public override void Load()
         {
@@ -74,13 +74,15 @@ namespace Macrocosm.Common.Bases.Projectiles
         {
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
-            Projectile.Resize((int)(Projectile.width * BlastRadiusMultiplier), (int)(Projectile.height * BlastRadiusMultiplier));
+            Projectile.Resize(BlastRadius, BlastRadius);
             Projectile.knockBack = 12f;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Projectile.timeLeft = 3;
+            if(Projectile.timeLeft > 3)
+                Projectile.timeLeft = 3;
+
             Projectile.velocity *= 0f;
             return false;
         }

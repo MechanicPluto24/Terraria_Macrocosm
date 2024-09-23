@@ -132,9 +132,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Particle.Create<TintableFlash>((p) =>
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
-                p.Scale = new(0.05f);
-                p.ScaleVelocity = new(0.08f);
-                p.Color = color.WithAlpha(127);
+                p.Scale = (BeamType is BeamVariant.Purple ? new(0.1f) : new(0f));
+                p.ScaleVelocity = new(0.12f);
+                p.Color = color.WithAlpha(255);
             });
 
         }

@@ -100,13 +100,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.timeLeft = 3;
+            if (Projectile.timeLeft > 3)
+                Projectile.timeLeft = 3;
+
             target.AddBuff(BuffID.Slow, 95);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Projectile.timeLeft = 3;
+            if (Projectile.timeLeft > 3)
+                Projectile.timeLeft = 3;
+
             target.AddBuff(BuffID.Slow, 95);
         }
 
@@ -133,6 +137,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 p.FadeInNormalizedTime = 0f;
                 p.FadeOutNormalizedTime = Main.rand.NextFloat(0.2f, 0.9f);
             }
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.01f);
+                p.ScaleVelocity = new(0.4f);
+                p.Color = new Color(104, 255, 255, 255);
+                p.TimeToLive = 4;
+            });
         }
     }
 }

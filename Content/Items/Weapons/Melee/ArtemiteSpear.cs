@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -37,15 +38,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<ArtemiteSpearProjectile>();
         }
 
-        private int altUseCooldown;
-
-        public override void UpdateInventory(Player player)
-        {
-            if (altUseCooldown > 0)
-                altUseCooldown--;
-        }
-
-        public override bool AltFunctionUse(Player player) => altUseCooldown <= 0;
+        public override bool AltFunctionUse(Player player) => player.GetItemAltUseCooldown(Type) <= 0;
 
         public override bool CanUseItem(Player player)
         {
@@ -54,7 +47,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
                 Item.useTime = 25;
                 Item.useAnimation = 17;
                 Item.useStyle = ItemUseStyleID.Swing;
-                altUseCooldown = 25;
+                player.SetItemAltUseCooldown(Type, 25);
                 return true;
             }
             else if (player.ownedProjectileCounts[ModContent.ProjectileType<ArtemiteSpearProjectile>()] < 1)

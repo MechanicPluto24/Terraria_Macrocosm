@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class ArtemiteSwordShoot : ModProjectile
+    public class ArtemiteSwordSlash : ModProjectile
     {
         public override string Texture => Macrocosm.TexturesPath + "Swing";
 
