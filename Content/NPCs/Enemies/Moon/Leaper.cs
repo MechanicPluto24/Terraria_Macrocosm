@@ -30,7 +30,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.width = 36;
             NPC.height = 44;
             NPC.damage = 65;
-            NPC.defense = 60;
+            NPC.defense = 70;
             NPC.lifeMax = 900;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath2;

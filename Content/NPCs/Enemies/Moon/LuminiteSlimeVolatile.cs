@@ -13,7 +13,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             base.SetDefaults();
             NPC.lifeMax = 650;
             NPC.damage = 80;
-            NPC.defense = 68;
+            NPC.defense = 70;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
