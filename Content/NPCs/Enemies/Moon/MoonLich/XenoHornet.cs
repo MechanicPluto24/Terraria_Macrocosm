@@ -24,7 +24,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             NPC.width = 34;
             NPC.height = 34;
             NPC.damage = 80;
-            NPC.defense = 30;
+            NPC.defense = 50;
             NPC.lifeMax = 200;
 
             NPC.knockBackResist = 0.3f;

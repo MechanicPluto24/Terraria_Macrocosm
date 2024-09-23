@@ -59,8 +59,8 @@ CraterCrawlerBody
 	Damage: 60
 
 CraterCrawlerHead
-	Life: 1800
-	Defense: 120
+	Life: 1600
+	Defense: 100
 	KB resist: 0
 	Damage: 90
 	Drops:
@@ -74,8 +74,8 @@ CraterCrawlerTail
 	Damage: 50
 
 CrescentGhoul
-	Life: 1400
-	Defense: 120
+	Life: 1300
+	Defense: 100
 	KB resist: 0
 	Damage: 65
 	Drops:
@@ -190,8 +190,8 @@ MoonWormBody
 	Damage: 120
 
 MoonWormHead
-	Life: 9000
-	Defense: 180
+	Life: 8000
+	Defense: 160
 	KB resist: 0
 	Damage: 175
 	Drops:
