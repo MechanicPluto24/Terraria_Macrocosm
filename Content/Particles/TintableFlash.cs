@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, null, Color, 0f, Texture.Size() / 2f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, null, Color, Rotation, Texture.Size() / 2f, Scale, SpriteEffects.None, 0f);
             return false;
         }
     }

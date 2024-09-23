@@ -1,4 +1,6 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -10,8 +12,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 {
     public class StarDestroyer : GunHeldProjectileItem
     {
-        private int starType = 0;
-
         public override void SetStaticDefaults()
         {
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
@@ -47,13 +47,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile gunHeldProjectile)
         {
+            int starType = player.ItemUseCount(Type) % 2;
             Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1), ModContent.ProjectileType<StarDestroyerStar>(), damage, knockback, player.whoAmI, ai0: starType);
 
             for (int i = 0; i < Main.rand.Next(1, 3 + 1); i++)
-                Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * Main.rand.NextFloat(0.9f, 1.6f), ModContent.ProjectileType<StarDestroyerBeam>(), damage / 2, knockback, player.whoAmI, ai0: i % 2);
-
-            if (starType++ >= 1)
-                starType = 0;
+                Projectile.NewProjectileDirect(source, position, velocity.RotatedByRandom(0.1) * Main.rand.NextFloat(0.9f, 1.6f), ModContent.ProjectileType<StarDestroyerBeam>(), damage / 2, knockback, player.whoAmI, ai0: starType);
 
             return false;
         }

@@ -31,7 +31,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         }
 
         public bool RifleMode { get; private set; }
-        private int shotCount;
 
         public override void SetDefaults()
         {
@@ -104,7 +103,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         {
             int fireRate = (int)(Item.useTime * player.GetAttackSpeed(DamageClass.Magic));
             int timer = 0;
-            shotCount++;
 
             if (player.AltFunction())
             {
@@ -115,7 +113,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             if (RifleMode)
                 Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunRifleHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer);
             else
-                Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunDualHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer, ai2: shotCount);
+                Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunDualHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer, ai2: player.ItemUseCount(Type));
 
             return false;
         }

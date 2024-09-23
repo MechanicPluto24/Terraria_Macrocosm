@@ -1,6 +1,8 @@
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Players;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -13,7 +15,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class ArtemiteSword : ModItem
     {
-        private int shotCount;
         public override void SetStaticDefaults()
         {
 
@@ -33,16 +34,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<ArtemiteSwordSwing>();
-            Item.shootSpeed = 16f;
+            Item.shootSpeed = 10f;
         }
-
-        /*
-        public override void UpdateInventory(Player player)
-        {
-            if (player.CurrentItem() != Item)
-                shotCount = 0;
-        }
-        */
 
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
@@ -60,12 +53,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteSwordSwing>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: player.GetAdjustedItemScale(Item));
 
-            Item.shootSpeed = 10;
-            if (shotCount <= 0)
-                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity, ModContent.ProjectileType<ArtemiteSwordShoot>(), damage, knockback, player.whoAmI, ai1: Item.shootSpeed);
-
-            if (shotCount++ >= 1)
-                shotCount = 0;
+            if (player.ItemUseCount(Type) % 2 == 0)
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity, ModContent.ProjectileType<ArtemiteSwordSlash>(), damage, knockback, player.whoAmI, ai1: Item.shootSpeed);
 
             return false;
         }

@@ -206,7 +206,7 @@ namespace Macrocosm.Common.Drawing.Particles
                 }
             }
 
-            if (alphaBlendDrawers.Any())
+            if (alphaBlendDrawers.Count > 0)
             {
                 Main.spriteBatch.End();
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);

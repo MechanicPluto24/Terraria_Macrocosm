@@ -91,8 +91,8 @@ Dweller
 		Moonstone, (1-5) 10%
 
 Hermite
-	Life: 600
-	Defense: 90
+	Life: 1300
+	Defense: 100
 	KB resist: 0
 	Damage: 60
 	Drops:
@@ -100,8 +100,8 @@ Hermite
 		Moonstone, (1-5) 10%
 
 KyaniteScarabSmall
-	Life: 200
-	Defense: 62
+	Life: 300
+	Defense: 90
 	KB resist: 0.6
 	Damage: 50
 	Drops:
@@ -109,15 +109,15 @@ KyaniteScarabSmall
 
 Leaper
 	Life: 900
-	Defense: 60
+	Defense: 70
 	KB resist: 0.03
 	Damage: 65
 	Drops:
 		Moonstone, (1-5) 10%
 
 LuminiteElemental
-	Life: 580
-	Defense: 80
+	Life: 1300
+	Defense: 100
 	KB resist: 0.2
 	Damage: 75
 	Drops:
@@ -125,8 +125,8 @@ LuminiteElemental
 		Moonstone, (1-5) 10%
 
 LuminiteSlime
-	Life: 550
-	Defense: 64
+	Life: 700
+	Defense: 80
 	KB resist: 0.5
 	Damage: 80
 	Drops:
@@ -135,7 +135,7 @@ LuminiteSlime
 
 LuminiteSlimeVolatile
 	Life: 650
-	Defense: 68
+	Defense: 70
 	KB resist: 0.5
 	Damage: 80
 	Drops:
@@ -144,15 +144,15 @@ LuminiteSlimeVolatile
 
 LunarChimera
 	Life: 1500
-	Defense: 90
+	Defense: 100
 	KB resist: 0.5
 	Damage: 100
 	Drops:
 		Moonstone, (1-5) 10%
 
 MoonLich
-	Life: 14000
-	Defense: 75
+	Life: 15000
+	Defense: 90
 	KB resist: 0
 	Damage: 60
 	Drops:
@@ -168,8 +168,8 @@ Scatterbrained
 		Moonstone, (1-5) 10%
 
 XenoHive
-	Life: 1000
-	Defense: 60
+	Life: 1200
+	Defense: 90
 	KB resist: 0.3
 	Damage: 65
 	Drops:
@@ -177,7 +177,7 @@ XenoHive
 
 XenoHornet
 	Life: 200
-	Defense: 30
+	Defense: 50
 	KB resist: 0.3
 	Damage: 80
 	Drops:
@@ -213,8 +213,8 @@ MoonZombie
 		Moonstone, (1-5) 10%
 
 RadioactiveSlime
-	Life: 2000
-	Defense: 60
+	Life: 2100
+	Defense: 80
 	KB resist: 0.5
 	Damage: 50
 	Drops:

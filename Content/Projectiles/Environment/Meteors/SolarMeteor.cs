@@ -13,14 +13,14 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
         {
             base.SetDefaults();
 
-            Projectile.width = 52;
-            Projectile.height = 44;
+            Projectile.width = 64;
+            Projectile.height = 64;
 
             ScreenshakeMaxDist = 140f * 16f;
             ScreenshakeIntensity = 100f;
 
             RotationMultiplier = 0.01f;
-            BlastRadiusMultiplier = 3.5f;
+            BlastRadius = 224;
         }
 
         public override void MeteorAI()
@@ -31,14 +31,14 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             if (Main.rand.NextBool(1))
             {
                 Dust dust = Dust.NewDustDirect(
-                        new Vector2(Projectile.position.X, Projectile.position.Y),
-                        Projectile.width,
-                        Projectile.height,
-                        DustID.SolarFlare,
-                        0f,
-                        0f,
-                        Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
-                    );
+                    Projectile.position,
+                    Projectile.width,
+                    Projectile.height,
+                    DustID.SolarFlare,
+                    0f,
+                    0f,
+                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                );
 
                 dust.noGravity = true;
             }
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             for (int i = 0; i < ImpactDustCount; i++)
             {
                 Dust dust = Dust.NewDustDirect(
-                    new Vector2(Projectile.Center.X, Projectile.Center.Y),
+                    Projectile.position,
                     Projectile.width,
                     Projectile.height,
                     DustID.SolarFlare,
@@ -70,8 +70,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
         public override void SpawnItems()
         {
             int type = ModContent.ItemType<SolarChunk>();
-            Vector2 position = new Vector2(Projectile.position.X + Projectile.width / 2, Projectile.position.Y - Projectile.height);
-            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
+            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center,  type);
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
         }
     }

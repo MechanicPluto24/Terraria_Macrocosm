@@ -1,4 +1,5 @@
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -81,7 +82,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
                     SoundEngine.PlaySound(SoundID.MaxMana, player.position);
                     for (int j = 0; j < 20; j++)
                     {
-                        int num = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, DustID.GemAmethyst, 0f, 0f, 100, default(Color), 2f);
+                        int num = Dust.NewDust(new Vector2(player.position.X, player.position.Y), player.width, player.height, ModContent.DustType<GreenBrightDust>(), 0f, 0f, 100, default(Color), 2f);
                         Dust dust = Main.dust[num];
                         dust.position.X = dust.position.X + (float)Main.rand.Next(-20, 21);
                         Dust dust2 = Main.dust[num];

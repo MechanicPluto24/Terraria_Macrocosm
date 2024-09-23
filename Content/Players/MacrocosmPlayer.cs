@@ -42,7 +42,17 @@ namespace Macrocosm.Content.Players
         private float chanceToNotConsumeAmmo = 0f;
         #endregion
 
-        #region Weapon data
+        #region Item use data
+
+        /// <summary> Use counter per item type. Not synced, not saved. </summary>
+        public int[] ItemUseCount { get; private set; }
+
+        /// <summary> Alt use cooldown per item type. Not synced, not saved. </summary>
+        public int[] ItemAltUseCooldown { get; private set; }
+        
+        #endregion
+
+        #region Specific weapon data
         /// <summary> 
         /// Chandrium whip hit stacks. 
         /// Not synced.
@@ -68,18 +78,35 @@ namespace Macrocosm.Content.Players
         public bool KnowsToUseZombieFinger = false;
         #endregion
 
+        public override void Initialize()
+        {
+            ItemUseCount = new int[ItemLoader.ItemCount];
+            ItemAltUseCooldown = new int[ItemLoader.ItemCount];
+        }
+
+        public override void OnEnterWorld()
+        {
+            CircuitSystem.SearchCircuits();
+        }
+
         public override void ResetEffects()
         {
             SpaceProtection = 0f;
             ChanceToNotConsumeAmmo = 0f;
 
             Player.buffImmune[BuffType<Depressurized>()] = false;
+
+            for(int type = 0; type < ItemLoader.ItemCount; type++)
+            {
+                if (ItemAltUseCooldown[type] > 0)
+                    ItemAltUseCooldown[type]--;
+            }
         }
 
-        #region Hooks
-        public override void OnEnterWorld()
+        public override bool CanUseItem(Item item)
         {
-            CircuitSystem.SearchCircuits();
+            ItemUseCount[item.type]++;
+            return true;
         }
 
         public override bool CanConsumeAmmo(Item weapon, Item ammo)
@@ -109,7 +136,6 @@ namespace Macrocosm.Content.Players
         {
             OnHurt_ChangeMedkit();
         }
-        #endregion
 
         #region Equipment & Environment Effects
         private void Update_EnvironmentalDebuffs()

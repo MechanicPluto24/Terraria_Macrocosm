@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.CameraModifiers;
+using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -22,35 +23,21 @@ namespace Macrocosm.Common.Utils
         }
 
         // TODO: some sort of netsync where the server or other clients can shake a player's screen
-        public static void AddScreenshake(this Player player, float intensity, string context)
-        {
-            Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
-        }
+        public static void AddScreenshake(this Player player, float intensity, string context) => Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
 
-        public static Player GetClosestPlayer(Vector2 position, int width, int height)
-        {
-            return Main.player[Player.FindClosest(position, width, height)];
-        }
+        public static Player GetClosestPlayer(Vector2 position, int width, int height) => Main.player[Player.FindClosest(position, width, height)];
 
-        public static Player GetClosestPlayer(Point tileCoords, int width, int height)
-        {
-            return Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates(), width, height)];
-        }
+        public static Player GetClosestPlayer(Point tileCoords, int width, int height) => Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates(), width, height)];
 
-        public static Player GetClosestPlayer(Point16 tileCoords, int width, int height)
-        {
-            return Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates(), width, height)];
-        }
+        public static Player GetClosestPlayer(Point16 tileCoords, int width, int height) => Main.player[Player.FindClosest(tileCoords.ToWorldCoordinates(), width, height)];
 
-        public static Item CurrentItem(this Player player)
-        {
-            return Main.mouseItem.type == ItemID.None ? player.inventory[player.selectedItem] : Main.mouseItem;
-        }
+        public static Item CurrentItem(this Player player) => Main.mouseItem.type == ItemID.None ? player.inventory[player.selectedItem] : Main.mouseItem;
 
-        public static bool AltFunction(this Player player)
-        {
-            return player.altFunctionUse == 2;
-        }
+        public static bool AltFunction(this Player player) => player.altFunctionUse == 2;
+
+        public static int ItemUseCount(this Player player, int itemType) => player.GetModPlayer<MacrocosmPlayer>().ItemUseCount[itemType];
+        public static int GetItemAltUseCooldown(this Player player, int itemType) => player.GetModPlayer<MacrocosmPlayer>().ItemAltUseCooldown[itemType];
+        public static void SetItemAltUseCooldown(this Player player, int itemType, int cooldown) => player.GetModPlayer<MacrocosmPlayer>().ItemAltUseCooldown[itemType] = cooldown;
 
         public static Point TargetCoords() => new(Player.tileTargetX, Player.tileTargetY);
         public static Point TargetCoords(this Player _) => new(Player.tileTargetX, Player.tileTargetY);

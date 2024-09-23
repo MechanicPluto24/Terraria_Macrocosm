@@ -112,19 +112,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (StarType == StarVariant.Yellow)
-                Projectile.timeLeft = 3;
+                if (Projectile.timeLeft > 3)
+                    Projectile.timeLeft = 3;
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             if (StarType == StarVariant.Yellow)
-                Projectile.timeLeft = 3;
+                if (Projectile.timeLeft > 3)
+                    Projectile.timeLeft = 3;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             if (StarType == StarVariant.Yellow)
-                Projectile.timeLeft = 3;
+                if (Projectile.timeLeft > 3)
+                    Projectile.timeLeft = 3;
 
             return true;
         }

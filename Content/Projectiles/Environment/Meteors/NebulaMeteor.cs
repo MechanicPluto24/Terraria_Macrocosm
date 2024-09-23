@@ -1,5 +1,9 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.GrabBags;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -13,14 +17,14 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
         {
             base.SetDefaults();
 
-            Projectile.width = 52;
-            Projectile.height = 44;
+            Projectile.width = 64;
+            Projectile.height = 64;
 
             ScreenshakeMaxDist = 140f * 16f;
             ScreenshakeIntensity = 100f;
 
             RotationMultiplier = 0.01f;
-            BlastRadiusMultiplier = 3.5f;
+            BlastRadius = 224;
         }
 
         public override void MeteorAI()
@@ -32,35 +36,12 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             if (Main.rand.NextBool(1))
             {
                 Dust dust = Dust.NewDustDirect(
-                        new Vector2(Projectile.position.X, Projectile.position.Y),
-                        Projectile.width,
-                        Projectile.height,
-                        DustID.UndergroundHallowedEnemies,
-                        0f,
-                        0f,
-                        Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
-                    );
-
-                dust.noGravity = true;
-            }
-        }
-
-        public override void ImpactEffects()
-        {
-            int ImpactDustCount = Main.rand.Next(140, 160);
-            Vector2 ImpactDustSpeed = new Vector2(3f, 10f);
-            float DustScaleMin = 1f;
-            float DustScaleMax = 1.6f;
-
-            for (int i = 0; i < ImpactDustCount; i++)
-            {
-                Dust dust = Dust.NewDustDirect(
-                    new Vector2(Projectile.Center.X, Projectile.Center.Y),
+                    Projectile.position,
                     Projectile.width,
                     Projectile.height,
                     DustID.UndergroundHallowedEnemies,
-                    Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
-                    Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
+                    0f,
+                    0f,
                     Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
                 );
 
@@ -68,11 +49,41 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             }
         }
 
+        public override void ImpactEffects()
+        {
+            int impactDustCount = Main.rand.Next(450, 480);
+            for (int i = 0; i < impactDustCount; i++)
+            {
+                int dist = 300;
+                Vector2 offset = Main.rand.NextVector2Circular(dist, dist);
+                Vector2 dustPosition = Projectile.Center + offset;
+                float distFactor = 0.2f + 0.8f * (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
+                Vector2 velocity = -offset * 0.04f * distFactor;
+                Particle.Create<DustParticle>((p =>
+                {
+                    p.DustType = DustID.UndergroundHallowedEnemies;
+                    p.Position = dustPosition;
+                    p.Velocity = velocity;
+                    p.Acceleration = velocity * 0.2f;
+                    p.Scale = new(Main.rand.NextFloat(0.6f, 2.4f));
+                    p.NoGravity = true;
+                    p.NormalUpdate = true;
+                }));
+            }
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.2f);
+                p.ScaleVelocity = new(0.3f);
+                p.Color = CelestialDisco.NebulaColor * 2f;
+            });
+        }
+
         public override void SpawnItems()
         {
             int type = ModContent.ItemType<NebulaChunk>();
-            Vector2 position = new Vector2(Projectile.position.X + Projectile.width / 2, Projectile.position.Y - Projectile.height);
-            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
+            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center,  type);
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
         }
     }

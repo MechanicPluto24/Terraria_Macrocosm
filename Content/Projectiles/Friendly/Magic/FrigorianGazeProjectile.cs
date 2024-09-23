@@ -185,9 +185,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 dust.noGravity = true;
             }
 
+            if (Projectile.timeLeft > 3)
+                Projectile.timeLeft = 3;
+
             Projectile.friendly = true;
             Projectile.Resize(300, 300);
-            Projectile.timeLeft = 3;
             Projectile.alpha = 255;
             Projectile.velocity *= 0;
             exploded = true;
