@@ -44,8 +44,8 @@ Bruiser
 		Moonstone, (1-5) 10%
 
 Clavite
-	Life: 700
-	Defense: 60
+	Life: 1100
+	Defense: 110
 	KB resist: 0
 	Damage: 85
 	Drops:
@@ -59,8 +59,8 @@ CraterCrawlerBody
 	Damage: 60
 
 CraterCrawlerHead
-	Life: 900
-	Defense: 40
+	Life: 1600
+	Defense: 100
 	KB resist: 0
 	Damage: 90
 	Drops:
@@ -74,8 +74,8 @@ CraterCrawlerTail
 	Damage: 50
 
 CrescentGhoul
-	Life: 1000
-	Defense: 70
+	Life: 1300
+	Defense: 100
 	KB resist: 0
 	Damage: 65
 	Drops:
@@ -190,8 +190,8 @@ MoonWormBody
 	Damage: 120
 
 MoonWormHead
-	Life: 3250
-	Defense: 63
+	Life: 8000
+	Defense: 160
 	KB resist: 0
 	Damage: 175
 	Drops:
@@ -205,8 +205,8 @@ MoonWormTail
 	Damage: 100
 
 MoonZombie
-	Life: 600
-	Defense: 65
+	Life: 1000
+	Defense: 90
 	KB resist: 0.5
 	Damage: 80
 	Drops:
@@ -221,8 +221,8 @@ RadioactiveSlime
 		Moonstone, (1-5) 10%
 
 RegolithSlime
-	Life: 450
-	Defense: 50
+	Life: 900
+	Defense: 60
 	KB resist: 0.5
 	Damage: 60
 	Drops:
@@ -247,8 +247,8 @@ ZombieEngineer
 		Moonstone, (1-5) 10%
 
 ZombieSecurity
-	Life: 650
-	Defense: 75
+	Life: 1300
+	Defense: 100
 	KB resist: 0.5
 	Damage: 75
 	Drops:
