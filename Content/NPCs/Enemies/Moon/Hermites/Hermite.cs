@@ -26,7 +26,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
         {
             NPC.width = 21;
             NPC.height = 32;
-            NPC.damage = 60;
+            NPC.damage = 65;
             NPC.defense = 100;
             NPC.lifeMax = 1300;
             NPC.HitSound = SoundID.NPCHit2;
