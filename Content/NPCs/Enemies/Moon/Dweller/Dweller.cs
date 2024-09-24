@@ -348,7 +348,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 
         public override void SetDefaults()
         {
-            NPC.damage = 150;
+            NPC.damage = 105;
             NPC.defense = 25;
             NPC.lifeMax = 20000;
             NPC.HitSound = SoundID.NPCHit1;
