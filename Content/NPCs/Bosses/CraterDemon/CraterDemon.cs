@@ -289,13 +289,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			 /*PhantasmalPortalCount       */ { 0, 1, 1, 2, 1, 2, 2, 3 },
 
-             /*ChargeAttackCountMin        */ { 2, 3, 2, 4, 2, 4, 2, 4 },                       
+             /*ChargeAttackCountMin        */ { 1, 2, 2, 4, 2, 4, 2, 4 },                       
 			 /*ChargeAttackCountMax        */ { 3, 4, 3, 5, 3, 5, 3, 5 },
 			 /*ChargeWaitTime              */ { 60, 20, 50, 15, 45, 10, 45, 10 },    
 			 /*ChargeSlowdownDelay         */ { 30, 16, 26, 14, 45, 22, 12, 18 },    
 			 
 			 /*PortalWaitTimeMin           */ { 80, 70, 40, 30, 20, 10, 5, 0 },                   
-			 /*PortalWaitTimeMax           */ { 160, 150, 80, 70, 40, 30, 10, 5 },                
+			 /*PortalWaitTimeMax           */ { 160, 140, 80, 70, 40, 30, 10, 5 },                
 			 /*PortalIdleTime              */ { 60, 55, 35, 30, 25, 20, 15, 10 },                 
 			 /*PortalChargeAttackCountMin  */ { 1, 2, 1, 2, 1, 2, 1, 2 },                       
 			 /*PortalChargeAttackCountMax  */ { 2, 3, 2, 3, 2, 3, 2, 3 },
@@ -427,7 +427,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.knockBackResist = 0f;
 
             NPC.defense = 150;
-            NPC.damage = 80;
+            NPC.damage = 50;
             NPC.lifeMax = 80000;
 
             NPC.boss = true;
