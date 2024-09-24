@@ -12,7 +12,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             base.SetDefaults();
             NPC.lifeMax = 650;
-            NPC.damage = 80;
+            NPC.damage = 70;
             NPC.defense = 70;
         }
 
