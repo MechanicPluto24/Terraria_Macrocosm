@@ -20,6 +20,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             get => Projectile.ai[1] > 0f;
             set => Projectile.ai[1] = value ? 1f : 0f;
         }
+
         public int Parent
         {
             get => (int)Projectile.ai[2];
@@ -38,7 +39,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             Projectile.width = 66;
             Projectile.height = 74;
             Projectile.hostile = true;
-            Projectile.timeLeft = spawnTimeLeft;
+            Projectile.timeLeft = 15 * 60;
             Projectile.alpha = 0;
             CooldownSlot = 1;
         }
@@ -61,6 +62,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 SoundEngine.PlaySound(SoundID.NPCDeath6 with { PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
                 spawnPosition = Projectile.Center;
+                Direction = Vector2.UnitY.RotatedByRandom(MathHelper.Pi * 2);
                 spawned = true;
             }
 
@@ -76,27 +78,26 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             flashTimer++;
         }
 
-        public Vector2 Direction = Vector2.UnitY.RotatedByRandom(MathHelper.Pi * 2);
-
+        public Vector2 Direction;
         public float Speed = 10f;
         int Counter = 0;
         public bool launched = false;
 
         private void AI_SpawnedFromCD()
         {
-            if (Main.npc[Parent].ai[0] == 3 && launched == false)
+            if ((CraterDemon.AttackState)Main.npc[Parent].ai[0] == CraterDemon.AttackState.SummonPhantasmals && launched == false)
             {
-                if (Speed < 20f)
+                if (Speed < 12f)
                     Speed += 0.06f;
 
-                if (Projectile.Distance(Main.npc[Parent].Center) < 170f)
+                if (Projectile.DistanceSQ(Main.npc[Parent].Center) < 80f * 80f)
                 {
                     Direction = Direction.RotatedBy(-0.04f * Math.Sin(Counter / 10));
                 }
                 else
                 {
                     Vector2 notDirection = Main.npc[Parent].Center - Projectile.Center;
-                    Direction = ((Direction + (notDirection * 0.002f)).SafeNormalize(Vector2.UnitX));
+                    Direction = ((Direction + (notDirection * 0.0008f)).SafeNormalize(Vector2.UnitX));
                 }
 
                 Direction = Direction.SafeNormalize(Vector2.UnitY);
@@ -115,7 +116,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     Direction = (TargetPlayer.Center - Projectile.Center).RotatedByRandom(MathHelper.Pi / 3);
                 }
                 Direction = Direction.SafeNormalize(Vector2.UnitY);
-                Projectile.velocity = Direction * Speed;
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Direction * Speed, 0.5f);
             }
         }
 

@@ -10,12 +10,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
     public class CraterDemonBossBar : ModBossBar
     {
-        private int? bossHeadIndex = -1;
+        private int bossHeadIndex = -1;
 
         public override Asset<Texture2D> GetIconTexture(ref Rectangle? iconFrame)
         {
             if (bossHeadIndex > 0)
-                return TextureAssets.NpcHeadBoss[bossHeadIndex.Value];
+                return TextureAssets.NpcHeadBoss[bossHeadIndex];
 
             return null;
         }
@@ -26,7 +26,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             if (!npc.active)
                 return false;
 
-            bossHeadIndex ??= npc.GetBossHeadTextureIndex();
+            if(bossHeadIndex == -1)
+                bossHeadIndex = npc.GetBossHeadTextureIndex();
 
             life = npc.life;
             lifeMax = npc.lifeMax;

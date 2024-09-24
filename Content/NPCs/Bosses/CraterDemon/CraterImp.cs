@@ -157,7 +157,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 : SpriteEffects.None;
 
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            spriteBatch.Draw(glowmask.Value, NPC.Center - Main.screenPosition, NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
+            spriteBatch.Draw(glowmask.Value, NPC.Center - Main.screenPosition, NPC.frame, Color.White, NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);           
         }
 
         public override void AI()
