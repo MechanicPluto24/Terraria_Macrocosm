@@ -1,8 +1,6 @@
-﻿using Terraria;
-using Terraria.ID;
+﻿using Macrocosm.Content.Rarities;
+using Terraria;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
-using Macrocosm.Content.Rarities;
 
 namespace Macrocosm.Content.Items.Ores
 {
@@ -22,6 +20,5 @@ namespace Macrocosm.Content.Items.Ores
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.material = true;
         }
-
     }
 }

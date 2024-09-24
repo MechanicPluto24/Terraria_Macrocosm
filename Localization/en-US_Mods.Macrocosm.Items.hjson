@@ -2013,3 +2013,8 @@ InhibitorFieldGrenade: {
 	DisplayName: Inhibitor Field Grenade
 	Tooltip: ""
 }
+
+QuartzFragment: {
+	DisplayName: Quartz Fragment
+	Tooltip: ""
+}
