@@ -1923,6 +1923,10 @@ OilShale
 	Value: 7 silver 50 copper
 	Research count: 100
 
+QuartzFragment
+	Value: 10 silver
+	Research count: 100
+
 SeleniteOre
 	Value: 7 silver 50 copper
 	Research count: 100

@@ -725,6 +725,105 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
+        private void QuartzTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OrePass");
+
+            int tries = 0;
+            int geodes = Main.rand.Next(10, 14);
+            int quartzType = TileType<QuartzBlock>();
+            while (geodes > 1 && tries < 100)
+            {
+                while (geodes > 1 && tries < 100)
+                {
+                    int i = Main.rand.Next(70, Main.maxTilesX - 70);
+                    int j = Main.rand.Next((int)(Main.maxTilesY / 3), Main.maxTilesY - 70);
+                    Tile tile = Main.tile[i, j];
+                    if (tile.HasTile)
+                    {
+                        int iOffset2 = i;
+                        int jOffset2 = j;
+                        int radius = Main.rand.Next(40, 46);
+
+                        int radius2 = Main.rand.Next(30, 36);
+                        ForEachInCircle(
+                            iOffset2,
+                            jOffset2,
+                            radius2,
+                            (i1, j1) =>
+                            {
+                                if (CoordinatesOutOfBounds(i1, j1))
+                                {
+                                    return;
+                                }
+
+                                float iDistance = Math.Abs(iOffset2 - i) / (radius2 * 0.5f);
+                                float jDistance = Math.Abs(jOffset2 - j) / (radius2 * 0.5f);
+
+                                if (Main.tile[i1, j1].HasTile)
+                                {
+                                    FastRemoveTile(i1, j1);
+                                }
+
+                            }
+                        );
+
+                        ForEachInCircle(
+                            iOffset2,
+                            jOffset2,
+                            radius,
+                            (i1, j1) =>
+                            {
+                                if (CoordinatesOutOfBounds(i1, j1))
+                                {
+                                    return;
+                                }
+
+                                float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
+                                float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
+
+                                if (WorldGen.genRand.NextFloat() < 0.2f)
+                                {
+                                    return;
+                                }
+
+                                if (Main.tile[i1, j1].HasTile)
+                                {
+                                    FastPlaceTile(i1, j1, (ushort)quartzType);
+                                }
+                            }
+                        );
+
+                        ForEachInCircle(
+                            iOffset2,
+                            jOffset2,
+                            radius2,
+                            (i1, j1) =>
+                            {
+                                if (CoordinatesOutOfBounds(i1, j1))
+                                {
+                                    return;
+                                }
+
+                                if (Main.tile[i1, j1].HasTile)
+                                {
+                                    WorldGen.TileRunner(iOffset2, jOffset2, WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 20), (ushort)quartzType);
+                                }
+                            }
+                        );
+
+                        geodes--;
+                    }
+                    else
+                    {
+                        tries++;
+                    }
+                }
+
+            }
+        }
+
+        [Task]
         private void SmoothTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
@@ -951,7 +1050,41 @@ namespace Macrocosm.Content.Subworlds
                     if (WorldGen.genRand.NextFloat() < altarChance && CheckEmptyAboveWithSolidToTheRight(i, j, 3, 2))
                     {
                         if (tile.TileType == protolithType || tile.TileType == irradiatedRockType)
+                        {
                             WorldGen.PlaceTile(i, j - 1, TileType<IrradiatedAltar>(), mute: true);
+                            int iOffset2 = i;
+                            int jOffset2 = j;
+                            int radius = Main.rand.Next(10, 16);
+                            ForEachInCircle(
+                                    iOffset2,
+                                    jOffset2,
+                                    radius,
+                                    (i1, j1) =>
+                                    {
+                                        if (Main.tile[i, j - 1].TileType != TileType<IrradiatedAltar>())
+                                        {
+                                            return;
+                                        }
+                                        if (CoordinatesOutOfBounds(i1, j1))
+                                        {
+                                            return;
+                                        }
+
+                                        float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
+                                        float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
+
+                                        if (WorldGen.genRand.NextFloat() < 0.5f)
+                                        {
+                                            return;
+                                        }
+
+                                        if (Main.tile[i1, j1].HasTile && !(Main.tile[i1, j1].TileType == TileType<IrradiatedAltar>()))
+                                        {
+                                            FastPlaceTile(i1, j1, (ushort)TileType<IrradiatedRock>());
+                                        }
+                                    }
+                                );
+                        }
                     }
 
                     if (WorldGen.genRand.NextFloat() < kyaniteNestChance && CheckEmptyAboveWithSolidToTheRight(i, j, 4, 3))

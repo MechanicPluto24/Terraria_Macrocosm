@@ -1940,7 +1940,7 @@ CrescentMoon: {
 }
 
 RocheChakram: {
-	DisplayName: Roche Chakram
+	DisplayName: Roche
 	Tooltip: ""
 }
 
@@ -2011,5 +2011,10 @@ NickelOre: {
 
 InhibitorFieldGrenade: {
 	DisplayName: Inhibitor Field Grenade
+	Tooltip: ""
+}
+
+QuartzFragment: {
+	DisplayName: Quartz Fragment
 	Tooltip: ""
 }
