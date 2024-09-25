@@ -52,7 +52,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[Type] = 1;
+            Main.npcFrameCount[Type] = 2;
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
@@ -69,19 +69,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.knockBackResist = 0.2f;
             NPC.aiStyle = -1;
-
-
+            Main.npcFrameCount[Type] = 2;
         }
-
-
-
-
-
         public override void OnSpawn(IEntitySource source)
         {
             // NPC.frame.Y = NPC.GetFrameHeight() * walkFrames.Start.Value;
-
-
         }
 
         #region Netcode

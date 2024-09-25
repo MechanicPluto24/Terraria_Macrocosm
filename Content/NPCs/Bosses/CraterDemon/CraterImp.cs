@@ -15,6 +15,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
     public class CraterImp : ModNPC
     {
+        private static Asset<Texture2D> glowmask;
+
+
         public enum AttackType
         {
             Spawning = -2,
@@ -31,18 +34,18 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             get => (AttackType)NPC.ai[1];
             set => NPC.ai[1] = (float)value;
         }
+
         public ref float AI_AttackProgress => ref NPC.ai[2];
+
         public int ParentBoss => (int)NPC.ai[3];
 
         private int targetFrame;
         private bool spawned;
         private float targetAlpha;
-
+        private float eyeOpacity = 0f;
         private int chargeTicks;
 
         public const int WaitTime = 4 * 60;
-
-        private static Asset<Texture2D> glowmask;
 
         public override void SetStaticDefaults()
         {
@@ -99,8 +102,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 CycleAnimation();
         }
 
-
-
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
         }
@@ -146,7 +147,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             return NPC.IsABestiaryIconDummy;
         }
-
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             if (NPC.IsABestiaryIconDummy)
@@ -158,10 +158,17 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
             spriteBatch.Draw(glowmask.Value, NPC.Center - Main.screenPosition, NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
+            float yOffset = NPC.rotation < 0f ? -11f : 11f;
+            spriteBatch.Draw(flare, NPC.Center - screenPos + new Vector2(-0.1f, yOffset).RotatedBy(NPC.rotation), null, new Color(157, 255, 156, 0) * Main.rand.NextFloat(0.4f, 0.8f) * eyeOpacity, NPC.rotation + MathHelper.PiOver2, flare.Size() / 2, NPC.scale * 0.1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(flare, NPC.Center - screenPos + new Vector2(20f, yOffset).RotatedBy(NPC.rotation), null, new Color(157, 255, 156, 0) * Main.rand.NextFloat(0.4f, 0.8f) * eyeOpacity, NPC.rotation + MathHelper.PiOver2, flare.Size() / 2, NPC.scale * 0.1f, SpriteEffects.None, 0f);
         }
 
         public override void AI()
         {
+            if (AI_Attack != AttackType.FloatTowardPlayer && eyeOpacity > 0f)
+                eyeOpacity = 0f;
+
             if (AI_Attack != AttackType.Despawning && (!Main.npc[ParentBoss].active || Main.npc[ParentBoss].type != ModContent.NPCType<CraterDemon>()))
             {
                 NPC.life = 0;
@@ -245,6 +252,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                                             Main.masterMode ? 80 :
                                             Main.expertMode ? 110 :
                                                               160;
+
+                        if (AI_Timer % shootPeriod > shootPeriod - 40 && eyeOpacity < 1f)
+                        {
+                            eyeOpacity += 0.07f;
+                        }
 
                         if (AI_Timer % shootPeriod == 0 && Main.netMode != NetmodeID.MultiplayerClient)
                         {
@@ -333,6 +345,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             }
 
             AI_Timer--;
+
+            if (Vector2.Distance(Main.npc[ParentBoss].Center, NPC.Center) > 1000f)
+            {
+                NPC.velocity += (Main.npc[ParentBoss].Center - NPC.Center).SafeNormalize(Vector2.UnitX) * 1.8f;
+            }
 
             NPC.alpha = (int)targetAlpha;
 

@@ -656,8 +656,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             if (AI_Attack == AttackState.SummonPhantasmals)
             {
-                int maxTimer = GetInitialTimer(AttackState.SummonPhantasmals);
-                float progress = MathHelper.Clamp((float)(AI_Timer - maxTimer * 0.9f) / (maxTimer - maxTimer * 0.9f), 0f, 1f);
+                float maxTimer = GetDifficultyInfo(DifficultyInfo.PhantasmalImpShootPeriod) * GetDifficultyScaling(DifficultyScale.AttackDurationScaling);
+                float timer = AI_Timer % maxTimer;
+                float progress = Utility.CubicEaseInOut(timer / maxTimer);
                 float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
                 spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
             }
