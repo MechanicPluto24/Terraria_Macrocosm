@@ -85,7 +85,16 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                 p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
                 p.Scale = new(0.8f);
                 p.ScaleVelocity = new(0.2f);
-                p.Color = CelestialDisco.SolarColor.WithOpacity(1f);
+                p.Color = new Color(255, 164, 57);
+            });
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(255, 164, 57).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 2.6f;
             });
         }
 

@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Particles
                 glowTex,
                 Position - screenPosition,
                 null,
-                color,
+                color * FadeFactor,
                 Velocity.ToRotation(),
                 glowTex.Size() * 0.5f,
                 new Vector2(Math.Clamp(speed, 0, 2), Math.Clamp(speed, 0, 0.5f)) * 0.15f * Scale,
