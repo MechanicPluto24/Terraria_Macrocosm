@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             Projectile.aiStyle = -1;
 
-            PlasmaBallCount = 450;
+            PlasmaBallCount = 850;
             BlastRadius = 200;
         }
 
@@ -128,15 +128,45 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.TwoPi / PlasmaBallCount)
             {
-                float speed = Main.rand.NextFloat(2f, 15f);
+                float speed = Utility.QuadraticEaseOut(Main.rand.NextFloat()) * 14f;
                 float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
                 Vector2 velocity = Utility.PolarVector(speed, theta);
+                float factor = speed / 14f;
 
-                var p = Particle.Create<InhibitorFieldParticle>(Projectile.Center + netOffset, velocity, scale: new(Main.rand.NextFloat(0.4f, 1.2f)));
-                p.AllowNegativeScale = true;
-                p.FadeInNormalizedTime = 0f;
-                p.FadeOutNormalizedTime = Main.rand.NextFloat(0.2f, 0.9f);
+                var p = Particle.Create<InhibitorFieldParticle>(p =>
+                {
+                    p.Position = Projectile.Center + netOffset;
+                    p.Velocity = velocity;
+                    p.Scale = new Vector2(Main.rand.NextFloat(0.9f, 1.2f)) * (0.2f + 0.8f * factor);
+                    p.FadeInNormalizedTime = 0f;
+                    p.FadeOutNormalizedTime = Main.rand.NextFloat(0.2f, 0.8f);
+                    p.TimeToLive = 205;
+                    p.ScaleVelocity = new Vector2(-0.004f);
+                });
             }
+
+            /*
+            for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.TwoPi / (PlasmaBallCount * 0.2f))
+            {
+                float speed = Utility.QuadraticEaseOut(Main.rand.NextFloat()) * 14f;
+                float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
+                Vector2 velocity = Utility.PolarVector(speed, theta);
+                float factor = speed / 14f;
+                Particle.Create<LightningParticle>((p) =>
+                {
+                    p.Position = Projectile.Center + netOffset;
+                    p.Velocity = velocity * 0.9f;
+                    p.Acceleration = velocity * 0.0008f;
+                    p.Scale = new Vector2(Main.rand.NextFloat(0.5f, 1f)) * factor;
+                    p.TimeToLive = 205;
+                    p.FadeOutNormalizedTime = 0.5f;
+                    p.FrameSpeed = 6;
+                    p.Color = new Color(104, 255, 255).WithAlpha((byte)Main.rand.Next(0, 64));
+                    p.OutlineColor = new Color(104, 255, 255) * 0.2f;
+                    p.ScaleVelocity = new Vector2(-0.006f);
+                });
+            }
+            */
 
             Particle.Create<TintableFlash>((p) =>
             {

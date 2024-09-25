@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
         {
             if (player.ItemUseCount(Type) % 6 > Main.rand.Next(3, 6))
-                Projectile.NewProjectile(source, position + new Vector2(0, 10 * player.direction).RotatedBy(velocity.ToRotation()), velocity * 0.4f, ModContent.ProjectileType<Projectiles.Friendly.Ranged.InhibitorFieldGrenade>(), damage, knockback, player.whoAmI, ai0: 450, ai1: 200);
+                Projectile.NewProjectile(source, position + new Vector2(0, 10 * player.direction).RotatedBy(velocity.ToRotation()), velocity, ProjectileID.RocketIII, damage, knockback, player.whoAmI);
 
             return true;
         }

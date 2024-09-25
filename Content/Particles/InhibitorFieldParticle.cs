@@ -16,8 +16,6 @@ namespace Macrocosm.Content.Particles
 
         public override void SetDefaults()
         {
-            TimeToLive = 135;
-            ScaleVelocity = new Vector2(-0.008f);
         }
 
         public override void OnSpawn()
@@ -43,6 +41,9 @@ namespace Macrocosm.Content.Particles
 
             float decelerationFactor = ((float)TimeToLive - TimeLeft) / TimeToLive;
             Velocity *= MathHelper.Lerp(0.9f, 0.85f, decelerationFactor);
+
+            if (Scale.X < 0.1f)
+                Kill();
         }
     }
 }

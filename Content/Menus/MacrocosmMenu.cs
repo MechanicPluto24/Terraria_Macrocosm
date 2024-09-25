@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Menus
         private readonly Asset<Texture2D> sunCorona5 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona5", Mode);
 
         private readonly Asset<Texture2D> logo = ModContent.Request<Texture2D>(AssetPath + "Logo", Mode);
-        private readonly Asset<Texture2D> logoOld = ModContent.Request<Texture2D>(AssetPath + "Old/Logo", Mode);
+        private readonly Asset<Texture2D> logoOld = ModContent.Request<Texture2D>(AssetPath + "Logo_Old", Mode);
 
         private readonly Asset<Texture2D> milkyWay = ModContent.Request<Texture2D>(AssetPath + "MilkyWay", Mode);
         private readonly Asset<Texture2D> nebula = ModContent.Request<Texture2D>(AssetPath + "Nebula", Mode);
@@ -167,7 +167,7 @@ namespace Macrocosm.Content.Menus
             if (drawOldLogo)
                 logoScale *= 0.65f;
             else
-                logoScale *= 1.1f;
+                logoScale *= 0.65f;
 
             drawColor = Color.White;
 
@@ -217,7 +217,7 @@ namespace Macrocosm.Content.Menus
             foreach (CelestialBody body in celestialBodies)
             {
                 body.ShouldUpdate = true;
-                body.Scale = 0.6f;
+                body.Scale = 0.5f;
 
                 body.SetLighting(Sun);
                 body.ConfigureBodySphericalShader = ConfigureBodyShader;
@@ -366,7 +366,7 @@ namespace Macrocosm.Content.Menus
 
             Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height() / 2);
             Vector2 position = saturn.Center;
-            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(sourceRect.Width / 2, sourceRect.Height), saturn.Scale, default, 0f);
+            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(sourceRect.Width / 2, sourceRect.Height), saturn.Scale * 0.96f, default, 0f);
 
             spriteBatch.End();
         }
@@ -377,7 +377,7 @@ namespace Macrocosm.Content.Menus
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
             Vector2 position = saturn.Center + new Vector2(0, 0);
-            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(rings.Height() / 2f, 0), saturn.Scale, default, 0f);
+            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(rings.Height() / 2f, 0), saturn.Scale * 0.96f, default, 0f);
 
             spriteBatch.End();
         }
@@ -386,10 +386,10 @@ namespace Macrocosm.Content.Menus
         {
             Matrix transformationMatrix =
                 Matrix.CreateTranslation(-saturn.Center.X, -saturn.Center.Y, 0f) * // Translate to screen origin
-                Matrix.CreateRotationX(MathHelper.Pi * 0.4f * 1) *                     // Apply X skew 
-                Matrix.CreateRotationY(MathHelper.Pi * 0.2f * 1) *                     // Apply Y skew
+                Matrix.CreateRotationX(MathHelper.Pi * 0.29f) *                    // Apply X skew 
+                Matrix.CreateRotationY(MathHelper.Pi * 0.3f) *                     // Apply Y skew
                 Matrix.CreateTranslation(saturn.Center.X, saturn.Center.Y, 0f) *   // Translate back to original position
-                Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);          // Apply UI scale
+                Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);      // Apply UI scale
             return transformationMatrix;
         }
 
