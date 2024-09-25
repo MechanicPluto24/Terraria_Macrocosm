@@ -59,10 +59,10 @@ CraterCrawlerBody
 	Damage: 60
 
 CraterCrawlerHead
-	Life: 1600
+	Life: 2000
 	Defense: 100
 	KB resist: 0
-	Damage: 70
+	Damage: 75
 	Drops:
 		Alien Residue, (1-2) 50%
 		Moonstone, (1-5) 10%
@@ -74,10 +74,10 @@ CraterCrawlerTail
 	Damage: 50
 
 CrescentGhoul
-	Life: 1300
+	Life: 1500
 	Defense: 100
 	KB resist: 0
-	Damage: 60
+	Damage: 65
 	Drops:
 		Alien Residue, 33.33%
 		Moonstone, (1-5) 10%
@@ -190,10 +190,10 @@ MoonWormBody
 	Damage: 120
 
 MoonWormHead
-	Life: 8000
+	Life: 10000
 	Defense: 160
 	KB resist: 0
-	Damage: 110
+	Damage: 115
 	Drops:
 		Alien Residue, (4-10) 100%
 		Moonstone, (1-5) 10%
@@ -205,10 +205,10 @@ MoonWormTail
 	Damage: 100
 
 MoonZombie
-	Life: 1000
+	Life: 1200
 	Defense: 90
 	KB resist: 0.5
-	Damage: 70
+	Damage: 75
 	Drops:
 		Moonstone, (1-5) 10%
 
@@ -247,10 +247,10 @@ ZombieEngineer
 		Moonstone, (1-5) 10%
 
 ZombieSecurity
-	Life: 1300
+	Life: 1400
 	Defense: 100
 	KB resist: 0.5
-	Damage: 70
+	Damage: 75
 	Drops:
 		Tycho .50, 15.97%, This is an Expert Mode drop rate
 		Tycho .50, 8.33%
