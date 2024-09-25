@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.damage = 155;
+            Item.damage = 300;
             Item.DamageType = DamageClass.Melee;
             Item.knockBack = 16;
             Item.value = Item.sellPrice(gold: 20);
