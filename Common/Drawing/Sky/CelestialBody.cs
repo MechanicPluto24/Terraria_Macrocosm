@@ -449,7 +449,7 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (OverrideBodyDraw is null)
                 {
-                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, default, state.RasterizerState, bodyShader, state.Matrix);
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, default, state.RasterizerState, bodyShader, state.Matrix);
                     spriteBatch.Draw(bodyTexture.Value, Center, bodySourceRect, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
                     spriteBatch.End();
                 }
