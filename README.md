@@ -36,19 +36,21 @@ SpicySpaceSnake - Spriter \
 Uncon_Arts - Artist \
 William - Spriter
 
+Clyder8 - Programmer \
 Feldy - Programmer \
 Halmska - Programmer \
 LadyLone - Programmer \
 SnowyStarfall - Programmer \
-sucss - Programmer 
+sucss - Programmer \
+Yttrium - Tester
+
 
 ### Contributors
-Clyder8 - Programmer \
 Dandy - Spriter \
+Ebon1 - Programmer \
 EduaRRdo - Spriter \
 Nicola - Artist \
-Nurby - Programmer \
-Yttrium - Tester
+Nurby - Programmer 
 
 ### Special thanks
 4mbr0s3, absoluteAquarian, ADVERSE KC, Almarduk, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat, Thanatos
