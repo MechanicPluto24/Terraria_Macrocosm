@@ -217,8 +217,7 @@ namespace Macrocosm.Content.Menus
             foreach (CelestialBody body in celestialBodies)
             {
                 body.ShouldUpdate = true;
-                body.Scale = 0.5f;
-
+                body.Scale = 0.6f;
                 body.SetLighting(Sun);
                 body.ConfigureBodySphericalShader = ConfigureBodyShader;
             }
