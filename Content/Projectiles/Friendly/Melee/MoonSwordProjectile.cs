@@ -48,12 +48,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            trail?.Draw(Projectile, new Vector2(24 * Projectile.direction, 4).RotatedBy(Projectile.rotation));
+            trail?.Draw(Projectile, new Vector2(24 * Projectile.direction, 4).RotatedBy(Projectile.rotation) + Projectile.Size * 0.5f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition, frame, Color.White.WithOpacity(1f), Projectile.rotation, frame.Size() / 2f, Projectile.scale, effects);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, frame, Color.White.WithOpacity(1f), Projectile.rotation, frame.Size() / 2f, Projectile.scale, effects);
 
             return false;
         }
@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.spriteDirection = Projectile.direction;
 
             for (int i = 0; i < 5; i++)
-                Particle.Create<ImbriumStar>(Projectile.position + Main.rand.NextVector2Circular(20, 55), -Projectile.velocity * 0.02f, new(0.5f));
+                Particle.Create<ImbriumStar>(Projectile.Center + Main.rand.NextVector2Circular(20, 55), -Projectile.velocity * 0.02f, new(0.5f));
 
             int frameSpeed = 3;
             if (Projectile.frameCounter++ >= frameSpeed)
