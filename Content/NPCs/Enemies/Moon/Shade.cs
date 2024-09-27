@@ -182,7 +182,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             SpriteEffects effects = NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             Texture2D texture = TextureAssets.Npc[Type].Value;
-            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, drawColor * NPC.Opacity, NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, (new Color(255,255,255) * (NPC.Opacity)*0.2f), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, drawColor * (NPC.Opacity), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
 
             /*
             // Debug collision hitbox
@@ -193,6 +194,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             */
 
             return NPC.IsABestiaryIconDummy;
-        }
     }
+}
 }
