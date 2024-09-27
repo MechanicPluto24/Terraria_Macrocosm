@@ -33,6 +33,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.penetrate = 5;
+            Projectile.timeLeft = 260;
             trail = new();
         }
 
