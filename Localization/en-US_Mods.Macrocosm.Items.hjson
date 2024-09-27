@@ -642,7 +642,7 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Copernicus
-	Tooltip: Occasionally shoots Inhibitor Field Grenades
+	Tooltip: Every 5th shot also shoots a rocket
 }
 
 Cruithne: {
@@ -2016,5 +2016,10 @@ InhibitorFieldGrenade: {
 
 QuartzFragment: {
 	DisplayName: Quartz Fragment
+	Tooltip: ""
+}
+
+ManisolBlades: {
+	DisplayName: Manisol Blades
 	Tooltip: ""
 }
