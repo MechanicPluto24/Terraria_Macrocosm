@@ -30,7 +30,17 @@ namespace Macrocosm.Common.Utils
             static bool TryFindingSpecificMatches(int launcher, int ammo, out int pickedProjectileId)
             {
                 pickedProjectileId = 0;
-                return AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out Dictionary<int, int> value) && value.TryGetValue(ammo, out pickedProjectileId);
+                if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var value) && value.TryGetValue(ammo, out pickedProjectileId))
+                    return true;
+
+                launcher = AmmoID.Sets.SpecificLauncherAmmoProjectileFallback[launcher];
+                if (launcher != -1)
+                {
+                    if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var fallbackValue) && fallbackValue.TryGetValue(ammo, out pickedProjectileId))
+                        return true;
+                }
+
+                return false;
             }
 
             if (copyWeaponType != ItemID.GrenadeLauncher && copyWeaponType != ItemID.RocketLauncher && copyWeaponType != ItemID.ProximityMineLauncher)
