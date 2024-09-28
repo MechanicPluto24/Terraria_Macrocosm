@@ -24,7 +24,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
         {
             NPC.width = 85;
             NPC.height = 76;
-            NPC.damage = 65;
+            NPC.damage = 50;
             NPC.defense = 90;
             NPC.lifeMax = 1200;
             NPC.HitSound = SoundID.NPCHit1;
