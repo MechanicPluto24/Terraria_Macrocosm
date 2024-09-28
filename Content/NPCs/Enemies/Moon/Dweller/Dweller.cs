@@ -449,9 +449,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             }
             else if (Rage < 5f)
             {
-                if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() <= 0.1f || Vector2.Distance(NPC.Center, target.Center) > 300f)
+                if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() <= 0.1f || Vector2.Distance(NPC.Center, target.Center) > 350f)
                     AI_State = ActionState.Stalk;
-                else
+                else if(Vector2.Distance(NPC.Center, target.Center) < 250f&&Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() > 0.1f)
                     AI_State = ActionState.Flee;
             }
             else
@@ -481,7 +481,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 
                 if (AI_State == ActionState.Stalk)
                 {
-                    speed = MathHelper.Lerp(speed, 1f + ((float)Math.Cos(Timer) * 0.5f), 0.1f);
+                    speed +=0.1f;
+                    speed = Math.Clamp(speed,-4f,2f);
                     if (anyLegTouchingGround)
                     {
                         NPC.velocity = direction * speed;
@@ -495,21 +496,23 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
                 }
                 if (AI_State == ActionState.Flee)
                 {
-                    speed = MathHelper.Lerp(speed, 2f + ((float)Math.Cos(Timer) * 0.5f), 0.2f);
+                    speed -=0.1f;
+                    speed = Math.Clamp(speed,-4f,2f);
                     if (anyLegTouchingGround)
                     {
-                        NPC.velocity = direction * -speed;
+                        NPC.velocity = direction * speed;
                         allowedVerticalMovement = true;
                     }
                     else
                     {
-                        NPC.velocity.X = direction.X * -speed;
+                        NPC.velocity.X = direction.X * speed;
                         NPC.velocity.Y = NPC.gravity;
                     }
                 }
                 if (AI_State == ActionState.Enrage)
                 {
-                    speed = MathHelper.Lerp(speed, 4f + Math.Abs((float)Math.Cos(Timer) * 3f), 0.3f);
+                    speed +=0.1f;
+                    speed = Math.Clamp(speed,-4f,8f);
                     if (anyLegTouchingGround)
                     {
                         NPC.velocity = direction * speed;

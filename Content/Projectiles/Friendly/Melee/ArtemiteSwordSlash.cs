@@ -43,6 +43,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.ignoreWater = true;
             Projectile.aiStyle = -1;
             Projectile.Opacity = 0f;
+            Projectile.timeLeft=500;
             trail = new();
         }
 
