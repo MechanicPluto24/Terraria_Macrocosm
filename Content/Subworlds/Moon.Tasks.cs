@@ -778,7 +778,36 @@ namespace Macrocosm.Content.Subworlds
                                 {
                                     return;
                                 }
+                                
+                                float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
+                                float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
 
+                                if (WorldGen.genRand.NextFloat() < 0.96f)
+                                {
+                                    return;
+                                }
+                                if (!Main.tile[i1, j1].HasTile)
+                                {
+                                    return;
+                                }
+                                
+                               TileRunnerButItDoesntIgnoreAir(i1, j1, WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 10), (ushort)quartzType);
+                                
+
+            
+                            }
+                        );
+                        ForEachInCircle(
+                            iOffset2,
+                            jOffset2,
+                            radius,
+                            (i1, j1) =>
+                            {
+                                if (CoordinatesOutOfBounds(i1, j1))
+                                {
+                                    return;
+                                }
+                                
                                 float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
                                 float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
 
@@ -786,6 +815,7 @@ namespace Macrocosm.Content.Subworlds
                                 {
                                     return;
                                 }
+                              
 
                                 if (Main.tile[i1, j1].HasTile)
                                 {
@@ -794,23 +824,7 @@ namespace Macrocosm.Content.Subworlds
                             }
                         );
 
-                        ForEachInCircle(
-                            iOffset2,
-                            jOffset2,
-                            radius2,
-                            (i1, j1) =>
-                            {
-                                if (CoordinatesOutOfBounds(i1, j1))
-                                {
-                                    return;
-                                }
-
-                                if (Main.tile[i1, j1].HasTile)
-                                {
-                                    WorldGen.TileRunner(iOffset2, jOffset2, WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 20), (ushort)quartzType);
-                                }
-                            }
-                        );
+                        
 
                         geodes--;
                     }
@@ -1012,6 +1026,7 @@ namespace Macrocosm.Content.Subworlds
             ushort regolithType = (ushort)TileType<Regolith>();
             ushort protolithType = (ushort)TileType<Protolith>();
             ushort irradiatedRockType = (ushort)TileType<IrradiatedRock>();
+            ushort quartzType = (ushort)TileType<QuartzBlock>();
 
             for (int i = 0; i < Main.maxTilesX - 1; i++)
             {
@@ -1020,6 +1035,7 @@ namespace Macrocosm.Content.Subworlds
                 for (int j = 1; j < Main.maxTilesY; j++)
                 {
                     Tile tile = Main.tile[i, j];
+                    
                     if (WorldGen.genRand.NextFloat() < smallRockSpawnChance && tile.HasTile && Main.tileSolid[tile.TileType] && !tile.IsActuated)
                     {
                         if (tile.TileType == regolithType)
