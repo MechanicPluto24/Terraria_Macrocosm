@@ -13,6 +13,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class ManisolBlades : ModItem
     {
+         public override void SetStaticDefaults()
+        {
+            ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+        }
         public override void SetDefaults()
         {
             Item.width = 29;

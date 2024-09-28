@@ -17,7 +17,8 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             Main.tileBrick[Type] = true;
             Main.tileBlockLight[Type] = true;
             Main.tileLighted[Type] = true;
-
+            Main.tileShine2[Type] = true;
+            Main.tileShine[Type] = 975;
             TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
 
             MinPick = 225;
