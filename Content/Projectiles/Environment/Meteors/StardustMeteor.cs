@@ -71,10 +71,30 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 
             Particle.Create<TintableFlash>((p) =>
             {
-                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Position = Projectile.Center;
                 p.Scale = new(0.8f);
                 p.ScaleVelocity = new(0.2f);
-                p.Color = CelestialDisco.StardustColor.WithOpacity(1f);
+                p.Color = new Color(116, 164, 255).WithOpacity(1f);
+            });
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(116, 164, 255).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1.5f);
+                p.NumberOfInnerReplicas = 8;
+                p.ReplicaScalingFactor = 1.4f;
+            });
+
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(252, 241, 69).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1.2f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 1.2f;
+                p.Rotation = MathHelper.PiOver2;
             });
 
             for (int i = 0; i < 45; i++)

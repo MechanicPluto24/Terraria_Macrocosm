@@ -6,6 +6,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using ReLogic.Content;
 using System;
 using Terraria;
@@ -31,18 +32,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetDefaults()
         {
-            Projectile.CloneDefaults(ProjectileID.Bullet);
-            AIType = -1;
             Projectile.width = 14;
             Projectile.height = 14;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = 1;
+            Projectile.light = 0.5f;
+            Projectile.alpha = 255;
+            Projectile.extraUpdates = 1;
+            //Projectile.scale = 1.2f;
+            Projectile.DamageType = DamageClass.Ranged;
             Projectile.timeLeft = 270;
             Projectile.light = 0f;
         }
 
         bool spawned = false;
         float auraAlpha = 0f;
-        public override bool PreAI()
+
+        public override void AI()
         {
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+
             if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
                 Projectile.PrepareBombToBlow();
 
@@ -77,10 +87,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             if (Projectile.alpha < 0)
                 Projectile.alpha = 0;
-
-            Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 1.57f;
-
-            return false;
         }
 
         public override void PrepareBombToBlow()
@@ -126,7 +132,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             if (Projectile.timeLeft < 3)
                 return false;
-
 
             var spriteBatch = Main.spriteBatch;
             state.SaveState(Main.spriteBatch);

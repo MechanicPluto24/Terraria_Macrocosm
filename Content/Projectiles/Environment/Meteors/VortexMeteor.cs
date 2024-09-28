@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.GrabBags;
@@ -68,14 +67,42 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                     p.NoGravity = true;
                     p.NormalUpdate = true;
                 }));
+
+
+                dist = 40;
+                dustPosition = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
+                distFactor = (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
+                radians = (Projectile.Center - dustPosition).ToRotation() - MathHelper.PiOver2;
+                velocity = new Vector2(-0.02f * distFactor, 0).RotatedBy(radians);
+
+                Particle.Create<PortalSwirl>((p =>
+                {
+                    p.Position = dustPosition;
+                    p.Scale = new(Main.rand.NextFloat(0.2f, 0.3f));
+                    p.Velocity = velocity;
+                    p.Acceleration = velocity * 40f;
+                    p.TimeToLive = 30;
+                    p.FadeInNormalizedTime = 0f;
+                    p.FadeOutNormalizedTime = 0.9f;
+                    p.Color = new Color(68, 255, 255);
+                }));
             }
 
             Particle.Create<TintableFlash>((p) =>
             {
-                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Position = Projectile.Center;
                 p.Scale = new(0f);
                 p.ScaleVelocity = new(0.2f);
-                p.Color = CelestialDisco.VortexColor.WithOpacity(1f);
+                p.Color = new Color(68, 255, 255);
+            });
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(68, 255, 255).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 2.6f;
             });
         }
 
