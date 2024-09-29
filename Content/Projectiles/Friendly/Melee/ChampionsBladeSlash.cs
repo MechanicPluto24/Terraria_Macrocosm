@@ -36,6 +36,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.penetrate = -1;
+            Projectile.timeLeft=500;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
             Projectile.tileCollide = false;

@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.DamageType = DamageClass.Melee;
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = -1;
+            Projectile.localNPCHitCooldown = 15;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.ownerHitCheck = true; // A line of sight check so the projectile can't deal damage through tiles.
@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         int RuneTimer;
         private bool shot;
         private Vector2? aim;
-
+        float altSwingOpacity=0f;
         public override void AI()
         {
             // Current time that the projectile has been alive.
@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 float adjustedRotation = MathHelper.Pi * -SwingDirection * progress - velocityRotation - SwingDirection * MathHelper.Pi + player.fullRotation + MathHelper.Pi;
                 Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
 
-                aim ??= (Main.MouseWorld - player.Center).SafeNormalize(default);
+                aim ??= (Projectile.rotation<0f ? new Vector2(1f,0f): new Vector2(-1f,0f))+((Main.MouseWorld - player.Center).SafeNormalize(default)*0.3f);
                 if (!shot && progress > 0.1f && Projectile.owner == Main.myPlayer)
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim.Value, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, 1f);
@@ -79,13 +79,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 float adjustedRotation = MathHelper.Pi * SwingDirection * progress + velocityRotation + SwingDirection * MathHelper.Pi + player.fullRotation;
                 Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
-
-                Timer *= 1.1f;
+                if (altSwingOpacity<1f)
+                    altSwingOpacity+=0.01f;
+                if(Timer<1200f)
+                    Timer *= 1.1f;
+                else
+                    Timer+=120f;
                 Projectile.Center = player.RotatedRelativePoint(player.MountedCenter + (new Vector2(Projectile.width / 2, 0).RotatedBy(adjustedRotation))) - Projectile.velocity;
 
                 player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
-                if (Timer >= MaxTime)
+                if (Timer >= 500 &&(Utility.CastLength(Projectile.Center, new Vector2(1, 0).RotatedBy(adjustedRotation), Projectile.width, false)< (Projectile.width/2)))
                 {
+                    float damageMultiplier = (int)(Timer/600f);
+                    if(damageMultiplier>2f)
+                        damageMultiplier=2f;
                     Particle.Create<TintableExplosion>(p =>
                     {
                         p.Position = Projectile.Center + new Vector2((Projectile.width / 2), 0).RotatedBy(Projectile.rotation);
@@ -103,8 +110,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                        p.NumberOfInnerReplicas = 6;
                        p.ReplicaScalingFactor = 0.2f;
                    });
+                    if (Main.myPlayer == Projectile.owner){
+                    CreateBlood(Projectile.damage*damageMultiplier);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(1f,0f)*damageMultiplier, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage*damageMultiplier), 1f, Main.myPlayer, 1f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(-1f,0f)*damageMultiplier, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage*damageMultiplier), 1f, Main.myPlayer, 1f);
+                    }
 
-                    CreateBlood();
 
                     Projectile.Kill();
                 }
@@ -127,6 +138,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Vector2 position = player.Center - Main.screenPosition;
             Texture2D texture1 = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1").Value;
             Texture2D texture2 = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl2").Value;
+            Texture2D texture3 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "SwingEdgeAlt").Value;
             Vector2 origin = texture1.Size() / 2f;
             float scale = Projectile.scale * 1.3f;
             SpriteEffects spriteEffects = Projectile.rotation < 0f ? SpriteEffects.None : SpriteEffects.FlipHorizontally; // Flip the sprite based on the direction it is facing.
@@ -147,23 +159,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             if (Alt == 0f)
             {
-                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.4f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.6f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 0.5f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.5f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.3f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 1.1f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 0.5f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 1f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.7f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.9f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 1f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.8f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.2f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.6f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 0.3f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.5f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.1f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 1.1f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 0.3f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 1f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.5f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.9f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 0.8f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.8f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture3, position, null, Colour1 * lerpTime * 1f, Projectile.rotation + MathHelper.PiOver2 + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.8f, spriteEffects, 0f);
+
             }
             else
             {
                 float offset = Projectile.rotation < 0f ? (MathHelper.Pi / 2) + (MathHelper.Pi / 4) : MathHelper.Pi / 4;
 
-                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.4f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.6f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 0.5f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.5f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.3f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 1.1f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 0.5f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 1f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture1, position, null, Colour1 * lerpTime * 0.7f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.9f, spriteEffects, 0f);
-                Main.EntitySpriteDraw(texture2, position, null, Colour2 * lerpTime * 1f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.8f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture1, position, null, Colour1 * altSwingOpacity * 0.2f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.6f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture2, position, null, Colour2 * altSwingOpacity * 0.3f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.5f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture1, position, null, Colour1 * altSwingOpacity * 0.1f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 1.1f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture2, position, null, Colour2 * altSwingOpacity * 0.3f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 1f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture1, position, null, Colour1 * altSwingOpacity * 0.5f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.9f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture2, position, null, Colour2 * altSwingOpacity * 0.8f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.8f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture3, position, null, Colour1 * altSwingOpacity * 1f, Projectile.rotation + offset + Projectile.ai[0] * 1f * (1f - progress), origin, scale * 0.8f, spriteEffects, 0f);
+
             }
 
 
@@ -180,21 +196,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             return Color.White;
         }
 
-        public void CreateBlood()
+        public void CreateBlood(float damage)
         {
             Vector2 ProjSpawnPosition = Projectile.Center + new Vector2((Projectile.width / 2), 0).RotatedBy(Projectile.rotation);
             if (!Main.rand.NextBool(50))
             {
                 for (int i = 0; i < 8; i++)
                 {
-                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), ProjSpawnPosition, -Vector2.UnitY.RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(10f, 15f), ModContent.ProjectileType<LunarBlood>(), (int)(Projectile.damage * 0.5f), 0, Projectile.owner, 1f);
+                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), ProjSpawnPosition, -Vector2.UnitY.RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(10f, 15f)*(float)((damage/Projectile.damage)/1.5), ModContent.ProjectileType<LunarBlood>(), (int)(damage * 0.5f), 0, Projectile.owner, 1f);
                 }
             }
             else
             {
                 for (int i = 1; i < 9; i++)
                 {
-                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), ProjSpawnPosition, -Vector2.UnitY.RotatedBy(((MathHelper.PiOver4 / 2) * (i - 1)) - MathHelper.PiOver2 + (MathHelper.PiOver4 / 4)) * 15f, ModContent.ProjectileType<LunarBlood>(), (int)(Projectile.damage * 2f), 0, Projectile.owner, (float)(i + 1));
+                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), ProjSpawnPosition, -Vector2.UnitY.RotatedBy(((MathHelper.PiOver4 / 2) * (i - 1)) - MathHelper.PiOver2 + (MathHelper.PiOver4 / 4)) * 15f*(float)((damage/Projectile.damage)/1.5), ModContent.ProjectileType<LunarBlood>(), (int)(damage * 2f), 0, Projectile.owner, (float)(i + 1));
                 }
 
             }
