@@ -31,12 +31,15 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         }
 
         public override bool AltFunctionUse(Player player) => true;
-        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<CrescentScriptureProjectile>()] < 1;
+        public override bool CanUseItem(Player player) { 
+            return player.ownedProjectileCounts[ModContent.ProjectileType<CrescentScriptureProjectile>()] < 1;
+        }
+
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Vector2 aim = velocity;
-            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<CrescentScriptureProjectile>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax * 10, ai2: !player.AltFunction() ? 0f : 1f);
+            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<CrescentScriptureProjectile>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1:!player.AltFunction() ? player.itemAnimationMax * 10:1500, ai2: !player.AltFunction() ? 0f : 1f);
             return false;
         }
     }
