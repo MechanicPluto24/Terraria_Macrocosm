@@ -10,6 +10,7 @@ using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using static Macrocosm.Content.Tiles.Furniture.Industrial.IndustrialChest;
 
 namespace Macrocosm.Content.Menus
 {
@@ -170,6 +171,8 @@ namespace Macrocosm.Content.Menus
                 logoScale *= 0.65f;
 
             drawColor = Color.White;
+            Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
+            Sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
 
             Rectangle screen = new(0, 0, Main.screenWidth + 1, Main.screenHeight + 1);
             spriteBatch.Draw(TextureAssets.BlackTile.Value, screen, Color.Black);
@@ -185,15 +188,22 @@ namespace Macrocosm.Content.Menus
             spriteBatch.End();
             spriteBatch.Begin(state1);
 
-            Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
-            Sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
+            // Draw the asteroids behind everything.
+            // They do not reset the spritebatch in the draw logic.
+            foreach (CelestialBody asteroid in AsteroidBelt)
+                asteroid.Draw(spriteBatch);
+            foreach (CelestialBody asteroid in KuiperBelt)
+                asteroid.Draw(spriteBatch);
+
+            spriteBatch.End();
+            spriteBatch.Begin(state1);
 
             // Draw the moons behind the host planet
             foreach (CelestialBody planet in planetsWithMoons)
                 planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation - MathHelper.Pi >= child.OrbitAngle);
 
             // Draw the planets behind the Sun
-            Sun.DrawChildren(spriteBatch, (_) => true);
+            Sun.DrawChildren(spriteBatch, (child) => !(AsteroidBelt.Contains(child) || KuiperBelt.Contains(child)));
 
             // Draw the moons in front of the host planet
             foreach (CelestialBody planet in planetsWithMoons)
@@ -274,6 +284,7 @@ namespace Macrocosm.Content.Menus
             {
                 Rectangle sourceRect = asteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
                 CelestialBody asteroid = new(asteroids, scale: 0.6f, bodySourceRect: sourceRect);
+                asteroid.ResetSpritebatch = false;
                 asteroid.SetOrbitParent(Sun,
                     orbitRadius: 370 + Main.rand.NextFloat(40) * MathF.Sin(Rand()),
                     orbitRotation: Rand(),
@@ -289,6 +300,7 @@ namespace Macrocosm.Content.Menus
             {
                 Rectangle sourceRect = icyAsteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
                 CelestialBody icyAsteroid = new(icyAsteroids, scale: 0.6f, bodySourceRect: sourceRect);
+                icyAsteroid.ResetSpritebatch = false;
                 icyAsteroid.SetOrbitParent(Sun,
                     orbitRadius: 800 + Main.rand.NextFloat(100) * MathF.Sin(Rand()),
                     orbitRotation: Rand(),
@@ -361,7 +373,7 @@ namespace Macrocosm.Content.Menus
 
         private void Saturn_DrawRings_Back(CelestialBody saturn, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
 
             Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height() / 2);
             Vector2 position = saturn.Center;
@@ -372,7 +384,7 @@ namespace Macrocosm.Content.Menus
 
         private void Saturn_DrawRings_Front(CelestialBody saturn, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Saturn_GetMatrix(saturn, state.Matrix));
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
             Vector2 position = saturn.Center + new Vector2(0, 0);
@@ -403,7 +415,7 @@ namespace Macrocosm.Content.Menus
 
         private void Ouranos_DrawRings_Back(CelestialBody ouranos, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Ouranos_GetMatrix(ouranos, state.Matrix));
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Ouranos_GetMatrix(ouranos, state.Matrix));
 
             Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height() / 2);
             Vector2 position = ouranos.Center;
@@ -414,7 +426,7 @@ namespace Macrocosm.Content.Menus
 
         private void Ouranos_DrawRings_Front(CelestialBody ouranos, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)
         {
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Ouranos_GetMatrix(ouranos, state.Matrix));
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, shader, Ouranos_GetMatrix(ouranos, state.Matrix));
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
             Vector2 position = ouranos.Center + new Vector2(0, 0);
@@ -441,7 +453,7 @@ namespace Macrocosm.Content.Menus
         {
             Main.alreadyGrabbingSunOrMoon = false;
 
-            if (grabbed is null && !released.Any())
+            if (grabbed is null && released.Count == 0)
             {
                 foreach (var celestialBody in interactible)
                 {
