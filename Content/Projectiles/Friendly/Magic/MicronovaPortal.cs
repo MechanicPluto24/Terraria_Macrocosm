@@ -129,7 +129,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, effect, state);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, effect, state);
 
             twirl ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1");
             glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5");
@@ -142,7 +142,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             effect.Parameters["uRotation"].SetValue(Projectile.rotation);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, effect, state);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, effect, state);
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color).WithOpacity(0.9f * Projectile.Opacity), shootAim.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 1.5f, SpriteEffects.None, 0);
 

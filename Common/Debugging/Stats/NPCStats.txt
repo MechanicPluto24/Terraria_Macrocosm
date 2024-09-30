@@ -111,7 +111,7 @@ Leaper
 	Life: 900
 	Defense: 70
 	KB resist: 0.03
-	Damage: 50
+	Damage: 55
 	Drops:
 		Moonstone, (1-5) 10%
 
@@ -119,7 +119,7 @@ LuminiteElemental
 	Life: 1300
 	Defense: 100
 	KB resist: 0.2
-	Damage: 50
+	Damage: 55
 	Drops:
 		Luminite, (2-12) 50%
 		Moonstone, (1-5) 10%
@@ -239,10 +239,10 @@ Shade
 		Moonstone, (1-5) 10%
 
 ZombieEngineer
-	Life: 900
+	Life: 1100
 	Defense: 60
 	KB resist: 0.01
-	Damage: 60
+	Damage: 65
 	Drops:
 		Moonstone, (1-5) 10%
 
