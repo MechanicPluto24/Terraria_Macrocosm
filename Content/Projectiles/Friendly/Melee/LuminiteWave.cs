@@ -5,6 +5,7 @@ using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using System;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -33,7 +34,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
             Projectile.aiStyle = -1;
-            Projectile.Opacity = 0f;
+            Projectile.Opacity = 1f;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
@@ -47,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-            SpriteEffects effects = Projectile.velocity.X > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SpriteEffects effects = Projectile.spriteDirection== 1 ? SpriteEffects.None : SpriteEffects.None;
             float multiplier = 1f;
 
             state.SaveState(Main.spriteBatch);
@@ -71,26 +72,40 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             return false;
         }
-
+        public override void OnKill(int timeLeft){
+            for (int i=0; i<55;i++){
+            Dust dust = Dust.NewDustDirect(Projectile.Center , Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
+            dust.velocity = Projectile.velocity.RotatedByRandom(MathHelper.Pi*2)*Main.rand.NextFloat(0.1f,0.5f);
+            dust.noLight = false;
+            dust.noGravity = true;
+            }
+        }
         public override void AI()
         {
+            Projectile.rotation=Projectile.velocity.ToRotation();
+            Projectile.direction = Math.Sign(Projectile.velocity.X);
+            Projectile.spriteDirection=Projectile.direction;
+
             if (Projectile.timeLeft % 2 == 0)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.Center + new Vector2(0, Projectile.height / 2), Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
+                Dust dust = Dust.NewDustDirect(Projectile.Center + new Vector2(0, Projectile.height / 2), Projectile.width, Projectile.height/2, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
                 dust.velocity = Projectile.velocity * 0.5f;
                 dust.noLight = false;
                 dust.noGravity = true;
-                Dust dust2 = Dust.NewDustDirect(Projectile.Center - new Vector2(0, Projectile.height / 2), Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
+                Dust dust2 = Dust.NewDustDirect(Projectile.Center - new Vector2(0, Projectile.height / 2), Projectile.width, Projectile.height/2, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
                 dust2.velocity = Projectile.velocity * 0.5f;
                 dust2.noLight = false;
                 dust2.noGravity = true;
             }
 
-            if (Projectile.Opacity < 1f)
-                Projectile.Opacity += 0.04f;
+            if (Projectile.Opacity > 0f)
+                Projectile.Opacity -= 0.004f;
 
-            if (Speed < 28f)
-                Speed *= 1.5f;
+            if (Speed >= 1f)
+                Speed *= 0.995f;
+
+            if(Projectile.Opacity<=0.5f)
+                Projectile.Kill();
 
             Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * Speed;
         }

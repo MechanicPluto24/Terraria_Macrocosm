@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
@@ -40,7 +41,7 @@ namespace Macrocosm.Content.Items.Tools.Selenite
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<SeleniteDrill>(12)
+            .AddIngredient<SeleniteBar>(12)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
         }
