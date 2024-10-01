@@ -56,7 +56,16 @@ namespace Macrocosm.Common.Utils
 
             npc.velocity = move;
         }
-
+        public static int AmountOfNPCs(int Type)
+        {
+            int amount =0;
+            for (int i = 0; i < Main.maxNPCs; i++){
+                 NPC npc = Main.npc[i];
+                if(npc.type==Type&&npc.active)
+                    amount++;
+            }
+            return amount;
+        }
         public static void UpdateScaleAndHitbox(this NPC npc, int baseWidth, int baseHeight, float newScale)
         {
             Vector2 center = npc.Center;

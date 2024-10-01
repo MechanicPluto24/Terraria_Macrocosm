@@ -16,10 +16,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.width = 54;
             Item.height = 36;
-            Item.useTime = 60;
-            Item.useAnimation = 60;
+            Item.useTime = 30;
+            Item.useAnimation = 30;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.noMelee = true;
+            Item.shootSpeed = 25f;
             Item.knockBack = 10;
             Item.value = Item.sellPrice(0, 20, 0, 0);
             Item.rare = ModContent.RarityType<MoonRarityT3>();
@@ -30,16 +31,19 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.channel = true;
         }
 
-        public override bool AltFunctionUse(Player player) => true;
+        public override bool AltFunctionUse(Player player) => false;
         public override bool CanUseItem(Player player) { 
             return player.ownedProjectileCounts[ModContent.ProjectileType<CrescentScriptureProjectile>()] < 1;
         }
 
-
+        int shots=0;
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             Vector2 aim = velocity;
-            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<CrescentScriptureProjectile>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1:!player.AltFunction() ? player.itemAnimationMax * 10:1500, ai2: !player.AltFunction() ? 0f : 1f);
+            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<CrescentScriptureProjectile>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: Item.shootSpeed, ai2: 0f);
+            shots++;
+            if(shots>1)
+                shots=0;
             return false;
         }
     }
