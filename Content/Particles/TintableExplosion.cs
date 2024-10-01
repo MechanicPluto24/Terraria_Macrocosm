@@ -8,7 +8,6 @@ namespace Macrocosm.Content.Particles
 {
     public class TintableExplosion : Particle
     {
-        public override int TrailCacheLength => 15;
         public override int FrameCount => 7;
         public override bool DespawnOnAnimationComplete => true;
 
@@ -49,7 +48,6 @@ namespace Macrocosm.Content.Particles
         public override void AI()
         {
             Lighting.AddLight(Center, Color.ToVector3());
-
         }
 
         public override void OnKill()

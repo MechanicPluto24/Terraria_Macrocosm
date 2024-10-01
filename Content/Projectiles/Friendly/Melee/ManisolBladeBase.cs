@@ -9,6 +9,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public abstract class ManisolBladeBase : ModProjectile
     {
+        protected const float returnSpeed = 15f;
         protected int npcStick = -1;
         protected bool tileStick = false;
         protected Vector2 stickPosition = Vector2.Zero;
@@ -178,7 +179,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         Player player = Main.player[Projectile.owner];
                         Vector2 direction = Projectile.DirectionTo(player.Center).SafeNormalize(Vector2.Zero);
                         Rectangle projectileHitbox = new((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
-                        Projectile.velocity = Projectile.velocity.MoveTowards(direction * 15f, 6f);
+                        Projectile.velocity = Projectile.velocity.MoveTowards(direction * returnSpeed, 6f);
                         Rectangle playerHitbox = new((int)player.position.X, (int)player.position.Y, player.width, player.height);
 
                         if (projectileHitbox.Intersects(playerHitbox))

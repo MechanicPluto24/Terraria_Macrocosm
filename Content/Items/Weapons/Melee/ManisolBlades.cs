@@ -17,8 +17,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.height = 30;
             Item.damage = 500;
             Item.autoReuse = false;
-            Item.useTime = 16;
-            Item.useAnimation = 16;
+            Item.useTime = 26;
+            Item.useAnimation = 26;
             Item.shoot = ModContent.ProjectileType<ManisolBladeSol>();
             Item.shootSpeed = 24;
             Item.useStyle = ItemUseStyleID.Swing;
@@ -37,14 +37,19 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
+            /*
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<ManisolBladeSol>()] > 1 && player.ownedProjectileCounts[ModContent.ProjectileType<ManisolBladeMoon>()] > 1)
+                return false;
+            */
+
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile projectile = Main.projectile[i];
 
-                if (projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeSol sol && sol.AI_State == ManisolBladeBase.ActionState.Stick)
+                if (type == ModContent.ProjectileType<ManisolBladeSol>() && projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeSol sol && sol.AI_State == ManisolBladeBase.ActionState.Stick)
                     sol.ForceRecall();
 
-                if (projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeMoon moon && moon.AI_State == ManisolBladeBase.ActionState.Stick)
+                if (type == ModContent.ProjectileType<ManisolBladeMoon>() && projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeMoon moon && moon.AI_State == ManisolBladeBase.ActionState.Stick)
                     moon.ForceRecall();
             }
 
