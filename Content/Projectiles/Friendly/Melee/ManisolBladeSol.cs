@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Trails;
+﻿using Macrocosm.Content.Debuffs;
+using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -21,17 +22,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             if (!Main.dedServ && AI_State != ActionState.Stick)
             {
-                for (int i = 0; i < 2; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     Vector2 position = Projectile.Center + Projectile.velocity + (Main.rand.NextVector2Circular(10, 10) * MathHelper.Clamp(DropTimer / maxDropTime, 0f, 1f));
                     Vector2 velocity = new Vector2(-Projectile.velocity.X * 0.2f, -Projectile.velocity.Y * 0.2f).RotatedByRandom(MathHelper.Pi / 32f) * Main.rand.NextFloat(0.5f, 3.5f);
 
                     if (DropTimer <= maxDropTime || AI_State == ActionState.Returning)
-                    {
                         position = Projectile.Center;
-                    }
 
-                    Dust dust = Dust.NewDustPerfect(position, DustID.OrangeTorch, velocity, Scale: 0.8f);
+                    Dust dust = Dust.NewDustPerfect(position, DustID.OrangeTorch, velocity, Scale: 1.2f);
                     dust.noGravity = true;
                 }
             }
@@ -44,12 +43,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(BuffID.Daybreak, 300, false);
+            target.AddBuff(ModContent.BuffType<Melting>(), 260, false);
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            int length = AI_State == ActionState.Returning ? Projectile.oldPos.Length / 2: Projectile.oldPos.Length / 2;
+            int length = 0;
+            if (AI_State == ActionState.Thrown)
+                length = Projectile.oldPos.Length / 2;
+            else if (AI_State == ActionState.Returning)
+                length = Projectile.oldPos.Length / 2;
+
             for (int i = 1; i < length; i++)
             {
                 Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;

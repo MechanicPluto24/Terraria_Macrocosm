@@ -79,7 +79,6 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                 Particle.Create(ParticleOrchestraType.AshTreeShake, position, velocity);
             }
 
-
             Particle.Create<TintableFlash>((p) =>
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
@@ -96,6 +95,24 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                 p.NumberOfInnerReplicas = 6;
                 p.ReplicaScalingFactor = 2.6f;
             });
+
+            Particle.Create<SolarExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = Color.White.WithAlpha(127);
+                p.Scale = new(1.2f);
+                p.ScaleVelocity = new(0.1f);
+                p.FrameSpeed = 3;
+            });
+
+            /*
+            Particle.Create<TintableExplosionFiery>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(255, 164, 57).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1f);
+            });
+            */
         }
 
         public override void SpawnItems()
