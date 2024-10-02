@@ -92,12 +92,12 @@ namespace Macrocosm.Content.Machines
 
             state.SaveState(spriteBatch, continuous: true);
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, state.DepthStencilState, state.RasterizerState, null, turbineMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, state.DepthStencilState, state.RasterizerState, null, turbineMatrix);
 
             spriteBatch.Draw(turbine.Value, tileDrawPosition + turbineOffset, null, drawColor, 0f, turbine.Size() / 2f, turbineScale, turbineEffects, 0f);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, null, bladeMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, null, bladeMatrix);
 
             spriteBatch.Draw(blades.Value, tileDrawPosition + bladeOffset, null, drawColor, bladeRotation, blades.Size() / 2f + new Vector2(-0.11f, 0f), 1f, SpriteEffects.None, 0f);
 

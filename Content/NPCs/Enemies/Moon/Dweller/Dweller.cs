@@ -415,7 +415,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             if (pathRefreshTimer <= 0)
             {
                 path = new Queue<Vector2>(Utility.AStar.FindPath(new Rectangle(NPC.Hitbox.Center.X - 16, NPC.Hitbox.Center.Y - 16, 32, 32), target.Center, 24, 5000));
-                Main.NewText(path.Count);
+                //Main.NewText(path.Count);
                 pathRefreshTimer = 60;
             }
 
@@ -645,14 +645,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor * Corpreal, HeadRotation + JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
             spriteBatch.Draw(headShellRightGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal, HeadRotation - JawRotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
             spriteBatch.Draw(headShellLeftGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal, HeadRotation + JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
-
+            /*
             var lastPosition = NPC.Center;
             foreach (var position in path)
             {
                 Utils.DrawLine(spriteBatch, lastPosition, position, Color.Yellow);
                 lastPosition = position;
             }
-            /*
+           
             // Debug collision hitbox
             Rectangle hitbox = collisionHitbox;
             hitbox.X -= (int)screenPos.X;
