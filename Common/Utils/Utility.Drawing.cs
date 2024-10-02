@@ -1401,28 +1401,28 @@ namespace Macrocosm.Common.Utils
         {
             Vector2 origin = overrideOrigin != default ? overrideOrigin : new Vector2(frame.Width / framecountX / 2, texture.Height / framecount / 2);
             Color lightColor = overrideColor != null ? (Color)overrideColor : GetLightColor(position + new Vector2(width * 0.5f, height * 0.5f));
-            if (sb is List<DrawData>)
+            if (sb is List<DrawData> drawDatas)
             {
                 DrawData dd = new(texture, GetDrawPosition(position, origin, width, height, texture.Width, texture.Height, frame, framecount, framecountX, scale, drawCentered), frame, lightColor, rotation, origin, scale, direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0)
                 {
                     shader = shader
                 };
-                ((List<DrawData>)sb).Add(dd);
+                drawDatas.Add(dd);
             }
-            else if (sb is SpriteBatch)
+            else if (sb is SpriteBatch spriteBatch)
             {
                 bool applyDye = shader > 0;
                 if (applyDye)
                 {
-                    ((SpriteBatch)sb).End();
-                    ((SpriteBatch)sb).Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                    spriteBatch.End();
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                     GameShaders.Armor.ApplySecondary(shader, Main.player[Main.myPlayer], null);
                 }
-                ((SpriteBatch)sb).Draw(texture, GetDrawPosition(position, origin, width, height, texture.Width, texture.Height, frame, framecount, framecountX, scale, drawCentered), frame, lightColor, rotation, origin, scale, direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+                spriteBatch.Draw(texture, GetDrawPosition(position, origin, width, height, texture.Width, texture.Height, frame, framecount, framecountX, scale, drawCentered), frame, lightColor, rotation, origin, scale, direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
                 if (applyDye)
                 {
-                    ((SpriteBatch)sb).End();
-                    ((SpriteBatch)sb).Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                    spriteBatch.End();
+                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
                 }
             }
         }

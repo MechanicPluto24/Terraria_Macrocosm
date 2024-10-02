@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Particles
             Vector2 origin = texture.Size() / 2f;
             SpriteEffects effects = SpriteEffects.None;
 
-            float t = ((TimeToLive - TimeLeft) / TimeToLive) * 60f;
+            float t = ((TimeToLive - TimeLeft) / (float)TimeToLive) * 60f;
             float fade = Utils.GetLerpValue(0f, FadeInEnd, t, clamped: true) * Utils.GetLerpValue(FadeOutEnd, FadeOutStart, t, clamped: true);
 
             Color baseColor = Color.White * FadeFactor * 0.9f;
