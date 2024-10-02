@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Items.Walls;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Blocks.Terrain
@@ -17,6 +18,9 @@ namespace Macrocosm.Content.Items.Blocks.Terrain
 
         public override void AddRecipes()
         {
+            CreateRecipe()
+                .AddIngredient<ProtolithWall>(4)
+                .Register();
         }
     }
 }

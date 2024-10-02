@@ -1,4 +1,5 @@
 using Macrocosm.Content.Items.Blocks.Terrain;
+using Macrocosm.Content.Items.Walls;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -20,9 +21,13 @@ namespace Macrocosm.Content.Items.Blocks.Bricks
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<Regolith>(2)
-            .AddTile(TileID.WorkBenches)
-            .Register();
+                .AddIngredient<Regolith>(2)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+
+            CreateRecipe()
+                .AddIngredient<RegolithBrickWall>(4)
+                .Register();
         }
     }
 }

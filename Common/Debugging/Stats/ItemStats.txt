@@ -19,10 +19,22 @@ OsmiumBoots
 InvarArrow
 	Value: 15 copper
 	Research count: 99
+	Recipes:
+		Invar Bar x 1
+		at
+		Anvil
+			=> x25
+
 
 InvarBullet
 	Value: 15 copper
 	Research count: 99
+	Recipes:
+		Invar Bar x 1
+		at
+		Anvil
+			=> x50
+
 
 AluminumBoots
 	Value: 30 silver
@@ -337,6 +349,8 @@ IrradiatedBrick
 		at
 		Work Bench
 
+		Irradiated Brick Wall x 4
+
 
 RegolithBrick
 	Value: No value
@@ -345,6 +359,8 @@ RegolithBrick
 		Regolith x 2
 		at
 		Work Bench
+
+		Regolith Brick Wall x 4
 
 
 CheeseBlock
@@ -358,6 +374,22 @@ CheeseBlock
 IndustrialPlating
 	Value: No value
 	Research count: 100
+	Recipes:
+		Aluminum Bar x 1
+		Steel Bar x 1
+		Stone Block x 5
+		at
+		Anvil
+			=> x5
+
+		Industrial Plating Wall x 4
+
+		Industrial Hazard Wall x 4
+
+		Industrial Square Paneled Wall x 4
+
+		Industrial Trimming Wall x 4
+
 
 LexanGlass
 	Value: No value
@@ -367,6 +399,8 @@ LexanGlass
 		Glass x 1
 		at
 		Glass Kiln
+
+		Lexan Glass Wall x 4
 
 
 SilicaCrimsand
@@ -392,14 +426,23 @@ Cynthalith
 IrradiatedRock
 	Value: No value
 	Research count: 100
+	Recipes:
+		Irradiated Rock Wall x 4
+
 
 Protolith
 	Value: No value
 	Research count: 100
+	Recipes:
+		Protolith Wall x 4
+
 
 Regolith
 	Value: No value
 	Research count: 100
+	Recipes:
+		Regolith Wall x 4
+
 
 CraterDemonBossBag
 	Value: No value
@@ -439,14 +482,37 @@ HelixPatternDesign
 AdamantiteLoom
 	Value: 5 silver
 	Research count: 1
+	Recipes:
+		Adamantite Bar x 10
+		Steel Bar x 10
+		at
+		Anvil
+
 
 Fabricator
 	Value: 5 silver
 	Research count: 1
+	Recipes:
+		Adamantite Bar x 10
+		Steel Bar x 10
+		Printed Circuit Board x 2
+		Diamond x 1
+
+		Titanium Bar x 10
+		Steel Bar x 10
+		Printed Circuit Board x 2
+		Diamond x 1
+
 
 TitaniumLoom
 	Value: 5 silver
 	Research count: 1
+	Recipes:
+		Titanium Bar x 10
+		Steel Bar x 10
+		at
+		Anvil
+
 
 KyaniteScarabCritter
 	Value: 1 silver 50 copper
@@ -2348,7 +2414,7 @@ SeleniteDrill
 	Value: 40 gold
 	Research count: 1
 	Recipes:
-		Selenite Drill x 12
+		Selenite Bar x 12
 		at
 		Ancient Manipulator
 

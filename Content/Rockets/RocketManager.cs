@@ -215,7 +215,7 @@ namespace Macrocosm.Content.Rockets
                 Array.Copy(rockets, Rockets, rockets.Length);
             }
 
-            OnWorldSpawn();
+            OnWorldLoaded();
         }
 
         private static void OnWorldSpawn()
@@ -228,6 +228,20 @@ namespace Macrocosm.Content.Rockets
                     continue;
 
                 rocket.OnWorldSpawn();
+            }
+        }
+
+        public override void OnWorldLoad() => OnWorldLoaded();
+        private static void OnWorldLoaded()
+        {
+            for (int i = 0; i < MaxRockets; i++)
+            {
+                Rocket rocket = Rockets[i];
+
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
+
+                rocket.OnWorldLoad();
             }
         }
 

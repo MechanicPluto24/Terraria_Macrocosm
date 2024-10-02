@@ -51,18 +51,18 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, lightColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
-            if (rocket.StaticFire || rocket.InFlight || rocket.ForcedFlightAppearance || rocket.Landing)
+            if ( rocket.ForcedFlightAppearance || rocket.State != Rocket.ActionState.Idle)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.Additive, state1);
 
-                if (rocket.StaticFire)
+                if (rocket.State == Rocket.ActionState.StaticFire)
                     DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(rocket.StaticFireProgress));
 
-                if (rocket.InFlight || rocket.ForcedFlightAppearance)
+                if (rocket.State == Rocket.ActionState.Flight || rocket.ForcedFlightAppearance)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
 
-                if (rocket.Landing)
+                if (rocket.State == Rocket.ActionState.Landing)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
 
             }

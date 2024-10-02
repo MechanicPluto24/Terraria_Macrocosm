@@ -47,9 +47,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 
         public override bool? UseItem(Player player)
         {
-            if (Utility.SummonBossDirectlyWithMessage(player.Center - new Vector2(0f, 240f), ModContent.NPCType<CraterDemon>()))
-                SoundEngine.PlaySound(SoundID.ForceRoar, player.position);
-
+            Utility.SummonBossDirectlyWithMessage(player.Center - new Vector2(0f, 240f), ModContent.NPCType<CraterDemon>(), sound: SoundID.ForceRoar);
             return true;
         }
 

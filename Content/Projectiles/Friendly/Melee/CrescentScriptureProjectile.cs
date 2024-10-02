@@ -1,8 +1,5 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -40,14 +37,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.usesOwnerMeleeHitCD = true; // This will make the projectile apply the standard number of immunity frames as normal melee attacks.
             Projectile.stopsDealingDamageAfterPenetrateHits = true;
             Projectile.aiStyle = -1;
-       
+
         }
 
-        int RuneTimer;
+        private int runeTimer;
         private bool shot;
-        public Vector2 aim;
-        float altSwingOpacity=0f;
-        int shootTimer=0;
+        private Vector2 aim;
+        private float altSwingOpacity = 0f;
+        private int shootTimer = 0;
+
         public override void AI()
         {
             // Current time that the projectile has been alive.
@@ -56,20 +54,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float velocityRotation = Projectile.velocity.ToRotation();
             if (Alt == 0f)
             {
-            float adjustedRotation = (!(SwingDirection >= 0f)) ? ((MathHelper.Pi+(MathHelper.PiOver4/2)) * SwingDirection * progress + velocityRotation + SwingDirection *(MathHelper.Pi+(MathHelper.PiOver4/2)) + player.fullRotation)+MathHelper.PiOver4:((MathHelper.Pi+(MathHelper.PiOver4/2)) * SwingDirection * progress + velocityRotation + SwingDirection *(MathHelper.Pi+(MathHelper.PiOver4/2)) + player.fullRotation)-MathHelper.PiOver4;
+                float adjustedRotation = (!(SwingDirection >= 0f)) ? ((MathHelper.Pi + (MathHelper.PiOver4 / 2)) * SwingDirection * progress + velocityRotation + SwingDirection * (MathHelper.Pi + (MathHelper.PiOver4 / 2)) + player.fullRotation) + MathHelper.PiOver4 : ((MathHelper.Pi + (MathHelper.PiOver4 / 2)) * SwingDirection * progress + velocityRotation + SwingDirection * (MathHelper.Pi + (MathHelper.PiOver4 / 2)) + player.fullRotation) - MathHelper.PiOver4;
 
                 Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
 
-                    aim = (Main.MouseWorld.X<Main.player[Main.myPlayer].Center.X ? new Vector2(-1f,0f): new Vector2(1f,0f))+((Main.MouseWorld - Main.player[Main.myPlayer].Center).SafeNormalize(default)*1f);
+                aim = (Main.MouseWorld.X < Main.player[Main.myPlayer].Center.X ? new Vector2(-1f, 0f) : new Vector2(1f, 0f)) + ((Main.MouseWorld - Main.player[Main.myPlayer].Center).SafeNormalize(default) * 1f);
                 if (!shot && progress > 0.1f && Projectile.owner == Main.myPlayer)
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, 20f);
 
-                    for(int i=0; i<3; i++)
+                    for (int i = 0; i < 3; i++)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim.RotatedByRandom(MathHelper.PiOver4)*Main.rand.NextFloat(2f,5f), ModContent.ProjectileType<LuminiteRune>(), (int)(Projectile.damage / 4), 1f, Main.myPlayer, 1f);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim.RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(2f, 5f), ModContent.ProjectileType<LuminiteRune>(), (int)(Projectile.damage / 4), 1f, Main.myPlayer, 1f);
 
-                    } 
+                    }
                     shot = true;
                 }
 
@@ -85,21 +83,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             }
             else
             {
-                
-                float adjustedRotation = (!(SwingDirection >= 0f)) ? -((MathHelper.Pi+MathHelper.PiOver4) * SwingDirection * progress + -velocityRotation + SwingDirection *(MathHelper.Pi+MathHelper.PiOver4) + player.fullRotation)+MathHelper.Pi:-((MathHelper.Pi+MathHelper.PiOver4) * SwingDirection * progress + -velocityRotation + SwingDirection *(MathHelper.Pi+MathHelper.PiOver4) + player.fullRotation)-MathHelper.Pi;
+
+                float adjustedRotation = (!(SwingDirection >= 0f)) ? -((MathHelper.Pi + MathHelper.PiOver4) * SwingDirection * progress + -velocityRotation + SwingDirection * (MathHelper.Pi + MathHelper.PiOver4) + player.fullRotation) + MathHelper.Pi : -((MathHelper.Pi + MathHelper.PiOver4) * SwingDirection * progress + -velocityRotation + SwingDirection * (MathHelper.Pi + MathHelper.PiOver4) + player.fullRotation) - MathHelper.Pi;
 
                 Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
 
-                    aim = (Main.MouseWorld.X<Main.player[Main.myPlayer].Center.X ? new Vector2(-1f,0f): new Vector2(1f,0f))+((Main.MouseWorld - Main.player[Main.myPlayer].Center).SafeNormalize(default)*1f);
+                aim = (Main.MouseWorld.X < Main.player[Main.myPlayer].Center.X ? new Vector2(-1f, 0f) : new Vector2(1f, 0f)) + ((Main.MouseWorld - Main.player[Main.myPlayer].Center).SafeNormalize(default) * 1f);
                 if (!shot && progress > 0.1f && Projectile.owner == Main.myPlayer)
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, 20f);
 
-                    for(int i=0; i<3; i++)
+                    for (int i = 0; i < 3; i++)
                     {
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim.RotatedByRandom(MathHelper.PiOver4)*Main.rand.NextFloat(2f,5f), ModContent.ProjectileType<LuminiteRune>(), (int)(Projectile.damage / 4), 1f, Main.myPlayer, 1f);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim.RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(2f, 5f), ModContent.ProjectileType<LuminiteRune>(), (int)(Projectile.damage / 4), 1f, Main.myPlayer, 1f);
 
-                    } 
+                    }
                     shot = true;
                 }
 
@@ -112,7 +110,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 {
                     Projectile.Kill();
                 }
-        }
+            }
         }
 
         private SpriteBatchState state;
@@ -190,7 +188,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
             lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);
             float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
-            float Rotation=(!(SwingDirection >= 0f)) ? Projectile.rotation+(MathHelper.PiOver4):Projectile.rotation-(MathHelper.PiOver4);
+            float Rotation = (!(SwingDirection >= 0f)) ? Projectile.rotation + (MathHelper.PiOver4) : Projectile.rotation - (MathHelper.PiOver4);
             Color color = new Color(94, 229, 163);
             Color backDarkColor = (color * 0.4f).WithOpacity(progressScale);
             Color middleMediumColor = color;
@@ -203,15 +201,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             faintLightingColor.B = (byte)(faintLightingColor.R * (0.25f + lightingColor * 0.75f));
 
             // Back part
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), backDarkColor * lightingColor * lerpTime, Rotation+ SwingDirection * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), backDarkColor * lightingColor * lerpTime, Rotation + SwingDirection * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale, spriteEffects, 0f);
             // Very faint part affected by the light color
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), faintLightingColor * 0.15f, Rotation + SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
             // Middle part
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), new Color(213,155,148) * lightingColor * lerpTime * 0.8f, Rotation, origin, scale, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), new Color(213, 155, 148) * lightingColor * lerpTime * 0.8f, Rotation, origin, scale, spriteEffects, 0f);
             // Front part
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), frontLightColor * lightingColor * lerpTime * 0.5f, Rotation, origin, scale * 0.975f, spriteEffects, 0f);
             // Thin top line (final frame)
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.6f * lerpTime, Rotation+ SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.6f * lerpTime, Rotation + SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
             // Thin middle line (final frame)
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.5f * lerpTime, Rotation + SwingDirection * -0.05f, origin, scale * 0.8f, spriteEffects, 0f);
             // Thin bottom line (final frame)
@@ -226,7 +224,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             }
 
             // This draws a large star sparkle at the front of the projectile.
-            Vector2 drawPos2 = position + (Rotation+ Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection).ToRotationVector2() * ((float)texture.Width * 0.5f - 4f) * scale;
+            Vector2 drawPos2 = position + (Rotation + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection).ToRotationVector2() * ((float)texture.Width * 0.5f - 4f) * scale;
             Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(progress, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
             return true;
         }
@@ -243,14 +241,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 for (int i = 0; i < 8; i++)
                 {
-                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), ProjSpawnPosition, -Vector2.UnitY.RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(10f, 15f)*(float)((damage/Projectile.damage)/1.5), ModContent.ProjectileType<LunarBlood>(), (int)(damage * 0.5f), 0, Projectile.owner, 1f);
+                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), ProjSpawnPosition, -Vector2.UnitY.RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(10f, 15f) * (float)((damage / Projectile.damage) / 1.5), ModContent.ProjectileType<LunarBlood>(), (int)(damage * 0.5f), 0, Projectile.owner, 1f);
                 }
             }
             else
             {
                 for (int i = 1; i < 9; i++)
                 {
-                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), ProjSpawnPosition, -Vector2.UnitY.RotatedBy(((MathHelper.PiOver4 / 2) * (i - 1)) - MathHelper.PiOver2 + (MathHelper.PiOver4 / 4)) * 15f*(float)((damage/Projectile.damage)/1.5), ModContent.ProjectileType<LunarBlood>(), (int)(damage * 2f), 0, Projectile.owner, (float)(i + 1));
+                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), ProjSpawnPosition, -Vector2.UnitY.RotatedBy(((MathHelper.PiOver4 / 2) * (i - 1)) - MathHelper.PiOver2 + (MathHelper.PiOver4 / 4)) * 15f * (float)((damage / Projectile.damage) / 1.5), ModContent.ProjectileType<LunarBlood>(), (int)(damage * 2f), 0, Projectile.owner, (float)(i + 1));
                 }
 
             }
