@@ -11,8 +11,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ManisolBladeSol : ManisolBladeBase
     {
-        private DianiteMeteorTrail trail;
-
         public override void SetDefaults()
         {
             base.SetDefaults();

@@ -206,7 +206,7 @@ namespace Macrocosm.Common.Systems.UI
 
             Player player = Main.LocalPlayer;
 
-            if (Rocket is not null && !Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) || Rocket.Launched || player.controlMount || player.UICloseConditions())
+            if (Rocket is not null && !Rocket.Active || !Rocket.Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) || Rocket.State != Rocket.ActionState.Idle || player.controlMount || player.UICloseConditions())
                 UISystem.Hide();
         }
     }

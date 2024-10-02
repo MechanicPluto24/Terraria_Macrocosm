@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Players
 
                     if (rocket.ActiveInCurrentWorld &&
                         rocket.Bounds.InPlayerInteractionRange(settings) &&
-                        !rocket.Launched &&
+                        rocket.State == Rocket.ActionState.Idle &&
                         !player.GetModPlayer<RocketPlayer>().InRocket
                     )
                     {

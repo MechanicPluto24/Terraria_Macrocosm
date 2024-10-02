@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Rarities;
+﻿using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,6 +27,14 @@ namespace Macrocosm.Content.Items.Ammo
             Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Ranged.InvarBullet>();
             Item.shootSpeed = 2f;
             Item.ammo = AmmoID.Bullet;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe(50)
+                .AddIngredient<InvarBar>(1)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

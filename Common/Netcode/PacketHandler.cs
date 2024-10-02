@@ -24,6 +24,8 @@ namespace Macrocosm.Common.Netcode
         SyncMacrocosmPlayer,
         RequestLastSubworld,
         LastSubworldCheck,
+        SpawnNPCFromClient,
+        SyncNPCFromClient,
         SyncTEFromClient,
         SyncPowerWire
     }
@@ -70,8 +72,16 @@ namespace Macrocosm.Common.Netcode
                     SubworldTravelPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
                     break;
 
+                case MessageType.SpawnNPCFromClient:
+                    NetHelper.ReceiveSpawnNPCFromClient(reader, whoAmI);
+                    break;
+
+                case MessageType.SyncNPCFromClient:
+                    NetHelper.ReceiveSyncNPCFromClient(reader, whoAmI);
+                    break;
+
                 case MessageType.SyncTEFromClient:
-                    TENetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
+                    NetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
                     break;
 
                 case MessageType.SyncPowerWire:

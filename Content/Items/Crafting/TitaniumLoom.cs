@@ -1,4 +1,6 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Items.Bars;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Crafting
@@ -15,6 +17,15 @@ namespace Macrocosm.Content.Items.Crafting
             Item.width = 50;
             Item.height = 24;
             Item.value = 500;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.TitaniumBar, 10)
+                .AddIngredient<SteelBar>(10)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }
