@@ -40,13 +40,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.usesOwnerMeleeHitCD = true; // This will make the projectile apply the standard number of immunity frames as normal melee attacks.
             Projectile.stopsDealingDamageAfterPenetrateHits = true;
             Projectile.aiStyle = -1;
-            Timer = 1f;
+       
         }
 
         int RuneTimer;
         private bool shot;
-        private Vector2? aim;
+        public Vector2 aim;
         float altSwingOpacity=0f;
+        int shootTimer=0;
         public override void AI()
         {
             // Current time that the projectile has been alive.
@@ -55,17 +56,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float velocityRotation = Projectile.velocity.ToRotation();
             if (Alt == 0f)
             {
-                float adjustedRotation = MathHelper.Pi * -SwingDirection * progress - velocityRotation - SwingDirection * MathHelper.Pi + player.fullRotation + MathHelper.Pi;
+            float adjustedRotation = (!(SwingDirection >= 0f)) ? ((MathHelper.Pi+(MathHelper.PiOver4/2)) * SwingDirection * progress + velocityRotation + SwingDirection *(MathHelper.Pi+(MathHelper.PiOver4/2)) + player.fullRotation)+MathHelper.PiOver4:((MathHelper.Pi+(MathHelper.PiOver4/2)) * SwingDirection * progress + velocityRotation + SwingDirection *(MathHelper.Pi+(MathHelper.PiOver4/2)) + player.fullRotation)-MathHelper.PiOver4;
+
                 Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
 
-                aim ??= (Projectile.rotation<0f ? new Vector2(1f,0f): new Vector2(-1f,0f))+((Main.MouseWorld - player.Center).SafeNormalize(default)*0.3f);
+                    aim = (Main.MouseWorld.X<Main.player[Main.myPlayer].Center.X ? new Vector2(-1f,0f): new Vector2(1f,0f))+((Main.MouseWorld - Main.player[Main.myPlayer].Center).SafeNormalize(default)*1f);
                 if (!shot && progress > 0.1f && Projectile.owner == Main.myPlayer)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim.Value, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, 1f);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, 20f);
+
+                    for(int i=0; i<3; i++)
+                    {
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim.RotatedByRandom(MathHelper.PiOver4)*Main.rand.NextFloat(2f,5f), ModContent.ProjectileType<LuminiteRune>(), (int)(Projectile.damage / 4), 1f, Main.myPlayer, 1f);
+
+                    } 
                     shot = true;
                 }
 
-                Timer *= 1.14f;
+                Timer++;
                 Projectile.Center = player.RotatedRelativePoint(player.MountedCenter + (new Vector2(Projectile.width / 2, 0).RotatedBy(adjustedRotation))) - Projectile.velocity;
 
                 player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - ((MathHelper.Pi / 4) + MathHelper.Pi / 6));
@@ -77,60 +85,41 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             }
             else
             {
-                float adjustedRotation = MathHelper.Pi * SwingDirection * progress + velocityRotation + SwingDirection * MathHelper.Pi + player.fullRotation;
+                
+                float adjustedRotation = (!(SwingDirection >= 0f)) ? -((MathHelper.Pi+MathHelper.PiOver4) * SwingDirection * progress + -velocityRotation + SwingDirection *(MathHelper.Pi+MathHelper.PiOver4) + player.fullRotation)+MathHelper.Pi:-((MathHelper.Pi+MathHelper.PiOver4) * SwingDirection * progress + -velocityRotation + SwingDirection *(MathHelper.Pi+MathHelper.PiOver4) + player.fullRotation)-MathHelper.Pi;
+
                 Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
-                if (altSwingOpacity<1f)
-                    altSwingOpacity+=0.01f;
-                if(Timer<1200f)
-                    Timer *= 1.1f;
-                else
-                    Timer+=120f;
+
+                    aim = (Main.MouseWorld.X<Main.player[Main.myPlayer].Center.X ? new Vector2(-1f,0f): new Vector2(1f,0f))+((Main.MouseWorld - Main.player[Main.myPlayer].Center).SafeNormalize(default)*1f);
+                if (!shot && progress > 0.1f && Projectile.owner == Main.myPlayer)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, 20f);
+
+                    for(int i=0; i<3; i++)
+                    {
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, aim.RotatedByRandom(MathHelper.PiOver4)*Main.rand.NextFloat(2f,5f), ModContent.ProjectileType<LuminiteRune>(), (int)(Projectile.damage / 4), 1f, Main.myPlayer, 1f);
+
+                    } 
+                    shot = true;
+                }
+
+                Timer++;
                 Projectile.Center = player.RotatedRelativePoint(player.MountedCenter + (new Vector2(Projectile.width / 2, 0).RotatedBy(adjustedRotation))) - Projectile.velocity;
 
-                player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
-                if (Timer >= 500 &&(Utility.CastLength(Projectile.Center, new Vector2(1, 0).RotatedBy(adjustedRotation), Projectile.width, false)< (Projectile.width/2)))
+                player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - ((MathHelper.Pi / 4) + MathHelper.Pi / 6));
+
+                if (Timer >= MaxTime)
                 {
-                    float damageMultiplier = (int)(Timer/600f);
-                    if(damageMultiplier>2f)
-                        damageMultiplier=2f;
-                    Particle.Create<TintableExplosion>(p =>
-                    {
-                        p.Position = Projectile.Center + new Vector2((Projectile.width / 2), 0).RotatedBy(Projectile.rotation);
-                        p.Color = (new Color(94, 229, 163, 200));
-                        p.Scale = new(1.5f);
-                        p.NumberOfInnerReplicas = 8;
-                        p.ReplicaScalingFactor = 0.4f;
-                    });
-
-                    Particle.Create<TintableExplosion>(p =>
-                   {
-                       p.Position = Projectile.Center + new Vector2((Projectile.width / 2), 0).RotatedBy(Projectile.rotation);
-                       p.Color = (new Color(213, 155, 148, 200));
-                       p.Scale = new(1.2f);
-                       p.NumberOfInnerReplicas = 6;
-                       p.ReplicaScalingFactor = 0.2f;
-                   });
-                    if (Main.myPlayer == Projectile.owner){
-                    CreateBlood(Projectile.damage*damageMultiplier);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(1f,0f)*damageMultiplier, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage*damageMultiplier), 1f, Main.myPlayer, 1f);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, new Vector2(-1f,0f)*damageMultiplier, ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage*damageMultiplier), 1f, Main.myPlayer, 1f);
-                    }
-
-
                     Projectile.Kill();
                 }
-            }
-            RuneTimer++;
-            if (RuneTimer % 4 == 0)
-            {
-                for (int i = 0; i < 4; i++)
-                    Dust.NewDustPerfect(Projectile.Center + new Vector2(Main.rand.Next(0, (Projectile.width / 2)), 0).RotatedBy(Projectile.rotation), ModContent.DustType<RunicScriptDust>()).noGravity = true;
-            }
+        }
         }
 
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
+
+            /*
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
@@ -188,6 +177,57 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             // Uncomment this line for a visual representation of the projectile's size.
             // Main.EntitySpriteDraw(TextureAssets.MagicPixel.Value, position, sourceRectangle, Color.Orange * 0.75f, 0f, origin, scale, spriteEffects);
 
+            return true;
+            */
+            Player player = Main.player[Projectile.owner];
+            Vector2 position = player.Center - Main.screenPosition;
+            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Swing", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Vector2 origin = texture.Frame(1, 4).Size() / 2f;
+            float scale = Projectile.scale * 2f;
+            SpriteEffects spriteEffects = ((!(SwingDirection >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
+            float progress = Timer / MaxTime;
+            float lerpTime = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
+            float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
+            lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);
+            float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
+            float Rotation=(!(SwingDirection >= 0f)) ? Projectile.rotation+(MathHelper.PiOver4):Projectile.rotation-(MathHelper.PiOver4);
+            Color color = new Color(94, 229, 163);
+            Color backDarkColor = (color * 0.4f).WithOpacity(progressScale);
+            Color middleMediumColor = color;
+            Color frontLightColor = (color * 1.4f).WithAlpha(255); ;
+
+            Color whiteTimesLerpTime = Color.White * lerpTime * 0.5f;
+            whiteTimesLerpTime.A = (byte)(whiteTimesLerpTime.A * (1f - lightingColor));
+            Color faintLightingColor = whiteTimesLerpTime * lightingColor * 0.5f;
+            faintLightingColor.G = (byte)(faintLightingColor.G * lightingColor);
+            faintLightingColor.B = (byte)(faintLightingColor.R * (0.25f + lightingColor * 0.75f));
+
+            // Back part
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), backDarkColor * lightingColor * lerpTime, Rotation+ SwingDirection * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale, spriteEffects, 0f);
+            // Very faint part affected by the light color
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), faintLightingColor * 0.15f, Rotation + SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
+            // Middle part
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), new Color(213,155,148) * lightingColor * lerpTime * 0.8f, Rotation, origin, scale, spriteEffects, 0f);
+            // Front part
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 0), frontLightColor * lightingColor * lerpTime * 0.5f, Rotation, origin, scale * 0.975f, spriteEffects, 0f);
+            // Thin top line (final frame)
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.6f * lerpTime, Rotation+ SwingDirection * 0.01f, origin, scale, spriteEffects, 0f);
+            // Thin middle line (final frame)
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.5f * lerpTime, Rotation + SwingDirection * -0.05f, origin, scale * 0.8f, spriteEffects, 0f);
+            // Thin bottom line (final frame)
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.4f * lerpTime, Rotation + SwingDirection * -0.1f, origin, scale * 0.6f, spriteEffects, 0f);
+
+            // This draws some sparkles around the circumference of the swing.
+            for (float i = 0f; i < 8f; i += 1f)
+            {
+                float edgeRotation = Rotation + SwingDirection * i * (MathHelper.Pi * -2f) * 0.025f + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection;
+                Vector2 drawPos = position + edgeRotation.ToRotationVector2() * ((float)texture.Width * 0.5f - 6f) * scale;
+                Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos, new Color(255, 255, 255, 0) * lerpTime * (i / 9f), middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, edgeRotation, new Vector2(0f, Utils.Remap(progress, 0f, 1f, 3f, 0f)) * scale, Vector2.One * scale);
+            }
+
+            // This draws a large star sparkle at the front of the projectile.
+            Vector2 drawPos2 = position + (Rotation+ Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection).ToRotationVector2() * ((float)texture.Width * 0.5f - 4f) * scale;
+            Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(progress, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
             return true;
         }
 
