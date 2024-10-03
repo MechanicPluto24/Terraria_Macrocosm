@@ -1,8 +1,10 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Debuffs;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Drawing;
@@ -13,17 +15,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ManisolBladeSolExplosion : ModProjectile
     {
-        public override string Texture => Macrocosm.EmptyTexPath;
-
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.Explosive[Type] = true;
+            Main.projFrames[Type] = 5;
         }
 
         public override void SetDefaults()
         {
-            Projectile.width = 1;
-            Projectile.height = 1;
+            Projectile.width = 128;
+            Projectile.height = 128;
             Projectile.aiStyle = -1;
             Projectile.penetrate = -1;
             Projectile.friendly = true;
@@ -31,21 +31,26 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.light = 0.5f;
-            Projectile.timeLeft = 4;
+            Projectile.timeLeft = 5;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
+            Projectile.knockBack = 8f;
+            Projectile.alpha = 255;
         }
 
         public override void AI()
         {
-            if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
-                Projectile.PrepareBombToBlow();
+            Projectile.hide = true;
         }
 
-        public override void PrepareBombToBlow()
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.tileCollide = false;
-            Projectile.alpha = 255;
-            Projectile.Resize(128, 128);
-            Projectile.knockBack = 8f;
+            target.AddBuff(ModContent.BuffType<Melting>(), 260, false);
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(ModContent.BuffType<Melting>(), 260, false);
         }
 
         public override void OnKill(int timeLeft)
@@ -55,22 +60,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
-            int impactDustCount = Main.rand.Next(250, 280);
-            for (int i = 0; i < impactDustCount; i++)
+            for (int i = 0; i < Main.rand.Next(250, 280); i++)
             {
                 int dist = 20;
                 Vector2 dustPosition = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
                 float distFactor = (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
                 Vector2 velocity = (Projectile.Center - dustPosition).SafeNormalize(default) * -8f * distFactor;
-                Particle.Create<DustParticle>((p =>
-                {
-                    p.DustType = DustID.SolarFlare;
-                    p.Position = dustPosition;
-                    p.Velocity = velocity;
-                    p.Scale = new Vector2(Main.rand.NextFloat(0.6f, 1.2f));
-                    p.NoGravity = true;
-                    p.NormalUpdate = true;
-                }));
+                Dust dust = Dust.NewDustDirect(dustPosition, 0, 0, DustID.SolarFlare, velocity.X, velocity.Y, 0, default, Main.rand.NextFloat(0.6f, 1.2f));
+                dust.noGravity = true;
             }
 
             int flameParticleCount = Main.rand.Next(10, 20);
@@ -94,11 +91,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center;
-                p.Color = new Color(255, 164, 57).WithOpacity(0.1f) * 0.4f;
+                p.Color = new Color(255, 164, 57) * 0.1f;
                 p.Scale = new(1f);
                 p.NumberOfInnerReplicas = 6;
                 p.ReplicaScalingFactor = 1.6f;
             });
+
+            Particle.Create<SolarExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = Color.White.WithAlpha(127);
+                p.Scale = new(0.2f);
+                p.ScaleVelocity = new(0.12f);
+                p.FrameSpeed = 3;
+            });
         }
+
+        public override Color? GetAlpha(Color lightColor) => Color.White.WithAlpha(127);
     }
 }

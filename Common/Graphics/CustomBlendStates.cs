@@ -4,14 +4,21 @@ namespace Macrocosm.Common.Graphics
 {
     public class CustomBlendStates
     {
-        public static readonly BlendState Multiplicative = new()
+        private static BlendState _multiplicative;
+        private static BlendState _subtractive;
+        private static BlendState _negative;
+
+        public static BlendState Multiplicative => _multiplicative ??= new BlendState
         {
-            ColorBlendFunction = BlendFunction.Add,
-            ColorSourceBlend = Blend.DestinationColor,
-            ColorDestinationBlend = Blend.Zero,
+            ColorBlendFunction = BlendFunction.ReverseSubtract,
+            ColorDestinationBlend = Blend.One,
+            ColorSourceBlend = Blend.SourceAlpha,
+            AlphaBlendFunction = BlendFunction.ReverseSubtract,
+            AlphaDestinationBlend = Blend.One,
+            AlphaSourceBlend = Blend.SourceAlpha
         };
 
-        public static readonly BlendState Subtractive = new()
+        public static BlendState Subtractive => _subtractive ??= new BlendState
         {
             ColorSourceBlend = Blend.One,
             AlphaSourceBlend = Blend.One,
@@ -21,12 +28,11 @@ namespace Macrocosm.Common.Graphics
             AlphaBlendFunction = BlendFunction.ReverseSubtract,
         };
 
-        public static readonly BlendState Negative = new()
+        public static BlendState Negative => _negative ??= new BlendState
         {
             ColorBlendFunction = BlendFunction.ReverseSubtract,
             ColorSourceBlend = Blend.One,
             ColorDestinationBlend = Blend.One,
-
             AlphaBlendFunction = BlendFunction.ReverseSubtract,
             AlphaSourceBlend = Blend.One,
             AlphaDestinationBlend = Blend.One,

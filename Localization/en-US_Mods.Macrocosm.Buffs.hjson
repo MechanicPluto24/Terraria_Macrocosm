@@ -107,3 +107,8 @@ AntiRadiationPills: {
 	DisplayName: Anti Radiation Pills
 	Description: Mods.Macrocosm.Buffs.AntiRadiationPills.Description
 }
+
+Melting: {
+	DisplayName: Melting
+	Description: Mods.Macrocosm.Buffs.Melting.Description
+}
