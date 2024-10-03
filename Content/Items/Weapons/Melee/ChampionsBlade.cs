@@ -32,12 +32,28 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.noUseGraphic = true;
         }
 
-        #region Held Projectile Fields (per item)
+        public const int MaxStacks = 6;
+        public float SwingDirection { get; private set; } = -1;
+        public int HitStacks { get; set; }
+        public int ResetTimer { get; set; }
 
-        public float lastRotation = MathHelper.PiOver2 * 0.676f;
-        public float lastDirection = -1f;
+        public override bool CanUseItem(Player player)
+        {
+            SwingDirection = -SwingDirection;
+            return base.CanUseItem(player);
+        }
 
-        #endregion
+        public override void UpdateInventory(Player player)
+        {
+            if (ResetTimer >= 320)
+            {
+                HitStacks = 0;
+            }
+            else
+            {
+                ResetTimer++;
+            }
+        }
 
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
