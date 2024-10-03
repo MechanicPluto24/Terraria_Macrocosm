@@ -1,18 +1,18 @@
 ﻿using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     internal class ChampionsBladeHeldProjectile : ModProjectile
     {
-        public override string Texture => "Macrocosm/Content/Items/Weapons/Melee/ChampionsBlade";
-
         public override void SetDefaults()
         {
             Projectile.width = 0;
@@ -37,21 +37,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         }
 
         private Player Player => Main.player[Projectile.owner];
+        private ref float SwingDirection => ref Projectile.ai[0];
         private ref float Arc => ref Projectile.ai[1];
-        private ref float LastRotation => ref Projectile.ai[0];
-        private ChampionsBlade item;
+
+        // Client side only.
+        private ChampionsBlade blade;
+
+        private int shots;
+        private int hitStacks;
 
         // So that the weapon doesn't "blink" during continuous use.
         private bool despawn;
 
         public override void OnSpawn(IEntitySource source)
         {
-            // we just gon assume this true !
-            item = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as ChampionsBlade;
+            blade = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as ChampionsBlade;
 
-            item.lastDirection = -item.lastDirection;
-            LastRotation = item.lastRotation;
-            Arc = Projectile.velocity.ToRotation() + item.lastDirection * Main.rand.NextFloat(MathHelper.PiOver2, MathHelper.Pi) - item.lastRotation;
+            hitStacks = blade.HitStacks;
+            SwingDirection = blade.SwingDirection;
+            Arc = Main.rand.NextFloat(MathHelper.PiOver2, MathHelper.TwoPi * 0.85f);
 
             Projectile.netUpdate = true;
         }
@@ -75,47 +79,62 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             if (Player.noItems || Player.CCed || Player.ItemAnimationEndingOrEnded || Player.HeldItem.type != ModContent.ItemType<ChampionsBlade>())
             {
                 despawn = true;
-                if (item is not null)
+                if (blade is not null)
                 {
-                    item.lastRotation = Projectile.rotation;
+                    blade.HitStacks = hitStacks;
                 }
 
                 return;
             }
 
-            var x = 1f - (float)Player.itemAnimation / Player.itemAnimationMax - 1f;
-            Projectile.rotation = LastRotation + Arc * (MathF.Sin((x * x - 0.5f) * MathHelper.Pi) + 1f) / 2f;
+            if (Main.myPlayer == Player.whoAmI)
+            {
+                Projectile.velocity = Projectile.Center.DirectionTo(Main.MouseWorld);
+                Projectile.netUpdate = true;
+            }
+
+            var progress = 1f - (float)Player.itemAnimation / Player.itemAnimationMax;
+            var x = progress - 1f;
+            Projectile.rotation = Projectile.velocity.ToRotation()
+                + (0.5f * Arc - Arc * (MathF.Sin((x * x * x - 0.5f) * MathHelper.Pi) + 1f) / 2f) * SwingDirection
+                + Main.rand.NextFloat(0.1f);
 
 
-            /*            if (Main.netMode != NetmodeID.MultiplayerClient)
-                        {
+            if (shots < 5 && Main.netMode != NetmodeID.MultiplayerClient && progress > 0.3f && progress < 0.5f && Main.rand.NextBool(2))
+            {
+                Projectile.NewProjectile(
+                    Projectile.GetSource_FromAI(),
+                    Projectile.Center,
+                    Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedByRandom(MathHelper.PiOver4) * 12f,
+                    ModContent.ProjectileType<ChampionsBladeBoltProjectile>(),
+                    40,
+                    2f
+                );
+                shots++;
+            }
+        }
 
-                            if (Main.rand.NextBool(30))
-                            {
-                                Projectile.NewProjectile(
-                                    Projectile.GetSource_FromAI(),
-                                    Projectile.Center,
-                                    Projectile.velocity.SafeNormalize(Vector2.Zero) * 23f,
-                                    ModContent.ProjectileType<ChampionsBladeBoltProjectile>(),
-                                    40,
-                                    2f);
-                            }
-                        }
-            */
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            hitStacks = Math.Min(hitStacks + 1, ChampionsBlade.MaxStacks);
+            blade.ResetTimer = 0;
+            Projectile.netUpdate = true;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
+            var length = hitStacks == ChampionsBlade.MaxStacks ? 120 : 80;
             return Collision.CheckAABBvLineCollision(
                 targetHitbox.TopLeft(),
                 targetHitbox.Size(),
                 Projectile.Center,
-                Projectile.Center + Projectile.rotation.ToRotationVector2() * 80f);
+                Projectile.Center + Projectile.rotation.ToRotationVector2() * length);
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            var texture = TextureAssets.Projectile[Type].Value;
+            var texture = hitStacks == ChampionsBlade.MaxStacks ? TextureAssets.Projectile[Type].Value
+                : ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/ChampionsBlade", AssetRequestMode.ImmediateLoad).Value;
             var rotation = Projectile.rotation + (Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.Pi * 0.75f);
             var origin = new Vector2(Player.direction == 1 ? 10 : 67, 67);
 
