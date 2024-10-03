@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.Items.Weapons.Melee;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Content.CameraModifiers;
+using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -30,7 +32,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
 
-            Projectile.extraUpdates = 2;
+            Projectile.extraUpdates = 3;
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 999;
@@ -48,6 +50,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         // So that the weapon doesn't "blink" during continuous use.
         private bool despawn;
+
+        private OldPositionCache? tipOldPositions;
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -71,6 +75,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 Projectile.timeLeft = 2;
             }
+
 
             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.PiOver2);
             Player.heldProj = Projectile.whoAmI;
@@ -112,27 +117,55 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 );
                 shots++;
             }
+
+            var tipPosition = Projectile.Center + Projectile.rotation.ToRotationVector2() * SwordLength;
+            tipOldPositions ??= new(20, tipPosition);
+            tipOldPositions.Value.Add(tipPosition);
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             hitStacks = Math.Min(hitStacks + 1, ChampionsBlade.MaxStacks);
             blade.ResetTimer = 0;
+
+            Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(8f, "ChampionsBlade", 0.7f));
             Projectile.netUpdate = true;
         }
 
+        private float SwordLength => hitStacks == ChampionsBlade.MaxStacks ? 120 : 80;
+
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            var length = hitStacks == ChampionsBlade.MaxStacks ? 120 : 80;
             return Collision.CheckAABBvLineCollision(
                 targetHitbox.TopLeft(),
                 targetHitbox.Size(),
                 Projectile.Center,
-                Projectile.Center + Projectile.rotation.ToRotationVector2() * length);
+                Projectile.Center + Projectile.rotation.ToRotationVector2() * SwordLength
+            );
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
+            /*            Main.spriteBatch.End(out var state);
+                        Main.spriteBatch.Begin(BlendState.Additive, state);
+
+                        Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
+
+                        var strip = new VertexStrip();
+                        strip.PrepareStripWithProceduralPadding(
+                            tipOldPositions.Value.Positions,
+                            new float[tipOldPositions.Value.Count],
+                            _ => Color.White,
+                            progress => 2f,
+                            -Main.screenPosition,
+                            false,
+                            true);
+
+                        strip.DrawTrail();
+
+                        Main.spriteBatch.End();
+                        Main.spriteBatch.Begin(state);
+            */
             var texture = hitStacks == ChampionsBlade.MaxStacks ? TextureAssets.Projectile[Type].Value
                 : ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/ChampionsBlade", AssetRequestMode.ImmediateLoad).Value;
             var rotation = Projectile.rotation + (Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.Pi * 0.75f);

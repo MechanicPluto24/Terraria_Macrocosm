@@ -2802,7 +2802,7 @@ SteelZweihander
 	Recipes:
 		Steel Bar x 16
 		at
-		Work Bench
+		Anvil
 
 
 StopSign
