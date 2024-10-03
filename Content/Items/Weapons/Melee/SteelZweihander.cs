@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             CreateRecipe()
             .AddIngredient<SteelBar>(16)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.Anvils)
             .Register();
         }
     }
