@@ -2878,10 +2878,20 @@ StarDestroyer
 SteelCrossbow
 	Value: 2 gold 50 silver
 	Research count: 1
+	Recipes:
+		Steel Bar x 16
+		at
+		Anvil
+
 
 SteelRifle
 	Value: 2 gold 50 silver
 	Research count: 1
+	Recipes:
+		Steel Bar x 16
+		at
+		Anvil
+
 
 TychoDesertEagle
 	Value: 35 gold

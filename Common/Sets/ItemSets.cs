@@ -25,6 +25,9 @@ namespace Macrocosm.Common.Sets
         /// <summary> Set of items wiith custom potion sickness duration </summary>
         public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
 
+        /// <summary>  </summary>
+        public static bool[] ExplosivesShotDealDamageToOwner { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
+
         /// <summary> Unobtainable developer/debug items. Items in this set have a "Developer Item" tooltip  </summary>
         public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
 

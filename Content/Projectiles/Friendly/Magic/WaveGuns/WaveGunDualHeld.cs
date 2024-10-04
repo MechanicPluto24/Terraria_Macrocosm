@@ -74,7 +74,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                 if (AI_Timer % AI_FireRate == 0)
                 {
-                    Vector2 position = Projectile.Center + Projectile.velocity * 5;
+                    Vector2 position = Projectile.Center - Projectile.velocity * 5;
                     Vector2 velocity = Vector2.Normalize(Projectile.velocity) * (currentItem.shootSpeed / ContentSamples.ProjectilesByType[ModContent.ProjectileType<WaveGunEnergyBolt>()].extraUpdates);
 
                     if (AI_ShotCount % 2 == 0)
