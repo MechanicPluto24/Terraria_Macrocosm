@@ -2,6 +2,7 @@
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Macrocosm.Content.Items.Bars;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,7 +33,13 @@ namespace Macrocosm.Content.Items.Tools.Chandrium
             Item.pick = 235;
             Item.tileBoost = 5;
         }
-
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<ChandriumBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
+        }
         public override void MeleeEffects(Player player, Rectangle hitbox)
         {
             #region Variables
