@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Tiles.Ores
             AddMapEntry(new Color(32, 31, 33), CreateMapEntryName());
 
             DustType = ModContent.DustType<CoalDust>();
-            HitSound = SoundID.Dig;
+            HitSound = SoundID.Tink;
 
             MinPick = 40;
             MineResist = 5f;

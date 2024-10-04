@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         public override string Texture => Macrocosm.EmptyTexPath;
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 25;
+            ProjectileID.Sets.TrailCacheLength[Type] = 75;
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
@@ -55,10 +55,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 300;
-            Projectile.extraUpdates = 3;
-
-            ProjectileID.Sets.TrailCacheLength[Type] = 75;
-            ProjectileID.Sets.TrailingMode[Type] = 3;
+            Projectile.extraUpdates = 5;
         }
 
         public override void AI()
@@ -142,19 +139,32 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + $"Trace{Main.rand.Next(2, 5).ToString()}").Value;
+            //Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + $"Trace{Main.rand.Next(2, 5).ToString()}").Value;
             state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
+            var positions = (Vector2[])Projectile.oldPos.Clone();
+            for (int i = 1; i < positions.Length; i++)
+            {
+                if (positions[i] == default)
+                    continue;
+
+                positions[i] += Main.rand.NextVector2Unit() * Main.rand.NextFloat(5f * Utility.InverseLerp(0, 120, AI_Timer, clamped: true));
+            }
+
             int trailLength = BeamType is BeamVariant.Purple ? Projectile.oldPos.Length : Projectile.oldPos.Length - 10;
-            trail?.Draw(Projectile.oldPos[..trailLength], Projectile.oldRot[..trailLength], Projectile.Size / 2f);
+
+            if (AI_Timer < 8)
+                trailLength = 2;
+
+            trail?.Draw(positions[..trailLength], Projectile.oldRot[..trailLength], Projectile.Size / 2f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.velocity.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 0.25f, SpriteEffects.None, 0f);
+            //Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.velocity.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 0.25f, SpriteEffects.None, 0f);
 
             return false;
         }

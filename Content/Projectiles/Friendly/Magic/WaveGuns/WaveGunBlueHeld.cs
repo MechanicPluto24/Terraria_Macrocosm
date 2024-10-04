@@ -57,7 +57,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 float knockback = currentItem.knockBack;
                 if (AI_Timer % AI_FireRate == 0)
                 {
-                    Vector2 position = Projectile.Center + Projectile.velocity * 8;
+                    Vector2 position = Projectile.Center - Projectile.velocity * 5;
                     Vector2 velocity = Vector2.Normalize(Projectile.velocity.RotatedByRandom(MathHelper.PiOver2 / 9)) * (currentItem.shootSpeed / ContentSamples.ProjectilesByType[ModContent.ProjectileType<WaveGunEnergyBolt>()].extraUpdates);
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), damage, knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);
 

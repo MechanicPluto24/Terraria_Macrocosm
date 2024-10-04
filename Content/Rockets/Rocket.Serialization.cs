@@ -31,7 +31,8 @@ namespace Macrocosm.Content.Rockets
 
                 tag[nameof(Inventory)] = Inventory;
 
-                if (TargetLandingPosition != Vector2.Zero) tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
+                if (TargetLandingPosition != Vector2.Zero) 
+                    tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
 
                 tag[nameof(Nameplate)] = Nameplate;
 
