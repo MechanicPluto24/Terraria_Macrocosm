@@ -99,11 +99,6 @@ namespace Macrocosm.Content.LoadingScreens
 
             UpdateAnimation();
             Update();
-
-            // Make SubworldSystem.cache null if on game menu. 
-            // Remove once https://github.com/jjohnsnaill/SubworldLibrary/pull/35 is merged.
-            if (Main.gameMenu && Main.menuMode == 0)
-                MacrocosmSubworld.Hacks.SubworldSystem_NullCache();
         }
 
         /// <summary> Update the animation counter. Override for non-default behaviour </summary>
