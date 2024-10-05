@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Config;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.Weapons.Ranged;
@@ -113,7 +114,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     }
                 }
 
-                Projectile.position += (new Vector2(Main.rand.NextFloat(2.4f), Main.rand.NextFloat(0.4f))).RotatedBy(Projectile.rotation) * WindupProgress;
+                if (MacrocosmConfig.Instance.GunRecoilEffects)
+                    Projectile.position += (new Vector2(Main.rand.NextFloat(2.4f), Main.rand.NextFloat(0.4f))).RotatedBy(Projectile.rotation) * WindupProgress;
 
                 if (!Main.dedServ && AI_Windup % (fireFreq * 1.5) == 0)
                 {
