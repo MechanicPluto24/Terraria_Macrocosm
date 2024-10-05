@@ -153,35 +153,6 @@ namespace Macrocosm.Common.Subworlds
         {
             Utility.Chat(message, Color.Red);
             Macrocosm.Instance.Logger.Error(message);
-        }
-
-        public class Hacks
-        {
-            /// <summary>
-            /// Remove this once SubworldLibrary <see href="https://github.com/jjohnsnaill/SubworldLibrary/pull/35"/> is merged.
-            /// </summary>
-            public static void SubworldSystem_NullCache()
-            {
-                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
-                field.SetValue(null, null);
-            }
-
-            /// <summary> 
-            /// Bypasses SubworldLibrary tag key existence check. 
-            /// TODO: Replace with <see cref="SubworldSystem.CopyWorldData(string, object)"/> on next SubworldLibrary update.
-            /// </summary>
-            public static void SubworldSystem_CopyWorldData(string key, object data)
-            {
-                var copiedData = Utility.GetFieldValue<TagCompound>(typeof(SubworldSystem), "copiedData", flags: BindingFlags.Static | BindingFlags.NonPublic);
-
-                if (data != null)
-                    copiedData[key] = data;
-            }
-
-            public static void SubworldSystem_SendToAllSubserversExcept(Mod mod, int ignoreSubserver, byte[] data)
-            {
-
-            }
-        }
+        }       
     }
 }

@@ -49,13 +49,22 @@ namespace Macrocosm.Common.Global.Projectiles
 
         private void On_Projectile_BombsHurtPlayers(On_Projectile.orig_BombsHurtPlayers orig, Projectile self, Rectangle projRectangle, int j)
         {
-            if(self.TryGetGlobalProjectile(out ExplosiveGlobalProjectile global))
+            if (self.TryGetGlobalProjectile(out ExplosiveGlobalProjectile global))
             {
                 int type = global.sourceItemType;
-                if (type > 0 && !ItemSets.ExplosivesShotDealDamageToOwner[type])
-                    return;
+                if (type > 0)
+                {
+                    bool dealDamage;
+                    if (Main.getGoodWorld)
+                        dealDamage = ItemSets.ExplosivesShotDealDamageToOwner_GetGoodWorld[type];
+                    else
+                        dealDamage = ItemSets.ExplosivesShotDealDamageToOwner[type];
+
+                    if (!dealDamage)
+                        return;
+                }
             }
-   
+
             orig(self, projRectangle, j);
         }
     }

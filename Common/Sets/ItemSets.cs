@@ -25,8 +25,17 @@ namespace Macrocosm.Common.Sets
         /// <summary> Set of items wiith custom potion sickness duration </summary>
         public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
 
-        /// <summary>  </summary>
+        /// <summary> 
+        /// If true, explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
+        /// <br/> Set to false to disable self damage for explosives shot by this weapon in regular gameplay (not FTW).
+        /// </summary>
         public static bool[] ExplosivesShotDealDamageToOwner { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
+
+        /// <summary> 
+        /// If true, explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
+        /// <br/> Set to false to disable self damage for explosives shot by this weapon in For The Worthy worlds.
+        /// </summary>
+        public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
 
         /// <summary> Unobtainable developer/debug items. Items in this set have a "Developer Item" tooltip  </summary>
         public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
