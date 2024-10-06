@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Config;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Sounds;
@@ -66,7 +67,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                     SoundEngine.PlaySound(SFX.WaveGunShot, Projectile.position);
 
-                    GunRotation += 0.25f;
+                    if(MacrocosmConfig.Instance.GunRecoilEffects)
+                        GunRotation += 0.25f;
                 }
 
                 AI_Timer++;

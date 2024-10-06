@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Config;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Sounds;
@@ -79,12 +80,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                     if (AI_ShotCount % 2 == 0)
                     {
-                        redRotation += 0.3f;
+                        if (MacrocosmConfig.Instance.GunRecoilEffects)
+                            redRotation += 0.3f;
+
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Red);
                     }
                     else
                     {
-                        blueRotation += 0.3f;
+                        if (MacrocosmConfig.Instance.GunRecoilEffects)
+                            blueRotation += 0.3f;
+
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);
                     }
 

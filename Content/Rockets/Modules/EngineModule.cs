@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
+using static Macrocosm.Content.Tiles.Furniture.Industrial.IndustrialChest;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
@@ -51,7 +52,7 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, lightColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
-            if ( rocket.ForcedFlightAppearance || rocket.State != Rocket.ActionState.Idle)
+            if ( rocket.ForcedFlightAppearance || (rocket.State != Rocket.ActionState.Idle && rocket.State != Rocket.ActionState.PreLaunch))
             {
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.Additive, state1);

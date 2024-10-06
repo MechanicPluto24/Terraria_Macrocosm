@@ -18,6 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             ItemSets.ExplosivesShotDealDamageToOwner[Type] = false;
+            ItemSets.ExplosivesShotDealDamageToOwner_GetGoodWorld[Type] = true;
         }
 
         public override void SetDefaultsHeldProjectile()

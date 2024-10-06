@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Sky;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
@@ -32,6 +33,9 @@ namespace Macrocosm.Content.Subworlds
         public override float AtmosphericDensity => 0.1f;
 
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
+
+        public override int Width => 4200;
+        public override int Height => 1200;
 
         public override ChecklistConditionCollection LaunchConditions => new()
         {
