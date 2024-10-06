@@ -538,7 +538,8 @@ namespace Macrocosm.Content.Subworlds
                     {
                         continue;
                     }
-                    if (j < surfaceHeight + 60 && Main.rand.Next(Math.Abs(surfaceHeight + 60 - j)) < 10)
+                    float Distance = Math.Abs(surfaceHeight+ CynthalithlithLayerHeight+80  - j) / ((surfaceHeight + RegolithLayerHeight+ 30)-(surfaceHeight + CynthalithlithLayerHeight)*0.5f);
+                    if (WorldGen.genRand.NextFloat() < Distance*1.5f)
                     {
                         continue;
                     }

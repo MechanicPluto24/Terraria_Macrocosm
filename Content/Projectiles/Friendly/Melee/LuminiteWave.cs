@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         }
 
         public ref float Speed => ref Projectile.ai[0];
-
+        float progress = 0.5f;
         public override void SetDefaults()
         {
             Projectile.width = 80;
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
             Projectile.aiStyle = -1;
-            Projectile.Opacity = 1f;
+            Projectile.Opacity = 0f;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Vector2 origin = texture.Frame(1, 4).Size() / 2f;
             float scale = Projectile.scale * 1.2f;
             SpriteEffects spriteEffects = ((!(Projectile.velocity.X >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
-            float progress = 0.5f;
+            
             float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
             lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);
             float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
@@ -73,9 +73,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Color color = new Color(94, 229, 163) * 1.4f * Projectile.Opacity;
             Color middleMediumColor = color;
 
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), middleMediumColor * 1f, Projectile.rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -0.5f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), middleMediumColor * 0.6f, Projectile.rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -1.5f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), new Color(164, 101, 124)  * 0.4f, Projectile.rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -2.5f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), middleMediumColor * 1f, Projectile.rotation + Projectile.spriteDirection * MathHelper.PiOver4 * 0f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), middleMediumColor * 0.6f, Projectile.rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
+            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), new Color(164, 101, 124)  * 0.4f* Projectile.Opacity, Projectile.rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -2f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
 
             // This draws some sparkles around the circumference of the swing.
             for (float i = 0f; i < 14f; i += 1f)
@@ -87,19 +87,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             return false;
         }
-        public override void OnKill(int timeLeft){
-            for (int i=0; i<55;i++){
-            Dust dust = Dust.NewDustDirect(Projectile.Center , Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
-            dust.velocity = Projectile.velocity.RotatedByRandom(MathHelper.Pi*2)*Main.rand.NextFloat(0.1f,0.5f);
-            dust.noLight = false;
-            dust.noGravity = true;
-            }
-        }
+        
+        int Timer=0;
         public override void AI()
         {
+            Timer++;
             Projectile.rotation=Projectile.velocity.ToRotation();
             Projectile.direction = Math.Sign(Projectile.velocity.X);
             Projectile.spriteDirection=Projectile.direction;
+            if(Timer<10 &&Projectile.Opacity<1f)
+                Projectile.Opacity+=0.1f;
+            if(Timer>10)
+                Projectile.Opacity-=0.03f;
             /*
             if (Projectile.timeLeft % 2 == 0)
             {
@@ -118,8 +117,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             if (Speed >= 1f)
                 Speed *= 0.96f;
-
             if(Speed<=1.04f)
+                Projectile.Kill();
+            if(Projectile.Opacity<=0.01f&&Timer>10)
                 Projectile.Kill();
 
             Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * Speed;
