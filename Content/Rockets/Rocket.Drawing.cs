@@ -127,7 +127,7 @@ namespace Macrocosm.Content.Rockets
 
         public void DrawOverlay(SpriteBatch spriteBatch, Vector2 position)
         {
-            if (ForcedFlightAppearance || State != ActionState.Idle)
+            if (ForcedFlightAppearance || (State != ActionState.Idle && State != ActionState.PreLaunch))
             {
                 float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
 

@@ -67,18 +67,21 @@ namespace Macrocosm.Common.Subworlds
 
         #region Size
 
+        // FIXME: potentially broken, needs debugging
+        /*
         /// <summary> Determine the size of this subworld </summary>
         /// <param name="earthWorldSize"> The Earth's world size </param>
-        public virtual WorldSize SetSubworldSize(WorldSize earthWorldSize)
+        public virtual WorldSize GetSubworldSize(WorldSize earthWorldSize)
         {
             return earthWorldSize;
         }
 
-        /// <summary> The width is determined in ReadCopiedMainWorldData using <see cref="SetSubworldSize(WorldSize)"> </summary>
-        public sealed override int Width => SetSubworldSize(Earth.WorldSize).Width;
+        /// <summary> The width is determined in ReadCopiedMainWorldData using <see cref="GetSubworldSize(WorldSize)"> </summary>
+        public sealed override int Width => GetSubworldSize(Earth.WorldSize).Width;
 
-        /// <summary> The height is determined in ReadCopiedMainWorldData using <see cref="SetSubworldSize(WorldSize)"> </summary>
-        public sealed override int Height => SetSubworldSize(Earth.WorldSize).Height;
+        /// <summary> The height is determined in ReadCopiedMainWorldData using <see cref="GetSubworldSize(WorldSize)"> </summary>
+        public sealed override int Height => GetSubworldSize(Earth.WorldSize).Height;
+        */
 
         #endregion
 
@@ -284,7 +287,7 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound subworldDataTag = new();
             SaveData(subworldDataTag);
-            Hacks.SubworldSystem_CopyWorldData("Macrocosm:subworldDataTag", subworldDataTag);
+            SubworldSystem.CopyWorldData("Macrocosm:subworldDataTag", subworldDataTag);
         }
 
         public override void ReadCopiedSubworldData()
@@ -297,7 +300,7 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound mainWorldDataTag = new();
             SaveData(mainWorldDataTag);
-            SaveEarthSpecificData(mainWorldDataTag);
+            //SaveEarthSpecificData(mainWorldDataTag);
             SubworldSystem.CopyWorldData("Macrocosm:mainWorldDataTag", mainWorldDataTag);
         }
 
@@ -305,9 +308,10 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound mainWorldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:mainWorldDataTag");
             LoadData(mainWorldDataTag);
-            LoadEarthSpecificData(mainWorldDataTag);
+            //LoadEarthSpecificData(mainWorldDataTag);
         }
 
+        /*
         private void SaveEarthSpecificData(TagCompound tag)
         {
             // Save Earth's world size for other subworlds to use 
@@ -322,11 +326,12 @@ namespace Macrocosm.Common.Subworlds
             if (tag.ContainsKey(nameof(Earth) + nameof(Earth.WorldSize)))
             {
                 Earth.WorldSize = tag.Get<WorldSize>(nameof(Earth) + nameof(Earth.WorldSize));
-                WorldSize subworldSize = SetSubworldSize(Earth.WorldSize);
+                WorldSize subworldSize = GetSubworldSize(Earth.WorldSize);
                 Main.maxTilesX = subworldSize.Width;
                 Main.maxTilesY = subworldSize.Height;
             }
         }
+        */
 
         #endregion
 

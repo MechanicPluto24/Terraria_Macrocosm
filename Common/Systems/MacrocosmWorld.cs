@@ -45,8 +45,10 @@ namespace Macrocosm.Common.Systems
 
         public override void OnWorldLoad()
         {
+            /*
             if (!SubworldSystem.AnyActive())
                 Earth.WorldSize = WorldSize.Current;
+            */
         }
 
         // TODO: check this mess
