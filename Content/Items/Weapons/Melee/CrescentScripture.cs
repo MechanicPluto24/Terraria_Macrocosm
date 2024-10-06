@@ -14,8 +14,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             Item.damage = 300;
             Item.DamageType = DamageClass.Melee;
-            Item.width = 54;
-            Item.height = 36;
+            Item.width = 84;
+            Item.height = 84;
             Item.useTime = 30;
             Item.useAnimation = 30;
             Item.useStyle = ItemUseStyleID.Swing;
@@ -32,13 +32,12 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         }
 
         public override bool AltFunctionUse(Player player) => false;
-        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<CrescentScriptureProjectile>()] < 1;
+        public float SwingDirection { get; private set; } = -1;
 
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+       public override bool CanUseItem(Player player)
         {
-            Vector2 aim = velocity;
-            Projectile.NewProjectileDirect(source, position, aim, ModContent.ProjectileType<CrescentScriptureProjectile>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: Item.shootSpeed, ai2: 0f);
-            return false;
+            SwingDirection = -SwingDirection;
+            return base.CanUseItem(player);
         }
     }
 }

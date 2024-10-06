@@ -27,7 +27,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[Type] = 24;
+            Main.npcFrameCount[Type] = 25;
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
@@ -137,7 +137,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             Timer++;
 
-            if (gasLeak && Timer % 2 == 0 && AI_State != ActionState.Idle)
+            if (gasLeak && Timer % 2 == 0)
             {
                 ExplosionTimer++;
             }

@@ -23,12 +23,6 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             Item.channel = true;
         }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-            .AddIngredient<ChandriumBar>(12)
-            .AddTile(TileID.LunarCraftingStation)
-            .Register();
-        }
+        
     }
 }
