@@ -24,6 +24,12 @@ namespace Macrocosm.Content.LoadingScreens
             Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/Earth", AssetRequestMode.ImmediateLoad);
             Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
             earth = new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, scale: 0.7f);
+
+            progressBar = new(
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad),
+                new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
+            );
         }
 
         private readonly float animationDuration = 1000f;

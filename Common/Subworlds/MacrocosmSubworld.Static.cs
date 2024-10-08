@@ -11,8 +11,6 @@ using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.IO;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -79,7 +77,8 @@ namespace Macrocosm.Common.Subworlds
                 if (!trigger)
                     rocket = null;
 
-                UpdateLoadingScreen(rocket, targetWorldID);
+                SetupLoadingScreen(rocket, targetWorldID);
+                TitleCard.SetTargetWorld(targetWorldID);
 
                 Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel = trigger;
                 Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().SetReturnSubworld(targetWorldID);
@@ -87,22 +86,12 @@ namespace Macrocosm.Common.Subworlds
                 if (targetWorldID == Earth.ID)
                 {
                     SubworldSystem.Exit();
-                    LoadingScreen?.SetTargetWorld(targetWorldID);
-                    TitleCard.SetTargetWorld(targetWorldID);
                     return true;
                 }
 
                 bool entered = SubworldSystem.Enter(targetWorldID);
-
-                if (entered)
-                {
-                    LoadingScreen?.SetTargetWorld(targetWorldID);
-                    TitleCard.SetTargetWorld(targetWorldID);
-                }
-                else
-                {
+                if (!entered)
                     WorldTravelFailure("Error: Failed entering target subworld: " + targetWorldID + ", staying on " + CurrentID);
-                }
 
                 return entered;
             }
@@ -112,7 +101,7 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        private static void UpdateLoadingScreen(Rocket rocket, string targetWorld)
+        private static void SetupLoadingScreen(Rocket rocket, string targetWorld)
         {
             if (rocket is not null)
             {
@@ -144,7 +133,6 @@ namespace Macrocosm.Common.Subworlds
             else
                 LoadingScreen?.ClearRocket();
 
-
             LoadingScreen?.Setup();
         }
 
@@ -153,6 +141,24 @@ namespace Macrocosm.Common.Subworlds
         {
             Utility.Chat(message, Color.Red);
             Macrocosm.Instance.Logger.Error(message);
-        }       
+        }
+
+        public class Hacks
+        {
+            /// <summary>
+            /// Remove this once SubworldLibrary <see href="https://github.com/jjohnsnaill/SubworldLibrary/pull/35"/> is merged.
+            /// </summary>
+            public static void SubworldSystem_NullCache()
+            {
+                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
+                field.SetValue(null, null);
+            }
+
+            public static bool SubworldSystem_CacheIsNull()
+            {
+                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
+                return field.GetValue(null) is null;
+            }
+        }
     }
 }

@@ -262,6 +262,7 @@ namespace Macrocosm.Common.Systems
         private void UIWorldListItem_ctor_AddWorldIcons(On_UIWorldListItem.orig_ctor orig, UIWorldListItem self, Terraria.IO.WorldFileData data, int orderInList, bool canBePlayed)
         {
             orig(self, data, orderInList, canBePlayed);
+
             UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", obj: self);
 
             var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();

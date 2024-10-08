@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Particles
 
             Color innerColor = baseColor * 0.5f;
 
-            Vector2 scaleX = new Vector2(0.3f, 2f) * fade * Scale;
+            Vector2 scaleX = new Vector2(0.3f, 1f) * fade * Scale;
             Vector2 scaleY = new Vector2(0.3f, 1f) * fade * Scale;
 
             tintColor *= fade;
