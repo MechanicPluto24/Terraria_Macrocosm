@@ -65,7 +65,6 @@ namespace Macrocosm.Content.Rockets.Modules
 
                 if (rocket.State == Rocket.ActionState.Landing)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
-
             }
 
             spriteBatch.End();

@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -32,9 +33,9 @@ namespace Macrocosm.Content.LoadingScreens
         protected bool Moving => rocket is not null;
         protected Rocket rocket;
 
-        private UIWorldGenProgressBar progressBar;
+        protected UIWorldGenProgressBar progressBar;
 
-        private string statusText;
+        protected string statusText;
 
         /// <summary> Reset the animation timer. Useful when there's a persistent instance of a <see cref="LoadingScreen"/>. Call in the <see cref="Reset()"/> method. </summary>
         public void ResetAnimation()
@@ -52,25 +53,6 @@ namespace Macrocosm.Content.LoadingScreens
             fallingStars.Cast<FallingStar>().ToList().ForEach(star => star.Fall(deviationX: 0.1f, minSpeedY: 30f, maxSpeedY: 45f));
 
             Reset();
-        }
-
-        public void SetTargetWorld(string targetWorld)
-        {
-            targetWorld = MacrocosmSubworld.SanitizeID(targetWorld, out _);
-
-            switch (targetWorld)
-            {
-                case "Moon":
-                    progressBar = new(
-                        ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad),
-                        ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad),
-                        new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
-                    );
-                    break;
-
-                case "Earth":
-                    break;
-            }
         }
 
         public void SetRocket(Rocket rocket)
@@ -120,7 +102,7 @@ namespace Macrocosm.Content.LoadingScreens
 
 
         /// <summary> Draws the loading screen. </summary>
-        public void Draw(GameTime gametime, SpriteBatch spriteBatch, bool drawStatusText = true)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, bool drawStatusText = true)
         {
             InternalUpdate();
 
@@ -187,5 +169,40 @@ namespace Macrocosm.Content.LoadingScreens
             spriteBatch.End();
             spriteBatch.Begin(state);
         }
+
+        /*
+        private MethodInfo preDrawMenuMethodInfo;
+        private MethodInfo drawMenuMethodInfo;
+        private MethodInfo postDrawMenuMethodInfo;
+        private void DrawVanillaMenu(GameTime gameTime)
+        {
+            preDrawMenuMethodInfo ??= typeof(Main).GetMethod("PreDrawMenu", BindingFlags.NonPublic | BindingFlags.Instance);
+            drawMenuMethodInfo ??= typeof(Main).GetMethod("DrawMenu", BindingFlags.NonPublic | BindingFlags.Instance);
+            postDrawMenuMethodInfo ??= typeof(Main).GetMethod("PostDrawMenu", BindingFlags.NonPublic | BindingFlags.Static);
+
+            Main.spriteBatch.End();
+
+            // PreDrawMenu(out var screenSizeCache, out var screenSizeCacheAfterScaling);
+            object[] parameters = new object[2]; // 'PreDrawMenu' has two out parameters
+            preDrawMenuMethodInfo.Invoke(Main.instance, parameters);
+            Point screenSizeCache = (Point)parameters[0];
+            Point screenSizeCacheAfterScaling = (Point)parameters[1];
+
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+
+            // TODO: Replace with the provided parameter
+            // Temporary fix until a future SubworldLibrary update
+            // May break some mods that use gameTime in their DrawMenu
+            gameTime = new GameTime();
+
+            // DrawMenu(gameTime);
+            drawMenuMethodInfo.Invoke(Main.instance, [gameTime]);
+
+            // PostDrawMenu(screenSizeCache, screenSizeCacheAfterScaling);
+            postDrawMenuMethodInfo.Invoke(null, [screenSizeCache, screenSizeCacheAfterScaling]);
+
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
+        }
+        */
     }
 }

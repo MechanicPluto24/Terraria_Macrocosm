@@ -9,7 +9,6 @@ namespace Macrocosm.Content.Dusts
     {
         public override void OnSpawn(Dust dust)
         {
-            dust.scale = Main.rand.NextFloat(1, 1.35f);
         }
 
         public override bool Update(Dust dust)

@@ -2343,6 +2343,11 @@ ArtemiteHammer
 ArtemitePickaxe
 	Value: 40 gold
 	Research count: 1
+	Recipes:
+		Artemite Bar x 12
+		at
+		Ancient Manipulator
+
 
 ChandriumAxe
 	Value: 30 gold
@@ -2364,6 +2369,11 @@ ChandriumHammer
 ChandriumPickaxe
 	Value: 40 gold
 	Research count: 1
+	Recipes:
+		Chandrium Bar x 12
+		at
+		Ancient Manipulator
+
 
 DianiteAxe
 	Value: 1 gold
@@ -2711,6 +2721,10 @@ WaveGunRed
 	Value: 25 gold
 	Research count: 1
 
+WornLunarianDagger
+	Value: 1 gold
+	Research count: 1
+
 AluminumBroadsword
 	Value: 15 silver 50 copper
 	Research count: 1
@@ -2728,6 +2742,10 @@ AluminumShortsword
 		at
 		Anvil
 
+
+ArmstrongGauntlets
+	Value: 98 silver 45 copper
+	Research count: 1
 
 ArtemiteGreatsword
 	Value: 1 gold
@@ -2922,9 +2940,4 @@ ChandriumWhip
 Totality
 	Value: No value
 	Research count: 1
-	Recipes:
-		Chandrium Bar x 12
-		at
-		Ancient Manipulator
-
 

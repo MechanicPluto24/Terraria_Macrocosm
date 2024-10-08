@@ -25,10 +25,8 @@ namespace Macrocosm.Content.Particles
         {
             origScale = Scale.X;
             Color = new List<Color>() {
-                    new(177, 230, 207),
-                    new(83, 129, 167),
-                    new(157, 136, 169),
-                    new(130, 179, 185)
+                    new Color(44, 209, 147),
+                    new Color(0, 141, 92)
             }.GetRandom();
         }
 
