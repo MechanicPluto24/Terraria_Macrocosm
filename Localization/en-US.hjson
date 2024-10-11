@@ -16,6 +16,8 @@ Mods: {
 
 		GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
 	}
+
+	SubworldLibrary.Return: Save & Exit
 }
 
 ItemName.Coal: Christmas Coal

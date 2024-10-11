@@ -3,6 +3,8 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.Drawing.Imaging;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -11,10 +13,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    // Scrapped but alt attack can be reused for a magic weapon
-    public class SeleniteBowHeld : ChargedHeldProjectile
+    public class WornLunarianDaggerHeld : ChargedHeldProjectile
     {
-        public override string Texture => "Macrocosm/Content/Items/Weapons/Ranged/SeleniteBow";
+        public override string Texture => "Macrocosm/Content/Items/Weapons/Magic/WornLunarianDagger";
 
         public float MinCharge => MaxCharge * 0.2f;
         public ref float MaxCharge => ref Projectile.ai[0];
@@ -37,11 +38,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetProjectileDefaults()
         {
-
+            //Projectile.hide = true;
         }
 
         public override void ProjectileAI()
         {
+            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.Pi/2 + MathHelper.Pi/16);
+
             if (Player.whoAmI == Main.myPlayer)
             {
                 Item currentItem = Player.CurrentItem();
@@ -49,11 +52,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 int damage = Player.GetWeaponDamage(currentItem);
                 float knockback = currentItem.knockBack;
                 float speed;
-                int usedAmmoItemId;
 
                 if (Main.mouseRight && !altAttackActive)
                 {
-                    AI_Charge += 1f * Player.GetAttackSpeed(DamageClass.Ranged);
+                    AI_Charge += 1f * Player.GetAttackSpeed(DamageClass.Magic);
 
                     if (AI_Charge == MaxCharge)
                     {
@@ -87,11 +89,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     }
                     else if (AI_Timer % currentItem.useTime == 0)
                     {
-                        if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
+                        if (Player.CheckMana(currentItem.mana, true))
                         {
-                            // Shoot 2 parallel arrows
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(0, -7).RotatedBy(Projectile.velocity.ToRotation()), Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(0, +7).RotatedBy(Projectile.velocity.ToRotation()), Vector2.Normalize(Projectile.velocity) * speed, projToShoot, damage, knockback, Projectile.owner);
+                            Vector2 position = Projectile.Center + new Vector2(0, -12 * Projectile.direction).RotatedBy(Projectile.rotation);
+                            Vector2 velocity = Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(15)) * currentItem.shootSpeed * 0.666f;
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<LuminiteBolt>(), damage, knockback, Projectile.owner, 1f);
 
                             AI_Timer = 0;
                             SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
@@ -113,12 +115,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     }
                     else if (AI_Timer % altAttackRate == 0)
                     {
-                        if (Player.PickAmmo(currentItem, out _, out speed, out damage, out knockback, out _))
+                        if (Player.CheckMana(currentItem.mana, true))
                         {
-                            Vector2 position = Projectile.Center - new Vector2(20, 0).RotatedBy(Projectile.rotation) + Main.rand.NextVector2Circular(32, 32);
-                            Vector2 velocity = Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(15)) * speed * 0.666f;
-                            damage = (int)(damage * 0.5f);
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<SeleniteBolt>(), damage, knockback, Projectile.owner, 1f);
+                            Vector2 position = Projectile.Center + new Vector2(0, -12 * Projectile.direction).RotatedBy(Projectile.rotation);
+                            Vector2 velocity = Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(15)) * currentItem.shootSpeed * 0.666f;
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<LuminiteBolt>(), damage, knockback, Projectile.owner, 1f);
                         }
                     }
                 }
@@ -132,8 +133,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             var spriteBatch = Main.spriteBatch;
             Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(10, 0), Projectile.rotation);
-            spriteBatch.Draw(texture, rotPoint - Main.screenPosition, null, lightColor, Projectile.rotation, texture.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
+            float rotation = Projectile.rotation;
+            Vector2 offset = Projectile.direction > 0 ? new Vector2(-8, 6) : new Vector2(-6, -2);
+            Vector2 position = Utility.RotatingPoint(Projectile.Center, offset, rotation);
+            spriteBatch.Draw(texture, position - Main.screenPosition, null, lightColor, rotation, texture.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
             return false;
         }
 
@@ -177,12 +180,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     Opacity += 3f;
                 }
 
-                Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(20, 0), Projectile.rotation) + offset;
-                Utility.DrawStar(rotPoint - Main.screenPosition, 2, new Color(131, 168, 171, alpha), new Vector2(0.5f, 1.5f) * scale, rotation);
+                Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(8, -8 * Projectile.direction), Projectile.rotation) + offset;
+                Utility.DrawStar(rotPoint - Main.screenPosition, 2, new Color(44, 209, 147, alpha), new Vector2(0.5f, 1.5f) * scale, rotation);
 
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.AlphaBlend, state);
             }
+        }
+
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            //overPlayers.Add(Projectile.whoAmI);
         }
     }
 }

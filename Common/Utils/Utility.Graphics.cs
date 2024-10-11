@@ -140,6 +140,12 @@ namespace Macrocosm.Common.Utils
                 );
         }
 
+        public static void End(this SpriteBatch spriteBatch, out SpriteBatchState state)
+        {
+            state = spriteBatch.SaveState();
+            spriteBatch.End();
+        }
+
         public static void Begin(this SpriteBatch spriteBatch, SpriteSortMode sortMode, BlendState blendState, Effect effect, SpriteBatchState state)
             => spriteBatch.Begin(sortMode, blendState, state.SamplerState, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
 

@@ -2023,3 +2023,17 @@ ManisolBlades: {
 	DisplayName: Manisol Blades
 	Tooltip: ""
 }
+
+ArmstrongGauntlets: {
+	DisplayName: Armstrong Gauntlets
+	Tooltip: ""
+}
+
+WornLunarianDagger: {
+	DisplayName: Worn Lunarian Dagger
+	Tooltip:
+	'''
+	'A worn out dagger once had multiple uses. 
+	Now only its magical capabilities remain.'
+	'''
+}

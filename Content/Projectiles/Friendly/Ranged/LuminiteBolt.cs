@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class SeleniteBolt : ModProjectile
+    public class LuminiteBolt : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
@@ -84,16 +84,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             SoundEngine.PlaySound(SoundID.Item10);
 
-            for (int i = 0; i < 80; i++)
+            for (int i = 0; i < 20; i++)
             {
-                Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity, ModContent.DustType<SeleniteBrightDust>(), Main.rand.NextVector2Circular(8, 8), Scale: Main.rand.NextFloat(1f, 1.4f));
+                Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity, ModContent.DustType<LuminiteBrightDust>(), Main.rand.NextVector2Circular(8, 8), Scale: Main.rand.NextFloat(0.6f, 1.1f));
                 dust.noGravity = true;
             }
 
             for (int i = 0; i < 30; i++)
             {
-                Particle.Create<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(9, 2), new(5f), 0f);
-                Particle.Create<SeleniteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(2, 9), new(5f), 0f);
+                Particle.Create<LuminiteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(9, 2), new(5f), 0f);
+                Particle.Create<LuminiteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(2, 9), new(5f), 0f);
             }
 
             float count = Projectile.oldVelocity.LengthSquared() * trailMultiplier;
@@ -102,7 +102,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * i * 0.4f;
                 for (int j = 0; j < 2; j++)
                 {
-                    Dust dust = Dust.NewDustDirect(trailPosition, 1, 1, ModContent.DustType<SeleniteBrightDust>(), 0, 0, Scale: Main.rand.NextFloat(1f, 2f) * (1f - i / count));
+                    Dust dust = Dust.NewDustDirect(trailPosition, 1, 1, ModContent.DustType<LuminiteBrightDust>(), 0, 0, Scale: Main.rand.NextFloat(1f, 2f) * (1f - i / count));
                     dust.noGravity = true;
                 }
             }
@@ -122,7 +122,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             for (int n = 1; n < count; n++)
             {
                 Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * 0.4f;
-                Color color = new Color(177, 230, 204) * (0.8f - (float)n / count);
+                Color color = new Color(44, 209, 147) * (0.8f - (float)n / count);
                 Utility.DrawStar(trailPosition - Main.screenPosition, 1, color, Projectile.scale * 0.65f, Projectile.rotation, entity: true);
             }
 
@@ -131,6 +131,5 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             return false;
         }
-
     }
 }

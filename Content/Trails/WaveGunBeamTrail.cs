@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Drawing.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -23,16 +24,16 @@ namespace Macrocosm.Content.Trails
             .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark6"))
             .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark6"));
 
-        public override float Saturation => -5f;
+        public override float Saturation => -6f;
 
         public override Color TrailColors(float progressOnStrip)
         {
-            return Color.Lerp(Color.Transparent, Color, progressOnStrip * 1 / progressOnStrip);
+            return Color.Lerp(Color.Transparent, Color, 1f - progressOnStrip);
         }
 
         public override float TrailWidths(float progressOnStrip)
         {
-            return 40;
+            return 80f * (1f - MathF.Pow(progressOnStrip - 1, 2));
         }
     }
 }

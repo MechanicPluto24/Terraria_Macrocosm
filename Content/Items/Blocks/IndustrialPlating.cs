@@ -1,4 +1,6 @@
+using Macrocosm.Content.Items.Walls;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Blocks
@@ -18,7 +20,28 @@ namespace Macrocosm.Content.Items.Blocks
 
         public override void AddRecipes()
         {
+            CreateRecipe(5)
+                .AddIngredient<Bars.AluminumBar>(1)
+                .AddIngredient<Bars.SteelBar>(1)
+                .AddIngredient(ItemID.StoneBlock, 5)
+                .AddTile(TileID.Anvils)
+                .Register();
 
+            CreateRecipe()
+                .AddIngredient<IndustrialPlatingWall>(4)
+                .Register();
+
+            CreateRecipe()
+                .AddIngredient<IndustrialHazardWall>(4)
+                .Register();
+
+            CreateRecipe()
+                .AddIngredient<IndustrialSquarePaneledWall>(4)
+                .Register();
+
+            CreateRecipe()
+                .AddIngredient<IndustrialTrimmingWall>(4)
+                .Register();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Macrocosm.Content.Items.Walls;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -17,7 +18,9 @@ namespace Macrocosm.Content.Items.Blocks.Terrain
 
         public override void AddRecipes()
         {
-
+            CreateRecipe()
+                .AddIngredient<RegolithWall>(4)
+                .Register();
         }
     }
 }

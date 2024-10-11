@@ -22,11 +22,11 @@ namespace Macrocosm.Content.Items.Walls
         public override void AddRecipes()
         {
             CreateRecipe(4)
-            .AddIngredient<IrradiatedBrick>(1)
-            .AddTile(TileID.WorkBenches)
-            .DisableDecraft()
-            .AddCustomShimmerResult(ModContent.ItemType<IrradiatedBrickWallUnsafe>())
-            .Register();
+                .AddIngredient<IrradiatedBrick>(1)
+                .AddTile(TileID.WorkBenches)
+                .DisableDecraft()
+                .AddCustomShimmerResult(ModContent.ItemType<IrradiatedBrickWallUnsafe>())
+                .Register();
         }
     }
 
