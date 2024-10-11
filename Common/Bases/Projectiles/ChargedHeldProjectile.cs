@@ -88,6 +88,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
             Player.ChangeDir(Projectile.direction);
             Player.heldProj = Projectile.whoAmI;
+
             //OwnerPlayer.itemTime = 2;
             //OwnerPlayer.itemAnimation = 3;
 

@@ -116,7 +116,7 @@ namespace Macrocosm.Content.Machines
                 }
             }
 
-            TENetHelper.SyncTEFromClient(OreExcavator.ID);
+            NetHelper.SyncTEFromClient(OreExcavator.ID);
         }
 
         public override void Update(GameTime gameTime)

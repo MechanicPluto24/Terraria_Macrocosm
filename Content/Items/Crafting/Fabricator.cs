@@ -1,4 +1,7 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Tech;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Crafting
@@ -19,6 +22,19 @@ namespace Macrocosm.Content.Items.Crafting
 
         public override void AddRecipes()
         {
+            CreateRecipe()
+                .AddIngredient(ItemID.AdamantiteBar, 10)
+                .AddIngredient<SteelBar>(10)
+                .AddIngredient<PrintedCircuitBoard>(2)
+                .AddIngredient(ItemID.Diamond, 1)
+                .Register();
+
+            CreateRecipe()
+                .AddIngredient(ItemID.TitaniumBar, 10)
+                .AddIngredient<SteelBar>(10)
+                .AddIngredient<PrintedCircuitBoard>(2)
+                .AddIngredient(ItemID.Diamond, 1)
+                .Register();
         }
     }
 }

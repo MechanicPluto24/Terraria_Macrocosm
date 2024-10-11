@@ -22,9 +22,12 @@ namespace Macrocosm.Common.Subworlds
         /// <br> If true, the title sequence will display, and SubworldSystem.Exit() will move the player to Earth.</br> 
         /// <br> (Player took a Rocket, or used Teleporter)</br>
         /// <br> If false, the title sequence will display, and SubworldSystem.Exit() will return to the main menu. </br>
-        /// <br> (Player clicks the "Return" button from the in-game options menu, or is forced to a subworld on world enter) </br>
+        /// <br> (Player clicks the "Save & Exit"/"Return" button from the in-game options menu, or is forced to a subworld on world enter) </br>
         /// </summary>
-        public bool TriggeredSubworldTravel { get; set; }
+        public bool TriggeredSubworldTravel { get; set; } = false;
+
+        /// <summary> Whether the player has exited a subworld by clicking the "Save & Exit"/"Return" button or other means </summary>
+        private bool exitedBySaveAndExit  = false;
 
         /// <summary>
         /// The subworlds this player has visited.
@@ -58,15 +61,32 @@ namespace Macrocosm.Common.Subworlds
 
         public bool TryGetReturnSubworld(Guid worldUniqueId, out string subworldId) => lastSubworldIdByWorldUniqueId.TryGetValue(worldUniqueId, out subworldId);
 
+        public override void PreUpdate()
+        {
+            if (exitedBySaveAndExit)
+            {
+                exitedBySaveAndExit = false;
+                WorldGen.SaveAndQuit();
+            }
+        }
+
+        internal void OnExit_MacrocosmSubworld()
+        {
+            if (!TriggeredSubworldTravel)
+                exitedBySaveAndExit = true;
+        }
+
         public override void OnEnterWorld()
         {
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 currentMainWorldUniqueId = MacrocosmSubworld.MainWorldUniqueID;
-                if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && lastSubworldIdByWorldUniqueId.TryGetValue(currentMainWorldUniqueId, out string lastSubworldId))
+                if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && !exitedBySaveAndExit && TryGetReturnSubworld(currentMainWorldUniqueId, out string subworldId))
                 {
-                    if (lastSubworldId is not Earth.ID)
-                        MacrocosmSubworld.Travel(lastSubworldId, trigger: false);
+                    if (subworldId is not Earth.ID)
+                    {
+                        MacrocosmSubworld.Travel(subworldId, trigger: false);
+                    }
                 }
             }
 

@@ -88,7 +88,13 @@ namespace Macrocosm.Content.Players
             {
                 Rocket rocket = RocketManager.Rockets[RocketID];
 
-                if (rocket.InFlight || rocket.Landing)
+                if (!rocket.Active)
+                {
+                    DisembarkFromRocket();
+                    return;
+                }
+
+                if (rocket.State is Rocket.ActionState.Flight or Rocket.ActionState.Landing)
                     Player.velocity = rocket.Velocity;
                 else
                     Player.velocity = Vector2.Zero;
@@ -107,7 +113,7 @@ namespace Macrocosm.Content.Players
                     bool escapePressed = (Main.keyState.KeyPressed(Keys.Escape) && !Main.oldKeyState.KeyPressed(Keys.Escape));
                     bool dismountPressed = Player.controlMount;
 
-                    if (rocket.Launched || rocket.Landing)
+                    if (rocket.State != Rocket.ActionState.Idle)
                     {
                         UISystem.Hide();
                     }

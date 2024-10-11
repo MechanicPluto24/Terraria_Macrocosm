@@ -141,7 +141,9 @@ namespace Macrocosm.Content.Players
         private void Update_EnvironmentalDebuffs()
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
+            {
                 Player.AddBuff(BuffType<Depressurized>(), 2);
+            }
         }
 
         private void Update_RocketImmunities()
@@ -155,7 +157,9 @@ namespace Macrocosm.Content.Players
         private void Update_EquipImmunities()
         {
             if (SpaceProtection >= (float)3f)
+            {
                 Player.buffImmune[BuffType<Depressurized>()] = true;
+            }
         }
 
         private void Update_SetBonuses()

@@ -1,8 +1,11 @@
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
@@ -17,10 +20,15 @@ namespace Macrocosm.Common.Utils
             npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * factor * balance * bossAdjustment);
         }
 
-        public static bool SummonBossDirectlyWithMessage(Vector2 targetPosition, int type)
+        public static bool SummonBossDirectlyWithMessage(Vector2 targetPosition, int type, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, int target = 255, SoundStyle? sound = null)
         {
+            SoundEngine.PlaySound(sound, targetPosition);
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return false;
+
             //Try to spawn the new NPC.  If that failed, then "npc" will be 200
-            int npc = NPC.NewNPC(Entity.GetSource_NaturalSpawn(), (int)targetPosition.X, (int)targetPosition.Y, type);
+            int npc = NPC.NewNPC(Entity.GetSource_NaturalSpawn(), (int)targetPosition.X, (int)targetPosition.Y, type, 0, ai0, ai1, ai2, ai3, target);
 
             //Only display the text if we could spawn the NPC
             if (npc < Main.npc.Length)
@@ -31,7 +39,20 @@ namespace Macrocosm.Common.Utils
                 Main.NewText(Language.GetTextValue("Announcement.HasAwoken", name), 175, 75, 255);
             }
 
-            return npc != Main.npc.Length;  //Return false if we couldn't generate an NPC
+            //Return false if we couldn't generate an NPC
+            return npc != Main.maxNPCs; 
+        }
+
+        public static void SummonBossOnPlayerWithMessage(Player player, int type, SoundStyle? sound = null)
+        {
+            if (player.whoAmI == Main.myPlayer)
+            {
+                SoundEngine.PlaySound(sound, player.position);
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    NPC.SpawnOnPlayer(player.whoAmI, type);
+                else
+                    NetMessage.SendData(MessageID.SpawnBossUseLicenseStartEvent, number: player.whoAmI, number2: type);
+            }
         }
 
         public static void Move(this NPC npc, Vector2 moveTo, Vector2 offset, float speed = 3f, float turnResistance = 0.5f)
@@ -55,6 +76,19 @@ namespace Macrocosm.Common.Utils
             }
 
             npc.velocity = move;
+        }
+
+        public static int CountNPCs(int type)
+        {
+            int count = 0;
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                NPC npc = Main.npc[i];
+                if (npc.type == type && npc.active)
+                    count++;
+            }
+
+            return count;
         }
 
         public static void UpdateScaleAndHitbox(this NPC npc, int baseWidth, int baseHeight, float newScale)

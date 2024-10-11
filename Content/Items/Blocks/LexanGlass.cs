@@ -1,4 +1,5 @@
 using Macrocosm.Content.Items.Refined;
+using Macrocosm.Content.Items.Walls;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,6 +24,10 @@ namespace Macrocosm.Content.Items.Blocks
                 .AddIngredient<Plastic>(2)
                 .AddIngredient(ItemID.Glass, 1)
                 .AddTile(TileID.GlassKiln)
+                .Register();
+
+            CreateRecipe()
+                .AddIngredient<LexanGlassWall>(4)
                 .Register();
         }
     }
