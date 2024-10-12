@@ -115,9 +115,9 @@ namespace Macrocosm.Common.UI
             list.Recalculate();
             list.RecalculateChildren();
             float listHeight = list.GetTotalHeight();
-            float panelHeight = list.GetInnerDimensions().Height;
+            float panelHeight = list.GetDimensions().Height;
 
-            return listHeight < panelHeight;
+            return listHeight < panelHeight || panelHeight == 0;
         }
 
         public void Add(UIElement element) => list.Add(element);

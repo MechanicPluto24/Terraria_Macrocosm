@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Microsoft.Xna.Framework;
 using Terraria.GameContent.UI.Elements;
@@ -12,6 +13,9 @@ namespace Macrocosm.Content.Machines
         public BurnerGeneratorTE BurnerGenerator => MachineTE as BurnerGeneratorTE;
 
         private UIPanel inventoryPanel;
+
+        private UIPanel consumedItemPanel;
+        private UIInventoryItemIcon itemIcon;
 
         public BurnerGeneratorUI()
         {
@@ -35,12 +39,33 @@ namespace Macrocosm.Content.Machines
                 inventoryPanel.Activate();
                 Append(inventoryPanel);
             }
+
+            consumedItemPanel = new()
+            {
+                Width = new(48, 0),
+                Height = new(48, 0),
+                Left = new(0, 0.8f),
+                VAlign = 0.5f,
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            Append(consumedItemPanel);
+
+            itemIcon = new()
+            {
+                HAlign = 0.5f,
+                VAlign = 0.5f
+            };
+            consumedItemPanel.Append(itemIcon);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             Inventory.ActiveInventory = BurnerGenerator.Inventory;
+
+            if(itemIcon.Item.type != BurnerGenerator.ConsumedItem.type)
+                itemIcon.Item = BurnerGenerator.ConsumedItem;
         }
     }
 }

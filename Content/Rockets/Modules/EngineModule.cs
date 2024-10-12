@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,7 +25,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {
             new(ModContent.ItemType<RocketPlating>(), 45),
-            new(ModContent.ItemType<FuelCanister>(), 15),
+            new(ModContent.ItemType<Canister>(), 15),
             new(ModContent.ItemType<EngineComponent>(), 4),
             new(ModContent.ItemType<LandingGear>(), 3)
         };

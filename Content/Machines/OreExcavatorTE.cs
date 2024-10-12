@@ -21,7 +21,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    // TODO: redesign blacklisting
+    // TODO: redesign blacklisting?
     public class OreExcavatorTE : MachineTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();

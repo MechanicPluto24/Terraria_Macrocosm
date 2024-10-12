@@ -68,8 +68,6 @@ namespace Macrocosm.Common.Subworlds
 
         #region Size
 
-        // FIXME: potentially broken, needs debugging
-        /*
         /// <summary> Determine the size of this subworld </summary>
         /// <param name="earthWorldSize"> The Earth's world size </param>
         public virtual WorldSize GetSubworldSize(WorldSize earthWorldSize)
@@ -82,7 +80,6 @@ namespace Macrocosm.Common.Subworlds
 
         /// <summary> The height is determined in ReadCopiedMainWorldData using <see cref="GetSubworldSize(WorldSize)"> </summary>
         public sealed override int Height => GetSubworldSize(Earth.WorldSize).Height;
-        */
 
         #endregion
 
@@ -303,7 +300,7 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound mainWorldDataTag = new();
             SaveData(mainWorldDataTag);
-            //SaveEarthSpecificData(mainWorldDataTag);
+            SaveEarthSpecificData(mainWorldDataTag);
             SubworldSystem.CopyWorldData("Macrocosm:mainWorldDataTag", mainWorldDataTag);
         }
 
@@ -311,10 +308,9 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound mainWorldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:mainWorldDataTag");
             LoadData(mainWorldDataTag);
-            //LoadEarthSpecificData(mainWorldDataTag);
+            LoadEarthSpecificData(mainWorldDataTag);
         }
 
-        /*
         private void SaveEarthSpecificData(TagCompound tag)
         {
             // Save Earth's world size for other subworlds to use 
@@ -334,7 +330,6 @@ namespace Macrocosm.Common.Subworlds
                 Main.maxTilesY = subworldSize.Height;
             }
         }
-        */
 
         #endregion
 

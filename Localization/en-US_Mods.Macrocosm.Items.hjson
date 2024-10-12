@@ -647,7 +647,11 @@ Copernicus: {
 
 Cruithne: {
 	DisplayName: Cruithne-3753
-	Tooltip: Shoots slugs and a Delirium shell
+	Tooltip: 
+			'''
+			Converts musket balls to green slugs.
+			Shoots a delirium shell.
+			'''
 }
 
 LHBMinigun: {
@@ -1711,7 +1715,7 @@ StarRoyaleToilet: {
 
 XaocKey: {
 	DisplayName: Xaoc Key
-	Tooltip: ""
+	Tooltip: Opens all Luminite Chests
 }
 
 AstraCandelabra: {
@@ -2010,7 +2014,7 @@ NickelOre: {
 }
 
 InhibitorFieldGrenade: {
-	DisplayName: Inhibitor Field Grenade
+	DisplayName: Stasis Grenade
 	Tooltip: ""
 }
 
@@ -2032,8 +2036,18 @@ ArmstrongGauntlets: {
 WornLunarianDagger: {
 	DisplayName: Worn Lunarian Dagger
 	Tooltip:
-	'''
-	'A worn out dagger once had multiple uses. 
-	Now only its magical capabilities remain.'
-	'''
+		'''
+		'A worn out dagger once had multiple uses. 
+		Now only its magical capabilities remain.'
+		'''
+}
+
+Canister: {
+	DisplayName: Canister
+	Tooltip: ""
+}
+
+RocketFuelCanister: {
+	DisplayName: Rocket Fuel Canister
+	Tooltip: ""
 }

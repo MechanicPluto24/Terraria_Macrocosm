@@ -6,6 +6,7 @@ using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -95,6 +96,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         protected virtual void ProjectileAttack()
         {
+            SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (int i = 0; i < Main.rand.Next(3, 5); i++)
