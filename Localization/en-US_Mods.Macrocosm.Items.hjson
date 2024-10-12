@@ -2032,8 +2032,8 @@ ArmstrongGauntlets: {
 WornLunarianDagger: {
 	DisplayName: Worn Lunarian Dagger
 	Tooltip:
-	'''
-	'A worn out dagger once had multiple uses. 
-	Now only its magical capabilities remain.'
-	'''
+		'''
+		'A worn out dagger once had multiple uses. 
+		Now only its magical capabilities remain.'
+		'''
 }
