@@ -67,18 +67,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 spawned = true;
             }
 
+            OrbitAngle = 0f;
             Player owner = Main.player[Projectile.owner];
-            foreach (Projectile proj in Main.ActiveProjectiles)
+            if(Projectile.owner == Main.myPlayer)
             {
-                if (proj.active && proj.type == Type && proj.owner == Projectile.owner && Projectile.whoAmI != proj.whoAmI)
+                for (int i = 0; i < Projectile.whoAmI; i++)
                 {
-                    OrbitAngle += 1f;
+                    Projectile proj = Main.projectile[i];
+                    if (proj.active && proj.type == Type && proj.owner == Projectile.owner && Projectile.whoAmI != proj.whoAmI)
+                    {
+                        OrbitAngle += 1f;
+                    }
                 }
+                Projectile.netUpdate = true;
             }
-
-            if (OrbitAngle >= (float)owner.ownedProjectileCounts[Projectile.type])
-                OrbitAngle = (float)owner.ownedProjectileCounts[Projectile.type] - 1f;
-
+          
             if (!CheckActive(owner))
                 return;
 
@@ -105,6 +108,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             }
 
             Lighting.AddLight(Projectile.position, new Color(225, 100, 100).ToVector3() * 0.4f);
+
+            Main.NewText($"{Projectile.whoAmI} - {OrbitAngle}");
         }
 
         public override void OnSpawn(IEntitySource source)

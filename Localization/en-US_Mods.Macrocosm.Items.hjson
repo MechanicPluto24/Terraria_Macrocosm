@@ -2054,5 +2054,5 @@ RocketFuelCanister: {
 
 DroneRemote: {
 	DisplayName: P.D.C.D. Controller
-	Tooltip: "Summons a Hummingbird drone to fight for you"
+	Tooltip: Summons a Hummingbird drone to fight for you
 }
