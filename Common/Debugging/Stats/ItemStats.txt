@@ -1,3 +1,7 @@
+ArcaneBarnacle
+	Value: No value
+	Research count: 1
+
 CelestialBulwark
 	Value: 50 gold
 	Research count: 1
@@ -12,8 +16,24 @@ CelestialBulwark
 		Ancient Manipulator
 
 
+MomentumLash
+	Value: No value
+	Research count: 1
+
 OsmiumBoots
 	Value: 25 gold
+	Research count: 1
+
+StalwartTowerShield
+	Value: No value
+	Research count: 1
+
+TempestuousBand
+	Value: No value
+	Research count: 1
+
+ThaumaturgicWard
+	Value: No value
 	Research count: 1
 
 InvarArrow
@@ -2857,6 +2877,10 @@ Copernicus
 	Research count: 1
 
 Cruithne
+	Value: 1 gold
+	Research count: 1
+
+Ilmenite
 	Value: 1 gold
 	Research count: 1
 

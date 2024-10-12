@@ -1,6 +1,7 @@
 using Macrocosm.Content.Buffs.Minions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -12,6 +13,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
     public class DroneMinion : ModProjectile
     {
+        private static Asset<Texture2D> beam;
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 3;
@@ -109,7 +111,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
             Lighting.AddLight(Projectile.position, new Color(225, 100, 100).ToVector3() * 0.4f);
 
-            Main.NewText($"{Projectile.whoAmI} - {OrbitAngle}");
+            //Main.NewText($"{Projectile.whoAmI} - {OrbitAngle}");
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -425,11 +427,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             beamEnd -= Main.screenPosition;
 
             float rotation = (beamEnd - beamStart).ToRotation() + MathHelper.PiOver2;
-            Texture2D beam = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Trace3").Value;
+            beam ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Beam4");
             Vector2 scale = new Vector2(45f, Vector2.Distance(beamStart, beamEnd)) / beam.Size();
-            Vector2 origin = new(beam.Width * 0.5f, beam.Height);
+            Vector2 origin = new(beam.Width() * 0.5f, beam.Height());
 
-            spriteBatch.Draw(beam, beamStart, null, new Color(255, 0, 0, 0), rotation, origin, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(beam.Value, beamStart, null, new Color(255, 0, 0, 0), rotation, origin, scale, SpriteEffects.None, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -444,8 +446,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             {
                 Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (lightColor * (Projectile.alpha / 255f)), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
             }
+
             if (owner.statLife <= (owner.statLifeMax2 / 2) && owner.ownedProjectileCounts[Projectile.type] > 2)
                 DrawBeam(Main.spriteBatch);
+
             return false;
         }
     }
