@@ -56,14 +56,14 @@ namespace Macrocosm.Common.Systems.Power
 
             foreach (var generator in machines.Where(machine => machine.IsGenerator))
             {
-                if (generator.GeneratedPower > 0 && !generator.PoweredOn)
-                    generator.PowerOn();
-
-                if (generator.GeneratedPower <= 0 && generator.PoweredOn)
-                    generator.PowerOff();
-
                 float remainingPower = generator.GeneratedPower - (totalPowerDistributedToConsumers / totalGeneratedPower * generator.GeneratedPower);
                 generator.ActivePower = generator.PoweredOn ? remainingPower : 0;
+
+                if ((generator.GeneratedPower > 0 && !generator.PoweredOn))
+                    generator.PowerOn();
+
+                if ((generator.GeneratedPower <= 0 && generator.PoweredOn))
+                    generator.PowerOff();
             }
         }
 

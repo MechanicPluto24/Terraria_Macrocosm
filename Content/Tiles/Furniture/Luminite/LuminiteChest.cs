@@ -43,8 +43,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             for (int i = 0; i < styles.Count; i++)
             {
                 LuminiteStyle style = (LuminiteStyle)styles[i];
-                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{i}"), MapChestName);
-                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{i + 1}"), MapChestName);
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{i * 2}"), MapChestName);
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{(i * 2) + 1}"), MapChestName);
             }
 
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteChest>(), 0, 1);

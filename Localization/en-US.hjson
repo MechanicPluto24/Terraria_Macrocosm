@@ -14,6 +14,11 @@ Mods: {
 			MarkerNoPair: Found no other valid launch pad marker in the vicinity.
 		}
 
+		Liquids: {
+			Oil: Oil
+			RocketFuel: Rocket Fuel
+		}
+
 		GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
 	}
 

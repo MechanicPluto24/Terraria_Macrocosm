@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         }
 
         public override float CircularHoldoutOffset => 4f;
-        protected override bool StillInUse => base.StillInUse || itemUseTime > 0;
+        protected override bool StillInUse => base.StillInUse || itemUseTimer > 0;
         public override bool ShouldUpdateAimRotation => true;
 
         private float GunRotation = 0f;

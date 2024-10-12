@@ -1909,6 +1909,29 @@ ZombieFinger
 	Value: 2 silver
 	Research count: 1
 
+Canister
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Aluminum Bar x 10
+		Steel Bar x 5
+		Silicon x 8
+		at
+		Mythril Anvil
+
+
+RocketFuelCanister
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Aluminum Bar x 2
+		Steel Bar x 1
+		Silicon x 1
+		at
+		Mythril Anvil
+			=> x25
+
+
 BurnerGenerator
 	Value: 5 silver
 	Research count: 1
@@ -2133,17 +2156,6 @@ EngineComponent
 		Steel Bar x 20
 		Palladium Bar x 20
 		Tungsten Bar x 10
-		at
-		Fabricator
-
-
-FuelCanister
-	Value: 1 silver
-	Research count: 100
-	Recipes:
-		Aluminum Bar x 10
-		Steel Bar x 5
-		Silicon x 8
 		at
 		Fabricator
 

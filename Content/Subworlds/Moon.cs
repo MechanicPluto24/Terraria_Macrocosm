@@ -34,8 +34,7 @@ namespace Macrocosm.Content.Subworlds
 
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
-        public override int Width => 4200;
-        public override int Height => 1200;
+        public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
         public override ChecklistConditionCollection LaunchConditions => new()
         {

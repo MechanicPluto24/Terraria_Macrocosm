@@ -3,6 +3,7 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
 using Terraria;
@@ -11,11 +12,11 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Ranged
+namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class WornLunarianDaggerHeld : ChargedHeldProjectile
     {
-        public override string Texture => "Macrocosm/Content/Items/Weapons/Magic/WornLunarianDagger";
+        private static Asset<Texture2D> glow;
 
         public float MinCharge => MaxCharge * 0.2f;
         public ref float MaxCharge => ref Projectile.ai[0];
@@ -24,10 +25,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         private bool altAttackActive = false;
         private int altAttackCount = 0;
+        private int usePeriod = 0;
 
         public override float CircularHoldoutOffset => 8f;
 
-        protected override bool StillInUse => base.StillInUse || Main.mouseRight || itemUseTime > 0 || altAttackActive;
+        protected override bool StillInUse => base.StillInUse || Main.mouseRight || itemUseTimer > 0 || altAttackActive;
 
         public override bool ShouldUpdateAimRotation => true;
 
@@ -43,11 +45,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void ProjectileAI()
         {
-            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.Pi/2 + MathHelper.Pi/16);
+            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, Projectile.rotation - MathHelper.Pi / 2 + MathHelper.Pi / 16);
 
             if (Player.whoAmI == Main.myPlayer)
             {
                 Item currentItem = Player.CurrentItem();
+                usePeriod = currentItem.useTime;
 
                 int damage = Player.GetWeaponDamage(currentItem);
                 float knockback = currentItem.knockBack;
@@ -57,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 {
                     AI_Charge += 1f * Player.GetAttackSpeed(DamageClass.Magic);
 
-                    if (AI_Charge == MaxCharge)
+                    if ((int)AI_Charge == (int)MaxCharge)
                     {
                         SoundEngine.PlaySound(SoundID.Item29 with { Pitch = 0.2f, Volume = 0.35f }, Projectile.position);
                     }
@@ -76,18 +79,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 {
                     if (AI_Charge > MinCharge)
                     {
-                        if (Player.PickAmmo(currentItem, out _, out _, out _, out _, out _))
-                        {
-                            float charge = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
+                        float charge = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
+                        int attackCount = 3 + (int)(7 * charge);
 
-                            altAttackCount = 3 + (int)(7 * charge);
+                        if (Player.CheckMana(currentItem.mana * (int)(attackCount * 0.2f), true))
+                        {
+                            altAttackCount = attackCount;
                             altAttackActive = true;
 
                             AI_Timer = 0;
                             AI_Charge = 0;
                         }
                     }
-                    else if (AI_Timer % currentItem.useTime == 0)
+                    else if (AI_Timer % usePeriod == 0)
                     {
                         if (Player.CheckMana(currentItem.mana, true))
                         {
@@ -96,9 +100,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<LuminiteBolt>(), damage, knockback, Projectile.owner, 1f);
 
                             AI_Timer = 0;
-                            SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
+                            SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.4f, Pitch = 0.2f}, Projectile.position);
                         }
-                        else if (itemUseTime <= 0)
+                        else if (itemUseTimer <= 0)
                         {
                             Projectile.Kill();
                         }
@@ -115,12 +119,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     }
                     else if (AI_Timer % altAttackRate == 0)
                     {
-                        if (Player.CheckMana(currentItem.mana, true))
-                        {
-                            Vector2 position = Projectile.Center + new Vector2(0, -12 * Projectile.direction).RotatedBy(Projectile.rotation);
-                            Vector2 velocity = Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(15)) * currentItem.shootSpeed * 0.666f;
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<LuminiteBolt>(), damage, knockback, Projectile.owner, 1f);
-                        }
+                        Vector2 position = Projectile.Center + new Vector2(0, -12 * Projectile.direction).RotatedBy(Projectile.rotation);
+                        Vector2 velocity = Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(15)) * currentItem.shootSpeed * 0.666f;
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<LuminiteBolt>(), damage, knockback, Projectile.owner, 1f);
+                        SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.4f, Pitch = 0.25f }, Projectile.position);
                     }
                 }
 
@@ -147,44 +149,51 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void PostDraw(Color lightColor)
         {
             var spriteBatch = Main.spriteBatch;
+            glow ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            float rotation = Projectile.rotation;
+            Vector2 offset = Projectile.direction > 0 ? new Vector2(-8, 6) : new Vector2(-6, -2);
+            Vector2 position = Utility.RotatingPoint(Projectile.Center, offset, rotation);
+
+            byte alpha = (byte)(altAttackActive ? 0 : (int)(255f * ((AI_Timer % usePeriod) / (float)usePeriod)));
+            spriteBatch.Draw(glow.Value, position - Main.screenPosition, null, Color.White.WithAlpha(alpha), rotation, glow.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, 0f);
 
             if (AI_Charge > 0 || altAttackActive)
             {
-                state.SaveState(spriteBatch);
-                spriteBatch.End();
-                spriteBatch.Begin(BlendState.AlphaBlend, state);
+                //state.SaveState(spriteBatch);
+                //spriteBatch.End();
+                //spriteBatch.Begin(BlendState.AlphaBlend, state);
 
                 float progress = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
                 if (altAttackActive)
-                    progress = (1f - (AI_Timer / 50f)) * (altAttackCount / 10f);
+                    progress = (1f - AI_Timer / 50f) * (altAttackCount / 10f);
 
-                float rotation = Projectile.rotation + EffectTimer;
+                float glowRotation = Projectile.rotation + EffectTimer;
                 float scale = 0.5f * Projectile.scale * progress;
-                byte alpha = (byte)(255 - MathHelper.Clamp(64 + Opacity, 0, 255));
-                Vector2 offset = default;
+                byte glowAlpha = (byte)(255 - MathHelper.Clamp(64 + Opacity, 0, 255));
+                Vector2 glowOffset = default;
 
                 if (AI_Charge < MaxCharge)
                 {
                     scale += 0.5f * Utility.QuadraticEaseOut(progress);
-                    rotation += 0.5f * Utility.CubicEaseInOut(progress);
+                    glowRotation += 0.5f * Utility.CubicEaseInOut(progress);
                     Opacity += 1f;
-                    offset = Main.rand.NextVector2Circular(1, 1) * progress;
+                    glowOffset = Main.rand.NextVector2Circular(1, 1) * progress;
                 }
 
                 if (AI_Charge >= MaxCharge)
                 {
                     scale += 0.5f;
-                    rotation += 0.5f;
-                    offset = Main.rand.NextVector2Circular(1, 1);
+                    glowRotation += 0.5f;
+                    glowOffset = Main.rand.NextVector2Circular(1, 1);
                     EffectTimer += 0.001f;
                     Opacity += 3f;
                 }
 
-                Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(8, -8 * Projectile.direction), Projectile.rotation) + offset;
-                Utility.DrawStar(rotPoint - Main.screenPosition, 2, new Color(44, 209, 147, alpha), new Vector2(0.5f, 1.5f) * scale, rotation);
+                Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(8, -8 * Projectile.direction), Projectile.rotation) + glowOffset;
+                Utility.DrawStar(rotPoint - Main.screenPosition, 2, new Color(44, 209, 147, glowAlpha), new Vector2(0.5f, 1.5f) * scale, glowRotation);
 
-                spriteBatch.End();
-                spriteBatch.Begin(BlendState.AlphaBlend, state);
+                //spriteBatch.End();
+                //spriteBatch.Begin(BlendState.AlphaBlend, state);
             }
         }
 

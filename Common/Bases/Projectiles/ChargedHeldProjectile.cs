@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         }
 
         protected bool spawned;
-        protected int itemUseTime;
+        protected int itemUseTimer;
 
         protected Player Player => Main.player[Projectile.owner];
         protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed;
@@ -63,15 +63,15 @@ namespace Macrocosm.Common.Bases.Projectiles
             if (!spawned)
             {
                 ProjectileOnSpawn();
-                itemUseTime = Player.CurrentItem().useTime;
+                itemUseTimer = Player.CurrentItem().useTime;
                 spawned = true;
             }
         }
 
         private void UpdateItemTime()
         {
-            if (itemUseTime > 0)
-                itemUseTime--;
+            if (itemUseTimer > 0)
+                itemUseTimer--;
         }
 
         protected virtual void PlayerVisuals()

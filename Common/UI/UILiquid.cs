@@ -27,26 +27,31 @@ namespace Macrocosm.Common.UI
         private /*const*/ readonly int sliceSize = 1;
         private /*const*/ readonly int surfaceSliceHeight = 3;
 
-        private readonly LiquidType? macrocosmLiquidType;
+        private readonly LiquidType liquidType;
 
         public float LiquidLevel { get; set; } = 0f;
         public float WaveFrequency { get; set; } = 5f;
         public float WaveAmplitude { get; set; } = 0.1f;
         public bool RoundCorners { get; set; } = false;
 
-        /// <summary> Use <see cref="WaterStyleID"/>! </summary>
-        public UILiquid(int liquidId)
+        public UILiquid(LiquidType liquidType)
         {
-            texture = LiquidRenderer.Instance._liquidTextures[liquidId];
+            this.liquidType = liquidType;
+
+            texture = liquidType switch
+            {
+                LiquidType.Water => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Purity],
+                LiquidType.Lava => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Lava],
+                LiquidType.Honey => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Honey],
+                LiquidType.Shimmer => LiquidRenderer.Instance._liquidTextures[14],
+                LiquidType.Oil => ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/" + liquidType.ToString(), AssetRequestMode.ImmediateLoad),
+                LiquidType.RocketFuel => ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/" + liquidType.ToString(), AssetRequestMode.ImmediateLoad),
+                _ => Macrocosm.EmptyTex,
+            };
+
             surfaceSourceRectangle = new(16, 1280, sliceSize * 2, surfaceSliceHeight);
             fillSourceRectangle = new(16, 64, sliceSize, sliceSize);
             OverflowHidden = true;
-        }
-
-        public UILiquid(LiquidType macrocosmLiquidType) : this(0)
-        {
-            this.macrocosmLiquidType = macrocosmLiquidType;
-            texture = ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/" + macrocosmLiquidType.ToString(), AssetRequestMode.ImmediateLoad);
         }
 
         public override void Update(GameTime gameTime)
@@ -54,9 +59,9 @@ namespace Macrocosm.Common.UI
             Rectangle fillArea = GetFillArea();
             List<Particle> bubbles = ParticleManager.GetParticlesDrawnBy(this);
 
-            if (macrocosmLiquidType.HasValue && bubbles.Count < (float)(20 * LiquidLevel))
+            if (bubbles.Count < (float)(20 * LiquidLevel))
             {
-                if (macrocosmLiquidType.Value == LiquidType.RocketFuel)
+                if (liquidType == LiquidType.RocketFuel)
                 {
                     Particle.Create<RocketFuelBubble>((p) =>
                     {
@@ -67,10 +72,10 @@ namespace Macrocosm.Common.UI
                     });
                 }
                 /*
-                else if (macrocosmLiquidType.Value == LiquidType.Oil)
+                else if (liquidType == LiquidType.Oil)
                 {
                     Rectangle fillArea = GetFillArea();
-                    Particle.CreateParticle<RocketFuelBubble>((p) =>
+                    Particle.CreateParticle<OilBubble>((p) =>
                     {
                         p.Position = new(fillArea.X + Main.rand.NextFloat(fillArea.Width), fillArea.Bottom);
                         p.MaxY = fillArea.Top;

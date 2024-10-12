@@ -1,5 +1,5 @@
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Magic
 {
-	public class WornLunarianDagger : ModItem
+    public class WornLunarianDagger : ModItem
 	{
         public override void SetStaticDefaults()
         {
