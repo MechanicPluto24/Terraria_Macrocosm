@@ -12,8 +12,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
     public class DroneMinion : ModProjectile
     {
-
-
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 3;
@@ -25,7 +23,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Main.projPet[Type] = true;
 
             ProjectileID.Sets.MinionSacrificable[Type] = true;
-
         }
 
         public sealed override void SetDefaults()
@@ -65,19 +62,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private Vector2 FlyTo;
         public override void AI()
         {
-            Player owner = Main.player[Projectile.owner];
-            if (OrbitAngle >= (float)owner.ownedProjectileCounts[Projectile.type])
-                OrbitAngle = (float)owner.ownedProjectileCounts[Projectile.type] - 1f;
-            if (!CheckActive(owner))
-                return;
-
-            Lighting.AddLight(Projectile.position, new Color(225, 100, 100).ToVector3() * 0.4f);
-
             if (!spawned)
             {
-
                 spawned = true;
             }
+
+            Player owner = Main.player[Projectile.owner];
+            foreach (Projectile proj in Main.ActiveProjectiles)
+            {
+                if (proj.active && proj.type == Type && proj.owner == Projectile.owner && Projectile.whoAmI != proj.whoAmI)
+                {
+                    OrbitAngle += 1f;
+                }
+            }
+
+            if (OrbitAngle >= (float)owner.ownedProjectileCounts[Projectile.type])
+                OrbitAngle = (float)owner.ownedProjectileCounts[Projectile.type] - 1f;
+
+            if (!CheckActive(owner))
+                return;
 
             GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
             SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
@@ -100,6 +103,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 Projectile.friendly = true;
                 owner.statDefense += 3;
             }
+
+            Lighting.AddLight(Projectile.position, new Color(225, 100, 100).ToVector3() * 0.4f);
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -111,7 +116,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             if (owner.dead || !owner.active)
             {
                 owner.ClearBuff(ModContent.BuffType<DroneSummonBuff>());
-
                 return false;
             }
 
@@ -344,7 +348,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     Projectile.frame = 0;
                 }
             }
-
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -379,7 +382,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
                 // Otherwise, perform an AABB line collision check to check the whole beam.
 
-
                 return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, beamEnd, 10f * Projectile.scale, ref _);
             }
             else
@@ -411,9 +413,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             if (beamStart == beamEnd)
                 return;
 
-
             if (Vector2.Distance(beamStart, beamEnd) > 700f)
                 return;
+
             beamStart -= Main.screenPosition;
             beamEnd -= Main.screenPosition;
 

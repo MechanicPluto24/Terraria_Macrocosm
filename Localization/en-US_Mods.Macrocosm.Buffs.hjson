@@ -112,3 +112,8 @@ Melting: {
 	DisplayName: Melting
 	Description: Mods.Macrocosm.Buffs.Melting.Description
 }
+
+DroneSummonBuff: {
+	DisplayName: "P.D.C.D. \"Hummingbird\""
+	Description: The combat drone will fight for you
+}
