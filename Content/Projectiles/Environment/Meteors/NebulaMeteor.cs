@@ -1,5 +1,9 @@
-﻿using Macrocosm.Common.Bases;
-using Macrocosm.Content.Items.MeteorChunks;
+﻿using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.GrabBags;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -7,40 +11,89 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-	public class NebulaMeteor : BaseMeteor
-	{
-		public NebulaMeteor()
-		{
-			Width = 52;
-			Height = 44;
-			Damage = 1500;
+    public class NebulaMeteor : BaseMeteor
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
 
-			ScreenshakeMaxDist = 140f * 16f;
-			ScreenshakeIntensity = 100f;
+            Projectile.width = 64;
+            Projectile.height = 64;
 
-			RotationMultiplier = 0.01f;
-			BlastRadiusMultiplier = 3.5f;
+            ScreenshakeMaxDist = 140f * 16f;
+            ScreenshakeIntensity = 100f;
 
-			DustType = 71; // Nebula Blaze dust
-			ImpactDustCount = Main.rand.Next(140, 160);
-			ImpactDustSpeed = new Vector2(3f, 10f);
-			DustScaleMin = 1f;
-			DustScaleMax = 1.6f;
-			AI_DustChanceDenominator = 1;
-		}
+            RotationMultiplier = 0.01f;
+            BlastRadius = 224;
+        }
 
-		public override void SpawnItems()
-		{
-			int type = ModContent.ItemType<NebulaChunk>();
-			Vector2 position = new Vector2(Projectile.position.X + Width / 2, Projectile.position.Y - Height);
-			int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
-			NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
-		}
+        public override void MeteorAI()
+        {
+            float DustScaleMin = 1f;
+            float DustScaleMax = 1.6f;
 
-		//public override void AI_SpawnDusts()
-		//{
-		//	int dustType = Main.rand.Next(71, 74); // Nebula Dusts: 71, 72, 73
-		//	AI_SpawnDusts(dustType);
-		//}
-	}
+            // Nebula Dusts: 71, 72, 73
+            if (Main.rand.NextBool(1))
+            {
+                Dust dust = Dust.NewDustDirect(
+                    Projectile.position,
+                    Projectile.width,
+                    Projectile.height,
+                    DustID.UndergroundHallowedEnemies,
+                    0f,
+                    0f,
+                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                );
+
+                dust.noGravity = true;
+            }
+        }
+
+        public override void ImpactEffects()
+        {
+            int impactDustCount = Main.rand.Next(450, 480);
+            for (int i = 0; i < impactDustCount; i++)
+            {
+                int dist = 300;
+                Vector2 offset = Main.rand.NextVector2Circular(dist, dist);
+                Vector2 dustPosition = Projectile.Center + offset;
+                float distFactor = 0.2f + 0.8f * (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
+                Vector2 velocity = -offset * 0.04f * distFactor;
+                Particle.Create<DustParticle>((p =>
+                {
+                    p.DustType = DustID.UndergroundHallowedEnemies;
+                    p.Position = dustPosition;
+                    p.Velocity = velocity;
+                    p.Acceleration = velocity * 0.2f;
+                    p.Scale = new(Main.rand.NextFloat(0.6f, 2.4f));
+                    p.NoGravity = true;
+                    p.NormalUpdate = true;
+                }));
+            }
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.2f);
+                p.ScaleVelocity = new(0.3f);
+                p.Color = new Color(255, 72, 255);
+            });
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(255, 72, 255).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 2.6f;
+            });
+        }
+
+        public override void SpawnItems()
+        {
+            int type = ModContent.ItemType<NebulaChunk>();
+            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center,  type);
+            NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
+        }
+    }
 }

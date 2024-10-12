@@ -1,6 +1,9 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Items.MeteorChunks;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.GrabBags;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.GameContent.Drawing;
@@ -9,53 +12,104 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-	public class StardustMeteor : BaseMeteor
-	{
-		public StardustMeteor()
-		{
-			Width = 52;
-			Height = 44;
-			Damage = 1500;
+    public class StardustMeteor : BaseMeteor
+    {
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
 
-			ScreenshakeMaxDist = 140f * 16f;
-			ScreenshakeIntensity = 100f;
+            Projectile.width = 64;
+            Projectile.height = 64;
 
-			RotationMultiplier = 0.01f;
-			BlastRadiusMultiplier = 3.5f;
+            ScreenshakeMaxDist = 140f * 16f;
+            ScreenshakeIntensity = 100f;
 
-			DustType = DustID.YellowStarDust;
-			ImpactDustCount = Main.rand.Next(70, 80);
-			ImpactDustSpeed = new Vector2(3f, 10f);
-			DustScaleMin = 1f;
-			DustScaleMax = 1.6f;
-			AI_DustChanceDenominator = 1;
-		}
+            RotationMultiplier = 0.01f;
+            BlastRadius = 224;
+        }
 
-		public override void SpawnItems()
-		{
-			int type = ModContent.ItemType<StardustChunk>();
-			Vector2 position = new Vector2(Projectile.position.X + Width / 2, Projectile.position.Y - Height);
-			int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
-			NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
-		}
+        public override void MeteorAI()
+        {
+            float DustScaleMin = 1f;
+            float DustScaleMax = 1.6f;
 
-		public override void AI_SpawnDusts()
-		{
-			int dustType = Main.rand.NextFromList(DustID.YellowStarDust, DustID.DungeonWater);
-			AI_SpawnDusts(dustType);
-		}
+            if (Main.rand.NextBool(1))
+            {
+                Dust dust = Dust.NewDustDirect(
+                    Projectile.position,
+                    Projectile.width,
+                    Projectile.height,
+                    Main.rand.NextBool() ? DustID.YellowStarDust : DustID.DungeonWater,
+                    0f,
+                    0f,
+                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                );
 
-		public override void SpawnImpactDusts()
-		{
-			SpawnImpactDusts(DustID.YellowStarDust, noGravity: false);
+                dust.noGravity = true;
+            }
+        }
 
-			for (int i = 0; i < Main.rand.Next(30, 50); i++)
-			{
-				Vector2 position = Projectile.Center + new Vector2(Width, Height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
-				Vector2 velocity = new(Main.rand.NextFloat(-10, 10), Main.rand.NextFloat(0f, -20f));
+        public override void ImpactEffects()
+        {
+            int impactDustCount = Main.rand.Next(450, 480);
+            for (int i = 0; i < impactDustCount; i++)
+            {
+                int dist = 160;
+                Vector2 dustPosition = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
+                float distFactor = (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
+                Vector2 velocity = (Projectile.Center - dustPosition).SafeNormalize(default) * -8f;
+                Particle.Create<DustParticle>((p =>
+                {
+                    p.DustType = Main.rand.NextBool() ? DustID.YellowStarDust : DustID.DungeonWater;
+                    p.Position = dustPosition;
+                    p.Velocity = velocity;
+                    p.Scale = new Vector2(Main.rand.NextFloat(1.8f, 2f)) * (1f - distFactor);
+                    p.NoGravity = true;
+                    p.NormalUpdate = true;
+                }));
+            }
 
-				Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);
-			}
-		}
-	}
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center;
+                p.Scale = new(0.8f);
+                p.ScaleVelocity = new(0.2f);
+                p.Color = new Color(116, 164, 255).WithOpacity(1f);
+            });
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(116, 164, 255).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1.5f);
+                p.NumberOfInnerReplicas = 8;
+                p.ReplicaScalingFactor = 1.4f;
+            });
+
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(252, 241, 69).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1.2f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 1.2f;
+                p.Rotation = MathHelper.PiOver2;
+            });
+
+            for (int i = 0; i < 45; i++)
+            {
+                Vector2 position = Projectile.Center + new Vector2(120).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+                Vector2 velocity = -new Vector2(10).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+                Particle.Create(ParticleOrchestraType.StardustPunch, position, velocity);
+            }
+        }
+
+        public override void SpawnItems()
+        {
+            int type = ModContent.ItemType<StardustChunk>();
+            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center,  type);
+            NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
+        }
+    }
 }

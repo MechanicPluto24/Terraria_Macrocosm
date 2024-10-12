@@ -1,9 +1,9 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.NPCs.Global;
+using Macrocosm.Content.Items.Drops;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -17,269 +17,285 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
-	public class Clavite : ComplexAINPC<Clavite.AIState>, IMoonEnemy
-	{
-		public enum AIState
-		{
-			Fly,
-			Dash
-		}
+    public class Clavite : ComplexAINPC<Clavite.AIState>
+    {
+        public enum AIState
+        {
+            Fly,
+            Dash
+        }
 
-		public override void SetStaticDefaults()
-		{
-			base.SetStaticDefaults();
+        private static Asset<Texture2D> glowmask;
+        private static Asset<Texture2D> glowX4;
 
-			Main.npcFrameCount[Type] = 2;
-			NPCID.Sets.TrailCacheLength[Type] = 5;
-			NPCID.Sets.TrailingMode[Type] = 1;
-		}
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
 
-		public override void SetDefaults2()
-		{
-			NPC.width = 56;
-			NPC.height = 56;
-			NPC.lifeMax = 2500;
-			NPC.damage = 60;
-			NPC.defense = 60;
-			NPC.HitSound = SoundID.NPCHit2;
-			NPC.DeathSound = SoundID.NPCDeath2;
-			NPC.value = 60f;
-			NPC.knockBackResist = 0f;
-			NPC.noGravity = true;
-			NPC.noTileCollide = true;
-		}
+            Main.npcFrameCount[Type] = 2;
+            NPCID.Sets.TrailCacheLength[Type] = 5;
+            NPCID.Sets.TrailingMode[Type] = 1;
 
-		private Vector2? flyToOffset = null;
+            NPCSets.MoonNPC[Type] = true;
+            NPCSets.DropsMoonstone[Type] = true;
+        }
 
-		[StateMethod(AIState.Fly)]
-		private void Fly()
-		{
-			if (flyToOffset is null)
-			{
-				if ((NPC.target = GetRandomTargetInRange(1000)) == -1)
-				{
-					return;
-				}
+        public override void SetDefaults2()
+        {
+            NPC.width = 56;
+            NPC.height = 56;
+            NPC.lifeMax = 950;
+            NPC.damage = 45;
+            NPC.defense = 110;
+            NPC.HitSound = SoundID.NPCHit2;
+            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.value = 60f;
+            NPC.knockBackResist = 0f;
+            NPC.noGravity = true;
+            NPC.noTileCollide = true;
+        }
 
-				flyToOffset = Main.rand.NextVector2Unit() * 100f;
-			}
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
+        {
+            return spawnInfo.Player.InModBiome<MoonBiome>() && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
+        }
 
-			Player player = Main.player[NPC.target];
+        public override void ModifyNPCLoot(NPCLoot loot)
+        {
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 4));
+        }
 
-			NPC.Move(player.Center + flyToOffset.Value, Vector2.Zero, 5, 0.1f);
-			NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * MathF.Sin(Main.GameUpdateCount * 0.1f);
-			NPC.direction = NPC.Center.X < player.Center.X ? 1 : -1;
-			NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).ToRotation();
+        private Vector2? flyToOffset = null;
 
-			if (NPC.Center.DistanceSQ(player.Center) < 200f * 200f)
-			{
-				flyToOffset = null;
-				SetState(AIState.Dash);
-			}
-		}
+        [StateMethod(AIState.Fly)]
+        private void Fly()
+        {
+            if (flyToOffset is null)
+            {
+                if ((NPC.target = GetRandomTargetInRange(1000)) == -1)
+                {
+                    return;
+                }
 
-		private readonly int dashWaitFrames = 40;
-		private readonly int chompFrames = 6;
+                flyToOffset = Main.rand.NextVector2Unit() * 100f;
+            }
 
-		[StateMethod(AIState.Dash)]
-		private void Dash()
-		{
-			if (StateTime.Frames < dashWaitFrames)
-			{
-				NPC.velocity *= 0.98f;
-				NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).ToRotation();
+            Player player = Main.player[NPC.target];
 
-				if (StateTime.Frames == dashWaitFrames - 7)
-				{
-					SoundEngine.PlaySound(SoundID.DD2_BetsyWindAttack, NPC.Center);
-				}
-				return;
-			}
-			else if (StateTime.Frames == dashWaitFrames)
-			{
-				NPC.velocity = NPC.Center.DirectionTo(Main.player[NPC.target].Center) * 26f;
-			}
-			else if (StateTime.Frames == dashWaitFrames + chompFrames)
-			{
-				/*SoundEngine.PlaySound(SoundID.);*/
-			}
+            NPC.Move(player.Center + flyToOffset.Value, Vector2.Zero, 5, 0.1f);
+            NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * MathF.Sin(Main.GameUpdateCount * 0.1f);
+            NPC.direction = NPC.Center.X < player.Center.X ? 1 : -1;
+            NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).ToRotation();
 
-			NPC.velocity *= 0.96f;
-			NPC.rotation = NPC.velocity.ToRotation();
-			NPC.direction = NPC.velocity.X > 0 ? 1 : -1;
+            if (NPC.Center.DistanceSQ(player.Center) < 200f * 200f)
+            {
+                flyToOffset = null;
+                SetState(AIState.Dash);
+            }
+        }
 
-			if (NPC.velocity.LengthSquared() < 6f)
-			{
-				SetState(AIState.Fly);
-			}
-		}
+        private readonly int dashWaitFrames = 40;
+        private readonly int chompFrames = 6;
 
-		public override void FindFrame(int frameHeight)
-		{
-			if (State == AIState.Dash)
-			{
-				NPC.frame.Y = StateTime.Frames < dashWaitFrames + chompFrames ? 0 : frameHeight;
-				return;
-			}
+        [StateMethod(AIState.Dash)]
+        private void Dash()
+        {
+            if (StateTime.Frames < dashWaitFrames)
+            {
+                NPC.velocity *= 0.98f;
+                NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).ToRotation();
 
-			int frameSpeed = 15;
+                if (StateTime.Frames == dashWaitFrames - 7)
+                {
+                    SoundEngine.PlaySound(SoundID.DD2_BetsyWindAttack, NPC.Center);
+                }
+                return;
+            }
+            else if (StateTime.Frames == dashWaitFrames)
+            {
+                NPC.velocity = NPC.Center.DirectionTo(Main.player[NPC.target].Center) * 26f;
+            }
+            else if (StateTime.Frames == dashWaitFrames + chompFrames)
+            {
+                /*SoundEngine.PlaySound(SoundID.);*/
+            }
 
-			NPC.frameCounter++;
+            NPC.velocity *= 0.96f;
+            NPC.rotation = NPC.velocity.ToRotation();
+            NPC.direction = NPC.velocity.X > 0 ? 1 : -1;
 
-			if (NPC.frameCounter >= frameSpeed)
-			{
-				NPC.frameCounter = 0;
-				NPC.frame.Y += frameHeight;
+            if (NPC.velocity.LengthSquared() < 6f)
+            {
+                SetState(AIState.Fly);
+            }
+        }
 
-				if (NPC.frame.Y >= Main.npcFrameCount[Type] * frameHeight)
-				{
-					NPC.frame.Y = 0;
-				}
-			}
-		}
+        public override void FindFrame(int frameHeight)
+        {
+            if (State == AIState.Dash)
+            {
+                NPC.frame.Y = StateTime.Frames < dashWaitFrames + chompFrames ? 0 : frameHeight;
+                return;
+            }
 
-		public override float SpawnChance(NPCSpawnInfo spawnInfo)
-		{
-			return spawnInfo.Player.InModBiome<MoonBiome>() && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
-		}
+            int frameSpeed = 15;
 
-		public override void ModifyNPCLoot(NPCLoot loot)
-		{
-			loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>()));
-		}
+            NPC.frameCounter++;
 
-		public override void HitEffect(NPC.HitInfo hit)
-		{
-			for (int i = 0; i < 10; i++)
-			{
-				int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Stone);
-				Dust dust = Main.dust[dustIndex];
-				dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
-				dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
-				dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
-			}
+            if (NPC.frameCounter >= frameSpeed)
+            {
+                NPC.frameCounter = 0;
+                NPC.frame.Y += frameHeight;
 
-			if (Main.dedServ)
-				return;
+                if (NPC.frame.Y >= Main.npcFrameCount[Type] * frameHeight)
+                {
+                    NPC.frame.Y = 0;
+                }
+            }
+        }
 
-			if (NPC.life <= 0)
-			{
-				var entitySource = NPC.GetSource_Death();
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? DustID.Stone : DustID.GreenBlood);
+                Dust dust = Main.dust[dustIndex];
+                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+            }
 
-				Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreHead1").Type);
-				Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreHead2").Type);
-				Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGoreJaw1").Type);
-				Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreJaw2").Type);
-				Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 1.5f, Mod.Find<ModGore>("ClaviteGoreEye1").Type);
-				Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGoreEye2").Type);
-			}
-		}
+            if (Main.dedServ)
+                return;
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-		{
-			if (NPC.IsABestiaryIconDummy)
-				NPC.rotation = MathHelper.Pi;
+            if (NPC.life <= 0)
+            {
+                var entitySource = NPC.GetSource_Death();
 
-			SpriteBatchState state = spriteBatch.SaveState();
-			spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
+                Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreHead1").Type);
+                Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreHead2").Type);
+                Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGoreJaw1").Type);
+                Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreJaw2").Type);
+                Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 1.5f, Mod.Find<ModGore>("ClaviteGoreEye1").Type);
+                Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGoreEye2").Type);
 
-			Texture2D texture = TextureAssets.Npc[Type].Value;
-			for (int i = 0; i < NPC.oldPos.Length * 0.5f; i++)
-			{
-				float factor = 1f - (float)i / (NPC.oldPos.Length + 1);
-				spriteBatch.Draw(
-					texture,
-					NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
-					NPC.frame,
-					drawColor * factor * 0.5f,
-					NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
-					NPC.frame.Size() * 0.5f,
-					NPC.scale,
-					NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-					0f
-				);
-			}
+                for (int i = 0; i < 100; i++)
+                {
+                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? DustID.Stone : DustID.GreenBlood);
+                    Dust dust = Main.dust[dustIndex];
+                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+                }
+            }
+        }
 
-			spriteBatch.End();
-			spriteBatch.Begin(state);
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            glowX4 ??= ModContent.Request<Texture2D>(Texture + "_GlowX4");
 
-			spriteBatch.Draw(
-				texture,
-				NPC.Center - screenPos,
-				NPC.frame,
-				drawColor,
-				NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
-				NPC.frame.Size() * 0.5f,
-				NPC.scale,
-				NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-				0f
-			);
+            if (NPC.IsABestiaryIconDummy)
+                NPC.rotation = MathHelper.Pi;
 
-			Texture2D glowTexture = ModContent.Request<Texture2D>(Texture + "_Glow", AssetRequestMode.ImmediateLoad).Value;
-			spriteBatch.Draw(
-				glowTexture,
-				NPC.Center - screenPos,
-				NPC.frame,
-				Color.White,
-				NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
-				NPC.frame.Size() * 0.5f,
-				NPC.scale,
-				NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-				0f
-			);
+            SpriteBatchState state = spriteBatch.SaveState();
+            spriteBatch.End();
+            spriteBatch.Begin(BlendState.Additive, state);
+
+            Texture2D texture = TextureAssets.Npc[Type].Value;
+            for (int i = 0; i < NPC.oldPos.Length * 0.5f; i++)
+            {
+                float factor = 1f - (float)i / (NPC.oldPos.Length + 1);
+                spriteBatch.Draw(
+                    texture,
+                    NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
+                    NPC.frame,
+                    drawColor * factor * 0.5f,
+                    NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
+                    NPC.frame.Size() * 0.5f,
+                    NPC.scale,
+                    NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                    0f
+                );
+            }
+
+            spriteBatch.End();
+            spriteBatch.Begin(state);
+
+            spriteBatch.Draw(
+                texture,
+                NPC.Center - screenPos,
+                NPC.frame,
+                drawColor,
+                NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
+                NPC.frame.Size() * 0.5f,
+                NPC.scale,
+                NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                0f
+            );
+
+            spriteBatch.Draw(
+                glowmask.Value,
+                NPC.Center - screenPos,
+                NPC.frame,
+                Color.White,
+                NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
+                NPC.frame.Size() * 0.5f,
+                NPC.scale,
+                NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                0f
+            );
 
 
-			spriteBatch.End();
-			spriteBatch.Begin(BlendState.Additive, state);
+            spriteBatch.End();
+            spriteBatch.Begin(BlendState.Additive, state);
 
-			Texture2D glowX4Texture = ModContent.Request<Texture2D>(Texture + "_GlowX4", AssetRequestMode.ImmediateLoad).Value;
-			Rectangle glowX4Source = new(NPC.frame.X * 4, NPC.frame.Y * 4, NPC.frame.Width * 4, NPC.frame.Height * 4);
-			spriteBatch.Draw(
-				glowX4Texture,
-				NPC.Center - screenPos,
-				glowX4Source,
-				Color.White * 0.25f,
-				NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
-				glowX4Source.Size() * 0.5f,
-				NPC.scale / 4,
-				NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-				0f
-			);
+            Rectangle glowX4Source = new(NPC.frame.X * 4, NPC.frame.Y * 4, NPC.frame.Width * 4, NPC.frame.Height * 4);
+            spriteBatch.Draw(
+                glowX4.Value,
+                NPC.Center - screenPos,
+                glowX4Source,
+                Color.White * 0.25f,
+                NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
+                glowX4Source.Size() * 0.5f,
+                NPC.scale / 4,
+                NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                0f
+            );
 
-			for (int i = 0; i < NPC.oldPos.Length; i++)
-			{
-				float factor = 1f - (float)i / (NPC.oldPos.Length + 1);
+            for (int i = 0; i < NPC.oldPos.Length; i++)
+            {
+                float factor = 1f - (float)i / (NPC.oldPos.Length + 1);
 
-				spriteBatch.Draw(
-					glowTexture,
-					NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
-					NPC.frame,
-					Color.White * factor * 0.66f,
-					NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
-					NPC.frame.Size() * 0.5f,
-					NPC.scale,
-					NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-					0f
-				);
+                spriteBatch.Draw(
+                    glowmask.Value,
+                    NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
+                    NPC.frame,
+                    Color.White * factor * 0.66f,
+                    NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
+                    NPC.frame.Size() * 0.5f,
+                    NPC.scale,
+                    NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                    0f
+                );
 
-				spriteBatch.Draw(
-					glowX4Texture,
-					NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
-					glowX4Source,
-					Color.White * 0.15f * factor,
-					NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
-					glowX4Source.Size() * 0.5f,
-					NPC.scale / 4,
-					NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-					0f
-				);
-			}
+                spriteBatch.Draw(
+                    glowX4.Value,
+                    NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
+                    glowX4Source,
+                    Color.White * 0.15f * factor,
+                    NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
+                    glowX4Source.Size() * 0.5f,
+                    NPC.scale / 4,
+                    NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                    0f
+                );
+            }
 
-			spriteBatch.End();
-			spriteBatch.Begin(state);
+            spriteBatch.End();
+            spriteBatch.Begin(state);
 
-			return false;
-		}
-	}
+            return false;
+        }
+    }
 }

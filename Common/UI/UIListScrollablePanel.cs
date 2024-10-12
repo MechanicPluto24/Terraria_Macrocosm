@@ -10,217 +10,219 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
-	{
-		public bool HideScrollbarIfNotScrollable { get; set; } = true;
-		public float ListPadding { get; set; } = 3f;
-		public float ListOuterPadding { get; set; } = 6f;
-		public StyleDimension ListWidthWithScrollbar { get; set; } = new(0f, 0.915f);
-		public StyleDimension ListWidthWithoutScrollbar { get; set; } = new(0f, 1f);
-		public StyleDimension ScrollbarWidth { get; set; } = new(0f, 1f);
-		public StyleDimension ScrollbarHeight { get; set; } = new(0f, 0.94f);
-		public StyleDimension ScrollbarTop { get; set; } = default;
-		public StyleDimension ScrollbarLeft { get; set; } = default;
+    public class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
+    {
+        public bool HideScrollbarIfNotScrollable { get; set; } = true;
+        public float ListPadding { get; set; } = 3f;
+        public float ListOuterPadding { get; set; } = 6f;
+        public StyleDimension ListWidthWithScrollbar { get; set; } = new(0f, 0.915f);
+        public StyleDimension ListWidthWithoutScrollbar { get; set; } = new(0f, 1f);
+        public StyleDimension ScrollbarWidth { get; set; } = new(0f, 1f);
+        public StyleDimension ScrollbarHeight { get; set; } = new(0f, 0.94f);
+        public StyleDimension ScrollbarTop { get; set; } = default;
+        public StyleDimension ScrollbarLeft { get; set; } = default;
 
-		public float ScrollbarHAlign { get; set; } = 0.98f;
-		public float ScrollbarVAlign { get; set; } = 0.5f;
-		public float TitleHAlign { get; set; } = 0.5f;
+        public float ScrollbarHAlign { get; set; } = 0.98f;
+        public float ScrollbarVAlign { get; set; } = 0.5f;
+        public float TitleHAlign { get; set; } = 0.5f;
 
-		public bool HasScrollbar => scrollbar is not null;
-		public bool ShiftTitleIfHasScrollbar { get; set; } = true;
-		public bool HasTitle => title is not null;
+        public bool HasScrollbar => scrollbar is not null;
+        public bool ShiftTitleIfHasScrollbar { get; set; } = true;
+        public bool HasTitle => title is not null;
 
-		private UIText title;
-		private UIList list;
-		private UIScrollbar scrollbar;
-		private bool hasTitle = false;
+        private UIText title;
+        private UIList list;
+        private UIScrollbar scrollbar;
+        private bool hasTitle = false;
 
-		public UIListScrollablePanel()
-		{
-			list = new();
-		}
+        public UIListScrollablePanel()
+        {
+            list = new();
+        }
 
-		public UIListScrollablePanel(string titleKey) : this(Language.GetText(titleKey))
-		{
-		}
+        public UIListScrollablePanel(string titleKey) : this(Language.GetText(titleKey))
+        {
+        }
 
-		public UIListScrollablePanel(LocalizedText title) : this(new LocalizedColorScaleText(title))
-		{
-		}
+        public UIListScrollablePanel(LocalizedText title) : this(new LocalizedColorScaleText(title))
+        {
+        }
 
-		public UIListScrollablePanel(LocalizedColorScaleText title) : this()
-		{
-			this.title = title.ProvideUI();
-		}
+        public UIListScrollablePanel(LocalizedColorScaleText title) : this()
+        {
+            this.title = title.ProvideUIText();
+        }
 
-		public UIListScrollablePanel(List<UIElement> list, LocalizedColorScaleText title = null)
-		{
-			this.title = title?.ProvideUI();
+        public UIListScrollablePanel(List<UIElement> list, LocalizedColorScaleText title = null)
+        {
+            this.title = title?.ProvideUIText();
 
-			this.list = new();
-			list.AddRange(list);
-		}
+            this.list = new();
+            list.AddRange(list);
+        }
 
-		public UIListScrollablePanel(UIList list, LocalizedColorScaleText title = null)
-		{
-			this.title = title?.ProvideUI();
-			this.list = list;
-		}
+        public UIListScrollablePanel(UIList list, LocalizedColorScaleText title = null)
+        {
+            this.title = title?.ProvideUIText();
+            this.list = list;
+        }
 
-		public override void OnInitialize()
-		{
-			list ??= new();
-			list.Width = ListWidthWithoutScrollbar;
-			list.Height = new(0f, 1f);
-			list.SetPadding(ListOuterPadding);
-			list.ListPadding = ListPadding;
+        public override void OnInitialize()
+        {
+            list ??= new();
+            list.Width = ListWidthWithoutScrollbar;
+            list.Height = new(0f, 1f);
+            list.SetPadding(ListOuterPadding);
+            list.ListPadding = ListPadding;
 
-			if (title is not null)
-			{
-				title.Top = new(15, 0);
-				title.HAlign = TitleHAlign;
+            if (title is not null)
+            {
+                title.Top = new(15, 0);
+                title.HAlign = TitleHAlign;
 
-				Append(title);
-				title.Recalculate();
-				list.PaddingTop = title.GetDimensions().Height * 2.5f;
-				hasTitle = true;
-			}
+                Append(title);
+                title.Recalculate();
+                list.PaddingTop = title.GetDimensions().Height * 2.5f;
+                hasTitle = true;
+            }
 
-			Append(list);
+            Append(list);
 
-			CheckScrollbar();
-		}
+            CheckScrollbar();
+        }
 
-		public void UpdateOrder() => list.UpdateOrder();
-		public Action<List<UIElement>> ManualSortMethod
-		{
-			get => list.ManualSortMethod;
-			set => list.ManualSortMethod = value;
-		}
+        public void UpdateOrder() => list.UpdateOrder();
+        public Action<List<UIElement>> ManualSortMethod
+        {
+            get => list.ManualSortMethod;
+            set => list.ManualSortMethod = value;
+        }
 
-		public void SetTitle(string titleKey) => SetTitle(Language.GetText(titleKey));
-		public void SetTitle(LocalizedText title) => SetTitle(new LocalizedColorScaleText(title));
+        public void SetTitle(string titleKey) => SetTitle(Language.GetText(titleKey));
+        public void SetTitle(LocalizedText title) => SetTitle(new LocalizedColorScaleText(title));
 
-		public void SetTitle(LocalizedColorScaleText title)
-		{
-			RemoveChild(this.title);
-			this.title = title.ProvideUI();
-			Initialize();
-		}
+        public void SetTitle(LocalizedColorScaleText title)
+        {
+            if (this.title is not null)
+                RemoveChild(this.title);
 
-		public bool EntireListVisible()
-		{
-			list.Recalculate();
-			list.RecalculateChildren();
-			float listHeight = list.GetTotalHeight();
-			float panelHeight = list.GetInnerDimensions().Height;
+            this.title = title.ProvideUIText();
+            Initialize();
+        }
 
-			return listHeight < panelHeight;
-		}
+        public bool EntireListVisible()
+        {
+            list.Recalculate();
+            list.RecalculateChildren();
+            float listHeight = list.GetTotalHeight();
+            float panelHeight = list.GetDimensions().Height;
 
-		public void Add(UIElement element) => list.Add(element);
-		public void AddRange(List<UIElement> elements) => list.AddRange(elements);
-		public void RemoveFromList(UIElement element) => list.Remove(element);
-		public void ClearList() => list.Clear();
+            return listHeight < panelHeight || panelHeight == 0;
+        }
 
-		public IEnumerable<T> OfType<T>(bool recursive = true) where T : UIElement
-		{
-			if (!recursive)
-				return list.OfType<T>();
+        public void Add(UIElement element) => list.Add(element);
+        public void AddRange(List<UIElement> elements) => list.AddRange(elements);
+        public void RemoveFromList(UIElement element) => list.Remove(element);
+        public void ClearList() => list.Clear();
 
-			List<T> result = new();
-			foreach (UIElement element in list)
-			{
-				element.ExecuteRecursively(child =>
-				{
-					if (child is T typedChild)
-						result.Add(typedChild);
-				});
-			}
+        public IEnumerable<T> OfType<T>(bool recursive = true) where T : UIElement
+        {
+            if (!recursive)
+                return list.OfType<T>();
 
-			return result;
-		}
+            List<T> result = new();
+            foreach (UIElement element in list)
+            {
+                element.ExecuteRecursively(child =>
+                {
+                    if (child is T typedChild)
+                        result.Add(typedChild);
+                });
+            }
 
-		public UIHorizontalSeparator AddHorizontalSeparator(float percent = 0.98f, float hAlign = 0.5f)
-		{
-			var separator = new UIHorizontalSeparator()
-			{
-				Width = StyleDimension.FromPercent(percent),
-				HAlign = hAlign,
-				Color = UITheme.Current.SeparatorColor
-			};
+            return result;
+        }
 
-			Add(separator);
-			return separator;
-		}
+        public UIHorizontalSeparator AddHorizontalSeparator(float percent = 0.98f, float hAlign = 0.5f)
+        {
+            var separator = new UIHorizontalSeparator()
+            {
+                Width = StyleDimension.FromPercent(percent),
+                HAlign = hAlign,
+                Color = UITheme.Current.SeparatorColor
+            };
 
-		public UIHorizontalSeparator InsertHorizontalSeparator(int index)
-		{
-			var separator = new UIHorizontalSeparator()
-			{
-				Width = StyleDimension.FromPercent(0.98f),
-				Color = UITheme.Current.SeparatorColor
-			};
+            Add(separator);
+            return separator;
+        }
 
-			// Insert the separator at the specified index
-			list.ToList().Insert(index, separator);
+        public UIHorizontalSeparator InsertHorizontalSeparator(int index)
+        {
+            var separator = new UIHorizontalSeparator()
+            {
+                Width = StyleDimension.FromPercent(0.98f),
+                Color = UITheme.Current.SeparatorColor
+            };
 
-			return separator;
-		}
+            // Insert the separator at the specified index
+            list.ToList().Insert(index, separator);
 
-		public override void Update(GameTime gameTime)
-		{
-			base.Update(gameTime);
+            return separator;
+        }
 
-			CheckScrollbar();
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
 
-			if (hasTitle && title.HAlign != TitleHAlign)
-				title.HAlign = TitleHAlign;
-		}
+            CheckScrollbar();
 
-		private void CheckScrollbar()
-		{
-			if (!HideScrollbarIfNotScrollable || !EntireListVisible())
-			{
-				if (scrollbar is null)
-				{
-					scrollbar = new()
-					{
-						HAlign = ScrollbarHAlign,
-						VAlign = ScrollbarVAlign,
-						Height = ScrollbarHeight,
-						Width = ScrollbarWidth,
-						Top = ScrollbarTop,
-						Left = ScrollbarLeft
-					};
-					list.SetScrollbar(scrollbar);
-					Append(scrollbar);
+            if (hasTitle && title.HAlign != TitleHAlign)
+                title.HAlign = TitleHAlign;
+        }
 
-					list.Width = ListWidthWithScrollbar;
+        private void CheckScrollbar()
+        {
+            if (!HideScrollbarIfNotScrollable || !EntireListVisible())
+            {
+                if (scrollbar is null)
+                {
+                    scrollbar = new()
+                    {
+                        HAlign = ScrollbarHAlign,
+                        VAlign = ScrollbarVAlign,
+                        Height = ScrollbarHeight,
+                        Width = ScrollbarWidth,
+                        Top = ScrollbarTop,
+                        Left = ScrollbarLeft
+                    };
+                    list.SetScrollbar(scrollbar);
+                    Append(scrollbar);
 
-					if (hasTitle && ShiftTitleIfHasScrollbar)
-						title.Left = new(0, -0.05f);
-				}
-			}
-			else
-			{
-				if (Children.Contains(scrollbar))
-					RemoveChild(scrollbar);
+                    list.Width = ListWidthWithScrollbar;
 
-				list.Width = ListWidthWithoutScrollbar;
+                    if (hasTitle && ShiftTitleIfHasScrollbar)
+                        title.Left = new(0, -0.05f);
+                }
+            }
+            else
+            {
+                if (Children.Contains(scrollbar))
+                    RemoveChild(scrollbar);
 
-				scrollbar = null;
-			}
-		}
+                list.Width = ListWidthWithoutScrollbar;
 
-		public IEnumerator<UIElement> GetEnumerator()
-		{
-			return ((IEnumerable<UIElement>)list).GetEnumerator();
-		}
+                scrollbar = null;
+            }
+        }
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return ((IEnumerable)list).GetEnumerator();
-		}
-	}
+        public IEnumerator<UIElement> GetEnumerator()
+        {
+            return ((IEnumerable<UIElement>)list).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)list).GetEnumerator();
+        }
+    }
 }

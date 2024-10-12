@@ -6,83 +6,92 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Common.UI
 {
-	public class UIInputTextBox : UIPanel, IFocusable
-	{
-		private UIInputTextField textField;
+    public class UIInputTextBox : UIPanel, IFocusable
+    {
+        private UIInputTextField textField;
 
-		public string Text
-		{
-			get => textField.Text;
-			set => textField.Text = value;
-		}
+        public string Text
+        {
+            get => textField.Text;
+            set => textField.Text = value;
+        }
 
-		public Color TextColor
-		{
-			get => textField.TextColor;
-			set => textField.TextColor = value;
-		}
+        public Color TextColor
+        {
+            get => textField.TextColor;
+            set => textField.TextColor = value;
+        }
 
-		public float TextScale { get; set; } = 1f;
+        public bool ForceHideHintText
+        {
+            get => textField.ForceHideHintText;
+            set => textField.ForceHideHintText = value;
+        }
 
-		public int TextMaxLenght { get; set; } = 20;
+        public float TextScale { get; set; } = 1f;
 
-		public bool HasFocus { get; set; }
-		public string FocusContext { get; set; }
+        public int TextMaxLength { get; set; } = 20;
 
-		public Action OnFocusGain { get; set; } = () => { };
-		public Action OnFocusLost { get; set; } = () => { };
+        public bool HasFocus { get; set; }
+        public string FocusContext { get; set; }
 
-		public Action OnTextChange { get; set; } = () => { };
+        public Action OnFocusGain { get; set; } = () => { };
+        public Action OnFocusLost { get; set; } = () => { };
 
-		public Func<string, string> FormatText { get; set; } = (text) => text;
+        public Action OnTextChange { get; set; } = () => { };
 
-		public Color? HoverBorderColor { get; set; }
-		private Color normalBorderColor;
+        public Func<string, string> FormatText { get; set; } = (text) => text;
 
-		public UIInputTextBox(string defaultText)
-		{
-			textField = new(defaultText);
-		}
+        public Color? HoverBorderColor { get; set; }
+        public bool AllowSnippets { get; set; } = true;
 
-		public override void OnInitialize()
-		{
-			base.OnInitialize();
+        private Color normalBorderColor;
 
-			PaddingLeft = 8f;
-			PaddingRight = 4f;
+        public UIInputTextBox(string defaultText)
+        {
+            textField = new(defaultText);
+            textField.AllowSnippets = AllowSnippets;
+        }
 
-			Append(textField);
+        public override void OnInitialize()
+        {
+            base.OnInitialize();
 
-			textField.OnTextChange += (_, _) => { OnTextChange.Invoke(); };
+            PaddingLeft = 8f;
+            PaddingRight = 4f;
 
-			textField.FormatText = FormatText;
-			textField.TextMaxLenght = TextMaxLenght;
+            Append(textField);
 
-			OnLeftClick += (_, _) => { HasFocus = true; };
+            textField.OnTextChange += (_, _) => { OnTextChange.Invoke(); };
 
-			normalBorderColor = BorderColor;
-			HoverBorderColor ??= BorderColor;
-		}
+            textField.FormatText = FormatText;
+            textField.TextMaxLength = TextMaxLength;
 
-		public override void Update(GameTime gameTime)
-		{
-			base.Update(gameTime);
+            OnLeftClick += (_, _) => { HasFocus = true; };
 
-			if (HasFocus)
-			{
-				if (Main.keyState.IsKeyDown(Keys.Escape) && !Main.oldKeyState.IsKeyDown(Keys.Escape))
-					HasFocus = false;
-			}
+            normalBorderColor = BorderColor;
+            HoverBorderColor ??= BorderColor;
+        }
 
-			Main.blockInput = HasFocus;
-			textField.CurrentlyInputtingText = HasFocus;
-			textField.ForceHideHintText = HasFocus;
-			textField.TextScale = TextScale;
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
 
-			if (IsMouseHovering || HasFocus)
-				BorderColor = HoverBorderColor.Value;
-			else
-				BorderColor = normalBorderColor;
-		}
-	}
+            if (HasFocus)
+            {
+                if (Main.keyState.IsKeyDown(Keys.Escape) && !Main.oldKeyState.IsKeyDown(Keys.Escape))
+                    HasFocus = false;
+            }
+
+            Main.blockInput = HasFocus;
+            textField.CurrentlyInputtingText = HasFocus;
+            textField.ForceHideHintText = HasFocus;
+            textField.TextScale = TextScale;
+
+            if (IsMouseHovering || HasFocus)
+                BorderColor = HoverBorderColor.Value;
+            else
+                BorderColor = normalBorderColor;
+        }
+    }
 }

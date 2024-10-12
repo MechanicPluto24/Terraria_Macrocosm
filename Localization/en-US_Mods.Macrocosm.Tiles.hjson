@@ -1,4 +1,31 @@
-RocketLaunchPad.MapEntry: Launch Pad
+LuminiteChest: {
+	MapEntry0: Luminite Chest
+	MapEntry1: Luminite Chest (Locked)
+	MapEntry2: Heavenforge Chest
+	MapEntry3: Heavenforge Chest (Locked)
+	MapEntry4: Lunar Rust Chest
+	MapEntry5: Lunar Rust Chest (Locked)
+	MapEntry6: Astra Chest
+	MapEntry7: Astra Chest (Locked)
+	MapEntry8: Dark Celestial Chest
+	MapEntry9: Dark Celestial Chest (Locked)
+	MapEntry10: Mercury Chest
+	MapEntry11: Mercury Chest (Locked)
+	MapEntry12: Star Royale Chest
+	MapEntry13: Star Royale Chest (Locked)
+	MapEntry14: Cryocore Chest
+	MapEntry15: Cryocore Chest (Locked)
+	MapEntry16: Cosmic Ember Chest
+	MapEntry17: Cosmic Ember Chest (Locked)
+}
+
+IndustrialChest: {
+	MapEntryNormal: Industrial Storage Unit
+	MapEntryUnlocked: Industrial Electronic Storage Unit
+	MapEntryLocked: Industrial Electronic Storage Unit (Locked)
+}
+
+LaunchPadMarker.MapEntry: Launch Pad Marker
 IndustrialLoom.MapEntry: Industrial Loom
 AluminumOre.MapEntry: Aluminum Ore
 ArtemiteOre.MapEntry: Artemite Ore
@@ -7,10 +34,10 @@ DianiteOre.MapEntry: Dianite Ore
 LithiumOre.MapEntry: Lithium
 SeleniteOre.MapEntry: Selenite Ore
 OilShale.MapEntry: Oil Shale
+Coal.MapEntry: Coal
 ArtemiteBar.MapEntry: Artemite Bar
 ChandriumBar.MapEntry: Chandrium Bar
 DianiteBar.MapEntry: Dianite Bar
-LaunchPadMarker.MapEntry: Launch Pad Marker
 AluminumBar.MapEntry: Aluminum Bar
 SeleniteBar.MapEntry: Selenite Bar
 SteelBar.MapEntry: Steel Bar
@@ -21,19 +48,47 @@ SilicaCrimsand.MapEntry: Silica Crimsand
 SilicaEbonsand.MapEntry: Silica Ebonsand
 SilicaPearlsand.MapEntry: Silica Pearlsand
 SilicaSand.MapEntry: Silica Sand
-MoonBaseNeonTube.MapEntry: Neon Tube
-MoonBaseConsole.MapEntry: Console
-MoonBaseDeskLamp.MapEntry: DeskLamp
+IndustrialNeonTube.MapEntry: Neon Tube
+IndustrialDeskLamp.MapEntry: Desk Lamp
 LexanGlass.MapEntry: Lexan Glass
 XFLR6.MapEntry: XFLR-6
-
-MoonBaseChest: {
-	MapEntryNormal: Moon Base Storage Unit
-	MapEntryUnlocked: Moon Base Electronic Storage Unit
-	MapEntryLocked: Moon Base Electronic Storage Unit (Locked)
-}
-
 TeddyBear.MapEntry: Teddy Bear
 Motor.MapEntry: Motor
 PrintedCircuitBoard.MapEntry: Printed Circuit Board
-MoonBaseLocker.MapEntry: Moon Base Locker
+IndustrialLocker.MapEntry: Industrial Locker
+OxygenSystem.MapEntry: Oxygen System
+MercurianBanner.MapEntry: Mercurian Banner
+DeadworldMusicBox.MapEntry: Music Box (Deadworld)
+RequiemMusicBox.MapEntry: Music Box (Requiem)
+SpaceInvaderMusicBox.MapEntry: Music Box (Space Invader)
+StygiaMusicBox.MapEntry: Music Box (Stygia)
+EarthGlobe.MapEntry: Earth Globe
+PowerJunction.MapEntry: Power Junction
+Computer.MapEntry: Computer
+IndustrialCrate.MapEntry: Industrial Crate
+ConstructionLight.MapEntry: Construction Light
+OreExcavator.MapEntry: Ore Excavator
+Fabricator.MapEntry: Fabricator
+IndustrialGurney.MapEntry: Gurney
+CheeseBlock.MapEntry: Cheese Block
+CheeseChest.MapEntry: Cheese Chest
+IndustrialCeilingMonitor.MapEntry: Ceiling Monitor
+IndustrialDeskMonitor.MapEntry: Desk Monitor
+IndustrialWallMonitor.MapEntry: Wall Monitor
+Boombox.MapEntry: Boombox
+WindTurbineLarge.MapEntry: Wind Turbine
+WindTurbineSmall.MapEntry: Wind Turbine
+IndustrialControlPanel.MapEntry: Control Panel
+IndustrialControlStation.MapEntry: Control Station
+IndustrialDeskClock.MapEntry: Desk Clock
+BurnerGenerator.MapEntry: Burner Generator
+IndustrialServer.MapEntry: Server
+Medkit.MapEntry: Medkit
+IndustrialBulkheadClosed.MapEntry: Bulkhead
+IndustrialBulkheadOpen.MapEntry: Bulkhead
+IrradiatedAltar.MapEntry: Irradiated Altar
+AntiRadiationPills.MapEntry: Anti Radiation Pills
+KyaniteNest.MapEntry: Kyanite Nest
+Fridge.MapEntry: Fridge
+IVPole.MapEntry: IV Pole
+InvarBar.MapEntry: Invar Bar

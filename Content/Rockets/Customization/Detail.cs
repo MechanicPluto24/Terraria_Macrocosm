@@ -5,46 +5,41 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-	public readonly struct Detail
-	{
-		public string Name { get;  }
+    public readonly struct Detail
+    {
+        public string Name { get; }
         public string ModuleName { get; }
+
+        public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Details/" + ModuleName + "/" + Name;
+        public string IconTexturePath => GetType().Namespace.Replace('.', '/') + "/Details/Icons/" + Name;
+
+        private readonly Asset<Texture2D> texture;
+        private readonly Asset<Texture2D> iconTexture;
+
+        public Asset<Texture2D> Texture => texture;
+        public Asset<Texture2D> IconTexture => iconTexture;
 
 
         public Detail(string moduleName, string patternName)
         {
             Name = patternName;
             ModuleName = moduleName;
-        }
 
-        public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Details/" + ModuleName + "/" + Name;
-		public Texture2D Texture
-		{
-			get
-			{
-				if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> paintMask))
-					return paintMask.Value;
-				else
-					return Macrocosm.EmptyTex;
-			}
-		}
+            if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> detailTexture))
+                texture = detailTexture;
+            else
+                texture = Macrocosm.EmptyTex;
 
-        public string IconTexturePath => GetType().Namespace.Replace('.', '/') + "/Details/Icons/" + Name;
-        public Texture2D IconTexture
-        {
-            get
-            {
-                if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> paintMask))
-                    return paintMask.Value;
-                else
-                    return Macrocosm.EmptyTex;
-            }
+            if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> detailIconTexture))
+                iconTexture = detailIconTexture;
+            else
+                iconTexture = Macrocosm.EmptyTex;
         }
 
         public override bool Equals(object obj)
         {
             return obj is Detail detail &&
-                   Name == detail.Name; 
+                   Name == detail.Name;
         }
 
         public static bool operator ==(Detail left, Detail right)

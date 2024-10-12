@@ -17,7 +17,7 @@ float4 Pixelate(float2 texCoord : TEXCOORD) : COLOR
     return color;
 }
 
-technique Technique1
+technique
 {
     pass Pixelate
     {

@@ -13,247 +13,287 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	// Parent projectile class below
-	public class DianiteForkProjectile : ModProjectile
-	{
-		public override void SetStaticDefaults()
-		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 15;
-			ProjectileID.Sets.TrailingMode[Type] = 3;
-		}
+    // Parent projectile class below
+    public class DianiteForkProjectile : ModProjectile
+    {
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
+        }
 
-		public override void SetDefaults()
-		{
-			Projectile.width = 8;
-			Projectile.height = 8;
-			Projectile.friendly = true;
-			Projectile.DamageType = DamageClass.Magic;
-			Projectile.tileCollide = true;
-			Projectile.ignoreWater = true;
-			Projectile.penetrate = 1;
-			Projectile.timeLeft = 45;
+        private const int spawnTimeLeft = 45; //90
+        private DianiteForkTrail trail;
 
-			Projectile.SetTrail<DianiteForkTrail>();
-		}
+        public override void SetDefaults()
+        {
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.penetrate = 1;
+            Projectile.timeLeft = 90;
+            trail = new();
+        }
 
-		public enum ActionState { Orbit, Float, Home }
-		public ActionState AI_State
-		{
-			get => (ActionState)Projectile.ai[0];
-			set => Projectile.ai[0] = (float)value;
-		}
+        public enum ActionState { Orbit, Float, Home }
+        public ActionState AI_State
+        {
+            get => (ActionState)Projectile.ai[0];
+            set => Projectile.ai[0] = (float)value;
+        }
 
-		public ref float OrbitAngle => ref Projectile.ai[1];
+        public ref float OrbitAngle => ref Projectile.ai[1];
 
-		public int AI_Timer
-		{
-			get => (int)Projectile.ai[2];
-			set => Projectile.ai[2] = value;
-		}
+        public int AI_Timer
+        {
+            get => (int)Projectile.ai[2];
+            set => Projectile.ai[2] = value;
+        }
 
-		// The orbit center's position
-		private Vector2 targetPosition;
+        public float TimeLeftProgress => (float)Projectile.timeLeft / 90;
 
-		// The orbit center's movement vector (i.e. its velocity)
-		private Vector2 movementVector;
+        private int spawnDamage;
 
-		// The target angle when breaking apart the orbit
-		private float targetAngle;
+        // The orbit center's position
+        private Vector2 targetPosition;
 
-		// The free float duration, randomized and netsynced
-		private int floatDuration;
+        // The orbit center's movement vector (i.e. its velocity)
+        private Vector2 movementVector;
 
-		// The speed at the start of the homing
-		private float originalSpeed;
+        // The target angle when breaking apart the orbit
+        private float targetAngle;
 
-		// The turn speed of the homing, randomized and netsynced
-		private float turnSpeed;
+        // The free float duration, randomized and netsynced
+        private int floatDuration;
 
-		// The targeted NPC whoAmI
-		private int targetNPC;
+        // The speed at the start of the homing
+        private float originalSpeed;
 
-		// The targeted NPC 
-		private NPC TargetNPC => Main.npc[targetNPC];
+        // The turn speed of the homing, randomized and netsynced
+        private float turnSpeed;
 
-		public override void SendExtraAI(BinaryWriter writer)
-		{
-			writer.Write(turnSpeed);
-			writer.Write((byte)floatDuration);
-		}
+        // The targeted NPC whoAmI
+        private int targetNPC;
 
-		public override void ReceiveExtraAI(BinaryReader reader)
-		{
-			turnSpeed = reader.ReadSingle();
-			floatDuration = reader.ReadByte();
-		}
+        // The targeted NPC 
+        private NPC TargetNPC => Main.npc[targetNPC];
 
-		private bool spawned = false;
-		public override void AI()
-		{
-			if (!spawned)
-			{
-				targetAngle = (OrbitAngle * MathHelper.Pi / 180) - MathHelper.Pi / 2;
-				spawned = true;
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(turnSpeed);
+            writer.Write((byte)floatDuration);
+        }
 
-				targetPosition = Projectile.Center;
-				movementVector = Projectile.velocity;
-			}
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            turnSpeed = reader.ReadSingle();
+            floatDuration = reader.ReadByte();
+        }
 
-			AI_Timer++;
+        private bool spawned = false;
+        public override void AI()
+        {
+            if (!spawned)
+            {
+                targetAngle = MathHelper.Pi / 8 - MathHelper.Pi / 4 * (OrbitAngle / 180);
+                spawned = true;
 
-			// Keep alive unless metting specific conditions
-			Projectile.timeLeft++;
+                targetPosition = Projectile.Center;
+                movementVector = Projectile.velocity;
 
-			switch (AI_State)
-			{
-				case ActionState.Orbit:
+                spawnDamage = Projectile.damage;
+            }
 
-					Vector2 vector = (targetPosition - Projectile.Center).SafeNormalize(Vector2.UnitY);
-					Projectile.rotation = vector.ToRotation() - 1.57f;
-					OrbitAngle += 12 * Math.Sign(movementVector.X);
-					float orbitDistance = 10;
+            AI_Timer++;
 
-					float vX = orbitDistance * MathF.Cos(OrbitAngle / 180 * MathHelper.Pi);
-					float vY = orbitDistance * MathF.Sin(OrbitAngle / 180 * MathHelper.Pi);
+            // Keep alive unless metting specific conditions
+            Projectile.timeLeft++;
 
-					Projectile.position = targetPosition - Projectile.Size / 2f;
+            Projectile.Opacity = TimeLeftProgress;
 
-					Projectile.velocity.X = vX;
-					Projectile.velocity.Y = vY;
+            Projectile.damage = (int)(spawnDamage * TimeLeftProgress);
+            if (TimeLeftProgress < 0.2f)
+                Projectile.damage = 0;
 
-					targetPosition += movementVector;
+            switch (AI_State)
+            {
+                case ActionState.Orbit:
 
-					if (AI_Timer >= 60)
-					{
-						AI_State = ActionState.Float;
-						AI_Timer = 0;
+                    Vector2 vector = (targetPosition - Projectile.Center).SafeNormalize(Vector2.UnitY);
+                    Projectile.rotation = vector.ToRotation() - 1.57f;
+                    OrbitAngle += 12 * Math.Sign(movementVector.X);
+                    float orbitDistance = 10;
 
-						Projectile.velocity = movementVector.RotatedBy(targetAngle) * 0.8f;
+                    float vX = orbitDistance * MathF.Cos(OrbitAngle / 180 * MathHelper.Pi);
+                    float vY = orbitDistance * MathF.Sin(OrbitAngle / 180 * MathHelper.Pi);
 
-						if (Projectile.owner == Main.myPlayer)
-						{
-							floatDuration = (ushort)Main.rand.Next(1, 12);
-							Projectile.netUpdate = true;
-						}
-					}
+                    Projectile.position = targetPosition - Projectile.Size / 2f;
 
-					break;
+                    Projectile.velocity.X = vX;
+                    Projectile.velocity.Y = vY;
 
-				case ActionState.Float:
+                    targetPosition += movementVector;
 
-					if (AI_Timer >= floatDuration)
-					{
-						AI_State = ActionState.Home;
-						AI_Timer = 0;
+                    if (AI_Timer >= 60)
+                    {
+                        AI_State = ActionState.Float;
+                        AI_Timer = 0;
 
-						Projectile.penetrate = 1;
-						originalSpeed = Projectile.velocity.Length();
+                        Projectile.velocity = movementVector.RotatedBy(targetAngle) * 0.8f;
 
-						if (Projectile.owner == Main.myPlayer)
-						{
-							turnSpeed = Main.rand.NextFloat(0.01f, 0.1f);
-							Projectile.netUpdate = true;
-						}
+                        for (int i = 0; i < 35; i++)
+                        {
+                            Vector2 velocity = Main.rand.NextVector2Circular(16, 1f).RotatedBy(Projectile.velocity.ToRotation());
+                            Dust dust = Dust.NewDustPerfect(targetPosition, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.4f));
+                            dust.noGravity = true;
+                        }
 
-						for (int i = 0; i < 15; i++)
-						{
-							Vector2 velocity = Main.rand.NextVector2Circular(16, 2f).RotatedBy(movementVector.ToRotation());
-							Dust dust = Dust.NewDustPerfect(targetPosition, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.4f));
-							dust.noGravity = true;
-						}
-					}
+                        if (Projectile.owner == Main.myPlayer)
+                        {
+                            floatDuration = (ushort)Main.rand.Next(20, 40);
+                            Projectile.netUpdate = true;
+                        }
+                    }
 
-					break;
+                    break;
 
-				case ActionState.Home:
+                case ActionState.Float:
 
-					float homingDistance = 800f;
-					float closestDistance = homingDistance;
+                    if (AI_Timer >= floatDuration)
+                    {
+                        AI_State = ActionState.Home;
+                        AI_Timer = 0;
 
-					for (int i = 0; i < Main.maxNPCs; i++)
-					{
-						NPC npc = Main.npc[i];
-						if (npc.active && !npc.friendly && npc.lifeMax > 5 && !npc.dontTakeDamage)
-						{
-							float distance = Vector2.Distance(Projectile.Center, npc.Center);
-							if (distance < closestDistance)
-							{
-								closestDistance = distance;
-								targetNPC = npc.whoAmI;
-							}
-						}
-					}
+                        Projectile.penetrate = 1;
+                        originalSpeed = Projectile.velocity.Length();
 
-					// Adjust the projectile's velocity towards the target over time
-					if (TargetNPC is not null && Vector2.Distance(Projectile.Center, TargetNPC.Center) < homingDistance && TargetNPC.active && !TargetNPC.friendly && TargetNPC.lifeMax > 5 && !TargetNPC.dontTakeDamage)
-					{
-						Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
-						Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, turnSpeed);
-					}
-					else
-					{
-						Projectile.timeLeft--;
-					}
+                        if (Projectile.owner == Main.myPlayer)
+                        {
+                            turnSpeed = Main.rand.NextFloat(0.01f, 0.07f);
+                            Projectile.netUpdate = true;
+                        }
+                    }
 
-					break;
-			}
+                    break;
 
-			Lighting.AddLight(Projectile.Center, new Color(255, 146, 0).ToVector3());
+                case ActionState.Home:
 
-			if (AI_State is ActionState.Orbit)
-			{
-				if (AI_Timer % 3 == 0)
-				{
-					Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<DianiteBrightDust>(), -Projectile.velocity.X * 0.4f, -Projectile.velocity.Y * 0.4f);
-					dust.noGravity = true;
-				}
-			}
-			else
-			{
-				if (AI_Timer % 2 == 0)
-				{
-					Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<DianiteBrightDust>(), -Projectile.velocity.X * 0.4f, -Projectile.velocity.Y * 0.4f);
-					dust.noGravity = true;
-				}
-			}
-		}
+                    float homingDistance = 500f;
+                    float closestDistance = homingDistance;
+
+                    for (int i = 0; i < Main.maxNPCs; i++)
+                    {
+                        NPC npc = Main.npc[i];
+                        if (npc.active && !npc.friendly && npc.lifeMax > 5 && !npc.dontTakeDamage && npc.type != NPCID.TargetDummy)
+                        {
+                            float distance = Vector2.Distance(Projectile.Center, npc.Center);
+                            if (distance < closestDistance)
+                            {
+                                closestDistance = distance;
+                                targetNPC = npc.whoAmI;
+                            }
+                        }
+                    }
+
+                    // Adjust the projectile's velocity towards the target over time
+                    if (TargetNPC is not null && Vector2.Distance(Projectile.Center, TargetNPC.Center) < homingDistance && TargetNPC.active && !TargetNPC.friendly && TargetNPC.lifeMax > 5 && !TargetNPC.dontTakeDamage)
+                    {
+                        Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
+                        Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, turnSpeed);
+                        Projectile.timeLeft--;
+                    }
+                    else
+                    {
+                        Projectile.timeLeft -= 2;
+                    }
+
+                    break;
+            }
+
+            Lighting.AddLight(Projectile.Center, new Color(255, 146, 0).ToVector3() * TimeLeftProgress);
+
+            if (AI_State is ActionState.Orbit)
+            {
+                if (AI_Timer % 3 == 0)
+                {
+                    Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, ModContent.DustType<DianiteBrightDust>(), -Projectile.velocity.X * 0.4f, -Projectile.velocity.Y * 0.4f);
+                    dust.noGravity = true;
+                }
+            }
+            else
+            {
+                if (AI_Timer % (2 + (int)(3 * (1f - TimeLeftProgress))) == 0)
+                {
+                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<DianiteBrightDust>(), -Projectile.velocity.X * 0.4f, -Projectile.velocity.Y * 0.4f);
+                    dust.noGravity = true;
+                }
+            }
+        }
 
 
-		public override void OnKill(int timeLeft)
-		{
-			for (int i = 0; i < 20; i++)
-			{
-				Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
-				Dust dust = Dust.NewDustPerfect(Projectile.position, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.6f));
-				dust.noGravity = true;
-			}
-		}
+        public override void OnKill(int timeLeft)
+        {
+            int count = (int)(20f * Projectile.Opacity);
+            for (int i = 0; i < count; i++)
+            {
+                Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
+                Dust dust = Dust.NewDustPerfect(Projectile.position, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.6f));
+                dust.noGravity = true;
+            }
+        }
 
-		private SpriteBatchState state;
-		public override bool PreDraw(ref Color lightColor)
-		{
-			Texture2D tex = TextureAssets.Projectile[Type].Value;
-			Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureAssetsPath + "Circle6").Value;
-			Vector2 origin = Projectile.Size / 2f;
-			;
-			state.SaveState(Main.spriteBatch);
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.Additive, state);
+        private SpriteBatchState state;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D tex = TextureAssets.Projectile[Type].Value;
+            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
+            Vector2 origin = Projectile.Size / 2f;
 
-			Projectile.GetTrail().Draw(Projectile.Size / 2f);
-			Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(215, 101, 0), 0f, glow.Size() / 2, 0.05f * Projectile.scale, SpriteEffects.None, 0f);
+            state.SaveState(Main.spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+            trail.Opacity = TimeLeftProgress;
+            trail?.Draw(Projectile, Projectile.Size / 2f);
 
-			Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition,
-				null, Color.White, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            Color glowColor = new Color(248, 137, 0).WithOpacity(Projectile.Opacity);
+            int glowTrailCount = (int)(ProjectileID.Sets.TrailCacheLength[Type] * 0.5f * TimeLeftProgress);
+            for (int i = 0; i < glowTrailCount - 1; i++)
+            {
+                float trailMultCurrent = 1f - ((float)i / glowTrailCount);
+                float trailMultNext = 1f - ((float)(i + 1) / glowTrailCount);
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+                Vector2 currentPosition = Projectile.oldPos[i] + Projectile.Size / 2f - Main.screenPosition;
+                Vector2 nextPosition = Projectile.oldPos[i + 1] + Projectile.Size / 2f - Main.screenPosition;
 
-			return false;
-		}
-	}
+                Vector2 firstLerpPosition = Vector2.Lerp(currentPosition, nextPosition, 1f / 3f);
+                Vector2 secondLerpPosition = Vector2.Lerp(currentPosition, nextPosition, 2f / 3f);
+
+                Main.EntitySpriteDraw(glow, currentPosition, null, glowColor.WithOpacity(0.33f), Projectile.rotation, glow.Size() / 2, 0.035f * Projectile.scale * trailMultCurrent, SpriteEffects.None, 0f);
+
+                float avgTrailMultFirst = (trailMultCurrent * 2 + trailMultNext) / 3;
+                float avgTrailMultSecond = (trailMultCurrent + trailMultNext * 2) / 3;
+
+                Main.EntitySpriteDraw(glow, firstLerpPosition, null, glowColor.WithOpacity(0.33f), Projectile.rotation, glow.Size() / 2, 0.035f * Projectile.scale * avgTrailMultFirst, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(glow, secondLerpPosition, null, glowColor.WithOpacity(0.33f), Projectile.rotation, glow.Size() / 2, 0.035f * Projectile.scale * avgTrailMultSecond, SpriteEffects.None, 0f);
+            }
+
+            Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, glowColor, Projectile.rotation, glow.Size() / 2, 0.042f * Projectile.scale, SpriteEffects.None, 0f);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+            Main.EntitySpriteDraw(tex, Projectile.Center - Main.screenPosition,
+                null, Color.White * TimeLeftProgress, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+            return false;
+        }
+    }
 }
 

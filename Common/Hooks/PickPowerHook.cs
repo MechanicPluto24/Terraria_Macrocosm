@@ -1,53 +1,49 @@
 ﻿using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
-	public class PickPowerHook : ILoadable
-	{
+    // TML: this could be reworked into a tML GlobalTile "ModifyPickaxeDamage" hook
+    public class PickPowerHook : ILoadable
+    {
+        private static Dictionary<ushort, (int minPick, int mineResist, bool onlyInMacrocosm)> modifiedPickPowerByType;
 
-		private static Dictionary<int, (int minPick, int mineResist, bool onlyInMacrocosm)> modifiedPickPowerByType;
+        public void Load(Mod mod)
+        {
+            On_Player.GetPickaxeDamage += On_Player_GetPickaxeDamage;
+            modifiedPickPowerByType = new();
+        }
 
-		public void Load(Mod mod)
-		{
-			On_Player.GetPickaxeDamage += On_Player_GetPickaxeDamage;
+        public void Unload()
+        {
+            On_Player.GetPickaxeDamage -= On_Player_GetPickaxeDamage;
+            modifiedPickPowerByType = null;
+        }
 
-			modifiedPickPowerByType = new()
-			{
-				{ TileID.LunarOre, (minPick: 210, mineResist: 5, onlyInMacrocosm: false) }
-			};
-		}
+        public static void RegisterPickPowerModification(ushort tileType, int minPick, int mineResist, bool onlyInMacrocosm)
+        {
+            modifiedPickPowerByType.Add(tileType, (minPick, mineResist, onlyInMacrocosm));
+        }
 
-		public void Unload()
-		{
-			On_Player.GetPickaxeDamage -= On_Player_GetPickaxeDamage;
+        private int On_Player_GetPickaxeDamage(On_Player.orig_GetPickaxeDamage orig, Player self, int x, int y, int pickPower, int hitBufferIndex, Tile tileTarget)
+        {
+            int result = orig(self, x, y, pickPower, hitBufferIndex, tileTarget);
 
-			modifiedPickPowerByType = null;
-		}
+            if (modifiedPickPowerByType.TryGetValue(tileTarget.TileType, out (int minPick, int mineResist, bool onlyInMacrocosm) value))
+            {
+                if (value.onlyInMacrocosm && !SubworldSystem.AnyActive<Macrocosm>())
+                    return result;
 
-		// TML: this could be reworked into a tML GlobalTile "ModifyPickaxeDamage" hook
-		private int On_Player_GetPickaxeDamage(On_Player.orig_GetPickaxeDamage orig, Player self, int x, int y, int pickPower, int hitBufferIndex, Tile tileTarget)
-		{
-			int result = orig(self, x, y, pickPower, hitBufferIndex, tileTarget);
+                result = pickPower / value.mineResist;
 
-			if (modifiedPickPowerByType.ContainsKey(tileTarget.TileType))
-			{
-				var (minPick, mineResist, onlyInMacrocosm) = modifiedPickPowerByType[tileTarget.TileType];
+                if (pickPower < value.minPick)
+                    result = 0;
+            }
 
-				if (onlyInMacrocosm && !SubworldSystem.AnyActive<Macrocosm>())
-					return result;
+            return result;
+        }
 
-				result = pickPower / mineResist;
-
-				if (pickPower < minPick)
-					result = 0;
-			}
-
-			return result;
-		}
-
-	}
+    }
 }

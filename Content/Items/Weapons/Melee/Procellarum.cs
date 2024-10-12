@@ -1,6 +1,4 @@
-﻿using Macrocosm.Common.Bases;
-using Macrocosm.Content.Items.Materials;
-using Macrocosm.Content.Projectiles.Friendly.Melee;
+﻿using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -13,7 +11,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class Procellarum : ModItem
     {
-
         public override void SetStaticDefaults()
         {
             CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;

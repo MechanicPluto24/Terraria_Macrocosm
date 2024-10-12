@@ -1,8 +1,7 @@
-using Macrocosm.Content.Items.Materials;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -10,50 +9,54 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Magic
 {
-	public class DianiteTome : ModItem
-	{
-		public override void SetStaticDefaults()
-		{
+    public class DianiteTome : ModItem
+    {
+        public override void SetStaticDefaults()
+        {
 
-		}
+        }
 
-		public override void SetDefaults()
-		{
-			Item.damage = 125;
-			Item.DamageType = DamageClass.Magic;
-			Item.mana = 30;
-			Item.width = 80;
-			Item.height = 80;
-			Item.useTime = 12;
-			Item.useAnimation = 10;
-			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.noMelee = true;
-			Item.knockBack = 5;
-			Item.value = 10000;
-			Item.rare = ModContent.RarityType<MoonRarityT1>();
-			Item.UseSound = SoundID.Item20;
-			Item.autoReuse = true;
-			Item.shoot = ModContent.ProjectileType<DianiteMeteorSmall>();
-			Item.shootSpeed = 16f;
-			Item.tileBoost = 50;
-		}
+        public override void SetDefaults()
+        {
+            Item.damage = 155;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 25;
+            Item.width = 80;
+            Item.height = 80;
+            Item.useTime = 12;
+            Item.useAnimation = 10;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 5;
+            Item.channel = true;
+            Item.value = 10000;
+            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.UseSound = SoundID.Item78;
+            Item.shoot = ModContent.ProjectileType<DianitePortal>();
+        }
 
-		public override void AddRecipes()
-		{
-			Recipe recipe = Recipe.Create(Type);
-			recipe.AddIngredient<DianiteBar>(12);
-			recipe.AddTile(TileID.WorkBenches);
-			recipe.Register();
-		}
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<DianiteBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
+        }
 
-		public override void HoldItem(Player player)
-		{
-			Item.scale = 0.75f;
-		}
+        public override void HoldItem(Player player)
+        {
+            Item.scale = 0.75f;
+        }
 
-		public override Vector2? HoldoutOffset() => new Vector2(10, 8);
+        public override Vector2? HoldoutOffset() => new Vector2(10, 8);
 
-		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
+        {
+            Projectile.NewProjectile(source, Main.MouseWorld, velocity, type, damage, knockBack, player.whoAmI);
+            return false;
+        }
+
+        /*public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
 			int numProj = 2 + Main.rand.Next(1);  //This defines how many projectiles to shoot
 
@@ -84,6 +87,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 				Projectile.NewProjectile(source, playerOffset.X, playerOffset.Y, SpeedX, SpeedY, projType, damage, knockBack, Main.myPlayer, Main.MouseWorld.Y);
 			}
 			return false;
-		}
-	}
+		}*/
+    }
 }

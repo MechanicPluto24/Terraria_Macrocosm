@@ -2,12 +2,30 @@ Mods: {
 	Macrocosm: {
 		Common: {
 			Rocket: Rocket
+			LaunchPad: Launchpad
 			DevItem: Developer Item
+			Poster: Poster
+		}
+
+		Messages: {
+			MarkerTooClose: The launch pad markers are too close to each other.
+			MarkerSolidBlock: There is a solid block, can't place launch pad here.
+			MarkerFoundGap: The area is not flat, can't place launchpad here.
+			MarkerNoPair: Found no other valid launch pad marker in the vicinity.
+		}
+
+		Liquids: {
+			Oil: Oil
+			RocketFuel: Rocket Fuel
 		}
 
 		GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
 	}
+
+	SubworldLibrary.Return: Save & Exit
 }
+
+ItemName.Coal: Christmas Coal
 
 Bestiary_FlavorText: {
 	npc_MoonLordCore: The Vortex Titan, and ruler of the Moon. His strength and abilities are matched only by his obsession with conquering Earth.

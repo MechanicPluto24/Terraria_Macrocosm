@@ -1,15 +1,11 @@
-﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Particles;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
+using static tModPorter.ProgressUpdate;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
@@ -74,28 +70,29 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 Projectile.frameCounter = 0;
                 if (++Projectile.frame >= 5)
-                    Projectile.frame = 0; 
+                    Projectile.frame = 0;
             }
-            return;        
+            return;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            float count = 18 * (1f - Projectile.alpha / 255f); 
+
+            float count = 28 * (1f - Projectile.alpha / 255f);
             for (int n = 0; n < count; n++)
             {
-                float factor = (1f - Projectile.alpha / 255f);
-                Color color = Color.White * (0.7f - n / count) * factor;
+                float opacity = (1f - Projectile.alpha / 255f);
+                float progress = n / count;
+                Color color = Color.White * (0.7f - progress) * opacity;
                 Texture2D texture = TextureAssets.Projectile[Type].Value;
                 int frameY = (Projectile.frame + n) % 5;
                 Rectangle frame = texture.Frame(verticalFrames: Main.projFrames[Type], frameY: frameY);
-                Vector2 trailPosition = Projectile.position + frame.Size()/2f - Projectile.velocity.SafeNormalize(default) * n * 5f;
-                Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, frame, color, Projectile.rotation, frame.Size()/2f, Projectile.scale, SpriteEffects.None, 0);
+                Vector2 trailPosition = Projectile.position - Projectile.velocity.SafeNormalize(default) * n * 6f;
+                Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, frame, color, Projectile.rotation, frame.Size() / 2f, Projectile.scale * 1f * (1f - progress), SpriteEffects.None, 0);
+                Utility.DrawStar(trailPosition + new Vector2(0, -6).RotatedBy(Projectile.rotation) - Main.screenPosition, 1, new Color(31, 255, 106, 0) * opacity * 0.3f, 0.72f * (1f - progress), Projectile.rotation);
             }
-
             return false;
         }
-
         public override Color? GetAlpha(Color lightColor) => Color.White.WithOpacity(0.5f) * (1f - Projectile.alpha / 255f);
 
         public override void OnKill(int timeLeft)

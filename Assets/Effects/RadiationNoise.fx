@@ -28,14 +28,15 @@ float RandomNoise(float2 coords, float seed)
 
 float4 RadiationNoise(float2 coords : TEXCOORD0) : COLOR0
 {
+    float blockCount = 2.5; 
+    float2 blockSize = uScreenResolution / blockCount;
+    float2 blockCoords = floor(coords * blockSize) / blockSize;
     float4 color = tex2D(uImage0, coords);
-    
-    color.rgb -= uIntensity * RandomNoise(coords, sin(uTime));
-       
+    color.rgb -= uIntensity * RandomNoise(blockCoords, sin(uTime));
     return color;
 }
 
-technique Technique1
+technique
 {
     pass RadiationNoise
     {

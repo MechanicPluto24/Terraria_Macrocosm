@@ -5,7 +5,6 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -13,114 +12,128 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	public class DianiteMeteor : ModProjectile
-	{
-		public override void SetStaticDefaults()
-		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 18;
-			ProjectileID.Sets.TrailingMode[Type] = 3;
-		}
+    public class DianiteMeteor : ModProjectile
+    {
+        private DianiteMeteorTrail trail;
 
-		public override void SetDefaults()
-		{
-			Projectile.width = 26;
-			Projectile.height = 26;
-			Projectile.aiStyle = 56;
-			Projectile.friendly = true;
-			Projectile.DamageType = DamageClass.Magic;
-			Projectile.ignoreWater = true;
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 18;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
+        }
 
-			Projectile.SetTrail<DianiteMeteorTrail>();
-		}
+        public override void SetDefaults()
+        {
+            Projectile.width = 26;
+            Projectile.height = 26;
+            Projectile.aiStyle = 56;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.ignoreWater = true;
+            Projectile.alpha = 255;
+            trail = new(trailStartWidth: Projectile.width);
+        }
 
-		public ref float InitialTargetPositionY => ref Projectile.ai[0];
+        public ref float InitialTargetPositionY => ref Projectile.ai[0];
 
+        protected int trailOffset = 6;
+        bool spawned = false;
+        bool rotationClockwise = false;
 
-		bool spawned = false;
-		bool rotationClockwise = false;
+        public override void AI()
+        {
+            if (!spawned)
+            {
+                rotationClockwise = Main.rand.NextBool();
+                spawned = true;
+                Projectile.netUpdate = true;
+            }
 
-		public override void AI()
-		{
-			if (!spawned)
-			{
-				rotationClockwise = Main.rand.NextBool();
-				spawned = true;
+            Projectile.velocity.Y += 0.2f;
 
-				// sync ai array on spawn
-				Projectile.netUpdate = true;
-			}
-
-			if (Main.rand.NextBool())
-			{
-				Vector2 velocity = -Projectile.velocity.RotatedByRandom(MathHelper.Pi / 2f) * 0.1f;
-				Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), 1, DustID.Flare, velocity.X, velocity.Y, Scale: 1f);
-				dust.noGravity = true;
-			}
-
-			if (rotationClockwise)
-				Projectile.rotation += 0.2f;
-			else
-				Projectile.rotation -= 0.2f;
-		}
-
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
-		{
-			if (InitialTargetPositionY > Projectile.position.Y)
-				return false;
-
-			return true;
-		}
-
-		private SpriteBatchState state;
-		public override bool PreDraw(ref Color lightColor)
-		{
-			float count = Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y) * 10f;
-
-			if (count > 50f)
-				count = 50f;
-
-			state.SaveState(Main.spriteBatch);
-
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.Additive, state);
-
-			Projectile.GetTrail().Draw(TextureAssets.Projectile[Type].Size() / 2f);
-			for (int n = 2; n < count; n++)
-			{
-				Vector2 trailPosition = Projectile.Center - Projectile.velocity * n * 0.15f;
-				Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.OrangeRed * (0.75f - (float)n / count), Projectile.rotation + ((float)n / count), TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale * (1f - (float)n / count), SpriteEffects.None, 0f);
-			}
+            if (rotationClockwise)
+                Projectile.rotation += 0.1f;
+            else
+                Projectile.rotation -= 0.1f;
 
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
+            if (Projectile.alpha > 0)
+                Projectile.alpha -= 15;
 
-			return true;
-		}
+            Vector2 velocity = -Projectile.velocity.RotatedByRandom(MathHelper.Pi / 2f) * 0.1f;
+            Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), (int)(Projectile.height), DustID.Flare, velocity.X, velocity.Y, Scale: 1f);
+            dust.noGravity = true;
 
-		public override void OnKill(int timeLeft)
-		{
-			for (int i = 0; i < 25; i++)
-			{
-				Vector2 velocity = Main.rand.NextVector2Circular(25f, 25f);
-				Dust dust = Dust.NewDustDirect(Projectile.position + Projectile.oldVelocity, (int)(Projectile.width), Projectile.height, DustID.Flare, velocity.X, velocity.Y, Scale: 2.4f);
-				dust.noGravity = true;
-			}
+        }
 
-			//var smoke = Particle.CreateParticle<Smoke>(Projectile.Center + Projectile.oldVelocity, Vector2.Zero, scale: 0.6f); 
-			//smoke.Velocity *= 0.2f;
-			//smoke.Velocity.X += Main.rand.Next(-10, 11) * 0.15f;
-			//smoke.Velocity.Y += Main.rand.Next(-10, 11) * 0.15f;
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
+        {
+            if (InitialTargetPositionY > Projectile.position.Y)
+                return false;
 
-			var explosion = Particle.CreateParticle<TintableExplosion>(p =>
-			{
-				p.Position = Projectile.Center + Projectile.oldVelocity + Main.rand.NextVector2Circular(10f, 10f);
-				p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
-				p.Scale = 0.9f;
-				p.NumberOfInnerReplicas = 6;
-				p.ReplicaScalingFactor = 0.3f;
-			});
+            return true;
+        }
 
-		}
-	}
+        private SpriteBatchState state;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            state.SaveState(Main.spriteBatch);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            trail?.Draw(Projectile, TextureAssets.Projectile[Type].Size() / 2f);
+            float count = 25f * (float)(1f - Projectile.alpha / 255f);
+            for (int n = 2; n < count; n++)
+            {
+                Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * trailOffset;
+                Main.EntitySpriteDraw(texture, trailPosition - Main.screenPosition, null, Color.OrangeRed * (1f - (float)n / count), 0f, texture.Size() / 2f, Projectile.scale * (0.5f + 0.5f * (1f - (float)n / count)), SpriteEffects.None, 0f);
+            }
+
+            /*
+            Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorGradientSquare", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
+            Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
+
+            effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));
+            effect.Parameters["uImageSize0"].SetValue(TextureAssets.Projectile[Type].Size());
+
+            effect.Parameters["uColorIntensity"].SetValue(new Vector4(0.4f, 0f, 0f, 1f));
+            effect.Parameters["uOffset"].SetValue(new Vector2(0,0.15f).RotatedBy(Projectile.velocity.ToRotation()));
+            effect.Parameters["uSize"].SetValue(0.2f);
+			*/
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.OrangeRed, 1f - Projectile.alpha / 255f)).WithOpacity(0.75f), Projectile.rotation, texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+
+            return false;
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 25; i++)
+            {
+                Vector2 velocity = Main.rand.NextVector2Circular(25f, 25f);
+                Dust dust = Dust.NewDustDirect(Projectile.position + Projectile.oldVelocity, (int)(Projectile.width), Projectile.height, DustID.Flare, velocity.X, velocity.Y, Scale: 2.4f);
+                dust.noGravity = true;
+            }
+
+            //var smoke = Particle.CreateParticle<Smoke>(Projectile.Center + Projectile.oldVelocity, Vector2.Zero, scale: 0.6f); 
+            //smoke.Velocity *= 0.2f;
+            //smoke.Velocity.X += Main.rand.Next(-10, 11) * 0.15f;
+            //smoke.Velocity.Y += Main.rand.Next(-10, 11) * 0.15f;
+
+            var explosion = Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity + Main.rand.NextVector2Circular(10f, 10f);
+                p.Color = (new Color(195, 115, 62)).WithOpacity(0.6f);
+                p.Scale = new(0.9f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 0.3f;
+            });
+
+        }
+    }
 }
