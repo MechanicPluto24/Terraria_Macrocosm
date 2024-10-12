@@ -1,10 +1,11 @@
 using Macrocosm.Common.Utils;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Bases.Projectiles
+namespace Macrocosm.Common.Bases
 {
 	// TODO: Extend from HeldProjectile
 	public abstract class ChargedHeldProjectile : ModProjectile
@@ -30,7 +31,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 		}
 
         protected bool spawned;
-        protected int itemUseTimer;
+        protected int itemUseTime;
 
 		protected Player Player => Main.player[Projectile.owner];
 		protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed && !Player.dead;
@@ -62,15 +63,15 @@ namespace Macrocosm.Common.Bases.Projectiles
             if (!spawned)
             {
 				ProjectileOnSpawn();
-                itemUseTimer = Player.CurrentItem().useTime;
+                itemUseTime = Player.CurrentItem().useTime;
                 spawned = true;
             }
         }
 
 		private void UpdateItemTime()
 		{
-            if (itemUseTimer > 0)
-                itemUseTimer--;
+            if (itemUseTime > 0)
+                itemUseTime--;
         }
 
 		protected virtual void PlayerVisuals()

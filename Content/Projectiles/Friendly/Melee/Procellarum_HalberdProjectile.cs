@@ -22,11 +22,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             End
         }
         ProcellarumState chargeState;
-        public override int BaseSpeed => 65;
-        public override int HalberdSize => 200;
-        public override int RotPointToBlade => 20;
-        public override int RotationOffset => 39;
-        public override int StartOffset => 64 - RotationOffset;
+        // Old Vals: 75, 200, 20, 39, 64-rot
+        public override int BaseSpeed => 30;
+        public override int HalberdSize => 140;
+        public override int RotPointToBlade => 16;
+        public override int RotationOffset => 31;
+        public override int StartOffset => 54 - RotationOffset;
 
         public const int MAX_CHARGE_STAGE = 3;
         public const int TICKS_PER_STAGE = 60;
@@ -91,6 +92,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
                         int dust = Dust.NewDust(Projectile.Center, 5, 5, ModContent.DustType<LuminiteBrightDust>(), Player.velocity.X + Main.rand.Next(-5, 5), Player.velocity.Y + Main.rand.Next(-5, 5));
                         //Main.dust[dust].scale = 1f - (currentChargeTick * 0.1f);
+
+                        /* Do something like this
+                         * Particle.CreateParticle<PortalSwirl>(p =>
+                                {
+                                    p.Position = info.center + Main.rand.NextVector2Circular(180, 180) * 0.95f * info.scale;
+                                    p.Velocity = Vector2.One * 22;
+                                    p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * info.scale;
+                                    p.Color = new Color(92, 206, 130);
+                                    p.TargetCenter = info.center;
+                                    p.CustomDrawer = owner;
+                                });
+                         */
 
                         currentChargeTick += 1;
                         if (currentChargeTick >= TICKS_PER_STAGE && currentChargeStage < 3)

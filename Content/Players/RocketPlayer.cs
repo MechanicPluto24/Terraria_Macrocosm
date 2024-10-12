@@ -2,9 +2,11 @@
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
+using Macrocosm.Content.Debuffs.Environment;
 using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using SubworldLibrary;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -147,6 +149,14 @@ namespace Macrocosm.Content.Players
             {
                 Player.noItems = true;
                 Player.releaseMount = true;
+            }
+        }
+
+        public override void PostUpdateBuffs()
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>() && InRocket)
+            {
+                Player.buffImmune[ModContent.BuffType<Depressurized>()] = true;
             }
         }
 
