@@ -1,10 +1,8 @@
-﻿using Macrocosm.Common.Bases;
+﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Utilities;
 using System;
 using Terraria;
 using Terraria.Audio;
@@ -113,7 +111,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                             else currentAttack += 1;
                             SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
                         }
-                        else if (itemUseTime <= 0)
+                        else if (itemUseTimer <= 0)
                         {
                             Projectile.Kill();
                         }
