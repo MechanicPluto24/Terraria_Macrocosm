@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Minions
 {
-    public class DroneSummonBuff : ModBuff
+    public class HummingbirdDroneSummonBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Buffs.Minions
 
         public override void Update(Player player, ref int buffIndex)
         {
-            if (player.ownedProjectileCounts[ModContent.ProjectileType<DroneMinion>()] > 0)
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<HummingbirdDrone>()] > 0)
             {
                 player.buffTime[buffIndex] = 18000;
             }

@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
 {
-    public class DroneRemote : ModItem
+    public class HummingbirdDroneRemote : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -32,9 +32,9 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 
             Item.noMelee = true;
             Item.DamageType = DamageClass.Summon;
-            Item.buffType = ModContent.BuffType<DroneSummonBuff>();
+            Item.buffType = ModContent.BuffType<HummingbirdDroneSummonBuff>();
 
-            Item.shoot = ModContent.ProjectileType<DroneMinion>();
+            Item.shoot = ModContent.ProjectileType<HummingbirdDrone>();
         }
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {

@@ -2,6 +2,8 @@ using Macrocosm.Content.Buffs.Minions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Macrocosm.Content.Particles;
+using Macrocosm.Common.Drawing.Particles;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -10,11 +12,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-    public class DroneMinion : ModProjectile
+    public class HummingbirdDrone : ModProjectile
     {
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Type] = 3;
+            Main.projFrames[Type] = 2;
             ProjectileID.Sets.MinionTargettingFeature[Type] = true;
 
             ProjectileID.Sets.TrailCacheLength[Type] = 6;
@@ -28,7 +30,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public sealed override void SetDefaults()
         {
             Projectile.width = 50;
-            Projectile.height = (int)(78 / 3);
+            Projectile.height = (int)(78 / 2);
             Projectile.tileCollide = false;
 
             Projectile.friendly = true;
@@ -120,11 +122,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         {
             if (owner.dead || !owner.active)
             {
-                owner.ClearBuff(ModContent.BuffType<DroneSummonBuff>());
+                owner.ClearBuff(ModContent.BuffType<HummingbirdDroneSummonBuff>());
+
                 return false;
             }
 
-            if (owner.HasBuff(ModContent.BuffType<DroneSummonBuff>()))
+            if (owner.HasBuff(ModContent.BuffType<HummingbirdDroneSummonBuff>()))
             {
                 Projectile.timeLeft = 2;
             }
@@ -238,6 +241,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 }
             }
         }
+        public void BurstFire(Vector2 shootPos)
+        {
+            if (shootTimer>100 &&shootTimer%4==0&&Projectile.owner == Main.myPlayer)
+            {
+                Vector2 position = Projectile.Center + (Projectile.spriteDirection == 1 ? new Vector2(30,6):new Vector2(-30,6));
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(),position,(shootPos- position).RotatedByRandom(MathHelper.Pi/10).SafeNormalize(Vector2.UnitX)*28f, ModContent.ProjectileType<HummingbirdBullet>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
+                Particle.Create<HummingbirdFlash>((p) =>
+                {
+                    p.Position = position;
+                    p.Velocity =(shootPos- position).RotatedByRandom(MathHelper.Pi/10).SafeNormalize(Vector2.UnitX)*5f;
+                    p.Rotation=((shootPos- position).RotatedByRandom(MathHelper.Pi/10).SafeNormalize(Vector2.UnitX)*5f).ToRotation();
+                }, shouldSync: true
+                );
+            }
+        }
         private void Attack(bool foundTarget, float distanceFromTarget, Vector2 targetCenter)
         {
             Player owner = Main.player[Projectile.owner];
@@ -255,10 +273,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
                 if (shootTimer < 1)
                 {
-                    shootTimer = 60;
+                    shootTimer = 120;
                     FlyTo = (new Vector2(200, 0)).RotatedByRandom(MathHelper.TwoPi);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX) * 28f, ModContent.ProjectileType<DroneLaser>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
                 }
+                BurstFire(targetCenter);
 
                 // The immediate range around the target (so it doesn't latch onto it when close)
                 if (Vector2.Distance(Projectile.Center, targetCenter + FlyTo) > 80f)
@@ -317,9 +335,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
                 if (shootTimer < 1)
                 {
-                    shootTimer = 60;
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX) * 28f, ModContent.ProjectileType<DroneLaser>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
+                    shootTimer = 120;
                 }
+                BurstFire(targetCenter);
             }
 
             orbitPos = owner.Center + ((MathHelper.TwoPi * OrbitAngle / owner.ownedProjectileCounts[Projectile.type]).ToRotationVector2() * 250f);
@@ -348,7 +366,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 Projectile.frameCounter = 0;
                 Projectile.frame++;
 
-                if (Projectile.frame >= 3)
+                if (Projectile.frame >= 2)
                 {
                     Projectile.frame = 0;
                 }
