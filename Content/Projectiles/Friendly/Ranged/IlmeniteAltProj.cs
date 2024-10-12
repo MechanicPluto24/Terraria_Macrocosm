@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class IlmeniteAltProj : ModProjectile, IRangedProjectile
+    public class IlmeniteAltProj : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
         public float Strength
@@ -28,6 +28,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public Color colour3 = Color.Purple;
         public int helixProg;
         public Vector2 oldDevVect;
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileSets.HitsTiles[Type] = true;
+        }
 
         public override void SetDefaults()
         {
@@ -83,8 +88,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 DevVect = Utility.PolarVector(deviation, Projectile.rotation);
                 Color NColour1 = colour1 * (1f - (float)n / count);
                 Color NColour2 = colour2 * (1f - (float)n / count);
-                spriteBatch.DrawStar(trailPosition + DevVect - Main.screenPosition, 1, NColour1, Projectile.scale * MathF.Pow(0.95f, n), Projectile.rotation, entity: true);
-                spriteBatch.DrawStar(trailPosition - DevVect - Main.screenPosition, 1, NColour2, Projectile.scale * MathF.Pow(0.95f, n), Projectile.rotation, entity: true);
+                Utility.DrawStar(trailPosition + DevVect - Main.screenPosition, 1, NColour1, Projectile.scale * MathF.Pow(0.95f, n), Projectile.rotation, entity: true);
+                Utility.DrawStar(trailPosition - DevVect - Main.screenPosition, 1, NColour2, Projectile.scale * MathF.Pow(0.95f, n), Projectile.rotation, entity: true);
             }
 
             spriteBatch.End();
@@ -99,7 +104,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.NewProjectile(Projectile.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<IlminiteExplosion>(), damageDone, hit.Knockback * 5, Projectile.owner, Strength, target.Center.X, target.Center.Y);
+            Projectile.NewProjectile(Projectile.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), damageDone, hit.Knockback * 5, Projectile.owner, Strength, target.Center.X, target.Center.Y);
         }
     }
 }

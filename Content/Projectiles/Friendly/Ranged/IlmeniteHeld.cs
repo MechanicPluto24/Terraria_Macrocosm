@@ -173,7 +173,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(20, 0), Projectile.rotation) + offset;
                 colour1.A = alpha;
                 colour2.A = alpha;
-                spriteBatch.DrawStar(rotPoint - Main.screenPosition, (int)(5 * progress), Color.Lerp(colour1, colour2, MathF.Cos(AI_Charge / MinCharge)), scale, rotation);
+                Utility.DrawStar(rotPoint - Main.screenPosition, (int)(5 * progress), Color.Lerp(colour1, colour2, MathF.Cos(AI_Charge / MinCharge)), scale, rotation);
 
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.AlphaBlend, state);

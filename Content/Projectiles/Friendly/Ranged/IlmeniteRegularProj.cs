@@ -1,8 +1,8 @@
 ﻿using System;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class IlmeniteRegularProj : ModProjectile, IRangedProjectile
+    public class IlmeniteRegularProj : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
@@ -21,6 +21,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         int colourLerpProg = 0;
         public Color colour1 = new Color(188, 89, 134);
         public Color colour2 = new Color(33, 188, 190);
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileSets.HitsTiles[Type] = true;
+        }
 
         public override void SetDefaults()
         {
@@ -80,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * 0.4f;
                 color *= (1f - (float)n / count);
-                spriteBatch.DrawStar(trailPosition - Main.screenPosition, 1, color, Projectile.scale * (0.6f + Projectile.ai[0] * 0.15f), Projectile.rotation, entity: true);
+                Utility.DrawStar(trailPosition - Main.screenPosition, 1, color, Projectile.scale * (0.6f + Projectile.ai[0] * 0.15f), Projectile.rotation, entity: true);
             }
 
             spriteBatch.End();

@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Players
     /// </summary>
     public class MacrocosmPlayer : ModPlayer
     {
-        #region Equip data
+        #region Stats
         /// <summary> 
         /// The player's space protection level.
         /// Not synced.
@@ -40,6 +40,19 @@ namespace Macrocosm.Content.Players
         }
 
         private float chanceToNotConsumeAmmo = 0f;
+
+        /// <summary>
+        /// Extra crit damage, expressed in percentage.
+        /// ExtraCritDamagePercent += 0.25f means 25% extra crit damage, alongside the default +100% damage.
+        /// Not synced.
+        /// </summary>
+        public float ExtraCritDamagePercent { get; set; } = 0;
+
+        /// <summary>
+        /// Multiplier for non-crit damage.
+        /// Not synced.
+        /// </summary>
+        public float NonCritDamageMultiplier { get; set; } = 1f;
         #endregion
 
         #region Item use data
@@ -58,16 +71,6 @@ namespace Macrocosm.Content.Players
         /// Not synced.
         /// </summary>
         public int ChandriumWhipStacks = 0;
-        #endregion
-
-        #region Consumables data
-        public bool MedkitActive => Player.HasBuff<MedkitLow>() || Player.HasBuff<MedkitMedium>() || Player.HasBuff<MedkitHigh>();
-
-        // Used for identifying medkit tier
-        public int MedkitItemType = ItemType<Medkit>();
-        private Medkit Medkit => (ContentSamples.ItemsByType[MedkitItemType].ModItem as Medkit);
-        private int medkitTimer;
-        private int medkitHitCooldown;
         #endregion
 
         #region Player flags
@@ -92,7 +95,11 @@ namespace Macrocosm.Content.Players
         public override void ResetEffects()
         {
             SpaceProtection = 0f;
+
             ChanceToNotConsumeAmmo = 0f;
+
+            ExtraCritDamagePercent = 0;
+            NonCritDamageMultiplier = 1f;
 
             Player.buffImmune[BuffType<Depressurized>()] = false;
 
@@ -103,8 +110,25 @@ namespace Macrocosm.Content.Players
             }
         }
 
+
+        public override void PostUpdateBuffs()
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>())
+                Player.AddBuff(BuffType<Depressurized>(), 2);
+        }
+
+        public override void PostUpdateEquips()
+        {
+            if (SpaceProtection >= 3f)
+            {
+                Player.buffImmune[BuffType<Depressurized>()] = true;
+                Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + (int)(SpaceProtection / 3f));
+            }
+        }
+
         public override bool CanUseItem(Item item)
         {
+            // TODO: see why this is broken when useTime != useAnimation
             ItemUseCount[item.type]++;
             return true;
         }
@@ -119,111 +143,20 @@ namespace Macrocosm.Content.Players
             return consumeAmmo;
         }
 
-        public override void PostUpdateBuffs()
+        public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)
         {
-            Update_EnvironmentalDebuffs();
-            Update_RocketImmunities();
-            Update_MedkitHealing();
+            modifiers.CritDamage += ExtraCritDamagePercent;
+            modifiers.NonCritDamage *= NonCritDamageMultiplier;
         }
 
-        public override void PostUpdateEquips()
+        public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
         {
-            Update_EquipImmunities();
-            Update_SetBonuses();
-        }
-
-        public override void OnHurt(Player.HurtInfo info)
-        {
-            OnHurt_ChangeMedkit();
-        }
-
-        #region Equipment & Environment Effects
-        private void Update_EnvironmentalDebuffs()
-        {
-            if (SubworldSystem.AnyActive<Macrocosm>())
-            {
-                Player.AddBuff(BuffType<Depressurized>(), 2);
-            }
-        }
-
-        private void Update_RocketImmunities()
-        {
-            if (Player.GetModPlayer<RocketPlayer>().InRocket)
-            {
-                Player.buffImmune[BuffType<Depressurized>()] = true;
-            }
-        }
-
-        private void Update_EquipImmunities()
-        {
-            if (SpaceProtection >= (float)3f)
-            {
-                Player.buffImmune[BuffType<Depressurized>()] = true;
-            }
-        }
-
-        private void Update_SetBonuses()
-        {
-            if (SpaceProtection >= 3f)
-                Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + (int)(SpaceProtection / 3f));
-        }
-        #endregion
-
-        #region Consumables Effects
-        private void Update_MedkitHealing()
-        {
-            if (MedkitActive)
-            {
-                int healPeriod = Medkit.HealPeriod;
-                if (medkitTimer++ >= healPeriod)
-                {
-                    medkitTimer = 0;
-                    int healAmount = Medkit.HealthPerPeriod;
-
-                    if (Player.HasBuff<MedkitLow>())
-                        Player.Heal((int)(healAmount * 0.33f));
-                    else if (Player.HasBuff<MedkitMedium>())
-                        Player.Heal((int)(healAmount * 0.66f));
-                    else if (Player.HasBuff<MedkitHigh>())
-                        Player.Heal(healAmount);
-                }
-
-                if (medkitHitCooldown > 0)
-                    medkitHitCooldown--;
-            }
-            else
-            {
-                medkitTimer = 0;
-                medkitHitCooldown = 0;
-            }
-        }
-
-        private void OnHurt_ChangeMedkit()
-        {
-            if (medkitHitCooldown > 0)
+            if(proj.owner != Player.whoAmI)
                 return;
 
-            if (Player.HasBuff<MedkitMedium>())
-            {
-                int index = Player.FindBuffIndex(BuffType<MedkitMedium>());
-                int time = Player.buffTime[index];
-                Player.DelBuff(index);
-                Player.AddBuff(BuffType<MedkitLow>(), time);
-
-                medkitHitCooldown = Medkit.HitCooldown;
-            }
-
-            if (Player.HasBuff<MedkitHigh>())
-            {
-                int index = Player.FindBuffIndex(BuffType<MedkitHigh>());
-                int time = Player.buffTime[index];
-                Player.DelBuff(index);
-                Player.AddBuff(BuffType<MedkitMedium>(), time);
-
-                medkitHitCooldown = Medkit.HitCooldown;
-            }
+            modifiers.CritDamage += ExtraCritDamagePercent;
+            modifiers.NonCritDamage *= NonCritDamageMultiplier;
         }
-        #endregion
 
         #region Biome & Visual Effects
         public override void PostUpdateMiscEffects()

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -19,6 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         {
 
         }
+
         public override void SetDefaults()
         {
             Item.DefaultToBow(30, 30, true);
@@ -39,6 +39,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.useAmmo = AmmoID.Arrow;
             Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
         }
+
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
         public override bool CanConsumeAmmo(Item ammo, Player player) => player.ownedProjectileCounts[Item.shoot] == 1 || (player.itemTime == 0 && !player.AltFunction());
         public override bool AltFunctionUse(Player player) => true;
