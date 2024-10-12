@@ -647,11 +647,11 @@ Copernicus: {
 
 Cruithne: {
 	DisplayName: Cruithne-3753
-	Tooltip: 
-			'''
-			Converts musket balls to green slugs.
-			Shoots a delirium shell.
-			'''
+	Tooltip:
+		'''
+		Converts musket balls to green slugs.
+		Shoots a delirium shell.
+		'''
 }
 
 LHBMinigun: {
@@ -2050,4 +2050,9 @@ Canister: {
 RocketFuelCanister: {
 	DisplayName: Rocket Fuel Canister
 	Tooltip: ""
+}
+
+DroneRemote: {
+	DisplayName: P.D.C.D. Controller
+	Tooltip: "Summons a Hummingbird drone to fight for you"
 }

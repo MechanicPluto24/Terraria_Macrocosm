@@ -2949,6 +2949,10 @@ ChandriumWhip
 		Ancient Manipulator
 
 
+DroneRemote
+	Value: 1 platinum 50 gold
+	Research count: 1
+
 Totality
 	Value: No value
 	Research count: 1
