@@ -20,7 +20,7 @@ namespace Macrocosm.Common.DropRules
             this.canShowInBestiary = canShowInBestiary;
         }
 
-        public bool CanDrop(DropAttemptInfo info) => ModContent.GetInstance<T>().Name == MacrocosmSubworld.Current.Name;
+        public bool CanDrop(DropAttemptInfo info) => SubworldSystem.AnyActive() && ModContent.GetInstance<T>().Name == MacrocosmSubworld.Current.Name;
 
         public bool CanShowItemDropInUI() => canShowInBestiary;
 

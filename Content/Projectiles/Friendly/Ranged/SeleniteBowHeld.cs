@@ -18,16 +18,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 	{
 		public override string Texture => "Macrocosm/Content/Items/Weapons/Ranged/SeleniteBow";
 
-		public float MinCharge => MaxCharge * 0.2f;
-		public ref float MaxCharge => ref Projectile.ai[0];
-		public ref float AI_Timer => ref Projectile.ai[1];
-		public ref float AI_Charge => ref Projectile.ai[2];
+		public float MaxCharge;
+		public float MinCharge;
+		public float AI_Timer;
+		public float AI_Charge;
 
 		public override float CircularHoldoutOffset => 8f;
 
-		protected override bool StillInUse => base.StillInUse || Main.mouseRight || itemUseTime > 0;
-
 		public override bool ShouldUpdateAimRotation => true;
+
+        public override void OnSpawn(IEntitySource source)
+        {
+			if (Player.whoAmI == Main.myPlayer)
+			{
+				MaxCharge = 5 * Player.CurrentItem().useTime / Player.GetAttackSpeed(DamageClass.Ranged);
+				MinCharge = MaxCharge * 0.3f;
+				AI_Timer = Player.CurrentItem().useTime / Player.GetAttackSpeed(DamageClass.Ranged);
+            }
+        }
 
         public override void SetProjectileStaticDefaults()
 		{
@@ -51,7 +59,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
 				if (Main.mouseRight)
 				{
-					AI_Charge += 1f * Player.GetAttackSpeed(DamageClass.Ranged); 
+					Player.channel = true;
+					AI_Charge += 1f * Player.GetAttackSpeed(DamageClass.Ranged);
 
 					if (AI_Charge == MaxCharge)
 					{
@@ -70,7 +79,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 				}
 				else
 				{
-					if (AI_Charge > MinCharge)
+                    if (AI_Charge >= MinCharge)
 					{
 						if (Player.PickAmmo(currentItem, out _, out speed, out damage, out knockback, out usedAmmoItemId))
 						{
@@ -84,7 +93,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 							AI_Charge = 0;
 						}
 					}
-					else if (AI_Timer % currentItem.useTime == 0)
+					else if (Main.mouseLeft && AI_Timer >= (currentItem.useTime / Player.GetAttackSpeed(DamageClass.Ranged)))
 					{
 						if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
 						{
