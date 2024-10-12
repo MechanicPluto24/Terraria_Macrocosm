@@ -23,11 +23,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         }
         ProcellarumState chargeState;
         // Old Vals: 75, 200, 20, 39, 64-rot
-        public override int baseSpeed => 30;
-        public override int halberdSize => 140;
-        public override int rotPointToBlade => 16;
-        public override int rotationOffset => 31;
-        public override int startOffset => 54 - rotationOffset;
+        public override int BaseSpeed => 30;
+        public override int HalberdSize => 140;
+        public override int RotPointToBlade => 16;
+        public override int RotationOffset => 31;
+        public override int StartOffset => 54 - RotationOffset;
 
         public const int MAX_CHARGE_STAGE = 3;
         public const int TICKS_PER_STAGE = 60;

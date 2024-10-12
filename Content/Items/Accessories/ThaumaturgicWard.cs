@@ -1,4 +1,5 @@
 ﻿using Iced.Intel;
+using Macrocosm.Content.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,35 +25,6 @@ namespace Macrocosm.Content.Items.Accessories
             player.GetModPlayer<ManaWardPlayer>().ManaWard = true;
             player.GetDamage<GenericDamageClass>() -= 100;
             player.GetDamage<MagicDamageClass>() += 100;
-        }
-    }
-
-    public class ManaWardPlayer : ModPlayer
-    {
-        public bool ManaWard;
-        public override void ResetEffects()
-        {
-            ManaWard = false;
-        }
-
-        public override void OnHurt(Player.HurtInfo info)
-        {
-            if (ManaWard)
-            {
-                int manaDamage = 0;
-                if ((float)Player.statLife / Player.statLifeMax2 < 0.25f)
-                {
-                    manaDamage = info.Damage;
-                    if (manaDamage > Player.statMana) manaDamage = Player.statMana;
-                    Player.statMana -= manaDamage;
-                    Player.statLife -= info.Damage - manaDamage;
-                }
-            }
-        }
-
-        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
-        {
-            if (ManaWard && (float)Player.statLife / Player.statLifeMax2 < 0.25f) modifiers.FinalDamage *= 0.5f;
         }
     }
 }

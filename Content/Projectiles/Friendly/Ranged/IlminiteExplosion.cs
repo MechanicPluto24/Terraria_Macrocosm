@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Projectiles.Global;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Steamworks;
@@ -14,11 +14,17 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class IlminiteExplosion : ModProjectile, IRangedProjectile
+    public class IlmeniteExplosion : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
-        public Color colour1 = new Color(188, 89, 134);
-        public Color colour2 = new Color(33, 188, 190);
+        public Color colour1 = new(188, 89, 134);
+        public Color colour2 = new(33, 188, 190);
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileSets.HitsTiles[Type] = true;
+        }
+
         public override void SetDefaults()
         {
             Projectile.ignoreWater = true;
@@ -54,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Color NColor = Main.rand.NextBool() == true ? colour1 : colour2;
                 Vector2 NPosition = Projectile.Center + Main.rand.NextVector2Circular(40 - Projectile.timeLeft * 2, 40 - Projectile.timeLeft) * 2;
                 Lighting.AddLight(NPosition, NColor.ToVector3());
-                spriteBatch.DrawStar(NPosition - Main.screenPosition, Main.rand.Next(1, 4), NColor, Main.rand.NextFloat(Projectile.ai[0]), 0, entity: true);
+                Utility.DrawStar(NPosition - Main.screenPosition, Main.rand.Next(1, 4), NColor, Main.rand.NextFloat(Projectile.ai[0]), 0, entity: true);
             }
 
             spriteBatch.End();

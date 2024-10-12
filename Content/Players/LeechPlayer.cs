@@ -6,64 +6,60 @@ namespace Macrocosm.Content.Players
 {
     public class LeechPlayer : ModPlayer
     {
-        public int flatLeechLife;
-        public float percentLeechLife;
-        public float incLeechLife;
+        public int FlatLeechLife { get; set; }
+        public float PercentLeechLife { get; set; }
+        public float IncLeechLife { get; set; }
 
-        public int flatLeechMana;
-        public float percentLeechMana;
-        public float incLeechMana;
+        public int FlatLeechMana { get; set; }
+        public float PercentLeechMana { get; set; }
+        public float IncLeechMana { get; set; }
 
-        public bool manaPotionDisabler;
+        public bool DisableManaPotions { get; set; }
+
         public override void ResetEffects()
         {
-            flatLeechLife = 0;
-            percentLeechLife = 0f;
-            incLeechLife = 1f;
-            flatLeechMana= 0;
-            percentLeechMana = 0f;
-            incLeechMana = 1f;
-            manaPotionDisabler = false;
+            FlatLeechLife = 0;
+            PercentLeechLife = 0f;
+            IncLeechLife = 1f;
+            FlatLeechMana = 0;
+            PercentLeechMana = 0f;
+            IncLeechMana = 1f;
+            DisableManaPotions = false;
         }
-    }
 
-    public class LeechItem : GlobalItem
-    {
-        public override void OnHitNPC(Item item, Player player, NPC target, NPC.HitInfo hit, int damageDone)
+        public override bool CanUseItem(Item item)
+        {
+            if (item.healMana > 0 && DisableManaPotions) 
+                return false;
+
+            return true;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (!target.friendly && target.type != NPCID.TargetDummy)
             {
-                var p = player.GetModPlayer<LeechPlayer>();
-                player.statLife += (int)((p.flatLeechLife + damageDone * p.percentLeechLife) * p.incLeechLife);
-                player.statMana += (int)((p.flatLeechMana + damageDone * p.percentLeechMana) * p.incLeechMana);
+                Player.statLife += (int)((FlatLeechLife + damageDone * PercentLeechLife) * IncLeechLife);
+                Player.statMana += (int)((FlatLeechMana + damageDone * PercentLeechMana) * IncLeechMana);
             }
         }
 
-        public override bool CanUseItem(Item item, Player player)
+        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if (item.healMana > 0 && player.GetModPlayer<LeechPlayer>().manaPotionDisabler) return false;
-            return true;
-        }
-    }
-
-    public class LeechProjectile : GlobalProjectile
-    {
-        public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            if (!target.friendly && Main.myPlayer == projectile.owner && target.type != NPCID.TargetDummy)
+            if (!target.friendly && Main.myPlayer == proj.owner && target.type != NPCID.TargetDummy)
             {
-                var p = Main.player[Main.myPlayer];
-                var mp = p.GetModPlayer<LeechPlayer>();
-                //p.statLife += (int)((mp.flatLeechLife + damageDone * mp.percentLeechLife) * mp.incLeechLife);
-                int healLife = (int)((mp.flatLeechLife + damageDone * mp.percentLeechLife) * mp.incLeechLife);
-                if (healLife > 0) p.Heal(healLife);
-                int healMana = (int)((mp.flatLeechMana + damageDone * mp.percentLeechMana) * mp.incLeechMana);
+                int healLife = (int)((FlatLeechLife + damageDone * PercentLeechLife) * IncLeechLife);
+
+                if (healLife > 0)
+                    Player.Heal(healLife);
+
+                int healMana = (int)((FlatLeechMana + damageDone * PercentLeechMana) * IncLeechMana);
+
                 if (healMana > 0)
                 {
-                    p.statMana += healMana;
-                    p.ManaEffect(healMana);
+                    Player.statMana += healMana;
+                    Player.ManaEffect(healMana);
                 }
-
             }
         }
     }

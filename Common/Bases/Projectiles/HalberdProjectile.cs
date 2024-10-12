@@ -35,24 +35,29 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         //private float armRotation = 0f;
         //private float[] stateDmgMulti = new float[6] { 3f, 2f, 8f, 1f, 10f, 1f };
-        private List<NPC> NPCsHit = new List<NPC>();
+        private readonly List<NPC> NPCsHit = new();
         private Rectangle angleHitbox;
+
         /// <summary>
         /// Square dimensions of the projectile
         /// </summary>
-        public abstract int halberdSize { get; }
+        public abstract int HalberdSize { get; }
+
         /// <summary>
         /// Horizontal distance in pixels from rotation point to the furthest out part of the blade
         /// </summary>
-        public abstract int rotPointToBlade { get; }
+        public abstract int RotPointToBlade { get; }
+
         /// <summary>
         /// Horizontal distance in pixels from the tip of the spike to the rotation point
         /// </summary>
-        public abstract int rotationOffset { get; }
+        public abstract int RotationOffset { get; }
+
         /// <summary>
         /// Horizontal distance in pixels from the tip of the spike to the starting point take away the rotationOffset value
         /// </summary>
-        public abstract int startOffset { get; }
+        public abstract int StartOffset { get; }
+
         public int midOffset;
         public int farOffset;
         public int RotDiag;
@@ -61,9 +66,9 @@ namespace Macrocosm.Common.Bases.Projectiles
         public override void SetDefaults()
         {
             //baseMaxProgress = new int[6] { baseSpeed, baseSpeed / 3, baseSpeed / 3, (int)(baseSpeed * 2f / 3), baseSpeed / 4, baseSpeed / 2 };
-            farOffset = halberdSize - rotationOffset;
-            midOffset = (int)MathHelper.Lerp(startOffset, farOffset, 0.67f);
-            RotDiag = Utility.SquareDiagonal(rotationOffset);
+            farOffset = HalberdSize - RotationOffset;
+            midOffset = (int)MathHelper.Lerp(StartOffset, farOffset, 0.67f);
+            RotDiag = Utility.SquareDiagonal(RotationOffset);
             Projectile.Size = new Vector2(2 * RotDiag);
 
             Projectile.timeLeft = 120;
@@ -220,7 +225,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             */
             Projectile.timeLeft += 1;
             Player.heldProj = Projectile.whoAmI;
-            int finalMaxProgress = (int)(baseSpeed / useTimeMulti);
+            int finalMaxProgress = (int)(BaseSpeed / useTimeMulti);
             Projectile.Center = Player.MountedCenter - new Vector2(0, 6);
 
             float attackOffset = 0f;
@@ -272,15 +277,15 @@ namespace Macrocosm.Common.Bases.Projectiles
 
             if (Projectile.spriteDirection == 1)
             {
-                DrawOriginOffsetX = -(halberdSize / 2) + rotationOffset;
-                DrawOriginOffsetY = RotDiag - rotationOffset;
-                DrawOffsetX = RotDiag - rotationOffset;
+                DrawOriginOffsetX = -(HalberdSize / 2) + RotationOffset;
+                DrawOriginOffsetY = RotDiag - RotationOffset;
+                DrawOffsetX = RotDiag - RotationOffset;
             }
             else
             {
-                DrawOriginOffsetX = (halberdSize / 2) - rotationOffset;
-                DrawOriginOffsetY = RotDiag - rotationOffset;
-                DrawOffsetX = -halberdSize + RotDiag + rotationOffset;
+                DrawOriginOffsetX = (HalberdSize / 2) - RotationOffset;
+                DrawOriginOffsetY = RotDiag - RotationOffset;
+                DrawOffsetX = -HalberdSize + RotDiag + RotationOffset;
                 Projectile.rotation -= MathHelper.PiOver2;
             }
 
@@ -289,8 +294,8 @@ namespace Macrocosm.Common.Bases.Projectiles
             attackOffset = (farOffset) * MathF.Sin(MathHelper.Pi * currentAnimProgress / finalMaxProgress);
             attackAngle = BaseRotation - (Projectile.spriteDirection * (MathHelper.Pi * arcAngleDegrees / 180) * MathF.Sin(MathHelper.TwoPi * FloatAnimProgress));
 
-            Projectile.position.X += MathF.Cos(attackAngle) * (startOffset + attackOffset);
-            Projectile.position.Y += MathF.Sin(attackAngle) * (startOffset + attackOffset);
+            Projectile.position.X += MathF.Cos(attackAngle) * (StartOffset + attackOffset);
+            Projectile.position.Y += MathF.Sin(attackAngle) * (StartOffset + attackOffset);
             Projectile.rotation += (Projectile.Center - Player.MountedCenter).ToRotation();
 
             if (Player.direction == 1)
@@ -298,7 +303,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             else
                 Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, attackAngle - MathHelper.ToRadians(110));
 
-            int hitboxMin = Utility.SquareDiagonal(rotPointToBlade) * 2;
+            int hitboxMin = Utility.SquareDiagonal(RotPointToBlade) * 2;
             int hitboxMax = RotDiag * 2;
             if (attackAngle >= -MathHelper.PiOver2 && attackAngle < MathHelper.PiOver2)
             {
