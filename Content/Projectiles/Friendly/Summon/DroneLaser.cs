@@ -1,7 +1,6 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -27,8 +26,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Projectile.extraUpdates = 3;
             Projectile.timeLeft = 270;
             Projectile.light = 0f;
-            Projectile.hostile=false;
-            Projectile.friendly=true;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
         }
 
         public override bool PreAI()

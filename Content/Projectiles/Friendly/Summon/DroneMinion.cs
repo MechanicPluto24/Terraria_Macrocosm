@@ -1,11 +1,6 @@
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Minions;
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -17,7 +12,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
     public class DroneMinion : ModProjectile
     {
-        
+
 
         public override void SetStaticDefaults()
         {
@@ -30,13 +25,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Main.projPet[Type] = true;
 
             ProjectileID.Sets.MinionSacrificable[Type] = true;
-   
+
         }
 
         public sealed override void SetDefaults()
         {
             Projectile.width = 50;
-            Projectile.height = (int)(78/3);
+            Projectile.height = (int)(78 / 3);
             Projectile.tileCollide = false;
 
             Projectile.friendly = true;
@@ -63,54 +58,53 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public override bool? CanCutTiles() => false;
 
         public override bool MinionContactDamage() => true;
-        
+
         private bool spawned = false;
 
-        private int shootTimer=0;
+        private int shootTimer = 0;
         private Vector2 FlyTo;
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
-            if(OrbitAngle>=(float)owner.ownedProjectileCounts[Projectile.type])
-                OrbitAngle=(float)owner.ownedProjectileCounts[Projectile.type]-1f;
+            if (OrbitAngle >= (float)owner.ownedProjectileCounts[Projectile.type])
+                OrbitAngle = (float)owner.ownedProjectileCounts[Projectile.type] - 1f;
             if (!CheckActive(owner))
                 return;
-            
+
             Lighting.AddLight(Projectile.position, new Color(225, 100, 100).ToVector3() * 0.4f);
 
             if (!spawned)
             {
-                
+
                 spawned = true;
             }
-            
+
             GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
             SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
 
-            if(owner.statLife > (owner.statLifeMax2/2)&&owner.ownedProjectileCounts[Projectile.type]>2)
+            if (owner.statLife > (owner.statLifeMax2 / 2) && owner.ownedProjectileCounts[Projectile.type] > 2)
                 Attack(foundTarget, distanceFromTarget, targetCenter);
             else
-                Protect(foundTarget, owner,targetCenter);
+                Protect(foundTarget, owner, targetCenter);
 
             Visuals(foundTarget);
 
             HasTarget = foundTarget;
 
-            if(owner.statLife > (owner.statLifeMax2/2)&&owner.ownedProjectileCounts[Projectile.type]>2){
-                Projectile.friendly=false;
+            if (owner.statLife > (owner.statLifeMax2 / 2) && owner.ownedProjectileCounts[Projectile.type] > 2)
+            {
+                Projectile.friendly = false;
             }
-            else    {
-                Projectile.friendly=true;
-                owner.statDefense+=3;
+            else
+            {
+                Projectile.friendly = true;
+                owner.statDefense += 3;
             }
-
         }
 
         public override void OnSpawn(IEntitySource source)
         {
         }
-
-        
 
         private bool CheckActive(Player owner)
         {
@@ -145,7 +139,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             vectorToIdlePosition = idlePosition - Projectile.Center;
             distanceToIdlePosition = vectorToIdlePosition.Length();
             bool shouldTeleportToOwner = HasTarget ? distanceToIdlePosition > 4000f : distanceToIdlePosition > 2000f;
-
 
             if (Main.myPlayer == owner.whoAmI && shouldTeleportToOwner)
             {
@@ -189,7 +182,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
         private void SearchForTargets(Player owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter)
         {
-            Projectile.friendly=true;
+            Projectile.friendly = true;
             distanceFromTarget = 700f;
             targetCenter = Projectile.position;
             foundTarget = false;
@@ -209,7 +202,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 }
             }
 
-            if (!foundTarget )
+            if (!foundTarget)
             {
                 // This code is required either way, used for finding a target
                 for (int i = 0; i < Main.maxNPCs; i++)
@@ -235,9 +228,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     }
                 }
             }
-
-
-          
         }
         private void Attack(bool foundTarget, float distanceFromTarget, Vector2 targetCenter)
         {
@@ -247,23 +237,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             float speed = 45f;
             float inertia = 60f;
             Vector2 vectorToIdlePosition = owner.Center - Projectile.Center;
-            float distanceToIdlePosition =Vector2.Distance(Projectile.Center,owner.Center);
+            float distanceToIdlePosition = Vector2.Distance(Projectile.Center, owner.Center);
             if (foundTarget)
             {
                 // Minion has a target: attack (here, fly towards the enemy)
-                
+
                 shootTimer--;
 
-                if(shootTimer<1)
+                if (shootTimer < 1)
                 {
-                    shootTimer=60;
-                    FlyTo = (new Vector2(200,0)).RotatedByRandom(MathHelper.TwoPi);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center,(targetCenter- Projectile.Center).SafeNormalize(Vector2.UnitX)*28f, ModContent.ProjectileType<DroneLaser>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
+                    shootTimer = 60;
+                    FlyTo = (new Vector2(200, 0)).RotatedByRandom(MathHelper.TwoPi);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX) * 28f, ModContent.ProjectileType<DroneLaser>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
                 }
 
                 // The immediate range around the target (so it doesn't latch onto it when close)
-                if (Vector2.Distance(Projectile.Center,targetCenter+FlyTo) > 80f){
-                    Vector2 direction = (targetCenter+FlyTo) - Projectile.Center;
+                if (Vector2.Distance(Projectile.Center, targetCenter + FlyTo) > 80f)
+                {
+                    Vector2 direction = (targetCenter + FlyTo) - Projectile.Center;
                     direction.Normalize();
                     direction *= speed;
 
@@ -304,7 +295,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             }
         }
         Vector2 orbitPos;
-        private void Protect(bool foundTarget, Player owner,Vector2 targetCenter)
+        private void Protect(bool foundTarget, Player owner, Vector2 targetCenter)
         {
             // Default movement parameters (here for attacking)
             float speed = 20f;
@@ -315,94 +306,94 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 // Minion has a target: attack (here, fly towards the enemy)  
                 shootTimer--;
 
-                if(shootTimer<1)
+                if (shootTimer < 1)
                 {
-                    shootTimer=60;
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center,(targetCenter- Projectile.Center).SafeNormalize(Vector2.UnitX)*28f, ModContent.ProjectileType<DroneLaser>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
-
+                    shootTimer = 60;
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX) * 28f, ModContent.ProjectileType<DroneLaser>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
                 }
             }
-            
-            orbitPos=owner.Center+((MathHelper.TwoPi * OrbitAngle / owner.ownedProjectileCounts[Projectile.type]).ToRotationVector2() * 250f);
+
+            orbitPos = owner.Center + ((MathHelper.TwoPi * OrbitAngle / owner.ownedProjectileCounts[Projectile.type]).ToRotationVector2() * 250f);
             // Minion doesn't have a target: return to player and idle
-            if (Vector2.Distance(orbitPos,Projectile.Center) > 30f)
+            if (Vector2.Distance(orbitPos, Projectile.Center) > 30f)
             {
-               Vector2 direction = orbitPos - Projectile.Center;
+                Vector2 direction = orbitPos - Projectile.Center;
                 direction.Normalize();
                 direction *= speed;
 
                 Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
             }
-
-            
         }
 
         private void Visuals(bool hasTarget)
         {
-            
-                // So it will lean slightly towards the direction it's moving
-                Projectile.rotation = Projectile.velocity.X * 0.05f;
+            // So it will lean slightly towards the direction it's moving
+            Projectile.rotation = Projectile.velocity.X * 0.05f;
 
-                Projectile.spriteDirection = Projectile.direction;
-                int frameSpeed = 8;
-                Projectile.frameCounter++;
+            Projectile.spriteDirection = Projectile.direction;
+            int frameSpeed = 8;
+            Projectile.frameCounter++;
 
-                if (Projectile.frameCounter >= frameSpeed)
+            if (Projectile.frameCounter >= frameSpeed)
+            {
+                Projectile.frameCounter = 0;
+                Projectile.frame++;
+
+                if (Projectile.frame >= 3)
                 {
-                    Projectile.frameCounter = 0;
-                    Projectile.frame++;
-
-                    if (Projectile.frame >= 3)
-                    {
-                        Projectile.frame = 0;
-                    }
+                    Projectile.frame = 0;
                 }
-            
+            }
+
         }
+
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             Player owner = Main.player[Projectile.owner];
-             float _ = float.NaN;
-            if(owner.statLife <= (owner.statLifeMax2/2)&&owner.ownedProjectileCounts[Projectile.type]>2){
-            // If the target is touching the beam's hitbox (which is a small rectangle vaguely overlapping the host Prism), that's good enough.
-            if (projHitbox.Intersects(targetHitbox))
+            float _ = float.NaN;
+            if (owner.statLife <= (owner.statLifeMax2 / 2) && owner.ownedProjectileCounts[Projectile.type] > 2)
             {
-                return true;
-            }
+                // If the target is touching the beam's hitbox (which is a small rectangle vaguely overlapping the host Prism), that's good enough.
+                if (projHitbox.Intersects(targetHitbox))
+                {
+                    return true;
+                }
 
-            Projectile proj;
-            Vector2 beamStart =Projectile.Center;
-             
-            if (OrbitAngle !=0f)
-                proj = GetConnectedDrone(OrbitAngle-1f);
+                Projectile proj;
+                Vector2 beamStart = Projectile.Center;
+
+                if (OrbitAngle != 0f)
+                    proj = GetConnectedDrone(OrbitAngle - 1f);
+                else
+                    proj = GetConnectedDrone((float)(owner.ownedProjectileCounts[Projectile.type] - 1));
+
+                if (proj is null)
+                    return false;
+
+                Vector2 beamEnd = proj.Center;
+
+                if (Vector2.Distance(beamStart, beamEnd) > 700f)
+                    return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center, 10f * Projectile.scale, ref _);
+                if (beamStart == beamEnd)
+                    return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center, 10f * Projectile.scale, ref _);
+
+                // Otherwise, perform an AABB line collision check to check the whole beam.
+
+
+                return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, beamEnd, 10f * Projectile.scale, ref _);
+            }
             else
-                proj=GetConnectedDrone((float)(owner.ownedProjectileCounts[Projectile.type]-1));
-
-            if (proj is null)
-                return false;
-           
-            Vector2 beamEnd = proj.Center;
-            
-            if (Vector2.Distance(beamStart,beamEnd)>700f)
-                return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center, 10f * Projectile.scale, ref _);
-            if (beamStart == beamEnd)
-                return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center, 10f * Projectile.scale, ref _);
-
-            // Otherwise, perform an AABB line collision check to check the whole beam.
-           
-            
-            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, beamEnd, 10f * Projectile.scale, ref _);
-            }
-            else{
+            {
                 return false;
             }
         }
-        private Projectile GetConnectedDrone(float droneOffset){
-            Projectile proj =null;
+        private Projectile GetConnectedDrone(float droneOffset)
+        {
+            Projectile proj = null;
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile projcheck = Main.projectile[i];
-                if (projcheck.type == ModContent.ProjectileType<DroneMinion>() && projcheck.ai[1]==droneOffset  && projcheck.active)
+                if (projcheck.type == ModContent.ProjectileType<DroneMinion>() && projcheck.ai[1] == droneOffset && projcheck.active)
                     proj = Main.projectile[i];
             }
             return proj;
@@ -411,27 +402,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private void DrawBeam(SpriteBatch spriteBatch)
         {
             Player owner = Main.player[Projectile.owner];
-            Projectile proj = (OrbitAngle !=0f) ? GetConnectedDrone(OrbitAngle-1f) :GetConnectedDrone((float)owner.ownedProjectileCounts[Projectile.type]-1f);
-            Vector2 beamStart =Projectile.Center;
+            Projectile proj = (OrbitAngle != 0f) ? GetConnectedDrone(OrbitAngle - 1f) : GetConnectedDrone((float)owner.ownedProjectileCounts[Projectile.type] - 1f);
+            Vector2 beamStart = Projectile.Center;
             if (proj is null)
                 return;
             Vector2 beamEnd = proj.Center;
-           
-            if (beamStart==beamEnd)
+
+            if (beamStart == beamEnd)
                 return;
-            
-        
-            if (Vector2.Distance(beamStart,beamEnd)>700f)
+
+
+            if (Vector2.Distance(beamStart, beamEnd) > 700f)
                 return;
             beamStart -= Main.screenPosition;
             beamEnd -= Main.screenPosition;
-            
-            float rotation = (beamEnd - beamStart).ToRotation()+ MathHelper.PiOver2;
+
+            float rotation = (beamEnd - beamStart).ToRotation() + MathHelper.PiOver2;
             Texture2D beam = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Trace3").Value;
             Vector2 scale = new Vector2(45f, Vector2.Distance(beamStart, beamEnd)) / beam.Size();
             Vector2 origin = new(beam.Width * 0.5f, beam.Height);
 
-            spriteBatch.Draw(beam, beamStart, null, new Color(255,0,0,0), rotation, origin, scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(beam, beamStart, null, new Color(255, 0, 0, 0), rotation, origin, scale, SpriteEffects.None, 0f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -441,16 +432,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Texture2D tex = TextureAssets.Projectile[Type].Value;
             Vector2 pos = Projectile.position + Projectile.Size / 2 - Main.screenPosition;
             SpriteEffects effects = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-        
+
             if (Projectile.alpha > 0)
             {
                 Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (lightColor * (Projectile.alpha / 255f)), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
             }
-            if(owner.statLife <= (owner.statLifeMax2/2)&&owner.ownedProjectileCounts[Projectile.type]>2)
+            if (owner.statLife <= (owner.statLifeMax2 / 2) && owner.ownedProjectileCounts[Projectile.type] > 2)
                 DrawBeam(Main.spriteBatch);
             return false;
         }
-
-       
     }
 }
