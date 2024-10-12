@@ -1,5 +1,4 @@
-﻿using Macrocosm.Content.Buffs.Pets;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -30,8 +29,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Pets
 
         public override void SetDefaults()
         {
-            Projectile.CloneDefaults(ProjectileID.ZephyrFish);  
-            AIType = ProjectileID.ZephyrFish;  
+            Projectile.CloneDefaults(ProjectileID.ZephyrFish);
+            AIType = ProjectileID.ZephyrFish;
         }
 
         public override bool PreAI()
@@ -48,8 +47,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Pets
             Projectile.frame = MathF.Sign(Projectile.velocity.X) > 0 ? 1 : 0;
 
             if (!player.dead && player.HasBuff(ModContent.BuffType<Buffs.Pets.CraterDemonPet>()))
-                 Projectile.timeLeft = 2;
-         }
+                Projectile.timeLeft = 2;
+        }
 
         public override bool PreDraw(ref Color lightColor)
         {

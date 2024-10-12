@@ -2,12 +2,12 @@
 
 namespace Macrocosm.Common.Graphics
 {
-	public class CustomRasterizerStates
-	{
-		public static readonly RasterizerState ScissorTest = new()
-		{
-			CullMode = CullMode.None,
-			ScissorTestEnable = true
-		};
-	}
+    public class CustomRasterizerStates
+    {
+        public static readonly RasterizerState ScissorTest = new()
+        {
+            CullMode = CullMode.None,
+            ScissorTestEnable = true
+        };
+    }
 }

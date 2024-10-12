@@ -2,23 +2,40 @@
 
 namespace Macrocosm.Common.Graphics
 {
-	public class CustomBlendStates
-	{
-		public static readonly BlendState Multiplicative = new()
-		{
-			ColorBlendFunction = BlendFunction.Add,
-			ColorSourceBlend = Blend.DestinationColor,
-			ColorDestinationBlend = Blend.Zero,
-		};
+    public class CustomBlendStates
+    {
+        private static BlendState _multiplicative;
+        private static BlendState _subtractive;
+        private static BlendState _negative;
 
-		public static readonly BlendState Subtractive = new()
-		{
-			ColorSourceBlend = Blend.One,
-			AlphaSourceBlend = Blend.One,
-			ColorDestinationBlend = Blend.One,
-			AlphaDestinationBlend = Blend.One,
-			ColorBlendFunction = BlendFunction.ReverseSubtract,
-			AlphaBlendFunction = BlendFunction.ReverseSubtract,
-		};
-	}
+        public static BlendState Multiplicative => _multiplicative ??= new BlendState
+        {
+            ColorBlendFunction = BlendFunction.ReverseSubtract,
+            ColorDestinationBlend = Blend.One,
+            ColorSourceBlend = Blend.SourceAlpha,
+            AlphaBlendFunction = BlendFunction.ReverseSubtract,
+            AlphaDestinationBlend = Blend.One,
+            AlphaSourceBlend = Blend.SourceAlpha
+        };
+
+        public static BlendState Subtractive => _subtractive ??= new BlendState
+        {
+            ColorSourceBlend = Blend.One,
+            AlphaSourceBlend = Blend.One,
+            ColorDestinationBlend = Blend.One,
+            AlphaDestinationBlend = Blend.One,
+            ColorBlendFunction = BlendFunction.ReverseSubtract,
+            AlphaBlendFunction = BlendFunction.ReverseSubtract,
+        };
+
+        public static BlendState Negative => _negative ??= new BlendState
+        {
+            ColorBlendFunction = BlendFunction.ReverseSubtract,
+            ColorSourceBlend = Blend.One,
+            ColorDestinationBlend = Blend.One,
+            AlphaBlendFunction = BlendFunction.ReverseSubtract,
+            AlphaSourceBlend = Blend.One,
+            AlphaDestinationBlend = Blend.One,
+        };
+    }
 }

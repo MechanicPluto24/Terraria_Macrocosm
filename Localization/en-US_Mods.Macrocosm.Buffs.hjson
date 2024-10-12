@@ -45,5 +45,75 @@ HandheldEngineOverheat: {
 
 CraterDemonPet: {
 	DisplayName: Mini Crater Demon
-	Description: It's small! (Replace this lol)
+	Description: Mods.Macrocosm.Buffs.CraterDemonPet.Description
+}
+
+MedkitHigh: {
+	DisplayName: Medkit
+	Description: Mods.Macrocosm.Buffs.MedkitHigh.Description
+}
+
+MedkitLow: {
+	DisplayName: Medkit
+	Description: Mods.Macrocosm.Buffs.MedkitLow.Description
+}
+
+MedkitMedium: {
+	DisplayName: Medkit
+	Description: Mods.Macrocosm.Buffs.MedkitMedium.Description
+}
+
+Irradiated: {
+	DisplayName: Irradiated
+	Description: Mods.Macrocosm.Buffs.Irradiated.Description
+}
+
+Blindness: {
+	DisplayName: Blindness
+	Description: Mods.Macrocosm.Buffs.Blindness.Description
+}
+
+MildNecrosis: {
+	DisplayName: Mild Necrosis
+	Description: Mods.Macrocosm.Buffs.MildNecrosis.Description
+}
+
+Necrosis: {
+	DisplayName: Necrosis
+	Description: Mods.Macrocosm.Buffs.Necrosis.Description
+}
+
+OrganFailure: {
+	DisplayName: Organ Failure
+	Description: Mods.Macrocosm.Buffs.OrganFailure.Description
+}
+
+Paralysis: {
+	DisplayName: Paralysis
+	Description: Mods.Macrocosm.Buffs.Paralysis.Description
+}
+
+WeakBones: {
+	DisplayName: Weak Bones
+	Description: Mods.Macrocosm.Buffs.WeakBones.Description
+}
+
+Fatigue: {
+	DisplayName: Fatigue
+	Description: Mods.Macrocosm.Buffs.Fatigue.Description
+}
+
+AntiRadiationPills: {
+	DisplayName: Anti Radiation Pills
+	Description: Mods.Macrocosm.Buffs.AntiRadiationPills.Description
+}
+
+Melting: {
+	DisplayName: Melting
+	Description: Mods.Macrocosm.Buffs.Melting.Description
+}
+
+DroneSummonBuff: {
+	DisplayName: P.D.C.D. "Hummingbird"
+	Description: The combat drone will fight for you
 }

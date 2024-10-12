@@ -12,97 +12,96 @@ using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-	public class ImbriumJewelMeteor : ModProjectile
-	{
-		public override void SetStaticDefaults()
-		{
-			ProjectileID.Sets.TrailCacheLength[Type] = 20;
-			ProjectileID.Sets.TrailingMode[Type] = 3;
-			Main.projFrames[Type] = 6;
-		}
+    public class ImbriumJewelMeteor : ModProjectile
+    {
+        private ImbriumMeteorTrail trail;
 
-		public override void SetDefaults()
-		{
-			Projectile.width = 18;
-			Projectile.height = 18;
-			Projectile.friendly = true;
-			Projectile.timeLeft = 120;
-			Projectile.DamageType = DamageClass.Magic;
-			Projectile.alpha = 0;
-
-			Projectile.SetTrail<ImbriumMeteorTrail>();
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 20;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
+            Main.projFrames[Type] = 6;
         }
 
-		public override void AI()
-		{
-			Projectile.velocity.Y += 0.1f;
-			if (Projectile.velocity.Y > 12f)
-				Projectile.velocity.Y = 12f;
+        public override void SetDefaults()
+        {
+            Projectile.width = 18;
+            Projectile.height = 18;
+            Projectile.friendly = true;
+            Projectile.timeLeft = 120;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.alpha = 0;
+            trail = new();
+        }
 
-			if (Projectile.velocity != Vector2.Zero)
-				Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
+        public override void AI()
+        {
+            Projectile.velocity.Y += 0.1f;
+            if (Projectile.velocity.Y > 12f)
+                Projectile.velocity.Y = 12f;
 
-			if (Main.rand.NextFloat() < 0.5f)
-			{
-				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: 0.6f);
-				star.Alpha = 0.8f;
-			}
+            if (Projectile.velocity != Vector2.Zero)
+                Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
-			if (++Projectile.frameCounter >= 4)
-			{
-				Projectile.frameCounter = 0;
-				Projectile.frame = ++Projectile.frame % Main.projFrames[Type]; // 6 frames @ 4 ticks/frame
-			}
+            if (Main.rand.NextFloat() < 0.5f)
+            {
+                var star = Particle.Create<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: new(0.6f));
+                star.Opacity = 0.8f;
+            }
 
-			if (Projectile.alpha < 250)
-				Projectile.alpha += 10;
-		}
+            if (++Projectile.frameCounter >= 4)
+            {
+                Projectile.frameCounter = 0;
+                Projectile.frame = ++Projectile.frame % Main.projFrames[Type]; // 6 frames @ 4 ticks/frame
+            }
 
-		private SpriteBatchState state;
+            if (Projectile.alpha < 250)
+                Projectile.alpha += 10;
+        }
 
-		public override bool PreDraw(ref Color lightColor)
-		{
-			Texture2D tex = TextureAssets.Projectile[Type].Value;
+        private SpriteBatchState state;
 
-			Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D tex = TextureAssets.Projectile[Type].Value;
 
-			Vector2 origin = Projectile.Size / 2f + new Vector2(0, 16);
+            Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 
-			state.SaveState(Main.spriteBatch);
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(BlendState.Additive, state);
+            Vector2 origin = Projectile.Size / 2f + new Vector2(0, 16);
 
-			Projectile.GetTrail().Draw(Projectile.Size / 2f);
+            state.SaveState(Main.spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
 
-			Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
-				sourceRect, new Color(255, 255, 255, Projectile.alpha), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+            trail?.Draw(Projectile, Projectile.Size / 2f);
 
-			Main.spriteBatch.End();
-			Main.spriteBatch.Begin(state);
-			return false;
-		}
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition,
+                sourceRect, new Color(255, 255, 255, Projectile.alpha), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
 
-		public override void ModifyDamageHitbox(ref Rectangle hitbox)
-		{
-		}
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+            return false;
+        }
 
-		public override void OnKill(int timeLeft)
-		{
-			SoundEngine.PlaySound(SoundID.Item89, Projectile.position);
-			for (int i = 0; i < 10; i++)
-			{
-				var star = Particle.CreateParticle<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(1f, 1f), scale: 0.8f);
-				star.Alpha = 0.8f;
-			}
+        public override void ModifyDamageHitbox(ref Rectangle hitbox)
+        {
+        }
 
-			for (int j = 0; j < ProjectileID.Sets.TrailCacheLength[Type]; j++)
-			{
-				float progress = 1f - (j / (float)ProjectileID.Sets.TrailCacheLength[Type]);
-				var star = Particle.CreateParticle<ImbriumStar>(Projectile.oldPos[j] + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(0.1f, 0.1f), scale: 0.4f * progress);
-				star.Alpha = 0.8f * progress;
-			}
+        public override void OnKill(int timeLeft)
+        {
+            SoundEngine.PlaySound(SoundID.Item89, Projectile.position);
+            for (int i = 0; i < 10; i++)
+            {
+                var star = Particle.Create<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(1f, 1f), scale: new(0.8f));
+                star.Opacity = 0.8f;
+            }
 
-
-		}
-	}
+            for (int j = 0; j < ProjectileID.Sets.TrailCacheLength[Type]; j++)
+            {
+                float progress = 1f - (j / (float)ProjectileID.Sets.TrailCacheLength[Type]);
+                var star = Particle.Create<ImbriumStar>(Projectile.oldPos[j] + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Main.rand.NextVector2Circular(0.1f, 0.1f), scale: new(0.4f * progress));
+                star.Opacity = 0.8f * progress;
+            }
+        }
+    }
 }

@@ -7,101 +7,118 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-	public class RocketExhaustSmoke : Particle
-	{
-		public override int FrameNumber => 3;
-		public override bool SetRandomFrameOnSpawn => true;
+    public class RocketExhaustSmoke : Particle
+    {
+        public override int FrameCount => 3;
+        public override bool SetRandomFrameOnSpawn => true;
 
-		public bool FadeIn = false;
-		public bool FadeOut = true;
+        public bool FadeIn = false;
+        public bool FadeOut = true;
 
-		public Color DrawColor = Color.White;
+        public int TargetAlpha = 255;
 
-		public int TargetAlpha = 255;
+        public int FadeInSpeed = 1;
+        public int FadeOutSpeed = 4;
 
-		public float Deceleration = 0.98f;
+        public float ScaleDownSpeed = 0.005f;
 
-		public int FadeInSpeed = 1;
-		public int FadeOutSpeed = 4;
+        public bool Collide;
 
-		public float ScaleDownSpeed = 0.005f;
+        private float alpha = 255;
+        private bool fadedIn = false;
+        private bool collided = false;
 
-		public bool Collide;
+        public override ParticleDrawLayer DrawLayer => collided ? ParticleDrawLayer.AfterProjectiles : ParticleDrawLayer.BeforeNPCs;
 
-		private float alpha = 255;
-		private bool fadedIn = false;
-		private bool collided = false;
+        public override void SetDefaults()
+        {
+            TimeToLive = 120;
 
-		public override ParticleDrawLayer DrawLayer => collided ? ParticleDrawLayer.AfterProjectiles : ParticleDrawLayer.BeforeNPCs;
+            Acceleration = new(0, -0.98f);
+            ScaleVelocity = new(-0.005f);
 
-		public override void OnSpawn()
-		{
-			if (FadeOut)
-				alpha = 255;
+            FadeIn = false;
+            FadeOut = true;
 
-			if (FadeIn)
-				alpha = 0;
-		}
+            TargetAlpha = 255;
 
-		public override void AI()
-		{
-			Velocity *= Deceleration;
-			Scale -= ScaleDownSpeed;
+            FadeInSpeed = 1;
+            FadeOutSpeed = 4;
 
-			if (FadeIn && FadeOut)
-			{
-				if (!fadedIn)
-				{
-					if (alpha < TargetAlpha)
-						alpha += FadeInSpeed;
-					else
-						fadedIn = true;
-				}
-				else if (alpha > 0)
-				{
-					alpha -= FadeOutSpeed;
-				}
-			}
-			else
-			{
-				if (FadeIn && alpha < TargetAlpha)
-					alpha += FadeInSpeed;
+            ScaleDownSpeed = 0.005f;
 
-				if (FadeOut && alpha > 0)
-					alpha -= FadeOutSpeed;
-			}
+            Collide = false;
 
-			if (Collide)
-			{
-				var originalVelocity = Velocity;
+            alpha = 255;
+            fadedIn = false;
+            collided = false;
+        }
 
-				var collisionVelocity = Collision.TileCollision(Position, Velocity, 1, 1);
+        public override void OnSpawn()
+        {
+            if (FadeOut)
+                alpha = 255;
 
-				if (originalVelocity != collisionVelocity && !collided)
-				{
-					collided = true;
-					Velocity = collisionVelocity;
-					Velocity.Y = -MathF.Abs(Velocity.Y);
-					Velocity.Y *= Main.rand.NextFloat(0.1f, 0.25f);
-					Velocity.X *= Main.rand.NextFloat(5f, 10f);
-				}
+            if (FadeIn)
+                alpha = 0;
+        }
 
-				if (collided)
-				{
-					Velocity.Y *= 1.01f;
-				}
-			}
+        public override void AI()
+        {
+            if (FadeIn && FadeOut)
+            {
+                if (!fadedIn)
+                {
+                    if (alpha < TargetAlpha)
+                        alpha += FadeInSpeed;
+                    else
+                        fadedIn = true;
+                }
+                else if (alpha > 0)
+                {
+                    alpha -= FadeOutSpeed;
+                }
+            }
+            else
+            {
+                if (FadeIn && alpha < TargetAlpha)
+                    alpha += FadeInSpeed;
 
-			alpha = (int)MathHelper.Clamp(alpha, 0, 255);
+                if (FadeOut && alpha > 0)
+                    alpha -= FadeOutSpeed;
+            }
 
-			if (Scale < 0.1 || (fadedIn && alpha <= 0))
-				Kill();
-		}
+            if (Collide)
+            {
+                var originalVelocity = Velocity;
 
-		public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-		{
-			spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), Color.Lerp(DrawColor, lightColor, 0.5f).WithAlpha(DrawColor.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
-		}
+                var collisionVelocity = Collision.TileCollision(Position, Velocity, 1, 1);
 
-	}
+                if (originalVelocity != collisionVelocity && !collided)
+                {
+                    collided = true;
+                    Velocity = collisionVelocity;
+                    Velocity.Y = -MathF.Abs(Velocity.Y);
+                    Velocity.Y *= Main.rand.NextFloat(0.1f, 0.25f);
+                    Velocity.X *= Main.rand.NextFloat(5f, 10f);
+                }
+
+                if (collided)
+                {
+                    Velocity.Y *= 1.01f;
+                }
+            }
+
+            alpha = (int)MathHelper.Clamp(alpha, 0, 255);
+
+            if (Scale.X < 0.1f || (fadedIn && alpha <= 0))
+                Kill();
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color.Lerp(Color, lightColor, 0.5f).WithAlpha(Color.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+        }
+
+    }
 }

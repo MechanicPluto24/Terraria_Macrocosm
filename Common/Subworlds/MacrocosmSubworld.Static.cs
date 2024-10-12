@@ -5,160 +5,160 @@ using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
+using Terraria.IO;
 
 namespace Macrocosm.Common.Subworlds
 {
-	public enum MapColorType
-	{
-		SkyUpper,
-		SkyLower,
-		UndergroundUpper,
-		UndergroundLower,
-		CavernUpper,
-		CavernLower,
-		Underworld
-	}
 
-	public partial class MacrocosmSubworld
-	{
-		/// <summary> Get the current <c>MacrocosmSubworld</c> active instance. 
-		/// Earth returns null! You should check for <see cref="SubworldSystem.AnyActive"/> for <b>Macrocosm</b> before accessing this. </summary>
-		public static MacrocosmSubworld Current => SubworldSystem.AnyActive<Macrocosm>() ? SubworldSystem.Current as MacrocosmSubworld : null;
+    public partial class MacrocosmSubworld
+    {
+        /// <summary> Get the current <c>MacrocosmSubworld</c> active instance. 
+        /// Earth returns null! You should check for <see cref="SubworldSystem.AnyActive{Macrocosm}"/> for <see cref="Macrocosm"/> before accessing this. </summary>
+        public static MacrocosmSubworld Current => SubworldSystem.AnyActive<Macrocosm>() ? SubworldSystem.Current as MacrocosmSubworld : null;
 
-		/// <summary>
-		/// Get the current active subworld string ID, matching the subworld class name with the mod name prepended. 
-		/// Returns <c>"Macrocosm/Earth"</c> if none active.
-		/// </summary>
-		public static string CurrentID => SubworldSystem.AnyActive() ? SubworldSystem.Current.Mod.Name + "/" + SubworldSystem.Current.Name : "Macrocosm/Earth";
-		public static bool IsValidID(string id) => SubworldSystem.GetIndex(id) >= 0 || id is "Macrocosm/Earth";
-		public static string SanitizeID(string id) => id.Replace(Macrocosm.Instance.Name + "/", "");
+        /// <summary>
+        /// Get the current active subworld string ID, matching the subworld class name with the mod name prepended. 
+        /// Returns <see cref="Earth.ID"/> if none active.
+        /// </summary>
+        public static string CurrentID => SubworldSystem.AnyActive() ? SubworldSystem.Current.Mod.Name + "/" + SubworldSystem.Current.Name : Earth.ID;
+        public static bool IsValidID(string id) => SubworldSystem.GetIndex(id) >= 0 || id is Earth.ID;
 
-		public static int CurrentIndex => SubworldSystem.AnyActive() ? SubworldSystem.GetIndex(CurrentID) : -1;
+        public static string SanitizeID(string id) => SanitizeID(id, out _);
+        public static string SanitizeID(string id, out string modName)
+        {
+            string[] split = id.Split("/");
 
-		// TODO: We could protect the original properties get them only via statics?
-		public static double CurrentTimeRate => SubworldSystem.AnyActive<Macrocosm>() ? Current.TimeRate : Earth.TimeRate;
-		public static double CurrentDayLength => SubworldSystem.AnyActive<Macrocosm>() ? Current.DayLenght : Earth.DayLenght;
-		public static double CurrentNightLength => SubworldSystem.AnyActive<Macrocosm>() ? Current.NightLenght : Earth.NightLenght;
-		public static float CurrentGravityMultiplier => SubworldSystem.AnyActive<Macrocosm>() ? Current.GravityMultiplier : Earth.GravityMultiplier;
+            if (string.IsNullOrEmpty(id))
+            {
+                modName = "Macrocosm";
+                return "";
+            }
+            else if (split.Length == 1)
+            {
+                modName = "Macrocosm";
+                return split[0];
+            }
+            else
+            {
+                modName = split[0];
+                return split[1];
+            }
+        }
 
-		/// <summary> The loading screen. </summary>
-		public static LoadingScreen LoadingScreen { get; set; }
+        public static Dictionary<string, MacrocosmSubworld> Subworlds { get; } = [];
 
-		/// <summary> Travel to the specified subworld, using the specified rocket. </summary>
-		/// <param name="targetWorld"> The world to travel to, "Earth" for returning to the main world. </param>
-		/// <param name="rocket"> The spacecraft used for travel, if applicable. Will display in the loading screen. </param>
-		/// <param name="trigger"> Value set to the <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/>. Normally true. </param>
-		/// <returns> Whether world travel has been successful </returns>
-		public static bool Travel(string targetWorld, Rocket rocket = null, bool trigger = true)
-		{
-			if (Main.netMode != NetmodeID.Server)
-			{
-				if (!trigger)
-					rocket = null;
+        public static int CurrentIndex => SubworldSystem.AnyActive() ? SubworldSystem.GetIndex(CurrentID) : -1;
 
-				UpdateLoadingScreen(rocket, targetWorld);
+        public static Guid MainWorldUniqueID => SubworldSystem.AnyActive() ? typeof(SubworldSystem).GetFieldValue<WorldFileData>("main").UniqueId : Main.ActiveWorldFileData.UniqueId;
 
-				Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().TriggeredSubworldTravel = trigger;
-				Main.LocalPlayer.GetModPlayer<MacrocosmPlayer>().SetReturnSubworld(targetWorld);
+        public static double CurrentTimeRate => Current is not null ? Current.TimeRate : Earth.TimeRate;
+        public static double CurrentDayLength => Current is not null ? Current.DayLength : Earth.DayLength;
+        public static double CurrentNightLength => Current is not null ? Current.NightLength : Earth.NightLength;
+        public static float CurrentGravityMultiplier => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
+        public static float CurrentAtmosphericDensity => Current is not null ? Current.AtmosphericDensity : Earth.AtmosphericDensity;
 
-				if (targetWorld == "Macrocosm/Earth")
-				{
-					SubworldSystem.Exit();
-					LoadingScreen?.SetTargetWorld(targetWorld);
-					LoadingTitleSequence.SetTargetWorld(targetWorld);
-					return true;
-				}
+        /// <summary> The loading screen. </summary>
+        public static LoadingScreen LoadingScreen { get; set; }
 
-				bool entered = SubworldSystem.Enter(targetWorld);
+        /// <summary> Travel to the specified subworld, using the specified rocket. </summary>
+        /// <param name="targetWorldID"> The world to travel to, "Earth" for returning to the main world. </param>
+        /// <param name="rocket"> The spacecraft used for travel, if applicable. Will display in the loading screen. </param>
+        /// <param name="trigger"> Value set to the <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/>. Normally true. </param>
+        /// <returns> Whether world travel has been successful </returns>
+        public static bool Travel(string targetWorldID, Rocket rocket = null, bool trigger = true)
+        {
+            if (Main.netMode != NetmodeID.Server)
+            {
+                if (!trigger)
+                    rocket = null;
 
-				if (entered)
-				{
-					LoadingScreen?.SetTargetWorld(targetWorld);
-					LoadingTitleSequence.SetTargetWorld(targetWorld);
-				}
-				else
-				{
-					WorldTravelFailure("Error: Failed entering target subworld: " + targetWorld + ", staying on " + CurrentID);
-				}
+                SetupLoadingScreen(rocket, targetWorldID);
+                TitleCard.SetTargetWorld(targetWorldID);
 
-				return entered;
-			}
-			else
-			{
-				return true;
-			}
-		}
+                Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel = trigger;
+                Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().SetReturnSubworld(targetWorldID);
 
-		private static void UpdateLoadingScreen(Rocket rocket, string targetWorld)
-		{
-			if (rocket is not null)
-			{
-				if (!SubworldSystem.AnyActive<Macrocosm>())
-					LoadingScreen = new EarthLoadingScreen();
-				else LoadingScreen = CurrentID switch
-				{
-					"Macrocosm/Moon" => new MoonLoadingScreen(),
-					_ => null,
-				};
-			}
-			else
-			{
-				LoadingScreen = targetWorld switch
-				{
-					"Macrocosm/Earth" => new EarthLoadingScreen(),
-					"Macrocosm/Moon" => new MoonLoadingScreen(),
-					_ => null,
-				};
-			}
+                if (targetWorldID == Earth.ID)
+                {
+                    SubworldSystem.Exit();
+                    return true;
+                }
 
-			if (rocket is not null)
-				LoadingScreen?.SetRocket(rocket);
-			else
-				LoadingScreen?.ClearRocket();
+                bool entered = SubworldSystem.Enter(targetWorldID);
+                if (!entered)
+                    WorldTravelFailure("Error: Failed entering target subworld: " + targetWorldID + ", staying on " + CurrentID);
 
+                return entered;
+            }
+            else
+            {
+                return false;
+            }
+        }
 
-			LoadingScreen?.Setup();
-		}
+        private static void SetupLoadingScreen(Rocket rocket, string targetWorld)
+        {
+            if (rocket is not null)
+            {
+                if (!SubworldSystem.AnyActive<Macrocosm>())
+                {
+                    LoadingScreen = new EarthLoadingScreen();
+                }
+                else
+                {
+                    LoadingScreen = SanitizeID(CurrentID) switch
+                    {
+                        nameof(Moon) => new MoonLoadingScreen(),
+                        _ => null,
+                    };
+                }
+            }
+            else
+            {
+                LoadingScreen = SanitizeID(targetWorld) switch
+                {
+                    nameof(Earth) => new EarthLoadingScreen(),
+                    nameof(Moon) => new MoonLoadingScreen(),
+                    _ => null,
+                };
+            }
 
-		// Called if travel to the target subworld fails
-		public static void WorldTravelFailure(string message)
-		{
-			Utility.Chat(message, Color.Red);
-			Macrocosm.Instance.Logger.Error(message);
-		}
+            if (rocket is not null)
+                LoadingScreen?.SetRocket(rocket);
+            else
+                LoadingScreen?.ClearRocket();
 
-		public class Hacks
-		{
-			/// <summary>
-			/// Remove this once SubworldLibrary <see href="https://github.com/jjohnsnaill/SubworldLibrary/pull/35"/> is merged.
-			/// </summary>
-			public static void SubworldSystem_NullCache()
-			{
-				FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
-				field.SetValue(null, null);
-			}
+            LoadingScreen?.Setup();
+        }
 
-			/// <summary> 
-			/// Bypasses SubworldLibrary tag key existence check. 
-			/// TODO: Replace with <see cref="SubworldSystem.CopyWorldData(string, object)"/> on next SubworldLibrary update.
-			/// </summary>
-			public static void SubworldSystem_CopyWorldData(string key, object data)
-			{
-				var copiedData = Utility.GetFieldValue<TagCompound>(typeof(SubworldSystem), "copiedData", flags: BindingFlags.Static | BindingFlags.NonPublic);
+        // Called if travel to the target subworld fails
+        public static void WorldTravelFailure(string message)
+        {
+            Utility.Chat(message, Color.Red);
+            Macrocosm.Instance.Logger.Error(message);
+        }
 
-				if (data != null)
-					copiedData[key] = data;
-			}
+        public class Hacks
+        {
+            /// <summary>
+            /// Remove this once SubworldLibrary <see href="https://github.com/jjohnsnaill/SubworldLibrary/pull/35"/> is merged.
+            /// </summary>
+            public static void SubworldSystem_NullCache()
+            {
+                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
+                field.SetValue(null, null);
+            }
 
-			public static void SubworldSystem_SendToAllSubserversExcept(Mod mod, int ignoreSubserver, byte[] data)
-			{
-
-			}
-		}
-	}
+            public static bool SubworldSystem_CacheIsNull()
+            {
+                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
+                return field.GetValue(null) is null;
+            }
+        }
+    }
 }

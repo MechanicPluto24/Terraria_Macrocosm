@@ -1,41 +1,42 @@
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-	public class ArtemiteBrightDust : ModDust
-	{
-		public override void OnSpawn(Dust dust)
-		{
-			dust.noLight = true;
-			dust.scale = Main.rand.NextFloat(1, 1.35f);
-		}
+    public class ArtemiteBrightDust : ModDust
+    {
+        public override bool Update(Dust dust)
+        {
+            dust.position += dust.velocity;
+            dust.rotation += dust.dustIndex % 2 == 0 ? 0.2f : -0.2f;
 
-		public override bool Update(Dust dust)
-		{
-			dust.position += dust.velocity;
-			dust.rotation += dust.dustIndex % 2 == 0 ? -0.4f : 0.4f;
+            float scale = dust.scale;
+            if (scale > 1f)
+                scale = 1f;
 
-			if (!dust.noGravity)
-				dust.velocity.Y += 0.9f;
-			else
-				dust.velocity *= 0.88f;
+            if (!dust.noLight)
+                Lighting.AddLight(dust.position, new Color(129, 219, 198).ToVector3() * scale);
 
-			dust.scale -= 0.03f;
+            if (dust.noGravity)
+                dust.velocity *= 0.93f;
+            else
+                dust.velocity.Y += 0.1f;
 
-			if (dust.scale < 0f)
-				dust.active = false;
+            if (dust.customData != null && dust.customData is Player player)
+                dust.position += player.position - player.oldPosition;
 
-			Lighting.AddLight(dust.position, new Color(51, 185, 131).ToVector3() * 0.6f);
+            dust.scale -= 0.03f;
+            if (dust.scale < 0.2f)
+                dust.active = false;
 
-			return false;
-		}
+            return false;
+        }
 
-		public override bool MidUpdate(Dust dust) => true;
+        public override bool MidUpdate(Dust dust) => false;
 
-		public override Color? GetAlpha(Dust dust, Color lightColor)
-			=> Color.White;
-
-	}
+        public override Color? GetAlpha(Dust dust, Color lightColor)
+            => Color.White.WithAlpha(127);
+    }
 }
