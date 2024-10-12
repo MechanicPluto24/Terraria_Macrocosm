@@ -940,3 +940,53 @@ CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip: Summons a Mini Crater Demon
 }
+
+TempestuousBand: {
+	DisplayName: Tempestuous Band
+	Tooltip:
+		'''
+		Critical strikes deal 25% increased extra damage
+		Non-critical strikes deal 25% less damage
+		15% increased critical strike chance
+		'''
+}
+
+ArcaneBarnacle: {
+	DisplayName: Arcane Barnacle
+	Tooltip:
+		'''
+		15% increased magic damage
+		100% increased mana cost
+		Hitting an enemy leeches 1% of damage as mana
+		Items that instantly restore mana are disabled
+		'''
+}
+
+MomentumLash: {
+	DisplayName: Momentum Lash
+	Tooltip: Repeatedly hitting enemies with a whip increases summon damage and whip speed up to +25%
+}
+
+Ilmenite: {
+	DisplayName: Ilmenite
+	Tooltip: ""
+}
+
+Exsanguinator: {
+	DisplayName: Exsanguinator
+	Tooltip: ""
+}
+
+StalwartTowerShield: {
+	DisplayName: Stalwart Tower Shield
+	Tooltip: Repeatedly getting hit will increase defence by +10 up to +30
+}
+
+ThaumaturgicWard: {
+	DisplayName: Thaumaturgic Ward
+	Tooltip:
+		'''
+		Below 20% of maximum life, 50% of damage is taken from mana
+		Any mana taken
+		'''
+}

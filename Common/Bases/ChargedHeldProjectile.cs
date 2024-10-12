@@ -34,7 +34,7 @@ namespace Macrocosm.Common.Bases
         protected int itemUseTime;
 
 		protected Player Player => Main.player[Projectile.owner];
-		protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed;
+		protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed && !Player.dead;
 
 		public virtual float CircularHoldoutOffset { get; set; } = 1f;
 
@@ -102,7 +102,7 @@ namespace Macrocosm.Common.Bases
 
 		protected virtual void Aim()
 		{
-			if (!StillInUse || Player.whoAmI != Main.myPlayer)
+			if (Player.whoAmI != Main.myPlayer)
 				return;
 
 			// Get the player's current aiming direction as a normalized vector.
@@ -115,7 +115,7 @@ namespace Macrocosm.Common.Bases
 			if ((aim != Projectile.velocity || Projectile.velocity != Projectile.oldVelocity) && Main.netMode != NetmodeID.MultiplayerClient)
 				Projectile.netUpdate = true;
 
-			if (StillInUse && ShouldUpdateAimRotation)
+			if (ShouldUpdateAimRotation)
 				Projectile.velocity = aim;
 		}
 	}

@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 	{
 		public override string Texture => Macrocosm.EmptyTexPath;
 
-		public float Strenght
+		public float Strength
 		{
 			get => MathHelper.Clamp(Projectile.ai[0], 0f, 1f);
 			set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
 			if (trailMultiplier < 1f)
-				trailMultiplier += 0.015f * (0.1f + Strenght * 0.9f);
+				trailMultiplier += 0.015f * (0.1f + Strength * 0.9f);
 
 			Lighting.AddLight(Projectile.Center, new Color(177, 230, 204).ToVector3() * 0.6f);
 		}
