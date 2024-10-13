@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             state2.SaveState(spriteBatch, true);
 
-            if (rocket.ForcedFlightAppearance || rocket.State != Rocket.ActionState.Idle)
+            if (rocket.ForcedFlightAppearance || (rocket.State != Rocket.ActionState.Idle && rocket.State != Rocket.ActionState.PreLaunch))
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state2);

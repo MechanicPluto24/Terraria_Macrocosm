@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Subworlds
 {
     public partial class Moon
     {
-        public int CynthalithlithLayerHeight { get; } = 50;
+        public int CynthalithlithLayerHeight { get; } = 65;
         public int RegolithLayerHeight { get; } = 200;
         private float SurfaceWidthFrequency { get; } = 0.003f;
         private float SurfaceHeightFrequency { get; } = 20f;
@@ -538,11 +538,73 @@ namespace Macrocosm.Content.Subworlds
                     {
                         continue;
                     }
-                    if (j < surfaceHeight + 60 && Main.rand.Next(Math.Abs(surfaceHeight + 60 - j)) < 10)
+                    FastPlaceTile(i, j, cynthalithType);
+
+                   
+                  
+
+
+
+                    float Distance = Math.Abs(surfaceHeight+ CynthalithlithLayerHeight+80  - j) / ((surfaceHeight + RegolithLayerHeight+ 30)-(surfaceHeight + CynthalithlithLayerHeight)*0.5f);
+                    if (WorldGen.genRand.NextFloat() > Distance*0.16f)
                     {
                         continue;
                     }
-                    FastPlaceTile(i, j, cynthalithType);
+                    WorldGen.TileRunner(i, j, WorldGen.genRand.Next(10,25), WorldGen.genRand.Next(10, 60), cynthalithType);
+
+
+                    
+                }
+            }
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
+                int surfaceHeight = SurfaceHeight(i);
+                for (int j = surfaceHeight + CynthalithlithLayerHeight; j < surfaceHeight + RegolithLayerHeight + 30; j++)
+                {
+                    if (!Main.tile[i, j].HasTile)
+                    {
+                        continue;
+                    }   
+                    if(Main.rand.NextBool(300))
+                    {
+                        WorldGen.TileRunner(i, j, WorldGen.genRand.Next(6,12), WorldGen.genRand.Next(6,12), (ushort)TileType<Regolith>());
+                    }
+                   
+                }
+            }
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
+                int surfaceHeight = SurfaceHeight(i);
+                for (int j = surfaceHeight + CynthalithlithLayerHeight+80; j < surfaceHeight + RegolithLayerHeight + 30; j++)
+                {
+                    if (!Main.tile[i, j].HasTile)
+                    {
+                        continue;
+                    }   
+                    if(Main.rand.NextBool(300))
+                    {
+                        WorldGen.TileRunner(i, j, WorldGen.genRand.Next(6,12), WorldGen.genRand.Next(6,12), (ushort)TileType<Protolith>());
+                    }
+                   
+                }
+            }
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
+                int surfaceHeight = SurfaceHeight(i);
+                for (int j = surfaceHeight + RegolithLayerHeight + 30; j < surfaceHeight + RegolithLayerHeight + 140; j++)
+                {
+                    if (!Main.tile[i, j].HasTile)
+                    {
+                        continue;
+                    }   
+                    if(Main.rand.NextBool(300))
+                    {
+                        WorldGen.TileRunner(i, j, WorldGen.genRand.Next(6,12), WorldGen.genRand.Next(6,12), (ushort)TileType<Cynthalith>());
+                    }
+                   
                 }
             }
         }
@@ -724,7 +786,7 @@ namespace Macrocosm.Content.Subworlds
             GenerateOre(TileID.LunarOre, 0.00005, WorldGen.genRand.Next(9, 15), WorldGen.genRand.Next(9, 15), protolithType);
         }
 
-        [Task]
+        //[Task]
         private void QuartzTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OrePass");
@@ -985,7 +1047,7 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             int tries = 10000;
-            int count = WorldGen.genRand.Next(20, 80);
+            int count = WorldGen.genRand.Next(10, 30);
             for (int i = 0; i < count; i++)
             {
                 if (tries <= 0)
@@ -1020,7 +1082,7 @@ namespace Macrocosm.Content.Subworlds
             float smallRockSpawnChance = 0.1f;
             float mediumRockSpawnChance = 0.05f;
             float largeRockSpawnChance = 0.01f;
-            float altarChance = 0.0025f;
+            float altarChance = 0.01f;
             float kyaniteNestChance = 0.0045f;
 
             ushort regolithType = (ushort)TileType<Regolith>();

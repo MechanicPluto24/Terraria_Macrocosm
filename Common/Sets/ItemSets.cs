@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Content.Liquids;
 using Terraria;
 using Terraria.ID;
 
@@ -22,11 +23,31 @@ namespace Macrocosm.Common.Sets
         /// <summary> Set of items from which liquid can be extracted (e.g. Oil Shale). See <see cref="DataStructures.LiquidExtractData"/></summary>
         public static LiquidExtractData[] LiquidExtractData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new LiquidExtractData());
 
+        public static LiquidContainerData[] LiquidContainerData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new LiquidContainerData(), 
+            ItemID.EmptyBucket, DataStructures.LiquidContainerData.CreateEmpty(10),
+            ItemID.WaterBucket, new LiquidContainerData(LiquidType.Water, 10, ItemID.EmptyBucket),
+            ItemID.LavaBucket, new LiquidContainerData(LiquidType.Lava, 10, ItemID.EmptyBucket),
+            ItemID.HoneyBucket, new LiquidContainerData(LiquidType.Honey, 10, ItemID.EmptyBucket),
+            ItemID.BottomlessBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Water),
+            ItemID.BottomlessLavaBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Lava),
+            ItemID.BottomlessHoneyBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Honey),
+            ItemID.BottomlessShimmerBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Shimmer)
+        );
+
         /// <summary> Set of items wiith custom potion sickness duration </summary>
         public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
 
-        /// <summary>  </summary>
+        /// <summary> 
+        /// If true, explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
+        /// <br/> Set to false to disable self damage for explosives shot by this weapon in regular gameplay (not FTW).
+        /// </summary>
         public static bool[] ExplosivesShotDealDamageToOwner { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
+
+        /// <summary> 
+        /// If true, explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
+        /// <br/> Set to false to disable self damage for explosives shot by this weapon in For The Worthy worlds.
+        /// </summary>
+        public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
 
         /// <summary> Unobtainable developer/debug items. Items in this set have a "Developer Item" tooltip  </summary>
         public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateBoolSet();

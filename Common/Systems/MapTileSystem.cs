@@ -19,8 +19,13 @@ namespace Macrocosm.Common.Systems
             mapTileColorLookupBySubworld = new();
         }
 
+        public override void PostSetupContent()
+        {
+        }
+
         public override void Unload()
         {
+            MapHelper.Initialize();
             mapTileColorLookupBySubworld = null;
         }
 
@@ -52,7 +57,7 @@ namespace Macrocosm.Common.Systems
 
         /// <summary> 
         /// Applies the subworld-specific map tile colors specified in the current <see cref="MacrocosmSubworld.MapColors"/>. 
-        /// Should only be called in <see cref="MacrocosmSubworld.OnEnter"/>.
+        /// Should be called in <see cref="MacrocosmSubworld.OnEnter"/>.
         /// </summary>
         public static void ApplyMapTileColors()
         {

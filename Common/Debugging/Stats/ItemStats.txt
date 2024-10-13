@@ -1,3 +1,7 @@
+ArcaneBarnacle
+	Value: No value
+	Research count: 1
+
 CelestialBulwark
 	Value: 50 gold
 	Research count: 1
@@ -12,8 +16,24 @@ CelestialBulwark
 		Ancient Manipulator
 
 
+MomentumLash
+	Value: No value
+	Research count: 1
+
 OsmiumBoots
 	Value: 25 gold
+	Research count: 1
+
+StalwartTowerShield
+	Value: No value
+	Research count: 1
+
+TempestuousBand
+	Value: No value
+	Research count: 1
+
+ThaumaturgicWard
+	Value: No value
 	Research count: 1
 
 InvarArrow
@@ -1909,6 +1929,29 @@ ZombieFinger
 	Value: 2 silver
 	Research count: 1
 
+Canister
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Aluminum Bar x 10
+		Steel Bar x 5
+		Silicon x 8
+		at
+		Mythril Anvil
+
+
+RocketFuelCanister
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Aluminum Bar x 2
+		Steel Bar x 1
+		Silicon x 1
+		at
+		Mythril Anvil
+			=> x25
+
+
 BurnerGenerator
 	Value: 5 silver
 	Research count: 1
@@ -2137,17 +2180,6 @@ EngineComponent
 		Fabricator
 
 
-FuelCanister
-	Value: 1 silver
-	Research count: 100
-	Recipes:
-		Aluminum Bar x 10
-		Steel Bar x 5
-		Silicon x 8
-		at
-		Fabricator
-
-
 Gear
 	Value: 1 silver
 	Research count: 5
@@ -2343,6 +2375,11 @@ ArtemiteHammer
 ArtemitePickaxe
 	Value: 40 gold
 	Research count: 1
+	Recipes:
+		Artemite Bar x 12
+		at
+		Ancient Manipulator
+
 
 ChandriumAxe
 	Value: 30 gold
@@ -2364,6 +2401,11 @@ ChandriumHammer
 ChandriumPickaxe
 	Value: 40 gold
 	Research count: 1
+	Recipes:
+		Chandrium Bar x 12
+		at
+		Ancient Manipulator
+
 
 DianiteAxe
 	Value: 1 gold
@@ -2711,6 +2753,10 @@ WaveGunRed
 	Value: 25 gold
 	Research count: 1
 
+WornLunarianDagger
+	Value: 1 gold
+	Research count: 1
+
 AluminumBroadsword
 	Value: 15 silver 50 copper
 	Research count: 1
@@ -2728,6 +2774,10 @@ AluminumShortsword
 		at
 		Anvil
 
+
+ArmstrongGauntlets
+	Value: 98 silver 45 copper
+	Research count: 1
 
 ArtemiteGreatsword
 	Value: 1 gold
@@ -2830,6 +2880,10 @@ Cruithne
 	Value: 1 gold
 	Research count: 1
 
+Ilmenite
+	Value: 1 gold
+	Research count: 1
+
 InhibitorFieldGrenade
 	Value: 20 silver
 	Research count: 1
@@ -2919,12 +2973,11 @@ ChandriumWhip
 		Ancient Manipulator
 
 
+DroneRemote
+	Value: 1 platinum 50 gold
+	Research count: 1
+
 Totality
 	Value: No value
 	Research count: 1
-	Recipes:
-		Chandrium Bar x 12
-		at
-		Ancient Manipulator
-
 

@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,6 +10,7 @@ using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
+using static Macrocosm.Content.Tiles.Furniture.Industrial.IndustrialChest;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
@@ -23,7 +25,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {
             new(ModContent.ItemType<RocketPlating>(), 45),
-            new(ModContent.ItemType<FuelCanister>(), 15),
+            new(ModContent.ItemType<Canister>(), 15),
             new(ModContent.ItemType<EngineComponent>(), 4),
             new(ModContent.ItemType<LandingGear>(), 3)
         };
@@ -51,7 +53,7 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, lightColor, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
-            if ( rocket.ForcedFlightAppearance || rocket.State != Rocket.ActionState.Idle)
+            if ( rocket.ForcedFlightAppearance || (rocket.State != Rocket.ActionState.Idle && rocket.State != Rocket.ActionState.PreLaunch))
             {
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.Additive, state1);
@@ -64,7 +66,6 @@ namespace Macrocosm.Content.Rockets.Modules
 
                 if (rocket.State == Rocket.ActionState.Landing)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
-
             }
 
             spriteBatch.End();

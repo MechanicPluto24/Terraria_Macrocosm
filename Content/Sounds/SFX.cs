@@ -22,6 +22,10 @@ namespace Macrocosm.Content.Sounds
         public static readonly SoundStyle WaveGunSplit = new(SFXPath + "WaveGunSplit");
         public static readonly SoundStyle WaveGunShot = new(SFXPath + "WaveGunShot");
         public static readonly SoundStyle WaveGunShotRifle = new(SFXPath + "WaveGunShotRifle");
-
+        public static readonly SoundStyle ZombieDeath = new(SFXPath + "ZombieDeath");
+        public static readonly SoundStyle Zombie = new(SFXPath + "ZombieDeath_", 5);
+        public static readonly SoundStyle ZombieEngineerSprint = new(SFXPath + "ZombieEngineerSprint");
+        public static readonly SoundStyle ZombieEngineerGasLeak = new(SFXPath + "ZombieEngineerGasLeak");
+        public static readonly SoundStyle ZombieEngineerDeath = new(SFXPath + "ZombieEngineerDeath");
     }
 }

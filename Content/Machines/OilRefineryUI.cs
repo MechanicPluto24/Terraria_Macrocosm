@@ -1,14 +1,17 @@
-﻿using Macrocosm.Common.Sets.Items;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
-using Macrocosm.Content.Items.Tech;
+using Macrocosm.Content.Items.LiquidContainers;
+using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 
@@ -20,11 +23,20 @@ namespace Macrocosm.Content.Machines
 
         private UIPanel backgroundPanel;
 
-        private UIInventorySlot sourceSlot;
-        private UILiquidTank sourceLiquidTank;
+        private UILiquidTank inputLiquidTank;
+        private UILiquidTank outputLiquidTank;
 
-        private UIInventorySlot resultSlot;
-        private UILiquidTank resultLiquidTank;
+        private UITextPanel<string> inputTankLiquidName;
+        private UITextPanel<string> outputTankLiquidName;
+
+        private UIHoverImageButton inputSlotToInputTankArrow;
+        private UIHoverImageButton inputTankToOutputTankArrow;
+        private UIHoverImageButton outputTankToContainerSlotArrow;
+        private UIHoverImageButton containerSlotToOutputSlotArrow;
+
+        private UIInventorySlot inputSlot;
+        private UIInventorySlot containerSlot;
+        private UIInventorySlot outputSlot;
 
         public OilRefineryUI()
         {
@@ -34,7 +46,7 @@ namespace Macrocosm.Content.Machines
         {
             base.OnInitialize();
 
-            Width.Set(745f, 0f);
+            Width.Set(515f, 0f);
             Height.Set(394f, 0f);
 
             Recalculate();
@@ -49,41 +61,104 @@ namespace Macrocosm.Content.Machines
             backgroundPanel.SetPadding(0);
             Append(backgroundPanel);
 
-            sourceLiquidTank = new(Liquids.LiquidType.Oil)
+            inputLiquidTank = new(LiquidType.Oil)
             {
                 Width = new(25, 0),
-                Height = new(0, 0.8f),
-                Left = new(-25, 0.25f),
-                VAlign = 0.5f
+                Height = new(0, 0.7f),
+                Left = new(-25, 0.30f),
+                VAlign = 0.65f
             };
-            Append(sourceLiquidTank);
+            backgroundPanel.Append(inputLiquidTank);
 
-            resultLiquidTank = new(Liquids.LiquidType.RocketFuel)
+            outputLiquidTank = new(LiquidType.RocketFuel)
             {
                 Width = new(25, 0),
-                Height = new(0, 0.8f),
-                Left = new(0, 0.75f),
-                VAlign = 0.5f
+                Height = new(0, 0.7f),
+                Left = new(0, 0.495f),
+                VAlign = 0.65f
             };
-            Append(resultLiquidTank);
+            backgroundPanel.Append(outputLiquidTank);
+
+            inputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.Oil)}"))
+            {
+                HAlign = 0.257f,
+                Top = new(0, 0.08f),
+                TextScale = 0.8f,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(inputTankLiquidName);
+
+            outputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.RocketFuel)}"))
+            {
+                HAlign = 0.53f,
+                Top = new(0, 0.08f),
+                TextScale = 0.8f,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(outputTankLiquidName);
 
             if (OilRefinery.Inventory is not null)
             {
-                sourceSlot = OilRefinery.Inventory.ProvideItemSlot(0);
-                sourceSlot.Top = new(0, 0.45f);
-                sourceSlot.Left = new(-48, 0.15f);
-                backgroundPanel.Append(sourceSlot);
+                inputSlot = OilRefinery.Inventory.ProvideItemSlot(0);
+                inputSlot.Top = new(0, 0.45f);
+                inputSlot.Left = new(-48, 0.12f);
+                backgroundPanel.Append(inputSlot);
 
-                resultSlot = OilRefinery.Inventory.ProvideItemSlot(1);
-                resultSlot.Top = new(0, 0.45f);
-                resultSlot.Left = new(0, 0.85f);
-                resultSlot.AddReserved(
-                    (item) => item.ModItem is LiquidContainer,
-                    Lang.GetItemName(ModContent.ItemType<FuelCanister>()),
-                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture + "_Blueprint")
+                containerSlot = OilRefinery.Inventory.ProvideItemSlot(1);
+                containerSlot.Top = new(0, 0.45f);
+                containerSlot.Left = new(0, 0.67f);
+                containerSlot.AddReserved(
+                    (item) => item.type >= 0 && ItemSets.LiquidContainerData[item.type].Valid,
+                    Lang.GetItemName(ModContent.ItemType<Canister>()),
+                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
                 );
-                backgroundPanel.Append(resultSlot);
+                backgroundPanel.Append(containerSlot);
+
+                outputSlot = OilRefinery.Inventory.ProvideItemSlot(2);
+                outputSlot.Top = new(0, 0.45f);
+                outputSlot.Left = new(0, 0.885f);
+                outputSlot.AddReserved(
+                    (item) => item.type >= 0 && ItemSets.LiquidContainerData[item.type].Valid,
+                    Lang.GetItemName(ModContent.ItemType<Canister>()),
+                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
+                );
+                backgroundPanel.Append(outputSlot);
             }
+
+            Asset<Texture2D> arrow = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Buttons/LongArrow", AssetRequestMode.ImmediateLoad);
+            inputSlotToInputTankArrow = new(arrow)
+            {
+                Left = new(0, 0.125f),
+                VAlign = 0.52f
+            };
+            inputSlotToInputTankArrow.SetVisibility(1f);
+            backgroundPanel.Append(inputSlotToInputTankArrow);
+
+            inputTankToOutputTankArrow = new(arrow)
+            {
+                Left = new(0, 0.341f),
+                VAlign = 0.52f
+            };
+            inputTankToOutputTankArrow.SetVisibility(1f);
+            backgroundPanel.Append(inputTankToOutputTankArrow);
+
+            outputTankToContainerSlotArrow = new(arrow)
+            {
+                Left = new(0, 0.555f),
+                VAlign = 0.52f
+            };
+            outputTankToContainerSlotArrow.SetVisibility(1f);
+            backgroundPanel.Append(outputTankToContainerSlotArrow);
+
+            containerSlotToOutputSlotArrow = new(arrow)
+            {
+                Left = new(0, 0.772f),
+                VAlign = 0.52f
+            };
+            containerSlotToOutputSlotArrow.SetVisibility(1f);
+            backgroundPanel.Append(containerSlotToOutputSlotArrow);
         }
 
         public override void Update(GameTime gameTime)
@@ -91,15 +166,15 @@ namespace Macrocosm.Content.Machines
             base.Update(gameTime);
 
             Inventory.ActiveInventory = OilRefinery.Inventory;
-            resultSlot.CanInteract = OilRefinery.CanInteractWithResultSlot;
+            outputSlot.CanInteract = true;
 
-            sourceLiquidTank.LiquidLevel = MathHelper.Lerp(sourceLiquidTank.LiquidLevel, OilRefinery.SourceTankAmount / OilRefinery.SourceTankCapacity, 0.025f);
-            sourceLiquidTank.WaveAmplitude = 1f;
-            sourceLiquidTank.WaveFrequency = 1f;
+            inputLiquidTank.LiquidLevel = MathHelper.Lerp(inputLiquidTank.LiquidLevel, OilRefinery.InputTankAmount / OilRefinery.SourceTankCapacity, 0.025f);
+            inputLiquidTank.WaveAmplitude = 1f;
+            inputLiquidTank.WaveFrequency = 1f;
 
-            resultLiquidTank.LiquidLevel = MathHelper.Lerp(resultLiquidTank.LiquidLevel, OilRefinery.ResultTankAmount / OilRefinery.ResultTankCapacity, 0.025f);
-            resultLiquidTank.WaveAmplitude = 1f;
-            resultLiquidTank.WaveFrequency = 1f;
+            outputLiquidTank.LiquidLevel = MathHelper.Lerp(outputLiquidTank.LiquidLevel, OilRefinery.OutputTankAmount / OilRefinery.ResultTankCapacity, 0.025f);
+            outputLiquidTank.WaveAmplitude = 1f;
+            outputLiquidTank.WaveFrequency = 1f;
         }
     }
 }

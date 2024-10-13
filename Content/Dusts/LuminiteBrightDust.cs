@@ -9,7 +9,6 @@ namespace Macrocosm.Content.Dusts
     {
         public override void OnSpawn(Dust dust)
         {
-            dust.scale = Main.rand.NextFloat(1, 1.35f);
         }
 
         public override bool Update(Dust dust)
@@ -35,6 +34,6 @@ namespace Macrocosm.Content.Dusts
         public override bool MidUpdate(Dust dust) => true;
 
         public override Color? GetAlpha(Dust dust, Color lightColor)
-            => Color.White.WithAlpha(127);
+            => Color.White.WithAlpha((byte)dust.alpha);
     }
 }

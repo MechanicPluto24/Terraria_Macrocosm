@@ -2,13 +2,16 @@
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -23,10 +26,7 @@ namespace Macrocosm.Common.Systems.Power
         public float ActivePower
         {
             get => activePower;
-            set
-            {
-                activePower = MathHelper.Lerp(activePower, value, 0.25f);
-            }
+            set => activePower = value;
         }
 
         public bool IsConsumer => consumedPower != null;
@@ -99,7 +99,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public string GetPowerInfo()
         {
-            // TODO: localize these 4 words
+            // TODO: localize 
             string name = Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0));
             if (IsGenerator)
                 return $"{name} - Available: {ActivePower:F2}W / Generated: {GeneratedPower:F2} W";
@@ -222,6 +222,20 @@ namespace Macrocosm.Common.Systems.Power
             {
                 NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
                 CircuitSystem.SearchCircuits();
+            }
+        }
+
+        public static void DebugDrawMachines(SpriteBatch spriteBatch)
+        {
+            foreach (var kvp in ByID)
+            {
+                if (kvp.Value is MachineTE machine)
+                {
+                    string activePower = machine.ActivePower.ToString("F2");
+                    string maxPower = (machine.IsGenerator ? machine.GeneratedPower : machine.ConsumedPower).ToString("F2");
+                    Vector2 position = machine.Position.ToWorldCoordinates() - new Vector2(8, 16 + 8) - Main.screenPosition;
+                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, $"{activePower}/{maxPower}", position, Color.Wheat, 0f, Vector2.Zero, Vector2.One);
+                }
             }
         }
     }

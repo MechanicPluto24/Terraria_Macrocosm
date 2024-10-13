@@ -647,7 +647,11 @@ Copernicus: {
 
 Cruithne: {
 	DisplayName: Cruithne-3753
-	Tooltip: Shoots slugs and a Delirium shell
+	Tooltip:
+		'''
+		Converts musket balls to green slugs.
+		Shoots a delirium shell.
+		'''
 }
 
 LHBMinigun: {
@@ -1711,7 +1715,7 @@ StarRoyaleToilet: {
 
 XaocKey: {
 	DisplayName: Xaoc Key
-	Tooltip: ""
+	Tooltip: Opens all Luminite Chests
 }
 
 AstraCandelabra: {
@@ -2010,7 +2014,7 @@ NickelOre: {
 }
 
 InhibitorFieldGrenade: {
-	DisplayName: Inhibitor Field Grenade
+	DisplayName: Stasis Grenade
 	Tooltip: ""
 }
 
@@ -2022,4 +2026,83 @@ QuartzFragment: {
 ManisolBlades: {
 	DisplayName: Manisol Blades
 	Tooltip: ""
+}
+
+ArmstrongGauntlets: {
+	DisplayName: Armstrong Gauntlets
+	Tooltip: ""
+}
+
+WornLunarianDagger: {
+	DisplayName: Worn Lunarian Dagger
+	Tooltip:
+		'''
+		'A worn out dagger once had multiple uses. 
+		Now only its magical capabilities remain.'
+		'''
+}
+
+Canister: {
+	DisplayName: Canister
+	Tooltip: ""
+}
+
+RocketFuelCanister: {
+	DisplayName: Rocket Fuel Canister
+	Tooltip: ""
+}
+
+DroneRemote: {
+	DisplayName: P.D.C.D. Controller
+	Tooltip: Summons a Hummingbird drone to fight for you
+}
+
+TempestuousBand: {
+	DisplayName: Tempestuous Band
+	Tooltip:
+		'''
+		Critical strikes deal 25% increased extra damage
+		Non-critical strikes deal 25% less damage
+		15% increased critical strike chance
+		'''
+}
+
+ArcaneBarnacle: {
+	DisplayName: Arcane Barnacle
+	Tooltip:
+		'''
+		15% increased magic damage
+		100% increased mana cost
+		Hitting an enemy leeches 1% of damage as mana
+		Items that instantly restore mana are disabled
+		'''
+}
+
+MomentumLash: {
+	DisplayName: Momentum Lash
+	Tooltip: Repeatedly hitting enemies with a whip increases summon damage and whip speed up to +25%
+}
+
+Ilmenite: {
+	DisplayName: Ilmenite
+	Tooltip: ""
+}
+
+Exsanguinator: {
+	DisplayName: Exsanguinator
+	Tooltip: ""
+}
+
+StalwartTowerShield: {
+	DisplayName: Stalwart Tower Shield
+	Tooltip: Repeatedly getting hit will increase defence by +10 up to +30
+}
+
+ThaumaturgicWard: {
+	DisplayName: Thaumaturgic Ward
+	Tooltip:
+		'''
+		Below 20% of maximum life, 50% of damage is taken from mana
+		Any mana taken
+		'''
 }
