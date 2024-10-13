@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-    public class DianiteOre : ModTile, IModifyTileFrame
+    public class DianiteOre : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Tiles.Ores
             Main.tileBlockLight[Type] = true;
 
             TileID.Sets.ChecksForMerge[Type] = true;
-            Main.tileMerge[ModContent.TileType<Regolith>()][Type] = true;
+            Regolith.TileMerge[Type] = true;
 
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(210, 116, 75), name);
@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Tiles.Ores
             MineResist = 5f;
         }
 
-        public void ModifyTileFrame(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
+        public override void ModifyFrameMerge(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
         {
             WorldGen.TileMergeAttempt(-2, ModContent.TileType<Regolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
         }

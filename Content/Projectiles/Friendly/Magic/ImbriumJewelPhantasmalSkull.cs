@@ -1,13 +1,13 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Particles;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
 using Terraria;
-using Macrocosm.Content.Dusts;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -58,19 +58,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             set => Projectile.ai[2] = value;
         }
 
-        // The orbit center's position
-        private Vector2 targetPosition;
-
-        // The orbit center's movement vector (i.e. its velocity)
-        private Vector2 movementVector;
-
-        // The target angle when breaking apart the orbit
-        private float targetAngle;
-
         // The free float duration, randomized and netsynced
         private int floatDuration;
-
-        // The speed at the start of the homing
 
         // The turn speed of the homing, randomized and netsynced
         private float turnSpeed;
@@ -96,19 +85,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
         }
 
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone){
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
             Particle.Create<PhantasmalSkullHitEffect>((p) =>
                 {
-                    p.Position = Projectile.Center;
+                    p.Position = Projectile.Center + Projectile.oldVelocity * 2;
                     p.Velocity = Vector2.Zero;
-                    p.Scale = new(Main.rand.NextFloat(0.2f, 0.5f));
+                    p.Scale = new(Main.rand.NextFloat(0.1f, 0.25f));
                 }, shouldSync: true
                 );
         }
 
         public override void OnKill(int timeLeft)
         {
-            for (int i=0;i<40;i++)
+            for (int i = 0; i < 40; i++)
             {
                 Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GreenBrightDust>());
                 dust.velocity.X = Main.rand.Next(-70, 71) * 0.08f;
@@ -122,22 +112,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             if (!spawned)
             {
+                SoundEngine.PlaySound(SoundID.NPCDeath6 with { PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
+
                 Particle.Create<PhantasmalSkullSpawnEffect>((p) =>
                 {
-                    p.Position = Projectile.Center;
+                    p.Position = Projectile.Center + Projectile.velocity * 3;
                     p.Velocity = Vector2.Zero;
-                }, shouldSync: true
+                }, 
+                shouldSync: true
                 );
 
-                targetAngle = MathHelper.Pi / 8 - MathHelper.Pi / 4 * (OrbitAngle / 180);
-                SoundEngine.PlaySound(SoundID.NPCDeath6 with { PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
                 spawned = true;
-
-                targetPosition = Projectile.Center;
-                movementVector = Projectile.velocity;
             }
-            if (Projectile.alpha>0)
-                Projectile.alpha -= 16;
+
+            Projectile.alpha -= 15;
+            if (Projectile.alpha < 0)
+                Projectile.alpha = 0;
+
             Lighting.AddLight(Projectile.Center, new Color(30, 255, 105).WithOpacity(1f).ToVector3());
             float homingDistance = 500f;
             float closestDistance = homingDistance;
@@ -209,6 +200,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Projectile.alpha >= 255)
                 Projectile.active = false;
         }
+
         public NPC FindClosestNPC(float maxDetectDistance)
         {
             NPC closestNPC = null;

@@ -2973,7 +2973,11 @@ ChandriumWhip
 		Ancient Manipulator
 
 
-DroneRemote
+GreatstaffOfHorus
+	Value: 1 platinum 50 gold
+	Research count: 1
+
+HummingbirdDroneRemote
 	Value: 1 platinum 50 gold
 	Research count: 1
 

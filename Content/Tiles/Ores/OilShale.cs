@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Ores
 {
-    public class OilShale : ModTile, IModifyTileFrame
+    public class OilShale : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Tiles.Ores
             HitSound = SoundID.Tink;
         }
 
-        public void ModifyTileFrame(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
+        public override void ModifyFrameMerge(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
         {
             WorldGen.TileMergeAttempt(-2, TileID.Sandstone, ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
         }

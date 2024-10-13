@@ -2052,11 +2052,6 @@ RocketFuelCanister: {
 	Tooltip: ""
 }
 
-DroneRemote: {
-	DisplayName: P.D.C.D. Controller
-	Tooltip: Summons a Hummingbird drone to fight for you
-}
-
 TempestuousBand: {
 	DisplayName: Tempestuous Band
 	Tooltip:
@@ -2105,4 +2100,14 @@ ThaumaturgicWard: {
 		Below 20% of maximum life, 50% of damage is taken from mana
 		Any mana taken
 		'''
+}
+
+HummingbirdDroneRemote: {
+	DisplayName: P.D.C.D. Controller
+	Tooltip: Summons a Hummingbird drone to fight for you
+}
+
+GreatstaffOfHorus: {
+	DisplayName: Greatstaff Of Horus
+	Tooltip: ""
 }
