@@ -43,14 +43,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
 
-        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-        {
-            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
-            {
-                new FlavorTextBestiaryInfoElement(
-                    " ")
-            });
-        }
+        
 
         private float lightValueFlee = 0.1f; // This light value causes the leaper to flee.
         private float lightValueRage = 0.5f; // This light value causes the leaper to enrage faster.
