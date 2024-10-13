@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.CameraModifiers;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
@@ -8,6 +9,8 @@ using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Graphics;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -110,7 +113,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Projectile.NewProjectile(
                     Projectile.GetSource_FromAI(),
                     Projectile.Center,
-                    Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedByRandom(MathHelper.PiOver4) * 12f,
+                    Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedByRandom(MathHelper.PiOver4 / 2f) * 12f,
                     ModContent.ProjectileType<ChampionsBladeBoltProjectile>(),
                     40,
                     2f
@@ -118,7 +121,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 shots++;
             }
 
-            var tipPosition = Projectile.Center + Projectile.rotation.ToRotationVector2() * SwordLength;
+            var tipPosition = Projectile.Center + Projectile.rotation.ToRotationVector2() * SwordLength * 0.6f;
             tipOldPositions ??= new(20, tipPosition);
             tipOldPositions.Value.Add(tipPosition);
         }
@@ -146,26 +149,38 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override bool PreDraw(ref Color lightColor)
         {
-            /*            Main.spriteBatch.End(out var state);
-                        Main.spriteBatch.Begin(BlendState.Additive, state);
+            Main.spriteBatch.End(out var state);
+            Main.spriteBatch.Begin(BlendState.Additive, state);
 
-                        Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
+            var strip = new VertexStrip();
+            GameShaders.Misc["MagicMissile"]
+                .UseProjectionMatrix(true)
+                .UseImage0("Images/Extra_195")
+                .UseImage1("Images/Extra_195")
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeInTrail"))
+                .Apply();
 
-                        var strip = new VertexStrip();
-                        strip.PrepareStripWithProceduralPadding(
-                            tipOldPositions.Value.Positions,
-                            new float[tipOldPositions.Value.Count],
-                            _ => Color.White,
-                            progress => 2f,
-                            -Main.screenPosition,
-                            false,
-                            true);
+            var rotations = new float[tipOldPositions.Value.Count];
+            for (var i = 0; i < rotations.Length - 1; i++)
+            {
+                rotations[i] = (tipOldPositions.Value.Positions[i + 1] - tipOldPositions.Value.Positions[i]).ToRotation();
+            }
 
-                        strip.DrawTrail();
+            strip.PrepareStripWithProceduralPadding(
+                tipOldPositions.Value.Positions,
+                rotations,
+                progress => Color.White,
+                _ => 30f,
+                -Main.screenPosition,
+                false,
+                true
+            );
 
-                        Main.spriteBatch.End();
-                        Main.spriteBatch.Begin(state);
-            */
+            strip.DrawTrail();
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
             var texture = hitStacks == ChampionsBlade.MaxStacks ? TextureAssets.Projectile[Type].Value
                 : ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/ChampionsBlade", AssetRequestMode.ImmediateLoad).Value;
             var rotation = Projectile.rotation + (Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.Pi * 0.75f);

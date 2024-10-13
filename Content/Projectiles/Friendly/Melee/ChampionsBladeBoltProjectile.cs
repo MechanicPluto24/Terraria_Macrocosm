@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.Graphics;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -36,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.penetrate = 1;
 
             Projectile.timeLeft = 80;
-            Projectile.extraUpdates = 3;
+            Projectile.extraUpdates = 2;
 
             Projectile.friendly = true;
             Projectile.hostile = false;
@@ -46,12 +47,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 999;
+
+
+            ProjectileID.Sets.TrailCacheLength[Type] = Main.rand.Next(15, 25);
+            visualScale = Main.rand.NextFloat(0.8f, 1.5f);
         }
 
         private ref float SkewMultiplier => ref Projectile.ai[0];
+        private float visualScale;
         public override void OnSpawn(IEntitySource source)
         {
-            SkewMultiplier = (Main.rand.NextBool() ? 1f : -1f) * Main.rand.NextFloat(0.7f);
+            SkewMultiplier = (Main.rand.NextBool() ? 1f : -1f) * Main.rand.NextFloat(0.4f);
             Projectile.netUpdate = true;
         }
 
@@ -87,11 +93,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            var trailTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Square", AssetRequestMode.ImmediateLoad).Value;
-
-            Main.graphics.GraphicsDevice.Textures[0] = TextureAssets.MagicPixel.Value;
-
             var strip = new VertexStrip();
+
+            GameShaders.Misc["MagicMissile"]
+                .UseProjectionMatrix(true)
+                .UseImage0(TextureAssets.MagicPixel)
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark7"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark6"))
+                .Apply();
+
             var positions = (Vector2[])Projectile.oldPos.Clone();
             for (int i = 1; i < positions.Length; i++)
             {
@@ -100,22 +110,46 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     continue;
                 }
 
-                positions[i] += Main.rand.NextVector2Unit() * Main.rand.NextFloat(5f);
+                positions[i] += Main.rand.NextVector2Unit() * Main.rand.NextFloat(8f);
             }
 
             strip.PrepareStripWithProceduralPadding(
                 positions[1..],
                 Projectile.oldRot[1..],
                 _ => Color.White,
-                progress => 2f * (1f - MathF.Pow(2f * progress - 1, 2)),
+                progress => visualScale * 30f * (1f - MathF.Pow(2f * progress - 1, 2)),
                 Projectile.Size * 0.5f - Main.screenPosition,
                 false,
-                true);
+                true
+            );
 
             strip.DrawTrail();
 
+            var starTexture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark2", AssetRequestMode.ImmediateLoad).Value;
+            foreach (var position in Projectile.oldPos)
+            {
+                if (!Main.rand.NextBool(7))
+                {
+                    continue;
+                }
+
+                Main.spriteBatch.Draw(
+                    starTexture,
+                    position + Projectile.Size * 0.5f - Main.screenPosition + Main.rand.NextVector2Unit() * 6f,
+                    null,
+                    Color.White * Main.rand.NextFloat(0.2f, 0.7f),
+                    Main.rand.NextFloat(),
+                    starTexture.Size() * 0.5f,
+                    Main.rand.NextFloat() * 0.09f,
+                    SpriteEffects.None,
+                    0f
+                );
+            }
+
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
+
+            // Main.spriteBatch.Draw();
             return false;
         }
     }
