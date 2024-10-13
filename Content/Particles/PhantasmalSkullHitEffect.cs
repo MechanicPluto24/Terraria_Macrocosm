@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -8,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class PhantasmalSkullHitEffect : Particle
     {
-        public override string TexturePath => Macrocosm.TextureEffectsPath+"Star6";
+        public override string TexturePath => Macrocosm.TextureEffectsPath + "Star6";
         public override int MaxPoolCount => 100;
 
         public int StarPointCount { get; set; }
@@ -21,13 +20,12 @@ namespace Macrocosm.Content.Particles
         public float Opacity { get; set; }
         public override void SetDefaults()
         {
-            Color = new(30, 255, 105);
-            StarPointCount = 2;
-            FadeInFactor = 1.25f;
-            FadeOutFactor = 0.775f;
+            Color = new Color(30, 255, 105, 255);
+            FadeInFactor = 1.5f;
+            FadeOutFactor = 0.88f;
             fadeIn = true;
             actualScale = 0.1f;
-            Opacity=0.1f;
+            Opacity = 1f;
         }
 
         public override void OnSpawn()
@@ -40,26 +38,26 @@ namespace Macrocosm.Content.Particles
             if (fadeIn)
             {
                 actualScale *= FadeInFactor;
-                Opacity*= FadeInFactor;
+                Opacity *= FadeInFactor;
                 if (actualScale > defScale)
                     fadeIn = false;
             }
             else
             {
                 actualScale *= FadeOutFactor;
-                Opacity*=FadeOutFactor;
+                Opacity *= FadeOutFactor;
             }
 
             Lighting.AddLight(Center, Color.ToVector3() * actualScale * 0.5f);
 
-            if (actualScale < 0.1f && !fadeIn)
+            if (actualScale < 0.01f && !fadeIn)
                 Kill();
         }
-        public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-        {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(),new Color(30, 255, 105,0) * Opacity*1.5f, Rotation, Size * 0.5f, actualScale, SpriteEffects.None, 0f);
-        }
 
-        
+        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale, SpriteEffects.None, 0f);
+            return false;
+        }
     }
 }
