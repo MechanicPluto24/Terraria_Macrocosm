@@ -4,7 +4,6 @@ namespace Macrocosm.Common.DataStructures
 {
     public readonly struct LiquidExtractData
     {
-        // TODO: replace with ModLiquid.Type when it gets implemented in tML
         public LiquidType LiquidType { get; init; }
 
         public float ExtractedAmount { get; init; }
@@ -16,6 +15,6 @@ namespace Macrocosm.Common.DataStructures
             ExtractedAmount = extractedAmount;
         }
 
-        public bool Extractable => LiquidType > 0;
+        public bool Valid => LiquidType >= 0;
     }
 }

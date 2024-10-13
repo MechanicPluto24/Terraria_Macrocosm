@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Items.Consumables.Potions
         public sealed override bool? UseItem(Player player)
         {
             player.AddBuff(ModContent.BuffType<MedkitHigh>(), Duration);
-            player.GetModPlayer<MacrocosmPlayer>().MedkitItemType = Type;
+            player.GetModPlayer<MedkitPlayer>().MedkitItemType = Type;
             return true;
         }
 

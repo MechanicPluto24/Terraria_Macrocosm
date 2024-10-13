@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
 
             Player player = Main.player[Projectile.owner];
-            Projectile.rotation += MathHelper.ToRadians(16f);
+            Projectile.rotation += MathHelper.ToRadians(24f);
             Projectile.velocity *= 0f;
             AITimer++;
 
@@ -62,6 +62,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 int damage = Projectile.damage;
                 if (Projectile.owner == Main.myPlayer)
                     Projectile.NewProjectile(Terraria.Entity.InheritSource(Projectile), Projectile.Center + shootAim, shootAim, ModContent.ProjectileType<MicronovaBeam>(), damage, Projectile.knockBack, Main.player[Projectile.owner].whoAmI, ai1: shootAim.X, ai2: shootAim.Y);
+                SoundEngine.PlaySound(SoundID.Item117, Projectile.Center);
             }
 
             if (AITimer % 16 == 0)
@@ -87,8 +88,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 float progress = (1f - Projectile.alpha / 255f);
                 Particle.Create<PortalSwirl>(p =>
                 {
-                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 180).RotatedBy(shootAim.ToRotation() + MathHelper.PiOver4) * 0.4f * progress;
-                    p.Velocity = Vector2.One * 12;
+                    p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 200).RotatedBy(shootAim.ToRotation() + MathHelper.PiOver4) * 0.4f * progress;
+                    p.Velocity = Vector2.One * 16;
                     p.Scale = new((0.1f + Main.rand.NextFloat(0.1f)) * progress);
                     p.Color = new Color(0, 170, 200) * 0.6f;
                     p.TargetCenter = Projectile.Center;
@@ -134,7 +135,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             twirl ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1");
             glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5");
 
-            Main.spriteBatch.Draw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(135, 255, 240).WithOpacity(0.7f), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.615f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(glow.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);
 
             effect = skew.Value;
@@ -145,6 +145,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, effect, state);
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color).WithOpacity(0.9f * Projectile.Opacity), shootAim.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 1.5f, SpriteEffects.None, 0);
+            Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(140, 255, 255, 255), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.285f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(85, 200, 201, 164), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.655f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(95, 230, 231, 112), shootAim.ToRotation() + MathHelper.PiOver2 + MathHelper.Pi, twirl.Size() / 2f, Projectile.scale * 0.715f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

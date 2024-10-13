@@ -40,8 +40,18 @@ namespace Macrocosm.Content.Machines
             {
                 if (ConsumedItem.type != ItemID.None)
                 {
+                    FuelData fuelData = ItemSets.FuelData[ConsumedItem.type];
+                    GeneratedPower = 0.2f * (int)fuelData.Potency;
+
+                    if (checkTimer++ >= fuelData.ConsumptionRate)
+                    {
+                        checkTimer = 0;
+                        ConsumedItem.TurnToAir(fullReset: true);
+                    }
+                }
+                else
+                {
                     checkTimer = 0;
-                    GeneratedPower = 0;
                     bool fuelFound = false;
 
                     foreach (Item item in Inventory)
@@ -50,6 +60,7 @@ namespace Macrocosm.Content.Machines
                         if (fuelData.Potency > FuelPotency.None)
                         {
                             ConsumedItem = new(item.type, stack: 1);
+                            GeneratedPower = 0.2f * (int)fuelData.Potency;
 
                             item.stack--;
                             if (item.stack < 0)
@@ -61,18 +72,9 @@ namespace Macrocosm.Content.Machines
                     }
 
                     if (!fuelFound)
-                        MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
-                }
-                else
-                {
-                    FuelData fuelData = ItemSets.FuelData[ConsumedItem.type];
-
-                    GeneratedPower = 0.2f * (int)fuelData.Potency;
-
-                    if (checkTimer++ >= fuelData.ConsumptionRate)
                     {
-                        checkTimer = 0;
-                        ConsumedItem.TurnToAir(fullReset: true);
+                        GeneratedPower = 0;
+                        MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
                     }
                 }
             }

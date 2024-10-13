@@ -1,7 +1,9 @@
-﻿using Macrocosm.Common.Sets.Items;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -137,9 +139,9 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             liquidContainerItemSlot.Top = new(0, 0.1f);
             liquidContainerItemSlot.Left = new(0, 0.5f);
             liquidContainerItemSlot.AddReserved(
-                (item) => item.ModItem is LiquidContainer,
-                Lang.GetItemName(ModContent.ItemType<FuelCanister>()),
-                ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture + "_Blueprint")
+                (item) => ItemSets.LiquidContainerData[item.type].Valid,
+                Lang.GetItemName(ModContent.ItemType<Canister>()),
+                ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
             );
             return liquidContainerItemSlot;
         }
@@ -164,9 +166,10 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             if (neededFuel <= 0f)
                 dumpButtonInteractible = false;
 
-            if (liquidContainerItemSlot.Item.ModItem is LiquidContainer container)
+            LiquidContainerData data = ItemSets.LiquidContainerData[liquidContainerItemSlot.Item.type];
+            if (data.Valid)
             {
-                float availableFuel = container.Amount * liquidContainerItemSlot.Item.stack;
+                float availableFuel = data.Capacity * liquidContainerItemSlot.Item.stack;
 
                 if (availableFuel <= 0)
                     dumpButtonInteractible = false;
@@ -179,7 +182,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
                 if (neededFuel > 0f)
                 {
-                    canisterBufferLevel = (container.Amount * liquidContainerItemSlot.Item.stack) / (Rocket.FuelCapacity - Rocket.Fuel);
+                    canisterBufferLevel = (data.Capacity * liquidContainerItemSlot.Item.stack) / (Rocket.FuelCapacity - Rocket.Fuel);
                     if (canisterBufferLevel > 1f)
                         canisterBufferLevel = 1f;
                 }
@@ -203,14 +206,15 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private void DumpFuel()
         {
-            if (liquidContainerItemSlot.Item.ModItem is LiquidContainer container && !container.Empty)
+            LiquidContainerData data = ItemSets.LiquidContainerData[liquidContainerItemSlot.Item.type];
+            if (data.Valid && !data.Empty)
             {
-                float availableFuel = container.Amount * liquidContainerItemSlot.Item.stack;
+                float availableFuel = data.Capacity * liquidContainerItemSlot.Item.stack;
                 float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
                 float addedFuel = Math.Min(availableFuel, neededFuel);
 
                 Rocket.Fuel += addedFuel;
-                container.Amount -= addedFuel / liquidContainerItemSlot.Item.stack;
+                liquidContainerItemSlot.Item.type = LiquidContainerData.GetEmptyType(ItemSets.LiquidContainerData, liquidContainerItemSlot.Item.type);
 
                 Rocket.NetSync();
                 Rocket.Inventory.SyncItem(Rocket.SpecialInventorySlot_FuelTank);

@@ -43,7 +43,6 @@ namespace Macrocosm.Content.Machines
             AddMapEntry(new Color(121, 107, 91), CreateMapEntryName());
         }
 
-
         public override void TogglePowerStateFrame(int i, int j)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
@@ -74,6 +73,24 @@ namespace Macrocosm.Content.Machines
             }
 
             return true;
+        }
+
+        public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
+        {
+            if (IsPoweredOnFrame(i, j))
+                frameYOffset = 18 * Height * Main.tileFrame[type];
+        }
+
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            int ticksPerFrame = 4;
+            int frameCount = 4;
+            if (++frameCounter >= ticksPerFrame)
+            {
+                frameCounter = 0;
+                if (++frame >= frameCount)
+                    frame = 0;
+            }
         }
 
         public override void MouseOver(int i, int j)

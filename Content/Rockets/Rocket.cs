@@ -119,7 +119,7 @@ namespace Macrocosm.Content.Rockets
         /// <summary> List of the module names, in the customization access order </summary>
         public List<string> ModuleNames => Modules.Keys.ToList();
 
-        public int PreLaunchDuration = 120;
+        public int PreLaunchDuration = 160;
 
         public int StaticFireDuration = 60;
         /// <summary> The progress of the <see cref="StaticFire"/> </summary>
@@ -522,7 +522,7 @@ namespace Macrocosm.Content.Rockets
         public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
         {
             Main.playerInventory = false;
-            State = ActionState.StaticFire;
+            State = ActionState.PreLaunch;
             StartPositionY = Position.Y;
             TargetWorld = targetWorld;
             this.targetLaunchPad = targetLaunchPad;
@@ -752,7 +752,6 @@ namespace Macrocosm.Content.Rockets
             float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.CurrentGravityMultiplier;
             float atmoDesityFactor = 0.5f + 0.5f * MacrocosmSubworld.CurrentAtmosphericDensity;
 
-
             Point tilePos = (Position + new Vector2(Width / 2f, Height)).ToTileCoordinates();
             Point closestTile = Utility.GetClosestTile(tilePos.X, tilePos.Y, -1, 15, (t) => Main.tileSolid[t.TileType] && !t.IsActuated);
             closestTile.Y += 1;
@@ -813,7 +812,8 @@ namespace Macrocosm.Content.Rockets
                     break;
             }
 
-            //Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * lightIntensity);
+            Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(197, 56, 9).ToVector3() * lightIntensity);
+
             Main.LocalPlayer.AddScreenshake(screenshakeIntensity, $"Rocket{WhoAmI}");
 
             // Hack to force render the tiles otherwise completetly unlighted, so the trail does not draw in front of them 
@@ -891,7 +891,7 @@ namespace Macrocosm.Content.Rockets
             {
                 var smoke = Particle.Create<Smoke>(p =>
                 {
-                    p.Position = tileCoords.ToWorldCoordinates();
+                    p.Position = tileCoords.ToWorldCoordinates() + new Vector2(0, 16);
                     p.Velocity = new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-0.1f, -1f));
                     p.Scale = new(Main.rand.NextFloat(0.5f, 1.2f));
                     p.Rotation = Utility.RandomRotation();

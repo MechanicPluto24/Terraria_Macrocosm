@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Items.Tools.Dianite
             Item.height = 44;
             Item.useTime = 5;
             Item.useAnimation = 12;
-            Item.pick = 250;
+            Item.pick = 235;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 6;
             Item.value = 10000;

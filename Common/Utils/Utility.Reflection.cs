@@ -64,6 +64,5 @@ namespace Macrocosm.Common.Utils
                 ? throw new ArgumentException($"Method '{methodName}' not found on type {type.FullName}.", nameof(methodName))
                 : methodInfo.Invoke(instance is Type ? null : instance, parameters);
         }
-
     }
 }
