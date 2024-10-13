@@ -1,9 +1,4 @@
 ﻿using Macrocosm.Common.Sets;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -37,7 +32,7 @@ namespace Macrocosm.Common.Global.Projectiles
 
         private void On_Projectile_BombsHurtPlayers(On_Projectile.orig_BombsHurtPlayers orig, Projectile self, Microsoft.Xna.Framework.Rectangle projRectangle, int j)
         {
-            if (ItemSets.ExplosivesShotDealDamageToOwner[sourceType] || sourceType == -1)
+            if (sourceType == -1 || ItemSets.ExplosivesShotDealDamageToOwner[sourceType])
                 orig(self, projRectangle, j);
         }
     }
