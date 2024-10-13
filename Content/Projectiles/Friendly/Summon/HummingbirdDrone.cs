@@ -420,7 +420,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile projcheck = Main.projectile[i];
-                if (projcheck.type == ModContent.ProjectileType<DroneMinion>() && projcheck.ai[1] == droneOffset && projcheck.active)
+                if (projcheck.type == ModContent.ProjectileType<HummingbirdDrone>() && projcheck.ai[1] == droneOffset && projcheck.active)
                     proj = Main.projectile[i];
             }
             return proj;
