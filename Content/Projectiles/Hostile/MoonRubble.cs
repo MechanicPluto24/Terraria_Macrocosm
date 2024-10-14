@@ -53,6 +53,12 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.position = slopeCollision.XY();
             Projectile.velocity = slopeCollision.ZW();
 
+            if (Projectile.velocity.Y == 0f)
+                Projectile.hostile = false;
+            else
+                Projectile.hostile = true;
+
+
             // Decelerate while on the ground
             if (Projectile.velocity.Y == 0f)
             {

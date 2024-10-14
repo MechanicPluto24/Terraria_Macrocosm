@@ -1,5 +1,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Trails;
 using Macrocosm.Content.Buffs.Minions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,23 +27,26 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
 
             Main.projPet[Projectile.type] = true; // Denotes that this projectile is a pet or minion
-
+            ProjectileID.Sets.TrailCacheLength[Type] = 25;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
             ProjectileID.Sets.MinionSacrificable[Projectile.type] = true; // This is needed so your minion can properly spawn when summoned and replaced when other minions are summoned
             ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true; // Make the cultist resistant to this projectile, as it's resistant to all homing projectiles.
         }
-
+        private HorusTrail trail;
         public sealed override void SetDefaults()
         {
-            Projectile.width = 32;
-            Projectile.height = 32;
+            Projectile.width = 78;
+            Projectile.height = 60;
             Projectile.tileCollide = false; // Makes the minion go through tiles freely
-
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 20;
             // These below are needed for a minion weapon
             Projectile.friendly = true; // Only controls if it deals damage to enemies on contact (more on that later)
             Projectile.minion = true; // Declares this as a minion (has many effects)
             Projectile.DamageType = DamageClass.Summon; // Declares the damage type (needed for it to deal damage)
             Projectile.minionSlots = 1f; // Amount of slots this minion occupies from the total minion slots available to the player (more on that later)
             Projectile.penetrate = -1; // Needed so the minion doesn't despawn on collision with enemies or tiles
+            trail = new();
         }
 
         // Here you can decide if your minion breaks things like grass or pots
@@ -197,17 +201,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             // You don't need this assignment if your minion is shooting things instead of dealing contact damage
             Projectile.friendly = foundTarget;
         }
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HorusExplosion>(), Utility.TrueDamage((int)(Projectile.damage * 0.3f)),0f, Main.myPlayer);
+        }
 
         private void Movement(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, float distanceToIdlePosition, Vector2 vectorToIdlePosition)
         {
             // Default movement parameters (here for attacking)
-            float speed = 8f;
-            float inertia = 20f;
+            float speed = 15f;
+            float inertia = 16f;
 
             if (foundTarget)
             {
                 // Minion has a target: attack (here, fly towards the enemy)
-                if (distanceFromTarget > 40f)
+                if (distanceFromTarget > 250f)
                 {
                     // The immediate range around the target (so it doesn't latch onto it when close)
                     Vector2 direction = targetCenter - Projectile.Center;
@@ -223,17 +231,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 if (distanceToIdlePosition > 600f)
                 {
                     // Speed up the minion if it's away from the player
-                    speed = 12f;
+                    speed = 20f;
                     inertia = 60f;
                 }
                 else
                 {
                     // Slow down the minion if closer to the player
-                    speed = 4f;
+                    speed = 8f;
                     inertia = 80f;
                 }
 
-                if (distanceToIdlePosition > 20f)
+                if (distanceToIdlePosition > 100f)
                 {
                     // The immediate range around the player (when it passively floats about)
 
@@ -254,7 +262,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private void Visuals()
         {
             // So it will lean slightly towards the direction it's moving
-            Projectile.rotation = Projectile.velocity.X * 0.05f;
+            
+            Projectile.rotation = Projectile.velocity.ToRotation()-MathHelper.PiOver2;
 
             // This is a simple "loop through all frames from top to bottom" animation
             int frameSpeed = 5;
@@ -281,12 +290,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             return Color.White.WithAlpha(220);
         }
 
+        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            return base.PreDraw(ref lightColor);
+            state.SaveState(Main.spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+            trail?.Draw(Projectile, Projectile.Size / 2f);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+            return true;
         }
 
-        private SpriteBatchState state;
         public override void PostDraw(Color lightColor)
         {
             state.SaveState(Main.spriteBatch);
@@ -296,7 +311,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
             Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star5").Value;
             float opacity = 1f;
-            Main.EntitySpriteDraw(glow, Projectile.Center + new Vector2(23, 16) - Main.screenPosition, null, new Color(255, 170, 142, 255) * opacity, Projectile.rotation, glow.Size() / 2, Projectile.scale * Main.rand.NextFloat(0.19f, 0.21f), SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(255, 170, 142, 255) * opacity, Projectile.rotation, glow.Size() / 2, Projectile.scale * Main.rand.NextFloat(0.19f, 0.21f), SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
