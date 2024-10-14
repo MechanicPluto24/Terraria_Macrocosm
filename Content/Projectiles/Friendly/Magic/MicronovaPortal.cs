@@ -17,6 +17,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     public class MicronovaPortal : ModProjectile
     {
         private static Asset<Texture2D> twirl;
+        private static Asset<Texture2D> twirl2;
         private static Asset<Texture2D> glow;
 
         protected int defWidth;
@@ -132,9 +133,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, effect, state);
 
-            twirl ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1");
+            twirl ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl3");
+            twirl2 ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1");
             glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5");
 
+            Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(100, 170, 200).WithOpacity(1f), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.295f, SpriteEffects.None, 0f);
             Main.spriteBatch.Draw(glow.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);
 
             effect = skew.Value;
@@ -145,9 +148,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, effect, state);
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, (color).WithOpacity(0.9f * Projectile.Opacity), shootAim.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 1.5f, SpriteEffects.None, 0);
-            Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(140, 255, 255, 255), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.285f, SpriteEffects.None, 0f);
-            Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(85, 200, 201, 164), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.655f, SpriteEffects.None, 0f);
-            Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(95, 230, 231, 112), shootAim.ToRotation() + MathHelper.PiOver2 + MathHelper.Pi, twirl.Size() / 2f, Projectile.scale * 0.715f, SpriteEffects.None, 0f);
+
+            Main.EntitySpriteDraw(twirl2.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(140, 255, 255, 255), shootAim.ToRotation() + MathHelper.PiOver2, twirl2.Size() / 2f, Projectile.scale * 0.285f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(twirl2.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(85, 200, 201, 164), shootAim.ToRotation() + MathHelper.PiOver2, twirl2.Size() / 2f, Projectile.scale * 0.655f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(twirl2.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(95, 230, 231, 112), shootAim.ToRotation() + MathHelper.PiOver2 + MathHelper.Pi, twirl2.Size() / 2f, Projectile.scale * 0.715f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

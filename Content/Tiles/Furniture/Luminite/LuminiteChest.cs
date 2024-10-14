@@ -1,6 +1,10 @@
-﻿using Macrocosm.Common.Enums;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Keys;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections;
 using Terraria;
@@ -8,6 +12,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent.ObjectInteractions;
+using Terraria.Graphics.Renderers;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -89,7 +94,53 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
         public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
         {
-            DustType = dustType;
+            LuminiteStyle style = (LuminiteStyle)(Main.tile[i, j].TileFrameX / (18 * 2 * 2));
+            dustType = Utility.GetDustTypeFromLuminiteStyle(style);
+
+            if (style == LuminiteStyle.Luminite)
+                return true;
+
+            ref bool flag = ref WorldFlags.HeavenforgeShrineUnlocked;
+            switch (style)
+            {
+                case LuminiteStyle.Heavenforge: flag = ref WorldFlags.HeavenforgeShrineUnlocked; break;
+                case LuminiteStyle.LunarRust: flag = ref WorldFlags.LunarRustShrineUnlocked; break;
+                case LuminiteStyle.Astra: flag = ref WorldFlags.AstraShrineUnlocked; break;
+                case LuminiteStyle.DarkCelestial: flag = ref WorldFlags.DarkCelestialShrineUnlocked; break;
+                case LuminiteStyle.Mercury: flag = ref WorldFlags.MercuryShrineUnlocked; break;
+                case LuminiteStyle.StarRoyale: flag = ref WorldFlags.StarRoyaleShrineUnlocked; break;
+                case LuminiteStyle.Cryocore: flag = ref WorldFlags.CryocoreShrineUnlocked; break;
+                case LuminiteStyle.CosmicEmber: flag = ref WorldFlags.CosmicEmberShrineUnlocked; break;
+                default: break;
+            }
+
+            if(!flag && Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                for (float f = 0f; f < 20f; f += 1f)
+                {
+                    int time = Main.rand.Next(20, 40);
+                    Particle.Create<PrettySparkle>((p) =>
+                    {
+                        p.Position = new Vector2(i, j) * 16f + new Vector2(16f) + Main.rand.NextVector2Circular(16f, 16f);
+                        p.Color = Utility.GetLightColorFromLuminiteStyle(style);
+                        p.Scale = new Vector2(1f + Main.rand.NextFloat() * 2f, 0.7f + Main.rand.NextFloat() * 0.7f);
+                        p.Velocity = new Vector2(0f, -1f);
+                        p.FadeInNormalizedTime = 5E-06f;
+                        p.FadeOutNormalizedTime = 0.95f;
+                        p.TimeToLive = time;
+                        p.FadeOutEnd = time;
+                        p.FadeInEnd = time / 2;
+                        p.FadeOutStart = time / 2;
+                        p.AdditiveAmount = 0.35f;
+                        p.DrawHorizontalAxis = true;
+                        p.DrawVerticalAxis = true;
+                    });
+                }
+
+                WorldFlags.SetFlag(ref flag, true);
+                NetMessage.SendData(MessageID.WorldData);
+            }
+
             return true;
         }
 

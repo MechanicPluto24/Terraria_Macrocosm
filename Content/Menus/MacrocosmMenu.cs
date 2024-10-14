@@ -158,9 +158,9 @@ namespace Macrocosm.Content.Menus
             Stars.Clear();
             Sun.ClearOrbitChildren();
             AsteroidBelt.Clear();
+            KuiperBelt.Clear();
             released.Clear();
         }
-
 
         private SpriteBatchState state1, state2;
         public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)

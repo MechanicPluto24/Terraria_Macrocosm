@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.alpha = 255;
             Projectile.timeLeft = 35;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 10;
+            Projectile.localNPCHitCooldown = 25;
         }
         public override bool ShouldUpdatePosition() => false;
 

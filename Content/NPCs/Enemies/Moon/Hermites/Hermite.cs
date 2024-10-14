@@ -12,6 +12,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 {
     public class Hermite : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         private float alert = 0f;
 
         public override void SetStaticDefaults()

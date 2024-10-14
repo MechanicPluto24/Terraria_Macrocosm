@@ -1,7 +1,11 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -102,6 +106,44 @@ namespace Macrocosm.Content.Machines
                 player.noThrow = 2;
                 player.cursorItemIconEnabled = true;
                 player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
+            }
+        }
+
+        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
+        {
+            if (Main.gamePaused)
+                return;
+
+            Tile tile = Main.tile[i, j];
+            int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
+            int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
+
+            if (IsPoweredOnFrame(i, j))
+            {
+                // Exhaust position - spawn smoke
+                if (tileOffsetX == 1 && tileOffsetY == 0)
+                {
+                    if (Main.tileFrame[Type] % 2 == 1)
+                    {
+                        float atmoDensity = (0.3f + 0.7f * MacrocosmSubworld.CurrentAtmosphericDensity);
+                        int count = atmoDensity < 1f ? 1 : 2;
+                        for (int s = 0; s < count; s++)
+                        {
+                            Smoke smoke = Particle.Create<Smoke>((p) =>
+                            {
+                                p.Position = new Vector2(i, j) * 16f + new Vector2(12f, 16f);
+                                p.Velocity = new Vector2(0, -1.1f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
+                                p.Scale = new(0.3f);
+                                p.Rotation = 0f;
+                                p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
+                                p.FadeIn = true;
+                                p.Opacity = 0f;
+                                p.ScaleVelocity = new(0.0075f);
+                                p.WindFactor = 0.01f;
+                            });
+                        }
+                    }
+                }
             }
         }
     }

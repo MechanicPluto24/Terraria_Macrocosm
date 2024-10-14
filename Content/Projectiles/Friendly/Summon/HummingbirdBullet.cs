@@ -1,7 +1,6 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -27,8 +26,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Projectile.extraUpdates = 3;
             Projectile.timeLeft = 270;
             Projectile.light = 0f;
-            Projectile.hostile=false;
-            Projectile.friendly=true;
+            Projectile.hostile = false;
+            Projectile.friendly = true;
+            Projectile.alpha = 255;
         }
 
         public override bool PreAI()
@@ -46,12 +46,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             return false;
         }
 
-        public override Color? GetAlpha(Color lightColor) => Color.White;
-
+        public override Color? GetAlpha(Color lightColor) => Color.White * Projectile.Opacity;
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(255, 100, 100), new Color(255, 0, 0, 0));
+            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(255, 100, 100) * Projectile.Opacity, new Color(255, 201, 84, 0) * Projectile.Opacity);
             return true;
         }
 

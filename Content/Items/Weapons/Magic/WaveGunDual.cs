@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns;
 using Macrocosm.Content.Rarities;
@@ -31,6 +32,11 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         }
 
         public bool RifleMode { get; private set; }
+
+        public override void SetStaticDefaults()
+        {
+            ItemSets.UnobtainableItem[Type] = true;
+        }
 
         public override void SetDefaults()
         {

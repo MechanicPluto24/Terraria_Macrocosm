@@ -495,10 +495,6 @@ MoonPhaseGlobe
 	Value: 75 gold
 	Research count: 1
 
-HelixPatternDesign
-	Value: No value
-	Research count: 5
-
 AdamantiteLoom
 	Value: 5 silver
 	Research count: 1
@@ -1144,6 +1140,12 @@ DisplayScreen
 EarthGlobe
 	Value: 5 silver
 	Research count: 1
+	Recipes:
+		Plastic x 1
+		Aluminum Bar x 1
+		at
+		Work Bench
+
 
 Fridge
 	Value: 1 silver 50 copper

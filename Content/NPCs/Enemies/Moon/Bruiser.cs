@@ -11,6 +11,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class Bruiser : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public enum ActionState
         {
             Walk,

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Rarities;
@@ -17,6 +18,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override void Load()
         {
             glow = ModContent.Request<Texture2D>(Texture + "_Glow");
+        }
+
+        public override void SetStaticDefaults()
+        {
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

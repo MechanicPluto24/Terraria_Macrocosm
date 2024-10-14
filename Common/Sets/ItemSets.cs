@@ -49,8 +49,28 @@ namespace Macrocosm.Common.Sets
         /// </summary>
         public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
 
-        /// <summary> Unobtainable developer/debug items. Items in this set have a "Developer Item" tooltip  </summary>
+        /// <summary> Unobtainable developer/debug items. Items in this set have a "Developer Item" tooltip and rarity </summary>
         public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
+
+        /// <summary> Unobtainable items, other than <see cref="DeveloperItem"/>. Items in this set have an "Unobtainable" tooltip </summary>
+        public static bool[] UnobtainableItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
+
+        // TODO: these must be updated. previous adjustments were post-defense, these are pre
+        public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f, 
+            ItemID.Zenith, 0.16f,
+            ItemID.LastPrism, 0.35f,
+            ItemID.StarWrath, 0.5f,
+            ItemID.StardustDragonStaff, 0.25f,
+            ItemID.Terrarian, 0.37f,
+            ItemID.NebulaBlaze, 0.5f,
+            ItemID.Meowmere, 0.6f,
+            ItemID.Celeb2, 0.45f,
+            ItemID.LunarFlareBook, 0.94f,
+            ItemID.EmpressBlade, 0.65f,
+            ItemID.MoonlordArrow, 0.88f,
+            ItemID.RainbowCrystalStaff, 0.38f,
+            ItemID.MoonlordTurretStaff, 0.35f
+        );
 
         /// <summary> Set of seeds for alchemy or similar plants </summary>
         public static bool[] PlantSeed { get; } = ItemID.Sets.Factory.CreateBoolSet
