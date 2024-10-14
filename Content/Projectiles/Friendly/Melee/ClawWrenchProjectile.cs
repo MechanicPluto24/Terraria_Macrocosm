@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ClawWrenchProjectile : ModProjectile
     {
-        public override bool ShouldUpdatePosition() => false;
+        public override bool ShouldUpdatePosition() => alt;
 
         public override void SetDefaults()
         {
@@ -20,6 +20,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.ignoreWater = true;
             Projectile.DamageType = DamageClass.Melee;
             Projectile.penetrate = -1;
+            Projectile.timeLeft = 300;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
             Projectile.width = Projectile.height = 40;
@@ -29,17 +30,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public ref float SwingTime => ref Projectile.ai[0];
 
+        public bool alt =>  Projectile.ai[1]==1f;
+        
         public override void OnSpawn(IEntitySource source)
         {
             spawned = false;
         }
         bool spawned = false;
+        int Timer=0;
 
         public override void AI()
         {
             if (!OwnerPlayer.active || OwnerPlayer.dead || OwnerPlayer.CCed || OwnerPlayer.noItems)
                 return;
-
+            if(!alt){
             if (!spawned)
             {
                 SwingTime /= OwnerPlayer.GetAttackSpeed(DamageClass.Melee);
@@ -68,6 +72,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             OwnerPlayer.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotation - MathHelper.PiOver2);
             OwnerPlayer.itemTime = 2;
             OwnerPlayer.itemAnimation = 2;
+            }
+            else{
+                Timer++;
+                Projectile.rotation+=MathHelper.PiOver4/3;
+                Projectile.velocity.Y+=0.2f;
+                if(Timer>=SwingTime)
+                    Projectile.velocity=(OwnerPlayer.Center-Projectile.Center).SafeNormalize(Vector2.UnitX)*35f;
+
+                if(Vector2.Distance(OwnerPlayer.Center,Projectile.Center)>450f)
+                    Timer=(int)SwingTime+4;
+                if(Vector2.Distance(OwnerPlayer.Center,Projectile.Center)<30f&&Timer>=SwingTime)
+                    Projectile.Kill();
+                
+            }
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
