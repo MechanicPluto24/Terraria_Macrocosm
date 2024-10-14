@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -12,6 +13,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

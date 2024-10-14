@@ -1,5 +1,6 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Global.NPCs;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
@@ -27,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             ItemID.Sets.SkipsInitialUseSound[Item.type] = true;
-
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaultsHeldProjectile()

@@ -146,7 +146,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 for (int k = 0; k < 200; k++)
                 {
-                    if (Main.npc[k].active && Main.npc[k].CanBeChasedBy(this, true))
+                    if (Main.npc[k].active && Main.npc[k].CanBeChasedBy(Projectile))
                     {
                         Vector2 newMove = Main.npc[k].Center - Projectile.Center;
                         float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
@@ -166,30 +166,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 }
             }
 
-            /*if (TargetNPC != null && Vector2.Distance(Projectile.Center, TargetNPC.Center) < homingDistance && TargetNPC.CanBeChasedBy())
-            {
-                Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, turnSpeed);
-            }
-            else
-            {
-                //Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
-            }*/
-
-            /*Vector2 direction = TargetPlayer.Center - Projectile.Center;
-            float distance = direction.Length();
-            direction.Normalize();
-
-            float deviation = Main.rand.NextFloat(-0.1f, 0.1f);
-            direction = direction.RotatedBy(deviation);
-
-            Vector2 adjustedDirection = Vector2.Lerp(Projectile.velocity, direction, 0.2f);
-            adjustedDirection.Normalize();
-
-            float accelerateDistance = 30f * 16;
-            float speed = Projectile.velocity.Length() + (distance > accelerateDistance ? distance / accelerateDistance * 0.1f : 0f);
-            Projectile.velocity = adjustedDirection * speed;*/
-
             Projectile.direction = Math.Sign(Projectile.velocity.X);
             Projectile.spriteDirection = Projectile.direction;
             Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
@@ -201,29 +177,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 Projectile.active = false;
         }
 
-        public NPC FindClosestNPC(float maxDetectDistance)
-        {
-            NPC closestNPC = null;
-
-            float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
-
-            for (int k = 0; k < Main.maxNPCs; k++)
-            {
-                NPC target = Main.npc[k];
-                if (target.CanBeChasedBy())
-                {
-                    float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
-
-                    if (sqrDistanceToTarget < sqrMaxDetectDistance)
-                    {
-                        sqrMaxDetectDistance = sqrDistanceToTarget;
-                        closestNPC = target;
-                    }
-                }
-            }
-
-            return closestNPC;
-        }
 
         public override Color? GetAlpha(Color lightColor) => new Color(30, 255, 105).WithOpacity(1f);
 

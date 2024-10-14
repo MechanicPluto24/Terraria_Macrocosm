@@ -12,6 +12,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
     public class XenoHive : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 6;

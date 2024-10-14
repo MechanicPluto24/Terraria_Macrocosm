@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -20,6 +21,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetStaticDefaults()
         {
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

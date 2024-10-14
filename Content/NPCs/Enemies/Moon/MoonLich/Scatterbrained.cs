@@ -11,9 +11,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
+    //This thing is essentially a carbon copy of Zombie Security.
     public class Scatterbrained : ModNPC
     {
-        //This thing is essentially a carbon copy of Zombie Security.
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public enum ActionState
         {
             Walk,

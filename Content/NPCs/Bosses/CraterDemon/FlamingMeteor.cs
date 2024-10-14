@@ -38,6 +38,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.timeLeft = 600;
             NPC.damage = 50;
             NPC.knockBackResist = 0.1f;
+            NPC.chaseable = false;
             trail = new(new Color(242, 142, 35, 65), 30);
             trail2 = new(new Color(30, 255, 105, 0), 10);
         }

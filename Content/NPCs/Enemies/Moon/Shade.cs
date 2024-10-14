@@ -58,6 +58,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             AI_State = ActionState.Idle;
             NPC.Opacity = 0f;
 
+            if(NPC.IsABestiaryIconDummy)
+                NPC.Opacity = 1f;
         }
 
         public override void AI()

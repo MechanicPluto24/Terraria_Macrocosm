@@ -10,6 +10,8 @@ namespace Macrocosm.Common.Global.NPCs
     {
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
+            return;
+
             if (!SubworldSystem.AnyActive<Macrocosm>())
                 return;
 

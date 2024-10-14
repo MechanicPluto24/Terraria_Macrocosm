@@ -10,6 +10,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
     public class LunarChimera : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 1;

@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Subworlds
             if (shiniesIndex != -1)
                 tasks.Insert(shiniesIndex + 1, new PassLegacy("Macrocosm: Ores", GenerateOres));
 
-            int oceanIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Beaches"));
+            int oceanIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Sand Patches"));
             if (oceanIndex != -1)
                 tasks.Insert(oceanIndex + 1, new PassLegacy("Macrocosm: Silica", GenerateSilicaSand_Ocean));
         }
@@ -112,36 +112,21 @@ namespace Macrocosm.Content.Subworlds
 
         private void GenerateSilicaSand_Ocean(GenerationProgress progress, GameConfiguration configuration)
         {
-            for (int i = 0; i < Main.maxTilesX * Main.maxTilesY * 0.00015; i++)
+            int maxPatches = (int)(Main.maxTilesX * 0.013);
+            if (WorldGen.remixWorldGen)
+                maxPatches /= 4;
+
+            for (int i = 0; i < maxPatches; i++)
             {
-                int tileY = WorldGen.genRand.Next((int)GenVars.skyLakes, (int)GenVars.rockLayerHigh);
-                int tileX = WorldGen.genRand.Next(0, WorldGen.beachDistance);
+                int x = WorldGen.genRand.Next(0, WorldGen.beachDistance);
+                int y = WorldGen.genRand.Next((int)Main.worldSurface, (int)GenVars.rockLayerHigh);
 
                 if (WorldGen.genRand.NextBool())
-                    tileX = WorldGen.genRand.Next(Main.maxTilesX - WorldGen.beachDistance, Main.maxTilesX);
+                    x = WorldGen.genRand.Next(Main.maxTilesX - WorldGen.beachDistance, Main.maxTilesX);
 
-                int type = Main.tile[tileX, tileY].TileType;
-
-                if (type is TileID.Dirt or TileID.Stone)
-                {
-                    Utility.BlobTileRunner(
-                        tileX, tileY, TileType<SilicaSand>(),
-                        repeatCount: 1..2, sprayRadius: 10..40, blobSize: 10..30,
-                        perTileCheck: (i, j) => WorldGen.SolidOrSlopedTile(i, j) && (Main.tile[i, j].TileType is TileID.Dirt or TileID.Stone)
-                    );
-                }
-
-                // In case some mods or seeds add converted oceans (?)
-                /*
-				if (type is TileID.Ebonsand)
-					WorldGen.TileRunner(tileX, tileY, strength, steps, TileType<SilicaEbonsand>());
-
-				if (type is TileID.Crimsand)
-					WorldGen.TileRunner(tileX, tileY, strength, steps, TileType<SilicaCrimsand>());
-				
-				if (type is TileID.Pearlsand)
-					WorldGen.TileRunner(tileX, tileY, strength, steps, TileType<SilicaPearlsand>());
-				*/
+                int strength = WorldGen.genRand.Next(15, 70);
+                int steps = WorldGen.genRand.Next(20, 130);
+                WorldGen.TileRunner(x, y, strength, steps, TileType<SilicaSand>());
             }
         }
     }

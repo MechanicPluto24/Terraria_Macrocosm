@@ -73,7 +73,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPCID.Sets.NPCBestiaryDrawModifiers value = new()
             {
-                CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/MoonWorm_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
+                CustomTexturePath = Texture.Replace("Head", "") + "_Bestiary",
                 Position = new Vector2(40f, 24f),
                 PortraitPositionXOverride = 0f,
                 PortraitPositionYOverride = 12f

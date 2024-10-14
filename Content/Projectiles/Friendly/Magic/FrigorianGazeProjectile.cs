@@ -83,7 +83,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 spawned = true;
             }
 
-            Projectile.velocity.Y += 0.9f * MacrocosmSubworld.CurrentGravityMultiplier;
+            Projectile.velocity.Y += 0.9f * (0.5f + 0.5f * MacrocosmSubworld.CurrentGravityMultiplier);
 
             if (Projectile.timeLeft < timeUntilMandatoryBreak)
             {
@@ -135,6 +135,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
                     dust.noGravity = true;
                 }
+
+                Particle.Create<PrettySparkle>((p) =>
+                {
+                    p.Position = Projectile.Center;
+                    p.Velocity = Vector2.Zero;
+                    p.DrawHorizontalAxis = true;
+                    p.DrawVerticalAxis = true;
+                    p.AdditiveAmount = 0.4f;
+                    p.Scale = new(2f);
+                    p.ScaleVelocity = -new Vector2(Main.rand.NextFloat(0.01f, 0.02f));
+                    p.Color = (Main.rand.NextBool() ? new Color(56, 188, 173) : new Color(93, 81, 164));
+                    p.Rotation = 0f;
+                    p.TimeToLive = 40;
+                    p.FadeInNormalizedTime = 0f;
+                    p.FadeOutNormalizedTime = 0.5f;
+                });
 
                 SoundEngine.PlaySound(SoundID.Item107 with
                 {
