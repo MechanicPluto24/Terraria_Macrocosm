@@ -2106,3 +2106,8 @@ ThaumaturgicWard: {
 		Any mana taken
 		'''
 }
+
+HummingbirdDroneRemote: {
+	DisplayName: Hummingbird Drone Remote
+	Tooltip: ""
+}
