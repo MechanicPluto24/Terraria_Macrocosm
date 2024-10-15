@@ -56,7 +56,7 @@ namespace Macrocosm.Common.Sets
         public static bool[] UnobtainableItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
 
         // TODO: these must be updated. previous adjustments were post-defense, these are pre
-        public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f, 
+        public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f,
             ItemID.Zenith, 0.16f,
             ItemID.LastPrism, 0.35f,
             ItemID.StarWrath, 0.5f,
@@ -70,6 +70,58 @@ namespace Macrocosm.Common.Sets
             ItemID.MoonlordArrow, 0.88f,
             ItemID.RainbowCrystalStaff, 0.38f,
             ItemID.MoonlordTurretStaff, 0.35f
+        );
+
+        public static bool[] WingTimeDependsOnAtmosphericDensity { get; } = ItemID.Sets.Factory.CreateBoolSet(
+            ItemID.CreativeWings,
+            ItemID.AngelWings,
+            ItemID.DemonWings,
+            ItemID.FairyWings,
+            ItemID.FinWings,
+            ItemID.FrozenWings,
+            ItemID.HarpyWings,
+            ItemID.RedsWings,
+            ItemID.DTownsWings,
+            ItemID.WillsWings,
+            ItemID.CrownosWings,
+            ItemID.CenxsWings,
+            ItemID.BejeweledValkyrieWing,
+            ItemID.Yoraiz0rWings,
+            ItemID.JimsWings,
+            ItemID.SkiphsWings,
+            ItemID.LokisWings,
+            ItemID.ArkhalisWings,
+            ItemID.LeinforsWings,
+            ItemID.GhostarsWings,
+            ItemID.SafemanWings,
+            ItemID.FoodBarbarianWings,
+            ItemID.GroxTheGreatWings,
+            ItemID.LeafWings,
+            ItemID.BatWings,
+            ItemID.BeeWings,
+            ItemID.ButterflyWings,
+            ItemID.FlameWings,
+            ItemID.GhostWings,
+            ItemID.BoneWings,
+            ItemID.MothronWings,
+            ItemID.GhostWings,
+            ItemID.BeetleWings,
+            ItemID.FestiveWings,
+            ItemID.TatteredFairyWings,
+            ItemID.SteampunkWings,
+            ItemID.BetsyWings,
+            ItemID.RainbowWings,
+            ItemID.FishronWings,
+            ItemID.WingsNebula,
+            ItemID.WingsVortex,
+            ItemID.WingsSolar,
+            ItemID.WingsStardust
+        );
+
+        public static float[] WingTimeMultiplier_Moon { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f,
+            ItemID.LongRainbowTrailWings, 0.5f,
+            ItemID.Hoverboard, 0.3f,
+            ItemID.Jetpack, 0.3f
         );
 
         /// <summary> Set of seeds for alchemy or similar plants </summary>

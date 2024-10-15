@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
@@ -26,7 +27,10 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         private Dictionary<string, UIModuleAssemblyElement> assemblyElements;
         private UIRocketBlueprint uIRocketBlueprint;
+
         private UIPanelIconButton assembleButton;
+        private UIPanelIconButton dissasembleButton;
+
         private UIInfoElement compass;
         private UIInputTextBox nameTextBox;
         private UIPanelIconButton nameAcceptResetButton;
@@ -53,6 +57,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             nameTextBox = CreateNameTextBox();
             compass = CreateCompassCoordinatesInfo();
             assembleButton = CreateAssembleButton();
+            dissasembleButton = CreateAssembleButton();
             assemblyElements = CreateAssemblyElements();
 
             UpdateBlueprint();
@@ -72,7 +77,35 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             Check(consume: true);
         }
 
+        private void DisassembleRocket()
+        {
+            foreach (var kvp in LaunchPad.Rocket.Modules)
+            {
+                RocketModule module = kvp.Value;
+
+                for(int i = 0; i < module.Recipe.Count(); i++)
+                {
+                    AssemblyRecipeEntry recipeEntry = module.Recipe[i];
+                    Item item = null;
+                    if (recipeEntry.ItemType.HasValue)
+                    {
+                        item = new(recipeEntry.ItemType.Value, recipeEntry.RequiredAmount);
+                    }
+                    else
+                    {
+                        int defaultType = ContentSamples.ItemsByType.Values.FirstOrDefault((item) => recipeEntry.ItemCheck(item)).type;
+                        item = new(defaultType, recipeEntry.RequiredAmount);
+                    }
+                    LaunchPad.Inventory.TryPlacingItem(item, sound: false);
+                }
+            }
+
+            LaunchPad.Rocket.Despawn();
+            Rocket = new();
+        }
+
         private bool CheckInteractible() => Check(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
+        private bool CheckDissasembleInteractible() => LaunchPad.HasRocket;
 
         private bool Check(bool consume)
         {
@@ -96,8 +129,18 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             base.Update(gameTime);
             UpdateTextbox();
             UpdateBlueprint();
+            UpdateAssembleButton();
 
             Inventory.ActiveInventory = LaunchPad.Inventory;
+        }
+
+        private void UpdateAssembleButton()
+        {
+            if (LaunchPad.HasRocket && HasChild(assembleButton))
+                this.ReplaceChildWith(assembleButton, dissasembleButton = CreateDissasembleButton());
+
+            if (!LaunchPad.HasRocket && HasChild(dissasembleButton))
+                this.ReplaceChildWith(dissasembleButton, assembleButton = CreateAssembleButton());
         }
 
         private void UpdateTextbox()
@@ -140,7 +183,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 Width = new(0f, 0.3f),
                 Height = new(0f, 0.05f),
                 Top = new(0, 0.065f),
-                Left = new(0, 0.125f),
+                Left = new(0, 0.1f),
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
@@ -176,8 +219,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             {
                 Width = new(20, 0),
                 Height = new(20, 0),
-                Top = new(0, 0.0745f),
-                Left = new(0, 0.388f),
+                Top = new(0, 0.075f),
+                Left = new(0, 0.36f),
                 BackPanelColor = Color.White,
                 FocusedBackPanelColor = Color.White,
                 BackPanelBorderColor = Color.Transparent,
@@ -209,7 +252,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 Width = new(160, 0),
                 Height = new(30, 0),
                 Top = new(0, 0.016f),
-                Left = new(0, 0.18f),
+                Left = new(0, 0.13f),
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
@@ -230,7 +273,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             )
             {
                 Top = new(0, 0.895f),
-                Left = new(0, 0.2f),
+                Left = new(0, 0.14f),
                 CheckInteractible = CheckInteractible,
                 GrayscaleIconIfNotInteractible = true,
                 GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
@@ -240,6 +283,28 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             Append(assembleButton);
 
             return assembleButton;
+        }
+
+        private UIPanelIconButton CreateDissasembleButton()
+        {
+            dissasembleButton = new
+            (
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Wrench"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanel", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
+            )
+            {
+                Top = new(0, 0.895f),
+                Left = new(0, 0.14f),
+                CheckInteractible = CheckDissasembleInteractible,
+                GrayscaleIconIfNotInteractible = true,
+                GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
+            };
+            dissasembleButton.SetText(new(Language.GetText("Disassemble")), 0.8f, darkenTextIfNotInteractible: true);
+            dissasembleButton.OnLeftClick += (_, _) => DisassembleRocket();
+
+            return dissasembleButton;
         }
 
         private Dictionary<string, UIModuleAssemblyElement> CreateAssemblyElements()
@@ -283,7 +348,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     assemblyElements[module.Name] = assemblyElement;
 
                     assemblyElement.Top = new(0, 0.14f + 0.185f * assemblyElementCount++);
-                    assemblyElement.Left = new(0, 0.15f);
+                    assemblyElement.Left = new(0, 0.08f);
 
                     Append(assemblyElement);
                 }

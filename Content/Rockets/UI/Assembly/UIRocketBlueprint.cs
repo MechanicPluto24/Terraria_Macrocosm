@@ -18,9 +18,9 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         public override void OnInitialize()
         {
-            Width = new(0, 0.4f);
+            Width = new(0, 0.5f);
             Height = new(0, 1f);
-            Left = new(0, 0.6f);
+            Left = new(0, 0.5f);
             HAlign = 0f;
             BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
             BorderColor = UITheme.Current.PanelStyle.BorderColor;

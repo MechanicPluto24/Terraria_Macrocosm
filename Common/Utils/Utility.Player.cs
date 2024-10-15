@@ -1,5 +1,5 @@
-﻿using Macrocosm.Content.CameraModifiers;
-using Macrocosm.Content.Players;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Content.CameraModifiers;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;

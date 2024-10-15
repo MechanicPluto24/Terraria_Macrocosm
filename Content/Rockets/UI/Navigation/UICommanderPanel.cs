@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
-using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

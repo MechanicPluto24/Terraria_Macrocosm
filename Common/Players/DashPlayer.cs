@@ -6,7 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     public class DashPlayer : ModPlayer
     {
@@ -244,7 +244,7 @@ namespace Macrocosm.Content.Players
                     {
                         NPC npc = Main.npc[i];
 
-                        if (!npc.active || npc.dontTakeDamage || npc.friendly || (npc.aiStyle == Terraria.ID.NPCAIStyleID.Fairy && !(npc.ai[2] <= 1f)) || !Player.CanNPCBeHitByPlayerOrPlayerProjectile(npc))
+                        if (!npc.active || npc.dontTakeDamage || npc.friendly || npc.aiStyle == NPCAIStyleID.Fairy && !(npc.ai[2] <= 1f) || !Player.CanNPCBeHitByPlayerOrPlayerProjectile(npc))
                             continue;
 
                         Rectangle npcHitbox = npc.getRect();

@@ -114,9 +114,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                 default: break;
             }
 
-            if(!flag && Main.netMode != NetmodeID.MultiplayerClient)
+            if(Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (float f = 0f; f < 20f; f += 1f)
+                for (float f = 0f; f < 10f; f += 1f)
                 {
                     int time = Main.rand.Next(20, 40);
                     Particle.Create<PrettySparkle>((p) =>
@@ -124,7 +124,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                         p.Position = new Vector2(i, j) * 16f + new Vector2(16f) + Main.rand.NextVector2Circular(16f, 16f);
                         p.Color = Utility.GetLightColorFromLuminiteStyle(style);
                         p.Scale = new Vector2(1f + Main.rand.NextFloat() * 2f, 0.7f + Main.rand.NextFloat() * 0.7f);
-                        p.Velocity = new Vector2(0f, -1f);
+                        p.Velocity = new Vector2(0f, -2f) * Main.rand.NextFloat();
                         p.FadeInNormalizedTime = 5E-06f;
                         p.FadeOutNormalizedTime = 0.95f;
                         p.TimeToLive = time;
@@ -234,7 +234,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                 {
                     // Make sure to change the code in UnlockChest if you don't want the chest to only unlock at night.
                     int key = ModContent.ItemType<XaocKey>();
-                    if (player.HasItemInInventoryOrOpenVoidBag(key) && Chest.Unlock(left, top) && player.ConsumeItem(key, includeVoidBag: true))
+                    if (player.HasItemInInventoryOrOpenVoidBag(key) && Chest.Unlock(left, top))
                     {
                         if (Main.netMode == NetmodeID.MultiplayerClient)
                             NetMessage.SendData(MessageID.LockAndUnlock, -1, -1, null, player.whoAmI, 1f, left, top);

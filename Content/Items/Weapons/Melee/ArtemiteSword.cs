@@ -2,7 +2,6 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;

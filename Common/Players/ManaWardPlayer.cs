@@ -1,11 +1,11 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     public class ManaWardPlayer : ModPlayer
     {
-        public bool ManaWard { get; set; }  
+        public bool ManaWard { get; set; }
 
         public override void ResetEffects()
         {
@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Players
                 {
                     manaDamage = info.Damage;
 
-                    if (manaDamage > Player.statMana) 
+                    if (manaDamage > Player.statMana)
                         manaDamage = Player.statMana;
 
                     Player.statMana -= manaDamage;
