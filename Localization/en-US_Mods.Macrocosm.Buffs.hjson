@@ -122,3 +122,8 @@ GreatstaffOfHorusMinionBuff: {
 	DisplayName: Greatstaff Of Horus Minion Buff
 	Description: Mods.Macrocosm.Buffs.GreatstaffOfHorusMinionBuff.Description
 }
+
+HorusBurn: {
+	DisplayName: Horus Burn
+	Description: Mods.Macrocosm.Buffs.HorusBurn.Description
+}
