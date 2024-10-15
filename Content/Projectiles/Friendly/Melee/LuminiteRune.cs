@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {
                     NPC npc = Main.npc[i];
-                    if (npc.active && !npc.friendly && npc.lifeMax > 5 && !npc.dontTakeDamage && npc.type != NPCID.TargetDummy)
+                    if (npc.CanBeChasedBy(Projectile))
                     {
                         float distance = Vector2.Distance(Projectile.Center, npc.Center);
                         if (distance < closestDistance)
@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 }
             }
 
-            if (TargetNPC is not null && Vector2.Distance(Projectile.Center, TargetNPC.Center) < 3000f && TargetNPC.active && !TargetNPC.friendly && TargetNPC.lifeMax > 5 && !TargetNPC.dontTakeDamage)
+            if (TargetNPC is not null && Vector2.Distance(Projectile.Center, TargetNPC.Center) < 3000f && TargetNPC.CanBeChasedBy(Projectile))
             {
                 Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, 0.05f);

@@ -19,6 +19,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
     public class MoonLich : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         private static Asset<Texture2D> handTexture;
 
         private float offsetY = 0f;

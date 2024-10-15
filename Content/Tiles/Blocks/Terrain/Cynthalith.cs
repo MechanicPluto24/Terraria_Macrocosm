@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks.Terrain
 {
-    public class Cynthalith : ModTile, IModifyTileFrame
+    public class Cynthalith : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -16,8 +16,8 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             Main.tileLighted[Type] = true;
 
             TileID.Sets.ChecksForMerge[Type] = true;
-            Main.tileMerge[ModContent.TileType<Regolith>()][Type] = true;
-            Main.tileMerge[ModContent.TileType<Protolith>()][Type] = true;
+            Regolith.TileMerge[Type] = true;
+            Protolith.TileMerge[Type] = true;
 
             TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
 
@@ -35,10 +35,10 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             dustType = ModContent.DustType<CynthalithDust>();
         }
 
-        public void ModifyTileFrame(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
+        public override void ModifyFrameMerge(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
         {
-            WorldGen.TileMergeAttempt(-2, ModContent.TileType<Regolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
             WorldGen.TileMergeAttempt(Type, ModContent.TileType<Protolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
+            WorldGen.TileMergeAttempt(-2, ModContent.TileType<Regolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
         }
     }
 }

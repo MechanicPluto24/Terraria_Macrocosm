@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,6 +10,7 @@ namespace Macrocosm.Content.Items.Tech
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 5;
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

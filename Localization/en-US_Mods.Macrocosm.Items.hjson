@@ -2052,11 +2052,6 @@ RocketFuelCanister: {
 	Tooltip: ""
 }
 
-DroneRemote: {
-	DisplayName: P.D.C.D. Controller
-	Tooltip: Summons a Hummingbird drone to fight for you
-}
-
 TempestuousBand: {
 	DisplayName: Tempestuous Band
 	Tooltip:
@@ -2108,6 +2103,11 @@ ThaumaturgicWard: {
 }
 
 HummingbirdDroneRemote: {
-	DisplayName: Hummingbird Drone Remote
+	DisplayName: P.D.C.D. Controller
+	Tooltip: Summons a Hummingbird drone to fight for you
+}
+
+GreatstaffOfHorus: {
+	DisplayName: Greatstaff Of Horus
 	Tooltip: ""
 }
