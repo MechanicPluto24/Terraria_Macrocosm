@@ -158,5 +158,19 @@ namespace Macrocosm.Common.Utils
             float rarity = (1f - dropRateInfo.dropRate) * (1f / (averageStack + 1f));
             return rarity;
         }
+
+        public static int GetItemTypeFromWingID(int wingID)
+        {
+            foreach(var kvp in ContentSamples.ItemsByType)
+            {
+                int type = kvp.Key;
+                Item item = kvp.Value;
+
+                if (item.wingSlot == wingID)
+                    return type;
+            }
+
+            return -1;
+        }
     }
 }

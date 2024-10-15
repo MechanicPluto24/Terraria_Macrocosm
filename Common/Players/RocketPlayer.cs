@@ -14,7 +14,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     public class RocketPlayer : ModPlayer
     {
@@ -112,7 +112,7 @@ namespace Macrocosm.Content.Players
                     if (!rocket.Bounds.Contains(Player.Center.ToPoint()) || !rocket.ActiveInCurrentWorld)
                         DisembarkFromRocket();
 
-                    bool escapePressed = (Main.keyState.KeyPressed(Keys.Escape) && !Main.oldKeyState.KeyPressed(Keys.Escape));
+                    bool escapePressed = Main.keyState.KeyPressed(Keys.Escape) && !Main.oldKeyState.KeyPressed(Keys.Escape);
                     bool dismountPressed = Player.controlMount;
 
                     if (rocket.State != Rocket.ActionState.Idle)

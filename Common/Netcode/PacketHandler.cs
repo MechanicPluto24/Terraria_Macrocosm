@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
 using System;

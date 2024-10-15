@@ -2,7 +2,7 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     public class MomentumLashPlayer : ModPlayer
     {

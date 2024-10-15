@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Buffs.Potions;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using System.Collections.Generic;
 using System.Linq;

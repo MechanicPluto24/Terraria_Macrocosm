@@ -17,6 +17,7 @@ Common: {
 
 LaunchPad: {
 	Assemble: Assemble
+	Disassemble: Disassemble
 	AnyChest: Any Chest
 	UnknownLocation: Unknown
 }

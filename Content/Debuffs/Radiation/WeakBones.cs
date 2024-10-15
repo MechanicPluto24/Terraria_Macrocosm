@@ -1,6 +1,6 @@
 using Macrocosm.Common.Enums;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Players;
 using Terraria;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Debuffs.Radiation

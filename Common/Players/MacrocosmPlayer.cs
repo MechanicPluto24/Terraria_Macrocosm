@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     /// <summary>
     /// Miscellaneous class for storing custom player data. 
@@ -62,7 +62,7 @@ namespace Macrocosm.Content.Players
 
         /// <summary> Alt use cooldown per item type. Not synced, not saved. </summary>
         public int[] ItemAltUseCooldown { get; private set; }
-        
+
         #endregion
 
         #region Specific weapon data
@@ -103,7 +103,7 @@ namespace Macrocosm.Content.Players
 
             Player.buffImmune[BuffType<Depressurized>()] = false;
 
-            for(int type = 0; type < ItemLoader.ItemCount; type++)
+            for (int type = 0; type < ItemLoader.ItemCount; type++)
             {
                 if (ItemAltUseCooldown[type] > 0)
                     ItemAltUseCooldown[type]--;
@@ -151,7 +151,7 @@ namespace Macrocosm.Content.Players
 
         public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
         {
-            if(proj.owner != Player.whoAmI)
+            if (proj.owner != Player.whoAmI)
                 return;
 
             modifiers.CritDamage += ExtraCritDamagePercent;

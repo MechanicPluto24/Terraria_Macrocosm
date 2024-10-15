@@ -1,6 +1,6 @@
+using Macrocosm.Common.Players;
 using Macrocosm.Content.Items.Blocks;
 using Macrocosm.Content.Items.Refined;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Tiles.Crafting;
 using Terraria;
 using Terraria.ID;
