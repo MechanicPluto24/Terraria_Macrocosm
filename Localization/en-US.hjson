@@ -3,8 +3,13 @@ Mods: {
 		Common: {
 			Rocket: Rocket
 			LaunchPad: Launchpad
-			DevItem: Developer Item
-			Poster: Poster
+			MapNames.Poster: Poster
+
+			Tooltips: {
+				DeveloperItem: Developer Item
+				UnobtainableItem: Unobtainable
+				VanillaNerf: Cosmic radiation has degraded this weapon
+			}
 		}
 
 		Messages: {

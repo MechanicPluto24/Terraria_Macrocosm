@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
@@ -15,6 +16,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void SetStaticDefaults()
         {
             ItemID.Sets.SkipsInitialUseSound[Type] = true;
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

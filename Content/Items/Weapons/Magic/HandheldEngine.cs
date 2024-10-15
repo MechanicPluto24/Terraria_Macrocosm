@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
@@ -13,6 +14,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

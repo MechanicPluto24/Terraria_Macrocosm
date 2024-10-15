@@ -1,10 +1,11 @@
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Minions;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using Macrocosm.Content.Particles;
-using Macrocosm.Common.Drawing.Particles;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -16,6 +17,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
     public class HummingbirdDrone : ModProjectile
     {
         private static Asset<Texture2D> beam;
+        private static Asset<Texture2D> glowmask;
+        private static Asset<Texture2D> flash;
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 2;
@@ -53,17 +56,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             set => Projectile.ai[0] = value ? 1f : 0f;
         }
 
-        public ref float AnimationState => ref Projectile.localAI[0];
         public ref float OrbitAngle => ref Projectile.ai[1];
+        public ref float AnimationState => ref Projectile.localAI[0];
 
         public override bool? CanCutTiles() => false;
-
         public override bool MinionContactDamage() => true;
 
-        private bool spawned = false;
+        public bool ShouldProtect(Player owner) => owner.active && !owner.dead && owner.statLife < (owner.statLifeMax2 / 2) && owner.ownedProjectileCounts[Projectile.type] > 2;
 
+        private bool spawned = false;
+        private Vector2 orbitPos;
         private int shootTimer = 0;
-        private Vector2 FlyTo;
+        private Vector2 flyTo;
+
+        private int flashFrame = -1;
+        private float flashRotation = 0;
+
         public override void AI()
         {
             if (!spawned)
@@ -72,8 +80,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             }
 
             OrbitAngle = 0f;
-            Player owner = Main.player[Projectile.owner];
-            if(Projectile.owner == Main.myPlayer)
+            if (Projectile.owner == Main.myPlayer)
             {
                 for (int i = 0; i < Projectile.whoAmI; i++)
                 {
@@ -85,14 +92,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 }
                 Projectile.netUpdate = true;
             }
-          
+
+            Player owner = Main.player[Projectile.owner];
+
             if (!CheckActive(owner))
                 return;
 
             GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
             SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
 
-            if (owner.statLife > (owner.statLifeMax2 / 2) && owner.ownedProjectileCounts[Projectile.type] > 2)
+            if (!ShouldProtect(owner))
                 Attack(foundTarget, distanceFromTarget, targetCenter);
             else
                 Protect(foundTarget, owner, targetCenter);
@@ -112,8 +121,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             }
 
             Lighting.AddLight(Projectile.position, new Color(225, 100, 100).ToVector3() * 0.4f);
-
-            //Main.NewText($"{Projectile.whoAmI} - {OrbitAngle}");
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -243,19 +250,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 }
             }
         }
-        public void BurstFire(Vector2 shootPos)
+
+        public void BurstFire(Vector2 target)
         {
-            if (shootTimer>100 &&shootTimer%4==0&&Projectile.owner == Main.myPlayer)
+            Projectile.direction = Math.Sign(target.X - Projectile.Center.X);
+            Projectile.rotation = (target - Projectile.Center).ToRotation();
+
+            if (shootTimer > 100 && shootTimer % 4 == 0 && Projectile.owner == Main.myPlayer)
             {
-                Vector2 position = Projectile.Center + (Projectile.spriteDirection == 1 ? new Vector2(30,6):new Vector2(-30,6));
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(),position,(shootPos- position).RotatedByRandom(MathHelper.Pi/10).SafeNormalize(Vector2.UnitX)*28f, ModContent.ProjectileType<HummingbirdBullet>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
-                Particle.Create<HummingbirdFlash>((p) =>
-                {
-                    p.Position = position;
-                    p.Velocity =(shootPos- position).RotatedByRandom(MathHelper.Pi/10).SafeNormalize(Vector2.UnitX)*5f;
-                    p.Rotation=((shootPos- position).RotatedByRandom(MathHelper.Pi/10).SafeNormalize(Vector2.UnitX)*5f).ToRotation();
-                }, shouldSync: true
-                );
+                Vector2 position = Projectile.Center + (Projectile.spriteDirection == 1 ? new Vector2(30, 6) : new Vector2(-30, 6));
+                Vector2 velocity = (target - position).RotatedByRandom(MathHelper.Pi / 10).SafeNormalize(Vector2.UnitX) * 28f;
+                Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<HummingbirdBullet>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
+                flashFrame = 0;
             }
         }
         private void Attack(bool foundTarget, float distanceFromTarget, Vector2 targetCenter)
@@ -276,14 +282,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 if (shootTimer < 1)
                 {
                     shootTimer = 120;
-                    FlyTo = (new Vector2(200, 0)).RotatedByRandom(MathHelper.TwoPi);
+                    flyTo = (new Vector2(200, 0)).RotatedByRandom(MathHelper.TwoPi);
                 }
+
                 BurstFire(targetCenter);
 
                 // The immediate range around the target (so it doesn't latch onto it when close)
-                if (Vector2.Distance(Projectile.Center, targetCenter + FlyTo) > 80f)
+                if (Vector2.Distance(Projectile.Center, targetCenter + flyTo) > 80f)
                 {
-                    Vector2 direction = (targetCenter + FlyTo) - Projectile.Center;
+                    Vector2 direction = (targetCenter + flyTo) - Projectile.Center;
                     direction.Normalize();
                     direction *= speed;
 
@@ -323,7 +330,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 }
             }
         }
-        Vector2 orbitPos;
+
         private void Protect(bool foundTarget, Player owner, Vector2 targetCenter)
         {
             // Default movement parameters (here for attacking)
@@ -339,6 +346,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 {
                     shootTimer = 120;
                 }
+
                 BurstFire(targetCenter);
             }
 
@@ -360,7 +368,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Projectile.rotation = Projectile.velocity.X * 0.05f;
 
             Projectile.spriteDirection = Projectile.direction;
-            int frameSpeed = 8;
+            int frameSpeed = 4;
             Projectile.frameCounter++;
 
             if (Projectile.frameCounter >= frameSpeed)
@@ -369,10 +377,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 Projectile.frame++;
 
                 if (Projectile.frame >= 2)
-                {
                     Projectile.frame = 0;
-                }
             }
+
+            if (flashFrame >= 0 && flashFrame++ > 2)
+                flashFrame = -1;
         }
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
@@ -406,7 +415,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center, 10f * Projectile.scale, ref _);
 
                 // Otherwise, perform an AABB line collision check to check the whole beam.
-
                 return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, beamEnd, 10f * Projectile.scale, ref _);
             }
             else
@@ -414,6 +422,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 return false;
             }
         }
+
         private Projectile GetConnectedDrone(float droneOffset)
         {
             Projectile proj = null;
@@ -454,21 +463,35 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Player owner = Main.player[Projectile.owner];
-
             Texture2D tex = TextureAssets.Projectile[Type].Value;
             Vector2 pos = Projectile.position + Projectile.Size / 2 - Main.screenPosition;
             SpriteEffects effects = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             if (Projectile.alpha > 0)
-            {
                 Main.EntitySpriteDraw(tex, pos, tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (lightColor * (Projectile.alpha / 255f)), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
-            }
-
-            if (owner.statLife <= (owner.statLifeMax2 / 2) && owner.ownedProjectileCounts[Projectile.type] > 2)
-                DrawBeam(Main.spriteBatch);
 
             return false;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            Vector2 pos = Projectile.position + Projectile.Size / 2 - Main.screenPosition;
+            SpriteEffects effects = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+            if (Projectile.alpha > 0)
+                Main.EntitySpriteDraw(glowmask.Value, pos, glowmask.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (Color.White * (Projectile.alpha / 255f)), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
+
+            if(flashFrame >= 0)
+            {
+                flash ??= ModContent.Request<Texture2D>(Texture + "_Flash");
+                Vector2 flashPos = Projectile.Center + (Projectile.spriteDirection == 1 ? new Vector2(24, 3) : new Vector2(-24, 3)).RotatedBy(Projectile.rotation) - Main.screenPosition;
+                Rectangle frame = flash.Frame(1, 3, frameY: flashFrame);
+                Main.EntitySpriteDraw(flash.Value, flashPos, frame, (Color.White * (Projectile.alpha / 255f)), Projectile.rotation, frame.Size() / 2, Projectile.scale, effects, 0f);
+            }
+
+            if (ShouldProtect(Main.player[Projectile.owner]))
+                DrawBeam(Main.spriteBatch);
         }
     }
 }

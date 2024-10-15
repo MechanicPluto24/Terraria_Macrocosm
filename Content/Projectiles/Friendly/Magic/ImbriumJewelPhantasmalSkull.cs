@@ -1,13 +1,13 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Particles;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
 using Terraria;
-using Macrocosm.Content.Dusts;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -58,19 +58,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             set => Projectile.ai[2] = value;
         }
 
-        // The orbit center's position
-        private Vector2 targetPosition;
-
-        // The orbit center's movement vector (i.e. its velocity)
-        private Vector2 movementVector;
-
-        // The target angle when breaking apart the orbit
-        private float targetAngle;
-
         // The free float duration, randomized and netsynced
         private int floatDuration;
-
-        // The speed at the start of the homing
 
         // The turn speed of the homing, randomized and netsynced
         private float turnSpeed;
@@ -96,19 +85,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
         }
 
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone){
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
             Particle.Create<PhantasmalSkullHitEffect>((p) =>
                 {
-                    p.Position = Projectile.Center;
+                    p.Position = Projectile.Center + Projectile.oldVelocity * 2;
                     p.Velocity = Vector2.Zero;
-                    p.Scale = new(Main.rand.NextFloat(0.2f, 0.5f));
+                    p.Scale = new(Main.rand.NextFloat(0.1f, 0.25f));
                 }, shouldSync: true
                 );
         }
 
         public override void OnKill(int timeLeft)
         {
-            for (int i=0;i<40;i++)
+            for (int i = 0; i < 40; i++)
             {
                 Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GreenBrightDust>());
                 dust.velocity.X = Main.rand.Next(-70, 71) * 0.08f;
@@ -122,22 +112,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             if (!spawned)
             {
+                SoundEngine.PlaySound(SoundID.NPCDeath6 with { PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
+
                 Particle.Create<PhantasmalSkullSpawnEffect>((p) =>
                 {
-                    p.Position = Projectile.Center;
+                    p.Position = Projectile.Center + Projectile.velocity * 3;
                     p.Velocity = Vector2.Zero;
-                }, shouldSync: true
+                }, 
+                shouldSync: true
                 );
 
-                targetAngle = MathHelper.Pi / 8 - MathHelper.Pi / 4 * (OrbitAngle / 180);
-                SoundEngine.PlaySound(SoundID.NPCDeath6 with { PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
                 spawned = true;
-
-                targetPosition = Projectile.Center;
-                movementVector = Projectile.velocity;
             }
-            if (Projectile.alpha>0)
-                Projectile.alpha -= 16;
+
+            Projectile.alpha -= 15;
+            if (Projectile.alpha < 0)
+                Projectile.alpha = 0;
+
             Lighting.AddLight(Projectile.Center, new Color(30, 255, 105).WithOpacity(1f).ToVector3());
             float homingDistance = 500f;
             float closestDistance = homingDistance;
@@ -155,7 +146,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 for (int k = 0; k < 200; k++)
                 {
-                    if (Main.npc[k].active && Main.npc[k].CanBeChasedBy(this, true))
+                    if (Main.npc[k].active && Main.npc[k].CanBeChasedBy(Projectile))
                     {
                         Vector2 newMove = Main.npc[k].Center - Projectile.Center;
                         float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
@@ -175,30 +166,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 }
             }
 
-            /*if (TargetNPC != null && Vector2.Distance(Projectile.Center, TargetNPC.Center) < homingDistance && TargetNPC.CanBeChasedBy())
-            {
-                Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, turnSpeed);
-            }
-            else
-            {
-                //Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
-            }*/
-
-            /*Vector2 direction = TargetPlayer.Center - Projectile.Center;
-            float distance = direction.Length();
-            direction.Normalize();
-
-            float deviation = Main.rand.NextFloat(-0.1f, 0.1f);
-            direction = direction.RotatedBy(deviation);
-
-            Vector2 adjustedDirection = Vector2.Lerp(Projectile.velocity, direction, 0.2f);
-            adjustedDirection.Normalize();
-
-            float accelerateDistance = 30f * 16;
-            float speed = Projectile.velocity.Length() + (distance > accelerateDistance ? distance / accelerateDistance * 0.1f : 0f);
-            Projectile.velocity = adjustedDirection * speed;*/
-
             Projectile.direction = Math.Sign(Projectile.velocity.X);
             Projectile.spriteDirection = Projectile.direction;
             Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
@@ -209,29 +176,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Projectile.alpha >= 255)
                 Projectile.active = false;
         }
-        public NPC FindClosestNPC(float maxDetectDistance)
-        {
-            NPC closestNPC = null;
 
-            float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
-
-            for (int k = 0; k < Main.maxNPCs; k++)
-            {
-                NPC target = Main.npc[k];
-                if (target.CanBeChasedBy())
-                {
-                    float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
-
-                    if (sqrDistanceToTarget < sqrMaxDetectDistance)
-                    {
-                        sqrMaxDetectDistance = sqrDistanceToTarget;
-                        closestNPC = target;
-                    }
-                }
-            }
-
-            return closestNPC;
-        }
 
         public override Color? GetAlpha(Color lightColor) => new Color(30, 255, 105).WithOpacity(1f);
 

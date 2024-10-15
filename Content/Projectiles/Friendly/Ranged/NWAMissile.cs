@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {
                     // only run locally
-                    if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(this) && Main.npc[i].GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile)
+                    if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(Projectile) && Main.npc[i].GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile)
                     {
                         float targetCenterX = Main.npc[i].position.X + Main.npc[i].width / 2;
                         float targetCenterY = Main.npc[i].position.Y + Main.npc[i].height / 2;

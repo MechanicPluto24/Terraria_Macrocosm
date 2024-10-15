@@ -113,12 +113,12 @@ Melting: {
 	Description: Mods.Macrocosm.Buffs.Melting.Description
 }
 
-DroneSummonBuff: {
+HummingbirdDroneSummonBuff: {
 	DisplayName: P.D.C.D. "Hummingbird"
 	Description: The combat drone will fight for you
 }
 
-HummingbirdDroneSummonBuff: {
-	DisplayName: Hummingbird Drone Summon Buff
-	Description: Mods.Macrocosm.Buffs.HummingbirdDroneSummonBuff.Description
+GreatstaffOfHorusMinionBuff: {
+	DisplayName: Greatstaff Of Horus Minion Buff
+	Description: Mods.Macrocosm.Buffs.GreatstaffOfHorusMinionBuff.Description
 }

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.ID;
 
@@ -16,7 +17,6 @@ namespace Macrocosm.Common.TileFrame
         //  Empty      | _
         //  Don't care |  
         // ---------------
-
         /// <summary> 
         /// Style currently used for plating blocks with special frames (e.g. Industrial Plating) 
         /// Adapted from the Gemspark blend style 

@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Tiles.Paintings
             TileObjectData.addTile(Type);
 
             TileID.Sets.DisableSmartCursor[Type] = true;
-            AddMapEntry(new Color(21, 136, 255), Language.GetText("Mods.Macrocosm.Common.Poster"));
+            AddMapEntry(new Color(21, 136, 255), Language.GetText("Mods.Macrocosm.Common.MapNames.Poster"));
         }
     }
 }

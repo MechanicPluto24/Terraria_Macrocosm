@@ -33,9 +33,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Thrown
                     Main.moonPhase = 7;
                 else
                     Main.moonPhase--;
-            }
 
-            NetMessage.SendData(MessageID.WorldData);
+                NetMessage.SendData(MessageID.WorldData);
+            }
         }
     }
 }

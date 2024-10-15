@@ -23,33 +23,70 @@ namespace Macrocosm.Content.Subworlds
 {
     public partial class Moon
     {
-        public int CynthalithlithLayerHeight { get; } = 65;
-        public int RegolithLayerHeight { get; } = 200;
-        private float SurfaceWidthFrequency { get; } = 0.003f;
-        private float SurfaceHeightFrequency { get; } = 20f;
-        private float TerrainPercentage { get; } = 0.8f;
+        public int CynthalithlithLayerHeight => 65;
+        public int RegolithLayerHeight => 200;
+        private float SurfaceWidthFrequency => 0.003f;
+        private float SurfaceHeightFrequency => 20f;
+        private float TerrainPercentage => 0.8f;
+        private int SpawnFlatArea => 50;
         private int GroundY => (int)(Main.maxTilesY * (1f - TerrainPercentage));
-        private static float FunnySurfaceEquation(float x) => MathF.Sin(2f * x) + MathF.Sin(MathHelper.Pi * x) + 0.4f * MathF.Cos(10f * x);
-        private int SurfaceHeight(int i) => (int)(FunnySurfaceEquation(i * SurfaceWidthFrequency + gen_StartYOffset) * SurfaceHeightFrequency) + GroundY;
-        private static int WhatTheHellIsThisEquation(int x) => (int)(((10 * Math.Sin(x / 20)) * (Math.Cos(x / 5)) + ((int)(2 * Math.Sin(MathHelper.Pi * x / 80)) ^ 2)) / 1.4);
-        private int IDontEvenHaveANameForThis(int x, float a, int b) => (int)(((a * WhatTheHellIsThisEquation(x)) + ((x ^ 2) / a) + (Math.Abs(b * x))) / 15);
+        private float SurfaceEquation(float x) => MathF.Sin(2f * x) + MathF.Sin(MathHelper.Pi * x) + 0.4f * MathF.Cos(10f * x);
+        private int SurfaceHeight(int i)
+        {
+            float x = i * SurfaceWidthFrequency + gen_StartYOffset;
+            float normalHeight = SurfaceEquation(x) * SurfaceHeightFrequency + GroundY;
+
+            int spawnX = Main.spawnTileX;
+
+            int flatWidth = SpawnFlatArea * 2; 
+            int blendWidth = SpawnFlatArea; 
+
+            int flatStart = spawnX - flatWidth / 2;
+            int flatEnd = spawnX + flatWidth / 2;
+
+            int blendStart = flatStart - blendWidth;
+            int blendEnd = flatEnd + blendWidth;
+
+            float flatHeight = SurfaceEquation(spawnX * SurfaceWidthFrequency + gen_StartYOffset) * SurfaceHeightFrequency + GroundY;
+
+            if (i >= flatStart && i <= flatEnd)
+            {
+                return (int)flatHeight;
+            }
+            else if (i >= blendStart && i < flatStart)
+            {
+                float t = (i - blendStart) / (float)(flatStart - blendStart);
+                float height = MathHelper.Lerp(normalHeight, flatHeight, t);
+                return (int)height;
+            }
+            else if (i > flatEnd && i <= blendEnd)
+            {
+                float t = (i - flatEnd) / (float)(blendEnd - flatEnd);
+                float height = MathHelper.Lerp(flatHeight, normalHeight, t);
+                return (int)height;
+            }
+            else
+            {
+                return (int)normalHeight;
+            }
+        }
 
         private bool gen_IsIrradiationRight;
-        private static float gen_StartYOffset;
+        private float gen_StartYOffset;
 
-        private static Point gen_LuminiteShrinePosition;
-        private static Point gen_HeavenforgeShrinePosition;
-        private static Point gen_MercuryShrinePosition;
-        private static Point gen_LunarRustShrinePosition;
-        private static Point gen_StarRoyaleShrinePosition;
-        private static Point gen_AstraShrinePosition;
-        private static Point gen_CryocoreShrinePosition;
-        private static Point gen_DarkCelestialShrinePosition;
-        private static Point gen_CosmicEmberShrinePosition;
+        private Point gen_LuminiteShrinePosition;
+        private Point gen_HeavenforgeShrinePosition;
+        private Point gen_MercuryShrinePosition;
+        private Point gen_LunarRustShrinePosition;
+        private Point gen_StarRoyaleShrinePosition;
+        private Point gen_AstraShrinePosition;
+        private Point gen_CryocoreShrinePosition;
+        private Point gen_DarkCelestialShrinePosition;
+        private Point gen_CosmicEmberShrinePosition;
 
         private Structure DetermineLunarHouse()
         {
-            int i = Main.rand.Next(0, 9);
+            int i = WorldGen.genRand.Next(0, 9);
             return i switch
             {
                 0 => new LunarHouse1(),
@@ -112,12 +149,16 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterPass");
 
-            void SpawnMeteors(Range minMaxCount, Range minMaxRadius)
+            void CarveCraters(Range minMaxCount, Range minMaxRadius)
             {
                 int count = WorldGen.genRand.Next(minMaxCount);
                 for (int x = 0; x < count; x++)
                 {
                     int i = (int)((x + WorldGen.genRand.NextFloat() * 0.9f) * (Main.maxTilesX / count));
+
+                    if (Math.Abs(i - (Main.maxTilesX / 2)) < Math.Max(SpawnFlatArea, minMaxRadius.End.Value))
+                        continue;
+
                     for (int j = 0; j < Main.maxTilesY; j++)
                     {
                         if (Main.tile[i, j].HasTile)
@@ -142,9 +183,9 @@ namespace Macrocosm.Content.Subworlds
                 }
             }
 
-            SpawnMeteors(2..5, 100..150);
-            SpawnMeteors(5..6, 30..40);
-            SpawnMeteors(25..36, 7..15);
+            CarveCraters(2..5, 100..150);
+            CarveCraters(5..6, 30..40);
+            CarveCraters(25..36, 7..15);
         }
 
         [Task]
@@ -219,6 +260,9 @@ namespace Macrocosm.Content.Subworlds
                     continue;
                 }
 
+                if (Math.Abs(i - (Main.maxTilesX / 2)) < SpawnFlatArea)
+                    continue;
+
                 if (WorldGen.genRand.NextFloat() < verticalTunnelSpawnChance)
                 {
                     skipI = verticalTunnelSpread;
@@ -228,9 +272,9 @@ namespace Macrocosm.Content.Subworlds
                     float tunnelSize = verticalTunnelSize * WorldGen.genRand.NextFloat(0.6f, 1f);
                     for (int j = 0; j < tunnelLength; j += (int)(tunnelSize * 0.66f))
                     {
-                        int radius = (int)(((FunnySurfaceEquation(j * 0.01f + eqOffset * 2f) + 1f) * 0.1f + 0.8f) * tunnelSize);
+                        int radius = (int)(((SurfaceEquation(j * 0.01f + eqOffset * 2f) + 1f) * 0.1f + 0.8f) * tunnelSize);
 
-                        int iPos = i + (int)(FunnySurfaceEquation(j * 0.005f + eqOffset) * tunnelSize * 3.5f);
+                        int iPos = i + (int)(SurfaceEquation(j * 0.005f + eqOffset) * tunnelSize * 3.5f);
                         int jPos = surfaceHeight + j;
                         ForEachInCircle(
                             iPos,
@@ -476,7 +520,7 @@ namespace Macrocosm.Content.Subworlds
 
             for (int i = 0; i < Main.maxTilesX; i++)
             {
-                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 9f);
+                int offset = (int)(SurfaceEquation(i * 0.02f + randomOffset) * 9f);
                 int surfaceHeight = SurfaceHeight(i);
                 for (int j = surfaceHeight; j < surfaceHeight + RegolithLayerHeight; j++)
                 {
@@ -497,7 +541,7 @@ namespace Macrocosm.Content.Subworlds
                         while (jOffset < veinLength)
                         {
                             ForEachInCircle(
-                                i + (int)(FunnySurfaceEquation(jOffset * 0.1f + veinEqOffset) * 2f),
+                                i + (int)(SurfaceEquation(jOffset * 0.1f + veinEqOffset) * 2f),
                                 j + jOffset,
                                 (float)jOffset / veinLength > 0.6f ? 1 : 2,
                                 (i1, j1) =>
@@ -530,7 +574,7 @@ namespace Macrocosm.Content.Subworlds
 
             for (int i = 0; i < Main.maxTilesX; i++)
             {
-                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
+                int offset = (int)(SurfaceEquation(i * 0.02f + randomOffset) * 3f);
                 int surfaceHeight = SurfaceHeight(i);
                 for (int j = surfaceHeight + CynthalithlithLayerHeight; j < surfaceHeight + RegolithLayerHeight + 30; j++)
                 {
@@ -540,25 +584,18 @@ namespace Macrocosm.Content.Subworlds
                     }
                     FastPlaceTile(i, j, cynthalithType);
 
-                   
-                  
-
-
-
                     float Distance = Math.Abs(surfaceHeight+ CynthalithlithLayerHeight+80  - j) / ((surfaceHeight + RegolithLayerHeight+ 30)-(surfaceHeight + CynthalithlithLayerHeight)*0.5f);
                     if (WorldGen.genRand.NextFloat() > Distance*0.16f)
                     {
                         continue;
                     }
                     WorldGen.TileRunner(i, j, WorldGen.genRand.Next(10,25), WorldGen.genRand.Next(10, 60), cynthalithType);
-
-
-                    
                 }
             }
+
             for (int i = 0; i < Main.maxTilesX; i++)
             {
-                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
+                int offset = (int)(SurfaceEquation(i * 0.02f + randomOffset) * 3f);
                 int surfaceHeight = SurfaceHeight(i);
                 for (int j = surfaceHeight + CynthalithlithLayerHeight; j < surfaceHeight + RegolithLayerHeight + 30; j++)
                 {
@@ -566,16 +603,17 @@ namespace Macrocosm.Content.Subworlds
                     {
                         continue;
                     }   
-                    if(Main.rand.NextBool(300))
+                    if(WorldGen.genRand.NextBool(300))
                     {
                         WorldGen.TileRunner(i, j, WorldGen.genRand.Next(6,12), WorldGen.genRand.Next(6,12), (ushort)TileType<Regolith>());
                     }
                    
                 }
             }
+
             for (int i = 0; i < Main.maxTilesX; i++)
             {
-                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
+                int offset = (int)(SurfaceEquation(i * 0.02f + randomOffset) * 3f);
                 int surfaceHeight = SurfaceHeight(i);
                 for (int j = surfaceHeight + CynthalithlithLayerHeight+80; j < surfaceHeight + RegolithLayerHeight + 30; j++)
                 {
@@ -583,16 +621,17 @@ namespace Macrocosm.Content.Subworlds
                     {
                         continue;
                     }   
-                    if(Main.rand.NextBool(300))
+                    if(WorldGen.genRand.NextBool(300))
                     {
                         WorldGen.TileRunner(i, j, WorldGen.genRand.Next(6,12), WorldGen.genRand.Next(6,12), (ushort)TileType<Protolith>());
                     }
                    
                 }
             }
+
             for (int i = 0; i < Main.maxTilesX; i++)
             {
-                int offset = (int)(FunnySurfaceEquation(i * 0.02f + randomOffset) * 3f);
+                int offset = (int)(SurfaceEquation(i * 0.02f + randomOffset) * 3f);
                 int surfaceHeight = SurfaceHeight(i);
                 for (int j = surfaceHeight + RegolithLayerHeight + 30; j < surfaceHeight + RegolithLayerHeight + 140; j++)
                 {
@@ -600,7 +639,7 @@ namespace Macrocosm.Content.Subworlds
                     {
                         continue;
                     }   
-                    if(Main.rand.NextBool(300))
+                    if(WorldGen.genRand.NextBool(300))
                     {
                         WorldGen.TileRunner(i, j, WorldGen.genRand.Next(6,12), WorldGen.genRand.Next(6,12), (ushort)TileType<Cynthalith>());
                     }
@@ -609,23 +648,28 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        private static int IrradiationEquation(int x, float a, int b)
+        {
+            static int Equation(int x) => (int)(((10 * Math.Sin(x / 20)) * (Math.Cos(x / 5)) + ((int)(2 * Math.Sin(MathHelper.Pi * x / 80)) ^ 2)) / 1.4);
+            return (int)(((a * Equation(x)) + ((x ^ 2) / a) + (Math.Abs(b * x))) / 15);
+        }
+
         //[Task]
         private void IrradiationPass(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.IrradiationPass");
             //So many variables, but hey, this is how I do world gen. It does make it consice.
-            ushort IrradiationRockType = (ushort)TileType<IrradiatedRock>();
-            ushort IrradiationWallType = (ushort)WallType<IrradiatedRockWall>();
-            int IrradiationCenter = gen_IsIrradiationRight ? (int)(Main.maxTilesX / 2) + Main.rand.Next(500, 600) : (int)(Main.maxTilesX / 2) - Main.rand.Next(500, 600);
-            int IrradiationHeight = 400;
-            int IrradiationWidth = Main.rand.Next(240, 260);
+            ushort rrradiationRockType = (ushort)TileType<IrradiatedRock>();
+            ushort irradiationWallType = (ushort)WallType<IrradiatedRockWall>();
+            int irradiationCenter = gen_IsIrradiationRight ? (int)(Main.maxTilesX / 2) + WorldGen.genRand.Next(500, 600) : (int)(Main.maxTilesX / 2) - WorldGen.genRand.Next(500, 600);
+            int irradiationHeight = 400;
+            int irradiationWidth = WorldGen.genRand.Next(240, 260);
 
-            //reused this because eh, im bad at smooth tile conversion.
-            for (int radius, x = 0; x < IrradiationHeight; x += 1 + (int)(radius * 0.1f))
+            for (int radius, x = 0; x < irradiationHeight; x += 1 + (int)(radius * 0.1f))
             {
 
-                radius = (int)((float)IrradiationWidth * (1.5f - (float)x / IrradiationHeight));
-                int iOffset = IrradiationCenter + WorldGen.genRand.NextDirection(10..50);
+                radius = (int)((float)irradiationWidth * (1.5f - (float)x / irradiationHeight));
+                int iOffset = irradiationCenter + WorldGen.genRand.NextDirection(10..50);
                 int jOffset = (int)Main.worldSurface + x + WorldGen.genRand.NextDirection(20..30);
                 ForEachInCircle(
                     iOffset,
@@ -647,23 +691,22 @@ namespace Macrocosm.Content.Subworlds
 
                         if (Main.tile[i1, j1].WallType != WallID.None)
                         {
-                            FastPlaceWall(i1, j1, IrradiationWallType);
+                            FastPlaceWall(i1, j1, irradiationWallType);
                         }
 
                         if (Main.tile[i1, j1].HasTile)
                         {
-                            FastPlaceTile(i1, j1, IrradiationRockType);
+                            FastPlaceTile(i1, j1, rrradiationRockType);
                         }
                     }
                 );
             }
 
-            //basically do the same thing but make it smaller and remove tiles.
-            for (int radius, x = 0; x < (IrradiationHeight / 1.5); x += 1 + (int)(radius * 0.1f))
+            for (int radius, x = 0; x < (irradiationHeight / 1.5); x += 1 + (int)(radius * 0.1f))
             {
 
-                radius = (int)((float)IrradiationWidth * (0.3f - (((float)x / (IrradiationHeight)) * 0.3f)));
-                int iOffset = IrradiationCenter + WorldGen.genRand.NextDirection(10..20);
+                radius = (int)((float)irradiationWidth * (0.3f - (((float)x / (irradiationHeight)) * 0.3f)));
+                int iOffset = irradiationCenter + WorldGen.genRand.NextDirection(10..20);
                 int jOffset = (int)Main.worldSurface + x + WorldGen.genRand.NextDirection(20..30);
                 ForEachInCircle(
                     iOffset,
@@ -681,7 +724,7 @@ namespace Macrocosm.Content.Subworlds
 
                         if (Main.tile[i1, j1].WallType != WallID.None || j1 > CynthalithlithLayerHeight + SurfaceHeight(i1))
                         {
-                            FastPlaceWall(i1, j1, IrradiationWallType);
+                            FastPlaceWall(i1, j1, irradiationWallType);
                         }
 
                         if (Main.tile[i1, j1].HasTile)
@@ -691,28 +734,23 @@ namespace Macrocosm.Content.Subworlds
                     }
                 );
             }
-            //Now we create the cavern at the bottom. Done in 2 steps.
-            int radius2 = (int)((float)IrradiationWidth * 0.5f);
-            int iOffset2 = IrradiationCenter + WorldGen.genRand.NextDirection(2..4);
-            int jOffset2 = (int)Main.worldSurface + (int)(IrradiationHeight / 1.5) - WorldGen.genRand.NextDirection(20..30);
 
-            //Tunnels
+            int radius2 = (int)((float)irradiationWidth * 0.5f);
+            int iOffset2 = irradiationCenter + WorldGen.genRand.NextDirection(2..4);
+            int jOffset2 = (int)Main.worldSurface + (int)(irradiationHeight / 1.5) - WorldGen.genRand.NextDirection(20..30);
 
             //Right facing tunnels
-            for (int iteration = 0; iteration < Main.rand.Next(2, 5); iteration++)
+            for (int i = 0; i < WorldGen.genRand.Next(2, 5); i++)
             {
-
-                float a = Main.rand.NextFloat(1.0f, 20.0f);
-                int b = Main.rand.Next(0, 22);
-                int AAAAAAAA = 0;//DONT ASK, THIS IS DRIVING ME MAD.
-
-                AAAAAAAA = 0;
-                for (int something = 0; something < Main.rand.Next(100, 150); something++)
+                float a = WorldGen.genRand.NextFloat(1.0f, 20.0f);
+                int b = WorldGen.genRand.Next(0, 22);
+                int count = 0; 
+                for (int j = 0; j < WorldGen.genRand.Next(100, 150); j++)
                 {
                     ForEachInCircle(
-                            iOffset2 + AAAAAAAA,
-                            jOffset2 + IDontEvenHaveANameForThis(AAAAAAAA, a, b),
-                            Main.rand.Next(5, 8),
+                            iOffset2 + count,
+                            jOffset2 + IrradiationEquation(count, a, b),
+                            WorldGen.genRand.Next(5, 8),
                             (i1, j1) =>
                             {
                                 if (CoordinatesOutOfBounds(i1, j1))
@@ -722,33 +760,27 @@ namespace Macrocosm.Content.Subworlds
 
                                 float iDistance = Math.Abs(iOffset2 - i1) / (radius2 * 0.5f);
                                 float jDistance = Math.Abs(jOffset2 - j1) / (radius2 * 0.5f);
-
-
-
-
                                 FastRemoveTile(i1, j1);
-                                FastPlaceWall(i1, j1, IrradiationWallType);
+                                FastPlaceWall(i1, j1, irradiationWallType);
                             }
                         );
-                    AAAAAAAA++;
+                    count++;
                 }
 
             }
-            //left facing tunnels
-            for (int iteration = 0; iteration < Main.rand.Next(2, 5); iteration++)
+
+            for (int i = 0; i < WorldGen.genRand.Next(2, 5); i++)
             {
 
-                float a = Main.rand.NextFloat(1.0f, 20.0f);
-                int b = Main.rand.Next(0, 22);
-                int AAAAAAAA = 0;//DONT ASK, THIS IS DRIVING ME MAD.
-
-                AAAAAAAA = 0;
-                for (int something = 0; something < Main.rand.Next(100, 150); something++)
+                float a = WorldGen.genRand.NextFloat(1.0f, 20.0f);
+                int b = WorldGen.genRand.Next(0, 22);
+                int count = 0; 
+                for (int j = 0; j < WorldGen.genRand.Next(100, 150); j++)
                 {
                     ForEachInCircle(
-                            iOffset2 + AAAAAAAA,
-                            jOffset2 + IDontEvenHaveANameForThis(AAAAAAAA, a, b),
-                            Main.rand.Next(5, 8),
+                            iOffset2 + count,
+                            jOffset2 + IrradiationEquation(count, a, b),
+                            WorldGen.genRand.Next(5, 8),
                             (i1, j1) =>
                             {
                                 if (CoordinatesOutOfBounds(i1, j1))
@@ -759,14 +791,11 @@ namespace Macrocosm.Content.Subworlds
                                 float iDistance = Math.Abs(iOffset2 - i1) / (radius2 * 0.5f);
                                 float jDistance = Math.Abs(jOffset2 - j1) / (radius2 * 0.5f);
 
-
-
-
                                 FastRemoveTile(i1, j1);
-                                FastPlaceWall(i1, j1, IrradiationWallType);
+                                FastPlaceWall(i1, j1, irradiationWallType);
                             }
                         );
-                    AAAAAAAA--;
+                    count--;
                 }
 
             }
@@ -792,22 +821,22 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OrePass");
 
             int tries = 0;
-            int geodes = Main.rand.Next(10, 14);
+            int geodes = WorldGen.genRand.Next(10, 14);
             int quartzType = TileType<QuartzBlock>();
             while (geodes > 1 && tries < 100)
             {
                 while (geodes > 1 && tries < 100)
                 {
-                    int i = Main.rand.Next(70, Main.maxTilesX - 70);
-                    int j = Main.rand.Next((int)(Main.maxTilesY / 3), Main.maxTilesY - 70);
+                    int i = WorldGen.genRand.Next(70, Main.maxTilesX - 70);
+                    int j = WorldGen.genRand.Next((int)(Main.maxTilesY / 3), Main.maxTilesY - 70);
                     Tile tile = Main.tile[i, j];
                     if (tile.HasTile)
                     {
                         int iOffset2 = i;
                         int jOffset2 = j;
-                        int radius = Main.rand.Next(40, 46);
+                        int radius = WorldGen.genRand.Next(40, 46);
 
-                        int radius2 = Main.rand.Next(30, 36);
+                        int radius2 = WorldGen.genRand.Next(30, 36);
                         ForEachInCircle(
                             iOffset2,
                             jOffset2,
@@ -885,9 +914,6 @@ namespace Macrocosm.Content.Subworlds
                                 }
                             }
                         );
-
-                        
-
                         geodes--;
                     }
                     else
@@ -1132,7 +1158,7 @@ namespace Macrocosm.Content.Subworlds
                             WorldGen.PlaceTile(i, j - 1, TileType<IrradiatedAltar>(), mute: true);
                             int iOffset2 = i;
                             int jOffset2 = j;
-                            int radius = Main.rand.Next(10, 16);
+                            int radius = WorldGen.genRand.Next(10, 16);
                             ForEachInCircle(
                                     iOffset2,
                                     jOffset2,
@@ -1156,7 +1182,7 @@ namespace Macrocosm.Content.Subworlds
                                             return;
                                         }
 
-                                        if (Main.tile[i1, j1].HasTile && !(Main.tile[i1, j1].TileType == TileType<IrradiatedAltar>()))
+                                        if (Main.tile[i1, j1].HasTile && TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[i1, j1].TileType] && !(Main.tile[i1, j1].TileType == TileType<IrradiatedAltar>()))
                                         {
                                             FastPlaceTile(i1, j1, (ushort)TileType<IrradiatedRock>());
                                         }
@@ -1170,7 +1196,6 @@ namespace Macrocosm.Content.Subworlds
                         if (tile.TileType == protolithType)
                         {
                             WorldGen.PlaceTile(i, j - 1, TileType<KyaniteNest>(), mute: true);
-                            Console.WriteLine($"Placed Kyanite at {i},{j - 1}");
                         }
                     }
                 }

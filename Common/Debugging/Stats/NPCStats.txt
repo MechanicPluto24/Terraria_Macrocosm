@@ -35,14 +35,6 @@ KyaniteScarabCritter
 	KB resist: 1
 	Damage: 0
 
-Bruiser
-	Life: 10000
-	Defense: 80
-	KB resist: 0
-	Damage: 150
-	Drops:
-		Moonstone, (1-5) 10%
-
 Clavite
 	Life: 950
 	Defense: 110
@@ -80,23 +72,6 @@ CrescentGhoul
 	Damage: 55
 	Drops:
 		Alien Residue, 33.33%
-		Moonstone, (1-5) 10%
-
-Dweller
-	Life: 20000
-	Defense: 25
-	KB resist: 0.5
-	Damage: 80
-	Drops:
-		Moonstone, (1-5) 10%
-
-Hermite
-	Life: 1300
-	Defense: 100
-	KB resist: 0
-	Damage: 55
-	Drops:
-		Regolith, 50%
 		Moonstone, (1-5) 10%
 
 KyaniteScarabSmall
@@ -140,47 +115,6 @@ LuminiteSlimeVolatile
 	Damage: 60
 	Drops:
 		Luminite, (2-12) 50%
-		Moonstone, (1-5) 10%
-
-LunarChimera
-	Life: 1500
-	Defense: 100
-	KB resist: 0.5
-	Damage: 60
-	Drops:
-		Moonstone, (1-5) 10%
-
-MoonLich
-	Life: 15000
-	Defense: 90
-	KB resist: 0
-	Damage: 55
-	Drops:
-		Space Dust, (3-5) 100%
-		Moonstone, (1-5) 10%
-
-Scatterbrained
-	Life: 650
-	Defense: 70
-	KB resist: 0.2
-	Damage: 60
-	Drops:
-		Moonstone, (1-5) 10%
-
-XenoHive
-	Life: 1200
-	Defense: 90
-	KB resist: 0.3
-	Damage: 50
-	Drops:
-		Moonstone, (1-5) 10%
-
-XenoHornet
-	Life: 200
-	Defense: 50
-	KB resist: 0.3
-	Damage: 50
-	Drops:
 		Moonstone, (1-5) 10%
 
 MoonWormBody

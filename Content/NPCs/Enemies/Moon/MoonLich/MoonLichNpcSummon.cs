@@ -9,6 +9,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
     public class MoonLichNPCSummon : ModProjectile
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public override string Texture => Macrocosm.EmptyTexPath;
 
         private bool summon = false;
