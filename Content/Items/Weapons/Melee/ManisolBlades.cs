@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             Item.width = 38;
             Item.height = 30;
-            Item.damage = 500;
+            Item.damage = 255;
             Item.autoReuse = false;
             Item.useTime = 26;
             Item.useAnimation = 26;
