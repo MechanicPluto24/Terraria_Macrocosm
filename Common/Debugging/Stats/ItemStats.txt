@@ -2973,7 +2973,7 @@ ChandriumWhip
 		Ancient Manipulator
 
 
-DroneRemote
+HummingbirdDroneRemote
 	Value: 1 platinum 50 gold
 	Research count: 1
 
