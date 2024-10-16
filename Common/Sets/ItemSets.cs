@@ -57,13 +57,13 @@ namespace Macrocosm.Common.Sets
 
         // TODO: these must be updated. previous adjustments were post-defense, these are pre
         public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f,
-            ItemID.Zenith, 0.16f,
+            ItemID.Zenith, 0.4f,
             ItemID.LastPrism, 0.35f,
-            ItemID.StarWrath, 0.5f,
+            ItemID.StarWrath, 0.65f,
             ItemID.StardustDragonStaff, 0.25f,
             ItemID.Terrarian, 0.37f,
             ItemID.NebulaBlaze, 0.5f,
-            ItemID.Meowmere, 0.6f,
+            ItemID.Meowmere, 0.65f,
             ItemID.Celeb2, 0.45f,
             ItemID.LunarFlareBook, 0.94f,
             ItemID.EmpressBlade, 0.65f,
