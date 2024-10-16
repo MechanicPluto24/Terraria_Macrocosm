@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,6 +37,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             base.Update(gameTime);
         }
 
+        private SpriteBatchState state;
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
@@ -45,10 +48,19 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             CalculatedStyle dimensions = GetDimensions();
             Vector2 position = dimensions.Center() - Rocket.Bounds.Size() / 2f;
 
+            state.SaveState(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SamplerState.PointClamp, state);
             if (!Rocket.Active)
+            {
                 Rocket.Draw(Rocket.DrawMode.Blueprint, spriteBatch, position, useRenderTarget: false);
+            }
             else
-                Rocket.Draw(Rocket.DrawMode.Dummy, spriteBatch, position, useRenderTarget: true);
+            {
+                Rocket.Draw(Rocket.DrawMode.Dummy, spriteBatch, position, useRenderTarget: false);
+            }
+            spriteBatch.End();
+            spriteBatch.Begin(state);
         }
     }
 }

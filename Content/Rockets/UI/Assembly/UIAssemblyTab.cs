@@ -57,7 +57,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             nameTextBox = CreateNameTextBox();
             compass = CreateCompassCoordinatesInfo();
             assembleButton = CreateAssembleButton();
-            dissasembleButton = CreateAssembleButton();
+            Append(assembleButton);
+            dissasembleButton = CreateDissasembleButton();
             assemblyElements = CreateAssemblyElements();
 
             UpdateBlueprint();
@@ -71,43 +72,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
         }
 
-        private void AssembleRocket()
-        {
-            Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
-            Check(consume: true);
-        }
-
-        private void DisassembleRocket()
-        {
-            foreach (var kvp in LaunchPad.Rocket.Modules)
-            {
-                RocketModule module = kvp.Value;
-
-                for(int i = 0; i < module.Recipe.Count(); i++)
-                {
-                    AssemblyRecipeEntry recipeEntry = module.Recipe[i];
-                    Item item = null;
-                    if (recipeEntry.ItemType.HasValue)
-                    {
-                        item = new(recipeEntry.ItemType.Value, recipeEntry.RequiredAmount);
-                    }
-                    else
-                    {
-                        int defaultType = ContentSamples.ItemsByType.Values.FirstOrDefault((item) => recipeEntry.ItemCheck(item)).type;
-                        item = new(defaultType, recipeEntry.RequiredAmount);
-                    }
-                    LaunchPad.Inventory.TryPlacingItem(item, sound: false);
-                }
-            }
-
-            LaunchPad.Rocket.Despawn();
-            Rocket = new();
-        }
-
-        private bool CheckInteractible() => Check(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
-        private bool CheckDissasembleInteractible() => LaunchPad.HasRocket;
-
-        private bool Check(bool consume)
+        private bool CheckAssembleRecipes(bool consume)
         {
             bool met = true;
 
@@ -124,6 +89,51 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             return met;
         }
 
+
+        private void AssembleRocket()
+        {
+            CheckAssembleRecipes(consume: true);
+            Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
+        }
+
+        private void DisassembleRocket()
+        {
+            int slot = 0;
+            foreach (var kvp in LaunchPad.Rocket.Modules)
+            {
+                RocketModule module = kvp.Value;
+
+                if (module.Recipe.Linked)
+                    continue;
+
+                for (int i = 0; i < module.Recipe.Count(); i++)
+                {
+                    AssemblyRecipeEntry recipeEntry = module.Recipe[i];
+                    Item item = null;
+                    if (recipeEntry.ItemType.HasValue)
+                    {
+                        item = new(recipeEntry.ItemType.Value, recipeEntry.RequiredAmount);
+                    }
+                    else
+                    {
+                        int defaultType = ContentSamples.ItemsByType.Values.FirstOrDefault((item) => recipeEntry.ItemCheck(item)).type;
+                        item = new(defaultType, recipeEntry.RequiredAmount);
+                    }
+
+                    if (!LaunchPad.Inventory.TryPlacingItemInSlot(item, slot, sound: true))
+                        Main.LocalPlayer.QuickSpawnItem(item.GetSource_DropAsItem("Launchpad"), item.type, item.stack);
+
+                    slot++;
+                }
+            }
+
+            LaunchPad.Rocket.Despawn();
+            Rocket = new();
+        }
+
+        private bool CheckAssembleInteractible() => CheckAssembleRecipes(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
+        private bool CheckDissasembleInteractible() => LaunchPad.HasRocket;
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
@@ -136,11 +146,16 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         private void UpdateAssembleButton()
         {
-            if (LaunchPad.HasRocket && HasChild(assembleButton))
-                this.ReplaceChildWith(assembleButton, dissasembleButton = CreateDissasembleButton());
-
-            if (!LaunchPad.HasRocket && HasChild(dissasembleButton))
-                this.ReplaceChildWith(dissasembleButton, assembleButton = CreateAssembleButton());
+            if (LaunchPad.HasRocket)
+            {
+                if (HasChild(assembleButton))
+                    this.ReplaceChildWith(assembleButton, dissasembleButton = CreateDissasembleButton());
+            }
+            else
+            {
+                if (HasChild(dissasembleButton))
+                    this.ReplaceChildWith(dissasembleButton, assembleButton = CreateAssembleButton());
+            }
         }
 
         private void UpdateTextbox()
@@ -274,13 +289,12 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             {
                 Top = new(0, 0.895f),
                 Left = new(0, 0.14f),
-                CheckInteractible = CheckInteractible,
+                CheckInteractible = CheckAssembleInteractible,
                 GrayscaleIconIfNotInteractible = true,
                 GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
             };
             assembleButton.SetText(new(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Assemble")), 0.8f, darkenTextIfNotInteractible: true);
             assembleButton.OnLeftClick += (_, _) => AssembleRocket();
-            Append(assembleButton);
 
             return assembleButton;
         }
@@ -301,7 +315,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 GrayscaleIconIfNotInteractible = true,
                 GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
             };
-            dissasembleButton.SetText(new(Language.GetText("Disassemble")), 0.8f, darkenTextIfNotInteractible: true);
+            dissasembleButton.SetText(new(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Disassemble"), scale: 0.8f), 0.8f, darkenTextIfNotInteractible: true);
             dissasembleButton.OnLeftClick += (_, _) => DisassembleRocket();
 
             return dissasembleButton;
