@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Rockets
         private Effect meshEffect;
         private EffectParameter meshTransform;
         private RenderTarget2D renderTarget;
-        private SpriteBatchState sbState, sbState2;
+        private SpriteBatchState sbState;
         private DynamicVertexBuffer vertexBuffer;
         private DynamicIndexBuffer indexBuffer;
         private VertexPositionColorTexture[] vertices;
@@ -70,14 +70,8 @@ namespace Macrocosm.Content.Rockets
                         PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);
                         PresentLightingBuffers(numVertices, primitiveCount);
                         break;
-
-                    // All other cases draw the RenderTarget directly
-                    default:
-
-                        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, sbState.Matrix);
-                        spriteBatch.Draw(renderTarget, position, Color.White);
-                        spriteBatch.End();
-
+                    case DrawMode.Dummy:
+                        DrawDummyWithRenderTarget(spriteBatch, position);
                         break;
                 }
 
@@ -173,12 +167,24 @@ namespace Macrocosm.Content.Rockets
             DrawWorld(spriteBatch, position);
             PostDraw(spriteBatch, position, inWorld: false);
 
-            sbState2.SaveState(spriteBatch);
+            sbState.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(sbState.SpriteSortMode, BlendState.Additive, sbState.SamplerState, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Main.UIScaleMatrix);
             DrawOverlay(spriteBatch, position);
             spriteBatch.End();
             spriteBatch.Begin(sbState);
+        }
+
+        private void DrawDummyWithRenderTarget(SpriteBatch spriteBatch, Vector2 position)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, sbState.Matrix);
+            PreDrawBeforeTiles(spriteBatch, position, inWorld: false);
+            spriteBatch.Draw(renderTarget, position, Color.White);
+            PostDraw(spriteBatch, position, inWorld: false);
+            spriteBatch.End();
+            spriteBatch.Begin(sbState.SpriteSortMode, BlendState.Additive, sbState.SamplerState, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Main.UIScaleMatrix);
+            DrawOverlay(spriteBatch, position);
+            spriteBatch.End();
         }
 
         private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)

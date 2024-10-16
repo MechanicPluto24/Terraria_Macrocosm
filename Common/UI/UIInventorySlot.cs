@@ -346,7 +346,6 @@ namespace Macrocosm.Common.UI
             DrawItem(spriteBatch, ref inv, position);
 
             Main.inventoryScale = prevScale;
-
         }
 
         protected virtual void DrawItemSlot(SpriteBatch spriteBatch, ref Item item, Vector2 position)
