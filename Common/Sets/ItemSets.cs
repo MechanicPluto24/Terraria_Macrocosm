@@ -57,19 +57,19 @@ namespace Macrocosm.Common.Sets
 
         // TODO: these must be updated. previous adjustments were post-defense, these are pre
         public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f, 
-            ItemID.Zenith, 0.16f,
-            ItemID.LastPrism, 0.35f,
-            ItemID.StarWrath, 0.5f,
-            ItemID.StardustDragonStaff, 0.25f,
-            ItemID.Terrarian, 0.37f,
-            ItemID.NebulaBlaze, 0.5f,
-            ItemID.Meowmere, 0.6f,
+            ItemID.Zenith, 0.45f,
+            ItemID.LastPrism, 0.01f,
+            ItemID.StarWrath, 0.63f,
+            ItemID.StardustDragonStaff, 0.01f,
+            ItemID.Terrarian, 0.55f,
+            ItemID.NebulaBlaze, 0.8f,
+            ItemID.Meowmere, 0.62f,
             ItemID.Celeb2, 0.45f,
-            ItemID.LunarFlareBook, 0.94f,
+            ItemID.LunarFlareBook, 1.13f,
             ItemID.EmpressBlade, 0.65f,
             ItemID.MoonlordArrow, 0.88f,
-            ItemID.RainbowCrystalStaff, 0.38f,
-            ItemID.MoonlordTurretStaff, 0.35f
+            ItemID.RainbowCrystalStaff, 0.3f,
+            ItemID.MoonlordTurretStaff, 0.2f
         );
 
         /// <summary> Set of seeds for alchemy or similar plants </summary>
