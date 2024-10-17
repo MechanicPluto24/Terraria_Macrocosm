@@ -34,8 +34,17 @@ namespace Macrocosm.Common.Sets
             ItemID.BottomlessShimmerBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Shimmer)
         );
 
+        /// <summary> Uned for unobtainable testing items and other developer items. Items in this set have a "Developer" tooltip and rarity </summary>
+        public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
+
+        /// <summary> Unobtainable items, other than Developer Items meant for testing. Items in this set have an "Unobtainable" tooltip </summary>
+        public static bool[] UnobtainableItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
+
         /// <summary> Set of items wiith custom potion sickness duration </summary>
         public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
+
+        /// <summary> Set of torches that work in a Macrocosm subworld </summary>
+        public static bool[] AllowedTorches { get; } = ItemID.Sets.Factory.CreateBoolSet();
 
         /// <summary> 
         /// If true, explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
@@ -49,18 +58,15 @@ namespace Macrocosm.Common.Sets
         /// </summary>
         public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
 
-        /// <summary> Unobtainable developer/debug items. Items in this set have a "Developer Item" tooltip and rarity </summary>
-        public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
-
-        /// <summary> Unobtainable items, other than <see cref="DeveloperItem"/>. Items in this set have an "Unobtainable" tooltip </summary>
-        public static bool[] UnobtainableItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
-
-        // TODO: these must be updated. previous adjustments were post-defense, these are pre
+        /// <summary> 
+        /// Damage adjustment for items while in a Macrocosm subworld. 
+        /// Applies a tooltip indicating if the item is stronger or weaker.
+        /// </summary>
         public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f, 
             ItemID.Zenith, 0.45f,
-            ItemID.LastPrism, 0.01f,
+            ItemID.LastPrism, 0.35f,
             ItemID.StarWrath, 0.63f,
-            ItemID.StardustDragonStaff, 0.01f,
+            ItemID.StardustDragonStaff, 0.25f,
             ItemID.Terrarian, 0.55f,
             ItemID.NebulaBlaze, 0.8f,
             ItemID.Meowmere, 0.62f,
