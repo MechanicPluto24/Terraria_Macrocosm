@@ -1,9 +1,9 @@
-﻿using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

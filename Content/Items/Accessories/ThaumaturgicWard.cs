@@ -1,5 +1,5 @@
 ﻿using Iced.Intel;
-using Macrocosm.Content.Players;
+using Macrocosm.Common.Players;
 using System;
 using System.Collections.Generic;
 using System.Linq;

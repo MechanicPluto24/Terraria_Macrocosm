@@ -45,6 +45,8 @@ namespace Macrocosm.Content.LoadingScreens
             FadeEffect.StartFadeIn(0.012f);
         }
 
+        public void SetProgressBar(UIWorldGenProgressBar progressBar) => this.progressBar = progressBar;
+
         public void Setup()
         {
             stars = new(600, 700, wrapMode: MacrocosmStar.WrapMode.Random);
@@ -118,7 +120,6 @@ namespace Macrocosm.Content.LoadingScreens
             if (Moving)
             {
                 DrawRocket(spriteBatch);
-
                 fallingStars.Draw(spriteBatch);
             }
 

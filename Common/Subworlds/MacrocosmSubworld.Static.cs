@@ -1,9 +1,11 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.LoadingScreens;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SubworldLibrary;
 using System;
 using System.Collections.Generic;
@@ -11,6 +13,7 @@ using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.IO;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -126,6 +129,17 @@ namespace Macrocosm.Common.Subworlds
                     nameof(Moon) => new MoonLoadingScreen(),
                     _ => null,
                 };
+            }
+
+            switch (SanitizeID(targetWorld))
+            {
+                case "Moon":
+                    LoadingScreen?.SetProgressBar(new(
+                        ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad),
+                        ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad),
+                        new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
+                    ));
+                    break;
             }
 
             if (rocket is not null)

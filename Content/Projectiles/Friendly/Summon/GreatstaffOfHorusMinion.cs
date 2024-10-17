@@ -1,24 +1,26 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Trails;
 using Macrocosm.Content.Buffs.Minions;
+using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
-using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-  
+
     // This minion shows a few mandatory things that make it behave properly.
     // Its attack pattern is simple: If an enemy is in range of 43 tiles, it will fly to it and deal contact damage
     // If the player targets a certain NPC with right-click, it will fly through tiles to it
     // If it isn't attacking, it will float near the player with minimal movement
     public class GreatstaffOfHorusMinion : ModProjectile
     {
+        private static Asset<Texture2D> glow;
         public override void SetStaticDefaults()
         {
             // Sets the amount of frames this minion has on its spritesheet
@@ -62,10 +64,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
 
         // The AI of this minion is split into multiple methods to avoid bloat. This method just passes values between calls actual parts of the AI.
+        int shineOrbitTimer = 0;
+
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
-
+            shineOrbitTimer += 2;
+            if (shineOrbitTimer >= 180)
+                shineOrbitTimer = 0;
             if (!CheckActive(owner))
             {
                 return;
@@ -203,7 +209,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HorusExplosion>(), Utility.TrueDamage((int)(Projectile.damage * 0.3f)),0f, Main.myPlayer);
+            Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<HorusExplosion>(), Utility.TrueDamage((int)(Projectile.damage * 0.3f)), 0f, Main.myPlayer);
         }
 
         private void Movement(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, float distanceToIdlePosition, Vector2 vectorToIdlePosition)
@@ -262,8 +268,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private void Visuals()
         {
             // So it will lean slightly towards the direction it's moving
-            
-            Projectile.rotation = Projectile.velocity.ToRotation()-MathHelper.PiOver2;
+
+            Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
             // This is a simple "loop through all frames from top to bottom" animation
             int frameSpeed = 5;
@@ -293,9 +299,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
+            Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(shineOrbitTimer * 2)) * 50f, -(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * 20f);
+
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            if ((-(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * 20f) < 0f)
+                DrawShine(Main.spriteBatch, new Color(127, 200, 155), orbit);
+
             trail?.Draw(Projectile, Projectile.Size / 2f);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
@@ -305,16 +317,40 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public override void PostDraw(Color lightColor)
         {
             state.SaveState(Main.spriteBatch);
+            Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(shineOrbitTimer * 2)) * 50f, -(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * 20f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star5").Value;
+            glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star5");
             float opacity = 1f;
-            Main.EntitySpriteDraw(glow, Projectile.Center - Main.screenPosition, null, new Color(255, 170, 142, 255) * opacity, Projectile.rotation, glow.Size() / 2, Projectile.scale * Main.rand.NextFloat(0.19f, 0.21f), SpriteEffects.None, 0f);
-
+            Main.EntitySpriteDraw(glow.Value, Projectile.Center - Main.screenPosition, null, new Color(255, 170, 142, 255) * opacity, Projectile.rotation, glow.Size() / 2, Projectile.scale * Main.rand.NextFloat(0.19f, 0.21f), SpriteEffects.None, 0f);
+            if ((-(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * 20f) >= 0f)
+                DrawShine(Main.spriteBatch, new Color(127, 200, 155), orbit);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
+        }
+
+        private void DrawShine(SpriteBatch spriteBatch, Color drawColor, Vector2 orbit)
+        {
+            Texture2D shineTexture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
+            int trailLength = 50;
+            float opacityFactor = 0.4f;
+            for (int i = 0; i < trailLength; i++)
+            {
+                float lerpFactor = i / (float)trailLength;
+                Vector2 previousOrbit = new
+                (
+                    (float)Math.Cos(MathHelper.ToRadians((shineOrbitTimer - i) * 2)) * 50f,
+                    -(float)Math.Sin(MathHelper.ToRadians((shineOrbitTimer - i) * 2)) * 20f
+                );
+
+                Color trailColor = drawColor * (1f - lerpFactor) * opacityFactor;
+
+                spriteBatch.Draw(shineTexture, Projectile.Center + previousOrbit.RotatedBy(MathHelper.ToRadians(-70)) - Main.screenPosition, null, trailColor, MathHelper.ToRadians(shineOrbitTimer) + MathHelper.ToRadians(-70), shineTexture.Size() / 2, Projectile.scale * (1f - lerpFactor) * 0.7f, SpriteEffects.None, 0f);
+            }
+
+            spriteBatch.Draw(shineTexture, Projectile.Center + orbit.RotatedBy(MathHelper.ToRadians(-70)) - Main.screenPosition, null, drawColor, MathHelper.ToRadians(shineOrbitTimer) + MathHelper.ToRadians(-70), shineTexture.Size() / 2, Projectile.scale * 0.7f, SpriteEffects.None, 0f);
         }
     }
 }

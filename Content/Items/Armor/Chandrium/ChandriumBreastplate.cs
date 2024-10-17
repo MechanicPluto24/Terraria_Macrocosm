@@ -1,6 +1,6 @@
 // using Macrocosm.Tiles;
+using Macrocosm.Common.Players;
 using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;

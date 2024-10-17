@@ -1,6 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;

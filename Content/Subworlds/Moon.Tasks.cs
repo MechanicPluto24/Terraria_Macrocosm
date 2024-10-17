@@ -333,10 +333,10 @@ namespace Macrocosm.Content.Subworlds
             } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
             StructureMap.AddProtectedStructure(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y), 10);
 
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new Actions.ClearTile());
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new Actions.ClearTile());
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y - shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new Actions.ClearTile());
+            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y - shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new Actions.ClearTile());
 
-            gen_LuminiteShrinePosition = new(x + shrine.Size.X / 2, y + shrine.Size.Y / 2);
+            gen_LuminiteShrinePosition = new(x + shrine.Size.X / 2, y);
         }
 
         [Task]

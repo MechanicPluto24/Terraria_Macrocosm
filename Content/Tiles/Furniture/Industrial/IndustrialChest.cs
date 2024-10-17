@@ -1,7 +1,7 @@
 using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Players;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Keys;
-using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

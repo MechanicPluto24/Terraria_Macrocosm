@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         public override void OnInitialize()
         {
-            Width.Set(0, 0.25f);
+            Width.Set(0, 0.331f);
             //Height.Set(0, 0.18f + 0.06f * ((slots.Count - 1) / 4));
             Height.Set(0, 0.18f);
             SetPadding(12f);

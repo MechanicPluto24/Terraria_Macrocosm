@@ -10,7 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     public class InventoryPlayer : ModPlayer
     {

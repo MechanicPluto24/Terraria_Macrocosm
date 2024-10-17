@@ -158,7 +158,7 @@ namespace Macrocosm.Common.Storage
                 Array.Fill(items, new Item(), oldSize, newSize - oldSize);
         }
 
-        public bool TryPlacingItem(Item item, bool justCheck = false, bool sound = true, bool serverSync = true)
+        public bool TryPlacingItem(Item item, bool justCheck = false, bool sound = true, bool serverSync = true, int startFromIndex = 0)
         {
             if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
                 return false;
@@ -169,7 +169,7 @@ namespace Macrocosm.Common.Storage
             bool result = false;
             if (item.maxStack > 1)
             {
-                for (int i = 0; i < Size; i++)
+                for (int i = startFromIndex; i < Size; i++)
                 {
                     if (!uiItemSlots[i].CanInteract)
                         continue;
@@ -250,8 +250,106 @@ namespace Macrocosm.Common.Storage
 
                     if (shouldSync)
                         SyncItem(j);
+                }
+            }
 
-                    break;
+            return result;
+        }
+
+        public bool TryPlacingItemInSlot(Item item, int slot, bool justCheck = false, bool sound = true, bool serverSync = true)
+        {
+            if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
+                return false;
+
+            bool shouldSync = Main.netMode == NetmodeID.MultiplayerClient || (serverSync && Main.netMode == NetmodeID.Server);
+
+            Player player = Main.LocalPlayer;
+            bool result = false;
+            if (item.maxStack > 1)
+            {
+                // Yes, I'm lazy - Feldy
+                for (int i = slot; i <= slot; i++)
+                {
+                    if (!uiItemSlots[i].CanInteract)
+                        continue;
+
+                    if (!uiItemSlots[i].ReservedCheck(item))
+                        continue;
+
+                    if (items[i].stack >= items[i].maxStack || item.type != items[i].type)
+                        continue;
+
+                    if (!ItemLoader.CanStack(items[i], item))
+                        continue;
+
+                    int stackDifference = item.stack;
+                    if (item.stack + items[i].stack > items[i].maxStack)
+                        stackDifference = items[i].maxStack - items[i].stack;
+
+                    if (justCheck)
+                    {
+                        result = result || stackDifference > 0;
+                        break;
+                    }
+
+                    ItemLoader.StackItems(items[i], item, out _);
+
+                    if (sound)
+                        SoundEngine.PlaySound(SoundID.Grab);
+
+                    if (item.stack <= 0)
+                    {
+                        item.SetDefaults();
+                        uiItemSlots[i].ClearGlow();
+
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                            SyncItem(i);
+
+                        break;
+                    }
+
+                    if (items[i].type == ItemID.None)
+                    {
+                        items[i] = item.Clone();
+                        item.SetDefaults();
+                        uiItemSlots[i].ClearGlow();
+                    }
+
+                    if (shouldSync)
+                        SyncItem(i);
+                }
+            }
+
+            if (item.stack > 0)
+            {
+                // Lol - Feldy
+                for (int j = slot; j <= slot; j++)
+                {
+                    if (!uiItemSlots[j].CanInteract)
+                        continue;
+
+                    if (!uiItemSlots[j].ReservedCheck(item))
+                        continue;
+
+                    if (items[j].stack != 0)
+                        continue;
+
+                    if (justCheck)
+                    {
+                        result = true;
+                        break;
+                    }
+
+                    if (sound)
+                        SoundEngine.PlaySound(SoundID.Grab);
+
+                    items[j] = item.Clone();
+                    item.SetDefaults();
+                    uiItemSlots[j].ClearGlow();
+                    ItemSlot.AnnounceTransfer(new ItemSlot.ItemTransferInfo(items[j], 0, 3));
+
+                    if (shouldSync)
+                        SyncItem(j);
                 }
             }
 

@@ -2,7 +2,7 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     public class LeechPlayer : ModPlayer
     {
@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Players
 
         public override bool CanUseItem(Item item)
         {
-            if (item.healMana > 0 && DisableManaPotions) 
+            if (item.healMana > 0 && DisableManaPotions)
                 return false;
 
             return true;
