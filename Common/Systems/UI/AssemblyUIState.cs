@@ -27,7 +27,7 @@ namespace Macrocosm.Common.Systems.UI
         public override void OnInitialize()
         {
             window = new();
-            window.Width.Set(875f, 0f);
+            window.Width.Set(675f, 0f);
             window.Height.Set(720f, 0f);
             window.HAlign = 0.5f;
             window.VAlign = 0.5f;
@@ -78,7 +78,8 @@ namespace Macrocosm.Common.Systems.UI
                     tab.OnTabClose();
             });
 
-            LaunchPad.Inventory.InteractingPlayer = 255;
+            if(LaunchPad is not null)
+                LaunchPad.Inventory.InteractingPlayer = 255;
         }
 
         public override void Update(GameTime gameTime)

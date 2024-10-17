@@ -9,7 +9,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     public class MedkitPlayer : ModPlayer
     {
@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Players
 
         // Used for identifying medkit tier
         public int MedkitItemType = ModContent.ItemType<Medkit>();
-        private Medkit Medkit => (ContentSamples.ItemsByType[MedkitItemType].ModItem as Medkit);
+        private Medkit Medkit => ContentSamples.ItemsByType[MedkitItemType].ModItem as Medkit;
         private int medkitTimer;
         private int medkitHitCooldown;
 

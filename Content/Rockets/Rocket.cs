@@ -1,13 +1,13 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Tech;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
@@ -222,7 +222,7 @@ namespace Macrocosm.Content.Rockets
             {
                 // Travel to spawn point if a specific launchpad has not been set
                 if (TargetLandingPosition == default)
-                    TargetLandingPosition = Utility.SpawnWorldPosition;
+                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 4);
 
                 Center = new(TargetLandingPosition.X, Center.Y);
             }
@@ -231,6 +231,7 @@ namespace Macrocosm.Content.Rockets
         public void OnWorldLoad()
         {
             ResetAnimation();
+            /*
             if (State == ActionState.Landing && ActiveInCurrentWorld)
             {
                 // Travel to spawn point if a specific launchpad has not been set
@@ -239,6 +240,7 @@ namespace Macrocosm.Content.Rockets
 
                 Center = new(TargetLandingPosition.X, Center.Y);
             }
+            */
         }
 
         /// <summary> Called when a subworld is generated </summary>
@@ -247,7 +249,8 @@ namespace Macrocosm.Content.Rockets
             if (State == ActionState.Landing && ActiveInCurrentWorld)
             {
                 // Target landing position always defaults to the spawn point just set on worldgen
-                TargetLandingPosition = Utility.SpawnWorldPosition;
+                TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 4);
+
                 Center = new(TargetLandingPosition.X, Center.Y);
             }
         }
@@ -659,6 +662,9 @@ namespace Macrocosm.Content.Rockets
 
         private bool MouseCanInteract()
         {
+            if (LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, Main.MouseWorld.ToTileCoordinates16()) != null)
+                return false;
+
             foreach (RocketModule module in Modules.Values.Where((module) => !(module is BoosterRight) && !(module is BoosterLeft)))
                 if (module.Hitbox.Contains(Main.MouseWorld.ToPoint()))
                     return true;

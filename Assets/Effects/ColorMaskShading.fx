@@ -68,7 +68,7 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     // Blend the original color with the new found, accounting for the ambient brightness 
     // (will return the original if found unrecognized key in the mask) 
     color.rgb = lerp(color.rgb, newColor.rgb * texelBrightness, newColor.a);
-    return float4(color.rgb, color.a);
+    return float4(color.rgb, newColor.a);
 }
 
 technique 

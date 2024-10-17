@@ -1,9 +1,9 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Weapons;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;

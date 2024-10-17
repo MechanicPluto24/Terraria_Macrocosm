@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Players;
+﻿using Macrocosm.Common.Players;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;

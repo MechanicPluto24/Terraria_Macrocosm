@@ -72,6 +72,58 @@ namespace Macrocosm.Common.Sets
             ItemID.MoonlordTurretStaff, 0.2f
         );
 
+        public static bool[] WingTimeDependsOnAtmosphericDensity { get; } = ItemID.Sets.Factory.CreateBoolSet(
+            ItemID.CreativeWings,
+            ItemID.AngelWings,
+            ItemID.DemonWings,
+            ItemID.FairyWings,
+            ItemID.FinWings,
+            ItemID.FrozenWings,
+            ItemID.HarpyWings,
+            ItemID.RedsWings,
+            ItemID.DTownsWings,
+            ItemID.WillsWings,
+            ItemID.CrownosWings,
+            ItemID.CenxsWings,
+            ItemID.BejeweledValkyrieWing,
+            ItemID.Yoraiz0rWings,
+            ItemID.JimsWings,
+            ItemID.SkiphsWings,
+            ItemID.LokisWings,
+            ItemID.ArkhalisWings,
+            ItemID.LeinforsWings,
+            ItemID.GhostarsWings,
+            ItemID.SafemanWings,
+            ItemID.FoodBarbarianWings,
+            ItemID.GroxTheGreatWings,
+            ItemID.LeafWings,
+            ItemID.BatWings,
+            ItemID.BeeWings,
+            ItemID.ButterflyWings,
+            ItemID.FlameWings,
+            ItemID.GhostWings,
+            ItemID.BoneWings,
+            ItemID.MothronWings,
+            ItemID.GhostWings,
+            ItemID.BeetleWings,
+            ItemID.FestiveWings,
+            ItemID.TatteredFairyWings,
+            ItemID.SteampunkWings,
+            ItemID.BetsyWings,
+            ItemID.RainbowWings,
+            ItemID.FishronWings,
+            ItemID.WingsNebula,
+            ItemID.WingsVortex,
+            ItemID.WingsSolar,
+            ItemID.WingsStardust
+        );
+
+        public static float[] WingTimeMultiplier_Moon { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f,
+            ItemID.LongRainbowTrailWings, 0.5f,
+            ItemID.Hoverboard, 0.3f,
+            ItemID.Jetpack, 0.3f
+        );
+
         /// <summary> Set of seeds for alchemy or similar plants </summary>
         public static bool[] PlantSeed { get; } = ItemID.Sets.Factory.CreateBoolSet
         (

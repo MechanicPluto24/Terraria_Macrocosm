@@ -2,9 +2,9 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Graphics;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Accessories;
-using Macrocosm.Content.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

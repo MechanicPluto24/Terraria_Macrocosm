@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Players;
+﻿using Macrocosm.Common.Players;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
@@ -26,7 +27,10 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         private Dictionary<string, UIModuleAssemblyElement> assemblyElements;
         private UIRocketBlueprint uIRocketBlueprint;
+
         private UIPanelIconButton assembleButton;
+        private UIPanelIconButton dissasembleButton;
+
         private UIInfoElement compass;
         private UIInputTextBox nameTextBox;
         private UIPanelIconButton nameAcceptResetButton;
@@ -53,6 +57,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             nameTextBox = CreateNameTextBox();
             compass = CreateCompassCoordinatesInfo();
             assembleButton = CreateAssembleButton();
+            Append(assembleButton);
+            dissasembleButton = CreateDissasembleButton();
             assemblyElements = CreateAssemblyElements();
 
             UpdateBlueprint();
@@ -66,15 +72,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
         }
 
-        private void AssembleRocket()
-        {
-            Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
-            Check(consume: true);
-        }
-
-        private bool CheckInteractible() => Check(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
-
-        private bool Check(bool consume)
+        private bool CheckAssembleRecipes(bool consume)
         {
             bool met = true;
 
@@ -91,13 +89,73 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             return met;
         }
 
+
+        private void AssembleRocket()
+        {
+            CheckAssembleRecipes(consume: true);
+            Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
+        }
+
+        private void DisassembleRocket()
+        {
+            int slot = 0;
+            foreach (var kvp in LaunchPad.Rocket.Modules)
+            {
+                RocketModule module = kvp.Value;
+
+                if (module.Recipe.Linked)
+                    continue;
+
+                for (int i = 0; i < module.Recipe.Count(); i++)
+                {
+                    AssemblyRecipeEntry recipeEntry = module.Recipe[i];
+                    Item item = null;
+                    if (recipeEntry.ItemType.HasValue)
+                    {
+                        item = new(recipeEntry.ItemType.Value, recipeEntry.RequiredAmount);
+                    }
+                    else
+                    {
+                        int defaultType = ContentSamples.ItemsByType.Values.FirstOrDefault((item) => recipeEntry.ItemCheck(item)).type;
+                        item = new(defaultType, recipeEntry.RequiredAmount);
+                    }
+
+                    if (!LaunchPad.Inventory.TryPlacingItemInSlot(item, slot, sound: true))
+                        Main.LocalPlayer.QuickSpawnItem(item.GetSource_DropAsItem("Launchpad"), item.type, item.stack);
+
+                    slot++;
+                }
+            }
+
+            LaunchPad.Rocket.Despawn();
+            Rocket = new();
+        }
+
+        private bool CheckAssembleInteractible() => CheckAssembleRecipes(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
+        private bool CheckDissasembleInteractible() => LaunchPad.HasRocket;
+
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             UpdateTextbox();
             UpdateBlueprint();
+            UpdateAssembleButton();
 
             Inventory.ActiveInventory = LaunchPad.Inventory;
+        }
+
+        private void UpdateAssembleButton()
+        {
+            if (LaunchPad.HasRocket)
+            {
+                if (HasChild(assembleButton))
+                    this.ReplaceChildWith(assembleButton, dissasembleButton = CreateDissasembleButton());
+            }
+            else
+            {
+                if (HasChild(dissasembleButton))
+                    this.ReplaceChildWith(dissasembleButton, assembleButton = CreateAssembleButton());
+            }
         }
 
         private void UpdateTextbox()
@@ -140,7 +198,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 Width = new(0f, 0.3f),
                 Height = new(0f, 0.05f),
                 Top = new(0, 0.065f),
-                Left = new(0, 0.125f),
+                Left = new(0, 0.1f),
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
@@ -176,8 +234,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             {
                 Width = new(20, 0),
                 Height = new(20, 0),
-                Top = new(0, 0.0745f),
-                Left = new(0, 0.388f),
+                Top = new(0, 0.075f),
+                Left = new(0, 0.36f),
                 BackPanelColor = Color.White,
                 FocusedBackPanelColor = Color.White,
                 BackPanelBorderColor = Color.Transparent,
@@ -209,7 +267,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 Width = new(160, 0),
                 Height = new(30, 0),
                 Top = new(0, 0.016f),
-                Left = new(0, 0.18f),
+                Left = new(0, 0.13f),
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
@@ -230,16 +288,37 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             )
             {
                 Top = new(0, 0.895f),
-                Left = new(0, 0.2f),
-                CheckInteractible = CheckInteractible,
+                Left = new(0, 0.14f),
+                CheckInteractible = CheckAssembleInteractible,
                 GrayscaleIconIfNotInteractible = true,
                 GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
             };
             assembleButton.SetText(new(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Assemble")), 0.8f, darkenTextIfNotInteractible: true);
             assembleButton.OnLeftClick += (_, _) => AssembleRocket();
-            Append(assembleButton);
 
             return assembleButton;
+        }
+
+        private UIPanelIconButton CreateDissasembleButton()
+        {
+            dissasembleButton = new
+            (
+                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Wrench"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanel", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
+            )
+            {
+                Top = new(0, 0.895f),
+                Left = new(0, 0.14f),
+                CheckInteractible = CheckDissasembleInteractible,
+                GrayscaleIconIfNotInteractible = true,
+                GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
+            };
+            dissasembleButton.SetText(new(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Disassemble"), scale: 0.8f), 0.8f, darkenTextIfNotInteractible: true);
+            dissasembleButton.OnLeftClick += (_, _) => DisassembleRocket();
+
+            return dissasembleButton;
         }
 
         private Dictionary<string, UIModuleAssemblyElement> CreateAssemblyElements()
@@ -283,7 +362,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     assemblyElements[module.Name] = assemblyElement;
 
                     assemblyElement.Top = new(0, 0.14f + 0.185f * assemblyElementCount++);
-                    assemblyElement.Left = new(0, 0.15f);
+                    assemblyElement.Left = new(0, 0.08f);
 
                     Append(assemblyElement);
                 }

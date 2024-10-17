@@ -1,5 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Players;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

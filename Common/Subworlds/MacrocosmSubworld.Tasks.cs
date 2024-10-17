@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Macrocosm.Content.Rockets;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria.GameContent.Generation;
@@ -84,6 +85,7 @@ namespace Macrocosm.Common.Subworlds
 
                 // (Re)construct structure map of this subworld when SubLib fetches worldgen tasks (i.e. subworld generation commences)
                 StructureMap = new();
+                RocketManager.OnWorldGenerated();
 
                 return tasks;
             }

@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Systems;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;

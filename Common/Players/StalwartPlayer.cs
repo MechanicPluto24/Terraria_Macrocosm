@@ -1,7 +1,7 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Players
+namespace Macrocosm.Common.Players
 {
     public class StalwartPlayer : ModPlayer
     {
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Players
         {
             if (StalwartShield)
             {
-                if (defenceBonus < 30) 
+                if (defenceBonus < 30)
                     defenceBonus += 10;
 
                 decreaseTick = 0;
