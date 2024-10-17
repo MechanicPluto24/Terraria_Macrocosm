@@ -1,8 +1,11 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
+using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using Terraria;
+using Terraria.ID;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -26,6 +29,11 @@ namespace Macrocosm.Content.Rockets
             {
                 module.Detail = source.Modules[module.Name].Detail;
                 module.Pattern = source.Modules[module.Name].Pattern;
+
+                foreach (PatternColorData data in module.Pattern.ColorData)
+                    if (data.Color.A > 0)
+                        for (int i = 0; i < 20; i++)
+                            Dust.NewDustDirect(module.Position, module.Width, module.Height, DustID.TintablePaint, newColor: data.Color.WithAlpha(220), Scale: Main.rand.NextFloat(0.2f, 1f));
             }
 
             if (sync)

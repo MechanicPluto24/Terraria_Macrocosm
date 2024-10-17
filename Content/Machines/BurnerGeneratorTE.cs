@@ -21,6 +21,8 @@ namespace Macrocosm.Content.Machines
 
         public Item ConsumedItem { get; set; } = new(ItemID.None);
 
+        public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)checkTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
+
         protected int checkTimer;
 
         public override void OnFirstUpdate()

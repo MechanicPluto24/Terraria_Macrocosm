@@ -218,6 +218,8 @@ namespace Macrocosm.Common.Storage
 
                     if (shouldSync)
                         SyncItem(i);
+
+                    result = true;
                 }
             }
 
@@ -250,6 +252,8 @@ namespace Macrocosm.Common.Storage
 
                     if (shouldSync)
                         SyncItem(j);
+
+                    result = true;
                 }
             }
 
@@ -317,6 +321,8 @@ namespace Macrocosm.Common.Storage
 
                     if (shouldSync)
                         SyncItem(i);
+
+                    result = true;
                 }
             }
 
@@ -350,6 +356,8 @@ namespace Macrocosm.Common.Storage
 
                     if (shouldSync)
                         SyncItem(j);
+
+                    result = true;
                 }
             }
 

@@ -103,6 +103,9 @@ namespace Macrocosm.Content.Rockets
         /// <summary> The layer this rocket is drawn in </summary>
         public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
+        /// <summary> The rocket transparency. Currently it only works when the rocket is drawn using a RenderTarget </summary>
+        public float Transparency { get; set; } = 1f;
+
         /// <summary> This rocket's nameplate </summary>
         public Nameplate Nameplate { get; set; } = new();
 
@@ -212,6 +215,7 @@ namespace Macrocosm.Content.Rockets
         {
             CurrentWorld = MacrocosmSubworld.CurrentID;
             OnWorldSpawn();
+            SetModuleWorldPositions();
         }
 
         /// <summary> Called when spawning into a new world (creation or travel) </summary>
@@ -366,6 +370,12 @@ namespace Macrocosm.Content.Rockets
                     break;
 
             }
+
+            if(Transparency < 1f)
+                Transparency += 0.01f;
+
+            if (Transparency > 1f)
+                Transparency = 1f;
 
             //Main.NewText(State);
 

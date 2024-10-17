@@ -1,7 +1,9 @@
-﻿using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
@@ -94,6 +96,42 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
             CheckAssembleRecipes(consume: true);
             Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
+
+            foreach (var kvp in Rocket.Modules)
+            {
+                RocketModule module = kvp.Value;
+
+                if (module.Recipe.Linked)
+                    continue;
+
+                for (int i = 0; i < module.Recipe.Count(); i++)
+                {
+                    AssemblyRecipeEntry recipeEntry = module.Recipe[i];
+                    Item item = null;
+                    if (recipeEntry.ItemType.HasValue)
+                    {
+                        item = new(recipeEntry.ItemType.Value, recipeEntry.RequiredAmount);
+                    }
+                    else
+                    {
+                        int defaultType = ContentSamples.ItemsByType.Values.FirstOrDefault((item) => recipeEntry.ItemCheck(item)).type;
+                        item = new(defaultType, recipeEntry.RequiredAmount);
+                    }
+
+                    for (int particle = 0; particle < item.stack; particle++)
+                    {
+                        if(Main.rand.NextBool(6))
+                            Particle.Create<ItemTransferParticle>((p) =>
+                            {
+                                p.StartPosition = LaunchPad.CenterWorld;
+                                p.EndPosition = module.Center + Main.rand.NextVector2Circular(64, 64);
+                                p.ItemType = item.type;
+                                p.TimeToLive = Main.rand.Next(40, 60);
+                            });
+                    }
+
+                }
+            }
         }
 
         private void DisassembleRocket()
@@ -120,8 +158,28 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                         item = new(defaultType, recipeEntry.RequiredAmount);
                     }
 
+                    bool spawnParticle = true;
+                    Item particleItem = item.Clone();
                     if (!LaunchPad.Inventory.TryPlacingItemInSlot(item, slot, sound: true))
+                    {
                         Main.LocalPlayer.QuickSpawnItem(item.GetSource_DropAsItem("Launchpad"), item.type, item.stack);
+                        spawnParticle = false;
+                    }
+
+                    if (spawnParticle)
+                    {
+                        for (int particle = 0; particle < particleItem.stack; particle++)
+                        {
+                            if (Main.rand.NextBool(6))
+                                Particle.Create<ItemTransferParticle>((p) =>
+                                {
+                                    p.StartPosition = module.Center + Main.rand.NextVector2Circular(64, 64);
+                                    p.EndPosition = LaunchPad.CenterWorld;
+                                    p.ItemType = particleItem.type;
+                                    p.TimeToLive = Main.rand.Next(50, 70);
+                                });
+                        }
+                    }
 
                     slot++;
                 }

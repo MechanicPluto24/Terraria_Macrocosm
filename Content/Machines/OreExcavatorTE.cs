@@ -177,7 +177,7 @@ namespace Macrocosm.Content.Machines
 
                     // Jungle loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.MudBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new SceneDataConditions.IsJungle(scene)));
-                    Loot.Add(new TEDropWithConditionRule(this, ItemID.ChlorophyteOre, 12, condition: new ConditionsChain.All(new SceneDataConditions.IsJungle(scene), new Conditions.IsHardmode())));
+                    Loot.Add(new TEDropWithConditionRule(this, ItemID.ChlorophyteOre, 12, condition: new ConditionsChain.All(new SceneDataConditions.IsJungle(scene), new Conditions.DownedPlantera())));
 
                     // Underworld loot 
                     // TODO: maybe exclude common drops from underworld and keep only these?
