@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.consumable = true;
             Item.UseSound = SoundID.Item7;
             Item.autoReuse = true;
-            Item.damage = 340;
+            Item.damage = 360;
             Item.knockBack = 1f;
             Item.noUseGraphic = true;
             Item.DamageType = DamageClass.Ranged;
