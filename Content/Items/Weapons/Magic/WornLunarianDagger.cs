@@ -23,6 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
             Item.damage = 240;
             Item.knockBack = 4;
+            Item.mana = 8;
 
             Item.width = 32;
             Item.height = 54;
