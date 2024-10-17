@@ -2111,3 +2111,8 @@ GreatstaffOfHorus: {
 	DisplayName: Greatstaff Of Horus
 	Tooltip: ""
 }
+
+LuminiteTorch: {
+	DisplayName: Luminite Torch
+	Tooltip: ""
+}

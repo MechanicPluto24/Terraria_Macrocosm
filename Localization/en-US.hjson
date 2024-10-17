@@ -6,9 +6,10 @@ Mods: {
 			MapNames.Poster: Poster
 
 			Tooltips: {
-				DeveloperItem: Developer Item
+				DeveloperItem: Developer
 				UnobtainableItem: Unobtainable
-				VanillaNerf: Cosmic radiation has degraded this weapon
+				WeaponNerf: Cosmic radiation has degraded this weapon
+				WeaponBuff: Cosmic radiation has made this weapon more powerful
 			}
 		}
 

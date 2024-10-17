@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Global.Tiles;
+using Macrocosm.Common.Sets;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -26,7 +27,7 @@ namespace Macrocosm.Common.Hooks
 
         private static void RemoveDroppedItemLight(On_Item.orig_UpdateItem_VisualEffects orig, Item item)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type])
+            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type] && !ItemSets.AllowedTorches[item.type])
                 return;
 
             orig(item);
@@ -34,7 +35,7 @@ namespace Macrocosm.Common.Hooks
 
         private static bool DisableTorchHolding(On_Player.orig_CanVisuallyHoldItem orig, Player self, Item item)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type])
+            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type] && !ItemSets.AllowedTorches[item.type])
                 return false;
 
             return orig(self, item);
@@ -42,7 +43,7 @@ namespace Macrocosm.Common.Hooks
 
         private static void RemoveHeldLight(On_Player.orig_ItemCheck_EmitHeldItemLight orig, Player self, Item item)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type])
+            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type] && !ItemSets.AllowedTorches[item.type])
                 return;
 
             orig(self, item);

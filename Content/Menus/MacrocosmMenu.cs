@@ -409,8 +409,8 @@ namespace Macrocosm.Content.Menus
             intensity = -1f;
             float rotationProgress = Math.Abs(MathF.Cos((rotation + MathHelper.Pi)));
             float offsetRadius = MathHelper.Lerp(-0.45f, -0.4f, Utility.QuadraticEaseInOut(rotationProgress));
-            offset = Utility.PolarVector(offsetRadius, rotation + MathHelper.Pi / 8);
-            radius = MathHelper.Lerp(0.35f, 0.4f, Utility.QuadraticEaseInOut(rotationProgress));
+            offset = Utility.PolarVector(offsetRadius, rotation + MathHelper.Pi / 4);
+            radius = MathHelper.Lerp(0.6f, 0.6f, Utility.QuadraticEaseInOut(rotationProgress));
         }
 
         private void Ouranos_DrawRings_Back(CelestialBody ouranos, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> rings, Effect shader)

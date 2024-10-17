@@ -10,5 +10,14 @@ namespace Macrocosm.Common.Sets
     {
         /// <summary> Projectiles that spawn dusts on tile collision </summary>
         public static bool[] HitsTiles { get; } = ProjectileID.Sets.Factory.CreateBoolSet();
+
+        /// <summary>  </summary>
+        public static float[] DamageAdjustment { get; } = ProjectileID.Sets.Factory.CreateFloatSet(defaultState: 1f, 
+            ProjectileID.StardustDragon1, 0.25f,   
+            ProjectileID.StardustDragon2, 0.25f,   
+            ProjectileID.StardustDragon3, 0.25f,   
+            ProjectileID.StardustDragon4, 0.25f,
+            ProjectileID.LastPrismLaser, 0.35f
+        );
     }
 }
