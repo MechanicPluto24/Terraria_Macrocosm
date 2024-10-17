@@ -322,8 +322,8 @@ namespace Macrocosm.Content.Rockets
                     Vector2 worldPosition = Position + new Vector2(xQuotient * width, yQuotient * height);
                     Vector2 screenPosition = worldPosition - Main.screenPosition;
                     Vector2 uv = new(xQuotient, yQuotient);
-                    //Color lighting = Color.White;
-                    Color lighting = new(Lighting.GetSubLight(worldPosition));
+
+                    Color lighting = new Color(Lighting.GetSubLight(worldPosition)) * Transparency;
 
                     vertices[(y * w) + x] = new VertexPositionColorTexture(new Vector3(screenPosition, 0f), lighting, uv);
                 }
@@ -382,12 +382,14 @@ namespace Macrocosm.Content.Rockets
         private void PresentLightingBuffers(int numVertices, int primitiveCount)
         {
             // Store previous settings
+            var samplerState = PrimitivesSystem.GraphicsDevice.SamplerStates[0];
             var scissorRectangle = PrimitivesSystem.GraphicsDevice.ScissorRectangle;
             var rasterizerState = PrimitivesSystem.GraphicsDevice.RasterizerState;
             var previousVertices = PrimitivesSystem.GraphicsDevice.GetVertexBuffers();
             var previousIndices = PrimitivesSystem.GraphicsDevice.Indices;
 
             // Assign our own buffers to the GPU
+            PrimitivesSystem.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             PrimitivesSystem.GraphicsDevice.SetVertexBuffer(vertexBuffer);
             PrimitivesSystem.GraphicsDevice.Indices = indexBuffer;
             PrimitivesSystem.GraphicsDevice.Textures[0] = renderTarget;
@@ -397,7 +399,8 @@ namespace Macrocosm.Content.Rockets
             PrimitivesSystem.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, numVertices, 0, primitiveCount);
             //DebugVertices();
 
-            // Reset our settings back to the previosu ones
+            // Reset our settings back to the previous ones
+            PrimitivesSystem.GraphicsDevice.SamplerStates[0] = samplerState;
             PrimitivesSystem.GraphicsDevice.ScissorRectangle = scissorRectangle;
             PrimitivesSystem.GraphicsDevice.RasterizerState = rasterizerState;
             PrimitivesSystem.GraphicsDevice.SetVertexBuffers(previousVertices);

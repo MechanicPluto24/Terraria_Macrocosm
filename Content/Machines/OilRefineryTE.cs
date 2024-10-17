@@ -22,6 +22,8 @@ namespace Macrocosm.Content.Machines
         public float OutputTankAmount { get; private set; }
         public virtual float ResultTankCapacity => 100f;
 
+        public float RefineProgress => refineTimer / (float)maxRefineTimer;
+
         public Item InputSlot => Inventory[0];
         public Item ContainerSlot => Inventory[1];
         public Item OutputSlot => Inventory[2];
@@ -111,8 +113,8 @@ namespace Macrocosm.Content.Machines
                 {
                     refineTimer = 0;
 
-                    InputTankAmount -= 10f;
-                    OutputTankAmount += 5f;
+                    InputTankAmount -= 20f;
+                    OutputTankAmount += 15f;
                 }
             }
             else

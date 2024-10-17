@@ -121,7 +121,7 @@ namespace Macrocosm.Content.Machines
             if (IsPoweredOnFrame(i, j))
             {
                 // Exhaust position - spawn smoke
-                if (tileOffsetX == 1 && tileOffsetY == 0)
+                if (tileOffsetX == 0 && tileOffsetY == 0)
                 {
                     if (Main.tileFrame[Type] % 2 == 1)
                     {
@@ -131,7 +131,7 @@ namespace Macrocosm.Content.Machines
                         {
                             Smoke smoke = Particle.Create<Smoke>((p) =>
                             {
-                                p.Position = new Vector2(i, j) * 16f + new Vector2(12f, 16f);
+                                p.Position = new Vector2(i, j) * 16f + new Vector2(15f, 2f);
                                 p.Velocity = new Vector2(0, -1.1f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
                                 p.Scale = new(0.3f);
                                 p.Rotation = 0f;
