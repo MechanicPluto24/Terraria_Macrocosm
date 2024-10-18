@@ -13,11 +13,11 @@ namespace Macrocosm.Common.Sets
 
         /// <summary>  </summary>
         public static float[] DamageAdjustment { get; } = ProjectileID.Sets.Factory.CreateFloatSet(defaultState: 1f, 
-            ProjectileID.StardustDragon1, 0.25f,   
-            ProjectileID.StardustDragon2, 0.25f,   
-            ProjectileID.StardustDragon3, 0.25f,   
-            ProjectileID.StardustDragon4, 0.25f,
-            ProjectileID.LastPrismLaser, 0.35f
+            ProjectileID.StardustDragon1, 0.65f,   
+            ProjectileID.StardustDragon2, 0.65f,   
+            ProjectileID.StardustDragon3, 0.65f,   
+            ProjectileID.StardustDragon4, 0.65f,
+            ProjectileID.LastPrismLaser, 0.65f
         );
     }
 }

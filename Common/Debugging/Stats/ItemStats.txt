@@ -2509,15 +2509,6 @@ WiringKit
 	Value: 1 gold
 	Research count: 1
 
-LuminiteTorch
-	Value: 1 silver
-	Research count: 100
-	Recipes:
-		Torch x 100
-		Luminite Bar x 1
-			=> x100
-
-
 CraterDemonTrophy
 	Value: 1 gold
 	Research count: 1
