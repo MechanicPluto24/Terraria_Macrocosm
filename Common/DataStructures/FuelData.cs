@@ -9,7 +9,8 @@ namespace Macrocosm.Common.DataStructures
         Low = 2,
         Medium = 3,
         High = 4,
-        VeryHigh = 5
+        VeryHigh = 5,
+        SolarFragmentHigh = 10
     }
 
     public enum BurnContext
