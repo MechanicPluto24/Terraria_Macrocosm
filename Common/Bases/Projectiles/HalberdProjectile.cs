@@ -1,10 +1,12 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -228,15 +230,15 @@ namespace Macrocosm.Common.Bases.Projectiles
             int finalMaxProgress = (int)(BaseSpeed / useTimeMulti);
             Projectile.Center = Player.MountedCenter - new Vector2(0, 6);
 
-            float attackOffset = 0f;
-            float attackAngle = 0f;
+            float attackOffset;
+            float attackAngle;
 
             float angleOffset = MathHelper.Pi * 3 / 4;
             Projectile.rotation = angleOffset;
-            float CursorRotation;
             if (currentAnimProgress == 0)
             {
                 arcAngleDegrees = Main.rand.Next(20);
+                SoundEngine.PlaySound(SoundID.DD2_GhastlyGlaivePierce, Projectile.position);
                 //TODO play ghastlyglaivepierce sound on swing
             }
             if (RotationLock) BaseRotation = (Main.MouseWorld - Player.MountedCenter).ToRotation();
@@ -296,7 +298,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
             Projectile.position.X += MathF.Cos(attackAngle) * (StartOffset + attackOffset);
             Projectile.position.Y += MathF.Sin(attackAngle) * (StartOffset + attackOffset);
-            Projectile.rotation += (Projectile.Center - Player.MountedCenter).ToRotation();
+            Projectile.rotation += (Projectile.Center - Player.MountedCenter - new Vector2(-4 * Player.direction, 6 * Player.gravDir)).ToRotation();
 
             if (Player.direction == 1)
                 Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, attackAngle - MathHelper.ToRadians(70));

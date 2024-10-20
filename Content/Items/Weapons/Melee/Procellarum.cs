@@ -43,16 +43,16 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             if (Main.mouseRight)
             {
                 Item.damage = 280;
-                Item.useTime = 70;
-                Item.useAnimation = 70;
+                Item.useTime = 30;
+                Item.useAnimation = 30;
                 Item.autoReuse = true;
-                Item.channel = true;
+                Item.channel = false;
             }
             else
             { 
                 Item.damage = 550;
-                Item.useTime = 40;
-                Item.useAnimation = 40;
+                Item.useTime = 30;
+                Item.useAnimation = 30;
                 Item.autoReuse = true;
                 Item.channel = true;
             }
