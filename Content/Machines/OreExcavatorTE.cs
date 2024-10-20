@@ -79,12 +79,13 @@ namespace Macrocosm.Content.Machines
 
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Regolith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Protolith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<Cynthalith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
+
 
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<ArtemiteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<SeleniteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<ChandriumOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<DianiteOre>(), 10));
-                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<QuartzFragment>(), 10));
                     Loot.Add(new TECommonDrop(this, ItemID.LunarOre, 8));
 
                     break;
