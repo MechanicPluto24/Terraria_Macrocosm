@@ -1944,7 +1944,7 @@ CrescentMoon: {
 }
 
 RocheChakram: {
-	DisplayName: Roche
+	DisplayName: Roche Chakram
 	Tooltip: ""
 }
 
@@ -2114,5 +2114,10 @@ GreatstaffOfHorus: {
 
 LuminiteTorch: {
 	DisplayName: Luminite Torch
+	Tooltip: ""
+}
+
+RyuguStaff: {
+	DisplayName: Ryugu Staff
 	Tooltip: ""
 }
