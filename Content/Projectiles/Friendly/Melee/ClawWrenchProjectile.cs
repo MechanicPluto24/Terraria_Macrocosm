@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.penetrate = -1;
             Projectile.timeLeft = 300;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = -1;
+            Projectile.localNPCHitCooldown = 999;
             Projectile.width = Projectile.height = 40;
             spawned = false;
         }
@@ -84,8 +84,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 OwnerPlayer.ChangeDir(Math.Sign(Projectile.velocity.X));
                 OwnerPlayer.heldProj = Projectile.whoAmI;
                 OwnerPlayer.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotation - MathHelper.PiOver2);
-                OwnerPlayer.itemTime = 2;
-                OwnerPlayer.itemAnimation = 2;
+               
             }
             else
             {
@@ -111,12 +110,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         
 
-        public override void ModifyDamageHitbox(ref Rectangle hitbox)
-        {
-            Vector2 polar = Utility.PolarVector(35, Projectile.rotation + (Projectile.spriteDirection == -1 ? MathHelper.PiOver4 : MathHelper.PiOver2 + MathHelper.PiOver4));
-            hitbox.X -= (int)polar.X;
-            hitbox.Y -= (int)polar.Y;
-        }
+        
 
         public override bool PreDraw(ref Color lightColor)
         {
