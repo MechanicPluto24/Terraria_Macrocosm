@@ -63,6 +63,9 @@ namespace Macrocosm.Common.Players
         /// <summary> Alt use cooldown per item type. Not synced, not saved. </summary>
         public int[] ItemAltUseCooldown { get; private set; }
 
+        /// <summary> Cooldown on held projectile attacks. </summary>
+        public int HeldProjectileCooldown = 0;
+
         #endregion
 
         #region Specific weapon data
@@ -124,6 +127,8 @@ namespace Macrocosm.Common.Players
                 Player.buffImmune[BuffType<Depressurized>()] = true;
                 Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + (int)(SpaceProtection / 3f));
             }
+
+            if (HeldProjectileCooldown < 600) HeldProjectileCooldown++; // 600 ticks as none of these weapons will have a use time above 10s.
         }
 
         public override bool CanUseItem(Item item)
