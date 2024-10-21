@@ -48,7 +48,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Thrown
             Lighting.AddLight(Projectile.Center, new Color(0, 255, 180).ToVector3() * 2f);
             Projectile.velocity.Y += 1f * (0.5f + 0.5f * MacrocosmSubworld.CurrentGravityMultiplier);
             Projectile.oldVelocity = Projectile.velocity * -1f;
-            Projectile.rotation += 0.05f * Projectile.velocity.Length() * Math.Sign(Projectile.velocity.X);
+            if (BounceCounter < numBounces)
+                Projectile.rotation += 0.05f * Projectile.velocity.Length() * Math.Sign(Projectile.velocity.X);
         }
 
         private void Bounce(Vector2 oldVelocity)
