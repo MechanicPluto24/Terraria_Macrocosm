@@ -57,15 +57,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 if (nestCoords != default && hasRock)
                 {
                     Utility.AIFighter(NPC, ref NPC.ai, nestPosition);
-                    if (Vector2.Distance(NPC.Center, nestPosition) < 80f)
-                        NPC.active = false;
+                    if (Vector2.Distance(NPC.Center, nestPosition) < 17f){
+                    NPC.active = false;
                     NPC.life = 0;
+                    }
                 }
                 else
                 {
                     if (luminiteCoords != default && !hasRock)
                     {
-                        if (Vector2.DistanceSquared(NPC.Center, luminitePosition) > 50f && interestTimer < 200)
+                        if (Vector2.Distance(NPC.Center, luminitePosition) > 17f && interestTimer < 600)
                         {
                             Utility.AIFighter(NPC, ref NPC.ai, luminitePosition);
                             interestTimer++;
@@ -73,8 +74,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         else
                         {
                             NPC.velocity.X *= 0.01f;
-                            if (interestTimer < 200)
-                                interestTimer = 200;
+                            if (interestTimer < 600)
+                                interestTimer = 600;
                             if (Math.Abs(NPC.velocity.Y) < 0.01f)
                             {
                                 interestTimer++;
@@ -83,7 +84,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                                 dust.velocity.Y = 1f + Main.rand.Next(-50, 51) * 0.01f;
                                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
                                 dust.noGravity = true;
-                                if (interestTimer > 320)
+                                if (interestTimer > 660)
                                 {
                                     interestTimer = 0;
                                     hasRock = true;
