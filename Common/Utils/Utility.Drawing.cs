@@ -222,22 +222,18 @@ namespace Macrocosm.Common.Utils
 
         // TODO: - Add variation based on current subworld's day/night lengths
         //		 - Remove magic numbers lol 
-        /// <summary> Used for linear brightness scaling along an entire day/night cycle  </summary>
-        public static float GetProgressNoonToMidnight(float minBrightness, float maxBrightness)
+        /// <summary> Used for linear scaling along an entire day/night cycle  </summary>
+        public static float ScaleNoonToMidnight(float min, float max)
         {
             float brightness;
             double totalTime = Main.dayTime ? Main.time : Main.dayLength + Main.time;
 
-            float diff = maxBrightness - minBrightness;
+            float diff = max - min;
 
             if (totalTime <= 27000)
-            {
-                brightness = minBrightness + (maxBrightness * ((diff * 0.4f) + (diff * 0.6f * ((float)totalTime / 27000))));
-            }
+                brightness = min + (max * ((diff * 0.4f) + (diff * 0.6f * ((float)totalTime / 27000))));
             else
-            {
-                brightness = totalTime >= 70200 ? diff * 0.4f * ((float)(totalTime - 70200) / 16200) : maxBrightness - ((float)(totalTime - 27000) / 43200);
-            }
+                brightness = totalTime >= 70200 ? diff * 0.4f * ((float)(totalTime - 70200) / 16200) : max - ((float)(totalTime - 27000) / 43200);
 
             return brightness;
         }

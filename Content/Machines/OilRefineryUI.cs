@@ -30,6 +30,7 @@ namespace Macrocosm.Content.Machines
         private UITextPanel<string> outputTankLiquidName;
 
         private UITextureProgressBar arrowProgressBar;
+        private UITextureProgressBar arrowProgressBar0;
 
         private UIHoverImageButton arrow1;
         private UIHoverImageButton arrow2;
@@ -47,7 +48,7 @@ namespace Macrocosm.Content.Machines
         {
             base.OnInitialize();
 
-            Width.Set(615f, 0f);
+            Width.Set(415f, 0f);
             Height.Set(394f, 0f);
 
             //Recalculate();
@@ -72,17 +73,23 @@ namespace Macrocosm.Content.Machines
                 backgroundPanel.Append(inputSlot);
             }
 
-            arrow1 = new(arrow)
+            arrowProgressBar0 = new(
+                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBorder", AssetRequestMode.ImmediateLoad),
+                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad),
+                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad)
+               )
             {
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                FillColors = [Color.Black, new Color(157, 60, 0)],
                 Left = new(0, 0.125f),
                 VAlign = 0.52f
             };
-            arrow1.SetVisibility(1f);
-            backgroundPanel.Append(arrow1);
+            backgroundPanel.Append(arrowProgressBar0);
 
             inputLiquidTank = new(LiquidType.Oil)
             {
-                Width = new(25, 0),
+                Width = new(64, 0),
                 Height = new(0, 0.7f),
                 Left = new(0, 0.23f),
                 VAlign = 0.65f
@@ -108,16 +115,16 @@ namespace Macrocosm.Content.Machines
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 FillColors = [Color.Black, new Color(157, 60, 0)],
-                Left = new(0, 0.28f),
+                Left = new(0, 0.36f),
                 VAlign = 0.52f
             };
             backgroundPanel.Append(arrowProgressBar);
 
             outputLiquidTank = new(LiquidType.RocketFuel)
             {
-                Width = new(25, 0),
+                Width = new(64, 0),
                 Height = new(0, 0.7f),
-                Left = new(0, 0.575f),
+                Left = new(0, 0.485f),
                 VAlign = 0.65f
             };
             backgroundPanel.Append(outputLiquidTank);
@@ -134,7 +141,7 @@ namespace Macrocosm.Content.Machines
 
             arrow2 = new(arrow)
             {
-                Left = new(0, 0.62f),
+                Left = new(0, 0.6f),
                 VAlign = 0.52f
             };
             arrow2.SetVisibility(1f);
@@ -155,8 +162,9 @@ namespace Macrocosm.Content.Machines
 
             arrow3 = new(arrow)
             {
-                Left = new(0, 0.8f),
-                VAlign = 0.52f
+                Left = new(0, 0.72f),
+                VAlign = 0.52f,
+                Rotation = MathHelper.PiOver2
             };
             arrow3.SetVisibility(1f);
             backgroundPanel.Append(arrow3);

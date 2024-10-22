@@ -21,15 +21,15 @@ namespace Macrocosm.Content.Particles
         public override void SetDefaults()
         {
             TimeToLive = 250;
+            Color = new List<Color>() {
+                    new(44, 209, 147),
+                    new(0, 141, 92)
+            }.GetRandom();
         }
 
         public override void OnSpawn()
         {
             origScale = Scale.X;
-            Color = new List<Color>() {
-                    new(44, 209, 147),
-                    new(0, 141, 92)
-            }.GetRandom();
         }
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
@@ -49,8 +49,8 @@ namespace Macrocosm.Content.Particles
 
             Lighting.AddLight(Center, new Vector3(1f, 1f, 1f) * Scale.X * 0.02f);
 
-            //if (ScaleV.Y < 0.1f)
-            //	Kill();
+            if (Scale.Y < 0.1f)
+            	Kill();
         }
     }
 }

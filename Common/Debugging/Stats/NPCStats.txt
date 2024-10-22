@@ -5,6 +5,7 @@ CraterDemon
 	Damage: 50
 	Drops:
 		Crater Demon Trophy, 10%
+		Xaoc Key, 100%
 		Treasure Bag (Crater Demon), 100%, This is an Expert Mode drop rate
 		Crater Demon Relic, 100%, This is a Master Mode drop rate
 		Toy Rocket, 25%, This is a Master Mode drop rate

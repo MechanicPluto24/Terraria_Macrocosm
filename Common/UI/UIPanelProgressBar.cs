@@ -87,7 +87,7 @@ namespace Macrocosm.Common.UI
             spriteBatch.Draw(texture, new Rectangle(left, top + cornerSize, cornerSize, panelArea.Height - 2 * cornerSize), new Rectangle(0, cornerSize, cornerSize, barSize), color);
             spriteBatch.Draw(texture, new Rectangle(right - cornerSize, top + cornerSize, cornerSize, panelArea.Height - 2 * cornerSize), new Rectangle(cornerSize + barSize, cornerSize, cornerSize, barSize), color);
 
-            spriteBatch.Draw(texture, new Rectangle(left + cornerSize, top + cornerSize, panelArea.Width - 2 * cornerSize, panelArea.Height - 2 * cornerSize), new Rectangle(cornerSize, cornerSize, barSize, barSize), Color.White * Main.rand.NextFloat());
+            spriteBatch.Draw(texture, new Rectangle(left + cornerSize, top + cornerSize, panelArea.Width - 2 * cornerSize, panelArea.Height - 2 * cornerSize), new Rectangle(cornerSize, cornerSize, barSize, barSize), color);
         }
 
         private SpriteBatchState state;

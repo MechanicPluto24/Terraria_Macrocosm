@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Machines
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
             TileObjectData.newTile.CoordinatePadding = 2;
-            TileObjectData.newTile.StyleHorizontal = false;
+            TileObjectData.newTile.StyleHorizontal = true;
 
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
             TileObjectData.newTile.UsesCustomCanPlace = true;

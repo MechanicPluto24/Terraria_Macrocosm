@@ -48,6 +48,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 999;
 
+            Projectile.alpha = 255;
+
 
             ProjectileID.Sets.TrailCacheLength[Type] = Main.rand.Next(15, 25);
             visualScale = Main.rand.NextFloat(0.8f, 1.5f);
@@ -64,14 +66,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void AI()
         {
             Projectile.velocity = Projectile.velocity.RotatedBy(SkewMultiplier * 0.05f);
-            if (Projectile.timeLeft % 8 == 0)
             {
                 Particle.Create<LuminiteSpark>(particle =>
                 {
                     particle.Position = Projectile.Center;
+                    particle.Scale = new(Main.rand.NextFloat(2f, 6f));
+                    particle.ScaleVelocity = new Vector2(-35f);
                     particle.Velocity = Projectile.velocity.RotatedBy(MathHelper.Pi + Main.rand.NextFloatDirection() * 0.2f) * 0.2f;
+                    particle.Color = new Color(30, 255, 105, 255) * (1f - Projectile.alpha / 255f);
                 });
             }
+
+            Lighting.AddLight(Projectile.Center, new Color(30, 255, 105).ToVector3());
+
+            Projectile.alpha -= 5;
+            if (Projectile.alpha < 0)
+                Projectile.alpha = 0;
         }
 
         public override void OnKill(int timeLeft)
@@ -81,9 +91,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Particle.Create<LuminiteSpark>(particle =>
                 {
                     particle.Position = Projectile.Center;
-                    particle.Velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(6f, 20f);
+                    particle.Scale = new(Main.rand.NextFloat(2f, 6f));
+                    particle.Velocity = Main.rand.NextVector2Unit() * Main.rand.NextFloat(2f, 6f);
+                    particle.Color = new Color(30, 255, 105, 255);
                 });
             }
+
+            Lighting.AddLight(Projectile.Center, new Color(30, 255, 105).ToVector3() * 1.5f);
         }
 
         public override bool PreDraw(ref Color lightColor)
@@ -106,17 +120,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             for (int i = 1; i < positions.Length; i++)
             {
                 if (positions[i] == default)
-                {
                     continue;
-                }
 
-                positions[i] += Main.rand.NextVector2Unit() * Main.rand.NextFloat(8f);
+                positions[i] += Main.rand.NextVector2Unit() * Main.rand.NextFloat(6f);
             }
 
             strip.PrepareStripWithProceduralPadding(
                 positions[1..],
                 Projectile.oldRot[1..],
-                _ => Color.White,
+                _ => new Color(30, 255, 105) * (1f - Projectile.alpha / 255f),
                 progress => visualScale * 30f * (1f - MathF.Pow(2f * progress - 1, 2)),
                 Projectile.Size * 0.5f - Main.screenPosition,
                 false,
@@ -125,31 +137,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             strip.DrawTrail();
 
-            var starTexture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark2", AssetRequestMode.ImmediateLoad).Value;
-            foreach (var position in Projectile.oldPos)
-            {
-                if (!Main.rand.NextBool(7))
-                {
-                    continue;
-                }
-
-                Main.spriteBatch.Draw(
-                    starTexture,
-                    position + Projectile.Size * 0.5f - Main.screenPosition + Main.rand.NextVector2Unit() * 6f,
-                    null,
-                    Color.White * Main.rand.NextFloat(0.2f, 0.7f),
-                    Main.rand.NextFloat(),
-                    starTexture.Size() * 0.5f,
-                    Main.rand.NextFloat() * 0.09f,
-                    SpriteEffects.None,
-                    0f
-                );
-            }
-
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
-
-            // Main.spriteBatch.Draw();
             return false;
         }
     }
