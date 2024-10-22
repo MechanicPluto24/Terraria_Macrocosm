@@ -15,15 +15,35 @@ namespace Macrocosm.Content.Machines
     {
         public override MachineTile MachineTile => ModContent.GetInstance<BurnerGenerator>();
 
-        public Inventory Inventory { get; set; }
-        protected virtual int InventorySize => 50;
-        public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+        public override MachineType MachineType => MachineType.Generator; 
 
+        /// <summary> The hull heat progress, 0 to 1, increases when burning and decreases otherwise. </summary>
+        public float HullHeatProgress 
+        { 
+            get => hullHeatProgress; 
+            set => hullHeatProgress = MathHelper.Clamp(value, 0f, 1f);
+        }
+        protected float hullHeatProgress;
+
+        /// <summary> The hull heat, in degrees Celsius </summary>
+        public float HullHeat => 1200f * HullHeatProgress;
+
+        /// <summary> The burning progress of the <see cref="ConsumedItem"/> </summary>
+        public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)burnTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
+        protected int burnTimer;
+
+        /// <summary> The max power out that the Burner can have, at max <see cref="HullHeatProgress"/></summary>
+        public float MaxPower => 5f;
+
+        /// <summary> The rate at which <see cref="HullHeatProgress"/> changes. </summary>
+        public float HullHeatRate => 0.00005f;
+
+        /// <summary> The item currently being burned. </summary>
         public Item ConsumedItem { get; set; } = new(ItemID.None);
 
-        public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)checkTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
-
-        protected int checkTimer;
+        public Inventory Inventory { get; set; }
+        protected virtual int InventorySize => 6;
+        public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
         public override void OnFirstUpdate()
         {
@@ -38,22 +58,25 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
+            CanAutoPowerOn = false;
+            CanAutoPowerOff = false;
+
             if (PoweredOn)
             {
                 if (ConsumedItem.type != ItemID.None)
                 {
                     FuelData fuelData = ItemSets.FuelData[ConsumedItem.type];
-                    GeneratedPower = 0.2f * (int)fuelData.Potency;
+                    HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
 
-                    if (checkTimer++ >= fuelData.ConsumptionRate)
+                    if (burnTimer++ >= fuelData.ConsumptionRate)
                     {
-                        checkTimer = 0;
+                        burnTimer = 0;
                         ConsumedItem.TurnToAir(fullReset: true);
                     }
                 }
                 else
                 {
-                    checkTimer = 0;
+                    burnTimer = 0;
                     bool fuelFound = false;
 
                     foreach (Item item in Inventory)
@@ -62,7 +85,7 @@ namespace Macrocosm.Content.Machines
                         if (fuelData.Potency > FuelPotency.None)
                         {
                             ConsumedItem = new(item.type, stack: 1);
-                            GeneratedPower = 0.2f * (int)fuelData.Potency;
+                            HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
 
                             item.stack--;
                             if (item.stack < 0)
@@ -75,21 +98,24 @@ namespace Macrocosm.Content.Machines
 
                     if (!fuelFound)
                     {
-                        GeneratedPower = 0;
+                        Power = 0;
                         MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
                     }
                 }
             }
             else
             {
-                GeneratedPower = 0;
+                HullHeatProgress -= HullHeatRate;
             }
+
+            Power = HullHeatProgress * MaxPower;
         }
 
         public override void NetSend(BinaryWriter writer)
         {
             Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
+
             ItemIO.Send(ConsumedItem, writer);
         }
 

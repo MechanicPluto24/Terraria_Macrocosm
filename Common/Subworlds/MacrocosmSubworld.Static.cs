@@ -64,6 +64,7 @@ namespace Macrocosm.Common.Subworlds
         public static double CurrentNightLength => Current is not null ? Current.NightLength : Earth.NightLength;
         public static float CurrentGravityMultiplier => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
         public static float CurrentAtmosphericDensity => Current is not null ? Current.AtmosphericDensity : Earth.AtmosphericDensity;
+        public static float GetCurrentAmbientTemperature() => Current is not null ? Current.GetAmbientTemperature() : Earth.GetAmbientTemperature();
 
         /// <summary> The loading screen. </summary>
         public static LoadingScreen LoadingScreen { get; set; }

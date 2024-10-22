@@ -7,6 +7,8 @@ namespace Macrocosm.Content.Machines
     public class SolarPanelLargeTE : MachineTE
     {
         public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelLarge>();
+        public override MachineType MachineType => MachineType.Generator;
+
         public override bool PoweredOn => Main.dayTime;
 
         public override void OnFirstUpdate()
@@ -16,9 +18,9 @@ namespace Macrocosm.Content.Machines
         public override void MachineUpdate()
         {
             if (PoweredOn)
-                GeneratedPower = 1f;
+                Power = 2f;
             else
-                GeneratedPower = 0;
+                Power = 0;
         }
     }
 }

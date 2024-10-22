@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.Enums;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,6 +9,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -15,44 +17,42 @@ using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Systems.Power
 {
+    public enum MachineType 
+    {
+        Consumer,
+        Generator,
+        Battery,
+        Controller
+    }
+
     public abstract class MachineTE : ModTileEntity, IClientUpdateable
     {
         public abstract MachineTile MachineTile { get; }
 
+        public abstract MachineType MachineType { get; }
+
         public virtual bool Operating => MachineTile.IsOperatingFrame(Position.X, Position.Y);
         public virtual bool PoweredOn => MachineTile.IsPoweredOnFrame(Position.X, Position.Y);
 
-        private float activePower;
+        /// <summary> The actual power, after circuit distribution. </summary>
         public float ActivePower
         {
             get => activePower;
             set => activePower = value;
         }
+        private float activePower;
 
-        public bool IsConsumer => consumedPower != null;
-        private float? consumedPower;
 
-        public float ConsumedPower
+        /// <summary> The normal working power of the machine </summary>
+        public float Power
         {
-            get => consumedPower ?? 0f;
-            set
-            {
-                consumedPower = value;
-                generatedPower = null;
-            }
+            get => nominalPower;
+            set => nominalPower = value;
         }
+        private float nominalPower;
 
-        public bool IsGenerator => generatedPower != null;
-        private float? generatedPower;
-        public float GeneratedPower
-        {
-            get => generatedPower ?? 0f;
-            set
-            {
-                generatedPower = value;
-                consumedPower = null;
-            }
-        }
+        public bool CanAutoPowerOn { get; set; } = true;
+        public bool CanAutoPowerOff { get; set; } = true;
 
         /// <summary> Things to happen before the first update tick. </summary>
         public virtual void OnFirstUpdate() { }
@@ -87,8 +87,7 @@ namespace Macrocosm.Common.Systems.Power
                 //    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
             }
 
-            GeneratedPower = 0;
-            ConsumedPower = 0;
+            Power = 0;
             MachineUpdate();
         }
 
@@ -97,14 +96,12 @@ namespace Macrocosm.Common.Systems.Power
             Update();
         }
 
-        public string GetPowerInfo()
+        public override void OnKill()
         {
-            // TODO: localize 
-            string name = Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0));
-            if (IsGenerator)
-                return $"{name} - Available: {ActivePower:F2}W / Generated: {GeneratedPower:F2} W";
-            else
-                return $"{name} - Consumed: {ActivePower:F2}W / Required: {ConsumedPower:F2} W";
+            if(this is IInventoryOwner inventoryOwner)
+            {
+                inventoryOwner.Inventory.DropAllItems(inventoryOwner.InventoryItemDropLocation);
+            }
         }
 
         public bool IsConnected(MachineTE other)
@@ -225,6 +222,18 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
+        public string GetPowerInfo()
+            => $"{Language.GetText($"Mods.Macrocosm.UI.Machines.PowerInfo").Format($"{Power:F2}")}";
+
+        public string GetStatusInfo()
+            => $"{Language.GetText($"Mods.Macrocosm.UI.Machines.StatusInfo").Format($"{ActivePower:F2}", $"{Power:F2}")}";
+
+        public string GetFullStatusInfo()
+            => $"{Language.GetText($"Mods.Macrocosm.UI.Machines.FullStatusInfo.{MachineType}").Format($"{ActivePower:F2}", $"{Power:F2}")}";
+
+        public string GetMachineNameAndStatusInfo()
+            => $"{Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0))} - {GetFullStatusInfo()}";
+
         public static void DebugDrawMachines(SpriteBatch spriteBatch)
         {
             foreach (var kvp in ByID)
@@ -232,9 +241,9 @@ namespace Macrocosm.Common.Systems.Power
                 if (kvp.Value is MachineTE machine)
                 {
                     string activePower = machine.ActivePower.ToString("F2");
-                    string maxPower = (machine.IsGenerator ? machine.GeneratedPower : machine.ConsumedPower).ToString("F2");
+                    string nominalPower = machine.Power.ToString("F2");
                     Vector2 position = machine.Position.ToWorldCoordinates() - new Vector2(8, 16 + 8) - Main.screenPosition;
-                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, $"{activePower}/{maxPower}", position, Color.Wheat, 0f, Vector2.Zero, Vector2.One);
+                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, $"{activePower}/{nominalPower}", position, Color.Wheat, 0f, Vector2.Zero, Vector2.One);
                 }
             }
         }

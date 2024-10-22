@@ -22,8 +22,8 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             Item.damage = 185;
             Item.knockBack = 3f;
             Item.mana = 10;
-            Item.width = 32;
-            Item.height = 32;
+            Item.width = 36;
+            Item.height = 48;
             Item.useTime = 36;
             Item.useAnimation = 36;
             Item.useStyle = ItemUseStyleID.Swing;

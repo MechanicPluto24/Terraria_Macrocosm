@@ -17,6 +17,8 @@ namespace Macrocosm.Content.Machines
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OilRefinery>();
 
+        public override MachineType MachineType => MachineType.Consumer;
+
         public float InputTankAmount { get; private set; }
         public virtual float SourceTankCapacity => 100f;
         public float OutputTankAmount { get; private set; }
@@ -66,7 +68,7 @@ namespace Macrocosm.Content.Machines
         {
             StartRefining();
 
-            ConsumedPower = 0.6f;
+            Power = 5f;
 
             Extract();
             Refine();

@@ -46,7 +46,7 @@ namespace Macrocosm.Common.Systems.Power
 
             Append(title);
 
-            if (MachineTE.IsGenerator)
+            if (MachineTE.MachineType is MachineType.Generator or MachineType.Battery)
             {
                 powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/LightningGreen", AssetRequestMode.ImmediateLoad))
                 {
@@ -60,7 +60,7 @@ namespace Macrocosm.Common.Systems.Power
                     Top = new(-34, 0f)
                 };
             }
-            else if (MachineTE.IsConsumer)
+            else if (MachineTE.MachineType is MachineType.Consumer)
             {
                 powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/BatteryFull", AssetRequestMode.ImmediateLoad))
                 {
@@ -85,9 +85,9 @@ namespace Macrocosm.Common.Systems.Power
         {
             base.Update(gameTime);
 
-            if (MachineTE.IsGenerator)
+            if (MachineTE.MachineType is MachineType.Generator or MachineType.Battery)
             {
-                if (MachineTE.GeneratedPower > 0)
+                if (MachineTE.Power > 0)
                 {
                     powerOnIcon.SetVisibility(1f);
                     powerOffIcon.SetVisibility(0f);
@@ -98,7 +98,7 @@ namespace Macrocosm.Common.Systems.Power
                     powerOffIcon.SetVisibility(1f);
                 }
             }
-            else if (MachineTE.IsConsumer)
+            else if (MachineTE.MachineType is MachineType.Consumer)
             {
                 if (MachineTE.PoweredOn)
                 {

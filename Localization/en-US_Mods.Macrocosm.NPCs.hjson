@@ -137,19 +137,34 @@ ZombieSecurity: {
 	BestiaryFlavorText: Remnants of the Moon Base's security personnel, now reanimated and patrolling the area as undead sentinels.
 }
 
-Dweller: {
-	DisplayName: Dweller
-	BestiaryFlavorText: Alien beasts of immense size that stalk their prey in the Moon's pitch black caverns. They act extremely aggressive in the presence of light.
+KyaniteScarabCritter: {
+	DisplayName: Kyanite Scarab Hatchling
+	BestiaryFlavorText: Juvenile Scarabs are rarely seen away from their nests and are completely defenseless, relying on the vigilant protection of the adult Scarabs. In a long-lost civilization, they were once considered a delicacy.
 }
 
 KyaniteScarabSmall: {
-	DisplayName: Kyanite Scarab Small
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.KyaniteScarabSmall.BestiaryFlavorText
+	DisplayName: Kyanite Scarab Worker
+	BestiaryFlavorText: Kyanite Scarabs establish their homes close to ore deposits, crafting nests from found metals. The shinier their nests, the likelier they are to attract mates from other nests.
+}
+
+KyaniteScarabLarge: {
+	DisplayName: Kyanite Scarab Soldier
+	BestiaryFlavorText: Larger Kyanite Scarabs serve as fighters and guardians of their nests. Highly aggressive by nature, they will fiercely attack any intruder that approaches their territory.
 }
 
 LuminiteElemental: {
 	DisplayName: Luminite Elemental
 	BestiaryFlavorText: Even on this desolate Moon, elementals have manifested in clumps of luminite ore, using its bizarre properties to defend itself.
+}
+
+Shade: {
+	DisplayName: Shade
+	BestiaryFlavorText: Exposure to light will cause these ghostly entities to flee. However, if they remain exposed and vulnerable for an extended period of time, they may retaliate with hostility.
+}
+
+ZombieEngineer: {
+	DisplayName: Zombie Engineer
+	BestiaryFlavorText: The engineer�s leaking gas tank makes it a ticking time bomb, prone to exploding at any moment. It was once part of the Moon base�s maintenance crew.
 }
 
 MoonLich: {
@@ -167,11 +182,6 @@ XenoHornet: {
 	BestiaryFlavorText: Tiny, mutated alien drones that have evolved to fly with small, biochemical jets. They can quickly overwhelm their targets in large numbers.
 }
 
-Bruiser: {
-	DisplayName: Bruiser
-	BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
-}
-
 LunarChimera: {
 	DisplayName: Gutbelcher
 	BestiaryFlavorText: Reconstructed amalgams of various lunar aliens, belching their acidic and volatile insides at their targets.
@@ -182,9 +192,9 @@ Scatterbrained: {
 	BestiaryFlavorText: Reanimated storm divers, their bodies reconfigured and distorted. Their attacks are slow and inaccurate, but deadly.
 }
 
-KyaniteScarabCritter: {
-	DisplayName: Kyanite Scarab Critter
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.KyaniteScarabCritter.BestiaryFlavorText
+Dweller: {
+	DisplayName: Dweller
+	BestiaryFlavorText: Alien beasts of immense size that stalk their prey in the Moon's pitch black caverns. They act extremely aggressive in the presence of light.
 }
 
 Hermite: {
@@ -192,14 +202,9 @@ Hermite: {
 	BestiaryFlavorText: Mods.Macrocosm.NPCs.Hermite.BestiaryFlavorText
 }
 
-Shade: {
-	DisplayName: Shade
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.Shade.BestiaryFlavorText
-}
-
-ZombieEngineer: {
-	DisplayName: Zombie Engineer
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.ZombieEngineer.BestiaryFlavorText
+Bruiser: {
+	DisplayName: Bruiser
+	BestiaryFlavorText: A hulking, tanky behemoth of alien flesh, bone, and fury. Get too close and they'll slug your bloody entrails into orbit!
 }
 
 LuminiteHorror: {
