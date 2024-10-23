@@ -1,0 +1,4 @@
+MeteorStorm: {
+	Start: Meteors are falling from the sky!
+	End: Meteors have stopped falling from the sky.
+}

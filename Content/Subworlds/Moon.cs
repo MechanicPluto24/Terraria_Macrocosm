@@ -2,7 +2,6 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
@@ -10,11 +9,13 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Localization;
 using Terraria.DataStructures;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
+
 namespace Macrocosm.Content.Subworlds
 {
     /// <summary>
@@ -42,20 +43,6 @@ namespace Macrocosm.Content.Subworlds
             //new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
         };
 
-        public override float GetAmbientTemperature()
-        {
-            float temperature;
-
-            if (Main.time < 0.2f * DayLength) 
-                temperature = Utility.ScaleNoonToMidnight(-183f, 106f);
-            else if (Main.time > 0.8f * Main.dayLength) 
-                temperature = Utility.ScaleNoonToMidnight(106f, -183f);
-            else
-                temperature = (Main.time < Main.dayLength / 2) ? -183f : 106f;
-
-            return temperature;
-        }
-
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
             {MapColorType.SkyUpper, new Color(10, 10, 10)},
@@ -76,7 +63,7 @@ namespace Macrocosm.Content.Subworlds
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
 
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
-            meteorStormWaitTimeToEnd = Main.rand.Next(900, 2700);
+            meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
         }
 
         public override void OnExitWorld()
@@ -131,6 +118,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (meteorStormWaitTimeToStart <= meteorStormCounter && !MeteorStormActive)
             {
+                Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.Start"), Color.Gray);
                 MeteorStormActive = true;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
@@ -138,13 +126,14 @@ namespace Macrocosm.Content.Subworlds
 
             if (MeteorStormActive && meteorStormWaitTimeToEnd <= meteorStormCounter)
             {
+                Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.End"), Color.Gray);
                 MeteorStormActive = false;
                 meteorStormCounter = 0;
-                meteorStormWaitTimeToEnd = Main.rand.Next(900, 2700);
+                meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
             }
 
             if (MeteorStormActive)
-                MeteorBoost = 100f;
+                MeteorBoost = 1000f;
             else
                 MeteorBoost = 1f;
         }
