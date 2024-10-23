@@ -42,7 +42,19 @@ namespace Macrocosm.Content.Subworlds
         {
             //new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
         };
+        public override float GetAmbientTemperature()
+        {
+            float temperature;
 
+            if (Main.time < 0.2f * DayLength) 
+                temperature = Utility.ScaleNoonToMidnight(-183f, 106f);
+            else if (Main.time > 0.8f * Main.dayLength) 
+                temperature = Utility.ScaleNoonToMidnight(106f, -183f);
+            else
+                temperature = (Main.time < Main.dayLength / 2) ? -183f : 106f;
+
+            return temperature;
+        }
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
             {MapColorType.SkyUpper, new Color(10, 10, 10)},
