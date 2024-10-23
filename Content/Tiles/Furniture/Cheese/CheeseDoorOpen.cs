@@ -29,8 +29,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             DustType = ModContent.DustType<CheeseDust>();
             AdjTiles = [TileID.OpenDoor];
 
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cheese.CheeseDoor>(), 0);
-
             AddMapEntry(new Color(220, 216, 121), Language.GetText("MapObject.Door"));
 
             TileObjectData.newTile.Width = 2;
@@ -44,7 +42,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
+            TileObjectData.newTile.StyleWrapLimit = 2;  
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Origin = new Point16(0, 1);
@@ -71,6 +70,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
+
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cheese.CheeseDoor>(), 0);
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)

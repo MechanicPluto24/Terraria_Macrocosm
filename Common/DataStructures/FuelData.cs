@@ -19,7 +19,7 @@ namespace Macrocosm.Common.DataStructures
         GuideVoodooDoll,
         Critter,
         CritterBadLuck,
-        PrismaticLacewing 
+        PrismaticLacewing
     }
 
     /// <summary>
@@ -54,5 +54,7 @@ namespace Macrocosm.Common.DataStructures
         public FuelPotency Potency => getPotency is not null ? getPotency() : potency;
         public int ConsumptionRate => consumtionRate;
         public BurnContext BurnContext => burnContext;
+
+        public bool Valid => Potency > FuelPotency.None;
     }
 }

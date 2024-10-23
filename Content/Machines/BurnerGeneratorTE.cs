@@ -82,7 +82,7 @@ namespace Macrocosm.Content.Machines
                     foreach (Item item in Inventory)
                     {
                         FuelData fuelData = ItemSets.FuelData[item.type];
-                        if (fuelData.Potency > FuelPotency.None)
+                        if (fuelData.Valid)
                         {
                             ConsumedItem = new(item.type, stack: 1);
                             HullHeatProgress += HullHeatRate * (float)fuelData.Potency;

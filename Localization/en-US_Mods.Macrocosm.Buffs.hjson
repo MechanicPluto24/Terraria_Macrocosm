@@ -127,3 +127,8 @@ HorusBurn: {
 	DisplayName: Horus Burn
 	Description: Mods.Macrocosm.Buffs.HorusBurn.Description
 }
+
+RyuguSummonBuff: {
+	DisplayName: Ryugu Summon Buff
+	Description: Mods.Macrocosm.Buffs.RyuguSummonBuff.Description
+}

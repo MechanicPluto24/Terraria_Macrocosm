@@ -15,6 +15,7 @@ using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -42,6 +43,7 @@ namespace Macrocosm.Content.Subworlds
         {
             //new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
         };
+
         public override float GetAmbientTemperature()
         {
             float temperature;
@@ -55,6 +57,7 @@ namespace Macrocosm.Content.Subworlds
 
             return temperature;
         }
+
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
             {MapColorType.SkyUpper, new Color(10, 10, 10)},

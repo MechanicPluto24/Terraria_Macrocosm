@@ -8,16 +8,11 @@ Mods: {
 			Tooltips: {
 				DeveloperItem: Developer
 				UnobtainableItem: Unobtainable
+				BurnFuel: This flammable item can be used as fuel
+				LiquidContainer: This item can store liquids
 				WeaponNerf: Cosmic radiation has degraded this weapon
 				WeaponBuff: Cosmic radiation has made this weapon more powerful
 			}
-		}
-
-		Messages: {
-			MarkerTooClose: The launch pad markers are too close to each other.
-			MarkerSolidBlock: There is a solid block, can't place launch pad here.
-			MarkerFoundGap: The area is not flat, can't place launchpad here.
-			MarkerNoPair: Found no other valid launch pad marker in the vicinity.
 		}
 
 		Liquids: {
