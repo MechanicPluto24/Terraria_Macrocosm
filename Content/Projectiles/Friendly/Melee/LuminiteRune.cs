@@ -99,12 +99,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnKill(int timeLeft)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 25; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.Center, Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
-                dust.velocity = Projectile.velocity.RotatedByRandom(MathHelper.Pi * 2) * Main.rand.NextFloat(0.1f, 0.5f);
+                Dust dust = Dust.NewDustDirect(Projectile.Center, Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), Scale: Main.rand.NextFloat(0.5f, 1f));
+                dust.velocity = Projectile.velocity.RotatedByRandom(MathHelper.Pi * 2) * Main.rand.NextFloat(0.5f, 1f);
                 dust.noLight = false;
                 dust.noGravity = true;
+                if (Projectile.frame > 1)
+                    dust.color = new Color(164, 101, 124);
             }
         }
 

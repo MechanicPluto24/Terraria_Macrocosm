@@ -223,13 +223,13 @@ namespace Macrocosm.Common.Systems.Power
         }
 
         public string GetPowerInfo()
-            => $"{Language.GetText($"Mods.Macrocosm.UI.Machines.PowerInfo").Format($"{Power:F2}")}";
+            => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo").Format($"{Power:F2}")}";
 
         public string GetStatusInfo()
-            => $"{Language.GetText($"Mods.Macrocosm.UI.Machines.StatusInfo").Format($"{ActivePower:F2}", $"{Power:F2}")}";
+            => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.StatusInfo").Format($"{ActivePower:F2}", $"{Power:F2}")}";
 
         public string GetFullStatusInfo()
-            => $"{Language.GetText($"Mods.Macrocosm.UI.Machines.FullStatusInfo.{MachineType}").Format($"{ActivePower:F2}", $"{Power:F2}")}";
+            => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.FullStatusInfo.{MachineType}").Format($"{ActivePower:F2}", $"{Power:F2}")}";
 
         public string GetMachineNameAndStatusInfo()
             => $"{Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0))} - {GetFullStatusInfo()}";

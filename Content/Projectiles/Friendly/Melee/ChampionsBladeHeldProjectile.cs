@@ -110,15 +110,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 + (0.5f * Arc - Arc * (MathF.Sin((x * x * x - 0.5f) * MathHelper.Pi) + 1f) / 2f) * SwingDirection
                 + Main.rand.NextFloat(0.1f);
 
-
-            if (shots < 5 && Main.netMode != NetmodeID.MultiplayerClient && progress > 0.3f && progress < 0.5f && Main.rand.NextBool(2))
+            float maxShots = 2 + 5 * ((float)hitStacks / ChampionsBlade.MaxStacks);
+            if (shots < maxShots && Main.netMode != NetmodeID.MultiplayerClient && progress > 0.3f && progress < 0.5f && Main.rand.NextBool(2))
             {
                 Projectile.NewProjectile(
                     Projectile.GetSource_FromAI(),
                     Projectile.Center,
                     Projectile.velocity.SafeNormalize(Vector2.Zero).RotatedByRandom(MathHelper.PiOver4 / 2f) * 12f,
                     ModContent.ProjectileType<ChampionsBladeBoltProjectile>(),
-                    40,
+                    (int)(Projectile.damage * 0.5f),
                     2f
                 );
                 shots++;

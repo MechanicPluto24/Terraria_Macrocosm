@@ -31,9 +31,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             DustType = DustID.LunarOre;
             AdjTiles = [TileID.OpenDoor];
 
-
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
-                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.Door"));
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Door"));
 
             TileObjectData.newTile.Width = 2;
             TileObjectData.newTile.Height = 3;
@@ -46,6 +45,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
@@ -73,11 +73,24 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
+
+            // Tiles usually drop their corresponding item automatically, but RegisterItemDrop is needed here.
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteDoor>(), (int)LuminiteStyle.Luminite);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeDoor>(), (int)LuminiteStyle.Heavenforge);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustDoor>(), (int)LuminiteStyle.LunarRust);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraDoor>(), (int)LuminiteStyle.Astra);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialDoor>(), (int)LuminiteStyle.DarkCelestial);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryDoor>(), (int)LuminiteStyle.Mercury);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleDoor>(), (int)LuminiteStyle.StarRoyale);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreDoor>(), (int)LuminiteStyle.Cryocore);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberDoor>(), (int)LuminiteStyle.CosmicEmber);
         }
-        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 2));
+
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 3));
+
         public override bool CreateDust(int i, int j, ref int type)
         {
-            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 2)));
+            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 3)));
             return true;
         }
 

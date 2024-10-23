@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
@@ -9,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
@@ -104,13 +106,17 @@ namespace Macrocosm.Content.Machines
             {
                 for (int i = 0; i < BurnerGenerator.Inventory.Size; i++)
                 {
-                    UIInventorySlot uiItemSlot = BurnerGenerator.Inventory.ProvideItemSlot(i, ItemSlot.Context.ChestItem);
+                    var inputSlot = BurnerGenerator.Inventory.ProvideItemSlot(i, ItemSlot.Context.ChestItem);
 
-                    uiItemSlot.Left = new(i * 48, 0f);
-                    uiItemSlot.VAlign = 0.5f;
-                    uiItemSlot.SetPadding(0f);
-
-                    inventoryPanel.Append(uiItemSlot);
+                    inputSlot.Left = new(i * 48, 0f);
+                    inputSlot.VAlign = 0.5f;
+                    inputSlot.SetPadding(0f);
+                    inputSlot.AddReserved(
+                         (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Valid,
+                         Language.GetText("Mods.Macrocosm.Machines.Common.BurnFuel"),
+                         ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/BurnFuel")
+                    );
+                    inventoryPanel.Append(inputSlot);
                 }
             }
 
@@ -149,7 +155,7 @@ namespace Macrocosm.Content.Machines
             base.Update(gameTime);
             Inventory.ActiveInventory = BurnerGenerator.Inventory;
 
-            powerStatusText.SetText($"{Language.GetTextValue("Mods.Macrocosm.UI.Machines.GeneratedPower")}: {MachineTE.GetPowerInfo()}");
+            powerStatusText.SetText($"{Language.GetTextValue("Mods.Macrocosm.Machines.Common.GeneratedPower")}: {MachineTE.GetPowerInfo()}");
 
             burnItemIconProgressBar.Progress = BurnerGenerator.BurnProgress;
 
@@ -157,9 +163,9 @@ namespace Macrocosm.Content.Machines
 
             float temperature = MacrocosmSubworld.GetCurrentAmbientTemperature() + BurnerGenerator.HullHeat;
             if(MacrocosmConfig.Instance.UnitSystem is MacrocosmConfig.UnitSystemType.Metric)
-                hullHeatText.SetText(Language.GetText("Mods.Macrocosm.UI.Machines.BurnerGenerator.HullHeatMetric").Format((int)temperature));
+                hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatMetric").Format((int)temperature));
             else if (MacrocosmConfig.Instance.UnitSystem is MacrocosmConfig.UnitSystemType.Imperial)
-                hullHeatText.SetText(Language.GetText("Mods.Macrocosm.UI.Machines.BurnerGenerator.HullHeatImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)));
+                hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)));
 
             if (itemIcon.Item.type != BurnerGenerator.ConsumedItem.type)
                 itemIcon.Item = BurnerGenerator.ConsumedItem;

@@ -13,10 +13,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-
-    public class LuminiteWave : ModProjectile
+    public class CrescentScriptureSlash : ModProjectile
     {
-        private LuminiteFireTrail trail;
         public override string Texture => Macrocosm.TexturesPath + "Swing";
 
         public override void SetStaticDefaults()
@@ -27,7 +25,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         }
 
         public ref float Speed => ref Projectile.ai[0];
-        float progress = 0.5f;
+        private float progress;
         public override void SetDefaults()
         {
             Projectile.width = 80;
@@ -42,8 +40,55 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.DamageType = DamageClass.Melee;
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
+            progress = 0.5f;
+        }
 
-            trail = new();
+        int Timer = 0;
+        public override void AI()
+        {
+            Timer++;
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            Projectile.direction = Math.Sign(Projectile.velocity.X);
+            Projectile.spriteDirection = Projectile.direction;
+
+            if (Timer < 10 && Projectile.Opacity < 1f)
+                Projectile.Opacity += 0.1f;
+
+            if (Timer > 40)
+                Projectile.Opacity -= 0.03f;
+
+            if (Projectile.Opacity > 0f)
+                Projectile.Opacity -= 0.004f;
+
+            Speed *= 0.95f;
+
+            if (Projectile.Opacity <= 0.01f && Timer > 10)
+                Projectile.Kill();
+
+            Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * Speed;
+
+            Lighting.AddLight(Projectile.Center, new Color(94, 229, 163).ToVector3());
+
+            if (Speed > 4f)
+            {
+                for (int i = 0; i < 2; i++)
+                    Particle.Create<PrettySparkle>((p) =>
+                    {
+                        Vector2 offset = Main.rand.NextVector2Circular(20, 100).RotatedBy(Projectile.rotation);
+                        p.Position = Projectile.Center + offset;
+                        p.Velocity = Projectile.velocity.SafeNormalize(default) * Main.rand.NextFloat();
+                        p.DrawHorizontalAxis = true;
+                        p.DrawVerticalAxis = false;
+                        p.AdditiveAmount = 0.4f;
+                        p.Scale = new Vector2(2f, Main.rand.NextFloat(0.5f, 1.5f)) * (1f - (Vector2.DistanceSquared(Projectile.Center, Projectile.Center + offset) / (100f * 100f)));
+                        p.ScaleVelocity = new Vector2(Main.rand.NextFloat(0.01f, 0.02f));
+                        p.Color = (Main.rand.NextBool() ? new Color(94, 229, 163, 255) : new Color(164, 101, 124, 255)) * Projectile.Opacity;
+                        p.Rotation = Projectile.rotation;
+                        p.TimeToLive = 40;
+                        p.FadeInNormalizedTime = 0f;
+                        p.FadeOutNormalizedTime = 0.2f;
+                    });
+            }
         }
 
         private SpriteBatchState state;
@@ -89,68 +134,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             return false;
         }
 
-        int Timer = 0;
-        public override void AI()
-        {
-            Timer++;
-            Projectile.rotation = Projectile.velocity.ToRotation();
-            Projectile.direction = Math.Sign(Projectile.velocity.X);
-            Projectile.spriteDirection = Projectile.direction;
 
-            if (Timer < 10 && Projectile.Opacity < 1f)
-                Projectile.Opacity += 0.1f;
-
-            if (Timer > 40)
-                Projectile.Opacity -= 0.03f;
-            /*
-            if (Projectile.timeLeft % 2 == 0)
-            {
-                Dust dust = Dust.NewDustDirect(Projectile.Center + new Vector2(0, Projectile.height / 2), Projectile.width, Projectile.height/2, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
-                dust.velocity = Projectile.velocity * 0.5f;
-                dust.noLight = false;
-                dust.noGravity = true;
-                Dust dust2 = Dust.NewDustDirect(Projectile.Center - new Vector2(0, Projectile.height / 2), Projectile.width, Projectile.height/2, ModContent.DustType<LuminiteBrightDust>(), Scale: 3);
-                dust2.velocity = Projectile.velocity * 0.5f;
-                dust2.noLight = false;
-                dust2.noGravity = true;
-            }
-            */
-            if (Projectile.Opacity > 0f)
-                Projectile.Opacity -= 0.004f;
-
-            if (Speed >= 1f)
-                Speed *= 0.96f;
-
-            if (Speed <= 1.04f)
-                Projectile.Kill();
-
-            if (Projectile.Opacity <= 0.01f && Timer > 10)
-                Projectile.Kill();
-
-            Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX) * Speed;
-
-            Lighting.AddLight(Projectile.Center, new Color(94, 229, 163).ToVector3());
-
-            if (Speed > 4f)
-            {
-                for(int i = 0; i < 2; i++)
-                Particle.Create<PrettySparkle>((p) =>
-                {
-                    Vector2 offset = Main.rand.NextVector2Circular(20, 100).RotatedBy(Projectile.rotation);
-                    p.Position = Projectile.Center + offset;
-                    p.Velocity = Projectile.velocity.SafeNormalize(default) * Main.rand.NextFloat();
-                    p.DrawHorizontalAxis = true;
-                    p.DrawVerticalAxis = false;
-                    p.AdditiveAmount = 0.4f;
-                    p.Scale = new Vector2(2f, Main.rand.NextFloat(0.5f, 1.5f)) * (1f - (Vector2.DistanceSquared(Projectile.Center, Projectile.Center + offset) / (100f * 100f)));
-                    p.ScaleVelocity = new Vector2(Main.rand.NextFloat(0.01f, 0.02f));
-                    p.Color = (Main.rand.NextBool() ? new Color(94, 229, 163, 255) : new Color(164, 101, 124, 255)) * Projectile.Opacity;
-                    p.Rotation = Projectile.rotation;
-                    p.TimeToLive = 40;
-                    p.FadeInNormalizedTime = 0f;
-                    p.FadeOutNormalizedTime = 0.2f;
-                });
-            }
-        }
     }
 }

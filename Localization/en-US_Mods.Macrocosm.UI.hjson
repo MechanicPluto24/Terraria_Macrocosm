@@ -22,26 +22,6 @@ LaunchPad: {
 	UnknownLocation: Unknown
 }
 
-Machines: {
-	ConsumedPower: Consumed Power
-	GeneratedPower: Generated Power
-	StoredEnergy: Stored Energy
-	PowerInfo: "{0}kW"
-	StatusInfo: "{0}kW / {1}kW"
-
-	FullStatusInfo: {
-		Consumer: Consumed: {0}kW / Required: {1}kW
-		Generator: Available: {0}kW / Generated: {1}kW
-		Battery: Available: {0}kW / Stored: {1}kW
-		Controller: ""
-	}
-
-	BurnerGenerator: {
-		HullHeatMetric: Hull heat: {0}°C
-		HullHeatImperial: Hull heat: {0}°F
-	}
-}
-
 Rocket: {
 	Common: {
 		Close: Close

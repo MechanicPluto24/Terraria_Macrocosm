@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             AdjTiles = [TileID.ClosedDoor];
 
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
-                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.Door"));
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Door"));
 
             TileObjectData.newTile.Width = 1;
             TileObjectData.newTile.Height = 3;
@@ -57,6 +57,14 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newAlternate.Origin = new Point16(0, 2);
             TileObjectData.addAlternate(0);
             TileObjectData.addTile(Type);
+        }
+
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 3));
+
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 3)));
+            return true;
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
