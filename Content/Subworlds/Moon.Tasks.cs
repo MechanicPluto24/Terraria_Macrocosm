@@ -6,8 +6,11 @@ using Macrocosm.Content.Tiles.Ores;
 using Macrocosm.Content.Tiles.Walls;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Refined;
+using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.Items.Consumables.Throwable;
 using Macrocosm.Content.Items.Weapons.Melee;
+using Macrocosm.Content.Items.Accessories;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Summon;
@@ -1328,6 +1331,158 @@ namespace Macrocosm.Content.Subworlds
             }
             
         }
+
+
+        public void ManageIndustrialChest(Chest chest){
+            int slot =0;
+            int random1 = WorldGen.genRand.Next(1,15);
+            switch (random1)
+            {
+                case 1:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<RyuguStaff>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 2:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<ArmstrongGauntlets>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 3:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<WornLunarianDagger>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 4:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<RocheChakram>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 5:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<ClawWrench>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 6:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<WaveGunRed>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 7:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Copernicus>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 8:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<HummingbirdDroneRemote>());
+                    chest.item[slot++].stack = 1;
+                    break; 
+                case 9:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<ArcaneBarnacle>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 10:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<MomentumLash>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 11:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<OsmiumBoots>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 12:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<StalwartTowerShield>());
+                    chest.item[slot++].stack = 1;
+                    break; 
+                case 13:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<TempestuousBand>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 14:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<ThaumaturgicWard>());
+                    chest.item[slot++].stack = 1;
+                    break; 
+            }
+            for(int i =0; i<3; i++){
+                int random2 = WorldGen.genRand.Next(1,9);
+            switch (random2)
+            {
+                case 1:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Plastic>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                case 2:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Ores.NickelOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                case 3:
+                    chest.item[slot].SetDefaults(ItemID.LunarOre);
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                case 4:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<SpaceDust>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                case 5:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<AlienResidue>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                case 6:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Ores.LithiumOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                case 7:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Ores.AluminumOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                case 8:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<SteelBar>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break; 
+            }
+            }
+            int random3 = WorldGen.genRand.Next(1,5);
+            switch (random3)
+            {
+                case 1:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Ores.ArtemiteOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                    break;
+                case 2:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Ores.ChandriumOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                    break;
+                case 3:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Ores.DianiteOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                    break;
+                case 4:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Ores.SeleniteOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                    break;
+                
+            }
+            for(int i =0; i<2; i++){
+            int random4 = WorldGen.genRand.Next(1,5);
+            switch (random4)
+            {
+                case 1:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Blocks.IndustrialPlating>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(30, 90);
+                    break;
+                case 2:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Blocks.Terrain.Protolith>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(30, 90);
+                    break;
+                case 3:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Blocks.Terrain.Regolith>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(30, 90);
+                    break;
+                case 4:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Blocks.Terrain.Cynthalith>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(30, 90);
+                    break;
+                
+            }
+            }
+            chest.item[slot].SetDefaults(ModContent.ItemType<LunarCrystal>());
+                chest.item[slot++].stack = WorldGen.genRand.Next(1, 20);
+            chest.item[slot].SetDefaults(ModContent.ItemType<Moonstone>());
+                chest.item[slot++].stack = WorldGen.genRand.Next(1, 20);
+        }
+
         bool SolarChest1=false;
         bool VortexChest1=false;
         bool NebulaChest1=false;
@@ -1339,6 +1494,13 @@ namespace Macrocosm.Content.Subworlds
             {
                 Chest chest = Main.chest[i];
                 if (chest != null){
+
+                if(Main.tile[chest.x,chest.y].TileType==TileType<Tiles.Furniture.Industrial.IndustrialChest>())
+                {
+                    ManageIndustrialChest(chest);
+                }
+
+
                 
                 bool IsProperChest=Main.tile[chest.x, chest.y].TileType == TileID.Containers2;
 
