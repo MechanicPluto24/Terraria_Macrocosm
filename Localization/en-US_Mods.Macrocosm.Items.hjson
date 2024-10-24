@@ -2116,3 +2116,8 @@ LuminiteTorch: {
 	DisplayName: Luminite Torch
 	Tooltip: ""
 }
+
+RyuguStaff: {
+	DisplayName: Ryugu Staff
+	Tooltip: ""
+}
