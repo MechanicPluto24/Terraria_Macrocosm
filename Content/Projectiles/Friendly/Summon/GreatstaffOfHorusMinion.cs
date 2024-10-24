@@ -80,7 +80,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
             SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
             Movement(foundTarget, distanceFromTarget, targetCenter, distanceToIdlePosition, vectorToIdlePosition);
-            Visuals();
+            Visuals(foundTarget);
         }
 
         // This is the "active check", makes sure the minion is alive while the player is alive, and despawns if not
@@ -265,12 +265,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             }
         }
 
-        private void Visuals()
+        private void Visuals(bool foundTarget)
         {
             // So it will lean slightly towards the direction it's moving
-
-            Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
-
+            if(foundTarget)
+                Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
+            else{
+            Projectile.rotation = Projectile.velocity.X * 0.05f;
+            }
             // This is a simple "loop through all frames from top to bottom" animation
             int frameSpeed = 5;
 
