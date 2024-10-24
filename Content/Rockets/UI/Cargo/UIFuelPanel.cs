@@ -148,6 +148,17 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public void FixedUpdate()
         {
+            
+
+            // Animate canister buffer
+
+            // Animate rocket tank
+            
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
             overflowWarningVisible = false;
             dumpButtonInteractible = true;
             liquidContainerItemSlot.CanInteract = true;
@@ -167,7 +178,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 dumpButtonInteractible = false;
 
             LiquidContainerData data = ItemSets.LiquidContainerData[liquidContainerItemSlot.Item.type];
-            if (data.Valid)
+            if (data.Valid&& !data.Empty)
             {
                 float availableFuel = data.Capacity * liquidContainerItemSlot.Item.stack;
 
@@ -188,10 +199,8 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 }
             }
 
-            // Animate canister buffer
             canisterBufferTank.LiquidLevel = MathHelper.Lerp(canisterBufferTank.LiquidLevel, canisterBufferLevel, 0.1f);
 
-            // Animate rocket tank
             float rocketFuelPercent = Rocket.Fuel / Rocket.FuelCapacity;
             if (rocketFuelPercent > 1f)
                 rocketFuelPercent = 1f;

@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.Players;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -19,7 +20,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public float MaxCharge;
         public float MinCharge;
-        public float AI_Timer;
         public float AI_Charge;
         public int currentAttack;
         public Color colour1 = new Color(188, 89, 134);
@@ -35,7 +35,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 MaxCharge = 5 * Player.CurrentItem().useTime / Player.GetAttackSpeed(DamageClass.Ranged);
                 MinCharge = MaxCharge * 0.3f;
-                AI_Timer = Player.CurrentItem().useTime / Player.GetAttackSpeed(DamageClass.Ranged);
             }
             currentAttack = 0;
         }
@@ -89,7 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
                             float strength = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
-                            damage += (int)(damage * 1.75f * strength);
+                            damage = (int)(damage * 3f * strength);
                             speed *= 0.2f;
                             knockback *= 2f;
 
@@ -99,14 +98,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                             AI_Charge = 0;
                         }
                     }
-                    else if (Main.mouseLeft && AI_Timer >= (currentItem.useTime / Player.GetAttackSpeed(DamageClass.Ranged)))
+                    else if (Main.mouseLeft && Player.GetModPlayer<MacrocosmPlayer>().HeldProjectileCooldown >= (currentItem.useTime / Player.GetAttackSpeed(DamageClass.Ranged)))
                     {
                         if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
                             int extra = ContentSamples.ProjectilesByType[projToShoot].extraUpdates;
                             int pen = ContentSamples.ProjectilesByType[projToShoot].penetrate;
                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed / 3, ModContent.ProjectileType<IlmeniteRegularProj>(), (int)(damage * Math.Pow(1.25f, currentAttack)), knockback, Projectile.owner, currentAttack, extra, pen);
-                            AI_Timer = 0;
+                            Player.GetModPlayer<MacrocosmPlayer>().HeldProjectileCooldown = 0;
                             if (currentAttack > 1) currentAttack = 0;
                             else currentAttack += 1;
                             SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
@@ -117,7 +116,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         }
                     }
                 }
-                AI_Timer++;
             }
         }
 
