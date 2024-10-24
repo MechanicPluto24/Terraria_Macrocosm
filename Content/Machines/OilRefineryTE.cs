@@ -17,19 +17,21 @@ namespace Macrocosm.Content.Machines
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OilRefinery>();
 
+        public override MachineType MachineType => MachineType.Consumer;
+
         public float InputTankAmount { get; private set; }
         public virtual float SourceTankCapacity => 100f;
         public float OutputTankAmount { get; private set; }
         public virtual float ResultTankCapacity => 100f;
 
+        public float ExtractProgress => inputExtractTimer / (float)maxInputExtractTimer;
         public float RefineProgress => refineTimer / (float)maxRefineTimer;
 
-        public Item InputSlot => Inventory[0];
-        public Item ContainerSlot => Inventory[1];
-        public Item OutputSlot => Inventory[2];
+        public Item ContainerSlot => Inventory[0];
+        public Item OutputSlot => Inventory[1];
 
         public Inventory Inventory { get; set; }
-        protected virtual int InventorySize => 3;
+        protected virtual int InventorySize => 1 + 1 + 5;
         public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
         private bool refining;
@@ -66,7 +68,7 @@ namespace Macrocosm.Content.Machines
         {
             StartRefining();
 
-            ConsumedPower = 0.6f;
+            Power = 5f;
 
             Extract();
             Refine();
@@ -78,26 +80,32 @@ namespace Macrocosm.Content.Machines
 
         private void Extract()
         {
-            LiquidExtractData data = ItemSets.LiquidExtractData[InputSlot.type];
-            if (Operating && InputTankAmount < SourceTankCapacity && data.Valid)
+            for(int i = 2; i < Inventory.Size; i++)
             {
-                inputExtractTimer++;
-                if (inputExtractTimer >= maxInputExtractTimer)
+                Item inputItem = Inventory[i];
+                LiquidExtractData data = ItemSets.LiquidExtractData[inputItem.type];
+                if (Operating && InputTankAmount < SourceTankCapacity && data.Valid)
+                {
+                    inputExtractTimer++;
+                    if (inputExtractTimer >= maxInputExtractTimer)
+                    {
+                        inputExtractTimer = 0;
+
+                        if (inputItem.stack <= 1)
+                            inputItem.TurnToAir();
+                        else
+                            inputItem.stack--;
+
+                        InputTankAmount += data.ExtractedAmount;
+                    }
+
+                    break;
+                }
+                else
                 {
                     inputExtractTimer = 0;
-
-                    if (InputSlot.stack <= 1)
-                        InputSlot.TurnToAir();
-                    else
-                        InputSlot.stack--;
-
-                    InputTankAmount += data.ExtractedAmount;
                 }
-            }
-            else
-            {
-                inputExtractTimer = 0;
-            }
+            }  
         }
 
         private void Refine()
@@ -137,15 +145,18 @@ namespace Macrocosm.Content.Machines
                         fillTimer = 0;
 
                         int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.RocketFuel, ContainerSlot.type);
-                        OutputSlot.type = fillType;
-                        OutputSlot.stack++;
+                        if(fillType > 0)
+                        {
+                            OutputSlot.type = fillType;
+                            OutputSlot.stack++;
 
-                        if (ContainerSlot.stack <= 1)
-                            ContainerSlot.TurnToAir();
-                        else
-                            ContainerSlot.stack--;
+                            if (ContainerSlot.stack <= 1)
+                                ContainerSlot.TurnToAir();
+                            else
+                                ContainerSlot.stack--;
 
-                        OutputTankAmount -= ItemSets.LiquidContainerData[fillType].Capacity;
+                            OutputTankAmount -= ItemSets.LiquidContainerData[fillType].Capacity;
+                        }                       
                     }
                 }
             }

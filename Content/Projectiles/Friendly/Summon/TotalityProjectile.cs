@@ -1,11 +1,11 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
@@ -38,20 +38,46 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
         public Vector2 WhipTipPosition;
 
+        private bool spawned;
+
+        public override void PostAI()
+        {
+            if (!spawned)
+            {
+                if(Projectile.owner == Main.myPlayer)
+                {
+                    Vector2 position = Projectile.Center;
+                    Vector2 velocity = (Projectile.velocity * 2.4f).RotatedBy(MathHelper.Pi/3);
+                    float rotation = velocity.ToRotation();
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<TotalitySlashProjectile>(), (int)((float)Projectile.damage), 0f, Main.myPlayer, rotation);
+                }
+               
+                spawned = true;
+            }
+
+            List<Vector2> list = new();
+            Projectile.FillWhipControlPoints(Projectile, list);
+
+            foreach (Vector2 position in list)
+            {
+                Lighting.AddLight(position, new Color(253, 174, 248).ToVector3() * 0.2f);
+            }
+        }
+
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             // minions will attack the npcs hit with this whip 
             Player player = Main.player[Projectile.owner];
             player.MinionAttackTargetNPC = target.whoAmI;
 
-            float rotation = (target.Center - player.Center).ToRotation() + Main.rand.NextFloat(-MathHelper.Pi / 8, MathHelper.Pi / 8);
-
             Color color = new List<Color>() {
-                   new(44, 210, 91),
-                   new(201, 125, 205),
+                    new(44, 210, 91),
+                    new(201, 125, 205),
                     new(114, 111, 207)
-                }.GetRandom();
+            }.GetRandom();
             color.A = (byte)Main.rand.Next(120, 200);
+
+            float rotation = (target.Center - player.Center).ToRotation() + Main.rand.NextFloat(-MathHelper.Pi / 8, MathHelper.Pi / 8);
 
             Particle.Create<TintableSlash>((p) =>
             {
@@ -94,7 +120,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 dust.alpha = 15;
             }
         }
-
 
         private readonly int frameWidth = 18;
         private readonly int frameHeight = 26;
@@ -170,27 +195,56 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     frame.Y = animFrames[i] * frameHeight;
                 }
 
-                if (!handle && !tip)
-                    for (float f = 0f; f < 1f; f += 0.5f)
-                        Utility.DrawStar(Vector2.Lerp(list[i], list[i + 1], f) + Main.rand.NextVector2Circular(6, 6) - Main.screenPosition, 1, new Color(253, 174, 248, 125), scale * 0.4f, rotation, flip, entity: true);
+                Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
 
-                if (tip)
+                //if (!handle && !tip)
+                //    for (float f = 0f; f < 1f; f += 0.5f)
+                //        Utility.DrawStar(Vector2.Lerp(list[i], list[i + 1], f) + Main.rand.NextVector2Circular(6, 6) - Main.screenPosition, 1, new Color(253, 174, 248, 125), scale * 0.4f, rotation, flip, entity: true);
+
+                state.SaveState(Main.spriteBatch);
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(BlendState.Additive, state);
+
+                if (!tip && !handle && Timer > 10)
                 {
-                    state.SaveState(Main.spriteBatch);
-                    Main.spriteBatch.End();
-                    Main.spriteBatch.Begin(BlendState.Additive, state);
-
-                    Texture2D glowTex = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5").Value;
-                    float glowScale = MathHelper.Lerp(0.4f, 1.3f, Utils.GetLerpValue(0.1f, 0.7f, progress, true) * Utils.GetLerpValue(0.9f, 0.7f, progress, true)) * 1.1f;
-                    float glowProgress = 4f * progress * (1f - progress);
-                    glowScale *= glowProgress;
-                    Main.EntitySpriteDraw(glowTex, Vector2.Lerp(list[^2], list[^3], 0.1f) - Main.screenPosition, null, new Color(253, 174, 248, 150) * glowScale, rotation, glowTex.Size() / 2f, new Vector2(glowScale * 0.06f, glowScale * 0.14f), default, 0);
-
-                    Main.spriteBatch.End();
-                    Main.spriteBatch.Begin(state);
+                    for (int j = 0; j < 15; j++)
+                    {
+                        Main.EntitySpriteDraw(
+                            texture,
+                            pos - Main.screenPosition,
+                            frame,
+                            (new Color(255, 163, 217) * 0.6f * (1f - (j / 15f))),
+                            rotation,
+                            origin,
+                            scale + (0.2f * j),
+                            flip,
+                            0
+                        );
+                    }
                 }
 
-                Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);
+                if (tip && Timer > 10)
+                {
+                    for (int j = 0; j < 15; j++)
+                    {
+                        Main.EntitySpriteDraw(
+                            texture,
+                            Vector2.Lerp(list[^2], list[^3], 0.3f) - Main.screenPosition,
+                            frame,
+                            (new Color(255, 163, 217, 5) * 0.1f * (1f - (j / 15f))).WithAlpha(255),
+                            rotation,
+                            origin,
+                            scale + (0.12f * j),
+                            flip,
+                            0
+                        );
+                    }
+                }
+
+
+                Main.spriteBatch.End();
+                Main.spriteBatch.Begin(state);
+
 
                 pos += diff;
             }

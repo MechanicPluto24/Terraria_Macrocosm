@@ -105,7 +105,7 @@ StarDestroyerStar_Blue.DisplayName: Star Destroyer Blue Star
 StarDestroyerStar_Yellow.DisplayName: Star Destroyer Yellow Star
 StarDestroyerStar.DisplayName: Star Destroyer Star
 ArtemiteGreatswordSwingEmpowered.DisplayName: Artemite Greatsword
-RocheChakramProjectile.DisplayName: Roche
+RocheChakramProjectile.DisplayName: Roche Chakram
 RocheSpike.DisplayName: Roche Spike
 ArtemiteSwordShoot.DisplayName: Artemite Sword Shoot
 BlueEnergyBolt.DisplayName: Blue Energy Bolt
@@ -149,3 +149,8 @@ HummingbirdDrone.DisplayName: P.D.C.D. "Hummingbird"
 CalcicCaneBolt.DisplayName: Calcic Cane Bolt
 GreatstaffOfHorusMinion.DisplayName: Greatstaff Of Horus Minion
 HorusExplosion.DisplayName: Horus Explosion
+RyuguMinion.DisplayName: Ryugu Minion
+RyuguShell.DisplayName: Ryugu Shell
+CrescentScriptureSlash.DisplayName: Crescent Scripture Slash
+TotalitySlashProjectile.DisplayName: Totality Slash Projectile
+TotalitySmallSlashProjectile.DisplayName: Totality Small Slash Projectile

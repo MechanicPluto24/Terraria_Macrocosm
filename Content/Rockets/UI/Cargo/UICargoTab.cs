@@ -162,7 +162,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private UIPanel CreateInventoryPanel()
         {
-            inventoryPanel = Rocket.Inventory.ProvideUI
+            inventoryPanel = Rocket.Inventory.ProvideUIWithInteractionButtons
             (
                 out var slots,
                 out var lootAllButton,

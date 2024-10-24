@@ -21,14 +21,53 @@ namespace Macrocosm.Common.Storage
             int? end = null,
             int iconsPerRow = 10,
             int rowsWithoutScrollbar = 5,
+            float iconSize = 48f
+        )
+        {
+            return ProvideUI(out _, start, end, iconsPerRow, rowsWithoutScrollbar);
+        }
+
+        public UIPanel ProvideUI
+        (
+            out UIListScrollablePanel inventorySlots,
+            int start = 0,
+            int? end = null,
+            int iconsPerRow = 10,
+            int rowsWithoutScrollbar = 5,
+            float iconSize = 48f
+        )
+        {
+            UIPanel inventoryPanel = new()
+            {
+                Width = new(0, 1f),
+                Height = new(0, 1f),
+                Left = new(0, 0),
+                Top = new(0, 0),
+                HAlign = 0f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+            };
+            inventoryPanel.SetPadding(0f);
+
+            inventorySlots = CreateInventorySlotsList(start, end, iconsPerRow, rowsWithoutScrollbar, iconSize);
+            inventoryPanel.Append(inventorySlots);
+            return inventoryPanel;
+        }
+
+        public UIPanel ProvideUIWithInteractionButtons
+        (
+            int start = 0,
+            int? end = null,
+            int iconsPerRow = 10,
+            int rowsWithoutScrollbar = 5,
             float iconSize = 48f,
             float buttonMenuTopPercent = 0.83f
         )
         {
-            return ProvideUI(out _, out _, out _, out _, out _, out _, start, end, iconsPerRow, rowsWithoutScrollbar, iconSize, buttonMenuTopPercent);
+            return ProvideUIWithInteractionButtons(out _, out _, out _, out _, out _, out _, start, end, iconsPerRow, rowsWithoutScrollbar, iconSize, buttonMenuTopPercent);
         }
 
-        public UIPanel ProvideUI
+        public UIPanel ProvideUIWithInteractionButtons
         (
             out UIListScrollablePanel inventorySlots,
             out UIPanelIconButton lootAllButton,

@@ -107,7 +107,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             if (!shot && progress > 0.2f && Projectile.owner == Main.myPlayer)
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<LuminiteWave>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, 20f);
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitY), ModContent.ProjectileType<CrescentScriptureSlash>(), (int)(Projectile.damage / 2), 1f, Main.myPlayer, 45f);
 
                 for (int i = 0; i < 3; i++)
                 {

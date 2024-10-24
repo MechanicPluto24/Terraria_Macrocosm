@@ -94,7 +94,7 @@ namespace Macrocosm.Common.Systems.Power
                         {
                             circuits.Add(circuit);
                         }
-                        else if (machine.IsConsumer && machine.PoweredOn)
+                        else if (machine.MachineType is MachineType.Consumer && machine.PoweredOn)
                         {
                             machine.PowerOff();
                         }

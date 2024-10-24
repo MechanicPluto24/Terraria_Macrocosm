@@ -33,9 +33,9 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 
             Item.noMelee = true;
             Item.DamageType = DamageClass.Summon;
-            Item.buffType = ModContent.BuffType<GreatstaffOfHorusMinionBuff>();
+            Item.buffType = ModContent.BuffType<RyuguSummonBuff>();
 
-            Item.shoot = ModContent.ProjectileType<GreatstaffOfHorusMinion>();
+            Item.shoot = ModContent.ProjectileType<RyuguMinion>();
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)

@@ -140,26 +140,26 @@ namespace Macrocosm.Content.Tiles.Special
             if (tooCloseLeft && foundMarkerLeft || tooCloseRight && foundMarkerRight)
             {
                 // The launch pad markers are too close to each other.
-                Main.NewText(Language.GetText("Mods.Macrocosm.Messages.MarkerTooClose"), Color.Yellow);
+                Main.NewText(Language.GetText("Mods.Macrocosm.StatusMessages.LaunchpadMarker.TooClose"), Color.Yellow);
                 return false;
             }
 
             if (foundGapLeft && foundMarkerLeft && !foundObstructionLeft || foundGapRight && foundMarkerRight && !foundObstructionRight)
             {
                 // The area is not flat, can't place launchpad here.
-                Main.NewText(Language.GetText("Mods.Macrocosm.Messages.MarkerFoundGap"), Color.Yellow);
+                Main.NewText(Language.GetText("Mods.Macrocosm.StatusMessages.LaunchpadMarker.FoundGap"), Color.Yellow);
                 return false;
             }
 
             if (foundObstructionRight && foundMarkerRight || foundObstructionLeft && foundMarkerLeft)
             {
                 // There is a solid block, can't place launch pad here.
-                Main.NewText(Language.GetText("Mods.Macrocosm.Messages.MarkerSolidBlock"), Color.Yellow);
+                Main.NewText(Language.GetText("Mods.Macrocosm.StatusMessages.LaunchpadMarker.SolidBlock"), Color.Yellow);
                 return false;
             }
 
             // Found no other valid launch pad marker in the vicinity.
-            Main.NewText(Language.GetText("Mods.Macrocosm.Messages.MarkerNoPair"), Color.Yellow);
+            Main.NewText(Language.GetText("Mods.Macrocosm.StatusMessages.LaunchpadMarker.NoPair"), Color.Yellow);
             return false;
         }
 

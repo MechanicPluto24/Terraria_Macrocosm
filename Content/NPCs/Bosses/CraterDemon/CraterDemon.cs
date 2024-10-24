@@ -16,6 +16,7 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
+using Macrocosm.Content.Items.Keys;
 using Macrocosm.Content.NPCs.TownNPCs;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -485,6 +486,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         {
             // common drops (non-boss bag)
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CraterDemonTrophy>(), 10));
+
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<XaocKey>()));//FOR NOW
 
             // EM drop
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CraterDemonBossBag>()));

@@ -653,6 +653,15 @@ AstraClock
 		Mythril Anvil
 
 
+AstraDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Astra Brick x 6
+		at
+		Mythril Anvil
+
+
 AstraLantern
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -929,6 +938,15 @@ CosmicEmberClock
 		Mythril Anvil
 
 
+CosmicEmberDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cosmic Ember Brick x 6
+		at
+		Mythril Anvil
+
+
 CosmicEmberLantern
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1014,6 +1032,15 @@ CryocoreClock
 		Mythril Anvil
 
 
+CryocoreDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Cryocore Brick x 6
+		at
+		Mythril Anvil
+
+
 CryocoreLantern
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1095,6 +1122,15 @@ DarkCelestialClock
 	Recipes:
 		Dark Celestial Brick x 20
 		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+DarkCelestialDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Dark Celestial Brick x 6
 		at
 		Mythril Anvil
 
@@ -1211,6 +1247,15 @@ HeavenforgeClock
 	Recipes:
 		Heavenforge Brick x 20
 		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+HeavenforgeDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Heavenforge Brick x 6
 		at
 		Mythril Anvil
 
@@ -1606,6 +1651,15 @@ LuminiteClock
 		Mythril Anvil
 
 
+LuminiteDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Luminite Brick x 6
+		at
+		Mythril Anvil
+
+
 LuminiteLantern
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1691,6 +1745,15 @@ LunarRustClock
 		Mythril Anvil
 
 
+LunarRustDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Lunar Rust Brick x 6
+		at
+		Mythril Anvil
+
+
 LunarRustLantern
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1772,6 +1835,15 @@ MercuryClock
 	Recipes:
 		Mercury Brick x 20
 		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+MercuryDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Mercury Brick x 6
 		at
 		Mythril Anvil
 
@@ -1865,6 +1937,15 @@ StarRoyaleClock
 	Recipes:
 		Star Royale Brick x 20
 		Iron Bar x 3
+		at
+		Mythril Anvil
+
+
+StarRoyaleDoor
+	Value: 1 silver 50 copper
+	Research count: 1
+	Recipes:
+		Star Royale Brick x 6
 		at
 		Mythril Anvil
 
@@ -2989,6 +3070,10 @@ GreatstaffOfHorus
 	Research count: 1
 
 HummingbirdDroneRemote
+	Value: 1 platinum 50 gold
+	Research count: 1
+
+RyuguStaff
 	Value: 1 platinum 50 gold
 	Research count: 1
 
