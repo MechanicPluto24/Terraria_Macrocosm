@@ -20,10 +20,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             Item.width = 64;
             Item.height = 64;
-            Item.damage = 260;
+            Item.damage = 280;
             Item.autoReuse = true;
-            Item.useTime = 20;
-            Item.useAnimation = 20;
+            Item.useTime = 16;
+            Item.useAnimation = 16;
             Item.shoot = ModContent.ProjectileType<ClawWrenchProjectile>();
             Item.shootSpeed = 25;
             Item.useStyle = ItemUseStyleID.Swing;
