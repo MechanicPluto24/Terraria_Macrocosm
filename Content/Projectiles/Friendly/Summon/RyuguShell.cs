@@ -21,8 +21,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         {
             Projectile.CloneDefaults(14);
             AIType = -1;
-            Projectile.width = 8;
-            Projectile.height = 8;
+            Projectile.width = 14;
+            Projectile.height =14;
             Projectile.extraUpdates = 1;
             Projectile.timeLeft = 270;
             Projectile.light = 0f;
