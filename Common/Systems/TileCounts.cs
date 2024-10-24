@@ -13,16 +13,21 @@ namespace Macrocosm.Common.Systems
 
         public int RegolithCount { get; private set; } = 0;
         public int IrradiatedRockCount { get; private set; } = 0;
-        public int GraveyardModTileCount { get; private set; } = 0;
+        public int GraveyardTileCount { get; private set; } = 0;
         public int MonolithCount { get; private set; } = 0;
-        private int[] graveyardTileTypes;
 
+        private int[] graveyardTileTypes;
         public override void PostSetupContent()
         {
             List<int> graveyardtypes = new();
             for (int type = 0; type < TileLoader.TileCount; type++)
+            {
                 if (TileSets.GraveyardTile[type])
+                {
                     graveyardtypes.Add(type);
+                }
+            }
+
             graveyardTileTypes = graveyardtypes.ToArray();
         }
 
@@ -33,14 +38,14 @@ namespace Macrocosm.Common.Systems
             MonolithCount = tileCounts[ModContent.TileType<Monolith>()];
 
             foreach (int type in graveyardTileTypes)
-                GraveyardModTileCount += tileCounts[type];
+                GraveyardTileCount += tileCounts[type];
         }
 
         public override void ResetNearbyTileEffects()
         {
             RegolithCount = 0;
             IrradiatedRockCount = 0;
-            GraveyardModTileCount = 0;
+            GraveyardTileCount = 0;
             MonolithCount = 0;
         }
     }

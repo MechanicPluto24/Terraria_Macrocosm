@@ -4,6 +4,13 @@ using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Ores;
 using Macrocosm.Content.Tiles.Walls;
+using Macrocosm.Content.Items.Currency;
+using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Consumables.Throwable;
+using Macrocosm.Content.Items.Weapons.Melee;
+using Macrocosm.Content.Items.Weapons.Ranged;
+using Macrocosm.Content.Items.Weapons.Magic;
+using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Macrocosm.Content.WorldGeneration.Structures.LunarOutposts;
 using Macrocosm.Content.WorldGeneration.Structures.Shrines;
@@ -12,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
@@ -1247,6 +1255,116 @@ namespace Macrocosm.Content.Subworlds
 
             Main.dayTime = true;
             Main.time = 0;
+        }
+        //This will be MUCH easier when uncon does the shrine redesgins and uses the luminite chests
+        private void ManageChest(Chest chest,int type){
+            int slot =0;
+            chest.item[slot].SetDefaults(ModContent.ItemType<Moonstone>());
+            chest.item[slot++].stack = WorldGen.genRand.Next(30,60);
+            chest.item[slot].SetDefaults(ModContent.ItemType<LunarCrystal>());
+            chest.item[slot++].stack = WorldGen.genRand.Next(30,60);
+            if (type == 1 || type == 2){
+            chest.item[slot].SetDefaults(ModContent.ItemType<ArtemiteBar>());
+            chest.item[slot++].stack = WorldGen.genRand.Next(10,15);
+            chest.item[slot].SetDefaults(ItemID.FragmentSolar);
+            chest.item[slot++].stack = WorldGen.genRand.Next(10,15);
+            }
+
+            if (type == 3 || type == 4){
+            chest.item[slot].SetDefaults(ModContent.ItemType<SeleniteBar>());
+            chest.item[slot++].stack = WorldGen.genRand.Next(10,15);
+            chest.item[slot].SetDefaults(ItemID.FragmentVortex);
+            chest.item[slot++].stack = WorldGen.genRand.Next(10,15);
+            }
+
+            if (type == 5 || type == 6){
+            chest.item[slot].SetDefaults(ModContent.ItemType<DianiteBar>());
+            chest.item[slot++].stack = WorldGen.genRand.Next(10,15);
+            chest.item[slot].SetDefaults(ItemID.FragmentNebula);
+            chest.item[slot++].stack = WorldGen.genRand.Next(10,15);
+            }
+
+            if (type == 7 || type == 8){
+            chest.item[slot].SetDefaults(ModContent.ItemType<ChandriumBar>());
+            chest.item[slot++].stack = WorldGen.genRand.Next(10,15);
+            chest.item[slot].SetDefaults(ItemID.FragmentStardust);
+            chest.item[slot++].stack = WorldGen.genRand.Next(10,15);
+            }
+
+            switch (type)
+            {
+                case 1:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Procellarum>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 2:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<ManisolBlades>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 3:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Ilmenite>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 4:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<StarDestroyer>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 5:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<FrigorianGaze>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 6:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Micronova>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 7:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Totality>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 8:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<GreatstaffOfHorus>());
+                    chest.item[slot++].stack = 1;
+                    break; 
+            }
+            
+        }
+        bool SolarChest1=false;
+        bool VortexChest1=false;
+        bool NebulaChest1=false;
+        bool StardustChest1=false;
+        [Task]
+        private void ChestLootTask(GenerationProgress progress)
+        {
+            for (int i = 0; i < Main.maxChests; i++)
+            {
+                Chest chest = Main.chest[i];
+                if (chest != null){
+                
+                bool IsProperChest=Main.tile[chest.x, chest.y].TileType == TileID.Containers2;
+
+                if(IsProperChest &&Main.tile[chest.x, chest.y].TileFrameX == 5 * 36)//solar
+                {
+                    ManageChest(chest,SolarChest1==false ? 1 : 2);
+                    SolarChest1=true;
+                }
+                if(IsProperChest &&Main.tile[chest.x, chest.y].TileFrameX == 6 * 36)//vortex
+                {
+                    ManageChest(chest,VortexChest1==false ? 3 : 4);
+                    VortexChest1=true;
+                }
+                if(IsProperChest &&Main.tile[chest.x, chest.y].TileFrameX == 7 * 36)//nebula
+                {
+                    ManageChest(chest,NebulaChest1==false ? 5 : 6);
+                    NebulaChest1=true;
+                }
+                if(IsProperChest &&Main.tile[chest.x, chest.y].TileFrameX == 8 * 36)//stardust
+                {
+                    ManageChest(chest,StardustChest1==false ? 7 : 8);
+                    StardustChest1=true;
+                }
+
+                }
+            }
         }
     }
 }

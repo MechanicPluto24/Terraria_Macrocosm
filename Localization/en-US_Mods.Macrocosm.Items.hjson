@@ -1944,7 +1944,7 @@ CrescentMoon: {
 }
 
 RocheChakram: {
-	DisplayName: Roche
+	DisplayName: Roche Chakram
 	Tooltip: ""
 }
 
@@ -2119,5 +2119,50 @@ LuminiteTorch: {
 
 RyuguStaff: {
 	DisplayName: Ryugu Staff
+	Tooltip: ""
+}
+
+AstraDoor: {
+	DisplayName: Astra Door
+	Tooltip: ""
+}
+
+CosmicEmberDoor: {
+	DisplayName: Cosmic Ember Door
+	Tooltip: ""
+}
+
+CryocoreDoor: {
+	DisplayName: Cryocore Door
+	Tooltip: ""
+}
+
+DarkCelestialDoor: {
+	DisplayName: Dark Celestial Door
+	Tooltip: ""
+}
+
+HeavenforgeDoor: {
+	DisplayName: Heavenforge Door
+	Tooltip: ""
+}
+
+LuminiteDoor: {
+	DisplayName: Luminite Door
+	Tooltip: ""
+}
+
+LunarRustDoor: {
+	DisplayName: Lunar Rust Door
+	Tooltip: ""
+}
+
+MercuryDoor: {
+	DisplayName: Mercury Door
+	Tooltip: ""
+}
+
+StarRoyaleDoor: {
+	DisplayName: Star Royale Door
 	Tooltip: ""
 }

@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools
@@ -30,7 +31,11 @@ namespace Macrocosm.Content.Items.Tools
         {
             if (player.whoAmI == Main.myPlayer && Utility.TryGetTileEntityAs(Player.tileTargetX, Player.tileTargetY, out MachineTE machine))
             {
-                Main.NewText(machine.GetPowerInfo(), machine.IsGenerator ? Color.LightGreen : Color.Orange);
+                if (machine.MachineType is MachineType.Generator or MachineType.Battery)
+                    Main.NewText(machine.GetMachineNameAndStatusInfo(), Color.LightGreen);
+                else
+                    Main.NewText(machine.GetMachineNameAndStatusInfo(), Color.Orange);
+
                 return true;
             }
 

@@ -56,6 +56,9 @@ namespace Macrocosm.Common.Subworlds
         /// </summary>
         public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity;
 
+        /// <summary> The ambient temperature, expressed in °C </summary>
+        public virtual float GetAmbientTemperature() => Earth.GetAmbientTemperature();
+
         /// <summary> Whether wiring should function in this subworld. Useful for solar storms :) </summary>
         public virtual bool ShouldUpdateWiring { get; set; } = true;
 
