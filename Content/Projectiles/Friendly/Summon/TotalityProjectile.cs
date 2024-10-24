@@ -44,10 +44,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         {
             if (!spawned)
             {
-                if(Projectile.owner == Main.myPlayer)
+                Player player = Main.player[Projectile.owner];
+                if(player.whoAmI == Main.myPlayer)
                 {
-                    Vector2 position = Projectile.Center;
-                    Vector2 velocity = (Projectile.velocity * 2.4f).RotatedBy(MathHelper.Pi/3);
+                    Vector2 position = Projectile.Center ;
+                    Vector2 velocity = (Projectile.velocity * 2.4f).RotatedBy(MathHelper.Pi/3 * -player.direction) ;
                     float rotation = velocity.ToRotation();
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<TotalitySlashProjectile>(), (int)((float)Projectile.damage), 0f, Main.myPlayer, rotation);
                 }
