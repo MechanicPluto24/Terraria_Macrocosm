@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using System.Collections.Generic;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -20,10 +21,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
     // If it isn't attacking, it will float near the player with minimal movement
     public class RyuguMinion : ModProjectile
     {
+        
+
         public override void SetStaticDefaults()
         {
+            
             // Sets the amount of frames this minion has on its spritesheet
-            Main.projFrames[Projectile.type] = 1;
+            Main.projFrames[Projectile.type] = 15;
             // This is necessary for right-click targeting
             ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
 
@@ -34,8 +38,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
         public sealed override void SetDefaults()
         {
-            Projectile.width = 49;
-            Projectile.height = 42;
+            Projectile.width = 56;
+            Projectile.height = 54;
             Projectile.tileCollide = false; // Makes the minion go through tiles freely
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 20;
@@ -47,7 +51,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Projectile.penetrate = -1; // Needed so the minion doesn't despawn on collision with enemies or tiles
           
         }
-
+        bool Firing =false;
         // Here you can decide if your minion breaks things like grass or pots
         public override bool? CanCutTiles()
         {
@@ -64,6 +68,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         bool foundTarget;
         bool spawned;
         float mult=0f;
+        float FireDist=0f;
         int shootTimer=0;
         NPC targetNPC;
         float distanceFromTarget;
@@ -73,9 +78,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             if(!spawned){
                 spawned=true;
                 mult=Main.rand.NextFloat(0.5f,1.5f);
+                FireDist=Main.rand.NextFloat(500f,750f);
             }
             Player owner = Main.player[Projectile.owner];
-            
+            if(Vector2.Distance(owner.Center, Projectile.Center)>6000f)
+                Projectile.Center=owner.Center;
             if (!CheckActive(owner))
             {
                 return;
@@ -122,18 +129,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     }
                 }
             }
-            if (foundTarget)
+            if (foundTarget&&(Vector2.Distance(targetNPC.Center,Projectile.Center)>FireDist||Projectile.velocity.Y !=0))
                 Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f*mult, (int)(3*mult), 14, (proj, owner) => { return targetNPC;});
             else
                 Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.1f*mult, (int)(8*mult), 14, (proj, owner) => {return owner;});
 
 
-            if (foundTarget){
-                shootTimer++;
-                if(shootTimer>300){
-                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, (targetNPC.Center - Projectile.Center).RotatedByRandom(MathHelper.Pi / 13).SafeNormalize(Vector2.UnitX) * 16f, ModContent.ProjectileType<RyuguShell>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
-                    shootTimer=0;
-                }
+            if (foundTarget&&Vector2.Distance(targetNPC.Center,Projectile.Center)<=FireDist&&Projectile.velocity.Y ==0){
+                Projectile.velocity.X=0;
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f*mult, 0, 14, (proj, owner) => { return targetNPC;});
+                Firing=true;
+            }
+            else{
+                Firing=false;
             }
 
             Visuals();
@@ -157,33 +165,57 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
 
         
-
+        int ProjFrame;
         private void Visuals()
         {
+            List<int> WalkFrames = new List<int>{1,2,3};
+            List<int> AirFrame = new  List<int>{4}; 
+            List<int> FireFrames = new  List<int>{5,6,7,8,9,10,-1,11,12,13,14,15};
             // So it will lean slightly towards the direction it's moving
             
             
             // This is a simple "loop through all frames from top to bottom" animation
             int frameSpeed = 5;
 
-            Projectile.frameCounter++;
+            
 
-            if (Projectile.frameCounter >= frameSpeed)
-            {
-                Projectile.frameCounter = 0;
-                Projectile.frame++;
-
-                if (Projectile.frame >= Main.projFrames[Projectile.type])
-                {
-                    Projectile.frame = 0;
+            
+                if(Projectile.velocity.Y !=0){
+                    Firing=false;
+                    Projectile.frame=AirFrame[0]-1;
+                    ProjFrame=20;
                 }
-            }
+                else if (!Firing){
+                    Projectile.frameCounter++;
+                    if (Projectile.frameCounter %frameSpeed==0)
+                    {
+                        ProjFrame++;
+                    }
+                    if (ProjFrame<20)
+                        ProjFrame=20;
+                    Projectile.frame=WalkFrames[ProjFrame%3]-1;
+                }
+                else if (Firing){
+                    Projectile.direction = Math.Sign(targetNPC.Center.X - Projectile.Center.X);
+                    Projectile.spriteDirection = Projectile.direction;
 
-            // Some visuals here
-        }
 
-     
-        
-
+                    if (ProjFrame>=20)
+                        ProjFrame=0;
+                    Projectile.frameCounter++;
+                    if (Projectile.frameCounter %5==0)
+                    {
+                        ProjFrame++;
+                    }
+                    if(ProjFrame>11)
+                        ProjFrame=0;
+                    Projectile.frame=FireFrames[ProjFrame]-1;
+                    if(Projectile.frame==-2){
+                        ProjFrame=7;
+                        Projectile.frame=FireFrames[7]-1;
+                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, (targetNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX) * 16f, ModContent.ProjectileType<RyuguShell>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
+                    }
+                }
     }
+}
 }
