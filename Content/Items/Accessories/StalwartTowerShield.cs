@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Accessories
             Item.width = 34;
             Item.height = 52;
             Item.accessory = true;
-            Item.defense = 10;
+            Item.defense = 5;
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)
