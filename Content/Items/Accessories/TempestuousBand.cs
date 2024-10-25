@@ -16,8 +16,8 @@ namespace Macrocosm.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetModPlayer<MacrocosmPlayer>().ExtraCritDamagePercent += 0.25f;
-            player.GetModPlayer<MacrocosmPlayer>().NonCritDamageMultiplier -= 0.25f;
+            player.GetModPlayer<MacrocosmPlayer>().ExtraCritDamagePercent += 0.20f;
+            player.GetModPlayer<MacrocosmPlayer>().NonCritDamageMultiplier -= 0.20f;
             player.GetCritChance<GenericDamageClass>() += 15;
         }
     }
