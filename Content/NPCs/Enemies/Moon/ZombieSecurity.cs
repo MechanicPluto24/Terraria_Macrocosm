@@ -13,6 +13,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -69,8 +70,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.damage = 65;
             NPC.defense = 100;
             NPC.lifeMax = 1400;
-            NPC.HitSound = SoundID.NPCHit1;
-            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.HitSound = SFX.Zombie;
+            NPC.DeathSound = SFX.ZombieDeath;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = -1;
             SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
