@@ -81,8 +81,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 FireDist=Main.rand.NextFloat(500f,750f);
             }
             Player owner = Main.player[Projectile.owner];
+
             if(Vector2.Distance(owner.Center, Projectile.Center)>6000f)
                 Projectile.Center=owner.Center;
+
+            
             if (!CheckActive(owner))
             {
                 return;
@@ -130,14 +133,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 }
             }
             if (foundTarget&&(Vector2.Distance(targetNPC.Center,Projectile.Center)>FireDist||Projectile.velocity.Y !=0))
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f*mult, (int)(3*mult), 14, (proj, owner) => { return targetNPC;});
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f*mult, (int)(3*mult), (int)(14*mult), (proj, owner) => { return targetNPC;});
             else
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.1f*mult, (int)(8*mult), 14, (proj, owner) => {return owner;});
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.1f*mult, (int)(8*mult), (int)(14*mult), (proj, owner) => {return owner;});
 
 
             if (foundTarget&&Vector2.Distance(targetNPC.Center,Projectile.Center)<=FireDist&&Projectile.velocity.Y ==0){
                 Projectile.velocity.X=0;
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f*mult, 0, 14, (proj, owner) => { return targetNPC;});
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f*mult, 0, (int)(14*mult), (proj, owner) => { return targetNPC;});
                 Firing=true;
             }
             else{
