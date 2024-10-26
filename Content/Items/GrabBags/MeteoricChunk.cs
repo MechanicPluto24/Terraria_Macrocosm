@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.GrabBags
             Item.width = 32;
             Item.height = 32;
             Item.maxStack = Item.CommonMaxStack;
-            Item.value = Item.sellPrice(silver: 1);
+            Item.value = Item.sellPrice(silver: 50);
             Item.rare = ItemRarityID.Purple;
         }
 
