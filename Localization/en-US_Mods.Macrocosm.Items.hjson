@@ -1005,6 +1005,7 @@ Procellarum: {
 		<left> to swing, with hits applying a Lightning Mark
 		<right> to throw, charging to call down 5 heavenly lightning bolts down upon enemies
 		lightning bolts will prioritise and home in on and deal 50% increased damage to marked enemies
+		'''
 }
 
 LexanGlass: {
@@ -2088,6 +2089,7 @@ Ilmenite: {
 		'''
 		<left> click to fire bolts of light that take on the 
 		Hold <right> to charge up an explosive vortex of light
+		'''
 }
 
 StalwartTowerShield: {
