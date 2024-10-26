@@ -2094,7 +2094,7 @@ Ilmenite: {
 
 StalwartTowerShield: {
 	DisplayName: Stalwart Tower Shield
-	Tooltip: Repeatedly getting hit will increase defence by +5 up to +15
+	Tooltip: Repeatedly getting hit will increase defence by +3 up to +12
 }
 
 ThaumaturgicWard: {
