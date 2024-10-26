@@ -142,7 +142,7 @@ namespace Macrocosm.Content.Menus
         public override Asset<Texture2D> Logo => !drawOldLogo ? logo : logoOld;
         public override Asset<Texture2D> SunTexture => Macrocosm.EmptyTex;
         public override Asset<Texture2D> MoonTexture => Macrocosm.EmptyTex;
-        public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld");
+        public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Menu");
 
         public override ModSurfaceBackgroundStyle MenuBackgroundStyle => base.MenuBackgroundStyle;
         public override string DisplayName => "Macrocosm";

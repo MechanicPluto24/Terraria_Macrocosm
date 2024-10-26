@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Crafting
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Crafting.IndustrialLoom>(), tileStyleToPlace: 0);
             Item.width = 50;
             Item.height = 24;
-            Item.value = 500;
+            Item.value =  Item.sellPrice(gold:1);
         }
 
         public override void AddRecipes()
