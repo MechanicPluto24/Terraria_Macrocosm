@@ -40,7 +40,7 @@ namespace Macrocosm.Common.Players
         {
             if (MomentumLash && ProjectileID.Sets.IsAWhip[proj.type] == true && !target.friendly && target.type != NPCID.TargetDummy)
             {
-                if (momentumBonus < 0.25f)
+                if (momentumBonus < 0.18f)
                     momentumBonus += 0.01f;
 
                 decreaseTick = 0;

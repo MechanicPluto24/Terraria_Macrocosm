@@ -38,7 +38,7 @@ namespace Macrocosm.Common.Players
         {
             if (StalwartShield)
             {
-                if (defenceBonus < 30)
+                if (defenceBonus < 15)
                     defenceBonus += 10;
 
                 decreaseTick = 0;

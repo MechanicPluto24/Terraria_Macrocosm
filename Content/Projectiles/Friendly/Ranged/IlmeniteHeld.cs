@@ -88,7 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
                             float strength = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
-                            damage = (int)(damage * 3f * strength);
+                            damage = (int)(damage * 2f * strength);
                             speed *= 0.2f;
                             knockback *= 2f;
 

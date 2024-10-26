@@ -130,6 +130,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         float FiringAngle;
                         if (currentChargeStage > 0)
                         {
+                            int boltDamage = (int)(Projectile.damage * 0.5f * currentChargeStage);
                             for (int i = 0; i < Main.npc.Length && ProjFired <= 4; i++)
                             {
                                 if (Main.npc[i].active)
@@ -143,7 +144,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                                             ProjSpawnPosition,
                                             Utility.PolarVector(40 + ProjFired * 4, FiringAngle),
                                             ModContent.ProjectileType<Procellarum_LightBolt>(),
-                                            (int)(Projectile.damage * 0.5f * currentChargeStage),
+                                            boltDamage,
                                             0,
                                             Player.whoAmI,
                                             i + 1,
@@ -162,7 +163,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                                         ProjSpawnPosition,
                                         Utility.PolarVector(40 + ProjFired * 4, FiringAngle),
                                         ModContent.ProjectileType<Procellarum_LightBolt>(),
-                                        (int)(Projectile.damage * (0.5f + 0.5f * currentChargeStage)),
+                                        boltDamage,
                                         0,
                                         Player.whoAmI);
                                 }
@@ -334,7 +335,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             if (projectile.type == ModContent.ProjectileType<Procellarum_LightBolt>())
             {
-                modifiers.FinalDamage *= 2;
+                modifiers.FinalDamage *= 1.5f;
             }
         }
         public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
