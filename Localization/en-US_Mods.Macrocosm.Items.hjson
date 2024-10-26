@@ -1000,7 +1000,11 @@ SolarPanelSmall: {
 
 Procellarum: {
 	DisplayName: Procellarum
-	Tooltip: ""
+	Tooltip:
+		'''
+		<left> to swing, with hits applying a Lightning Mark
+		<right> to throw, charging to call down 5 heavenly lightning bolts down upon enemies
+		lightning bolts will prioritise and home in on and deal 50% increased damage to marked enemies
 }
 
 LexanGlass: {
@@ -2056,8 +2060,8 @@ TempestuousBand: {
 	DisplayName: Tempestuous Band
 	Tooltip:
 		'''
-		Critical strikes deal 25% increased extra damage
-		Non-critical strikes deal 25% less damage
+		Critical strikes deal 20% increased extra damage
+		Non-critical strikes deal 20% less damage
 		15% increased critical strike chance
 		'''
 }
@@ -2075,30 +2079,30 @@ ArcaneBarnacle: {
 
 MomentumLash: {
 	DisplayName: Momentum Lash
-	Tooltip: Repeatedly hitting enemies with a whip increases summon damage and whip speed up to +25%
+	Tooltip: Repeatedly hitting enemies with a whip increases summon damage and whip speed up to +18%
 }
 
 Ilmenite: {
 	DisplayName: Ilmenite
-	Tooltip: ""
-}
-
-Exsanguinator: {
-	DisplayName: Exsanguinator
-	Tooltip: ""
+	Tooltip:
+		'''
+		<left> click to fire bolts of light that take on the 
+		Hold <right> to charge up an explosive vortex of light
 }
 
 StalwartTowerShield: {
 	DisplayName: Stalwart Tower Shield
-	Tooltip: Repeatedly getting hit will increase defence by +10 up to +30
+	Tooltip: Repeatedly getting hit will increase defence by +5 up to +15
 }
 
 ThaumaturgicWard: {
 	DisplayName: Thaumaturgic Ward
 	Tooltip:
 		'''
-		Below 20% of maximum life, 50% of damage is taken from mana
-		Any mana taken
+		Below 30% of maximum life, 50% of damage is taken from mana
+		Any overflow on damage to mana is then applied back to your life
+		Deal no non-magic damage
+		Cannot be equipped with Magic Cuffs
 		'''
 }
 

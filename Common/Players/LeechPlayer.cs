@@ -15,6 +15,7 @@ namespace Macrocosm.Common.Players
         public float IncLeechMana { get; set; }
 
         public bool DisableManaPotions { get; set; }
+        public bool DisableLifePotions { get; set; }
 
         public override void ResetEffects()
         {
@@ -29,9 +30,8 @@ namespace Macrocosm.Common.Players
 
         public override bool CanUseItem(Item item)
         {
-            if (item.healMana > 0 && DisableManaPotions)
-                return false;
-
+            if (item.healMana > 0 && DisableManaPotions) return false;
+            if (item.healLife > 0 && DisableLifePotions) return false;
             return true;
         }
 
