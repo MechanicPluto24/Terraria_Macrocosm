@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Players
             if (ManaWard)
             {
                 int manaDamage = 0;
-                if ((float)Player.statLife / Player.statLifeMax2 < 0.25f)
+                if ((float)Player.statLife / Player.statLifeMax2 < 0.3f)
                 {
                     manaDamage = info.Damage;
 
@@ -32,7 +32,7 @@ namespace Macrocosm.Common.Players
 
         public override void ModifyHurt(ref Player.HurtModifiers modifiers)
         {
-            if (ManaWard && (float)Player.statLife / Player.statLifeMax2 < 0.25f) modifiers.FinalDamage *= 0.5f;
+            if (ManaWard && (float)Player.statLife / Player.statLifeMax2 < 0.3f) modifiers.FinalDamage *= 0.5f;
         }
     }
 }
