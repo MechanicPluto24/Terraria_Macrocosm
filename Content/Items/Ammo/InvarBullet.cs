@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Items.Ammo
         {
             CreateRecipe(50)
                 .AddIngredient<InvarBar>(1)
-                .AddTile(TileID.Anvils)
+                .AddTile(TileID.LunarCraftingStation)
                 .Register();
         }
     }

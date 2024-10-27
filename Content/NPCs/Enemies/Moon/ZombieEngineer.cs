@@ -11,6 +11,9 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Sounds;
+using Terraria.Audio;
+
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class ZombieEngineer : ModNPC
@@ -55,7 +58,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 60;
             NPC.lifeMax = 1100;
             NPC.HitSound = SoundID.NPCHit1;
-            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.DeathSound = SFX.ZombieEngineerDeath;
             NPC.knockBackResist = 0.01f;
             NPC.aiStyle = -1;
 
@@ -74,6 +77,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private bool gasLeak = false;
         private float runSpeed = 0.01f;
         private int headTimer = 0;
+        bool runNoise=false;
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (projectile.type == ModContent.ProjectileType<ZombieEngineerExplosion>())
@@ -177,10 +181,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Player player = Main.player[NPC.target];
             bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
             Utility.AIFighter(NPC, ref NPC.ai, player.Center, accelerationFactor: 0.08f, velMax: 4f, maxJumpTilesX: 2, maxJumpTilesY: 1);
+            if(!runNoise){
+            SoundEngine.PlaySound(SFX.ZombieEngineerSprint, NPC.position);
+            runNoise=true;
+            }
 
+            if (Vector2.Distance(NPC.Center, player.Center) < 300f&&!gasLeak){
+                gasLeak = true;            
+                SoundEngine.PlaySound(SFX.ZombieEngineerGasLeak, NPC.position);
+            }
 
-            if (Vector2.Distance(NPC.Center, player.Center) < 300f)
-                gasLeak = true;
 
             if (NPC.velocity.Y == 0)
             {

@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
 {
@@ -28,7 +29,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.value = Item.sellPrice(gold: 30);
             Item.rare = ModContent.RarityType<MoonRarityT2>();
-            Item.UseSound = SoundID.Item44;
+            Item.UseSound = SFX.RobotSummon;
 
             Item.noMelee = true;
             Item.DamageType = DamageClass.Summon;

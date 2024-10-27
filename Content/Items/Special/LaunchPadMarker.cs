@@ -1,5 +1,7 @@
 ﻿using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Items.Bars;
 
 namespace Macrocosm.Content.Items.Special
 {
@@ -18,5 +20,16 @@ namespace Macrocosm.Content.Items.Special
         {
             return null;
         }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe(2)
+                .AddIngredient(ItemID.Glass, 1)
+                .AddIngredient(ItemID.Wire, 2)
+                .AddIngredient<AluminumBar>(2)
+                .AddTile<Tiles.Crafting.Fabricator>()
+                .Register();
+        }
+
     }
 }

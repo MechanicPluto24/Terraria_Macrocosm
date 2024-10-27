@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
         {
             Item.width = 18;
             Item.height = 18;
-            Item.value = 10000;
+            Item.value = Item.sellPrice(gold: 10);
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.defense = 15;
         }
