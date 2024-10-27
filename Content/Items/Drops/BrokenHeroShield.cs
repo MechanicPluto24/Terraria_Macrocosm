@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Drops
             Item.width = 34;
             Item.height = 38;
             Item.maxStack = Item.CommonMaxStack;
-            Item.value = 10000;
+            Item.value =  Item.sellPrice(gold:5);
             Item.rare = ItemRarityID.Expert;
             Item.expert = true;
             Item.material = true;

@@ -1,5 +1,8 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
+using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Refined;
+using Terraria.ID;
 
 namespace Macrocosm.Content.Items.Machines
 {
@@ -14,8 +17,17 @@ namespace Macrocosm.Content.Items.Machines
             Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.SolarPanelLarge>());
             Item.width = 44;
             Item.height = 34;
-            Item.value = 500;
+            Item.value =  Item.sellPrice(gold:1);
             Item.mech = true;
+        }
+        public override void AddRecipes()
+        {
+             CreateRecipe()
+                .AddIngredient<SolarCell>(16)
+                .AddIngredient(ItemID.Glass, 12)
+                .AddIngredient(ItemID.Wire, 16)                
+                .AddTile<Tiles.Crafting.Fabricator>()
+                .Register();
         }
     }
 }

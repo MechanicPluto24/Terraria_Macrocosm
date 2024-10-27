@@ -18,8 +18,8 @@ namespace Macrocosm.Content.Items.Accessories
         {
             var leechPlayer = player.GetModPlayer<LeechPlayer>();
             player.GetDamage<MagicDamageClass>() += 0.15f;
-            player.manaCost += 1f;
-            leechPlayer.PercentLeechMana += 0.01f;
+            player.manaCost += 0.70f;
+            leechPlayer.PercentLeechMana += 0.02f;
             leechPlayer.DisableManaPotions = true;
         }
     }

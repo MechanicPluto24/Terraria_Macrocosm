@@ -1335,7 +1335,7 @@ namespace Macrocosm.Content.Subworlds
 
         public void ManageIndustrialChest(Chest chest){
             int slot =0;
-            int random1 = WorldGen.genRand.Next(1,15);
+            int random1 = WorldGen.genRand.Next(1,16);
             switch (random1)
             {
                 case 1:
@@ -1393,7 +1393,11 @@ namespace Macrocosm.Content.Subworlds
                 case 14:
                     chest.item[slot].SetDefaults(ModContent.ItemType<ThaumaturgicWard>());
                     chest.item[slot++].stack = 1;
-                    break; 
+                    break;
+                case 15:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<CrescentMoon>());
+                    chest.item[slot++].stack = 1;
+                    break;  
             }
             for(int i =0; i<3; i++){
                 int random2 = WorldGen.genRand.Next(1,9);
