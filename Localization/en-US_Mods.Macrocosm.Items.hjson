@@ -2120,7 +2120,7 @@ GreatstaffOfHorus: {
 
 LuminiteTorch: {
 	DisplayName: Luminite Torch
-	Tooltip: "Can be used in airless environments."
+	Tooltip: Can be used in airless environments.
 }
 
 RyuguStaff: {
