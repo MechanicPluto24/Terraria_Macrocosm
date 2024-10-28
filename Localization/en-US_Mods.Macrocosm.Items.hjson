@@ -2177,3 +2177,8 @@ SolarCell: {
 	DisplayName: Solar Cell
 	Tooltip: ""
 }
+
+LaserSight: {
+	DisplayName: Laser Sight
+	Tooltip: ""
+}

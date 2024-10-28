@@ -107,7 +107,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             }
         }
 
-        // TODO
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             int length = ProjectileID.Sets.TrailCacheLength[Type];
@@ -126,7 +125,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                         return true;
                 }
             }
-
 
             return base.Colliding(projHitbox, targetHitbox);
         }
