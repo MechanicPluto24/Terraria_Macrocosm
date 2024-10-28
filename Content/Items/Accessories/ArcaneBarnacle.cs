@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             var leechPlayer = player.GetModPlayer<LeechPlayer>();
-            player.GetDamage<MagicDamageClass>() += 0.15f;
+            player.GetDamage<MagicDamageClass>() += 0.1f;
             player.manaCost += 0.70f;
             leechPlayer.PercentLeechMana += 0.02f;
             leechPlayer.DisableManaPotions = true;
