@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             return true;
         }
 
-        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 2));
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / (18 * 2));
 
         public override void NumDust(int x, int y, bool fail, ref int num)
         {

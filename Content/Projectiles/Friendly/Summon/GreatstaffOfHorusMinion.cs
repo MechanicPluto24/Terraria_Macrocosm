@@ -69,13 +69,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
-            shineOrbitTimer += 2;
+            shineOrbitTimer += 8;
+
             if (shineOrbitTimer >= 180)
                 shineOrbitTimer = 0;
+
             if (!CheckActive(owner))
-            {
                 return;
-            }
 
             GeneralBehavior(owner, out Vector2 vectorToIdlePosition, out float distanceToIdlePosition);
             SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
@@ -268,10 +268,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private void Visuals(bool foundTarget)
         {
             // So it will lean slightly towards the direction it's moving
-            if(foundTarget)
+            if (foundTarget)
+            {
                 Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
-            else{
-            Projectile.rotation = Projectile.velocity.X * 0.05f;
+            }
+            else
+            {
+                Projectile.rotation = Projectile.velocity.X * 0.05f;
             }
             // This is a simple "loop through all frames from top to bottom" animation
             int frameSpeed = 5;
@@ -299,15 +302,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
 
         private SpriteBatchState state;
+        private float shineOrbitX = 45f;
+        private float shineOrbitY = 8f;
         public override bool PreDraw(ref Color lightColor)
         {
-            Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(shineOrbitTimer * 2)) * 50f, -(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * 20f);
+            Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbitX, -(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbitY);
 
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            if ((-(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * 20f) < 0f)
+            if ((-(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbitY) < 0f)
                 DrawShine(Main.spriteBatch, new Color(127, 200, 155), orbit);
 
             trail?.Draw(Projectile, Projectile.Size / 2f);
@@ -319,7 +324,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public override void PostDraw(Color lightColor)
         {
             state.SaveState(Main.spriteBatch);
-            Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(shineOrbitTimer * 2)) * 50f, -(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * 20f);
+            Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbitX, -(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbitY);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
@@ -327,7 +332,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star5");
             float opacity = 1f;
             Main.EntitySpriteDraw(glow.Value, Projectile.Center - Main.screenPosition, null, new Color(255, 170, 142, 255) * opacity, Projectile.rotation, glow.Size() / 2, Projectile.scale * Main.rand.NextFloat(0.19f, 0.21f), SpriteEffects.None, 0f);
-            if ((-(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * 20f) >= 0f)
+            if ((-(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbitY) >= 0f)
                 DrawShine(Main.spriteBatch, new Color(127, 200, 155), orbit);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
@@ -336,23 +341,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private void DrawShine(SpriteBatch spriteBatch, Color drawColor, Vector2 orbit)
         {
             Texture2D shineTexture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
-            int trailLength = 50;
-            float opacityFactor = 0.4f;
+            int trailLength = 80;
+            float opacityFactor = 0.75f;
+            float rotation = orbit.ToRotation() + MathHelper.Pi / 4f;
             for (int i = 0; i < trailLength; i++)
             {
                 float lerpFactor = i / (float)trailLength;
                 Vector2 previousOrbit = new
                 (
-                    (float)Math.Cos(MathHelper.ToRadians((shineOrbitTimer - i) * 2)) * 50f,
-                    -(float)Math.Sin(MathHelper.ToRadians((shineOrbitTimer - i) * 2)) * 20f
+                    (float)Math.Cos(MathHelper.ToRadians((shineOrbitTimer - i) * 2)) * shineOrbitX,
+                    -(float)Math.Sin(MathHelper.ToRadians((shineOrbitTimer - i) * 2)) * shineOrbitY
                 );
 
                 Color trailColor = drawColor * (1f - lerpFactor) * opacityFactor;
-
-                spriteBatch.Draw(shineTexture, Projectile.Center + previousOrbit.RotatedBy(MathHelper.ToRadians(-70)) - Main.screenPosition, null, trailColor, MathHelper.ToRadians(shineOrbitTimer) + MathHelper.ToRadians(-70), shineTexture.Size() / 2, Projectile.scale * (1f - lerpFactor) * 0.7f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(shineTexture, Projectile.Center + previousOrbit.RotatedBy(MathHelper.ToRadians(-70)) - Main.screenPosition, null, trailColor, rotation, shineTexture.Size() / 2, Projectile.scale * (1f - lerpFactor) * 0.4f, SpriteEffects.None, 0f);
             }
 
-            spriteBatch.Draw(shineTexture, Projectile.Center + orbit.RotatedBy(MathHelper.ToRadians(-70)) - Main.screenPosition, null, drawColor, MathHelper.ToRadians(shineOrbitTimer) + MathHelper.ToRadians(-70), shineTexture.Size() / 2, Projectile.scale * 0.7f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(shineTexture, Projectile.Center + orbit.RotatedBy(MathHelper.ToRadians(-70)) - Main.screenPosition, null, drawColor, rotation, shineTexture.Size() / 2, Projectile.scale * 0.4f, SpriteEffects.None, 0f);
         }
     }
 }

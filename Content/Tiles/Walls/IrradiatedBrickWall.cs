@@ -7,11 +7,10 @@ namespace Macrocosm.Content.Tiles.Walls
 {
     public class IrradiatedBrickWall : ModWall
     {
-
         public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = true;
-            AddMapEntry(new Color(65, 65, 65));
+            AddMapEntry(new Color(199, 199, 184));
 
             DustType = ModContent.DustType<IrradiatedRockDust>();
         }

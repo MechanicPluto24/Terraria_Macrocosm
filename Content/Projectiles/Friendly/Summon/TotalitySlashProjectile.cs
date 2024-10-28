@@ -65,6 +65,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 slashDir = Main.player[Projectile.owner].direction;
             }
 
+
+            Player player = Main.player[Projectile.owner];
             AI_Timer++;
 
             if (AI_Timer > 100)
@@ -95,6 +97,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 }
 
                 Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.Pi / 80 * slashDir);
+                Projectile.position += player.velocity * 0.2f;
             }
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;

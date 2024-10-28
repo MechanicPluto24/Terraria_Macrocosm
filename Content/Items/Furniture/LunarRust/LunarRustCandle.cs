@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
+using Macrocosm.Content.Items.Consumables.Throwable;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.LunarRust
         {
             CreateRecipe()
                 .AddIngredient(ItemID.LunarRustBrick, 4)
-                .AddIngredient(ItemID.Torch, 1) // Luminite Crystal
+                .AddIngredient<LunarCrystal>(1)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }
