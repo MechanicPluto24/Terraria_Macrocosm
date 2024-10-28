@@ -3,7 +3,9 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Terraria;
 using Terraria.ID;
+using Macrocosm.Content.Items.LiquidContainers;
 using Terraria.ModLoader;
+using Terraria.GameContent.ItemDropRules;
 using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
@@ -72,6 +74,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<RocketFuelCanister>(), 10, 1, 4));
         }
 
         public override void HitEffect(NPC.HitInfo hit)
