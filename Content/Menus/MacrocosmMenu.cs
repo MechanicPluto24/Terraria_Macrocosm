@@ -137,12 +137,16 @@ namespace Macrocosm.Content.Menus
             ];
         }
 
+
+        private CelestialBody grabbed;
+        private readonly Dictionary<CelestialBody, int> released = new();
+        private readonly List<CelestialBody> destroyed = new();
         private bool drawOldLogo = false;
 
         public override Asset<Texture2D> Logo => !drawOldLogo ? logo : logoOld;
         public override Asset<Texture2D> SunTexture => Macrocosm.EmptyTex;
         public override Asset<Texture2D> MoonTexture => Macrocosm.EmptyTex;
-        public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Menu");
+        public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/IntoTheUnknown");
 
         public override ModSurfaceBackgroundStyle MenuBackgroundStyle => base.MenuBackgroundStyle;
         public override string DisplayName => "Macrocosm";
@@ -160,13 +164,14 @@ namespace Macrocosm.Content.Menus
             AsteroidBelt.Clear();
             KuiperBelt.Clear();
             released.Clear();
+            destroyed.Clear();
         }
 
         private SpriteBatchState state1, state2;
         public override bool PreDrawLogo(SpriteBatch spriteBatch, ref Vector2 logoDrawCenter, ref float logoRotation, ref float logoScale, ref Color drawColor)
         {
             if (drawOldLogo)
-                logoScale *= 0.65f;
+                logoScale *= 0.45f;
             else
                 logoScale *= 0.65f;
 
@@ -198,15 +203,17 @@ namespace Macrocosm.Content.Menus
             spriteBatch.End();
             spriteBatch.Begin(state1);
 
+            List<CelestialBody> toDraw = planetsWithMoons.Where((planet) => !destroyed.Contains(planet)).ToList();
+
             // Draw the moons behind the host planet
-            foreach (CelestialBody planet in planetsWithMoons)
+            foreach (CelestialBody planet in toDraw)
                 planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation - MathHelper.Pi >= child.OrbitAngle);
 
             // Draw the planets behind the Sun
-            Sun.DrawChildren(spriteBatch, (child) => !(AsteroidBelt.Contains(child) || KuiperBelt.Contains(child)));
+            Sun.DrawChildren(spriteBatch, (child) => !(destroyed.Contains(child) || AsteroidBelt.Contains(child) || KuiperBelt.Contains(child)));
 
             // Draw the moons in front of the host planet
-            foreach (CelestialBody planet in planetsWithMoons)
+            foreach (CelestialBody planet in toDraw)
                 planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation - MathHelper.Pi < child.OrbitAngle);
 
             DrawSunCorona();
@@ -215,6 +222,7 @@ namespace Macrocosm.Content.Menus
             Sun.Draw(spriteBatch);
             DrawSunLightEffects(spriteBatch);
 
+            drawOldLogo = destroyed.Count > 0;
             Interact();
 
             return true;
@@ -446,16 +454,13 @@ namespace Macrocosm.Content.Menus
                 Matrix.CreateScale(uiScaleMatrix.M11, uiScaleMatrix.M22, 0f);            // Apply UI scale
             return transformationMatrix;
         }
-
-        private CelestialBody grabbed;
-        private readonly Dictionary<CelestialBody, int> released = new();
         private void Interact()
         {
             Main.alreadyGrabbingSunOrMoon = false;
 
             if (grabbed is null && released.Count == 0)
             {
-                foreach (var celestialBody in interactible)
+                foreach (var celestialBody in interactible.Where((planet) => !destroyed.Contains(planet)))
                 {
                     if (celestialBody.Hitbox.Contains(Main.mouseX, Main.mouseY) && Main.mouseLeft)
                     {
@@ -470,24 +475,19 @@ namespace Macrocosm.Content.Menus
                 grabbed.ShouldUpdate = false;
                 Vector2 mousePosition = Main.MouseScreen;
                 Vector2 targetPosition;
-
-                float minDistanceFromSun = 160 + Math.Max(grabbed.Width, grabbed.Height);
                 bool forceRelease = false;
-                if (Vector2.Distance(mousePosition, Sun.Center) < minDistanceFromSun)
-                {
-                    targetPosition = Vector2.Lerp(grabbed.Center, Sun.Center + (mousePosition - Sun.Center) * minDistanceFromSun, 0.0005f);
 
-                    if (Vector2.Distance(grabbed.Center, mousePosition) > 20f)
-                        forceRelease = true;
-                }
-                else
-                {
-                    Main.alreadyGrabbingSunOrMoon = true;
-                    targetPosition = mousePosition;
-                }
-
+                Main.alreadyGrabbingSunOrMoon = true;
+                targetPosition = mousePosition;
                 grabbed.Center = Vector2.Lerp(grabbed.Center, targetPosition, 0.1f);
                 grabbed.OrbitRotation = (grabbed.Center - Sun.Center).ToRotation();
+
+                float minDistance = 120f - (grabbed.Width * grabbed.Scale);
+                if (Vector2.DistanceSquared(mousePosition, Sun.Center) < minDistance * minDistance)
+                {
+                    destroyed.Add(grabbed);
+                    grabbed = null;
+                }
 
                 if (!Main.mouseLeft || forceRelease)
                 {

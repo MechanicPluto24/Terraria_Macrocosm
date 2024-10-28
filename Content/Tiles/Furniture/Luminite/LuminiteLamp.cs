@@ -27,7 +27,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Main.tileLavaDeath[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Lamps, 0));
-            TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.addTile(Type);
 
             AdjTiles = [TileID.Lamps];
@@ -41,11 +40,11 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
         public override bool CreateDust(int i, int j, ref int type)
         {
-            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 2)));
+            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 3)));
             return true;
         }
 
-        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 2));
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 3));
 
         public override void HitWire(int i, int j)
         {
@@ -65,12 +64,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                 NetMessage.SendTileSquare(-1, i, topY, 1, 3);
         }
 
-   
-
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            Vector3 color = Utility.GetLightColorFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 2))).ToVector3();
+            Vector3 color = Utility.GetLightColorFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 3))).ToVector3();
             if (tile.TileFrameX == 0)
             {
                 r = color.X;
@@ -82,7 +79,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, new Vector2(0, 8));
+            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, new Vector2(0, 0));
         }
     }
 }

@@ -1,7 +1,9 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -22,7 +24,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Projectile.CloneDefaults(14);
             AIType = -1;
             Projectile.width = 14;
-            Projectile.height =14;
+            Projectile.height = 14;
             Projectile.extraUpdates = 1;
             Projectile.timeLeft = 270;
             Projectile.light = 0f;
@@ -34,8 +36,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public override bool PreAI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation();
-            Projectile.velocity.Y +=0.01f;
-
+            Projectile.velocity.Y += 0.01f;
 
             if (Projectile.alpha > 0)
                 Projectile.alpha -= 15;
@@ -50,10 +51,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(255, 100, 100) * Projectile.Opacity, new Color(255, 201, 84, 0) * Projectile.Opacity);
+            //Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(255, 100, 100) * Projectile.Opacity, new Color(255, 201, 84, 0) * Projectile.Opacity);
+
+            float count = 28 * (1f - Projectile.alpha / 255f);
+            for (int n = 0; n < count; n++)
+            {
+                Texture2D texture = TextureAssets.Projectile[Type].Value;
+                float opacity = (1f - Projectile.alpha / 255f);
+                float progress = n / count;
+                Color color = Color.White * (0.7f - progress) * opacity;
+                Vector2 trailPosition = Projectile.position - Projectile.velocity.SafeNormalize(default) * n * 6f;
+                Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1f * (1f - progress), SpriteEffects.None, 0);
+            }
+
             return true;
         }
-
-        //public override Color? GetAlpha(Color lightColor) => Color.White;
     }
 }

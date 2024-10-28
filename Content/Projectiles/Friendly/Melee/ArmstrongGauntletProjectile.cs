@@ -124,8 +124,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                  {
                      p.Position = Projectile.Center;
                      p.Velocity = Vector2.Zero;
-                     p.Color = new Color(100, 100, 150, 100);
-                     p.Scale = new Vector2(8f, 8f);
+                     p.Color = new Color(100, 100, 150, 255);
+                     p.Scale = new Vector2(4f, 4f);
                      p.Rotation = Projectile.rotation;
                      p.TimeToLive = 25;
                      p.DrawVerticalAxis = false;
@@ -138,6 +138,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             overPlayers.Add(index);
         }
+
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             // If the target is touching the beam's hitbox (which is a small rectangle vaguely overlapping the host Prism), that's good enough.
@@ -163,7 +164,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Vector2 drawPos = Projectile.Center;
             Vector2 offset = new Vector2(0f, Projectile.gfxOffY);
             //Main.EntitySpriteDraw(texture, drawPos + offset - Main.screenPosition, null, Projectile.GetAlpha(lightColor), Projectile.rotation + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale, SpriteEffects.None, 0);
-
 
             offset += Vector2.SmoothStep(-Projectile.velocity, Projectile.velocity * 0.5f, prog);
 
@@ -215,8 +215,5 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.Default, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
             return false;
         }
-
-
-
     }
 }
