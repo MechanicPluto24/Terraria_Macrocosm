@@ -2087,7 +2087,7 @@ Ilmenite: {
 	DisplayName: Ilmenite
 	Tooltip:
 		'''
-		<left> click to fire bolts of light that take on the 
+		<left> to fire bolts of light
 		Hold <right> to charge up an explosive vortex of light
 		'''
 }
@@ -2120,7 +2120,7 @@ GreatstaffOfHorus: {
 
 LuminiteTorch: {
 	DisplayName: Luminite Torch
-	Tooltip: ""
+	Tooltip: Can be used in airless environments.
 }
 
 RyuguStaff: {
@@ -2170,5 +2170,10 @@ MercuryDoor: {
 
 StarRoyaleDoor: {
 	DisplayName: Star Royale Door
+	Tooltip: ""
+}
+
+SolarCell: {
+	DisplayName: Solar Cell
 	Tooltip: ""
 }

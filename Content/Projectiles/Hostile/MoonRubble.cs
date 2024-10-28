@@ -19,8 +19,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void SetDefaults()
         {
-            Projectile.width = 30;
-            Projectile.height = 30;
+            Projectile.width = 48;
+            Projectile.height = 48;
 
             Projectile.tileCollide = false;
 

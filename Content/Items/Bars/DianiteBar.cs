@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Bars
             Item.width = 20;
             Item.height = 20;
             Item.maxStack = Item.CommonMaxStack;
-            Item.value = 750;
+            Item.value = Item.sellPrice(gold:1);
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useTurn = true;
             Item.useAnimation = 15;
