@@ -9,6 +9,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
 {
     public class Totality : ModItem
     {
+        public override bool MeleePrefix() { return true; }
         public override void SetStaticDefaults()
         {
 
