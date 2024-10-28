@@ -16,6 +16,10 @@ CelestialBulwark
 		Ancient Manipulator
 
 
+LaserSight
+	Value: 25 gold
+	Research count: 1
+
 MomentumLash
 	Value: No value
 	Research count: 1
@@ -42,7 +46,7 @@ InvarArrow
 	Recipes:
 		Invar Bar x 1
 		at
-		Anvil
+		Ancient Manipulator
 			=> x25
 
 
@@ -52,7 +56,7 @@ InvarBullet
 	Recipes:
 		Invar Bar x 1
 		at
-		Anvil
+		Ancient Manipulator
 			=> x50
 
 
@@ -84,7 +88,7 @@ AluminumHelmet
 
 
 ArtemiteBreastplate
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Artemite Bar x 16
@@ -93,7 +97,7 @@ ArtemiteBreastplate
 
 
 ArtemiteHelmet
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Artemite Bar x 8
@@ -102,7 +106,7 @@ ArtemiteHelmet
 
 
 ArtemiteLeggings
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Artemite Bar x 12
@@ -139,7 +143,7 @@ AstronautSuit
 
 
 ChandriumBreastplate
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Chandrium Bar x 16
@@ -148,7 +152,7 @@ ChandriumBreastplate
 
 
 ChandriumHelm
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Chandrium Bar x 8
@@ -157,7 +161,7 @@ ChandriumHelm
 
 
 ChandriumLeggings
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Chandrium Bar x 12
@@ -166,7 +170,7 @@ ChandriumLeggings
 
 
 DianiteBreastplate
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Dianite Bar x 16
@@ -175,7 +179,7 @@ DianiteBreastplate
 
 
 DianiteLeggings
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Dianite Bar x 12
@@ -184,7 +188,7 @@ DianiteLeggings
 
 
 DianiteVisor
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Dianite Bar x 8
@@ -193,7 +197,7 @@ DianiteVisor
 
 
 SeleniteBreastplate
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Selenite Bar x 16
@@ -202,7 +206,7 @@ SeleniteBreastplate
 
 
 SeleniteHeadgear
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Selenite Bar x 8
@@ -211,7 +215,7 @@ SeleniteHeadgear
 
 
 SeleniteLeggings
-	Value: 1 gold
+	Value: 50 gold
 	Research count: 1
 	Recipes:
 		Selenite Bar x 12
@@ -276,7 +280,7 @@ AluminumBar
 
 
 ArtemiteBar
-	Value: 7 silver 50 copper
+	Value: 5 gold
 	Research count: 25
 	Recipes:
 		Artemite Ore x 6
@@ -285,7 +289,7 @@ ArtemiteBar
 
 
 ChandriumBar
-	Value: 7 silver 50 copper
+	Value: 5 gold
 	Research count: 25
 	Recipes:
 		Chandrium Ore x 6
@@ -294,7 +298,7 @@ ChandriumBar
 
 
 DianiteBar
-	Value: 7 silver 50 copper
+	Value: 5 gold
 	Research count: 25
 	Recipes:
 		Dianite Ore x 6
@@ -303,7 +307,7 @@ DianiteBar
 
 
 InvarBar
-	Value: 1 gold 75 silver
+	Value: 10 gold
 	Research count: 25
 	Recipes:
 		Iron Bar x 1
@@ -318,7 +322,7 @@ InvarBar
 
 
 SeleniteBar
-	Value: 7 silver 50 copper
+	Value: 5 gold
 	Research count: 25
 	Recipes:
 		Selenite Ore x 6
@@ -496,7 +500,7 @@ MoonPhaseGlobe
 	Research count: 1
 
 AdamantiteLoom
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 1
 	Recipes:
 		Adamantite Bar x 10
@@ -506,7 +510,7 @@ AdamantiteLoom
 
 
 Fabricator
-	Value: 5 silver
+	Value: 15 gold
 	Research count: 1
 	Recipes:
 		Adamantite Bar x 10
@@ -521,7 +525,7 @@ Fabricator
 
 
 TitaniumLoom
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 1
 	Recipes:
 		Titanium Bar x 10
@@ -567,7 +571,7 @@ AlienResidue
 	Research count: 25
 
 BrokenHeroShield
-	Value: 1 gold
+	Value: 25 gold
 	Research count: 1
 
 CortexFragment
@@ -575,7 +579,7 @@ CortexFragment
 	Research count: 1
 
 DeliriumPlating
-	Value: 1 silver
+	Value: 5 gold
 	Research count: 25
 
 SpaceDust
@@ -628,7 +632,7 @@ AstraChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Astra Brick x 20
+		Astra Brick x 5
 		at
 		Mythril Anvil
 
@@ -913,7 +917,7 @@ CosmicEmberChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Cosmic Ember Brick x 20
+		Cosmic Ember Brick x 5
 		at
 		Mythril Anvil
 
@@ -1007,7 +1011,7 @@ CryocoreChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Cryocore Brick x 20
+		Cryocore Brick x 5
 		at
 		Mythril Anvil
 
@@ -1101,7 +1105,7 @@ DarkCelestialChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Dark Celestial Brick x 20
+		Dark Celestial Brick x 5
 		at
 		Mythril Anvil
 
@@ -1226,7 +1230,7 @@ HeavenforgeChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Heavenforge Brick x 20
+		Heavenforge Brick x 5
 		at
 		Mythril Anvil
 
@@ -1530,7 +1534,7 @@ IndustrialSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cheese Block x 6
+		Industrial Plating x 6
 		Water Bucket x 1
 		at
 		Work Bench
@@ -1626,7 +1630,7 @@ LuminiteChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Luminite Brick x 20
+		Luminite Brick x 5
 		at
 		Mythril Anvil
 
@@ -1720,7 +1724,7 @@ LunarRustChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Lunar Rust Brick x 20
+		Lunar Rust Brick x 5
 		at
 		Mythril Anvil
 
@@ -1814,7 +1818,7 @@ MercuryChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Mercury Brick x 20
+		Mercury Brick x 5
 		at
 		Mythril Anvil
 
@@ -1916,7 +1920,7 @@ StarRoyaleChair
 	Value: 5 silver
 	Research count: 1
 	Recipes:
-		Star Royale Brick x 20
+		Star Royale Brick x 5
 		at
 		Mythril Anvil
 
@@ -1985,23 +1989,23 @@ XFLR6
 	Research count: 1
 
 MeteoricChunk
-	Value: 5 silver
+	Value: 2 gold 50 silver
 	Research count: 10
 
 NebulaChunk
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 10
 
 SolarChunk
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 10
 
 StardustChunk
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 10
 
 VortexChunk
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 10
 
 XaocKey
@@ -2016,9 +2020,9 @@ Canister
 	Value: 1 silver
 	Research count: 100
 	Recipes:
-		Aluminum Bar x 10
-		Steel Bar x 5
-		Silicon x 8
+		Glass x 2
+		Steel Bar x 2
+		Plastic x 6
 		at
 		Mythril Anvil
 
@@ -2036,32 +2040,99 @@ RocketFuelCanister
 
 
 BurnerGenerator
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 1
+	Recipes:
+		Steel Bar x 8
+		Wire x 10
+		Aluminum Bar x 6
+		at
+		Fabricator
+
 
 OilRefinery
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 1
+	Recipes:
+		Steel Bar x 10
+		Copper Bar x 12
+		Aluminum Bar x 6
+		Canister x 2
+		at
+		Fabricator
+
+		Steel Bar x 10
+		Tin Bar x 12
+		Aluminum Bar x 6
+		Canister x 2
+		at
+		Fabricator
+
 
 OreExcavator
-	Value: 5 silver
+	Value: 10 gold
 	Research count: 1
+	Recipes:
+		Steel Bar x 20
+		Wire x 50
+		Adamantite Bar x 10
+		Aluminum Bar x 20
+		Diamond x 50
+		at
+		Fabricator
+
+		Steel Bar x 20
+		Wire x 50
+		Titanium Bar x 10
+		Aluminum Bar x 20
+		Diamond x 50
+		at
+		Fabricator
+
 
 SolarPanelLarge
-	Value: 5 silver
+	Value: 5 gold
 	Research count: 1
+	Recipes:
+		Solar Cell x 16
+		Glass x 12
+		Wire x 16
+		at
+		Fabricator
+
 
 SolarPanelSmall
-	Value: 5 silver
+	Value: 2 gold 50 silver
 	Research count: 1
+	Recipes:
+		Solar Cell x 4
+		Glass x 3
+		Wire x 4
+		at
+		Fabricator
+
 
 WindTurbineLarge
-	Value: 5 silver
+	Value: 1 gold 25 silver
 	Research count: 1
+	Recipes:
+		Steel Bar x 40
+		Wire x 32
+		Plastic x 8
+		at
+		Fabricator
+
 
 WindTurbineSmall
-	Value: 5 silver
+	Value: 50 silver
 	Research count: 1
+	Recipes:
+		Steel Bar x 10
+		Wire x 8
+		Plastic x 2
+		at
+		Fabricator
+
 
 SpaceShuttle
 	Value: 3 silver
@@ -2189,6 +2260,17 @@ Plastic
 		Alchemy Table
 
 
+SolarCell
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Silicon x 3
+		Wire x 1
+		at
+		Fabricator
+			=> x4
+
+
 SpacesuitFabric
 	Value: 1 silver
 	Research count: 25
@@ -2206,6 +2288,14 @@ CraterDemonRelic
 LaunchPadMarker
 	Value: 5 silver
 	Research count: 1
+	Recipes:
+		Glass x 1
+		Wire x 2
+		Aluminum Bar x 2
+		at
+		Fabricator
+			=> x2
+
 
 AirVent
 	Value: 1 silver

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.IO;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -40,6 +41,17 @@ namespace Macrocosm.Common.Players
         }
 
         private float chanceToNotConsumeAmmo = 0f;
+
+        /// <summary>
+        /// Percentage of regular shoot spread reduction of ranged weapons.
+        /// </summary>
+        public float ShootSpreadReduction 
+        {
+            get => shootSpreadReduction; 
+            set => shootSpreadReduction = MathHelper.Clamp(value, 0f, 1f);
+        }
+        private float shootSpreadReduction = 0f;
+
 
         /// <summary>
         /// Extra crit damage, expressed in percentage.
@@ -100,6 +112,7 @@ namespace Macrocosm.Common.Players
             SpaceProtection = 0f;
 
             ChanceToNotConsumeAmmo = 0f;
+            ShootSpreadReduction = 0f;
 
             ExtraCritDamagePercent = 0;
             NonCritDamageMultiplier = 1f;
@@ -112,7 +125,6 @@ namespace Macrocosm.Common.Players
                     ItemAltUseCooldown[type]--;
             }
         }
-
 
         public override void PostUpdateBuffs()
         {
@@ -146,6 +158,18 @@ namespace Macrocosm.Common.Players
                 consumeAmmo = false;
 
             return consumeAmmo;
+        }
+        
+        // FIXME: Not working atm
+        public override void ModifyShootStats(Item item, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+            /*
+            if (ShootSpreadReduction <= 0f)
+                return;
+
+            Vector2 targetDirection = (Main.MouseWorld - position).SafeNormalize(Vector2.Zero);
+            velocity = Vector2.Lerp(velocity, targetDirection * velocity.Length(), ShootSpreadReduction);
+            */
         }
 
         public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)
