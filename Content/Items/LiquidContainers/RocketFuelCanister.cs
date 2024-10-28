@@ -3,6 +3,8 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.Ores;
 using Macrocosm.Content.Liquids;
+using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Refined;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -36,9 +38,9 @@ namespace Macrocosm.Content.Items.LiquidContainers
         public override void AddRecipes()
         {
             CreateRecipe(25)
-                .AddIngredient<AluminumBar>(2)
-                .AddIngredient<SteelBar>(1)
-                .AddIngredient<Silicon>(1)
+                .AddIngredient(ItemID.Glass,2)
+                .AddIngredient<SteelBar>(2)
+                .AddIngredient<Plastic>(6)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }
