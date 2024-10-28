@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.GrabBags
             Item.width = 32;
             Item.height = 32;
             Item.maxStack = Item.CommonMaxStack;
-            Item.value = Item.sellPrice(silver: 1);
+            Item.value = Item.sellPrice(silver: 50);
             Item.rare = ItemRarityID.Purple;
         }
 
@@ -43,8 +43,8 @@ namespace Macrocosm.Content.Items.GrabBags
 
             for (int i = 0; i < Main.rand.Next(1, 5); i++)
             {
-                int itemType = Utils.SelectRandom(Main.rand, ModContent.ItemType<ArtemiteOre>(), ModContent.ItemType<ChandriumOre>(), ModContent.ItemType<SeleniteOre>(), ModContent.ItemType<DianiteOre>());
-                player.QuickSpawnItem(player.GetSource_OpenItem(Type), itemType, Main.rand.Next(1, 4));
+                int itemType = Utils.SelectRandom(Main.rand, ModContent.ItemType<ArtemiteOre>(), ModContent.ItemType<ChandriumOre>(), ModContent.ItemType<SeleniteOre>(), ModContent.ItemType<DianiteOre>(), ModContent.ItemType<NickelOre>());
+                player.QuickSpawnItem(player.GetSource_OpenItem(Type), itemType, Main.rand.Next(1, 5));
             }
         }
 

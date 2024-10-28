@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<CheeseBlock>(6)
+                .AddIngredient<IndustrialPlating>(6)
                 .AddIngredient(ItemID.WaterBucket, 1)
                 .AddTile(TileID.WorkBenches)
                 .Register();
