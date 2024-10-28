@@ -642,7 +642,7 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Copernicus
-	Tooltip: Every 5th shot also shoots a rocket
+	Tooltip: ""
 }
 
 Cruithne: {
