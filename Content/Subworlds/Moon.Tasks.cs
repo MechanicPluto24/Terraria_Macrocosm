@@ -1460,7 +1460,7 @@ namespace Macrocosm.Content.Subworlds
 
         public void ManageIndustrialChest(Chest chest){
             int slot =0;
-            int random1 = WorldGen.genRand.Next(1,7);
+            int random1 = WorldGen.genRand.Next(1,9);
             switch (random1)
             {
                 case 1:
@@ -1485,6 +1485,14 @@ namespace Macrocosm.Content.Subworlds
                     break;
                 case 6:
                     chest.item[slot].SetDefaults(ModContent.ItemType<StalwartTowerShield>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 7:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<Items.Tools.Sledgehammer>());
+                    chest.item[slot++].stack = 1;
+                    break;
+                case 8:
+                    chest.item[slot].SetDefaults(ModContent.ItemType<LaserSight>());
                     chest.item[slot++].stack = 1;
                     break;
                 
