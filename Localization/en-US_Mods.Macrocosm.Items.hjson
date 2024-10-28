@@ -2071,9 +2071,9 @@ ArcaneBarnacle: {
 	DisplayName: Arcane Barnacle
 	Tooltip:
 		'''
-		15% increased magic damage
-		100% increased mana cost
-		Hitting an enemy leeches 1% of damage as mana
+		10% increased magic damage
+		70% increased mana cost
+		Hitting an enemy leeches 2% of damage as mana
 		Items that instantly restore mana are disabled
 		'''
 }
