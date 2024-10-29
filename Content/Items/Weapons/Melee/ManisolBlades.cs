@@ -11,6 +11,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class ManisolBlades : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+        }
+
         public override void SetDefaults()
         {
             Item.width = 38;
@@ -25,9 +30,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.noUseGraphic = true;
             Item.autoReuse = true;
-            Item.UseSound = SoundID.Item1;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarityT3>();
         }
+        public override bool AltFunctionUse(Player player) => player.GetItemAltUseCooldown(Type) <= 0;
+      
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
@@ -42,7 +48,18 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             if (player.ownedProjectileCounts[ModContent.ProjectileType<ManisolBladeSol>()] > 1 && player.ownedProjectileCounts[ModContent.ProjectileType<ManisolBladeMoon>()] > 1)
                 return false;
             */
+            if(player.AltFunction()){
+                for (int i = 0; i < Main.maxProjectiles; i++)
+                {
+                Projectile projectile = Main.projectile[i];
 
+                if (projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeSol sol && sol.AI_State == ManisolBladeBase.ActionState.Stick)
+                    sol.ForceRecall();
+
+                if (projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeMoon moon && moon.AI_State == ManisolBladeBase.ActionState.Stick)
+                    moon.ForceRecall();
+                }
+            }
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile projectile = Main.projectile[i];
@@ -54,7 +71,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
                     moon.ForceRecall();
             }
 
-            return true;
+            return !player.AltFunction();
         }
     }
 }

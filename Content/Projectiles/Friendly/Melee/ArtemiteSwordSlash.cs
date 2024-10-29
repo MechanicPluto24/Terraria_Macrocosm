@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.ignoreWater = true;
             Projectile.aiStyle = -1;
             Projectile.Opacity = 0f;
-            Projectile.timeLeft=500;
+            Projectile.timeLeft=300;
             trail = new();
         }
 
@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.rotation = Projectile.velocity.ToRotation() + 0.2f * Projectile.direction;
             Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitY) * Speed;
 
-            bool speedUp = Timer >= 40;
+            bool speedUp = Timer >= 20;
 
             if (Projectile.Opacity < 1f)
                 Projectile.Opacity += 0.01f;

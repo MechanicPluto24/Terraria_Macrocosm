@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Macrocosm.Common.Utils;
+
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
@@ -47,11 +49,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
-            Projectile.timeLeft = 240;
             maxPenetrateCount = 0;
             maxDropTime = 20;
         }
 
+        bool hasStartedToReturn=false;
         public virtual void OnStick()
         {
         }
@@ -69,7 +71,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             AI_State = ActionState.Returning;
             Projectile.velocity = new Vector2(10, 10);
             Projectile.timeLeft = 300;  
-            OnRecalled();
+            if(!hasStartedToReturn)
+                OnRecalled();
+            hasStartedToReturn=true;
             Projectile.netUpdate = true;
         }
 
@@ -104,10 +108,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override bool PreAI()
         {
-            if (Projectile.timeLeft <= 3)
+            Projectile.oldVelocity = Projectile.velocity;
+
+            Player player = Main.player[Projectile.owner];
+            if(player.AltFunction())
                 ForceRecall();
 
-            Projectile.oldVelocity = Projectile.velocity;
+            if (AI_State != ActionState.Returning)
+                Projectile.timeLeft++;
 
             switch (AI_State)
             {
@@ -176,7 +184,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     if (Main.myPlayer == Projectile.owner)
                     {
                         Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-                        Player player = Main.player[Projectile.owner];
                         Vector2 direction = Projectile.DirectionTo(player.Center).SafeNormalize(Vector2.Zero);
                         Rectangle projectileHitbox = new((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
                         Projectile.velocity = Projectile.velocity.MoveTowards(direction * returnSpeed, 6f);
