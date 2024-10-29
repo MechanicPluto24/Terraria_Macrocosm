@@ -22,7 +22,5 @@ namespace Macrocosm.Content.Items.Mounts
             Item.noMelee = true;
             Item.mountType = ModContent.MountType<SpaceShuttleMount>();
         }
-
-
     }
 }

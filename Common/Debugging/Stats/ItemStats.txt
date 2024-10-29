@@ -1765,6 +1765,30 @@ ZombieFinger
 	Value: 2 silver
 	Research count: 1
 
+Canister
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Glass x 2
+		Steel Bar x 2
+		Plastic x 6
+		at
+		Mythril Anvil
+			=> x25
+
+
+RocketFuelCanister
+	Value: 1 silver
+	Research count: 100
+	Recipes:
+		Glass x 2
+		Steel Bar x 2
+		Plastic x 6
+		at
+		Mythril Anvil
+			=> x25
+
+
 BurnerGenerator
 	Value: 5 silver
 	Research count: 1

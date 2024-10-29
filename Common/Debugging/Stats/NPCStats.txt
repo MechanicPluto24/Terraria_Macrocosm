@@ -210,6 +210,7 @@ MoonZombie
 	KB resist: 0.5
 	Damage: 70
 	Drops:
+		Rocket Fuel Canister, (1-4) 10%
 		Moonstone, (1-5) 10%
 
 RadioactiveSlime
