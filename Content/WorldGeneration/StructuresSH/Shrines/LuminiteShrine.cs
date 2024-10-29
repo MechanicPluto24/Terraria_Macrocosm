@@ -5,7 +5,7 @@ using Terraria.ID;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 {
-    public class LuminiteShrine : Structure
+    public class LuminiteShrine : StructureSH
     {
         public override bool PrePlace(Point16 origin)
         {

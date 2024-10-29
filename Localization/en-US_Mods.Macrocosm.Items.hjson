@@ -2602,3 +2602,8 @@ StarRoyaleTable: {
 	DisplayName: Star Royale Table
 	Tooltip: ""
 }
+
+TextureExporter: {
+	DisplayName: Texture Exporter
+	Tooltip: ""
+}

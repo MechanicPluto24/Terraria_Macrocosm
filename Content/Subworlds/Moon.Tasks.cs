@@ -336,7 +336,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CavePass");
 
-            Structure shrine = new LuminiteShrine();
+            StructureSH shrine = new LuminiteShrine();
 
             int x, y;
             do
@@ -950,7 +950,7 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            Structure shrine = new LuminiteShrine();
+            StructureSH shrine = new LuminiteShrine();
             bool solidDown = WorldUtils.Find(gen_LuminiteShrinePosition, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidDown && shrine.Place(new Point16(solidGround.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.8f)), null))
                 return;

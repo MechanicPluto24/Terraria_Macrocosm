@@ -10,11 +10,15 @@ using Terraria.ObjectData;
 using Terraria;
 using Microsoft.Xna.Framework;
 using System.Linq;
+using Terraria.GameContent;
 
 namespace Macrocosm.Common.WorldGeneration
 {
-    public class Tex2GenExporter
+    public class Tex2GenExporter : ModSystem
     {
+        public static bool ShowExportRegion { get; set; } = false;
+        public static Rectangle RegionRectangle { get; set; }
+
         public static void ExportRegion(
             int startX,
             int startY,
@@ -64,6 +68,31 @@ namespace Macrocosm.Common.WorldGeneration
             SaveColorMap_JSON(tileTypeToColor, tileColorMapPath);
             SaveColorMap_JSON(wallTypeToColor, wallColorMapPath);
             SaveObjectMap_JSON(objectMap, objectMapPath);
+        }
+
+        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        {
+            if (ShowExportRegion)
+            {
+                Rectangle screenRectangle = new Rectangle(
+                    (int)(RegionRectangle.X * 16 - Main.screenPosition.X),
+                    (int)(RegionRectangle.Y * 16 - Main.screenPosition.Y),
+                    RegionRectangle.Width * 16,
+                    RegionRectangle.Height * 16
+                );
+
+                Color rectangleColor = Color.Red * 0.5f;
+                DrawRectangleOutline(spriteBatch, screenRectangle, rectangleColor, 2);
+            }
+        }
+
+        private void DrawRectangleOutline(SpriteBatch spriteBatch, Rectangle rect, Color color, int thickness)
+        {
+            Texture2D pixel = TextureAssets.MagicPixel.Value;
+            spriteBatch.Draw(pixel, new Rectangle(rect.X, rect.Y, rect.Width, thickness), color);
+            spriteBatch.Draw(pixel, new Rectangle(rect.X, rect.Y, thickness, rect.Height), color);
+            spriteBatch.Draw(pixel, new Rectangle(rect.Right - thickness, rect.Y, thickness, rect.Height), color);
+            spriteBatch.Draw(pixel, new Rectangle(rect.X, rect.Bottom - thickness, rect.Width, thickness), color);
         }
 
         private static Color GetColorForTile(int i, int j, Dictionary<string, Color> tileTypeToColor)

@@ -557,10 +557,6 @@ BanHammer
 	Value: 1 gold
 	Research count: 1
 
-DevOmnitool
-	Value: No value
-	Research count: 1
-
 DevPick
 	Value: 1 gold
 	Research count: 1
@@ -575,6 +571,10 @@ RocketPlacer
 
 Teleporter
 	Value: 10 gold
+	Research count: 1
+
+TextureExporter
+	Value: No value
 	Research count: 1
 
 AlienResidue
@@ -2837,15 +2837,16 @@ Canister
 		Plastic x 6
 		at
 		Mythril Anvil
+			=> x25
 
 
 RocketFuelCanister
 	Value: 1 silver
 	Research count: 100
 	Recipes:
-		Aluminum Bar x 2
-		Steel Bar x 1
-		Silicon x 1
+		Glass x 2
+		Steel Bar x 2
+		Plastic x 6
 		at
 		Mythril Anvil
 			=> x25
