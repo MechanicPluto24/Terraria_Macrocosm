@@ -27,12 +27,12 @@ IndustrialChest: {
 
 LaunchPadMarker.MapEntry: Launch Pad Marker
 IndustrialLoom.MapEntry: Industrial Loom
-AluminumOre.MapEntry: Aluminum Ore
-ArtemiteOre.MapEntry: Artemite Ore
-ChandriumOre.MapEntry: Chandrium Ore
-DianiteOre.MapEntry: Dianite Ore
+AluminumOre.MapEntry: Aluminum
+ArtemiteOre.MapEntry: Artemite
+ChandriumOre.MapEntry: Chandrium
+DianiteOre.MapEntry: Dianite
 LithiumOre.MapEntry: Lithium
-SeleniteOre.MapEntry: Selenite Ore
+SeleniteOre.MapEntry: Selenite
 OilShale.MapEntry: Oil Shale
 Coal.MapEntry: Coal
 ArtemiteBar.MapEntry: Artemite Bar

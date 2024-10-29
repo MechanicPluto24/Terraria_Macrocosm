@@ -528,11 +528,15 @@ Fabricator
 		Steel Bar x 10
 		Printed Circuit Board x 2
 		Diamond x 1
+		at
+		Mythril Anvil
 
 		Titanium Bar x 10
 		Steel Bar x 10
 		Printed Circuit Board x 2
 		Diamond x 1
+		at
+		Mythril Anvil
 
 
 TitaniumLoom
@@ -830,7 +834,7 @@ CheeseCandelabra
 	Research count: 1
 	Recipes:
 		Cheese Block x 5
-		Torch x 3
+		Luminite Torch x 3
 		at
 		Work Bench
 
@@ -840,7 +844,7 @@ CheeseCandle
 	Research count: 1
 	Recipes:
 		Cheese Block x 4
-		Torch x 1
+		Luminite Torch x 1
 		at
 		Work Bench
 
@@ -859,7 +863,7 @@ CheeseChandelier
 	Research count: 1
 	Recipes:
 		Cheese Block x 4
-		Torch x 4
+		Luminite Torch x 4
 		Chain x 1
 		at
 		Work Bench
@@ -908,7 +912,7 @@ CheeseLamp
 	Research count: 1
 	Recipes:
 		Cheese Block x 3
-		Torch x 1
+		Luminite Torch x 1
 		at
 		Work Bench
 
@@ -2837,15 +2841,16 @@ Canister
 		Plastic x 6
 		at
 		Mythril Anvil
+			=> x25
 
 
 RocketFuelCanister
 	Value: 1 silver
 	Research count: 100
 	Recipes:
-		Aluminum Bar x 2
-		Steel Bar x 1
-		Silicon x 1
+		Glass x 2
+		Steel Bar x 2
+		Plastic x 6
 		at
 		Mythril Anvil
 			=> x25
@@ -3491,12 +3496,18 @@ SteelPickaxe
 WiringKit
 	Value: 1 gold
 	Research count: 1
+	Recipes:
+		Wire x 50
+		Plastic x 5
+		at
+		Tinkerer's Workshop
+
 
 LuminiteTorch
 	Value: 1 silver
 	Research count: 100
 	Recipes:
-		Torch x 100
+		Space Dust x 1
 		Luminite Bar x 1
 			=> x100
 

@@ -66,7 +66,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                     {
                         //armCenter = Player.RotatedRelativePoint(Player.MountedCenter, true) + new Vector2(-Player.direction * 3, -3);
                         //Projectile.Center = armCenter + (dirVec * -8f);
-                        Player.velocity = dirVec * (Player.velocity.Length() + 10);
+                        Player.velocity = dirVec * 15f;
                     }
                 }
                 spawned = true;

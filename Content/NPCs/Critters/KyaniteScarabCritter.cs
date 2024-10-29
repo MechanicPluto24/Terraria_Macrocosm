@@ -21,11 +21,13 @@ namespace Macrocosm.Content.NPCs.Critters
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = false;
         }
+
         public override bool CanBeHitByNPC(NPC 	attacker){
             if (attacker.type == ModContent.NPCType<KyaniteScarabSmall>())
                 return false;
             return true;
         }
+
         public override void SetDefaults()
         {
             NPC.width = 20;

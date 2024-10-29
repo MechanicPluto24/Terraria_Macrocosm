@@ -642,7 +642,7 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Copernicus
-	Tooltip: ""
+	Tooltip: Every 5th shot also shoots a rocket.
 }
 
 Cruithne: {
@@ -1929,7 +1929,7 @@ Fridge: {
 }
 
 IVPole: {
-	DisplayName: I V Pole
+	DisplayName: IV Pole
 	Tooltip: ""
 }
 
@@ -1949,7 +1949,7 @@ CrescentMoon: {
 }
 
 RocheChakram: {
-	DisplayName: Roche Chakram
+	DisplayName: Roche
 	Tooltip: ""
 }
 

@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Refined;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -40,6 +41,15 @@ namespace Macrocosm.Content.Items.Tools
             }
 
             return null;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.Wire, 50)
+                .AddIngredient<Plastic>(5)
+                .AddTile(TileID.TinkerersWorkbench)
+                .Register();
         }
     }
 }

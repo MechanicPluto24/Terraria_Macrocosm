@@ -73,8 +73,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     {
                         NPC.NewNPC(Projectile.GetSource_FromAI(), (int)Projectile.Center.X, (int)Projectile.Center.Y, ModContent.NPCType<FlamingMeteor>());
                     }
-
-                    Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, Projectile.Center);
                 }
             }
 
