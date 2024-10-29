@@ -345,11 +345,12 @@ namespace Macrocosm.Content.Rockets
                     break;
 
                 case ActionState.Landing:
-
+                    if (TargetLandingPosition == default && LandingProgress == 0)
+                        TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 2);
                     float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
                     float landingDuration = 10f * 60f * (1f / gravityFactor);
                     float landingIncrement = landingDistance / landingDuration;
-                    Position = new Vector2(Position.X, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, EasedLandingProgress));
+                    Position = new Vector2(TargetLandingPosition.X - Width / 2 - 8, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, EasedLandingProgress));
                     LandingProgress += landingIncrement / landingDistance;
                     LandingProgress = MathHelper.Clamp(LandingProgress, 0f, 1f);
 
@@ -1032,7 +1033,7 @@ namespace Macrocosm.Content.Rockets
 
                 // For same world travel assign the correct position here
                 if (TargetLandingPosition == default)
-                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(16, 16);
+                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 2);
 
                 Center = new(TargetLandingPosition.X, Center.Y);
 
