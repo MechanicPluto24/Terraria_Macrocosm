@@ -9,10 +9,16 @@ namespace Macrocosm.Content.Particles
     {
         public override int TrailCacheLength => 15;
 
-        public Color DrawColor;
         public override string TexturePath => Macrocosm.EmptyTexPath;
-        public bool FadeIn = false;
-        public bool FadeOut = true;
+        public bool FadeIn { get; set; }
+        public bool FadeOut { get; set; }
+
+        public override void SetDefaults()
+        {
+            FadeIn = false;
+            FadeOut = true;
+        }
+
         public override void OnSpawn()
         {
             if (FadeOut)
@@ -21,16 +27,18 @@ namespace Macrocosm.Content.Particles
             if (FadeIn)
                 alpha = 0;
         }
+
         public int FadeInSpeed = 1;
         public int FadeOutSpeed = 7;
         private float alpha = 255;
         private bool fadedIn = false;
         public int TargetAlpha = 255;
+
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             Texture2D Texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flame4").Value;
-            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), DrawColor * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), Color * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
         public override void AI()

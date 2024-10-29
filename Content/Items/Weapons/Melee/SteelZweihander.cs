@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.damage = 55;
+            Item.damage = 25;
             Item.DamageType = DamageClass.Melee;
             Item.knockBack = 5;
             Item.value = 10000;
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             CreateRecipe()
             .AddIngredient<SteelBar>(16)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.Anvils)
             .Register();
         }
     }

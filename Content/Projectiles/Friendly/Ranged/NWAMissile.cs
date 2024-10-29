@@ -1,6 +1,5 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Global.NPCs;
-using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
@@ -78,7 +77,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {
                     // only run locally
-                    if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(this) && Main.npc[i].GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile)
+                    if (Projectile.owner == Main.myPlayer && Main.npc[i].CanBeChasedBy(Projectile) && Main.npc[i].GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile)
                     {
                         float targetCenterX = Main.npc[i].position.X + Main.npc[i].width / 2;
                         float targetCenterY = Main.npc[i].position.Y + Main.npc[i].height / 2;
@@ -252,11 +251,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 }
             }
 
-            var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+            var explosion = Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center;
-                p.DrawColor = (new Color(195, 115, 62)).WithOpacity(0.6f);
-                p.Scale = 1.2f;
+                p.Color = (new Color(195, 115, 62)).WithOpacity(0.6f);
+                p.Scale = new(1.2f);
                 p.NumberOfInnerReplicas = 9;
                 p.ReplicaScalingFactor = 0.5f;
             });
@@ -265,7 +264,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             for (int i = 0; i < 2; i++)
             {
                 Vector2 velocity = Main.rand.NextVector2CircularEdge(3, 3) * (i == 1 ? 0.8f : 0.4f);
-                Particle.CreateParticle<Smoke>(Projectile.Center, velocity, scale: 1.2f);
+                Particle.Create<Smoke>(Projectile.Center, velocity, scale: new(1.2f));
             }
 
         }

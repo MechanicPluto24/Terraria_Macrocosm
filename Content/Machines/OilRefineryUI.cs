@@ -1,14 +1,17 @@
-﻿using Macrocosm.Common.Sets.Items;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
-using Macrocosm.Content.Items.Tech;
+using Macrocosm.Content.Items.LiquidContainers;
+using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 
@@ -19,12 +22,22 @@ namespace Macrocosm.Content.Machines
         public OilRefineryTE OilRefinery => MachineTE as OilRefineryTE;
 
         private UIPanel backgroundPanel;
+        private UIPanel inventoryPanel;
 
-        private UIInventorySlot sourceSlot;
-        private UILiquidTank sourceLiquidTank;
+        private UILiquidTank inputLiquidTank;
+        private UILiquidTank outputLiquidTank;
 
-        private UIInventorySlot resultSlot;
-        private UILiquidTank resultLiquidTank;
+        private UITextPanel<string> inputTankLiquidName;
+        private UITextPanel<string> outputTankLiquidName;
+
+        private UITextureProgressBar refineArrowProgressBar;
+        private UITextureProgressBar extractArrowProgressBar;
+
+        private UIHoverImageButton containerArrow1;
+        private UIHoverImageButton containerArrow2;
+
+        private UIInventorySlot containerSlot;
+        private UIInventorySlot outputSlot;
 
         public OilRefineryUI()
         {
@@ -34,10 +47,12 @@ namespace Macrocosm.Content.Machines
         {
             base.OnInitialize();
 
-            Width.Set(745f, 0f);
+            Width.Set(510f, 0f);
             Height.Set(394f, 0f);
 
-            Recalculate();
+            //Recalculate();
+
+            Asset<Texture2D> arrow = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Buttons/LongArrow", AssetRequestMode.ImmediateLoad);
 
             backgroundPanel = new()
             {
@@ -49,40 +64,140 @@ namespace Macrocosm.Content.Machines
             backgroundPanel.SetPadding(0);
             Append(backgroundPanel);
 
-            sourceLiquidTank = new(Liquids.LiquidType.Oil)
+            if (OilRefinery.Inventory is not null)
             {
-                Width = new(25, 0),
-                Height = new(0, 0.8f),
-                Left = new(-25, 0.25f),
-                VAlign = 0.5f
-            };
-            Append(sourceLiquidTank);
+                inventoryPanel = new()
+                {
+                    Height = new(0, 0.75f),
+                    Width = new(48 + 12, 0f),
+                    Left = new(0, 0.04f),
+                    VAlign = 0.6f,
+                    BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                };
+                backgroundPanel.Append(inventoryPanel);
 
-            resultLiquidTank = new(Liquids.LiquidType.RocketFuel)
+                for (int i = 2; i < OilRefinery.Inventory.Size; i++)
+                {
+                    var inputSlot = OilRefinery.Inventory.ProvideItemSlot(i);
+                    inputSlot.Top = new(48 * (i - 2), 0f);
+                    inputSlot.HAlign = 0.5f;
+                    inputSlot.AddReserved(
+                        (item) => item.type >= ItemID.None && ItemSets.LiquidExtractData[item.type].Valid,
+                        Language.GetText("Mods.Macrocosm.Machines.Common.LiquidExtract"),
+                        ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/LiquidExtract")
+                    );
+                    inventoryPanel.Append(inputSlot);
+                }
+            }
+
+            extractArrowProgressBar = new(
+                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBorder", AssetRequestMode.ImmediateLoad),
+                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad),
+                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad)
+            )
             {
-                Width = new(25, 0),
-                Height = new(0, 0.8f),
-                Left = new(0, 0.75f),
-                VAlign = 0.5f
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                FillColors = [Color.Black],
+                Left = new(0, 0.17f),
+                VAlign = 0.52f
             };
-            Append(resultLiquidTank);
+            backgroundPanel.Append(extractArrowProgressBar);
+
+            inputLiquidTank = new(LiquidType.Oil)
+            {
+                Width = new(64, 0),
+                Height = new(0, 0.7f),
+                HAlign = 0.335f,
+                VAlign = 0.65f
+            };
+            backgroundPanel.Append(inputLiquidTank);
+
+            inputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.Oil)}"))
+            {
+                HAlign = 0.335f,
+                Top = new(0, 0.08f),
+                TextScale = 0.8f,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(inputTankLiquidName);
+
+            refineArrowProgressBar = new(
+               ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBorder", AssetRequestMode.ImmediateLoad),
+               ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad),
+               ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad)
+            )
+            {
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                FillColors = [Color.Black, new Color(157, 60, 0)],
+                HAlign = 0.5f,
+                VAlign = 0.52f
+            };
+            backgroundPanel.Append(refineArrowProgressBar);
+
+            outputLiquidTank = new(LiquidType.RocketFuel)
+            {
+                Width = new(64, 0),
+                Height = new(0, 0.7f),
+                HAlign = 0.665f,
+                VAlign = 0.65f
+            };
+            backgroundPanel.Append(outputLiquidTank);
+
+            outputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.RocketFuel)}"))
+            {
+                HAlign = 0.68f,
+                Top = new(0, 0.08f),
+                TextScale = 0.8f,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(outputTankLiquidName);
+
+            containerArrow1 = new(arrow)
+            {
+                HAlign = 0.82f,
+                VAlign = 0.32f
+            };
+            containerArrow1.SetVisibility(1f);
+            backgroundPanel.Append(containerArrow1);
 
             if (OilRefinery.Inventory is not null)
             {
-                sourceSlot = OilRefinery.Inventory.ProvideItemSlot(0);
-                sourceSlot.Top = new(0, 0.45f);
-                sourceSlot.Left = new(-48, 0.15f);
-                backgroundPanel.Append(sourceSlot);
-
-                resultSlot = OilRefinery.Inventory.ProvideItemSlot(1);
-                resultSlot.Top = new(0, 0.45f);
-                resultSlot.Left = new(0, 0.85f);
-                resultSlot.AddReserved(
-                    (item) => item.ModItem is LiquidContainer,
-                    Lang.GetItemName(ModContent.ItemType<FuelCanister>()),
-                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture + "_Blueprint")
+                containerSlot = OilRefinery.Inventory.ProvideItemSlot(0);
+                containerSlot.VAlign = 0.32f;
+                containerSlot.HAlign = 0.95f;
+                containerSlot.AddReserved(
+                    (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
+                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
+                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
                 );
-                backgroundPanel.Append(resultSlot);
+                backgroundPanel.Append(containerSlot);
+            }
+
+            containerArrow2 = new(arrow)
+            {
+                HAlign = 0.935f,
+                VAlign = 0.54f,
+                Rotation = MathHelper.PiOver2
+            };
+            containerArrow2.SetVisibility(1f);
+            backgroundPanel.Append(containerArrow2);
+
+            if (OilRefinery.Inventory is not null)
+            {
+                outputSlot = OilRefinery.Inventory.ProvideItemSlot(1);
+                outputSlot.Top = new(0, 0.65f);
+                outputSlot.HAlign = 0.95f;
+                outputSlot.AddReserved(
+                    (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
+                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
+                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
+                );
+                backgroundPanel.Append(outputSlot);
             }
         }
 
@@ -91,15 +206,18 @@ namespace Macrocosm.Content.Machines
             base.Update(gameTime);
 
             Inventory.ActiveInventory = OilRefinery.Inventory;
-            resultSlot.CanInteract = OilRefinery.CanInteractWithResultSlot;
+            outputSlot.CanInteract = true;
 
-            sourceLiquidTank.LiquidLevel = MathHelper.Lerp(sourceLiquidTank.LiquidLevel, OilRefinery.SourceTankAmount / OilRefinery.SourceTankCapacity, 0.025f);
-            sourceLiquidTank.WaveAmplitude = 1f;
-            sourceLiquidTank.WaveFrequency = 1f;
+            extractArrowProgressBar.Progress = OilRefinery.RefineProgress;
+            refineArrowProgressBar.Progress = OilRefinery.RefineProgress;
 
-            resultLiquidTank.LiquidLevel = MathHelper.Lerp(resultLiquidTank.LiquidLevel, OilRefinery.ResultTankAmount / OilRefinery.ResultTankCapacity, 0.025f);
-            resultLiquidTank.WaveAmplitude = 1f;
-            resultLiquidTank.WaveFrequency = 1f;
+            inputLiquidTank.LiquidLevel = MathHelper.Lerp(inputLiquidTank.LiquidLevel, OilRefinery.InputTankAmount / OilRefinery.SourceTankCapacity, 0.025f);
+            inputLiquidTank.WaveAmplitude = 1f;
+            inputLiquidTank.WaveFrequency = 1f;
+
+            outputLiquidTank.LiquidLevel = MathHelper.Lerp(outputLiquidTank.LiquidLevel, OilRefinery.OutputTankAmount / OilRefinery.ResultTankCapacity, 0.025f);
+            outputLiquidTank.WaveAmplitude = 1f;
+            outputLiquidTank.WaveFrequency = 1f;
         }
     }
 }

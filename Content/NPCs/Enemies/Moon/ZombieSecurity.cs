@@ -13,6 +13,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -66,11 +67,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.width = 24;
             NPC.height = 44;
-            NPC.damage = 75;
-            NPC.defense = 75;
-            NPC.lifeMax = 650;
-            NPC.HitSound = SoundID.NPCHit1;
-            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.damage = 65;
+            NPC.defense = 100;
+            NPC.lifeMax = 1400;
+            NPC.HitSound = SFX.Zombie;
+            NPC.DeathSound = SFX.ZombieDeath;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = -1;
             SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
@@ -80,7 +81,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? .08f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? .02f : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
@@ -262,7 +263,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     particleAim = aimVelocity.RotatedBy(-0.2f * Math.Sign(aimVelocity.X));
 
                 Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
-                Particle.CreateParticle<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, 1f, aimVelocity.ToRotation(), true);
+                Particle.Create<GunFireRing>(NPC.Center + particleAim * 0.24f, aimVelocity * 0.05f, new(1f), aimVelocity.ToRotation(), true);
             }
         }
 

@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.LunarRust
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChair>(), (int)LuminiteStyle.LunarRust * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChair>(), (int)LuminiteStyle.LunarRust);
             Item.width = 16;
             Item.height = 32;
             Item.value = 500;
@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.LunarRust
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient(ItemID.LunarRustBrick, 20)
+            .AddIngredient(ItemID.LunarRustBrick, 5)
             .AddTile(TileID.MythrilAnvil)
             .Register();
         }

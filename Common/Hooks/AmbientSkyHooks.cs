@@ -30,7 +30,7 @@ namespace Macrocosm.Common.Hooks
 
         private void On_AmbientSky_Spawn(On_AmbientSky.orig_Spawn orig, AmbientSky self, Player player, SkyEntityType type, int seed)
         {
-            if(SubworldSystem.AnyActive<Macrocosm>() && type != SkyEntityType.Meteor)    
+            if (SubworldSystem.AnyActive<Macrocosm>() && type != SkyEntityType.Meteor)
                 return;
 
             orig(self, player, type, seed);

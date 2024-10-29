@@ -1,11 +1,10 @@
 ﻿using Macrocosm.Common.Systems;
+using Macrocosm.Content.Backgrounds.Moon;
+using Macrocosm.Content.Subworlds;
+using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Content.Players;
-using Macrocosm.Content.Backgrounds.Moon;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Subworlds;
-using SubworldLibrary;
 namespace Macrocosm.Content.Biomes
 {
     public class IrradiationBiome : ModBiome

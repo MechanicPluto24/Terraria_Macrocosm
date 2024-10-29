@@ -77,6 +77,12 @@ namespace Macrocosm.Common.Drawing.Sky
         /// <summary> Whether the CelestialBody should update its position or not </summary>
         public bool ShouldUpdate { get; set; } = true;
 
+        /// <summary> 
+        /// Whether to reset the spritebatch or not. Set to false for batched drawing.
+        /// If false, you MUST manually begin and end the spritebatch when drawing!
+        /// </summary>
+        public bool ResetSpritebatch { get; set; } = true;
+
         public delegate void FuncConfigureSphericalShader(CelestialBody celestialBody, CelestialBody lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
         public FuncConfigureSphericalShader ConfigureBackSphericalShader;
         public FuncConfigureSphericalShader ConfigureBodySphericalShader;
@@ -336,15 +342,19 @@ namespace Macrocosm.Common.Drawing.Sky
             if (!ShouldDraw())
                 return;
 
-            state.SaveState(spriteBatch);
-            bool beginCalled = spriteBatch.BeginCalled();
-            spriteBatch.EndIfBeginCalled();
+            bool beginCalled = true;
+            if (ResetSpritebatch)
+            {
+                state.SaveState(spriteBatch);
+                beginCalled = spriteBatch.BeginCalled();
+                spriteBatch.EndIfBeginCalled();
+            }
 
             DrawBack(spriteBatch);
             DrawBody(spriteBatch);
             DrawFront(spriteBatch);
 
-            if (beginCalled)
+            if (ResetSpritebatch && beginCalled)
                 spriteBatch.Begin(state);
         }
 
@@ -402,9 +412,9 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (OverrideBackDraw is null)
                 {
-                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, backShader, state.Matrix);
+                    if(ResetSpritebatch) spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, backShader, state.Matrix);
                     spriteBatch.Draw(backTexture.Value, Center, backSourceRect, Color, Rotation, backTexture.Size() / 2, Scale, default, 0f);
-                    spriteBatch.End();
+                    if (ResetSpritebatch) spriteBatch.End();
                 }
                 else OverrideBackDraw(this, spriteBatch, state, backTexture, backShader);
             }
@@ -449,9 +459,9 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (OverrideBodyDraw is null)
                 {
-                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, default, state.RasterizerState, bodyShader, state.Matrix);
+                    if (ResetSpritebatch) spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, state.RasterizerState, bodyShader, state.Matrix);
                     spriteBatch.Draw(bodyTexture.Value, Center, bodySourceRect, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
-                    spriteBatch.End();
+                    if (ResetSpritebatch) spriteBatch.End();
                 }
                 else OverrideBodyDraw(this, spriteBatch, state, bodyTexture, bodyShader);
             }
@@ -496,9 +506,9 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (OverrideFrontDraw is null)
                 {
-                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, frontShader, state.Matrix);
+                    if (ResetSpritebatch) spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, frontShader, state.Matrix);
                     spriteBatch.Draw(frontTexture.Value, Center, frontSourceRect, Color, Rotation, frontTexture.Size() / 2, Scale, default, 0f);
-                    spriteBatch.End();
+                    if (ResetSpritebatch) spriteBatch.End();
                 }
                 else OverrideFrontDraw(this, spriteBatch, state, frontTexture, frontShader);
             }

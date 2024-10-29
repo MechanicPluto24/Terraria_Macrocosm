@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -8,7 +7,6 @@ using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -34,6 +32,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
 
             TileObjectData.addTile(Type);
 
@@ -45,16 +44,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
                 AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.Candelabra"));
 
-            // To complete direction-dependent item drops
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteCandelabra>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeCandelabra>(), 2, 3);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustCandelabra>(), 4, 5);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraCandelabra>(), 6, 7);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialCandelabra>(), 8, 9);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryCandelabra>(), 10, 11);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleCandelabra>(), 12, 13);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreCandelabra>(), 14, 15);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberCandelabra>(), 16, 17);
         }
         public override bool CreateDust(int i, int j, ref int type)
         {
@@ -91,7 +80,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            Vector3 color = Utility.GetLightColorFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 2))).ToVector3();
+            Vector3 color = Utility.GetLightColorFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18))).ToVector3();
             if (tile.TileFrameX == 0)
             {
                 r = color.X;

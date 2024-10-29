@@ -1,9 +1,11 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.LoadingScreens;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using SubworldLibrary;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,6 @@ using Terraria;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -63,6 +64,7 @@ namespace Macrocosm.Common.Subworlds
         public static double CurrentNightLength => Current is not null ? Current.NightLength : Earth.NightLength;
         public static float CurrentGravityMultiplier => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
         public static float CurrentAtmosphericDensity => Current is not null ? Current.AtmosphericDensity : Earth.AtmosphericDensity;
+        public static float GetCurrentAmbientTemperature() => Current is not null ? Current.GetAmbientTemperature() : Earth.GetAmbientTemperature();
 
         /// <summary> The loading screen. </summary>
         public static LoadingScreen LoadingScreen { get; set; }
@@ -79,7 +81,8 @@ namespace Macrocosm.Common.Subworlds
                 if (!trigger)
                     rocket = null;
 
-                UpdateLoadingScreen(rocket, targetWorldID);
+                SetupLoadingScreen(rocket, targetWorldID);
+                TitleCard.SetTargetWorld(targetWorldID);
 
                 Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel = trigger;
                 Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().SetReturnSubworld(targetWorldID);
@@ -87,22 +90,12 @@ namespace Macrocosm.Common.Subworlds
                 if (targetWorldID == Earth.ID)
                 {
                     SubworldSystem.Exit();
-                    LoadingScreen?.SetTargetWorld(targetWorldID);
-                    TitleCard.SetTargetWorld(targetWorldID);
                     return true;
                 }
 
                 bool entered = SubworldSystem.Enter(targetWorldID);
-
-                if (entered)
-                {
-                    LoadingScreen?.SetTargetWorld(targetWorldID);
-                    TitleCard.SetTargetWorld(targetWorldID);
-                }
-                else
-                {
+                if (!entered)
                     WorldTravelFailure("Error: Failed entering target subworld: " + targetWorldID + ", staying on " + CurrentID);
-                }
 
                 return entered;
             }
@@ -112,7 +105,7 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        private static void UpdateLoadingScreen(Rocket rocket, string targetWorld)
+        private static void SetupLoadingScreen(Rocket rocket, string targetWorld)
         {
             if (rocket is not null)
             {
@@ -139,11 +132,21 @@ namespace Macrocosm.Common.Subworlds
                 };
             }
 
+            switch (SanitizeID(targetWorld))
+            {
+                case "Moon":
+                    LoadingScreen?.SetProgressBar(new(
+                        ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad),
+                        ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad),
+                        new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
+                    ));
+                    break;
+            }
+
             if (rocket is not null)
                 LoadingScreen?.SetRocket(rocket);
             else
                 LoadingScreen?.ClearRocket();
-
 
             LoadingScreen?.Setup();
         }
@@ -166,21 +169,10 @@ namespace Macrocosm.Common.Subworlds
                 field.SetValue(null, null);
             }
 
-            /// <summary> 
-            /// Bypasses SubworldLibrary tag key existence check. 
-            /// TODO: Replace with <see cref="SubworldSystem.CopyWorldData(string, object)"/> on next SubworldLibrary update.
-            /// </summary>
-            public static void SubworldSystem_CopyWorldData(string key, object data)
+            public static bool SubworldSystem_CacheIsNull()
             {
-                var copiedData = Utility.GetFieldValue<TagCompound>(typeof(SubworldSystem), "copiedData", flags: BindingFlags.Static | BindingFlags.NonPublic);
-
-                if (data != null)
-                    copiedData[key] = data;
-            }
-
-            public static void SubworldSystem_SendToAllSubserversExcept(Mod mod, int ignoreSubserver, byte[] data)
-            {
-
+                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
+                return field.GetValue(null) is null;
             }
         }
     }

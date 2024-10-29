@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             ScreenshakeIntensity = 100f;
 
             RotationMultiplier = 0.01f;
-            BlastRadiusMultiplier = 3.5f;
+            BlastRadius = 224;
         }
 
         public override void MeteorAI()
@@ -63,7 +63,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             for (int i = 0; i < ImpactDustCount; i++)
             {
                 Dust dust = Dust.NewDustDirect(
-                    new Vector2(Projectile.Center.X, Projectile.Center.Y),
+                    Projectile.position,
                     Projectile.width,
                     Projectile.height,
                     ModContent.DustType<RegolithDust>(),
@@ -75,11 +75,11 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                 dust.noGravity = true;
             }
 
-            var explosion = Particle.CreateParticle<TintableExplosion>(p =>
+            var explosion = Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center;
-                p.DrawColor = (new Color(120, 120, 120)).WithOpacity(0.8f);
-                p.Scale = 1.7f;
+                p.Color = (new Color(120, 120, 120)).WithOpacity(0.8f);
+                p.Scale = new(1.7f);
                 p.NumberOfInnerReplicas = 12;
                 p.ReplicaScalingFactor = 0.4f;
             });
@@ -100,8 +100,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                 if (Main.rand.NextBool(3))
                 {
                     int type = ModContent.ItemType<MeteoricChunk>();
-                    Vector2 position = new Vector2(Projectile.position.X + Projectile.width / 2, Projectile.position.Y - Projectile.height);
-                    int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), position, new Vector2(Projectile.width, Projectile.height), type);
+                    int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center,  type);
                     NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
                 }
             }

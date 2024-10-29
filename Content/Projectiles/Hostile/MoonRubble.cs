@@ -19,8 +19,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void SetDefaults()
         {
-            Projectile.width = 30;
-            Projectile.height = 30;
+            Projectile.width = 48;
+            Projectile.height = 48;
 
             Projectile.tileCollide = false;
 
@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
-            float gravity = 0.8f * MacrocosmSubworld.CurrentGravityMultiplier; ;
+            float gravity = 0.8f * (0.5f + 0.5f * MacrocosmSubworld.CurrentGravityMultiplier); ;
             Projectile.velocity.Y += gravity;
             Projectile.rotation += Projectile.velocity.X * 0.05f;
 
@@ -52,6 +52,12 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Vector4 slopeCollision = Collision.SlopeCollision(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height, gravity, fall: true);
             Projectile.position = slopeCollision.XY();
             Projectile.velocity = slopeCollision.ZW();
+
+            if (Projectile.velocity.Y == 0f)
+                Projectile.hostile = false;
+            else
+                Projectile.hostile = true;
+
 
             // Decelerate while on the ground
             if (Projectile.velocity.Y == 0f)

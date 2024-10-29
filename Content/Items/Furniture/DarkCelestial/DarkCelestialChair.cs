@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.DarkCelestial
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChair>(), (int)LuminiteStyle.DarkCelestial * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChair>(), (int)LuminiteStyle.DarkCelestial);
             Item.width = 16;
             Item.height = 32;
             Item.value = 500;
@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.DarkCelestial
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient(ItemID.DarkCelestialBrick, 20)
+            .AddIngredient(ItemID.DarkCelestialBrick, 5)
             .AddTile(TileID.MythrilAnvil)
             .Register();
         }

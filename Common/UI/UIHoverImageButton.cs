@@ -23,13 +23,15 @@ namespace Macrocosm.Common.UI
 
         /// <summary> Whether to display hover text even if the button is not interactible </summary>
         public bool HoverTextOnButonNotInteractible { get; set; } = false;
-        public bool DrawBorderIfInFocus { get; set; } = true;
 
         public bool HasFocus { get; set; }
         public string FocusContext { get; set; }
 
         public Action OnFocusGain { get; set; } = () => { };
         public Action OnFocusLost { get; set; } = () => { };
+
+        public Color Color { get; set; } = Color.White;
+        public Color BorderColor { get; set; } = Color.White;
 
         public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
         public float Rotation
@@ -46,16 +48,10 @@ namespace Macrocosm.Common.UI
         }
 
         protected Asset<Texture2D> texture;
-
         protected Asset<Texture2D> borderTexture;
-
-
         protected int remoteInteractionFeedbackTicks = 0;
-
         protected float visibilityInteractible = 1f;
-
         protected float visibilityHover = 0.8f;
-
         protected float visibilityNotInteractible = 0.4f;
         private float rotation;
 
@@ -80,6 +76,12 @@ namespace Macrocosm.Common.UI
         public void SetBorderTexture(Asset<Texture2D> borderTexture)
         {
             this.borderTexture = borderTexture;
+        }
+        public void SetVisibility(float visibility)
+        {
+            visibilityInteractible = MathHelper.Clamp(visibility, 0f, 1f);
+            visibilityNotInteractible = MathHelper.Clamp(visibility, 0f, 1f);
+            visibilityHover = MathHelper.Clamp(visibility, 0f, 1f);
         }
 
         public void SetVisibility(float whenInteractible, float whenNotInteractible, float whenHovering)
@@ -113,10 +115,10 @@ namespace Macrocosm.Common.UI
             CalculatedStyle dimensions = GetDimensions();
 
             float visibility = CheckInteractible() ? (IsMouseHovering ? visibilityHover : visibilityInteractible) : visibilityNotInteractible;
-            spriteBatch.Draw(texture.Value, dimensions.Center(), null, Color.White * visibility, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
+            spriteBatch.Draw(texture.Value, dimensions.Center(), null, Color * visibility, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
 
-            if (borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0 || HasFocus && DrawBorderIfInFocus)
-                spriteBatch.Draw(borderTexture.Value, dimensions.Center(), null, Color.White, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
+            if (borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0 || HasFocus)
+                spriteBatch.Draw(borderTexture.Value, dimensions.Center(), null, BorderColor, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
         }
 
         public override void LeftClick(UIMouseEvent evt)

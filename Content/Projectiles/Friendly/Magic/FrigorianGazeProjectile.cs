@@ -1,6 +1,5 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -84,7 +83,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 spawned = true;
             }
 
-            Projectile.velocity.Y += 0.9f * MacrocosmSubworld.CurrentGravityMultiplier;
+            Projectile.velocity.Y += 0.9f * (0.3f + 0.7f * MacrocosmSubworld.CurrentGravityMultiplier);
 
             if (Projectile.timeLeft < timeUntilMandatoryBreak)
             {
@@ -103,7 +102,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             }
 
             if (AI_Timer % 6 == 1)
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Projectile.owner == Main.myPlayer)
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.oldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage / 4, 2, -1);
 
             if (BounceCounter > numBounces)
@@ -120,7 +119,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 Projectile.frame = BounceCounter;
 
-                if(!Main.dedServ && BounceCounter > 0)
+                if (!Main.dedServ && BounceCounter > 0)
                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, Mod.Find<ModGore>($"FrigorianGore{BounceCounter}").Type);
             }
 
@@ -137,12 +136,28 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     dust.noGravity = true;
                 }
 
-                 SoundEngine.PlaySound(SoundID.Item107 with
+                Particle.Create<PrettySparkle>((p) =>
+                {
+                    p.Position = Projectile.Center + Projectile.oldVelocity;
+                    p.Velocity = Vector2.Zero;
+                    p.DrawHorizontalAxis = true;
+                    p.DrawVerticalAxis = true;
+                    p.AdditiveAmount = 0.4f;
+                    p.Scale = new(2f);
+                    p.ScaleVelocity = -new Vector2(Main.rand.NextFloat(0.01f, 0.02f));
+                    p.Color = (Main.rand.NextBool() ? new Color(56, 188, 173) : new Color(93, 81, 164));
+                    p.Rotation = 0f;
+                    p.TimeToLive = 30;
+                    p.FadeInNormalizedTime = 0f;
+                    p.FadeOutNormalizedTime = 0.5f;
+                });
+
+                SoundEngine.PlaySound(SoundID.Item107 with
                 {
                     Volume = 0.5f * bounceFactor,
                     Pitch = 0.25f + 0.35f * bounceFactor
                 },
-                Projectile.position);
+               Projectile.position);
 
                 if (Projectile.velocity.X != oldVelocity.X)
                     Projectile.velocity.X = oldVelocity.X * -bounceFactor;
@@ -156,23 +171,31 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         private void CreateALotOfIce()
         {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
+            if (Projectile.owner == Main.myPlayer)
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
+                for(int i = 0; i < Main.rand.Next(1, 4); i++)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
+                }
             }
+
+            SoundEngine.PlaySound(SoundID.Item107 with
+            {
+                Volume = 1,
+                Pitch = 0f
+            },
+            Projectile.position);
 
             for (int i = 0; i < 5; i++)
                 Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore3").Type);
 
             for (int i = 0; i < 30; i++)
             {
-                Particle.CreateParticle<IceMist>((p) =>
+                Particle.Create<IceMist>((p) =>
                 {
                     p.Position = Projectile.Center;
                     p.Velocity = -Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.2f, 4f);
-                    p.Scale = Main.rand.NextFloat(0.2f, 0.5f);
+                    p.Scale = new(Main.rand.NextFloat(0.2f, 0.5f));
                 }, shouldSync: true
                 );
             }
@@ -186,9 +209,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 dust.noGravity = true;
             }
 
+            if (Projectile.timeLeft > 3)
+                Projectile.timeLeft = 3;
+
             Projectile.friendly = true;
             Projectile.Resize(300, 300);
-            Projectile.timeLeft = 3;
             Projectile.alpha = 255;
             Projectile.velocity *= 0;
             exploded = true;

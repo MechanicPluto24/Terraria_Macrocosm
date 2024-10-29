@@ -30,7 +30,17 @@ namespace Macrocosm.Common.Utils
             static bool TryFindingSpecificMatches(int launcher, int ammo, out int pickedProjectileId)
             {
                 pickedProjectileId = 0;
-                return AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out Dictionary<int, int> value) && value.TryGetValue(ammo, out pickedProjectileId);
+                if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var value) && value.TryGetValue(ammo, out pickedProjectileId))
+                    return true;
+
+                launcher = AmmoID.Sets.SpecificLauncherAmmoProjectileFallback[launcher];
+                if (launcher != -1)
+                {
+                    if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var fallbackValue) && fallbackValue.TryGetValue(ammo, out pickedProjectileId))
+                        return true;
+                }
+
+                return false;
             }
 
             if (copyWeaponType != ItemID.GrenadeLauncher && copyWeaponType != ItemID.RocketLauncher && copyWeaponType != ItemID.ProximityMineLauncher)
@@ -147,6 +157,20 @@ namespace Macrocosm.Common.Utils
             float averageStack = (dropRateInfo.stackMin + dropRateInfo.stackMax) / 2f;
             float rarity = (1f - dropRateInfo.dropRate) * (1f / (averageStack + 1f));
             return rarity;
+        }
+
+        public static int GetItemTypeFromWingID(int wingID)
+        {
+            foreach(var kvp in ContentSamples.ItemsByType)
+            {
+                int type = kvp.Key;
+                Item item = kvp.Value;
+
+                if (item.wingSlot == wingID)
+                    return type;
+            }
+
+            return -1;
         }
     }
 }

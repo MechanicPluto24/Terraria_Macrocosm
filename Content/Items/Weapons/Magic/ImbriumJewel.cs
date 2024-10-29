@@ -16,13 +16,13 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
-            Item.damage = 200;
+            Item.damage = 260;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 3;
+            Item.mana = 8;
             Item.width = 28;
             Item.height = 28;
-            Item.useTime = 5;
-            Item.useAnimation = 5;
+            Item.useTime = 13;
+            Item.useAnimation = 13;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 8;
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position += new Vector2(Main.rand.Next(-40, 41), Main.rand.Next(-40, 41));
+            position += new Vector2(Main.rand.Next(-200, 201), Main.rand.Next(-200, 201));
         }
     }
 }

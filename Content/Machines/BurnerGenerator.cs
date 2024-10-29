@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
@@ -36,6 +37,8 @@ namespace Macrocosm.Content.Machines
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
+
+            TileObjectData.newTile.StyleHorizontal = true;
 
             TileObjectData.newTile.DrawYOffset = 2;
 
@@ -109,30 +112,32 @@ namespace Macrocosm.Content.Machines
 
         public override bool RightClick(int i, int j)
         {
-            /*
+            Main.mouseRightRelease = false;
+            Utility.UICloseOthers();
+
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
-
-            for (int x = origin.X; x < origin.X + Width; x++)
+            if ((i >= origin.X + 2 && i <= origin.X + 3) && (j >= origin.Y + 0 && j <= origin.Y + 1))
             {
-                for (int y = origin.Y; y < origin.Y + Height; y++)
+                for (int x = origin.X; x < origin.X + Width; x++)
                 {
-                    Tile tile = Main.tile[x, y];
-
-                    if (IsPoweredOnFrame(x, y))
-                        tile.TileFrameY -= (short)(Height * 18);
-                    else
-                        tile.TileFrameY += (short)(Height * 18);
+                    for (int y = origin.Y; y < origin.Y + Height; y++)
+                    {
+                        Tile tile = Main.tile[x, y];
+                        if (IsPoweredOnFrame(x, y))
+                            tile.TileFrameY -= (short)(Height * 18);
+                        else
+                            tile.TileFrameY += (short)(Height * 18);
+                    }
                 }
+
+                if (Main.netMode != NetmodeID.SinglePlayer)
+                    NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
             }
-
-
-            if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
-
-            */
-
-            if (Utility.TryGetTileEntityAs(i, j, out BurnerGeneratorTE burnerGenerator))
-                UISystem.ShowMachineUI(burnerGenerator, new BurnerGeneratorUI());
+            else
+            {
+                if (Utility.TryGetTileEntityAs(i, j, out BurnerGeneratorTE burnerGenerator))
+                    UISystem.ShowMachineUI(burnerGenerator, new BurnerGeneratorUI());
+            }
 
             return true;
         }
@@ -144,9 +149,19 @@ namespace Macrocosm.Content.Machines
             if (!UISystem.Active && !player.mouseInterface)
             {
                 player.noThrow = 2;
-
-                Main.LocalPlayer.cursorItemIconEnabled = true;
-                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
+                Point16 origin = Utility.GetMultitileTopLeft(i, j);
+                if ((i >= origin.X + 2 && i <= origin.X + 3) && (j >= origin.Y + 0 && j <= origin.Y + 1))
+                {
+                    if (IsPoweredOnFrame(origin.X, origin.Y))
+                        CursorIcon.Current = CursorIcon.MachineTurnOff;
+                    else
+                        CursorIcon.Current = CursorIcon.MachineTurnOn;
+                }
+                else
+                {
+                    Main.LocalPlayer.cursorItemIconEnabled = true;
+                    player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
+                }
             }
         }
 
@@ -189,16 +204,16 @@ namespace Macrocosm.Content.Machines
                             if (Main.rand.NextBool(2))
                                 continue;
 
-                            Smoke smoke = Particle.CreateParticle<Smoke>((p) =>
+                            Smoke smoke = Particle.Create<Smoke>((p) =>
                             {
                                 p.Position = new Vector2(i, j) * 16f + new Vector2(k % 2 == 0 ? 4 : 13, 18f);
                                 p.Velocity = new Vector2(0, -0.7f).RotatedByRandom(MathHelper.Pi / 16) * atmoDensity;
-                                p.Scale = 0.1f;
+                                p.Scale = new(0.1f);
                                 p.Rotation = 0f;
-                                p.DrawColor = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
+                                p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
                                 p.FadeIn = true;
                                 p.Opacity = 0f;
-                                p.ExpansionRate = 0.0075f;
+                                p.ScaleVelocity = new(0.0075f);
                                 p.WindFactor = 0.01f;
                             });
                         }

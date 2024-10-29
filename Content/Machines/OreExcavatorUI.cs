@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Machines
 
             if (OreExcavator.Inventory is not null)
             {
-                inventoryPanel = OreExcavator.Inventory.ProvideUI(iconsPerRow: 10, rowsWithoutScrollbar: 5, buttonMenuTopPercent: 0.765f);
+                inventoryPanel = OreExcavator.Inventory.ProvideUIWithInteractionButtons(iconsPerRow: 10, rowsWithoutScrollbar: 5, buttonMenuTopPercent: 0.765f);
                 inventoryPanel.Width = new(0, 0.69f);
                 inventoryPanel.BorderColor = UITheme.Current.ButtonStyle.BorderColor;
                 inventoryPanel.BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
@@ -116,7 +116,7 @@ namespace Macrocosm.Content.Machines
                 }
             }
 
-            TENetHelper.SyncTEFromClient(OreExcavator.ID);
+            NetHelper.SyncTEFromClient(OreExcavator.ID);
         }
 
         public override void Update(GameTime gameTime)

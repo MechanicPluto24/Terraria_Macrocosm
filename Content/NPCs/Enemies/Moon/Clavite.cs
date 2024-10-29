@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -45,9 +44,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.width = 56;
             NPC.height = 56;
-            NPC.lifeMax = 700;
-            NPC.damage = 85;
-            NPC.defense = 60;
+            NPC.lifeMax = 950;
+            NPC.damage = 45;
+            NPC.defense = 110;
             NPC.HitSound = SoundID.NPCHit2;
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.value = 60f;

@@ -55,7 +55,7 @@
   {
     "patternName": "Helix",
     "moduleName": "CommandPod",
-    "unlockedByDefault": false,
+    "unlockedByDefault": true,
     "colorData": [
         { "color": "#F27777" },
         { "color": "#FF0000" },
@@ -152,7 +152,7 @@
   {
     "patternName": "Helix",
     "moduleName": "ServiceModule",
-    "unlockedByDefault": false,
+    "unlockedByDefault": true,
     "colorData": [
       {},
       { "color": "#FF0000" },
@@ -247,7 +247,7 @@
     {
         "patternName": "Helix",
         "moduleName": "ReactorModule",
-        "unlockedByDefault": false,
+        "unlockedByDefault": true,
         "colorData": [
             {},
             { "color": "#FF0000" },
@@ -338,7 +338,7 @@
   {
     "patternName": "Helix",
     "moduleName": "EngineModule",
-    "unlockedByDefault": false,
+    "unlockedByDefault": true,
     "colorData": [
       {},
       { "color": "#FF0000" },
@@ -426,7 +426,7 @@
   {
     "patternName": "Helix",
     "moduleName": "BoosterLeft",
-    "unlockedByDefault": false,
+    "unlockedByDefault": true,
     "colorData": [
         { "color": "#F27777" },
         { "color": "#FF0000" },
@@ -514,7 +514,7 @@
   {
     "patternName": "Helix",
     "moduleName": "BoosterRight",
-    "unlockedByDefault": false,
+    "unlockedByDefault": true,
     "colorData": [
         { "color": "#F27777" },
         { "color": "#FF0000" },

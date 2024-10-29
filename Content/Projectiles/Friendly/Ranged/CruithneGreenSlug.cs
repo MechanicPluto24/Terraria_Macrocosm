@@ -1,4 +1,3 @@
-using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -13,8 +12,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 100;
-            ProjectileID.Sets.TrailingMode[Type] = 0;
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 2;
 
             ProjectileSets.HitsTiles[Type] = true;
         }
@@ -32,24 +31,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool PreAI()
         {
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+
             Lighting.AddLight(Projectile.position, new Color(30, 255, 105).ToVector3() * 0.6f);
 
             if (Projectile.alpha > 0)
                 Projectile.alpha -= 15;
+
             if (Projectile.alpha < 0)
                 Projectile.alpha = 0;
-
-            Projectile.rotation = (float)Math.Atan2(Projectile.velocity.Y, Projectile.velocity.X) + 1.57f;
 
             return false;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
-
-            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 178, 115) * lightColor.GetBrightness(), new Color(255, 255, 255, 74) * lightColor.GetBrightness());
+            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 178, 115), new Color(0, 178, 115, 0));
             return true;
         }
+
+        //public override Color? GetAlpha(Color lightColor) => Color.White;
     }
 }

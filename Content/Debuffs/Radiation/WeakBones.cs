@@ -1,6 +1,6 @@
 using Macrocosm.Common.Enums;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Players;
 using Terraria;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Debuffs.Radiation
@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Debuffs.Radiation
         public override void Update(Player player, ref int buffIndex)
         {
             // Reduced defense
-            player.statDefense *= 1f * (1 / (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel + 1f)); 
+            player.statDefense *= 1f * (1 / (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel + 1f));
         }
     }
 }

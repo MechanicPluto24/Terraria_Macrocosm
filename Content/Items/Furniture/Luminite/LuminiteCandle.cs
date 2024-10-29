@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
+using Macrocosm.Content.Items.Consumables.Throwable;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,7 +14,7 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteCandle>(), (int)LuminiteStyle.Luminite * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteCandle>(), (int)LuminiteStyle.Luminite);
             Item.width = 16;
             Item.height = 16;
             Item.value = 150;
@@ -22,8 +23,8 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(ItemID.LunarOre, 4)
-                .AddIngredient(ItemID.Torch, 1) // Luminite Crystal
+                .AddIngredient(ItemID.LunarBrick, 4)
+                .AddIngredient<LunarCrystal>(1)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

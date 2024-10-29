@@ -12,6 +12,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 {
     public class Hermite : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         private float alert = 0f;
 
         public override void SetStaticDefaults()
@@ -26,9 +28,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
         {
             NPC.width = 21;
             NPC.height = 32;
-            NPC.damage = 60;
-            NPC.defense = 90;
-            NPC.lifeMax = 600;
+            NPC.damage = 55;
+            NPC.defense = 100;
+            NPC.lifeMax = 1300;
             NPC.HitSound = SoundID.NPCHit2;
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.value = 60f;

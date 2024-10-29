@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Debuffs.Radiation
         public override void Update(Player player, ref int buffIndex)
         {
             // Heavy DoT
-            player.lifeRegen = -70; 
+            player.lifeRegen = -70;
         }
     }
 }

@@ -46,10 +46,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.width = 32;
             NPC.height = 32;
             NPC.lifeMax = 500;
-            NPC.damage = 70;
+            NPC.damage = 50;
             NPC.defense = 60;
-            NPC.HitSound = SoundID.NPCHit36;
-            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.HitSound = SoundID.NPCHit36 with { Volume = 0.5f };
+            NPC.DeathSound = SoundID.NPCDeath6;
             NPC.value = 60f;
             NPC.knockBackResist = 0f;
             NPC.noGravity = true;
@@ -58,6 +58,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             AI_State = ActionState.Idle;
             NPC.Opacity = 0f;
 
+            if(NPC.IsABestiaryIconDummy)
+                NPC.Opacity = 1f;
         }
 
         public override void AI()
@@ -182,7 +184,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             SpriteEffects effects = NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             Texture2D texture = TextureAssets.Npc[Type].Value;
-            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, drawColor * NPC.Opacity, NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, (new Color(255,255,255) * (NPC.Opacity)*0.2f), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, drawColor * (NPC.Opacity), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
 
             /*
             // Debug collision hitbox
@@ -193,6 +196,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             */
 
             return NPC.IsABestiaryIconDummy;
-        }
     }
+}
 }

@@ -10,17 +10,19 @@ namespace Macrocosm.Common.UI;
 // Adapted from Terraria.GameContent.UI.Elements.UIItemIcon
 public class UIInventoryItemIcon : UIElement
 {
+    private static Asset<Texture2D> crossmark;
+
     public Color Color = Color.White;
 
     public bool Blacklisted = false;
     public bool DisplayCrossMarkWhenBlacklisted = true;
 
-    private Asset<Texture2D> crossmark;
-    private readonly Item item;
+    public Item Item { get; set; }
 
-    public UIInventoryItemIcon(Item item)
+    public UIInventoryItemIcon(Item item = null)
     {
-        this.item = item;
+        item ??= new();
+        Item = item;
         Width.Set(32f, 0f);
         Height.Set(32f, 0f);
     }
@@ -39,7 +41,7 @@ public class UIInventoryItemIcon : UIElement
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
-        ItemSlot.DrawItemIcon(screenPositionForItemCenter: GetDimensions().Center(), item: item, context: 31, spriteBatch: spriteBatch, scale: item.scale, sizeLimit: 32f, environmentColor: Color);
+        ItemSlot.DrawItemIcon(screenPositionForItemCenter: GetDimensions().Center(), item: Item, context: 31, spriteBatch: spriteBatch, scale: Item.scale, sizeLimit: 32f, environmentColor: Color);
 
         if (Blacklisted && DisplayCrossMarkWhenBlacklisted)
         {

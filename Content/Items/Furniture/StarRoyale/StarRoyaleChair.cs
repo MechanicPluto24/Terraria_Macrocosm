@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.StarRoyale
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChair>(), (int)LuminiteStyle.StarRoyale * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChair>(), (int)LuminiteStyle.StarRoyale);
             Item.width = 16;
             Item.height = 32;
             Item.value = 500;
@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.StarRoyale
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient(ItemID.StarRoyaleBrick, 20)
+            .AddIngredient(ItemID.StarRoyaleBrick, 5)
             .AddTile(TileID.MythrilAnvil)
             .Register();
         }

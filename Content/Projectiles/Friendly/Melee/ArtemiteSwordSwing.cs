@@ -67,14 +67,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             Projectile.scale = 0.9f + progress * MathHelper.SmoothStep(0, 1, progress) * 1.4f;
 
-            Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 2 * Projectile.velocity.Length() * progress), 0).RotatedBy(Projectile.rotation * Projectile.direction) + Main.player[Projectile.owner].velocity;
-            Dust dust = Dust.NewDustDirect(player.Center + new Vector2(94f * Projectile.scale * Main.rand.NextFloat(), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(1.2f, 2f));
-            dust.noGravity = true;
-
-            if (Main.rand.NextBool(8))
+            for (int i = 0; i < 2; i++)
             {
-                dust = Dust.NewDustDirect(player.Center + new Vector2(94f * Projectile.scale * Main.rand.NextFloat(), 0).RotatedBy(Projectile.rotation), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                Vector2 dustVelocity = player.velocity;
+                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(120f * Projectile.scale * Main.rand.NextFloat(0.2f , 0.8f), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1.2f));
                 dust.noGravity = true;
+
+                if (Main.rand.NextBool(8) && i == 0)
+                {
+                    dust = Dust.NewDustDirect(player.Center + new Vector2(40 * Projectile.scale * Main.rand.NextFloat(), 0).RotatedBy(Projectile.rotation), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                    dust.noGravity = true;
+                }
             }
 
             Projectile.scale *= Scale;
@@ -147,11 +150,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             hit.HitDirection = (Main.player[Projectile.owner].Center.X < target.Center.X) ? 1 : (-1);
 
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );
@@ -161,11 +164,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             info.HitDirection = (Main.player[Projectile.owner].Center.X < target.Center.X) ? 1 : (-1);
 
-            Particle.CreateParticle<ArtemiteStar>((p) =>
+            Particle.Create<ArtemiteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
-                p.Scale = 1f;
+                p.Scale = new(1f);
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );

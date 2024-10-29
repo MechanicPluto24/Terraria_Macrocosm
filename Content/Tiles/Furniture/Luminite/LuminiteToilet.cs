@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -39,6 +38,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
             TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleMultiplier = 2;
 
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
@@ -48,16 +48,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
                 AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Toilet"));
 
-            // To complete direction-dependent item drops
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteToilet>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeToilet>(), 2, 3);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustToilet>(), 4, 5);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraToilet>(), 6, 7);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialToilet>(), 8, 9);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryToilet>(), 10, 11);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleToilet>(), 12, 13);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreToilet>(), 14, 15);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberToilet>(), 16, 17);
         }
 
         public override bool CreateDust(int i, int j, ref int type)

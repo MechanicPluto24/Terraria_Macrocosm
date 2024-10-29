@@ -15,8 +15,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class StarDestroyerStar : ModProjectile
     {
-        public enum StarVariant 
-        { 
+        public enum StarVariant
+        {
             /// <summary> Blue stars penetrate enemies </summary>
             Blue,
             /// <summary> Yellow stars explode and have AoE </summary>
@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             if (StarType is StarVariant.Yellow && Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
                 Projectile.PrepareBombToBlow();
 
-            if(StarType is StarVariant.Blue && Projectile.penetrate < 3)
+            if (StarType is StarVariant.Blue && Projectile.penetrate < 3)
             {
                 NPC closestNPC = Utility.GetClosestNPC(Projectile.Center, 9000f);
                 if (closestNPC != null)
@@ -112,19 +112,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             if (StarType == StarVariant.Yellow)
-                Projectile.timeLeft = 3;
+                if (Projectile.timeLeft > 3)
+                    Projectile.timeLeft = 3;
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
             if (StarType == StarVariant.Yellow)
-                Projectile.timeLeft = 3;
+                if (Projectile.timeLeft > 3)
+                    Projectile.timeLeft = 3;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             if (StarType == StarVariant.Yellow)
-                Projectile.timeLeft = 3;
+                if (Projectile.timeLeft > 3)
+                    Projectile.timeLeft = 3;
 
             return true;
         }
@@ -158,13 +161,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 for (int i = 0; i < 24; i++)
                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 4).RotatedByRandom(MathHelper.TwoPi), 16);
 
-                Particle.CreateParticle<TintableExplosion>(Explosion =>
+                Particle.Create<TintableExplosion>(p =>
                 {
-                    Explosion.Position = Projectile.Center;
-                    Explosion.DrawColor = color.WithOpacity(0.1f) * 0.4f;
-                    Explosion.Scale = 1f;
-                    Explosion.NumberOfInnerReplicas = 6;
-                    Explosion.ReplicaScalingFactor = 2.6f;
+                    p.Position = Projectile.Center;
+                    p.Color = color.WithOpacity(0.1f) * 0.4f;
+                    p.Scale = new(1f);
+                    p.NumberOfInnerReplicas = 6;
+                    p.ReplicaScalingFactor = 2.6f;
                 });
             }
         }

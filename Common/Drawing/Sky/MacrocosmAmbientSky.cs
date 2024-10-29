@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Utilities;
+using System;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.GameContent.Ambience;
-using Terraria.GameContent.Skies;
-using Terraria.Graphics;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -53,18 +48,26 @@ namespace Macrocosm.Common.Drawing.Sky
 
         public override void Update(GameTime gameTime)
         {
-            if (Main.gamePaused)
-                return;
+            foreach (SlotVector<MacrocosmSkyEntity>.ItemPair item in entities)
+            {
+                MacrocosmSkyEntity value = item.Value;
+                value.Update(null, frameCounter);
+                if (!value.IsActive)
+                {
+                    entities.Remove(item.Id);
+                    if (Main.netMode != NetmodeID.Server && entities.Count == 0 && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
+                        SkyManager.Instance.Deactivate("Macrocosm:Ambience");
+                }
+            }
 
             frameCounter++;
+
             if (Main.netMode != NetmodeID.Server && AnActiveSkyConflictsWithAmbience() && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
                 SkyManager.Instance.Deactivate("Macrocosm:Ambience");
         }
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
-            DrawUpdate();
-
             if (Main.gameMenu && Main.netMode == NetmodeID.SinglePlayer && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
             {
                 entities.Clear();
@@ -77,20 +80,6 @@ namespace Macrocosm.Common.Drawing.Sky
 
         private void DrawUpdate()
         {
-            if (Main.gamePaused)
-                return;
-
-            foreach (SlotVector<MacrocosmSkyEntity>.ItemPair item in entities)
-            {
-                MacrocosmSkyEntity value = item.Value;
-                value.Update(null, frameCounter);
-                if (!value.IsActive)
-                {
-                    entities.Remove(item.Id);
-                    if (Main.netMode != NetmodeID.Server && entities.Count == 0 && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
-                        SkyManager.Instance.Deactivate("Macrocosm:Ambience");
-                }
-            }
         }
 
         public override bool IsActive() => isActive;

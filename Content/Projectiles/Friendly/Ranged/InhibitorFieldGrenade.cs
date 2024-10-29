@@ -1,12 +1,9 @@
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using System.IO;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -54,7 +51,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             Projectile.aiStyle = -1;
 
-            PlasmaBallCount = 450;
+            PlasmaBallCount = 850;
             BlastRadius = 200;
         }
 
@@ -66,11 +63,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Lighting.AddLight(Projectile.Center, 0.407f, 1f, 1f);
 
             if (Projectile.timeLeft == 2)
-                 SpawnParticles();
+                SpawnParticles();
 
-            if(Projectile.timeLeft > 3)
+            if (Projectile.timeLeft > 3)
             {
-                float gravity = 0.6f * MacrocosmSubworld.CurrentGravityMultiplier;
+                float gravity = 0.6f * (0.5f + 0.5f * MacrocosmSubworld.CurrentGravityMultiplier);
 
                 if (Projectile.velocity.Y == 0f && Projectile.velocity.X != 0f)
                 {
@@ -86,7 +83,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Projectile.rotation += Projectile.velocity.X * 0.05f;
 
                 if (Main.rand.NextBool(2))
-                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.PlasmaBallDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
+                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.InhibitorFieldDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
             }
         }
 
@@ -103,13 +100,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.timeLeft = 3;
+            if (Projectile.timeLeft > 3)
+                Projectile.timeLeft = 3;
+
             target.AddBuff(BuffID.Slow, 95);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Projectile.timeLeft = 3;
+            if (Projectile.timeLeft > 3)
+                Projectile.timeLeft = 3;
+
             target.AddBuff(BuffID.Slow, 95);
         }
 
@@ -127,12 +128,54 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.TwoPi / PlasmaBallCount)
             {
-                float speed = Main.rand.NextFloat(2f, 15f);
+                float speed = Utility.QuadraticEaseOut(Main.rand.NextFloat()) * 14f;
                 float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
                 Vector2 velocity = Utility.PolarVector(speed, theta);
+                float factor = speed / 14f;
 
-                Particle.CreateParticle<PlasmaBall>(Projectile.Center + netOffset, velocity, scale: Main.rand.NextFloat(0.2f, 1.2f));
+                var p = Particle.Create<InhibitorFieldParticle>(p =>
+                {
+                    p.Position = Projectile.Center + netOffset;
+                    p.Velocity = velocity;
+                    p.Scale = new Vector2(Main.rand.NextFloat(0.9f, 1.2f)) * (0.2f + 0.8f * factor);
+                    p.FadeInNormalizedTime = 0f;
+                    p.FadeOutNormalizedTime = Main.rand.NextFloat(0.2f, 0.8f);
+                    p.TimeToLive = 205;
+                    p.ScaleVelocity = new Vector2(-0.004f);
+                });
             }
+
+            /*
+            for (float i = 0; i < MathHelper.TwoPi; i += MathHelper.TwoPi / (PlasmaBallCount * 0.2f))
+            {
+                float speed = Utility.QuadraticEaseOut(Main.rand.NextFloat()) * 14f;
+                float theta = i + Main.rand.NextFloat(-MathHelper.PiOver4, MathHelper.PiOver4) * 0.5f;
+                Vector2 velocity = Utility.PolarVector(speed, theta);
+                float factor = speed / 14f;
+                Particle.Create<LightningParticle>((p) =>
+                {
+                    p.Position = Projectile.Center + netOffset;
+                    p.Velocity = velocity * 0.9f;
+                    p.Acceleration = velocity * 0.0008f;
+                    p.Scale = new Vector2(Main.rand.NextFloat(0.5f, 1f)) * factor;
+                    p.TimeToLive = 205;
+                    p.FadeOutNormalizedTime = 0.5f;
+                    p.FrameSpeed = 6;
+                    p.Color = new Color(104, 255, 255).WithAlpha((byte)Main.rand.Next(0, 64));
+                    p.OutlineColor = new Color(104, 255, 255) * 0.2f;
+                    p.ScaleVelocity = new Vector2(-0.006f);
+                });
+            }
+            */
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.01f);
+                p.ScaleVelocity = new(0.4f);
+                p.Color = new Color(104, 255, 255, 255);
+                p.TimeToLive = 4;
+            });
         }
     }
 }

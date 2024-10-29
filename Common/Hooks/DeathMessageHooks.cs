@@ -1,12 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs.Environment;
-using Macrocosm.Content.Debuffs.Radiation;
-using Macrocosm.Content.Players;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -33,7 +27,7 @@ namespace Macrocosm.Common.Hooks
             // Only overrided on the local client, will be synced and message will be broadcasted by the server 
             if (damageSource.SourceOtherIndex == 8 && player.whoAmI == Main.myPlayer)
             {
-                if (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel > 0f) 
+                if (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel > 0f)
                     damageSource.SourceCustomReason = IrradiationPlayer.DeathMessages.GetRandom().Format(player.name);
                 else if (player.HasBuff(ModContent.BuffType<Depressurized>()))
                     damageSource.SourceCustomReason = Depressurized.DeathMessages.GetRandom().Format(player.name);

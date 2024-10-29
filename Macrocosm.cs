@@ -1,11 +1,7 @@
 using Macrocosm.Common.Config;
-using Macrocosm.Common.Crossmod;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using SubworldLibrary;
 using System;
 using System.IO;
 using Terraria;

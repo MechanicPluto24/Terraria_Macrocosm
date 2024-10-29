@@ -1,3 +1,5 @@
+using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Critters;
 using Macrocosm.Content.NPCs.Enemies.Moon;
@@ -35,12 +37,23 @@ namespace Macrocosm.Content.Tiles.Ambient
             AddMapEntry(new Color(59, 63, 59), CreateMapEntryName());
         }
 
-        public override void RandomUpdate(int i, int j)
+        public override void NearbyEffects(int i, int j, bool closer)
         {
-            if(Main.netMode != NetmodeID.MultiplayerClient)
+            if (Main.gamePaused)
+                return;
+
+            int bugs = 0;
+            bugs += Utility.CountNPCs(ModContent.NPCType<KyaniteScarabSmall>());
+            bugs += Utility.CountNPCs(ModContent.NPCType<KyaniteScarabCritter>());
+
+            if (bugs < 8 && Main.rand.NextBool(120 * (bugs + 1)))
             {
                 int npcType = Main.rand.NextBool(4) ? ModContent.NPCType<KyaniteScarabSmall>() : ModContent.NPCType<KyaniteScarabCritter>();
-                NPC.NewNPCDirect(Entity.GetSource_NaturalSpawn(), new Vector2(i, j) * 16f, npcType);
+
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                    NetHelper.SpawnNPCFromClient(npcType, new Vector2(i, j + 1) * 16f);
+                else
+                    NPC.NewNPCDirect(Entity.GetSource_NaturalSpawn(), new Vector2(i, j + 1) * 16f, npcType);
             }
         }
     }

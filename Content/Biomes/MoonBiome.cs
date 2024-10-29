@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Backgrounds.Moon;
+using Macrocosm.Content.Items.Torches;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -20,6 +21,8 @@ namespace Macrocosm.Content.Biomes
         public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
         public override string MapBackground => BackgroundPath;
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Deadworld");
+
+        public override int BiomeTorchItemType => ModContent.ItemType<LuminiteTorch>();
 
         public override void SetStaticDefaults()
         {

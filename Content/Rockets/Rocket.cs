@@ -1,13 +1,13 @@
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Tech;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
@@ -27,6 +27,15 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket : IInventoryOwner
     {
+        public enum ActionState
+        {
+            Idle,
+            PreLaunch,
+            StaticFire,
+            Flight,
+            Landing
+        }
+
         /// <summary> The rocket's identifier </summary>
         public int WhoAmI = -1;
 
@@ -42,11 +51,7 @@ namespace Macrocosm.Content.Rockets
         /// <summary> The rocket's sequence timer </summary>
         [NetSync] public int FlightTime;
 
-        /// <summary> Whether the rocket has been launched </summary>
-        [NetSync] public bool Launched;
-
-        /// <summary> Whether the rocket is landing </summary>
-        [NetSync] public bool Landing;
+        [NetSync] public ActionState State = ActionState.Idle;
 
         /// <summary> The initial vertical position </summary>
         [NetSync] public float StartPositionY;
@@ -73,12 +78,6 @@ namespace Macrocosm.Content.Rockets
         /// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
         public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
 
-        /// <summary> Number of ticks of the launch countdown (seconds * 60 ticks/sec). Includes <see cref="StaticFire"/> </summary>
-        public int LiftoffTime = 3 * 60;
-
-        /// <summary> Whether this rocket is currently in flight </summary>
-        public bool InFlight => FlightTime >= LiftoffTime;
-
         /// <summary> The world Y coordinate for entering the target subworld </summary>
         private const float WorldExitPositionY = 60 * 16f;
 
@@ -101,11 +100,11 @@ namespace Macrocosm.Content.Rockets
             set => Position = value - Size / 2f;
         }
 
-        /// <summary> Whether the rocket is currently stationary </summary>
-        public bool Stationary => Velocity.LengthSquared() < 0.1f;
-
         /// <summary> The layer this rocket is drawn in </summary>
         public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
+
+        /// <summary> The rocket transparency. Currently it only works when the rocket is drawn using a RenderTarget </summary>
+        public float Transparency { get; set; } = 1f;
 
         /// <summary> This rocket's nameplate </summary>
         public Nameplate Nameplate { get; set; } = new();
@@ -123,14 +122,11 @@ namespace Macrocosm.Content.Rockets
         /// <summary> List of the module names, in the customization access order </summary>
         public List<string> ModuleNames => Modules.Keys.ToList();
 
-        /// <summary> The time (in ticks) after launch for the <see cref="StaticFire"/> </summary>
-        public const int StaticFireBeginTime = 120;
+        public int PreLaunchDuration = 160;
 
-        /// <summary> Whether the rocket is in the static fire part of the launch sequence </summary>
-        public bool StaticFire => StaticFireProgress > 0f && FlightTime < LiftoffTime;
-
+        public int StaticFireDuration = 60;
         /// <summary> The progress of the <see cref="StaticFire"/> </summary>
-        public float StaticFireProgress => Utility.InverseLerp(LiftoffTime - StaticFireBeginTime, LiftoffTime, FlightTime, clamped: true);
+        public float StaticFireProgress => Utility.InverseLerp(0, StaticFireDuration, FlightTime, clamped: true);
 
         /// <summary> The flight sequence progress </summary>
         public float FlightProgress { get; set; }
@@ -219,13 +215,28 @@ namespace Macrocosm.Content.Rockets
         {
             CurrentWorld = MacrocosmSubworld.CurrentID;
             OnWorldSpawn();
+            SetModuleWorldPositions();
         }
 
         /// <summary> Called when spawning into a new world (creation or travel) </summary>
         public void OnWorldSpawn()
         {
             ResetAnimation();
-            if (Landing && ActiveInCurrentWorld)
+            if (State == ActionState.Landing && ActiveInCurrentWorld)
+            {
+                // Travel to spawn point if a specific launchpad has not been set
+                if (TargetLandingPosition == default)
+                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 4);
+
+                Center = new(TargetLandingPosition.X, Center.Y);
+            }
+        }
+
+        public void OnWorldLoad()
+        {
+            ResetAnimation();
+            /*
+            if (State == ActionState.Landing && ActiveInCurrentWorld)
             {
                 // Travel to spawn point if a specific launchpad has not been set
                 if (TargetLandingPosition == default)
@@ -233,15 +244,17 @@ namespace Macrocosm.Content.Rockets
 
                 Center = new(TargetLandingPosition.X, Center.Y);
             }
+            */
         }
 
         /// <summary> Called when a subworld is generated </summary>
         public void OnSubworldGenerated()
         {
-            if (Landing && ActiveInCurrentWorld)
+            if (State == ActionState.Landing && ActiveInCurrentWorld)
             {
                 // Target landing position always defaults to the spawn point just set on worldgen
-                TargetLandingPosition = Utility.SpawnWorldPosition;
+                TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 4);
+
                 Center = new(TargetLandingPosition.X, Center.Y);
             }
         }
@@ -253,27 +266,119 @@ namespace Macrocosm.Content.Rockets
             Velocity = GetCollisionVelocity();
             Position += Velocity;
 
-            Movement();
             Effects();
             PlaySound();
 
-            if (Stationary)
+            float gravity = MacrocosmSubworld.CurrentGravityMultiplier;
+            float gravityFactor = 0.7f + 0.3f * gravity;
+
+            switch (State)
             {
-                Interact();
-                LookForCommander();
+                case ActionState.Idle:
+
+                    Interact();
+                    LookForCommander();
+                    Velocity.Y += 0.1f * gravity;
+
+                    break;
+
+                case ActionState.PreLaunch:
+
+                    FlightTime++;
+
+                    if (FlightTime >= PreLaunchDuration)
+                    {
+                        FlightTime = 0;
+                        State = ActionState.StaticFire;
+                    }
+
+                    Velocity.Y += 0.1f * gravity;
+
+                    break;
+
+                case ActionState.StaticFire:
+
+                    FlightTime++;
+
+                    if (FlightTime >= StaticFireDuration)
+                    {
+                        FlightTime = 0;
+                        State = ActionState.Flight;
+                        ResetAnimation();
+                        SoundEngine.PlaySound(SFX.RocketLaunch with { Volume = 1f, PlayOnlyIfFocused = true });
+                    }
+
+                    Velocity.Y += 0.1f * gravity;
+
+                    break;
+
+                case ActionState.Flight:
+
+                    FlightTime++;
+
+                    float launchDistance = Math.Abs(StartPositionY - WorldExitPositionY);
+                    float launchDuration = 10f * 60f * gravityFactor;
+                    float launchIncrement = launchDistance / launchDuration;
+
+                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, WorldExitPositionY, EasedFlightProgress));
+                    FlightProgress += launchIncrement / launchDistance;
+                    FlightProgress = MathHelper.Clamp(FlightProgress, 0f, 1f);
+
+                    UpdateModuleAnimation();
+                    if (EasedFlightProgress > 0.01f)
+                        StartModuleAnimation(landing: false);
+
+                    if (GetRocketPlayer(Main.myPlayer).InRocket)
+                        Main.BlackFadeIn = (int)(255f * EasedFlightProgress);
+
+                    if (CheckPlayerInRocket(Main.myPlayer) && Position.Y < WorldExitPositionY + 1)
+                    {
+                        FlightTime = 0;
+                        FlightProgress = 0f;
+                        LandingProgress = 0f;
+                        Velocity = Vector2.Zero;
+                        State = ActionState.Landing;
+                        ResetAnimation();
+                        Travel();
+                    }
+
+                    break;
+
+                case ActionState.Landing:
+                    if (TargetLandingPosition == default && LandingProgress == 0)
+                        TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 2);
+                    float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
+                    float landingDuration = 10f * 60f * (1f / gravityFactor);
+                    float landingIncrement = landingDistance / landingDuration;
+                    Position = new Vector2(TargetLandingPosition.X - Width / 2 - 8, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, EasedLandingProgress));
+                    LandingProgress += landingIncrement / landingDistance;
+                    LandingProgress = MathHelper.Clamp(LandingProgress, 0f, 1f);
+
+                    UpdateModuleAnimation();
+
+                    if (EasedLandingProgress > 0.95f)
+                        StartModuleAnimation(landing: true);
+
+                    if (GetRocketPlayer(Main.myPlayer).InRocket)
+                        Main.BlackFadeIn = (int)(255f * (1f - EasedLandingProgress));
+
+                    if (LandingProgress >= 1f - float.Epsilon)
+                    {
+                        State = ActionState.Idle;
+                        ResetAnimation();
+                    }
+
+                    break;
+
             }
 
-            if (CheckPlayerInRocket(Main.myPlayer) && Launched && Position.Y < WorldExitPositionY + 1)
-            {
-                FlightTime = 0;
-                FlightProgress = 0f;
-                LandingProgress = 0f;
-                Velocity = Vector2.Zero;
-                Launched = false;
-                Landing = true;
-                ResetAnimation();
-                Travel();
-            }
+            if(Transparency < 1f)
+                Transparency += 0.01f;
+
+            if (Transparency > 1f)
+                Transparency = 1f;
+
+            //Main.NewText(State);
 
             // reset render target after first update to fix reload issue
             if (!ranFirstUpdate)
@@ -431,7 +536,7 @@ namespace Macrocosm.Content.Rockets
         public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
         {
             Main.playerInventory = false;
-            Launched = true;
+            State = ActionState.PreLaunch;
             StartPositionY = Position.Y;
             TargetWorld = targetWorld;
             this.targetLaunchPad = targetLaunchPad;
@@ -493,7 +598,7 @@ namespace Macrocosm.Content.Rockets
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            if (MouseCanInteract() && Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) && !Launched)
+            if (MouseCanInteract() && Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) && State == ActionState.Idle)
             {
                 RocketPlayer rocketPlayer = GetRocketPlayer(Main.myPlayer);
 
@@ -510,7 +615,7 @@ namespace Macrocosm.Content.Rockets
                         UISystem.ShowRocketUI(this);
                     }
                 }
-                else if (!UISystem.Active && !InFlight && !Landing)
+                else if (!UISystem.Active)
                 {
                     if (rocketPlayer.InRocket)
                     {
@@ -544,7 +649,7 @@ namespace Macrocosm.Content.Rockets
                     }
                     else
                     {
-                        if (Landing)
+                        if (State == ActionState.Landing)
                             animatedModule.CurrentFrame = 0;
                         else
                             animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
@@ -568,6 +673,9 @@ namespace Macrocosm.Content.Rockets
 
         private bool MouseCanInteract()
         {
+            if (LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, Main.MouseWorld.ToTileCoordinates16()) != null)
+                return false;
+
             foreach (RocketModule module in Modules.Values.Where((module) => !(module is BoosterRight) && !(module is BoosterLeft)))
                 if (module.Hitbox.Contains(Main.MouseWorld.ToPoint()))
                     return true;
@@ -591,60 +699,20 @@ namespace Macrocosm.Content.Rockets
         // Handles the rocket's movement during flight
         private void Movement()
         {
-            float gravity = MacrocosmSubworld.CurrentGravityMultiplier;
-            float gravityFactor = 0.7f + 0.3f * gravity;
-
-            if (Launched)
+            if (State == ActionState.Flight)
             {
-                FlightTime++;
-
-                if (InFlight)
-                {
-                    float launchDistance = Math.Abs(StartPositionY - WorldExitPositionY);
-                    float launchDuration = 10f * 60f * gravityFactor;
-                    float launchIncrement = launchDistance / launchDuration;
-
-                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, WorldExitPositionY, EasedFlightProgress));
-                    FlightProgress += launchIncrement / launchDistance;
-                    FlightProgress = MathHelper.Clamp(FlightProgress, 0f, 1f);
-
-                    UpdateModuleAnimation();
-                    if (EasedFlightProgress > 0.01f)
-                        StartModuleAnimation(landing: false);
-
-                    if (GetRocketPlayer(Main.myPlayer).InRocket)
-                        Main.BlackFadeIn = (int)(255f * EasedFlightProgress);
-                }
+               
             }
-            else if (Landing)
+            else if (State == ActionState.Landing)
             {
-                float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
-                float landingDuration = 10f * 60f * (1f / gravityFactor);
-                float landingIncrement = landingDistance / landingDuration;
-                Position = new Vector2(Position.X, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, EasedLandingProgress));
-                LandingProgress += landingIncrement / landingDistance;
-                LandingProgress = MathHelper.Clamp(LandingProgress, 0f, 1f);
-
-                UpdateModuleAnimation();
-
-                if (EasedLandingProgress > 0.95f)
-                    StartModuleAnimation(landing: true);
-
-                if (GetRocketPlayer(Main.myPlayer).InRocket)
-                    Main.BlackFadeIn = (int)(255f * (1f - EasedLandingProgress));
-
-                if (LandingProgress >= 1f - float.Epsilon)
-                {
-                    Landing = false;
-                    ResetAnimation();
-                }
+               
             }
             else
             {
-                Velocity.Y += 0.1f * gravity;
             }
 
         }
+
         private void UpdateModuleAnimation()
         {
             bool animationActive = false;
@@ -695,12 +763,11 @@ namespace Macrocosm.Content.Rockets
 
         private void Effects()
         {
-            if (!Launched && !Landing)
+            if (State == ActionState.Idle)
                 return;
 
             float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.CurrentGravityMultiplier;
             float atmoDesityFactor = 0.5f + 0.5f * MacrocosmSubworld.CurrentAtmosphericDensity;
-
 
             Point tilePos = (Position + new Vector2(Width / 2f, Height)).ToTileCoordinates();
             Point closestTile = Utility.GetClosestTile(tilePos.X, tilePos.Y, -1, 15, (t) => Main.tileSolid[t.TileType] && !t.IsActuated);
@@ -709,50 +776,61 @@ namespace Macrocosm.Content.Rockets
             float lightIntensity = 0f;
             float screenshakeIntensity = 0f;
 
-            if (StaticFire)
+            switch (State)
             {
-                lightIntensity = StaticFireProgress;
-                screenshakeIntensity = 5f * (Utility.QuadraticEaseOut(StaticFireProgress));
+                case ActionState.StaticFire:
+                    {
+                        lightIntensity = StaticFireProgress;
+                        screenshakeIntensity = 5f * Utility.QuadraticEaseOut(StaticFireProgress);
 
-                int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor * StaticFireProgress);
-                SpawnSmokeExhaustTrail(countPerTick: count);
+                        int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(4f * atmoDesityFactor * StaticFireProgress);
+                        SpawnSmokeExhaustTrail(countPerTick: count);
 
-                if (Main.rand.NextFloat() < StaticFireProgress)
-                    SpawnTileDust(closestTile, 1);
+                        if (Main.rand.NextFloat() < StaticFireProgress)
+                            SpawnTileDust(closestTile, 1);
+                        break;
+                    }
+
+                case ActionState.Flight:
+                    {
+                        lightIntensity = 10f;
+                        screenshakeIntensity = FlightProgress < 0.05f ? 30f : 15f * (1f - Utility.QuadraticEaseOut(FlightProgress));
+
+                        int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 2 : (int)(5f * atmoDesityFactor);
+                        SpawnSmokeExhaustTrail(countPerTick: count);
+
+                        if (EasedFlightProgress < 0.1f)
+                            SpawnTileDust(closestTile, 2);
+                        break;
+                    }
+
+                case ActionState.Landing:
+                    {
+                        lightIntensity = 10f;
+                        screenshakeIntensity = 2f * Utility.QuadraticEaseOut(LandingProgress);
+
+                        int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor);
+                        SpawnSmokeExhaustTrail(countPerTick: count, speed: 2f * (1.2f - EasedLandingProgress));
+
+                        if (EasedLandingProgress > 0.9f)
+                            SpawnTileDust(closestTile, 2);
+
+                        if (LandingProgress >= 1f - 0.03f)
+                        {
+                            SpawnTileDust(closestTile, 15);
+                            SpawnHitTileDust(closestTile);
+                            screenshakeIntensity = 20f * gravityFactor;
+                        }
+
+                        break;
+                    }
+
+                case ActionState.Idle:
+                    break;
             }
 
-            if (InFlight)
-            {
-                lightIntensity = 10f;
-                screenshakeIntensity = FlightProgress < 0.05f ? 30f : 15f * (1f - Utility.QuadraticEaseOut(FlightProgress));
+            Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(197, 56, 9).ToVector3() * lightIntensity);
 
-                int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 2 : (int)(5f * atmoDesityFactor);
-                SpawnSmokeExhaustTrail(countPerTick: count);
-
-                if (EasedFlightProgress < 0.1f)
-                    SpawnTileDust(closestTile, 2);
-            }
-
-            if (Landing)
-            {
-                lightIntensity = 10f;
-                screenshakeIntensity = 2f * (Utility.QuadraticEaseOut(LandingProgress));
-
-                int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor);
-                SpawnSmokeExhaustTrail(countPerTick: count, speed: 2f * (1.2f - EasedLandingProgress));
-
-                if (EasedLandingProgress > 0.9f)
-                    SpawnTileDust(closestTile, 2);
-
-                if (LandingProgress >= 1f - 0.03f)
-                {
-                    SpawnTileDust(closestTile, 15);
-                    SpawnHitTileDust(closestTile);
-                    screenshakeIntensity = 20f * gravityFactor;
-                }
-            }
-
-            //Lighting.AddLight(new Vector2(Center.X, Position.Y + Height + 15), new Color(215, 69, 0).ToVector3() * lightIntensity);
             Main.LocalPlayer.AddScreenshake(screenshakeIntensity, $"Rocket{WhoAmI}");
 
             // Hack to force render the tiles otherwise completetly unlighted, so the trail does not draw in front of them 
@@ -768,14 +846,14 @@ namespace Macrocosm.Content.Rockets
                 Vector2 position = new Vector2(Center.X, Position.Y + Height - 28);
 
                 Vector2 velocity = new Vector2(Main.rand.NextFloat(-0.6f, 0.6f), Main.rand.NextFloat(2, 10));
-                if (Landing)
+                if (State == ActionState.Landing)
                     velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 16));
 
-                var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
+                var smoke = Particle.Create<RocketExhaustSmoke>(p =>
                 {
                     p.Position = position;
                     p.Velocity = velocity * speed;
-                    p.Scale = Main.rand.NextFloat(1.2f, 1.6f);
+                    p.Scale = new(Main.rand.NextFloat(1.2f, 1.6f));
                     p.Rotation = 0f;
                     p.FadeIn = true;
                     p.FadeOut = true;
@@ -783,8 +861,8 @@ namespace Macrocosm.Content.Rockets
                     p.FadeOutSpeed = 15;
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.001f;
-                    p.Deceleration = 0.995f;
-                    p.DrawColor = Color.White.WithAlpha(150);
+                    p.Acceleration = new(0, -0.03f);
+                    p.Color = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
             }
@@ -802,14 +880,14 @@ namespace Macrocosm.Content.Rockets
 
 
                 Vector2 velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4));
-                if (Landing)
+                if (State == ActionState.Landing)
                     velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 12));
 
-                var smoke = Particle.CreateParticle<RocketExhaustSmoke>(p =>
+                var smoke = Particle.Create<RocketExhaustSmoke>(p =>
                 {
                     p.Position = position;
                     p.Velocity = velocity * speed;
-                    p.Scale = Main.rand.NextFloat(0.6f, 0.9f);
+                    p.Scale = new(Main.rand.NextFloat(0.6f, 0.9f));
                     p.Rotation = 0f;
                     p.FadeIn = true;
                     p.FadeOut = true;
@@ -817,8 +895,8 @@ namespace Macrocosm.Content.Rockets
                     p.FadeOutSpeed = 12;
                     p.TargetAlpha = 128;
                     p.ScaleDownSpeed = 0.0015f;
-                    p.Deceleration = 0.993f;
-                    p.DrawColor = Color.White.WithAlpha(150);
+                    p.Acceleration = new(0, -0.04f);
+                    p.Color = Color.White.WithAlpha(150);
                     p.Collide = true;
                 }, shouldSync: false);
             }
@@ -828,16 +906,16 @@ namespace Macrocosm.Content.Rockets
         {
             for (int i = 0; i < countPerTick; i++)
             {
-                var smoke = Particle.CreateParticle<Smoke>(p =>
+                var smoke = Particle.Create<Smoke>(p =>
                 {
-                    p.Position = tileCoords.ToWorldCoordinates();
+                    p.Position = tileCoords.ToWorldCoordinates() + new Vector2(0, 16);
                     p.Velocity = new Vector2(Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-0.1f, -1f));
-                    p.Scale = Main.rand.NextFloat(0.5f, 1.2f);
+                    p.Scale = new(Main.rand.NextFloat(0.5f, 1.2f));
                     p.Rotation = Utility.RandomRotation();
-                    p.DrawColor = Smoke.GetTileHitColor(tileCoords);
+                    p.Color = Smoke.GetTileHitColor(tileCoords);
                     p.FadeIn = true;
                     p.Opacity = 0f;
-                    p.ExpansionRate = 0.0075f;
+                    p.ScaleVelocity = new(0.0075f);
                 });
             }
         }
@@ -853,7 +931,7 @@ namespace Macrocosm.Content.Rockets
 
         public void PlaySound()
         {
-            if (StaticFire)
+            if (State == ActionState.StaticFire)
             {
                 float intensity = 1f;
                 SoundEngine.PlaySound(SFX.RocketLoop with
@@ -867,11 +945,11 @@ namespace Macrocosm.Content.Rockets
                     sound.Pitch = MathHelper.Lerp(-1f, 0, StaticFireProgress);
                     sound.Volume = intensity;
                     sound.Position = Center;
-                    return FlightTime < LiftoffTime && ActiveInCurrentWorld;
+                    return FlightTime < StaticFireDuration && ActiveInCurrentWorld;
                 });
             }
 
-            if (FlightTime == LiftoffTime)
+            if (FlightTime == StaticFireDuration)
             {
                 SoundEngine.PlaySound(SFX.RocketLaunch with
                 {
@@ -882,11 +960,11 @@ namespace Macrocosm.Content.Rockets
                 Center, updateCallback: (sound) =>
                 {
                     sound.Position = Center;
-                    return InFlight && ActiveInCurrentWorld;
+                    return State == ActionState.Flight && ActiveInCurrentWorld;
                 });
             }
 
-            if (InFlight)
+            if (State == ActionState.Flight)
             {
                 SoundEngine.PlaySound(SFX.RocketLoop with
                 {
@@ -899,11 +977,11 @@ namespace Macrocosm.Content.Rockets
                 {
                     sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                     sound.Position = Center;
-                    return InFlight && ActiveInCurrentWorld;
+                    return State == ActionState.Flight && ActiveInCurrentWorld;
                 });
             }
 
-            if (Landing)
+            if (State == ActionState.Landing)
             {
                 SoundEngine.PlaySound(SFX.RocketLoop with
                 {
@@ -917,7 +995,7 @@ namespace Macrocosm.Content.Rockets
                     sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                     sound.Volume = LandingProgress < 0.8f ? 1f : (1f - LandingProgress) * 5f;
                     sound.Position = Center;
-                    return Landing && ActiveInCurrentWorld;
+                    return State == ActionState.Landing && ActiveInCurrentWorld;
                 });
             }
         }
@@ -955,7 +1033,7 @@ namespace Macrocosm.Content.Rockets
 
                 // For same world travel assign the correct position here
                 if (TargetLandingPosition == default)
-                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(16, 16);
+                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 2);
 
                 Center = new(TargetLandingPosition.X, Center.Y);
 

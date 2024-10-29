@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Mounts;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,6 +9,7 @@ namespace Macrocosm.Content.Items.Mounts
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

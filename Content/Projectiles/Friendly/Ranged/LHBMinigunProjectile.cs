@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Config;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Gores;
 using Macrocosm.Content.Items.Weapons.Ranged;
@@ -8,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -100,11 +102,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     if (StillInUse && AI_Windup % fireFreq == 0)
                     {
                         Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
-                        if (Player.PickAmmo(currentItem, out int projToShoot, out float speed, out int damage, out float knockback, out _))
+                        if (Player.PickAmmo(currentItem, out int projToShoot, out float speed, out int damage, out float knockback, out int ammoItemId))
                         {
                             // We want to disable knockback for this weapon but keep it able to receive the Unreal modifier
                             knockback = 0f;
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * speed, projToShoot, damage, knockback, Projectile.owner);
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, ammoItemId), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * speed, projToShoot, damage, knockback, Projectile.owner);
                         }
                         else
                         {
@@ -113,7 +115,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     }
                 }
 
-                Projectile.position += (new Vector2(Main.rand.NextFloat(2.4f), Main.rand.NextFloat(0.4f))).RotatedBy(Projectile.rotation) * WindupProgress;
+                if (MacrocosmConfig.Instance.GunRecoilEffects)
+                    Projectile.position += (new Vector2(Main.rand.NextFloat(2.4f), Main.rand.NextFloat(0.4f))).RotatedBy(Projectile.rotation) * WindupProgress;
 
                 if (!Main.dedServ && AI_Windup % (fireFreq * 1.5) == 0)
                 {

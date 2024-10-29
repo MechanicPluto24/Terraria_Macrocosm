@@ -7,43 +7,50 @@ namespace Macrocosm.Content.Particles
 {
     public class IceMist : Particle
     {
-        public override int FrameNumber => 1;
-
         public override string TexturePath => Macrocosm.TextureEffectsPath + "Smoke1";
-        public Color DrawColor = new Color(56, 188, 173, 0);
-        public float Opacity = 0.3f;
-        public float ExpansionRate = -0.008f;
-        
-        public bool FadeIn;
-        private bool fadedIn=false;
 
-        public float WindFactor = 0f;
+        public float Opacity { get; set; }
+        public float ExpansionRate { get; set; }
+        public bool FadeIn { get; set; }
+
+        private bool fadedIn;
+
+        public override void SetDefaults()
+        {
+            Color = new Color(56, 188, 173, 0);
+            ExpansionRate = -0.008f;
+            Opacity = 0.3f;
+            FadeIn = false;
+            fadedIn = false;
+        }
+
+        public override void OnSpawn()
+        {
+        }
 
         public override void AI()
         {
             if (!fadedIn)
             {
-                Scale -= ExpansionRate/3;
+                Scale -= new Vector2(ExpansionRate / 3);
                 Opacity += 0.05f;
                 if (Opacity >= 1f)
                     fadedIn = true;
             }
             else
             {
-                Scale += ExpansionRate/3;
+                Scale += new Vector2(ExpansionRate / 3);
                 if (Opacity > 0f)
                     Opacity -= 0.012f;
             }
 
-            Velocity.X += WindFactor * Utility.WindSpeedScaled;
-
-            if (Scale < 0.1f || (Opacity <= 0 && fadedIn))
+            if (Scale.X < 0.1f || (Opacity <= 0 && fadedIn))
                 Kill();
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Utility.Colorize(DrawColor, lightColor).WithAlpha(DrawColor.A) * Opacity, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor).WithAlpha(Color.A) * Opacity, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
     }
 }

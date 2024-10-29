@@ -18,9 +18,9 @@ namespace Macrocosm.Content.Projectiles.Hostile
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
             ProjectileID.Sets.TrailingMode[Type] = 0;
         }
-        //Similar to the luminite star.
-        Color colour = new Color(100, 255, 255);
 
+        // Similar to the luminite star.
+        private Color colour = new(34, 221, 151, 255);
 
         public override void SetDefaults()
         {
@@ -29,26 +29,25 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.tileCollide = false;
-            Projectile.timeLeft = 600;
+            Projectile.timeLeft = 300;
             Projectile.penetrate = -1;
 
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
         }
 
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, colour, colour.WithOpacity(0f));
+            Projectile.DrawMagicPixelTrail(Vector2.Zero, 4f, 0.1f, colour.WithAlpha(0), Color.Transparent);
 
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.DrawStar(Projectile.Center - Main.screenPosition, 2, colour, 0.4f, Projectile.rotation, entity: true);
+            Utility.DrawStar(Projectile.Center - Main.screenPosition, 2, colour, 0.4f, Projectile.rotation, entity: true);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
-
 
             return false;
         }

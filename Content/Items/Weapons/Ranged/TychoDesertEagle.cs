@@ -1,7 +1,6 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -35,7 +34,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.damage = 150;
+            Item.damage = 290;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 50;
             Item.height = 32;
@@ -59,7 +58,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             if (!Main.dedServ)
                 SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.3f }, position);
 
-            Particle.CreateParticle<GunFireRing>(position + new Vector2(14, 0).RotatedBy(velocity.ToRotation()), velocity * 0.25f, 1f, velocity.ToRotation(), false);
+            Particle.Create<GunFireRing>(position + new Vector2(14, 0).RotatedBy(velocity.ToRotation()), velocity * 0.25f, new(1f), velocity.ToRotation(), false);
 
             return true;
         }

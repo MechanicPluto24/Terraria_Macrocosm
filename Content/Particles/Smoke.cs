@@ -8,22 +8,29 @@ namespace Macrocosm.Content.Particles
 {
     public class Smoke : Particle
     {
-        public override int FrameNumber => 3;
+        public override int FrameCount => 3;
         public override bool SetRandomFrameOnSpawn => true;
 
-        public Color DrawColor;
-        public float Opacity = 1f;
-        public float ExpansionRate = -0.005f;
-
-        public bool FadeIn;
+        public float WindFactor { get; set; }
+        public float Opacity { get; set; }
+        public bool FadeIn { get; set; }
         private bool fadedIn;
 
-        public float WindFactor = 0f;
+        public override void SetDefaults()
+        {
+            ScaleVelocity = new(-0.005f);
+            Opacity = 1f;
+            FadeIn = false;
+            fadedIn = false;
+            WindFactor = 0f;
+        }
+
+        public override void OnSpawn()
+        {
+        }
 
         public override void AI()
         {
-            Scale += ExpansionRate;
-
             if (!fadedIn)
             {
                 Opacity += 0.03f;
@@ -38,13 +45,13 @@ namespace Macrocosm.Content.Particles
 
             Velocity.X += WindFactor * Utility.WindSpeedScaled;
 
-            if (Scale < 0.1 || (Opacity <= 0 && fadedIn))
+            if (Scale.X < 0.1f || (Opacity <= 0 && fadedIn))
                 Kill();
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Utility.Colorize(DrawColor, lightColor).WithAlpha(DrawColor.A) * Opacity, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor).WithAlpha(Color.A) * Opacity, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
         public static Color GetTileHitColor(Point coords) => GetTileHitColor(coords.X, coords.Y);

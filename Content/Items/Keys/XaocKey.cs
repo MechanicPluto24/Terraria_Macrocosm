@@ -13,11 +13,12 @@ namespace Macrocosm.Content.Items.Keys
 
         public override void SetDefaults()
         {
-            Item.CloneDefaults(ItemID.GoldenKey);
+            Item.CloneDefaults(ItemID.ShadowKey);
             Item.width = 18;
             Item.height = 30;
             Item.value = 200;
             Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.consumable = false;
         }
     }
 }

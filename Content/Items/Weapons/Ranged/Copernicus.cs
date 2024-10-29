@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
@@ -14,15 +15,15 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 {
     public class Copernicus : GunHeldProjectileItem
     {
-        private int grenadeCounter;
-
         public override void SetStaticDefaults()
         {
+            ItemSets.ExplosivesShotDealDamageToOwner[Type] = false;
+            ItemSets.ExplosivesShotDealDamageToOwner_GetGoodWorld[Type] = true;
         }
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.damage = 150;
+            Item.damage = 88;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 70;
             Item.height = 26;
@@ -58,18 +59,15 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             return true;
         }
 
-        public override void UpdateInventory(Player player)
-        {
-            if (player.CurrentItem() != Item)
-                grenadeCounter = 0;
-        }
-
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
         {
-            if(grenadeCounter++ > Main.rand.Next(3, 6))
+            var dummy = Item.Clone();
+            dummy.useAmmo = AmmoID.Rocket;
+
+            if(player.ItemUseCount(Type) % 5 == 0 && player.PickAmmo(dummy, out _, out float speed, out damage, out knockback, out _, dontConsume: false))
             {
-                Projectile.NewProjectile(source, position + new Vector2(0, 10 * player.direction).RotatedBy(velocity.ToRotation()), velocity * 0.4f, ModContent.ProjectileType<InhibitorFieldGrenade>(), damage, knockback, player.whoAmI, ai0: 450, ai1: 200);
-                grenadeCounter = 0;
+                int projToShoot = Utility.GetRocketAmmoProjectileID(player, ItemID.RocketLauncher);
+                Projectile.NewProjectile(source, position + new Vector2(30, 8 * player.direction).RotatedBy(velocity.ToRotation()), velocity, projToShoot, damage, knockback, player.whoAmI);
             }
 
             return true;

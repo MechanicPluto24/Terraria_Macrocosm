@@ -22,6 +22,10 @@ namespace Macrocosm.Content.Rockets
                 tag[nameof(Active)] = true;
                 tag[nameof(WhoAmI)] = WhoAmI;
 
+                tag[nameof(State)] = (int)State;
+
+                Console.WriteLine($"Rocket[{WhoAmI}]'s state was saved: {State.ToString()}");
+
                 tag[nameof(CurrentWorld)] = CurrentWorld;
                 tag[nameof(Position)] = Position;
                 tag[nameof(Fuel)] = Fuel;
@@ -29,10 +33,8 @@ namespace Macrocosm.Content.Rockets
 
                 tag[nameof(Inventory)] = Inventory;
 
-                if (Launched) tag[nameof(Launched)] = true;
-                if (Landing) tag[nameof(Landing)] = true;
-
-                if (TargetLandingPosition != Vector2.Zero) tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
+                if (TargetLandingPosition != Vector2.Zero) 
+                    tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
 
                 tag[nameof(Nameplate)] = Nameplate;
 
@@ -50,13 +52,19 @@ namespace Macrocosm.Content.Rockets
         {
             Rocket rocket = new();
             rocket.Active = tag.ContainsKey(nameof(Active));
+
             if (rocket.Active)
-            {
+            { 
                 if (tag.ContainsKey(nameof(WhoAmI)))
                     rocket.WhoAmI = tag.GetInt(nameof(WhoAmI));
 
                 if (tag.ContainsKey(nameof(CurrentWorld)))
                     rocket.CurrentWorld = tag.GetString(nameof(CurrentWorld));
+
+                if (tag.ContainsKey(nameof(State)))
+                    rocket.State = (ActionState)tag.GetInt(nameof(State));
+
+                Console.WriteLine($"Rocket[{rocket.WhoAmI}]'s state was loaded: {rocket.State.ToString()}");
 
                 if (tag.ContainsKey(nameof(Position)))
                     rocket.Position = tag.Get<Vector2>(nameof(Position));
@@ -69,9 +77,6 @@ namespace Macrocosm.Content.Rockets
 
                 if (tag.ContainsKey(nameof(Inventory)))
                     rocket.Inventory = tag.Get<Inventory>(nameof(Inventory));
-
-                rocket.Launched = tag.ContainsKey(nameof(Launched));
-                rocket.Landing = tag.ContainsKey(nameof(Landing));
 
                 if (tag.ContainsKey(nameof(TargetLandingPosition)))
                     rocket.TargetLandingPosition = tag.Get<Vector2>(nameof(TargetLandingPosition));

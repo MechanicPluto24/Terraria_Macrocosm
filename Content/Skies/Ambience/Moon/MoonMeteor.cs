@@ -1,10 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using Terraria.DataStructures;
-using Terraria.Utilities;
-using Terraria;
+﻿using Macrocosm.Common.Drawing.Sky;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.Drawing.Sky;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using Terraria;
+using Terraria.Utilities;
 
 namespace Macrocosm.Content.Skies.Ambience.Moon
 {
@@ -20,7 +19,7 @@ namespace Macrocosm.Content.Skies.Ambience.Moon
             Effects = ((random.Next(2) != 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
             Frame = new(1, 4) { CurrentRow = (byte)random.Next(4) };
 
-            LifeTime = random.Next(4, 7) * 60;
+            LifeTime = random.Next(4, 7) * 240;
             OpacityNormalizedTimeToFadeIn = 0.01f;
             OpacityNormalizedTimeToFadeOut = 0.99f;
             BrightnessLerper = 1f;

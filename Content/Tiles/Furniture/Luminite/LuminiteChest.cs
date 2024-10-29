@@ -1,19 +1,22 @@
-﻿using Terraria.Audio;
-using Terraria.DataStructures;
-using Terraria.GameContent.ObjectInteractions;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.ObjectData;
-using Macrocosm.Content.Dusts;
-using Microsoft.Xna.Framework;
-using Terraria.Enums;
-using Macrocosm.Content.Items.Keys;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Enums;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Keys;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.Enums;
+using Terraria.GameContent.ObjectInteractions;
+using Terraria.Graphics.Renderers;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Luminite
 {
@@ -45,8 +48,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             for (int i = 0; i < styles.Count; i++)
             {
                 LuminiteStyle style = (LuminiteStyle)styles[i];
-                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{i}"), MapChestName);
-                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{i + 1}"), MapChestName);
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{i * 2}"), MapChestName);
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{(i * 2) + 1}"), MapChestName);
             }
 
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteChest>(), 0, 1);
@@ -58,6 +61,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Origin = new Point16(0, 1);
             TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
             TileObjectData.newTile.AnchorInvalidTiles = [
@@ -89,7 +94,53 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
         public override bool UnlockChest(int i, int j, ref short frameXAdjustment, ref int dustType, ref bool manual)
         {
-            DustType = dustType;
+            LuminiteStyle style = (LuminiteStyle)(Main.tile[i, j].TileFrameX / (18 * 2 * 2));
+            dustType = Utility.GetDustTypeFromLuminiteStyle(style);
+
+            if (style == LuminiteStyle.Luminite)
+                return true;
+
+            ref bool flag = ref WorldFlags.HeavenforgeShrineUnlocked;
+            switch (style)
+            {
+                case LuminiteStyle.Heavenforge: flag = ref WorldFlags.HeavenforgeShrineUnlocked; break;
+                case LuminiteStyle.LunarRust: flag = ref WorldFlags.LunarRustShrineUnlocked; break;
+                case LuminiteStyle.Astra: flag = ref WorldFlags.AstraShrineUnlocked; break;
+                case LuminiteStyle.DarkCelestial: flag = ref WorldFlags.DarkCelestialShrineUnlocked; break;
+                case LuminiteStyle.Mercury: flag = ref WorldFlags.MercuryShrineUnlocked; break;
+                case LuminiteStyle.StarRoyale: flag = ref WorldFlags.StarRoyaleShrineUnlocked; break;
+                case LuminiteStyle.Cryocore: flag = ref WorldFlags.CryocoreShrineUnlocked; break;
+                case LuminiteStyle.CosmicEmber: flag = ref WorldFlags.CosmicEmberShrineUnlocked; break;
+                default: break;
+            }
+
+            if(Main.netMode != NetmodeID.MultiplayerClient)
+            {
+                for (float f = 0f; f < 10f; f += 1f)
+                {
+                    int time = Main.rand.Next(20, 40);
+                    Particle.Create<PrettySparkle>((p) =>
+                    {
+                        p.Position = new Vector2(i, j) * 16f + new Vector2(16f) + Main.rand.NextVector2Circular(16f, 16f);
+                        p.Color = Utility.GetLightColorFromLuminiteStyle(style);
+                        p.Scale = new Vector2(1f + Main.rand.NextFloat() * 2f, 0.7f + Main.rand.NextFloat() * 0.7f);
+                        p.Velocity = new Vector2(0f, -2f) * Main.rand.NextFloat();
+                        p.FadeInNormalizedTime = 5E-06f;
+                        p.FadeOutNormalizedTime = 0.95f;
+                        p.TimeToLive = time;
+                        p.FadeOutEnd = time;
+                        p.FadeInEnd = time / 2;
+                        p.FadeOutStart = time / 2;
+                        p.AdditiveAmount = 0.35f;
+                        p.DrawHorizontalAxis = true;
+                        p.DrawVerticalAxis = true;
+                    });
+                }
+
+                WorldFlags.SetFlag(ref flag, true);
+                NetMessage.SendData(MessageID.WorldData);
+            }
+
             return true;
         }
 
@@ -106,11 +157,11 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Tile tile = Main.tile[i, j];
 
             if (tile.TileFrameX % 36 != 0)
-                 left--;
- 
+                left--;
+
             if (tile.TileFrameY != 0)
-                 top--;
- 
+                top--;
+
             int chest = Chest.FindChest(left, top);
             if (chest < 0)
                 return Language.GetTextValue("LegacyChestType.0");
@@ -183,10 +234,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                 {
                     // Make sure to change the code in UnlockChest if you don't want the chest to only unlock at night.
                     int key = ModContent.ItemType<XaocKey>();
-                    if (player.HasItemInInventoryOrOpenVoidBag(key) && Chest.Unlock(left, top) && player.ConsumeItem(key, includeVoidBag: true))
+                    if (player.HasItemInInventoryOrOpenVoidBag(key) && Chest.Unlock(left, top))
                     {
                         if (Main.netMode == NetmodeID.MultiplayerClient)
-                             NetMessage.SendData(MessageID.LockAndUnlock, -1, -1, null, player.whoAmI, 1f, left, top);
+                            NetMessage.SendData(MessageID.LockAndUnlock, -1, -1, null, player.whoAmI, 1f, left, top);
                     }
                 }
                 else
@@ -245,8 +296,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                     player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
                     if (Main.tile[left, top].TileFrameX / 36 % 2 == 1)
-                         player.cursorItemIconID = ModContent.ItemType<XaocKey>();
- 
+                        player.cursorItemIconID = ModContent.ItemType<XaocKey>();
+
                     player.cursorItemIconText = "";
                 }
             }

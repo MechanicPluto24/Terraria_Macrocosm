@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.damage = 120;
+            Item.damage = 95;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 52;
             Item.height = 16;
@@ -53,8 +53,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             // Shoot slugs
             for (int i = 0; i < 6; i++)
             {
+                // Shoot green slugs instead of musket balls
+                type = type == ProjectileID.Bullet ? ModContent.ProjectileType<CruithneGreenSlug>() : type; 
+
                 Vector2 perturbedSpeed = velocity.RotatedByRandom(MathHelper.ToRadians(12)) * Main.rand.NextFloat(0.7f, 100f);
-                Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, ModContent.ProjectileType<CruithneGreenSlug>(), damage, knockBack, player.whoAmI);
+                Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
             }
 
             // Shoot delirium shell

@@ -3,29 +3,53 @@ Mods: {
 		Common: {
 			Rocket: Rocket
 			LaunchPad: Launchpad
-			DevItem: Developer Item
-			Poster: Poster
+			MapNames.Poster: Poster
+
+			Tooltips: {
+				DeveloperItem: Developer
+				UnobtainableItem: Unobtainable
+				BurnFuel: This flammable item can be used as fuel
+				LiquidContainer: This item can store liquids
+				WeaponNerf: Cosmic radiation has degraded this weapon
+				WeaponBuff: Cosmic radiation has made this weapon more powerful
+			}
 		}
 
-		Messages: {
-			MarkerTooClose: The launch pad markers are too close to each other.
-			MarkerSolidBlock: There is a solid block, can't place launch pad here.
-			MarkerFoundGap: The area is not flat, can't place launchpad here.
-			MarkerNoPair: Found no other valid launch pad marker in the vicinity.
+		Liquids: {
+			Oil: Oil
+			RocketFuel: Rocket Fuel
 		}
 
 		GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
 	}
+
+	SubworldLibrary.Return: Save & Exit
 }
 
 ItemName.Coal: Christmas Coal
 
 Bestiary_FlavorText: {
-	npc_MoonLordCore: The Vortex Titan, and ruler of the Moon. His strength and abilities are matched only by his obsession with conquering Earth.
-	npc_CultistBoss: A fanatical leader brainwashed into bringing forth the apocalypse, and preparing the world for the arrival of the Moon Lord.
+	npc_KingSlime: A gluttonous gelatin that has made off with the crown of a deceased giant. It has amassed a sizeable following of slimes to defend their king.
+	npc_EyeofCthulhu: While long exposure has deprived this beast of its phantasmal abilities, this eyeball torn from Moon Lord himself remains a powerful menace.
+	npc_EaterofWorldsHead: A massive worm carrying the plague of death; the spawn of an ancient, long dead Dryad. Despite its fearsome power it is likely only a juvenile.
+	npc_BrainofCthulhu: The colossal cerebrum that once belonged to Moon Lord, it has formed the Crimson to rebuild its body and reunite with its master.
+	npc_QueenBee: A hyperoxic abomination formed from the rapid evolution of hornets to adapt to a chaotic, aggressive jungle, one that fiercely defends its hive from any intruders.
+	npc_Deerclops: While this monocular monstrosity bears a striking resemblance to some of Earth's extinct species, the sorcery it welds hints that this beast hails from a world far beyond our own.
+	npc_SkeletronHead: The ceaseless abhorrence of the Dungeon's dark magic has reanimated its former warden, one who goads foolish heroes to dare enter his stygian domain.
+	npc_WallofFlesh: Eight billion humans, restless light and dark spirits, and countless other creatures, all that remains of Old Earth's population sealed within a horrific, agonized mass of flesh.
+	npc_QueenSlimeBoss: The fallout of the hadean beast have brough forth a new melded monarch to oversee its slimy population. Imbued with ancient Hallowed gems, she rules both the lands and the skies.
+	npc_Retinazer: One of two biomechanical sentinels, inspired by Moon Lord's eyeball to monitor the Terrarian island for potential threats; the elusive Retinazer unleashes barrages of deadly lasers.
+	npc_Spazmatism: One of two biomechanical sentinels, inspired by Moon Lord's eyeball to monitor the Terrarian island for potential threats; the aggressive Spazmatism belches an inferno of cursed flames.
+	npc_TheDestroyer: The Eater of Worlds' unique biology proved a remarkable inspiration for the Destroyer, a goliath of steel built to challenge the apocalyptic monsters of New Earth.
+	npc_SkeletronPrime: Heavily inspired by the restless guardian of the Dungeon, Skeletron Prime boasts a horrific, diverse arsenal of weapons designed to oppose any that threaten its manufacturers.
+	npc_Plantera: Formerly one of the mightiest of the old Dryads, she has transformed into a vengeful floral goliath hell-bent on combatting the hostile environment that has befallen Earth.
+	npc_Golem: The Lihzarhd's devotion to the Sun motivated them to construct a powerful golem to guard their Temple. Its design is reminiscent of a powerful solar envoy.
+	npc_DukeFishron: This mutated pigron mostly feeds on small fish and the highly elusive truffle worms, but its diet is often eclipsed by its highly territorial behavior and use of hydrokinetic sorcery.
+	npc_HallowBoss: One of the ancient Dryads who abandoned her devotion to nature. Her mad obsession with the Sun has earned her an infamous reputation to those who trespass her home.
+	npc_CultistBoss: The leader of the dreaded Lunatic Cult; his and his followers' minds has been manipulated to seek only the preparations of Moon Lord's invasion of Earth.
 	npc_LunarTowerStardust: Infused with the celestial ashes of long dead stars, this tower brings forth the servants of Moon Lord to conquer the Earth.
 	npc_LunarTowerNebula: Infused with the swirling gases of a stellar nebula, this tower brings forth the servants of Moon Lord to conquer the Earth.
 	npc_LunarTowerSolar: Infused with the incandescent fury of a star, this tower brings forth the servants of Moon Lord to conquer the Earth.
 	npc_LunarTowerVortex: Infused with the ceaseless storms of a cosmic vortex, this tower brings forth the servants of Moon Lord to conquer the Earth.
-	npc_WallofFlesh: The unholy remains of humanity, a visceral mass of flesh and powerful magic imprisoned by the denizens of the Underworld.
+	npc_MoonLordCore: The Vortex Titan, and ruler of the Moon. His mastery over phantasmal and otherworldly sorcery grants him nigh-limitless power; his fearsome strength and abilities are matched only by his ego, his lust for power, and his obsession with conquering Earth.
 }

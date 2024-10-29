@@ -1,17 +1,14 @@
-﻿using Macrocosm.Common.Global.NPCs;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
-using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -52,9 +49,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.width = 72;
             NPC.height = 84;
-            NPC.lifeMax = 1000;
-            NPC.damage = 65;
-            NPC.defense = 70;
+            NPC.lifeMax = 1500;
+            NPC.damage = 55;
+            NPC.defense = 100;
             NPC.HitSound = SoundID.NPCHit2;
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.aiStyle = -1;
@@ -113,7 +110,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (AI_State == ActionState.Chase)
                 NPC.damage = NPC.defDamage;
             else
-                NPC.damage = NPC.defDamage * 2;
+                NPC.damage = (int)(NPC.defDamage * 1.5);
 
             if (AI_State != ActionState.Spin)
                 Utility.LookAt(playerActive ? Main.player[NPC.target].Center : NPC.Center + NPC.velocity, NPC, 0);

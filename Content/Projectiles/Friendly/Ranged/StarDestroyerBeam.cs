@@ -2,13 +2,10 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Macrocosm.Content.Projectiles.Friendly.Ranged.StarDestroyerStar;
-using static Macrocosm.Content.Rockets.UI.Navigation.UILaunchButton;
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class StarDestroyerBeam : ModProjectile
@@ -59,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(90);
 
-            if(Projectile.alpha > 0)
+            if (Projectile.alpha > 0)
                 Projectile.alpha -= 15;
         }
 

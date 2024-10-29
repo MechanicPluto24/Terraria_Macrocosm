@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
-            Item.damage = 300;
+            Item.damage = 350;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 16;
             Item.width = 50;
@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.knockBack = 5;
             Item.value = 100000;
             Item.rare = ModContent.RarityType<MoonRarityT3>();
-            Item.UseSound = SoundID.Item20;
+            Item.UseSound = SoundID.Item43;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<MicronovaPortal>();
             Item.shootSpeed = 10f;

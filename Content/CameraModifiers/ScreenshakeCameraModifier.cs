@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.Graphics.CameraModifiers;
 
@@ -9,22 +10,24 @@ namespace Macrocosm.Content.CameraModifiers
         public string UniqueIdentity { get; private set; }
         public bool Finished { get; private set; }
 
-        private float screenShakeIntensity = 0f;
+        private float intensity = 0f;
+        private float multiplier;
 
-        public ScreenshakeCameraModifier(float intensity, string uniqueIdentity)
+        public ScreenshakeCameraModifier(float intensity, string uniqueIdentity, float multiplier = 0.9f)
         {
-            screenShakeIntensity = MathHelper.Clamp(intensity, 0, 100);
+            this.intensity = Math.Clamp(intensity, 0, 100);
+            this.multiplier = Math.Clamp(multiplier, 0f, 0.99f);
             UniqueIdentity = uniqueIdentity;
         }
 
         public void Update(ref CameraInfo cameraPosition)
         {
-            cameraPosition.CameraPosition += new Vector2(Main.rand.NextFloat(screenShakeIntensity), Main.rand.NextFloat(screenShakeIntensity));
-            screenShakeIntensity *= 0.9f;
+            cameraPosition.CameraPosition += new Vector2(Main.rand.NextFloat(intensity), Main.rand.NextFloat(intensity));
+            intensity *= multiplier;
 
-            if (screenShakeIntensity < 0.1f)
+            if (intensity < 0.1f)
             {
-                screenShakeIntensity = 0f;
+                intensity = 0f;
                 Finished = true;
             }
         }

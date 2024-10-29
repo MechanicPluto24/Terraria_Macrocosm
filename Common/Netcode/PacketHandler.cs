@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
 using System;
@@ -24,6 +24,8 @@ namespace Macrocosm.Common.Netcode
         SyncMacrocosmPlayer,
         RequestLastSubworld,
         LastSubworldCheck,
+        SpawnNPCFromClient,
+        SyncNPCFromClient,
         SyncTEFromClient,
         SyncPowerWire
     }
@@ -70,8 +72,16 @@ namespace Macrocosm.Common.Netcode
                     SubworldTravelPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
                     break;
 
+                case MessageType.SpawnNPCFromClient:
+                    NetHelper.ReceiveSpawnNPCFromClient(reader, whoAmI);
+                    break;
+
+                case MessageType.SyncNPCFromClient:
+                    NetHelper.ReceiveSyncNPCFromClient(reader, whoAmI);
+                    break;
+
                 case MessageType.SyncTEFromClient:
-                    TENetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
+                    NetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
                     break;
 
                 case MessageType.SyncPowerWire:

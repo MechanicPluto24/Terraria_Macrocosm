@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
@@ -42,7 +41,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.alpha = 255;
             Projectile.timeLeft = 35;
             Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 10;
+            Projectile.localNPCHitCooldown = 25;
         }
         public override bool ShouldUpdatePosition() => false;
 
@@ -51,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Player player = Main.player[Projectile.owner];
 
             if (AITimer < 1)
-                 Projectile.velocity = new Vector2(AimX, AimY);
+                Projectile.velocity = new Vector2(AimX, AimY);
 
             Projectile.rotation = Projectile.velocity.ToRotation();
 
@@ -71,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if (Transparency < 1f && AITimer < 25)
                 Transparency += 0.1f;
-            else 
+            else
                 Transparency -= 0.2f;
         }
 
@@ -115,10 +114,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Color color = new Color(171, 255, 255).WithAlpha(225) * Transparency * (0.9f + (0.1f * MathF.Sin(AITimer)));
-            for(int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Vector2 visualStartPosition = startPosition + new Vector2(0, Main.rand.NextFloat(-10f, 4f)).RotatedBy(Projectile.velocity.ToRotation());
-                Utility.DrawBeam(Main.spriteBatch, texture, visualStartPosition, endPosition, drawScale, color, new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
+                Utility.DrawBeam(texture, visualStartPosition, endPosition, drawScale, color, new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
             }
 
             Main.spriteBatch.End();

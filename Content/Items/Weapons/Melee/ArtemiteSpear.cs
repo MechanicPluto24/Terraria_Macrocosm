@@ -24,11 +24,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.value = Item.sellPrice(gold: 1);
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.useAnimation = 14;
-            Item.useTime = 14;
+            Item.useAnimation = 13;
+            Item.useTime = 13;
             Item.UseSound = SoundID.Item71;
             Item.autoReuse = true;
-            Item.damage = 225;
+            Item.damage = 220;
             Item.knockBack = 6.5f;
             Item.noUseGraphic = true;
             Item.DamageType = DamageClass.MeleeNoSpeed;
@@ -37,15 +37,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<ArtemiteSpearProjectile>();
         }
 
-        private int altUseCooldown;
-
-        public override void UpdateInventory(Player player)
-        {
-            if (altUseCooldown > 0)
-                altUseCooldown--;
-        }
-
-        public override bool AltFunctionUse(Player player) => altUseCooldown <= 0;
+        public override bool AltFunctionUse(Player player) => player.GetItemAltUseCooldown(Type) <= 0;
 
         public override bool CanUseItem(Player player)
         {
@@ -54,7 +46,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
                 Item.useTime = 25;
                 Item.useAnimation = 17;
                 Item.useStyle = ItemUseStyleID.Swing;
-                altUseCooldown = 25;
+                player.SetItemAltUseCooldown(Type, 25);
                 return true;
             }
             else if (player.ownedProjectileCounts[ModContent.ProjectileType<ArtemiteSpearProjectile>()] < 1)

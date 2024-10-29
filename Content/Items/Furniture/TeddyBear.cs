@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Sets;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture
@@ -7,6 +8,7 @@ namespace Macrocosm.Content.Items.Furniture
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

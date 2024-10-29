@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Bases;
-using Macrocosm.Common.Bases.NPCs;
+﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -22,9 +21,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void SetStaticDefaults()
         {
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new()  
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
             {
-                CustomTexturePath = "Macrocosm/Content/NPCs/Enemies/Moon/CraterCrawler_Bestiary", // If the NPC is multiple parts like a worm, a custom texture for the Bestiary is encouraged.
+                CustomTexturePath = Texture.Replace("Head", "") + "_Bestiary",
                 Position = new Vector2(40f, 24f),
                 PortraitPositionXOverride = 0f,
                 PortraitPositionYOverride = 12f
@@ -34,13 +33,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
         }
-
+        public override float FallSpeed => 0.4f;
         public override void SetDefaults()
         {
             NPC.CloneDefaults(NPCID.DiggerHead);
-            NPC.lifeMax = 900;
-            NPC.damage = 90;
-            NPC.defense = 40;
+            NPC.lifeMax = 2000;
+            NPC.damage = 65;
+            NPC.defense = 100;
             NPC.width = 20;
             NPC.height = 20;
             SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
@@ -197,7 +196,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true  };
+            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
 

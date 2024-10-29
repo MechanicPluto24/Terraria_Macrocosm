@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
@@ -12,6 +11,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class Bruiser : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public enum ActionState
         {
             Walk,

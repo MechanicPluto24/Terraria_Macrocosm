@@ -12,22 +12,8 @@ namespace Macrocosm.Content.LoadingScreens
 {
     public class EarthLoadingScreen : LoadingScreen
     {
-        private List<Asset<Texture2D>> earthBackgrounds;
+        private static List<Asset<Texture2D>> earthBackgrounds;
         private Asset<Texture2D> earthBackground;
-
-        public EarthLoadingScreen()
-        {
-            AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
-
-            earthBackgrounds = [
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Africa"),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Asia", mode),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Australia", mode),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Europe", mode),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_NorthAmerica", mode),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_SouthAmerica", mode)
-            ];
-        }
 
         private readonly float animationDuration = 1000f;
         protected override void UpdateAnimation()
@@ -42,6 +28,17 @@ namespace Macrocosm.Content.LoadingScreens
         protected override void Reset()
         {
             ResetAnimation();
+
+            AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
+            earthBackgrounds ??= [
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Africa"),
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Asia", mode),
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Australia", mode),
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Europe", mode),
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_NorthAmerica", mode),
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_SouthAmerica", mode)
+            ];
+
             earthBackground = earthBackgrounds.GetRandom();
         }
 

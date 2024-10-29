@@ -1,12 +1,8 @@
-﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Particles;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -21,7 +17,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         public float ScreenshakeIntensity;
 
         public float RotationMultiplier;
-        public float BlastRadiusMultiplier = 1f;
+        public int BlastRadius = 128;
 
         public override void Load()
         {
@@ -49,7 +45,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if(Type == info.DamageSource.SourceProjectileType)
+            if (Type == info.DamageSource.SourceProjectileType)
             {
                 // Can't use info.DamageSource = PlayerDeathReason.ByCustomReason(...) here:
                 // HurtInfo is a value type and a DamageSource reassignment won't be reflected outside this method
@@ -78,13 +74,15 @@ namespace Macrocosm.Common.Bases.Projectiles
         {
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
-            Projectile.Resize((int)(Projectile.width * BlastRadiusMultiplier), (int)(Projectile.height * BlastRadiusMultiplier));
+            Projectile.Resize(BlastRadius, BlastRadius);
             Projectile.knockBack = 12f;
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Projectile.timeLeft = 3;
+            if(Projectile.timeLeft > 3)
+                Projectile.timeLeft = 3;
+
             Projectile.velocity *= 0f;
             return false;
         }

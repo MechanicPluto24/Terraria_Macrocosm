@@ -1,10 +1,11 @@
 CraterDemon
-	Life: 100000
+	Life: 80000
 	Defense: 150
 	KB resist: 0
-	Damage: 80
+	Damage: 50
 	Drops:
 		Crater Demon Trophy, 10%
+		Xaoc Key, 100%
 		Treasure Bag (Crater Demon), 100%, This is an Expert Mode drop rate
 		Crater Demon Relic, 100%, This is a Master Mode drop rate
 		Toy Rocket, 25%, This is a Master Mode drop rate
@@ -35,19 +36,11 @@ KyaniteScarabCritter
 	KB resist: 1
 	Damage: 0
 
-Bruiser
-	Life: 10000
-	Defense: 80
-	KB resist: 0
-	Damage: 150
-	Drops:
-		Moonstone, (1-5) 10%
-
 Clavite
-	Life: 700
-	Defense: 60
+	Life: 950
+	Defense: 110
 	KB resist: 0
-	Damage: 85
+	Damage: 45
 	Drops:
 		Alien Residue, 25%
 		Moonstone, (1-5) 10%
@@ -59,10 +52,10 @@ CraterCrawlerBody
 	Damage: 60
 
 CraterCrawlerHead
-	Life: 900
-	Defense: 40
+	Life: 2000
+	Defense: 100
 	KB resist: 0
-	Damage: 90
+	Damage: 65
 	Drops:
 		Alien Residue, (1-2) 50%
 		Moonstone, (1-5) 10%
@@ -74,113 +67,55 @@ CraterCrawlerTail
 	Damage: 50
 
 CrescentGhoul
-	Life: 1000
-	Defense: 70
+	Life: 1500
+	Defense: 100
 	KB resist: 0
-	Damage: 65
+	Damage: 55
 	Drops:
 		Alien Residue, 33.33%
 		Moonstone, (1-5) 10%
 
-Dweller
-	Life: 20000
-	Defense: 25
-	KB resist: 0.5
-	Damage: 150
-	Drops:
-		Moonstone, (1-5) 10%
-
-Hermite
-	Life: 600
-	Defense: 90
-	KB resist: 0
-	Damage: 60
-	Drops:
-		Regolith, 50%
-		Moonstone, (1-5) 10%
-
 KyaniteScarabSmall
-	Life: 200
-	Defense: 62
+	Life: 300
+	Defense: 90
 	KB resist: 0.6
-	Damage: 50
+	Damage: 40
 	Drops:
 		Moonstone, (1-5) 10%
 
 Leaper
 	Life: 900
-	Defense: 60
+	Defense: 70
 	KB resist: 0.03
-	Damage: 65
+	Damage: 55
 	Drops:
 		Moonstone, (1-5) 10%
 
 LuminiteElemental
-	Life: 580
-	Defense: 80
+	Life: 1300
+	Defense: 100
 	KB resist: 0.2
-	Damage: 75
+	Damage: 55
 	Drops:
 		Luminite, (2-12) 50%
 		Moonstone, (1-5) 10%
 
 LuminiteSlime
-	Life: 550
-	Defense: 64
+	Life: 700
+	Defense: 80
 	KB resist: 0.5
-	Damage: 80
+	Damage: 50
 	Drops:
 		Luminite, (2-12) 50%
 		Moonstone, (1-5) 10%
 
 LuminiteSlimeVolatile
 	Life: 650
-	Defense: 68
+	Defense: 70
 	KB resist: 0.5
-	Damage: 80
-	Drops:
-		Luminite, (2-12) 50%
-		Moonstone, (1-5) 10%
-
-LunarChimera
-	Life: 1500
-	Defense: 90
-	KB resist: 0.5
-	Damage: 100
-	Drops:
-		Moonstone, (1-5) 10%
-
-MoonLich
-	Life: 14000
-	Defense: 75
-	KB resist: 0
 	Damage: 60
 	Drops:
-		Space Dust, (3-5) 100%
-		Moonstone, (1-5) 10%
-
-Scatterbrained
-	Life: 650
-	Defense: 70
-	KB resist: 0.2
-	Damage: 80
-	Drops:
-		Moonstone, (1-5) 10%
-
-XenoHive
-	Life: 1000
-	Defense: 60
-	KB resist: 0.3
-	Damage: 65
-	Drops:
-		Moonstone, (1-5) 10%
-
-XenoHornet
-	Life: 200
-	Defense: 30
-	KB resist: 0.3
-	Damage: 80
-	Drops:
+		Luminite, (2-12) 50%
 		Moonstone, (1-5) 10%
 
 MoonWormBody
@@ -190,10 +125,10 @@ MoonWormBody
 	Damage: 120
 
 MoonWormHead
-	Life: 3250
-	Defense: 63
+	Life: 10000
+	Defense: 160
 	KB resist: 0
-	Damage: 175
+	Damage: 100
 	Drops:
 		Alien Residue, (4-10) 100%
 		Moonstone, (1-5) 10%
@@ -205,27 +140,27 @@ MoonWormTail
 	Damage: 100
 
 MoonZombie
-	Life: 500
-	Defense: 65
+	Life: 1200
+	Defense: 90
 	KB resist: 0.5
-	Damage: 70
+	Damage: 65
 	Drops:
 		Rocket Fuel Canister, (1-4) 10%
 		Moonstone, (1-5) 10%
 
 RadioactiveSlime
-	Life: 2000
-	Defense: 60
+	Life: 2100
+	Defense: 80
 	KB resist: 0.5
 	Damage: 50
 	Drops:
 		Moonstone, (1-5) 10%
 
 RegolithSlime
-	Life: 450
-	Defense: 50
+	Life: 900
+	Defense: 60
 	KB resist: 0.5
-	Damage: 60
+	Damage: 40
 	Drops:
 		Space Dust, 50%
 		Moonstone, (1-5) 10%
@@ -234,16 +169,24 @@ Shade
 	Life: 500
 	Defense: 60
 	KB resist: 0
-	Damage: 70
+	Damage: 50
 	Drops:
 		Space Dust, 25%
 		Moonstone, (1-5) 10%
 
+ZombieEngineer
+	Life: 1100
+	Defense: 60
+	KB resist: 0.01
+	Damage: 65
+	Drops:
+		Moonstone, (1-5) 10%
+
 ZombieSecurity
-	Life: 650
-	Defense: 75
+	Life: 1400
+	Defense: 100
 	KB resist: 0.5
-	Damage: 75
+	Damage: 65
 	Drops:
 		Tycho .50, 15.97%, This is an Expert Mode drop rate
 		Tycho .50, 8.33%

@@ -1,9 +1,7 @@
 ﻿using Macrocosm.Common.Systems.UI;
-using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -18,6 +16,16 @@ namespace Macrocosm.Common.Systems
         public static bool DownedDementoxin = false;
         public static bool DownedLunalgamate = false;
 
+        public static bool LuminiteShrineUnlocked = false;
+        public static bool HeavenforgeShrineUnlocked = false;
+        public static bool LunarRustShrineUnlocked = false;
+        public static bool AstraShrineUnlocked = false;
+        public static bool DarkCelestialShrineUnlocked = false;
+        public static bool MercuryShrineUnlocked = false;
+        public static bool StarRoyaleShrineUnlocked = false;
+        public static bool CryocoreShrineUnlocked = false;
+        public static bool CosmicEmberShrineUnlocked = false;
+
         public static bool FoundVulcan = false;
         public static bool DeimosReturn = false;
 
@@ -27,7 +35,7 @@ namespace Macrocosm.Common.Systems
         /// </summary>
         /// <param name="flag"> The flag. </param>
         /// <param name="value"> The value to set, usually true. </param>
-        /// <param name="flagName"> The flag name for special logic. Set automatically </param>
+        /// <param name="flagName"> The flag name, for special logic. Set automatically </param>
         public static void SetFlag(ref bool flag, bool value = true, [CallerArgumentExpression(nameof(flag))] string flagName = null)
         {
             bool previousValue = flag;
@@ -51,15 +59,22 @@ namespace Macrocosm.Common.Systems
 
         public override void ClearWorld()
         {
-            // Moon flags
             DownedCraterDemon = false;
             DownedMoonBeast = false;
             DownedDementoxin = false;
             DownedLunalgamate = false;
-
-            // Global flags
+            LuminiteShrineUnlocked = false;
             FoundVulcan = false;
             DeimosReturn = false;
+
+            HeavenforgeShrineUnlocked = false;
+            LunarRustShrineUnlocked = false;
+            AstraShrineUnlocked = false;
+            DarkCelestialShrineUnlocked = false;
+            MercuryShrineUnlocked = false;
+            StarRoyaleShrineUnlocked = false;
+            CryocoreShrineUnlocked = false;
+            CosmicEmberShrineUnlocked = false;
         }
 
         public override void SaveWorldData(TagCompound tag) => SaveData(tag);
@@ -67,59 +82,99 @@ namespace Macrocosm.Common.Systems
 
         public static void SaveData(TagCompound tag)
         {
-            // Moon flags
             if (DownedCraterDemon) tag[nameof(DownedCraterDemon)] = true;
             if (DownedMoonBeast) tag[nameof(DownedMoonBeast)] = true;
             if (DownedDementoxin) tag[nameof(DownedDementoxin)] = true;
             if (DownedLunalgamate) tag[nameof(DownedLunalgamate)] = true;
 
-            // Global flags
+            if (LuminiteShrineUnlocked) tag[nameof(DownedLunalgamate)] = true;
+            if (HeavenforgeShrineUnlocked) tag[nameof(HeavenforgeShrineUnlocked)] = true;
+            if (LunarRustShrineUnlocked) tag[nameof(LunarRustShrineUnlocked)] = true;
+            if (AstraShrineUnlocked) tag[nameof(AstraShrineUnlocked)] = true;
+            if (DarkCelestialShrineUnlocked) tag[nameof(DarkCelestialShrineUnlocked)] = true;
+            if (MercuryShrineUnlocked) tag[nameof(MercuryShrineUnlocked)] = true;
+            if (StarRoyaleShrineUnlocked) tag[nameof(StarRoyaleShrineUnlocked)] = true;
+            if (CryocoreShrineUnlocked) tag[nameof(CryocoreShrineUnlocked)] = true;
+            if (CosmicEmberShrineUnlocked) tag[nameof(CosmicEmberShrineUnlocked)] = true;
+
             if (FoundVulcan) tag[nameof(FoundVulcan)] = true;
             if (DeimosReturn) tag[nameof(DeimosReturn)] = true;
         }
 
         public static void LoadData(TagCompound tag)
         {
-            // Moon flags 
             DownedCraterDemon = tag.ContainsKey(nameof(DownedCraterDemon));
             DownedMoonBeast = tag.ContainsKey(nameof(DownedMoonBeast));
             DownedDementoxin = tag.ContainsKey(nameof(DownedDementoxin));
             DownedLunalgamate = tag.ContainsKey(nameof(DownedLunalgamate));
 
-            // Global flags
+            LuminiteShrineUnlocked = tag.ContainsKey(nameof(LuminiteShrineUnlocked));
+            HeavenforgeShrineUnlocked = tag.ContainsKey(nameof(HeavenforgeShrineUnlocked));
+            LunarRustShrineUnlocked = tag.ContainsKey(nameof(LunarRustShrineUnlocked));
+            AstraShrineUnlocked = tag.ContainsKey(nameof(AstraShrineUnlocked));
+            DarkCelestialShrineUnlocked = tag.ContainsKey(nameof(DarkCelestialShrineUnlocked));
+            MercuryShrineUnlocked = tag.ContainsKey(nameof(MercuryShrineUnlocked));
+            StarRoyaleShrineUnlocked = tag.ContainsKey(nameof(StarRoyaleShrineUnlocked));
+            CryocoreShrineUnlocked = tag.ContainsKey(nameof(CryocoreShrineUnlocked));
+            CosmicEmberShrineUnlocked = tag.ContainsKey(nameof(CosmicEmberShrineUnlocked));
+
             FoundVulcan = tag.ContainsKey(nameof(FoundVulcan));
             DeimosReturn = tag.ContainsKey(nameof(DeimosReturn));
+
         }
 
         public override void NetSend(BinaryWriter writer)
         {
-            var flags = new BitsByte();
+            BitsByte bb = new
+            (
+                DownedCraterDemon,
+                DownedMoonBeast,
+                DownedDementoxin,
+                DownedLunalgamate,
 
-            // Moon flags
-            flags[0] = DownedCraterDemon;
-            flags[1] = DownedMoonBeast;
-            flags[2] = DownedDementoxin;
-            flags[3] = DownedLunalgamate;
+                LuminiteShrineUnlocked,
+                HeavenforgeShrineUnlocked,
+                LunarRustShrineUnlocked,
+                AstraShrineUnlocked
+            );
 
-            // Global flags 
-            flags[4] = FoundVulcan;
-            flags[5] = DeimosReturn;
-            writer.Write(flags);
+            BitsByte bb2 = new
+            (
+                DarkCelestialShrineUnlocked,
+                MercuryShrineUnlocked,
+                StarRoyaleShrineUnlocked,
+                CryocoreShrineUnlocked,
+                CosmicEmberShrineUnlocked,
+
+                FoundVulcan,
+                DeimosReturn
+            );
+
+            writer.Write(bb);
+            writer.Write(bb2);
         }
 
         public override void NetReceive(BinaryReader reader)
         {
-            BitsByte flags = reader.ReadByte();
+            BitsByte bb = reader.ReadByte();
+            BitsByte bb2 = reader.ReadByte();
 
-            // Moon flags
-            DownedCraterDemon = flags[0];
-            DownedMoonBeast = flags[1];
-            DownedDementoxin = flags[2];
-            DownedLunalgamate = flags[3];
+            DownedCraterDemon = bb[0];
+            DownedMoonBeast = bb[1];
+            DownedDementoxin = bb[2];
+            DownedLunalgamate = bb[3];
+            LuminiteShrineUnlocked = bb[4];
+            HeavenforgeShrineUnlocked = bb[5];
+            LunarRustShrineUnlocked = bb[6];
+            AstraShrineUnlocked = bb[7];
 
-            // Global flags
-            FoundVulcan = flags[4];
-            DeimosReturn = flags[5];
+            DarkCelestialShrineUnlocked = bb2[0];
+            MercuryShrineUnlocked = bb2[1];
+            StarRoyaleShrineUnlocked = bb2[2];
+            CryocoreShrineUnlocked = bb2[3]; 
+            CosmicEmberShrineUnlocked = bb2[4]; 
+            FoundVulcan = bb2[5];
+            DeimosReturn = bb2[6];
         }
     }
 }

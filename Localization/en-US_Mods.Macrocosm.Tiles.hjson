@@ -1,3 +1,30 @@
+LuminiteChest: {
+	MapEntry0: Luminite Chest
+	MapEntry1: Luminite Chest (Locked)
+	MapEntry2: Heavenforge Chest
+	MapEntry3: Heavenforge Chest (Locked)
+	MapEntry4: Lunar Rust Chest
+	MapEntry5: Lunar Rust Chest (Locked)
+	MapEntry6: Astra Chest
+	MapEntry7: Astra Chest (Locked)
+	MapEntry8: Dark Celestial Chest
+	MapEntry9: Dark Celestial Chest (Locked)
+	MapEntry10: Mercury Chest
+	MapEntry11: Mercury Chest (Locked)
+	MapEntry12: Star Royale Chest
+	MapEntry13: Star Royale Chest (Locked)
+	MapEntry14: Cryocore Chest
+	MapEntry15: Cryocore Chest (Locked)
+	MapEntry16: Cosmic Ember Chest
+	MapEntry17: Cosmic Ember Chest (Locked)
+}
+
+IndustrialChest: {
+	MapEntryNormal: Industrial Storage Unit
+	MapEntryUnlocked: Industrial Electronic Storage Unit
+	MapEntryLocked: Industrial Electronic Storage Unit (Locked)
+}
+
 LaunchPadMarker.MapEntry: Launch Pad Marker
 IndustrialLoom.MapEntry: Industrial Loom
 AluminumOre.MapEntry: Aluminum Ore
@@ -35,13 +62,6 @@ DeadworldMusicBox.MapEntry: Music Box (Deadworld)
 RequiemMusicBox.MapEntry: Music Box (Requiem)
 SpaceInvaderMusicBox.MapEntry: Music Box (Space Invader)
 StygiaMusicBox.MapEntry: Music Box (Stygia)
-
-IndustrialChest: {
-	MapEntryNormal: Industrial Storage Unit
-	MapEntryUnlocked: Industrial Electronic Storage Unit
-	MapEntryLocked: Industrial Electronic Storage Unit (Locked)
-}
-
 EarthGlobe.MapEntry: Earth Globe
 PowerJunction.MapEntry: Power Junction
 Computer.MapEntry: Computer
@@ -66,22 +86,9 @@ IndustrialServer.MapEntry: Server
 Medkit.MapEntry: Medkit
 IndustrialBulkheadClosed.MapEntry: Bulkhead
 IndustrialBulkheadOpen.MapEntry: Bulkhead
-
-LuminiteChest: {
-	MapEntry0: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry0
-	MapEntry1: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry1
-	MapEntry2: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry2
-	MapEntry3: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry3
-	MapEntry4: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry4
-	MapEntry5: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry5
-	MapEntry6: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry6
-	MapEntry7: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry7
-	MapEntry8: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry8
-	MapEntry9: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry9
-}
-
 IrradiatedAltar.MapEntry: Irradiated Altar
 AntiRadiationPills.MapEntry: Anti Radiation Pills
 KyaniteNest.MapEntry: Kyanite Nest
 Fridge.MapEntry: Fridge
 IVPole.MapEntry: IV Pole
+InvarBar.MapEntry: Invar Bar

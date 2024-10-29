@@ -75,14 +75,7 @@ namespace Macrocosm.Common.Utils
                     Vector2 v2 = oldPos[k - 1] + origin + rotatableOffsetFromCenter.RotatedBy(oldRot[k - 1]) - v1;
                     float brightness = Terraria.Utils.Remap(k, 0f, oldPos.Length, 1f, 0f);
                     Color color = endColor is null ? startColor * brightness : Color.Lerp((Color)endColor, startColor, brightness);
-
-                    SpriteBatch spriteBatch = Main.spriteBatch;
-                    SpriteBatchState state = spriteBatch.SaveState();
-                    spriteBatch.EndIfBeginCalled();
-                    spriteBatch.Begin(SpriteSortMode.Deferred, blendState: BlendState.NonPremultiplied, state);
                     Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, v1 - Main.screenPosition, rect, color, v2.ToRotation() + ((float)Math.PI / 2f), new Vector2(rect.Width / 2f, rect.Height), new Vector2(MathHelper.Lerp(startWidth, endWidth, (float)k / oldPos.Length), v2.Length()), SpriteEffects.None, 1);
-                    spriteBatch.End();
-                    spriteBatch.Begin(state);
                 }
             }
         }
@@ -94,13 +87,13 @@ namespace Macrocosm.Common.Utils
         /// <br/> <see cref="DelegateMethods.TurretLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
         /// <br/> <see cref="DelegateMethods.LightningLaserDraw(int, Vector2, float, Rectangle, out float, out Rectangle, out Vector2, out Color)"/>
         /// </summary>
-        public static void DrawBeam(SpriteBatch spriteBatch, Texture2D texture, Vector2 startPosition, Vector2 endPosition, Vector2 drawScale, Color beamColor, Terraria.Utils.LaserLineFraming lineFraming)
+        public static void DrawBeam(Texture2D texture, Vector2 startPosition, Vector2 endPosition, Vector2 drawScale, Color beamColor, Terraria.Utils.LaserLineFraming lineFraming)
         {
             DelegateMethods.c_1 = beamColor; // c_1 is an unnamed decompiled variable which is the render color of the beam drawn by the lineFraming delegate.
-            Terraria.Utils.DrawLaser(spriteBatch, texture, startPosition, endPosition, drawScale, lineFraming);
+            Terraria.Utils.DrawLaser(Main.spriteBatch, texture, startPosition, endPosition, drawScale, lineFraming);
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, int points, Color color, float scale = 1f, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             float rotationStep = MathHelper.Pi / points;
@@ -115,12 +108,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, List<float> rotations, Color color, float scale = 1f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 
@@ -132,12 +125,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, int points, Color color, Vector2 scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, int points, Color color, Vector2 scale, float rotation = 0f, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             float rotationStep = MathHelper.Pi / points;
@@ -152,12 +145,12 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
 
-        public static void DrawStar(this SpriteBatch spriteBatch, Vector2 position, List<float> rotations, Color color, Vector2 scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
+        public static void DrawStar(Vector2 position, List<float> rotations, Color color, Vector2 scale, SpriteEffects spriteEffects = SpriteEffects.None, bool entity = false)
         {
             Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
 
@@ -169,7 +162,7 @@ namespace Macrocosm.Common.Utils
                 }
                 else
                 {
-                    spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
+                    Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
                 }
             }
         }
@@ -184,13 +177,13 @@ namespace Macrocosm.Common.Utils
             Vector2 scaleX = new Vector2(fatness.X * 0.5f, scale.X) * fade;
             _ = new Vector2(fatness.Y * 0.5f, scale.Y) * fade;
 
-            Main.spriteBatch.DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
-            Main.spriteBatch.DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
+            DrawStar(drawpos, 2, color, scaleX, spriteEffects: dir, entity: true);
+            DrawStar(drawpos, 2, color2, scaleX * 0.6f, spriteEffects: dir, entity: true);
         }
 
         public static void DrawPrettyStarSparkle(float opacity, SpriteEffects dir, Vector2 drawPos, Color drawColor, Color shineColor, float flareCounter, float fadeInStart, float fadeInEnd, float fadeOutStart, float fadeOutEnd, float rotation, Vector2 scale, Vector2 fatness)
         {
-            Texture2D sparkleTexture = TextureAssets.Extra[98].Value;
+            Texture2D sparkleTexture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
             Color bigColor = shineColor * opacity * 0.5f;
             bigColor.A = 0;
             Vector2 origin = sparkleTexture.Size() / 2f;
@@ -229,22 +222,18 @@ namespace Macrocosm.Common.Utils
 
         // TODO: - Add variation based on current subworld's day/night lengths
         //		 - Remove magic numbers lol 
-        /// <summary> Used for linear brightness scaling along an entire day/night cycle  </summary>
-        public static float GetProgressNoonToMidnight(float minBrightness, float maxBrightness)
+        /// <summary> Used for linear scaling along an entire day/night cycle  </summary>
+        public static float ScaleNoonToMidnight(float min, float max)
         {
             float brightness;
             double totalTime = Main.dayTime ? Main.time : Main.dayLength + Main.time;
 
-            float diff = maxBrightness - minBrightness;
+            float diff = max - min;
 
             if (totalTime <= 27000)
-            {
-                brightness = minBrightness + (maxBrightness * ((diff * 0.4f) + (diff * 0.6f * ((float)totalTime / 27000))));
-            }
+                brightness = min + (max * ((diff * 0.4f) + (diff * 0.6f * ((float)totalTime / 27000))));
             else
-            {
-                brightness = totalTime >= 70200 ? diff * 0.4f * ((float)(totalTime - 70200) / 16200) : maxBrightness - ((float)(totalTime - 27000) / 43200);
-            }
+                brightness = totalTime >= 70200 ? diff * 0.4f * ((float)(totalTime - 70200) / 16200) : max - ((float)(totalTime - 27000) / 43200);
 
             return brightness;
         }
@@ -1408,28 +1397,28 @@ namespace Macrocosm.Common.Utils
         {
             Vector2 origin = overrideOrigin != default ? overrideOrigin : new Vector2(frame.Width / framecountX / 2, texture.Height / framecount / 2);
             Color lightColor = overrideColor != null ? (Color)overrideColor : GetLightColor(position + new Vector2(width * 0.5f, height * 0.5f));
-            if (sb is List<DrawData>)
+            if (sb is List<DrawData> drawDatas)
             {
                 DrawData dd = new(texture, GetDrawPosition(position, origin, width, height, texture.Width, texture.Height, frame, framecount, framecountX, scale, drawCentered), frame, lightColor, rotation, origin, scale, direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0)
                 {
                     shader = shader
                 };
-                ((List<DrawData>)sb).Add(dd);
+                drawDatas.Add(dd);
             }
-            else if (sb is SpriteBatch)
+            else if (sb is SpriteBatch spriteBatch)
             {
                 bool applyDye = shader > 0;
                 if (applyDye)
                 {
-                    ((SpriteBatch)sb).End();
-                    ((SpriteBatch)sb).Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+                    spriteBatch.End();
+                    spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
                     GameShaders.Armor.ApplySecondary(shader, Main.player[Main.myPlayer], null);
                 }
-                ((SpriteBatch)sb).Draw(texture, GetDrawPosition(position, origin, width, height, texture.Width, texture.Height, frame, framecount, framecountX, scale, drawCentered), frame, lightColor, rotation, origin, scale, direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+                spriteBatch.Draw(texture, GetDrawPosition(position, origin, width, height, texture.Width, texture.Height, frame, framecount, framecountX, scale, drawCentered), frame, lightColor, rotation, origin, scale, direction == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
                 if (applyDye)
                 {
-                    ((SpriteBatch)sb).End();
-                    ((SpriteBatch)sb).Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
+                    spriteBatch.End();
+                    spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend);
                 }
             }
         }

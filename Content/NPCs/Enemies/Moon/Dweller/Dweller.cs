@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
@@ -14,6 +15,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 {
     public class Dweller : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         private const int LegCount = 6;
         private readonly Leg[] Legs = new Leg[LegCount];
 
@@ -339,6 +342,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
         public bool HasTarget => TargetPlayer is not null && TargetPlayer.active && !TargetPlayer.dead;
 
         private Rectangle collisionHitbox;
+        private Queue<Vector2> path;
+        private int pathRefreshTimer;
 
         public override void SetStaticDefaults()
         {
@@ -348,7 +353,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 
         public override void SetDefaults()
         {
-            NPC.damage = 150;
+            NPC.damage = 80;
             NPC.defense = 25;
             NPC.lifeMax = 20000;
             NPC.HitSound = SoundID.NPCHit1;
@@ -408,6 +413,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             ToPlayer = target.Center - NPC.Center;
             HeadRotation = ToPlayer.ToRotation() + MathHelper.ToRadians(90);
 
+            pathRefreshTimer -= 1;
+            if (pathRefreshTimer <= 0)
+            {
+                path = new Queue<Vector2>(Utility.AStar.FindPath(new Rectangle(NPC.Hitbox.Center.X - 16, NPC.Hitbox.Center.Y - 16, 32, 32), target.Center, 24, 5000));
+                //Main.NewText(path.Count);
+                pathRefreshTimer = 60;
+            }
+
             int legsTouchingGround = Legs.Count(leg => WorldGen.SolidOrSlopedTile(Main.tile[leg.TipPosition.ToTileCoordinates()]));
             bool anyLegTouchingGround = legsTouchingGround > 0;
             collisionHitbox = new((int)NPC.position.X, (int)NPC.position.Y, 4 * 16, 10 * 16);
@@ -438,9 +451,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             }
             else if (Rage < 5f)
             {
-                if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() <= 0.1f || Vector2.Distance(NPC.Center, target.Center) > 300f)
+                if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() <= 0.1f || Vector2.Distance(NPC.Center, target.Center) > 350f)
                     AI_State = ActionState.Stalk;
-                else
+                else if(Vector2.Distance(NPC.Center, target.Center) < 250f&&Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() > 0.1f)
                     AI_State = ActionState.Flee;
             }
             else
@@ -453,10 +466,25 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 
             if (HasTarget)
             {
-                Vector2 direction = ToPlayer.SafeNormalize(Vector2.UnitX);
+                var direction = Vector2.Zero;
+                if (path.TryPeek(out var position))
+                {
+                    var distance = NPC.Center.Distance(position);
+                    direction = (position - NPC.Center) / distance;
+                    if (distance < 10f)
+                    {
+                        path.Dequeue();
+                    }
+                }
+                else
+                {
+                    direction = ToPlayer.SafeNormalize(Vector2.UnitX);
+                }
+
                 if (AI_State == ActionState.Stalk)
                 {
-                    speed = MathHelper.Lerp(speed, 1f + ((float)Math.Cos(Timer) * 0.5f), 0.1f);
+                    speed +=0.1f;
+                    speed = Math.Clamp(speed,-4f,2f);
                     if (anyLegTouchingGround)
                     {
                         NPC.velocity = direction * speed;
@@ -470,21 +498,23 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
                 }
                 if (AI_State == ActionState.Flee)
                 {
-                    speed = MathHelper.Lerp(speed, 2f + ((float)Math.Cos(Timer) * 0.5f), 0.2f);
+                    speed -=0.1f;
+                    speed = Math.Clamp(speed,-4f,2f);
                     if (anyLegTouchingGround)
                     {
-                        NPC.velocity = direction * -speed;
+                        NPC.velocity = direction * speed;
                         allowedVerticalMovement = true;
                     }
                     else
                     {
-                        NPC.velocity.X = direction.X * -speed;
+                        NPC.velocity.X = direction.X * speed;
                         NPC.velocity.Y = NPC.gravity;
                     }
                 }
                 if (AI_State == ActionState.Enrage)
                 {
-                    speed = MathHelper.Lerp(speed, 4f + Math.Abs((float)Math.Cos(Timer) * 3f), 0.3f);
+                    speed +=0.1f;
+                    speed = Math.Clamp(speed,-4f,8f);
                     if (anyLegTouchingGround)
                     {
                         NPC.velocity = direction * speed;
@@ -617,8 +647,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor * Corpreal, HeadRotation + JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
             spriteBatch.Draw(headShellRightGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal, HeadRotation - JawRotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
             spriteBatch.Draw(headShellLeftGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal, HeadRotation + JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
-
             /*
+            var lastPosition = NPC.Center;
+            foreach (var position in path)
+            {
+                Utils.DrawLine(spriteBatch, lastPosition, position, Color.Yellow);
+                lastPosition = position;
+            }
+           
             // Debug collision hitbox
             Rectangle hitbox = collisionHitbox;
             hitbox.X -= (int)screenPos.X;

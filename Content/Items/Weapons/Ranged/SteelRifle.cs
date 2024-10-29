@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Content.Items.Bars;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -53,6 +54,14 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             position -= new Vector2(4 * player.direction, 2);
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<SteelBar>(16)
+            .AddTile(TileID.Anvils)
+            .Register();
         }
     }
 }

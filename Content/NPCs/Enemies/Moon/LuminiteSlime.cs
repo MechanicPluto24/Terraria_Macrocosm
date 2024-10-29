@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -7,6 +6,7 @@ using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,9 +28,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.width = 36;
             NPC.height = 22;
-            NPC.damage = 80;
-            NPC.defense = 64;
-            NPC.lifeMax = 550;
+            NPC.damage = 50;
+            NPC.defense = 80;
+            NPC.lifeMax = 700;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
             NPC.value = 60f;
@@ -96,6 +96,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         protected virtual void ProjectileAttack()
         {
+            SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (int i = 0; i < Main.rand.Next(3, 5); i++)

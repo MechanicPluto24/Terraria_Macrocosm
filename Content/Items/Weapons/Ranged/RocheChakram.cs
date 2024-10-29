@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.value = Item.sellPrice(silver: 4);
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useAnimation = 15;
@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.consumable = true;
             Item.UseSound = SoundID.Item71;
             Item.autoReuse = true;
-            Item.damage = 300;
+            Item.damage = 265;
             Item.knockBack = 0.5f;
             Item.noUseGraphic = true;
             Item.DamageType = DamageClass.Ranged;

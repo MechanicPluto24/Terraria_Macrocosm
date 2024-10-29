@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Rockets
         private Effect meshEffect;
         private EffectParameter meshTransform;
         private RenderTarget2D renderTarget;
-        private SpriteBatchState state, state2;
+        private SpriteBatchState sbState;
         private DynamicVertexBuffer vertexBuffer;
         private DynamicIndexBuffer indexBuffer;
         private VertexPositionColorTexture[] vertices;
@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Rockets
                 renderTarget = GetRenderTarget(drawMode);
 
                 // Save our SpriteBatch state
-                state.SaveState(spriteBatch);
+                sbState.SaveState(spriteBatch);
                 spriteBatch.EndIfBeginCalled();
 
                 switch (drawMode)
@@ -70,14 +70,8 @@ namespace Macrocosm.Content.Rockets
                         PrepareLightingBuffers(Width, Height, out int numVertices, out int primitiveCount);
                         PresentLightingBuffers(numVertices, primitiveCount);
                         break;
-
-                    // All other cases draw the RenderTarget directly
-                    default:
-
-                        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, state.Matrix);
-                        spriteBatch.Draw(renderTarget, position, Color.White);
-                        spriteBatch.End();
-
+                    case DrawMode.Dummy:
+                        DrawDummyWithRenderTarget(spriteBatch, position);
                         break;
                 }
 
@@ -88,7 +82,7 @@ namespace Macrocosm.Content.Rockets
                 }
 
                 // Reset our SpriteBatch to its previous state
-                spriteBatch.Begin(state);
+                spriteBatch.Begin(sbState);
             }
             else
             {
@@ -127,17 +121,17 @@ namespace Macrocosm.Content.Rockets
 
         public void DrawOverlay(SpriteBatch spriteBatch, Vector2 position)
         {
-            if (StaticFire || InFlight || Landing || ForcedFlightAppearance)
+            if (ForcedFlightAppearance || (State != ActionState.Idle && State != ActionState.PreLaunch))
             {
                 float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
 
                 if (ForcedFlightAppearance)
                     scale *= 1.25f;
 
-                if (StaticFire)
+                if (State == ActionState.StaticFire)
                     scale *= Utility.QuadraticEaseOut(StaticFireProgress);
 
-                if (Landing && LandingProgress > 0.9f)
+                if (State == ActionState.Landing && LandingProgress > 0.9f)
                     scale *= Utility.QuadraticEaseOut((1f - LandingProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
@@ -173,12 +167,24 @@ namespace Macrocosm.Content.Rockets
             DrawWorld(spriteBatch, position);
             PostDraw(spriteBatch, position, inWorld: false);
 
-            state2.SaveState(spriteBatch);
+            sbState.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(state.SpriteSortMode, BlendState.Additive, state.SamplerState, state.DepthStencilState, state.RasterizerState, state.Effect, Main.UIScaleMatrix);
+            spriteBatch.Begin(sbState.SpriteSortMode, BlendState.Additive, sbState.SamplerState, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Main.UIScaleMatrix);
             DrawOverlay(spriteBatch, position);
             spriteBatch.End();
-            spriteBatch.Begin(state);
+            spriteBatch.Begin(sbState);
+        }
+
+        private void DrawDummyWithRenderTarget(SpriteBatch spriteBatch, Vector2 position)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, sbState.Matrix);
+            PreDrawBeforeTiles(spriteBatch, position, inWorld: false);
+            spriteBatch.Draw(renderTarget, position, Color.White);
+            PostDraw(spriteBatch, position, inWorld: false);
+            spriteBatch.End();
+            spriteBatch.Begin(sbState.SpriteSortMode, BlendState.Additive, sbState.SamplerState, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Main.UIScaleMatrix);
+            DrawOverlay(spriteBatch, position);
+            spriteBatch.End();
         }
 
         private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
@@ -236,13 +242,13 @@ namespace Macrocosm.Content.Rockets
                 typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
 
             // Draw our modules
-            state = spriteBatch.SaveState();
+            sbState = spriteBatch.SaveState();
             spriteBatch.EndIfBeginCalled();
 
             spriteBatch.GraphicsDevice.SetRenderTarget(renderTarget);
             spriteBatch.GraphicsDevice.Clear(Color.Transparent);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, state.Effect, Matrix.CreateScale(1f));
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Matrix.CreateScale(1f));
 
             switch (drawMode)
             {
@@ -316,8 +322,8 @@ namespace Macrocosm.Content.Rockets
                     Vector2 worldPosition = Position + new Vector2(xQuotient * width, yQuotient * height);
                     Vector2 screenPosition = worldPosition - Main.screenPosition;
                     Vector2 uv = new(xQuotient, yQuotient);
-                    //Color lighting = Color.White;
-                    Color lighting = new(Lighting.GetSubLight(worldPosition));
+
+                    Color lighting = new Color(Lighting.GetSubLight(worldPosition)) * Transparency;
 
                     vertices[(y * w) + x] = new VertexPositionColorTexture(new Vector3(screenPosition, 0f), lighting, uv);
                 }
@@ -376,12 +382,14 @@ namespace Macrocosm.Content.Rockets
         private void PresentLightingBuffers(int numVertices, int primitiveCount)
         {
             // Store previous settings
+            var samplerState = PrimitivesSystem.GraphicsDevice.SamplerStates[0];
             var scissorRectangle = PrimitivesSystem.GraphicsDevice.ScissorRectangle;
             var rasterizerState = PrimitivesSystem.GraphicsDevice.RasterizerState;
             var previousVertices = PrimitivesSystem.GraphicsDevice.GetVertexBuffers();
             var previousIndices = PrimitivesSystem.GraphicsDevice.Indices;
 
             // Assign our own buffers to the GPU
+            PrimitivesSystem.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             PrimitivesSystem.GraphicsDevice.SetVertexBuffer(vertexBuffer);
             PrimitivesSystem.GraphicsDevice.Indices = indexBuffer;
             PrimitivesSystem.GraphicsDevice.Textures[0] = renderTarget;
@@ -391,7 +399,8 @@ namespace Macrocosm.Content.Rockets
             PrimitivesSystem.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, numVertices, 0, primitiveCount);
             //DebugVertices();
 
-            // Reset our settings back to the previosu ones
+            // Reset our settings back to the previous ones
+            PrimitivesSystem.GraphicsDevice.SamplerStates[0] = samplerState;
             PrimitivesSystem.GraphicsDevice.ScissorRectangle = scissorRectangle;
             PrimitivesSystem.GraphicsDevice.RasterizerState = rasterizerState;
             PrimitivesSystem.GraphicsDevice.SetVertexBuffers(previousVertices);

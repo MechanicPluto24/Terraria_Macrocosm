@@ -1,24 +1,21 @@
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Weapons.Ranged;
-using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
+    //This thing is essentially a carbon copy of Zombie Security.
     public class Scatterbrained : ModNPC
     {
-        //This thing is essentially a carbon copy of Zombie Security.
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public enum ActionState
         {
             Walk,
@@ -57,7 +54,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override void SetStaticDefaults()
         {
-            Main.npcFrameCount[Type] = 1;
+            Main.npcFrameCount[Type] = 2;
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
@@ -67,26 +64,18 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
         {
             NPC.width = 24;
             NPC.height = 44;
-            NPC.damage = 80;
+            NPC.damage = 60;
             NPC.defense = 70;
             NPC.lifeMax = 650;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.knockBackResist = 0.2f;
             NPC.aiStyle = -1;
-           
-
+            Main.npcFrameCount[Type] = 2;
         }
-
-     
-
-       
-
         public override void OnSpawn(IEntitySource source)
         {
-           // NPC.frame.Y = NPC.GetFrameHeight() * walkFrames.Start.Value;
-
-            
+            // NPC.frame.Y = NPC.GetFrameHeight() * walkFrames.Start.Value;
         }
 
         #region Netcode
@@ -245,7 +234,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             if (Main.netMode != NetmodeID.MultiplayerClient && ShootSequence == sequenceShoot)
             {
                 Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), aimPosition, aimVelocity, projType, projDamage, 0f, Main.myPlayer);
-                
+
             }
         }
 
@@ -276,7 +265,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
             float aimLength = (float)Math.Sqrt(aimVelocity.X * aimVelocity.X + aimVelocity.Y * aimVelocity.Y);
             aimLength = projSpeed / aimLength;
-            aimVelocity *= aimLength*0.66f;
+            aimVelocity *= aimLength * 0.66f;
 
             return aimVelocity;
         }

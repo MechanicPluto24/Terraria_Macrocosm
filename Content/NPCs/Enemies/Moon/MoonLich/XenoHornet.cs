@@ -1,4 +1,3 @@
-using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -10,6 +9,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
     public class XenoHornet : ModNPC
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 5;
@@ -24,8 +25,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
             NPC.width = 34;
             NPC.height = 34;
-            NPC.damage = 80;
-            NPC.defense = 30;
+            NPC.damage = 50;
+            NPC.defense = 50;
             NPC.lifeMax = 200;
 
             NPC.knockBackResist = 0.3f;

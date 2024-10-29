@@ -1,10 +1,9 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class LuminiteSlimeVolatile : LuminiteSlime
@@ -13,13 +12,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             base.SetDefaults();
             NPC.lifeMax = 650;
-            NPC.damage = 80;
-            NPC.defense = 68;
+            NPC.damage = 60;
+            NPC.defense = 70;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return base.SpawnChance(spawnInfo);
+            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.04f : 0f;
         }
 
         public override void HitEffect(NPC.HitInfo hit)
@@ -51,7 +50,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             for (int i = 0; i < 5; i++)
                 Projectile.NewProjectile(NPC.GetSource_Death(), NPC.Center, (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(5f, 10f), ModContent.ProjectileType<LuminiteShard>(), (int)(NPC.damage * 0.25f), 1f, Main.myPlayer, ai1: -1, ai2: 1);
-            
+
             SpawnDusts(20);
         }
 

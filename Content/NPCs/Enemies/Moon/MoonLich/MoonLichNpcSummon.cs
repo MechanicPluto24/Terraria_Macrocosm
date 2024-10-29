@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -10,12 +9,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 {
     public class MoonLichNPCSummon : ModProjectile
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public override string Texture => Macrocosm.EmptyTexPath;
 
         private bool summon = false;
         private int timer = 0;
-
-        private Color colour = new Color(100, 255, 255);
 
         public override void SetStaticDefaults()
         {
@@ -47,12 +46,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override void AI()
         {
-            Particle.CreateParticle<TintableFire>(p =>
+            Particle.Create<TintableFire>(p =>
             {
-                p.Position = Projectile.position;
+                p.Position = Projectile.position + new Vector2(0, Projectile.height / 2);
                 p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                p.DrawColor = new Color(100, 255, 255, 0);
-                p.Scale = 0.03f;
+                p.Color = new Color(100, 255, 255, 0);
+                p.Scale = new(0.12f);
             });
 
             Projectile.velocity.Y += 1f;
@@ -83,12 +82,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
                 for (int i = 0; i < 20; i++)
                 {
-                    Particle.CreateParticle<TintableFire>(p =>
+                    Particle.Create<TintableFire>(p =>
                     {
-                        p.Position = Projectile.position;
-                        p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                        p.DrawColor = new Color(100, 255, 255, 0);
-                        p.Scale = 0.03f;
+                        p.Position = Projectile.position + new Vector2(0, Projectile.height / 2);
+                        p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(1f, 5f);
+                        p.Color = new Color(34, 221, 151, 0);
+                        p.Scale = new(0.16f);
                     });
                 }
 

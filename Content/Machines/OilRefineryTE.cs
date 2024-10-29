@@ -1,13 +1,15 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
-using Macrocosm.Common.Sets.Items;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
+using System.ComponentModel;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Macrocosm.Content.Machines
 {
@@ -15,29 +17,35 @@ namespace Macrocosm.Content.Machines
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OilRefinery>();
 
-        public float SourceTankAmount { get; private set; }
+        public override MachineType MachineType => MachineType.Consumer;
+
+        public float InputTankAmount { get; private set; }
         public virtual float SourceTankCapacity => 100f;
-        public float ResultTankAmount { get; private set; }
+        public float OutputTankAmount { get; private set; }
         public virtual float ResultTankCapacity => 100f;
 
-        public Item SourceItem => Inventory[0];
-        public Item ResultItem => Inventory[1];
+        public float ExtractProgress => inputExtractTimer / (float)maxInputExtractTimer;
+        public float RefineProgress => refineTimer / (float)maxRefineTimer;
 
-        public bool CanInteractWithResultSlot { get; private set; }
+        public Item ContainerSlot => Inventory[0];
+        public Item OutputSlot => Inventory[1];
 
         public Inventory Inventory { get; set; }
-        protected virtual int InventorySize => 2;
+        protected virtual int InventorySize => 1 + 1 + 5;
         public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
         private bool refining;
 
-        private int sourceTimer;
-        private const int maxSourceTimer = 60;
+        private int inputExtractTimer;
+        private const int maxInputExtractTimer = 60;
 
-        private int resultTimer;
-        private const int maxResultTimer = 60;
+        private int refineTimer;
+        private const int maxRefineTimer = 60;
 
-        public bool CanRefine => Operating && SourceTankAmount > 0f && ResultTankAmount < ResultTankCapacity;
+        private int fillTimer;
+        private const int maxFillTimer = 60;
+
+        public bool CanRefine => Operating && InputTankAmount > 0f && OutputTankAmount < ResultTankCapacity;
 
         public void StartRefining()
         {
@@ -60,38 +68,44 @@ namespace Macrocosm.Content.Machines
         {
             StartRefining();
 
-            ConsumedPower = 0.6f;
+            Power = 5f;
 
             Extract();
             Refine();
             FillContainers();
 
-            SourceTankAmount = MathHelper.Clamp(SourceTankAmount, 0, SourceTankCapacity);
-            ResultTankAmount = MathHelper.Clamp(ResultTankAmount, 0, ResultTankCapacity);
+            InputTankAmount = MathHelper.Clamp(InputTankAmount, 0, SourceTankCapacity);
+            OutputTankAmount = MathHelper.Clamp(OutputTankAmount, 0, ResultTankCapacity);
         }
 
         private void Extract()
         {
-            LiquidExtractData data = ItemSets.LiquidExtractData[SourceItem.type];
-            if (Operating && SourceTankAmount < SourceTankCapacity && data.Extractable)
+            for(int i = 2; i < Inventory.Size; i++)
             {
-                sourceTimer++;
-                if (sourceTimer >= maxSourceTimer)
+                Item inputItem = Inventory[i];
+                LiquidExtractData data = ItemSets.LiquidExtractData[inputItem.type];
+                if (Operating && InputTankAmount < SourceTankCapacity && data.Valid)
                 {
-                    sourceTimer = 0;
+                    inputExtractTimer++;
+                    if (inputExtractTimer >= maxInputExtractTimer)
+                    {
+                        inputExtractTimer = 0;
 
-                    if (SourceItem.stack <= 1)
-                        SourceItem.TurnToAir();
-                    else
-                        SourceItem.stack--;
+                        if (inputItem.stack <= 1)
+                            inputItem.TurnToAir();
+                        else
+                            inputItem.stack--;
 
-                    SourceTankAmount += data.ExtractedAmount;
+                        InputTankAmount += data.ExtractedAmount;
+                    }
+
+                    break;
                 }
-            }
-            else
-            {
-                sourceTimer = 0;
-            }
+                else
+                {
+                    inputExtractTimer = 0;
+                }
+            }  
         }
 
         private void Refine()
@@ -101,35 +115,50 @@ namespace Macrocosm.Content.Machines
 
             if (refining)
             {
-                resultTimer++;
+                refineTimer++;
 
-                if (resultTimer >= maxResultTimer)
+                if (refineTimer >= maxRefineTimer)
                 {
-                    resultTimer = 0;
+                    refineTimer = 0;
 
-                    SourceTankAmount -= 10f;
-                    ResultTankAmount += 5f;
+                    InputTankAmount -= 20f;
+                    OutputTankAmount += 15f;
                 }
             }
             else
             {
-                resultTimer = 0;
+                refineTimer = 0;
             }
         }
 
         private void FillContainers()
         {
-            CanInteractWithResultSlot = true;
-
-            if (ResultItem.ModItem is LiquidContainer container)
+            LiquidContainerData containerData = ItemSets.LiquidContainerData[ContainerSlot.type];
+            LiquidContainerData outputData = ItemSets.LiquidContainerData[OutputSlot.type];
+            if (containerData.Valid && containerData.Empty)
             {
-                if (ResultTankAmount > 0f && ResultItem.stack > 0 && !container.Full)
+                if (OutputTankAmount > 0f && !ContainerSlot.IsAir)
                 {
-                    container.Amount += 100f / ResultItem.stack;
-                    ResultTankAmount -= 1f;
-                }
+                    fillTimer++;
+                    if (fillTimer >= maxFillTimer)
+                    {
+                        fillTimer = 0;
 
-                CanInteractWithResultSlot = container.Full || container.Empty;
+                        int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.RocketFuel, ContainerSlot.type);
+                        if(fillType > 0)
+                        {
+                            OutputSlot.type = fillType;
+                            OutputSlot.stack++;
+
+                            if (ContainerSlot.stack <= 1)
+                                ContainerSlot.TurnToAir();
+                            else
+                                ContainerSlot.stack--;
+
+                            OutputTankAmount -= ItemSets.LiquidContainerData[fillType].Capacity;
+                        }                       
+                    }
+                }
             }
         }
 
@@ -137,8 +166,8 @@ namespace Macrocosm.Content.Machines
         {
             TagIO.Write(Inventory.SerializeData(), writer);
 
-            writer.Write(SourceTankAmount);
-            writer.Write(ResultTankAmount);
+            writer.Write(InputTankAmount);
+            writer.Write(OutputTankAmount);
         }
 
         public override void NetReceive(BinaryReader reader)
@@ -146,19 +175,19 @@ namespace Macrocosm.Content.Machines
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
-            SourceTankAmount = reader.ReadSingle();
-            ResultTankAmount = reader.ReadSingle();
+            InputTankAmount = reader.ReadSingle();
+            OutputTankAmount = reader.ReadSingle();
         }
 
         public override void SaveData(TagCompound tag)
         {
             tag[nameof(Inventory)] = Inventory;
 
-            if (SourceTankAmount != default)
-                tag[nameof(SourceTankAmount)] = SourceTankAmount;
+            if (InputTankAmount != default)
+                tag[nameof(InputTankAmount)] = InputTankAmount;
 
-            if (ResultTankAmount != default)
-                tag[nameof(ResultTankAmount)] = ResultTankAmount;
+            if (OutputTankAmount != default)
+                tag[nameof(OutputTankAmount)] = OutputTankAmount;
         }
 
         public override void LoadData(TagCompound tag)
@@ -166,11 +195,11 @@ namespace Macrocosm.Content.Machines
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 
-            if (tag.ContainsKey(nameof(SourceTankAmount)))
-                SourceTankAmount = tag.GetFloat(nameof(SourceTankAmount));
+            if (tag.ContainsKey(nameof(InputTankAmount)))
+                InputTankAmount = tag.GetFloat(nameof(InputTankAmount));
 
-            if (tag.ContainsKey(nameof(ResultTankAmount)))
-                ResultTankAmount = tag.GetFloat(nameof(ResultTankAmount));
+            if (tag.ContainsKey(nameof(OutputTankAmount)))
+                OutputTankAmount = tag.GetFloat(nameof(OutputTankAmount));
         }
     }
 }

@@ -35,6 +35,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 
@@ -42,8 +44,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
-
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cheese.CheeseToilet>(), 0, 1);
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num)
@@ -118,7 +118,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
 
             if (Main.tile[i, j].TileFrameX / 18 < 2)
-                 player.cursorItemIconReversed = true;
+                player.cursorItemIconReversed = true;
         }
 
         public override void HitWire(int i, int j)

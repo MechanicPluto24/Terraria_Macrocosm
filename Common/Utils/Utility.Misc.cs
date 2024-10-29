@@ -108,6 +108,9 @@ namespace Macrocosm.Common.Utils
         /// <summary> Scaled value of <see cref="Main.windSpeedCurrent"/> in between <c>[-1; 1]</c> </summary>
         public static float WindSpeedScaled => Main.windSpeedCurrent / MaxWindSpeedAbsolute;
 
+        public static float CelsiusToFarhenheit(float celsius) => celsius * 9f / 5f + 32f;
+        public static float FahrenheitToCelsius(float fahrenheit) => (fahrenheit - 32f) * 5f / 9f;
+
         public enum MessageSeverity { Info, Warn, Error, Fatal }
         public static void LogChatMessage(string message, MessageSeverity severity = MessageSeverity.Info)
         {

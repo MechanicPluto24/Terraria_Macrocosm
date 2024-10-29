@@ -9,7 +9,6 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Map;
-using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Utils
@@ -236,7 +235,7 @@ namespace Macrocosm.Common.Utils
                             else
                             {
                                 Vector2 top = GetMultitileTopLeft(x2, y2).ToVector2();
-                                x2 = (int)top.X; 
+                                x2 = (int)top.X;
                                 y2 = (int)top.Y;
                             }
                             pos = new(x2, y2);
@@ -489,6 +488,27 @@ namespace Macrocosm.Common.Utils
             ushort wall_mapTileType = MapHelper.wallLookup[wallType];
             MapTile mapTile = MapTile.Create(wall_mapTileType, light, includePaint ? tile.WallColor : PaintID.None);
             return colorLookup[mapTile.Type];
+        }
+
+        public static Vector2 Cast(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
+        {
+            Vector2 output = start;
+            direction.Normalize();
+            for (int i = 0; i < length; i++)
+            {
+                if (Collision.CanHitLine(output, 0, 0, output + direction, 0, 0) && (platformCheck ? !Collision.SolidTiles(output, 1, 1, platformCheck) && Main.tile[(int)output.X / 16, (int)output.Y / 16].TileType != TileID.Platforms : true))
+                    output += direction;
+                else
+                    break;
+            }
+
+            return output;
+        }
+
+        public static float CastLength(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
+        {
+            Vector2 end = Cast(start, direction, length, platformCheck);
+            return (end - start).Length();
         }
     }
 }

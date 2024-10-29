@@ -6,8 +6,6 @@ using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
@@ -42,7 +40,7 @@ namespace Macrocosm.Common.Global.NPCs
 
         public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
         {
-            if(npc.ModNPC is null)
+            if (npc.ModNPC is null)
             {
                 EarthBiome earthBiome = ModContent.GetInstance<EarthBiome>();
                 bestiaryEntry.Info.Add(new ModBiomeBestiaryInfoElement(Mod, earthBiome.DisplayName.Key, earthBiome.BestiaryIcon, null, null));

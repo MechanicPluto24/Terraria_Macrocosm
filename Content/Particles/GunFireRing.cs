@@ -6,9 +6,13 @@ namespace Macrocosm.Content.Particles
 {
     public class GunFireRing : Particle
     {
-        public override int FrameNumber => 4;
-        public override int FrameSpeed => 8;
+        public override int FrameCount => 4;
         public override bool DespawnOnAnimationComplete => true;
+
+        public override void SetDefaults()
+        {
+            FrameSpeed = 8;
+        }
 
         public override void OnSpawn()
         {
@@ -17,7 +21,6 @@ namespace Macrocosm.Content.Particles
         public override void AI()
         {
             Velocity *= 0.925f;
-
             Lighting.AddLight(Position, new Color(255, 202, 141).ToVector3());
         }
 

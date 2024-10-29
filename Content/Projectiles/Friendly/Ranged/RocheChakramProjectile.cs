@@ -2,7 +2,6 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -21,8 +20,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 10;   
-            ProjectileID.Sets.TrailingMode[Type] = 3;   
+            ProjectileID.Sets.TrailCacheLength[Type] = 10;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
         public override void SetDefaults()
@@ -72,7 +71,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 spawned = true;
             }
 
-            for(int i = 0; i < 2; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>());
                 dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
@@ -80,7 +79,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
                 dust.noGravity = true;
             }
-                
+
             if (Main.rand.NextBool(4))
             {
                 Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteDust>());
@@ -110,7 +109,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 if (Projectile.Distance(Main.player[Projectile.owner].Center) < 50f)
                 {
                     Projectile.Kill();
-                    if(Main.myPlayer == Projectile.owner)
+                    if (Main.myPlayer == Projectile.owner)
                         Main.player[Projectile.owner].QuickSpawnItem(Projectile.GetSource_FromAI(), ModContent.ItemType<RocheChakram>());
                 }
             }
@@ -149,7 +148,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
-                Texture2D texture = TextureAssets.Projectile[Type].Value;    
+                Texture2D texture = TextureAssets.Projectile[Type].Value;
                 Vector2 drawPos = Projectile.oldPos[i] + Projectile.Size / 2 - Main.screenPosition;
                 float dashFactor = MathHelper.Clamp(Projectile.velocity.Length(), 0, 20) / 20f;
                 float trailFactor = (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);

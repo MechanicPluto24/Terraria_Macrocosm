@@ -3,8 +3,6 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -134,7 +132,7 @@ namespace Macrocosm.Content.Tiles.Furniture
         {
             Tile tile = Main.tile[i, j];
 
-            if(TileAnimation.GetTemporaryFrame(i, j, out int tempFrame))
+            if (TileAnimation.GetTemporaryFrame(i, j, out int tempFrame))
             {
                 frameXOffset = (18 * 6 * (StyleCount - 1)) - tile.TileFrameX + (tile.TileFrameX % (18 * 6));
                 frameYOffset = 18 * 4 * tempFrame;
@@ -169,7 +167,7 @@ namespace Macrocosm.Content.Tiles.Furniture
                 }
                 else
                 {
-                    if(!TileAnimation.GetTemporaryFrame(i, j, out _))
+                    if (!TileAnimation.GetTemporaryFrame(i, j, out _))
                     {
                         // Earth screen frame
                         if (style == 1)
@@ -246,7 +244,7 @@ namespace Macrocosm.Content.Tiles.Furniture
                         g += 0.3f;
                         b += 0.3f;
                     }
-                    
+
                 }
             }
             else

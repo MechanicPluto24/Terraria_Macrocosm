@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Tiles.Ambient;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -9,8 +11,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Tiles.Ambient;
-using Macrocosm.Content.Items.Drops;
 namespace Macrocosm.Content.Items.Consumables.BossSummons
 {
     public class CraterDemonSummon : ModItem
@@ -47,9 +47,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 
         public override bool? UseItem(Player player)
         {
-            if (Utility.SummonBossDirectlyWithMessage(player.Center - new Vector2(0f, 240f), ModContent.NPCType<CraterDemon>()))
-                SoundEngine.PlaySound(SoundID.ForceRoar, player.position);
-
+            Utility.SummonBossDirectlyWithMessage(player.Center - new Vector2(0f, 240f), ModContent.NPCType<CraterDemon>(), sound: SoundID.ForceRoar);
             return true;
         }
 

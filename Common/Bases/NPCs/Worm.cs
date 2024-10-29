@@ -59,6 +59,10 @@ namespace Macrocosm.Common.Bases.NPCs
         public NPC GetFollowingSegment()
             => NPC.ai[1] >= Main.maxNPCs ? null : FollowingNPC;
 
+        public NPC GetFollowerSegment()
+            => NPC.ai[1] >= Main.maxNPCs ? null : FollowerNPC;
+
+
         private bool startDespawning;
 
         public sealed override bool PreAI()
@@ -105,9 +109,9 @@ namespace Macrocosm.Common.Bases.NPCs
             if (!FlipSprite && !collision)
                 return;
 
-            if (NPC.velocity.X < 1f)
+            if (NPC.velocity.X < 0f)
                 NPC.spriteDirection = -1;
-            else if (NPC.velocity.X > 1f)
+            else if (NPC.velocity.X >= 0f)
                 NPC.spriteDirection = 1;
         }
 
@@ -142,6 +146,8 @@ namespace Macrocosm.Common.Bases.NPCs
     {
         public sealed override WormSegmentType SegmentType => WormSegmentType.Head;
 
+        public virtual bool UseSmoothening { get; set; }
+
         /// <summary>
         /// The NPCID or ModContent.NPCType for the body segment NPCs.<br/>
         /// This property is only used if <see cref="HasCustomBodySegments"/> returns <see langword="false"/>.
@@ -162,6 +168,9 @@ namespace Macrocosm.Common.Bases.NPCs
 
         /// <summary> Whether the NPC ignores tile collision when attempting to "dig" through tiles, like how Wyverns work. </summary>
         public bool CanFly { get; set; }
+
+        /// <summary> Fall speed of the worm </summary>
+        public virtual float FallSpeed => 0.3f;
 
         /// <summary>
         /// The maximum distance in <b>pixels</b> within which the NPC will use tile collision, if <see cref="CanFly"/> returns <see langword="false"/>.<br/>
@@ -217,6 +226,11 @@ namespace Macrocosm.Common.Bases.NPCs
             HeadAI_SpawnSegments();
 
             HeadBehaviour();
+            if (UseSmoothening)
+            {
+                NPC follower = this.GetFollowerSegment();
+                NPC.rotation = (NPC.velocity.SafeNormalize(Vector2.UnitX) - (follower.Center - NPC.Center).SafeNormalize(Vector2.UnitX)).ToRotation() + MathHelper.PiOver2;
+            }
         }
         public virtual void HeadBehaviour()
         {
@@ -336,9 +350,6 @@ namespace Macrocosm.Common.Bases.NPCs
                         {
                             // Collision found
                             collision = true;
-
-                            if (Main.rand.NextBool(100))
-                                WorldGen.KillTile(i, j, fail: true, effectOnly: true, noItem: false);
                         }
                     }
                 }
@@ -430,15 +441,17 @@ namespace Macrocosm.Common.Bases.NPCs
         {
             // Keep searching for a new target
             NPC.TargetClosest(true);
-            //edited this because pluto wanted the worms to go underground faster, original fall speed was 0.11f
+
+            // Edited this because pluto wanted the worms to go underground faster, original fall speed was 0.11f
             // Constant gravity of 0.11 pixels/tick
-            NPC.velocity.Y += 0.3f;
-            //edited this so that worms could fall at up to 1.5* their max velcoity.
+            NPC.velocity.Y += FallSpeed;
+
+            // Edited this so that worms could fall at up to 1.5* their max velcoity.
             // Ensure that the NPC does not fall too quickly
             if (NPC.velocity.Y > speed * 1.5f)
             {
                 NPC.velocity.Y = speed * 1.5f;
-                NPC.velocity.X *= 6f;//Added to make worms look nicer
+                NPC.velocity.X *= 6f; // Added to make worms look nicer
             }
 
             // The following behaviour mimicks vanilla worm movement
@@ -589,6 +602,7 @@ namespace Macrocosm.Common.Bases.NPCs
 
     public abstract class WormBody : Worm
     {
+        public override bool CheckActive() => false;
         public sealed override WormSegmentType SegmentType => WormSegmentType.Body;
 
         public override void SetStaticDefaults()
@@ -597,14 +611,16 @@ namespace Macrocosm.Common.Bases.NPCs
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
         }
-
+        public virtual bool UseSmoothening { get; set; }
         public override void BodyTailAI()
         {
-            CommonAI_BodyTail(this);
             CustomBodyAI(this);
+            CommonAI_BodyTail(this);
             FlipBodyTail(this);
 
+
         }
+
         public virtual void CustomBodyAI(Worm worm) { }
 
         public static void CommonAI_BodyTail(Worm worm)
@@ -625,7 +641,6 @@ namespace Macrocosm.Common.Bases.NPCs
                 if (following is null || !following.active || following.friendly || following.townNPC || following.lifeMax <= 5)
                 {
                     worm.NPC.life = 0;
-                    worm.NPC.HitEffect(0, 10);
                     worm.NPC.active = false;
                 }
             }
@@ -658,6 +673,7 @@ namespace Macrocosm.Common.Bases.NPCs
     // Since the body and tail segments share the same AI
     public abstract class WormTail : Worm
     {
+        public override bool CheckActive() => false;
         public sealed override WormSegmentType SegmentType => WormSegmentType.Tail;
 
         public override void SetStaticDefaults()
@@ -670,8 +686,8 @@ namespace Macrocosm.Common.Bases.NPCs
 
         public override void BodyTailAI()
         {
-            WormBody.CommonAI_BodyTail(this);
             CustomTailAI(this);
+            WormBody.CommonAI_BodyTail(this);
             FlipBodyTail(this);
         }
     }

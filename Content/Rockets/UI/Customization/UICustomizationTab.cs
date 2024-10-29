@@ -159,6 +159,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             hslMenu.SetupApplyAndCancelButtons(ColorPickersLoseFocus, OnHSLMenuCancel);
 
             customizationPanelBackground.Activate();
+            JumpToModule(currentModuleName);
         }
 
         private void OnRocketChanged()
@@ -180,6 +181,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             Main.blockInput = false;
             AllLoseFocus();
+            Rocket.Inventory.DropItem(Rocket.SpecialInventorySlot_CustomizationUnlock, Rocket.Center, sync: false, fromClient: true);
         }
 
         public override void Update(GameTime gameTime)
@@ -187,7 +189,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             base.Update(gameTime);
 
             CustomizationDummy.ForcedStationaryAppearance = true;
-
             rocketPreview.RocketDummy = CustomizationDummy;
 
             UpdateDetailConfig();
@@ -206,7 +207,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         #region Update methods
         private void UpdateCurrentModule()
         {
-
         }
 
         private void UpdateDetailConfig()
@@ -298,6 +298,9 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         private void UpdateNameplateAlignButtons()
         {
+            if (!AlignButtonInteractible())
+                return;
+
             switch (CustomizationDummy.Nameplate.HAlign)
             {
                 case TextHorizontalAlign.Left: alignLeft.HasFocus = true; break;
@@ -396,6 +399,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         private void JumpToModule(string moduleName)
         {
             rocketPreview.SetModule(moduleName);
+            OnCurrentModuleChange(moduleName, -1);
             RefreshPatternColorPickers();
         }
 
@@ -1081,6 +1085,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 HAlign = 0f,
                 Left = new(0f, 0.482f),
                 OverrideBackgroundColor = true,
+                CheckInteractible = AlignButtonInteractible,
                 FocusContext = "RocketCustomizationColorPicker"
             };
 
@@ -1099,6 +1104,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 Left = new(0f, 0.56f),
                 HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignLeft"),
                 FocusContext = "HorizontalAlignment",
+                CheckInteractible = AlignButtonInteractible,
                 OnFocusGain = () =>
                 {
                     JumpToModule("EngineModule");
@@ -1115,6 +1121,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 Left = new(0f, 0.628f),
                 HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignCenterHorizontal"),
                 FocusContext = "HorizontalAlignment",
+                CheckInteractible = AlignButtonInteractible,
                 OnFocusGain = () =>
                 {
                     JumpToModule("EngineModule");
@@ -1130,6 +1137,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 Left = new(0f, 0.696f),
                 HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignRight"),
                 FocusContext = "HorizontalAlignment",
+                CheckInteractible = AlignButtonInteractible,
                 OnFocusGain = () =>
                 {
                     JumpToModule("EngineModule");
@@ -1145,6 +1153,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 Left = new(0f, 0.78f),
                 HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignTop"),
                 FocusContext = "VerticalAlignment",
+                CheckInteractible = AlignButtonInteractible,
                 OnFocusGain = () =>
                 {
                     JumpToModule("EngineModule");
@@ -1160,6 +1169,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 Left = new(0f, 0.848f),
                 HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignCenterVertical"),
                 FocusContext = "VerticalAlignment",
+                CheckInteractible = AlignButtonInteractible,
                 OnFocusGain = () =>
                 {
                     JumpToModule("EngineModule");
@@ -1175,6 +1185,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 Left = new(0f, 0.917f),
                 HoverText = Language.GetText("Mods.Macrocosm.UI.Common.AlignBottom"),
                 FocusContext = "VerticalAlignment",
+                CheckInteractible = AlignButtonInteractible,
                 OnFocusGain = () =>
                 {
                     JumpToModule("EngineModule");
@@ -1186,6 +1197,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             return nameplateConfigPanel;
         }
+
+        private bool AlignButtonInteractible() => !string.IsNullOrEmpty(CustomizationDummy.Nameplate.Text);
 
         private UIListScrollablePanel CreateDetailConfigPanel()
         {

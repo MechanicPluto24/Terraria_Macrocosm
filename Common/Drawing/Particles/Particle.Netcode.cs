@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Netcode;
-using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -44,14 +43,9 @@ namespace Macrocosm.Common.Drawing.Particles
 
             Particle particle;
             if (ParticleManager.Particles.Count <= particleIndex)
-            {
-                particle = (Particle)Activator.CreateInstance(ParticleManager.Types[particleType]);
-                ParticleManager.Particles.Add(particle);
-            }
+                particle = ParticleManager.CreateParticle(ParticleManager.Types[particleType]);
             else
-            {
                 particle = ParticleManager.Particles[particleIndex];
-            }
 
             particle.NetReadFields(reader);
 

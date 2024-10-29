@@ -18,7 +18,7 @@ ClawWrenchProjectile.DisplayName: Claw Wrench
 MoonSwordProjectile.DisplayName: Moon Sword
 MoonSwordSwing.DisplayName: Moon Sword
 ArchersLineProjectile.DisplayName: Archer's Line
-CruithneGreenSlug.DisplayName: Cruithne Green Slug
+CruithneGreenSlug.DisplayName: Green Slug
 DeliriumShell.DisplayName: Delirium Shell
 LHBMinigunProjectile.DisplayName: LHB-59
 NWAMissile.DisplayName: NWA-5000
@@ -49,7 +49,6 @@ MoonPhaseGlobeProjectile.DisplayName: Moon Phase Globe
 DianiteForkCoreProjectile.DisplayName: Dianite Fork
 DianiteForkProjectile.DisplayName: Dianite Fork
 RegolithDebris.DisplayName: Regolith Debris
-HalberdHeldProjectile.DisplayName: Halberd Held Projectile
 Procellarum_HalberdProjectile.DisplayName: Procellarum
 Procellarum_LightBolt.DisplayName: Procellarum
 InvarArrow.DisplayName: Invar Arrow
@@ -83,14 +82,11 @@ MoonWormDust.DisplayName: Moon Worm Dust
 FrigorianGazeProjectile.DisplayName: Frigorian Gaze
 FrigorianIceSpike.DisplayName: Frigorian Ice Spike
 FrigorianIceCrystal.DisplayName: Frigorian Ice Crystal
-StarDestroyerBeam.DisplayName: Star Destroyer Beam
-StarDestroyerStar.DisplayName: Star Destroyer Star
-StarDestroyerStarBlue.DisplayName: Star Destroyer Star Blue
-StarDestroyerStarYellow.DisplayName: Star Destroyer Star Yellow
+StarDestroyerBeam.DisplayName: Star Destroyer
+StarDestroyerStarBlue.DisplayName: Star Destroyer
+StarDestroyerStarYellow.DisplayName: Star Destroyer
 MoonRubble.DisplayName: Moon Rubble
 MoonLichNPCSummon.DisplayName: Moon Lich
-DualWaveGunsHeld.DisplayName: Dual Wave Guns Held
-WaveGunLaser.DisplayName: Wave Gun Laser
 WaveRifleLaser.DisplayName: Wave Rifle Laser
 LichBolt.DisplayName: Lich Bolt
 GreenLaser.DisplayName: Green Laser
@@ -99,16 +95,17 @@ FrigorianIceShard.DisplayName: Frigorian Ice Shard
 MicronovaBeam.DisplayName: Micronova Beam
 MicronovaPortal.DisplayName: Micronova Portal
 WaveStar.DisplayName: Wave Star
-InhibitorFieldGrenade.DisplayName: Inhibitor Field Grenade
-CrescentMoonProjectile.DisplayName: Crescent Moon Projectile
-LunarCrystalProjectile.DisplayName: Lunar Crystal Projectile
-ImbriumJewelPhantasmalSkull.DisplayName: Imbrium Jewel Phantasmal Skull
-ChampionsBladeSwing.DisplayName: Champions Blade Swing
-ChampionsBladeSwingEmpowered.DisplayName: Champions Blade Swing Empowered
-StarDestroyerStar_Blue.DisplayName: Star Destroyer Star_ Blue
-StarDestroyerStar_Yellow.DisplayName: Star Destroyer Star_ Yellow
-ArtemiteGreatswordSwingEmpowered.DisplayName: Artemite Greatsword Swing Empowered
-RocheChakramProjectile.DisplayName: Roche Chakram Projectile
+InhibitorFieldGrenade.DisplayName: Stasis Grenade
+CrescentMoonProjectile.DisplayName: Crescent Moon
+LunarCrystalProjectile.DisplayName: Lunar Crystal
+ImbriumJewelPhantasmalSkull.DisplayName: Phantasmal Skull
+ChampionsBladeSwing.DisplayName: Champion's Blade
+ChampionsBladeSwingEmpowered.DisplayName: Champion's Blade
+StarDestroyerStar_Blue.DisplayName: Star Destroyer Blue Star
+StarDestroyerStar_Yellow.DisplayName: Star Destroyer Yellow Star
+StarDestroyerStar.DisplayName: Star Destroyer Star
+ArtemiteGreatswordSwingEmpowered.DisplayName: Artemite Greatsword
+RocheChakramProjectile.DisplayName: Roche Chakram
 RocheSpike.DisplayName: Roche Spike
 ArtemiteSwordShoot.DisplayName: Artemite Sword Shoot
 BlueEnergyBolt.DisplayName: Blue Energy Bolt
@@ -116,3 +113,44 @@ BlueGunHeld.DisplayName: Blue Gun Held
 PurpleEnergyBolt.DisplayName: Purple Energy Bolt
 RedEnergyBolt.DisplayName: Red Energy Bolt
 RedGunHeld.DisplayName: Red Gun Held
+WaveGunEnergyBolt.DisplayName: Energy Bolt
+WaveGunBlueHeld.DisplayName: Blue Zap Gun
+WaveGunDualHeld.DisplayName: Zap Gun Dual Wield
+WaveGunRedHeld.DisplayName: Red Zap Gun
+WaveGunRifleHeld.DisplayName: Wave Gun
+ChampionsBladeSlash.DisplayName: Champion's Blade
+CrescentScriptureProjectile.DisplayName: Crescent Scripture
+LuminiteWave.DisplayName: Luminite Wave
+LunarBlood.DisplayName: Lunar Blood
+TotalityProjectile.DisplayName: Totality Projectile
+Explosion.DisplayName: Explosion
+ZombieEngineerExplosion.DisplayName: Zombie Engineer Explosion
+ArtemiteSwordSlash.DisplayName: Artemite Sword
+ManisolBladeMoon.DisplayName: Sol Blade
+ManisolBladeSol.DisplayName: Mani Blade
+ManisolBladeSolExplosion.DisplayName: Manisol Blade Sol Explosion
+ManisolBladeShadow.DisplayName: Manisol Blade Shadow
+LuminiteRune.DisplayName: Luminite Rune
+ChampionsBladeHeldProjectile.DisplayName: Champion's Blade
+ChampionsBladeBoltProjectile.DisplayName: Champion's Blade Bolt
+ArmstrongGauntletProjectile.DisplayName: Armstrong Gauntlet
+LuminiteBolt.DisplayName: Luminite Bolt
+WornLunarianDaggerHeld.DisplayName: Worn Lunarian Dagger
+DroneLaser.DisplayName: P.D.C.D. "Hummingbird"
+DroneMinion.DisplayName: P.D.C.D. "Hummingbird"
+ExsanguinatorProjectile.DisplayName: Exsanguinator Projectile
+IlmeniteHeld.DisplayName: Ilmenite Held
+IlmeniteRegularProj.DisplayName: Ilmenite Regular Proj
+IlmeniteAltProj.DisplayName: Ilmenite Alt Proj
+IlminiteExplosion.DisplayName: Ilminite Explosion
+IlmeniteExplosion.DisplayName: Ilmenite Explosion
+HummingbirdBullet.DisplayName: P.D.C.D. "Hummingbird"
+HummingbirdDrone.DisplayName: P.D.C.D. "Hummingbird"
+CalcicCaneBolt.DisplayName: Calcic Cane Bolt
+GreatstaffOfHorusMinion.DisplayName: Greatstaff Of Horus Minion
+HorusExplosion.DisplayName: Horus Explosion
+RyuguMinion.DisplayName: Ryugu Minion
+RyuguShell.DisplayName: Ryugu Shell
+CrescentScriptureSlash.DisplayName: Crescent Scripture Slash
+TotalitySlashProjectile.DisplayName: Totality Slash Projectile
+TotalitySmallSlashProjectile.DisplayName: Totality Small Slash Projectile

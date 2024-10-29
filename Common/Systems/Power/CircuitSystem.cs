@@ -94,7 +94,7 @@ namespace Macrocosm.Common.Systems.Power
                         {
                             circuits.Add(circuit);
                         }
-                        else if (machine.IsConsumer && machine.PoweredOn)
+                        else if (machine.MachineType is MachineType.Consumer && machine.PoweredOn)
                         {
                             machine.PowerOff();
                         }
@@ -113,16 +113,6 @@ namespace Macrocosm.Common.Systems.Power
 
         private static void DebugDrawMachines(SpriteBatch spriteBatch)
         {
-            foreach (var kvp in TileEntity.ByID)
-            {
-                if (kvp.Value is MachineTE machine)
-                {
-                    string activePower = machine.ActivePower.ToString("F2");
-                    string maxPower = (machine.IsGenerator ? machine.GeneratedPower : machine.ConsumedPower).ToString("F2");
-                    Vector2 position = machine.Position.ToWorldCoordinates() - new Vector2(8, 16 + 8) - Main.screenPosition;
-                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, $"{activePower}/{maxPower}", position, Color.Wheat, 0f, Vector2.Zero, Vector2.One);
-                }
-            }
         }
 
         private bool On_WorldGen_PlaceWire(On_WorldGen.orig_PlaceWire orig, int i, int j)
@@ -175,9 +165,9 @@ namespace Macrocosm.Common.Systems.Power
 
         public override bool HijackGetData(ref byte messageType, ref BinaryReader reader, int playerNumber)
         {
-            if(messageType is MessageID.TileManipulation or MessageID.TileSquare or MessageID.MassWireOperation)
-                 SearchCircuits();
- 
+            if (messageType is MessageID.TileManipulation or MessageID.TileSquare or MessageID.MassWireOperation)
+                SearchCircuits();
+
             return false;
         }
     }

@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.Heavenforge
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChair>(), (int)LuminiteStyle.Heavenforge * 2);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChair>(), (int)LuminiteStyle.Heavenforge);
             Item.width = 16;
             Item.height = 32;
             Item.value = 500;
@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.Heavenforge
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient(ItemID.HeavenforgeBrick, 20)
+            .AddIngredient(ItemID.HeavenforgeBrick, 5)
             .AddTile(TileID.MythrilAnvil)
             .Register();
         }

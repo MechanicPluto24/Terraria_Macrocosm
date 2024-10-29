@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Tiles.Ambient
             TileObjectData.newTile.Origin = new Point16(0, 7);
             TileObjectData.newTile.Width = 4;
             TileObjectData.newTile.Height = 8;
-            TileObjectData.newTile.CoordinateHeights = [16,16,16,16,16,16,16,16];
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.DrawYOffset = 2;

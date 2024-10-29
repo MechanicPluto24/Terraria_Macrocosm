@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Buffs.Potions;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Items.Consumables.Potions
         public sealed override bool? UseItem(Player player)
         {
             player.AddBuff(ModContent.BuffType<MedkitHigh>(), Duration);
-            player.GetModPlayer<MacrocosmPlayer>().MedkitItemType = Type;
+            player.GetModPlayer<MedkitPlayer>().MedkitItemType = Type;
             return true;
         }
 

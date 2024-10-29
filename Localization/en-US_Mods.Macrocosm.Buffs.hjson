@@ -45,27 +45,27 @@ HandheldEngineOverheat: {
 
 CraterDemonPet: {
 	DisplayName: Mini Crater Demon
-	Description: Mods.Macrocosm.Buffs.CraterDemonPet.Description
+	Description: You are being watched.
 }
 
 MedkitHigh: {
 	DisplayName: Medkit
-	Description: Mods.Macrocosm.Buffs.MedkitHigh.Description
+	Description: You are healing
 }
 
 MedkitLow: {
 	DisplayName: Medkit
-	Description: Mods.Macrocosm.Buffs.MedkitLow.Description
+	Description: You are healing
 }
 
 MedkitMedium: {
 	DisplayName: Medkit
-	Description: Mods.Macrocosm.Buffs.MedkitMedium.Description
+	Description: You are healing
 }
 
 Irradiated: {
 	DisplayName: Irradiated
-	Description: Mods.Macrocosm.Buffs.Irradiated.Description
+	Description: You have been exposed to radiation
 }
 
 Blindness: {
@@ -75,35 +75,60 @@ Blindness: {
 
 MildNecrosis: {
 	DisplayName: Mild Necrosis
-	Description: Mods.Macrocosm.Buffs.MildNecrosis.Description
+	Description: Dark patches begin to appear...
 }
 
 Necrosis: {
 	DisplayName: Necrosis
-	Description: Mods.Macrocosm.Buffs.Necrosis.Description
+	Description: Your body is dying!
 }
 
 OrganFailure: {
 	DisplayName: Organ Failure
-	Description: Mods.Macrocosm.Buffs.OrganFailure.Description
+	Description: Your organs are failing!
 }
 
 Paralysis: {
 	DisplayName: Paralysis
-	Description: Mods.Macrocosm.Buffs.Paralysis.Description
+	Description: You cannot move...
 }
 
 WeakBones: {
 	DisplayName: Weak Bones
-	Description: Mods.Macrocosm.Buffs.WeakBones.Description
+	Description: You feel weak...
 }
 
 Fatigue: {
 	DisplayName: Fatigue
-	Description: Mods.Macrocosm.Buffs.Fatigue.Description
+	Description: You feel tired...
 }
 
 AntiRadiationPills: {
 	DisplayName: Anti Radiation Pills
-	Description: Mods.Macrocosm.Buffs.AntiRadiationPills.Description
+	Description: You have been cured from radiation sickness
+}
+
+Melting: {
+	DisplayName: Melting
+	Description: You are melting
+}
+
+HummingbirdDroneSummonBuff: {
+	DisplayName: P.D.C.D. "Hummingbird"
+	Description: The combat drone will fight for you!
+}
+
+GreatstaffOfHorusMinionBuff: {
+	DisplayName: Greatstaff Of Horus Minion Buff
+	Description: A cosmic granule will fight for you!
+}
+
+HorusBurn: {
+	DisplayName: Horus Burn
+	Description: Burned by the light of the brightest star
+}
+
+RyuguSummonBuff: {
+	DisplayName: Ryugu Summon Buff
+	Description: The Ryugu will fight for you!
 }

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
@@ -8,8 +9,6 @@ namespace Macrocosm.Content.Dusts
     {
         public override void OnSpawn(Dust dust)
         {
-            dust.noLight = true;
-            dust.scale = Main.rand.NextFloat(1, 1.35f);
         }
 
         public override bool Update(Dust dust)
@@ -26,7 +25,8 @@ namespace Macrocosm.Content.Dusts
             if (dust.scale < 0f)
                 dust.active = false;
 
-            Lighting.AddLight(dust.position, new Color(51, 185, 131).ToVector3() * 0.6f);
+            if (!dust.noLight)
+                Lighting.AddLight(dust.position, new Color(51, 185, 131).ToVector3() * dust.scale * 0.6f);
 
             return false;
         }
@@ -34,7 +34,6 @@ namespace Macrocosm.Content.Dusts
         public override bool MidUpdate(Dust dust) => true;
 
         public override Color? GetAlpha(Dust dust, Color lightColor)
-            => Color.White;
-
+            => Color.White.WithAlpha((byte)dust.alpha);
     }
 }

@@ -15,9 +15,6 @@ namespace Macrocosm.Content.Particles
         public override string TexturePath => Macrocosm.EmptyTexPath;
         public override bool ShouldUpdatePosition => false;
 
-        public override int SpawnTimeLeft => spawnTimeLeft ??= Main.rand.Next(60, 80);
-        private int? spawnTimeLeft;
-
         public Vector2 StartPosition;
         public Vector2 EndPosition;
 
@@ -28,6 +25,21 @@ namespace Macrocosm.Content.Particles
 
         public int ItemType;
         private Item item = new();
+
+        public override void SetDefaults()
+        {
+            TimeToLive = 60;
+
+            StartPosition = default;
+            EndPosition = default;
+
+            MovementBezier = default;
+            ScaleBezier = default;
+
+            Opacity = 0f;
+            ItemType = 0;
+            item = new();
+        }
 
         public override void OnSpawn()
         {
@@ -48,7 +60,7 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
-            float progress = (float)TimeLeft / SpawnTimeLeft;
+            float progress = (float)TimeLeft / TimeToLive;
 
             float movementProgress = Utils.Remap(progress, 0.1f, 0.5f, 0f, 0.85f);
             movementProgress = Utils.Remap(progress, 0.5f, 0.9f, movementProgress, 1f);
@@ -57,14 +69,14 @@ namespace Macrocosm.Content.Particles
 
             float scaleProgress = Utils.Remap(progress, 0f, 0.1f, 0f, 1f);
             scaleProgress = Utils.Remap(progress, 0.85f, 0.95f, scaleProgress, 0f);
-            Scale = item.scale * scaleProgress;
+            Scale.X = item.scale * scaleProgress;
 
             Opacity = Utils.Remap(progress, 0f, 0.25f, 0f, 1f) * Utils.Remap(progress, 0.85f, 0.95f, 1f, 0f);
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            ItemSlot.DrawItemIcon(item, ItemSlot.Context.InWorld, spriteBatch, Position - screenPosition, Scale, 100f, Utility.Colorize(Color.White, lightColor) * Opacity);
+            ItemSlot.DrawItemIcon(item, ItemSlot.Context.InWorld, spriteBatch, Position - screenPosition, Scale.X, 100f, Utility.Colorize(Color.White, lightColor) * Opacity);
         }
     }
 }

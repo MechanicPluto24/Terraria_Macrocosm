@@ -28,7 +28,8 @@ namespace Macrocosm.Content.Rockets
             Rocket rocket = new()
             {
                 Position = position,
-                Active = true
+                Active = true,
+                Transparency = 0f
             };
 
             RocketManager.AddRocket(rocket);

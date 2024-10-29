@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Melee;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -12,7 +13,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()

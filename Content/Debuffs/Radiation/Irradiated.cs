@@ -1,5 +1,3 @@
-using Macrocosm.Common.Enums;
-using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ModLoader;
 

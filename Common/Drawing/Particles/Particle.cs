@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,7 +7,6 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-
 
 namespace Macrocosm.Common.Drawing.Particles
 {
@@ -23,7 +21,6 @@ namespace Macrocosm.Common.Drawing.Particles
         public int WhoAmI => ParticleManager.Particles.IndexOf(this);
 
         #region Loading
-
         public override void Load()
         {
             ParticleManager.Textures.Add(ModContent.Request<Texture2D>(TexturePath));
@@ -44,18 +41,64 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #endregion
 
-        #region Fields & Properties
-        protected Particle()
-        {
-            TimeLeft = SpawnTimeLeft;
-            Active = true;
+        #region Common Fields
+        /// <summary> Whether the current particle instance is active </summary>
+        [NetSync] public bool Active;
 
-            if (SetRandomFrameOnSpawn)
-                currentFrame = Main.rand.Next(FrameNumber);
+        /// <summary> Time left before despawining, in ticks </summary>
+        [NetSync] public int TimeLeft;
 
-            //OnSpawn();
-        }
+        /// <summary> The<c> Particle</c>'s total lifetime </summary>
+        [NetSync] public int TimeToLive = 300;
 
+        /// <summary> The <c>Particle</c>'s position in the world </summary>
+        [NetSync] public Vector2 Position;
+
+        /// <summary> The <c>Particle</c>'s velocity vector </summary>
+        [NetSync] public Vector2 Velocity;
+
+        /// <summary> The <c>Particle</c>'s acceleration vector </summary>
+        [NetSync] public Vector2 Acceleration;
+
+        /// <summary> The <c>Particle</c>'s rotation </summary>
+        [NetSync] public float Rotation = 0f;
+
+        /// <summary> The <c>Particle</c>'s <see cref="Rotation"> change per tick </summary>
+        [NetSync] public float RotationVelocity;
+
+        /// <summary> The <c>Particle</c>'s <see cref="RotationVelocity"> change per tick </summary>
+        [NetSync] public float RotationAcceleration;
+
+        /// <summary> The <c>Particle</c>'s scale vector </summary>
+        [NetSync] public Vector2 Scale = new(1f);
+
+        /// <summary> <see cref="ScaleVelocity"/> change per tick </summary>
+        [NetSync] public Vector2 ScaleAcceleration;
+
+        /// <summary> <see cref="Scale"/> change per tick </summary>
+        [NetSync] public Vector2 ScaleVelocity;
+
+        /// <summary> Allow negative scale (scale is absolute, but negative flips the sprite) </summary>
+        [NetSync] public bool AllowNegativeScale = false;
+
+        /// <summary> Normalized time (with respect to <see cref="TimeToLive"/> and <see cref="TimeLeft"/>) of the fade in </summary>
+        [NetSync] public float FadeInNormalizedTime = float.Epsilon;
+
+        /// <summary> Normalized time (with respect to <see cref="TimeToLive"/> and <see cref="TimeLeft"/>) of the fade out </summary>
+        [NetSync] public float FadeOutNormalizedTime = 1f;
+
+        /// <summary> The draw color </summary>
+        [NetSync] public Color Color = Color.White;
+
+        /// <summary> Particle animation update speed, in ticks per frame </summary>
+        [NetSync] public int FrameSpeed;
+
+        protected int currentFrame = 0;
+        protected int frameCounter = 0;
+
+        #endregion
+
+        #region Common Properties
         /// <summary> The <c>Particle</c>'s texture, autoloaded </summary>
         public Asset<Texture2D> Texture => ParticleManager.Textures[Type];
 
@@ -73,39 +116,11 @@ namespace Macrocosm.Common.Drawing.Particles
             }
         }
 
-        /// <summary> Whether the current particle instance is active </summary>
-        [NetSync] public bool Active;
-
-        /// <summary> Time left before despawining, in ticks </summary>
-        [NetSync] public int TimeLeft;
-
-        /// <summary> The <c>Particle</c>'s position in the world </summary>
-        [NetSync] public Vector2 Position;
-
-        /// <summary> The <c>Particle</c>'s velocity vector </summary>
-        [NetSync] public Vector2 Velocity;
-
-        /// <summary> The <c>Particle</c>'s rotation </summary>
-        [NetSync] public float Rotation = 0f;
-
-        /// <summary> The <c>Particle</c>'s scale as a 2d vector </summary>
-        [NetSync] public Vector2 ScaleV = new(1f);
-
-        /// <summary> The <c>Particle</c>'s scale as a scalar </summary>
-        public float Scale
-        {
-            get => ScaleV.X;
-            set { ScaleV.X = value; ScaleV.Y = value; }
-        }
-
         /// <summary> The <c>Particle</c>'s center coordinates in the world </summary>
         public Vector2 Center => Position + Size / 2;
 
         /// <summary> Path to the <c>Particle</c>'s texture, override for custom loading. </summary>
         public virtual string TexturePath => Utility.GetNamespacePath(this);
-
-        /// <summary> The  <c>Particle</c>'s total lifetime. If <see cref="DespawnOnAnimationComplete"/> is true, this defaults to the animation duration. </summary>
-        public virtual int SpawnTimeLeft => DespawnOnAnimationComplete ? FrameNumber * FrameSpeed - 1 : 300;
 
         /// <summary> Whether the <c>Particle</c> should update its position based on velocity </summary>
         public virtual bool ShouldUpdatePosition => true;
@@ -113,24 +128,83 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> The draw layer of this <c>Particle</c>, see <see cref="ParticleDrawLayer"/>. Unused if <see cref="HasCustomDrawer"/>. </summary>
         public virtual ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
+        /// <summary> Fade factor, taking into account the <see cref="FadeInNormalizedTime"/> and <see cref="FadeOutNormalizedTime"/> </summary>
+        public float FadeFactor
+        {
+            get
+            {
+                float fadeIn = MathHelper.Clamp(FadeInNormalizedTime, float.Epsilon, 1f);
+                float fadeOut = MathHelper.Clamp(FadeOutNormalizedTime, float.Epsilon, 1f);
+                float progress = (TimeToLive - (float)TimeLeft) / TimeToLive;
+                return Utility.InverseLerp(0f, fadeIn, progress, clamped: true) * Utility.InverseLerp(1f, fadeOut, progress, clamped: true);
+            }
+        }
+
+        #endregion
+
+        #region Pooling
+
+        /// <summary> The maximum number of particles of this type to keep in the pool. </summary>
+        public virtual int MaxPoolCount { get; }
+
+        /// <summary> Resets the particle's fields to their default values. </summary>
+        public void Reset()
+        {
+            Active = false;
+
+            TimeToLive = 300;
+            TimeLeft = TimeToLive;
+
+            Position = Vector2.Zero;
+            Velocity = Vector2.Zero;
+            Acceleration = Vector2.Zero;
+
+            Rotation = 0f;
+            RotationVelocity = 0f;
+            RotationAcceleration = 0f;
+
+            Scale = new Vector2(1f);
+            ScaleVelocity = Vector2.Zero;
+            ScaleAcceleration = Vector2.Zero;
+            AllowNegativeScale = false;
+
+            FadeInNormalizedTime = float.Epsilon;
+            FadeOutNormalizedTime = 1f;
+
+            Color = Color.White;
+
+            spawned = false;
+
+            CustomDrawer = null;
+
+            FrameSpeed = int.MaxValue;
+            frameCounter = 0;
+            currentFrame = 0;
+
+            OldPositions = new Vector2[1];
+            OldRotations = new float[1];
+
+            SetDefaults();
+        }
+
         #endregion
 
         #region Hooks
 
         public bool HasCustomDrawer => CustomDrawer is not null;
-        public object CustomDrawer = null;
+        public object CustomDrawer { get; set; } = null;
 
         /// <summary> Used for loading tasks, called on Mod load </summary>
         public virtual void OnLoad() { }
 
-
         /// <summary> Used for unloading tasks, called on Mod unload </summary>
         public virtual void OnUnload() { }
 
+        /// <summary> Set default values of this particle, called when instanced or fetched from pool. Randomized values are allowed. Runs before <c>CreateParticle</c>, values set here might be overwritten. </summary>
+        public virtual void SetDefaults() { }
 
-        /// <summary> Called when the <c>Particle</c> is spawned </summary>
+        /// <summary> Called when the <c>Particle</c> is spawned, used to create effects or run custom spawn logic. Runs after <c>CreateParticle</c> (on first update tick), may use value set here</summary>
         public virtual void OnSpawn() { }
-
 
         /// <summary> Used for defining the <c>Particle</c>'s behaviour </summary>
         public virtual void AI() { }
@@ -146,37 +220,31 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #region Animation
 
-        /// <summary> Whether to pick a random frame on spawn </summary>
+        /// <summary> Whether this particle type picks a random frame on spawn </summary>
         public virtual bool SetRandomFrameOnSpawn => false;
 
-        /// <summary> If true, particle will despawn on the end of animation </summary>
+        /// <summary> Whether this particle should despawn on the end of an animation cycle </summary>
         public virtual bool DespawnOnAnimationComplete => false;
 
         /// <summary> Number of animation frames of this particle </summary>
-        public virtual int FrameNumber => 1;
+        public virtual int FrameCount => 1;
 
-        /// <summary> Particle animation update speed, in ticks per frame </summary>
-        public virtual int FrameSpeed => 1;
-
-        protected int currentFrame = 0;
-        protected int frameCnt = 0;
-
-        /// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameNumber"/> and <see cref="FrameSpeed"/> </summary>
+        /// <summary> Used for animating the <c>Particle</c>. By default, updates with <see cref="FrameCount"/> and <see cref="FrameSpeed"/> </summary>
         public virtual void UpdateFrame()
         {
             // if not animated or frame was picked on spawn, don't update frame
-            if (FrameNumber <= 1 || SetRandomFrameOnSpawn)
+            if (FrameCount <= 1 || SetRandomFrameOnSpawn)
                 return;
 
             if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
             {
-                frameCnt++;
-                if (frameCnt == FrameSpeed)
+                frameCounter++;
+                if (frameCounter >= FrameSpeed)
                 {
-                    frameCnt = 0;
+                    frameCounter = 0;
                     currentFrame++;
 
-                    if (currentFrame >= FrameNumber)
+                    if (currentFrame >= FrameCount)
                         currentFrame = 0;
                 }
             }
@@ -188,23 +256,73 @@ namespace Macrocosm.Common.Drawing.Particles
         /// </summary>
         public virtual Rectangle? GetFrame()
         {
-
             if (Main.netMode == NetmodeID.Server)
                 return null;
 
-            // if not animated or frame is not picked randomly on spawn, draw the entire texture
-            if (FrameNumber <= 1 && !SetRandomFrameOnSpawn)
+            // if not animated and frame is not picked randomly on spawn, draw the entire texture
+            if (FrameCount <= 1 && !SetRandomFrameOnSpawn)
                 return null;
 
-
-            int frameHeight = Texture.Height() / FrameNumber;
+            int frameHeight = Texture.Height() / FrameCount;
             return new Rectangle(0, frameHeight * currentFrame, Texture.Width(), frameHeight);
         }
 
         #endregion
 
         #region Logic
+        internal bool spawned;
+        public void Update()
+        {
+            if (!spawned)
+            {
+                OnSpawn();
 
+                if (DespawnOnAnimationComplete)
+                    TimeToLive = FrameCount * FrameSpeed - 1;
+
+                TimeLeft = TimeToLive;
+
+                if (SetRandomFrameOnSpawn)
+                    currentFrame = Main.rand.Next(FrameCount);
+
+                spawned = true;
+            }
+
+            Velocity += Acceleration;
+            Position += Velocity;
+            RotationVelocity += RotationAcceleration;
+            Rotation += RotationVelocity;
+            ScaleVelocity += ScaleAcceleration;
+            Scale += ScaleVelocity;
+
+            if ((Scale.X < 0f || Scale.Y < 0f) && !AllowNegativeScale)
+                Scale = Vector2.Clamp(Scale, Vector2.Zero, new Vector2(float.MaxValue));
+
+            if (DrawLayer is ParticleDrawLayer.PostInterface && !HasCustomDrawer)
+                Position += Main.screenPosition;
+
+            PopulateTrailArrays();
+            AI();
+            UpdateFrame();
+
+            if (TimeLeft-- <= 0)
+                Kill();
+        }
+
+        public void Kill(bool shouldSync = false)
+        {
+            OnKill();
+            Active = false;
+
+            ParticleManager.RemoveParticle(this);
+
+            if (shouldSync)
+                NetSync();
+        }
+
+        #endregion
+
+        #region Drawcode
         /// <summary>
         /// Used for drawing things before the particle, with additive blending. Modify the spritebatch only when absolutely necessary.
         /// Substract <see cref="Main.screenPosition"> screenPosition </see> from the <see cref="Particle.Position">Position</see> before drawing.
@@ -228,7 +346,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <param name="lightColor"> The light color at the particle's position </param>
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), lightColor, Rotation, Size * 0.5f, ScaleV, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor) * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
         /// <summary> 
@@ -241,47 +359,26 @@ namespace Macrocosm.Common.Drawing.Particles
         public virtual void PostDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
         }
-
-        public void Update()
-        {
-            if (ShouldUpdatePosition)
-                Position += Velocity;
-
-            if (DrawLayer is ParticleDrawLayer.UI && !HasCustomDrawer)
-                Position += Main.screenPosition;
-
-            PopulateTrailData();
-            AI();
-            UpdateFrame();
-
-            if (TimeLeft-- <= 0)
-                Kill();
-        }
-
-        public void Kill(bool shouldSync = false)
-        {
-            if (!Active)
-                return;
-
-            OnKill();
-            Active = false;
-
-            if (shouldSync)
-                NetSync();
-        }
-
         #endregion
 
         #region Trails
+
+        /// <summary> This particle length of <see cref="OldPositions"/> and <see cref="OldRotations"/> </summary>
         public virtual int TrailCacheLength { get; set; } = 1;
 
+        /// <summary> Previous position </summary>
         public Vector2 OldPosition => OldPositions[0];
+
+        /// <summary> Previous rotation </summary>
         public float OldRotation => OldRotations[0];
 
+        /// <summary> Collection of old position, of length <see cref="TrailCacheLength"/> </summary>
         public Vector2[] OldPositions = new Vector2[1];
+
+        /// <summary> Collection of old rotations, of length <see cref="TrailCacheLength"/> </summary>
         public float[] OldRotations = new float[1];
 
-        private void PopulateTrailData()
+        private void PopulateTrailArrays()
         {
             if (OldPositions.Length != TrailCacheLength)
             {

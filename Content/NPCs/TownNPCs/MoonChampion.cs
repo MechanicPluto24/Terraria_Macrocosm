@@ -4,10 +4,12 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Consumables.Throwable;
-using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Items.Weapons.Magic;
+using Macrocosm.Content.Items.Weapons.Melee;
+using Macrocosm.Content.Items.Weapons.Ranged;
+using Macrocosm.Content.Items.Weapons.Summon;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -149,13 +151,13 @@ namespace Macrocosm.Content.NPCs.TownNPCs
         {
             var shop = new NPCShop(Type);
 
-            void AddNewSlot(int type, int price)
+            void AddNewSlot(int type, int price, params Condition[] conditions)
             {
                 shop.Add(new Item(type)
                 {
                     shopCustomPrice = price,
                     shopSpecialCurrency = CurrencySystem.MoonStone,
-                });
+                }, conditions);
             }
 
             // TODO: for testing, subject to change - Feldy
@@ -167,12 +169,22 @@ namespace Macrocosm.Content.NPCs.TownNPCs
             AddNewSlot(ModContent.ItemType<AstronautSuit>(), 20);
             AddNewSlot(ModContent.ItemType<AstronautLeggings>(), 20);
 
+            AddNewSlot(ModContent.ItemType<CrescentScripture>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.LuminiteShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<Procellarum>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.HeavenforgeShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<Ilmenite>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.LunarRustShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<Micronova>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.AstraShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<Totality>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.DarkCelestialShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<ManisolBlades>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.MercuryShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<StarDestroyer>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.StarRoyaleShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<FrigorianGaze>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.CryocoreShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<GreatstaffOfHorus>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.CosmicEmberShrineUnlocked));
+
             shop.Register();
         }
 
         public override void ModifyActiveShop(string shopName, Item[] items)
         {
-            foreach(Item item in items)
+            foreach (Item item in items)
             {
                 if (item is not null && item.type == ModContent.ItemType<LunarCrystal>())
                     item.stack = 20;

@@ -3,7 +3,10 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Terraria;
 using Terraria.ID;
+using Macrocosm.Content.Items.LiquidContainers;
 using Terraria.ModLoader;
+using Terraria.GameContent.ItemDropRules;
+using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -21,11 +24,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.width = 18;
             NPC.height = 44;
-            NPC.damage = 70;
-            NPC.defense = 65;
-            NPC.lifeMax = 500;
-            NPC.HitSound = SoundID.NPCHit1;
-            NPC.DeathSound = SoundID.NPCDeath2;
+            NPC.damage = 65;
+            NPC.defense = 90;
+            NPC.lifeMax = 1200;
+            NPC.HitSound = SFX.Zombie;
+            NPC.DeathSound = SFX.ZombieDeath;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = 3;
             AIType = NPCID.ZombieMushroom;
@@ -71,6 +74,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<RocketFuelCanister>(), 10, 1, 4));
         }
 
         public override void HitEffect(NPC.HitInfo hit)

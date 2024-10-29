@@ -3,6 +3,7 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Macrocosm.Content.Items.Bars;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Artemite
@@ -50,6 +51,13 @@ namespace Macrocosm.Content.Items.Tools.Artemite
             #region Lighting
             Lighting.AddLight(player.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
             #endregion
+        }
+         public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<ArtemiteBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
         }
     }
 }

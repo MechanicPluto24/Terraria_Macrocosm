@@ -28,11 +28,6 @@ DemonSunBiome: {
 	TownNPCDialogueName: the Demon Sun
 }
 
-MonolithBiome: {
-	DisplayName: Monolith Biome
-	TownNPCDialogueName: the Monolith Biome
-}
-
 MoonNightBiome: {
 	DisplayName: Moon Night
 	TownNPCDialogueName: the Moon Night

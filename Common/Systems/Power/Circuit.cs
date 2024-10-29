@@ -19,32 +19,32 @@ namespace Macrocosm.Common.Systems.Power
 
         public void Solve()
         {
-            float totalGeneratedPower = 0;
-            float totalConsumedPower = 0;
+            float inputPower = 0;
+            float consumedPower = 0;
             foreach (var machine in machines)
             {
-                if (machine.IsGenerator)
-                    totalGeneratedPower += machine.GeneratedPower;
+                if (machine.MachineType is MachineType.Generator)
+                    inputPower += machine.Power;
 
-                if (machine.IsConsumer)
-                    totalConsumedPower += machine.ConsumedPower;
+                if (machine.MachineType is MachineType.Consumer)
+                    consumedPower += machine.Power;
             }
 
-            bool enoughPower = totalGeneratedPower >= totalConsumedPower;
-            float powerShortageFactor = enoughPower ? 1 : totalGeneratedPower / totalConsumedPower;
+            bool enoughPower = inputPower >= consumedPower;
+            float powerShortageFactor = enoughPower ? 1 : inputPower / consumedPower;
             float totalPowerDistributedToConsumers = 0;
 
-            foreach (var consumer in machines.Where(machine => machine.IsConsumer))
+            foreach (var consumer in machines.Where(machine => machine.MachineType is MachineType.Consumer))
             {
-                if (enoughPower && !consumer.PoweredOn)
+                if (enoughPower && !consumer.PoweredOn && consumer.CanAutoPowerOn)
                     consumer.PowerOn();
 
-                if (!enoughPower && consumer.PoweredOn)
+                if (!enoughPower && consumer.PoweredOn && consumer.CanAutoPowerOff)
                     consumer.PowerOff();
 
                 if (consumer.Operating)
                 {
-                    float powerReceived = consumer.ConsumedPower * powerShortageFactor;
+                    float powerReceived = consumer.Power * powerShortageFactor;
                     consumer.ActivePower = powerReceived;
                     totalPowerDistributedToConsumers += powerReceived;
                 }
@@ -54,16 +54,16 @@ namespace Macrocosm.Common.Systems.Power
                 }
             }
 
-            foreach (var generator in machines.Where(machine => machine.IsGenerator))
+            foreach (var generator in machines.Where(machine => machine.MachineType is MachineType.Generator))
             {
-                if (generator.GeneratedPower > 0 && !generator.PoweredOn)
+                float remainingPower = generator.Power - (totalPowerDistributedToConsumers / inputPower * generator.Power);
+                generator.ActivePower = generator.PoweredOn ? remainingPower : 0;
+
+                if (generator.Power > 0 && !generator.PoweredOn && generator.CanAutoPowerOn)
                     generator.PowerOn();
 
-                if (generator.GeneratedPower <= 0 && generator.PoweredOn)
+                if (generator.Power <= 0 && generator.PoweredOn && generator.CanAutoPowerOff)
                     generator.PowerOff();
-
-                float remainingPower = generator.GeneratedPower - (totalPowerDistributedToConsumers / totalGeneratedPower * generator.GeneratedPower);
-                generator.ActivePower = generator.PoweredOn ? remainingPower : 0;
             }
         }
 

@@ -89,6 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
 
         bool spawned = false;
+        bool preformingProjectileAttack=false;
         public override void OnSpawn(IEntitySource source)
         {
         }
@@ -261,13 +262,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private void Movement(bool foundTarget, float distanceFromTarget, Vector2 targetCenter, float distanceToIdlePosition, Vector2 vectorToIdlePosition)
         {
             // Default movement parameters (here for attacking)
-            float speed = 8f;
+            float speed = 11f;
             float inertia = 20f;
             bool dash = false;
 
             if (foundTarget)
             {
-
+                if (!preformingProjectileAttack)
+                {
                 if (AttackTimer < 120)
                 {
                     AttackTimer++;
@@ -280,7 +282,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 else
                 {
                     AttackTimer = 0;
-                    speed *= 20f * MathHelper.Clamp(distanceFromTarget, 0, 100) / 100;
+                    speed *= 30f * MathHelper.Clamp(distanceFromTarget, 0, 100) / 100;
                     inertia = 10f;
                     dash = true;
                 }
@@ -294,6 +296,34 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
                     direction *= speed;
                     Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
+                }
+                if(dash)
+                    if(Main.rand.NextBool(3))
+                        preformingProjectileAttack=true;
+                }
+                else
+                {
+                speed = 6f;
+                AttackTimer++;
+                if (distanceFromTarget > 270f)
+                {
+                    // The immediate range around the target (so it doesn't latch onto it when close)
+                    Vector2 direction = targetCenter - Projectile.Center;
+                    direction.Normalize();
+
+                    direction *= speed;
+                    Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
+                } 
+                if (AttackTimer%60==0&&Projectile.owner == Main.myPlayer)
+                {
+                Vector2 position = Projectile.Center;
+                Projectile.NewProjectile(Projectile.GetSource_FromAI(),position,(targetCenter- position).SafeNormalize(Vector2.UnitX)*11f, ModContent.ProjectileType<CalcicCaneBolt>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
+                }
+                if(AttackTimer>250)
+                {
+                    AttackTimer=0;
+                    preformingProjectileAttack=false;
+                }
                 }
             }
             else

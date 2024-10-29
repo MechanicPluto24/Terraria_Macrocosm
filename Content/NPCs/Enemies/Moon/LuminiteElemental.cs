@@ -11,6 +11,7 @@ using ReLogic.Content;
 using System;
 using System.IO;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -70,10 +71,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.width = 38;
             NPC.height = 38;
-            NPC.damage = 75;
-            NPC.defense = 80;
-            NPC.lifeMax = 580;
-            NPC.HitSound = SoundID.Dig;
+            NPC.damage = 55;
+            NPC.defense = 100;
+            NPC.lifeMax = 1300;
+            NPC.HitSound = SoundID.NPCDeath6 with { Pitch = 0.5f, Volume = 0.2f };
             NPC.DeathSound = SoundID.NPCDeath6;
             NPC.value = 60f;
             NPC.knockBackResist = 0.2f;
@@ -171,14 +172,18 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (AI_Timer >= attackPeriod)
             {
-                if (clearLineOfSight && target.active && !target.dead && Main.netMode != NetmodeID.MultiplayerClient)
+                if (clearLineOfSight && target.active && !target.dead)
                 {
-                    for (int i = 0; i < Main.rand.Next(3, 6); i++)
+                    SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
+
+                    if(Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        Vector2 projVelocity = Utility.PolarVector(8f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
-                        Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
-                        proj.netUpdate = true;
-                    }
+                        for (int i = 0; i < Main.rand.Next(3, 6); i++)
+                        {
+                            Vector2 projVelocity = Utility.PolarVector(8f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
+                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
+                        }
+                    }               
                 }
 
                 AI_Timer = 0;
@@ -204,11 +209,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (AI_Timer >= panicAttackPeriod)
             {
-                if (clearLineOfSight && target.active && !target.dead && Main.netMode != NetmodeID.MultiplayerClient)
+                if (clearLineOfSight && target.active && !target.dead)
                 {
-                    Vector2 projVelocity = Utility.PolarVector(12f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
-                    Projectile proj = Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
-                    proj.netUpdate = true;
+                    SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
+
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Vector2 projVelocity = Utility.PolarVector(12f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
+                        Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
+                    }
                 }
 
                 AI_Timer = 0;
@@ -224,24 +233,25 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 else
                     NPC.velocity = (luminitePosition - NPC.Center).SafeNormalize(Vector2.UnitX) * 5f;
 
-                if (Main.netMode != NetmodeID.MultiplayerClient)
+                if (Vector2.DistanceSquared(NPC.Center, luminitePosition) < 30 * 30 && NPC.life < NPC.lifeMax)
                 {
-                    if (Vector2.DistanceSquared(NPC.Center, luminitePosition) < 30 * 30 && NPC.life < NPC.lifeMax)
-                    {
-                        Healing = true;
+                    Healing = true;
 
-                        if (HealTimer++ % 10 == 0)
+                    if (HealTimer++ % 10 == 0)
+                    {
+                        SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.2f, PitchRange = (0f, 0.2f)}, NPC.Center);
+
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             NPC.life += 10;
                             NPC.HealEffect(10, broadcast: true);
                             NPC.netUpdate = true;
                         }
                     }
-                    else
-                    {
-                        Healing = false;
-                        NPC.netUpdate = true;
-                    }
+                }
+                else
+                {
+                    Healing = false;
                 }
             }
             else

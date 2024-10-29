@@ -1,6 +1,6 @@
 // using Macrocosm.Tiles;
+using Macrocosm.Common.Players;
 using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
         {
             Item.width = 18;
             Item.height = 18;
-            Item.value = 10000;
+            Item.value = Item.sellPrice(gold: 10);
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.defense = 15;
         }

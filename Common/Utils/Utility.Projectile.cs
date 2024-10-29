@@ -1,6 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Trails;
-using Macrocosm.Common.Global.Projectiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -88,8 +86,8 @@ namespace Macrocosm.Common.Utils
         /// <summary>
         /// Helper to draw an animated projectile extra, such as a glowmask
         /// </summary>
-        public static void DrawAnimatedExtra(this Projectile proj, Texture2D glowmask, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
-            => proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), glowmask, frame);
+        public static void DrawAnimatedExtra(this Projectile proj, Texture2D texture, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
+            => proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), texture, frame);
 
 
         public static void DrawWhipLine(List<Vector2> list, Color color)

@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-        
+
 
             Item.staff[Type] = true;
         }
@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         {
             Item.damage = 135;
             Item.DamageType = DamageClass.Magic;
-            Item.mana = 6;
+            Item.mana = 8;
             Item.width = 80;
             Item.height = 80;
             Item.useTime = 12;

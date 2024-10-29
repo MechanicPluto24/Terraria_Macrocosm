@@ -1,5 +1,6 @@
 ﻿using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets.Modules
@@ -46,8 +47,10 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             inputItem.stack -= RequiredAmount;
 
-            if (inputItem.stack <= 0)
-                inputItem.TurnToAir();
+            if (inputItem.type == ItemID.None || inputItem.stack < 1)
+            {
+                inputItem.TurnToAir(fullReset: true);
+            }
         }
     }
 }

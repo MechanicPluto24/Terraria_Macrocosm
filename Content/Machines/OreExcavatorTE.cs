@@ -21,21 +21,26 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    // TODO: redesign blacklisting
     public class OreExcavatorTE : MachineTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();
 
+        public override MachineType MachineType => MachineType.Consumer;
+
         public SimpleLootTable Loot { get; set; }
         protected virtual int OreGenerationRate => 60;
+
+        public List<int> BlacklistedItems { get; set; } = new();
+
 
         public Inventory Inventory { get; set; }
         protected virtual int InventorySize => 50;
         public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
-
         protected int checkTimer;
-        public List<int> BlacklistedItems = new();
+
+        protected int sceneCheckTimer;
+        protected SceneData scene;
 
         public override void OnFirstUpdate()
         {
@@ -54,11 +59,12 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            ConsumedPower = 1f;
+            Power = 25f;
 
             if (Operating)
             {
                 checkTimer++;
+                sceneCheckTimer++;
             }
 
             if (checkTimer >= OreGenerationRate)
@@ -66,19 +72,26 @@ namespace Macrocosm.Content.Machines
                 checkTimer = 0;
                 Loot?.Drop(Utility.GetClosestPlayer(Position, MachineTile.Width * 16, MachineTile.Height * 16));
             }
+
+            if (sceneCheckTimer >= 5 * 60 * 60)
+            {
+                sceneCheckTimer = 0;
+                scene?.Scan();
+            }
         }
 
-        public virtual void PopulateItemLoot()
+        protected virtual void PopulateItemLoot()
         {
-            SceneData scene = new(Position);
-            //scene.Scan();
+            scene = new(Position);
 
             switch (MacrocosmSubworld.SanitizeID(MacrocosmSubworld.CurrentID))
             {
                 case nameof(Moon):
 
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Regolith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
-                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<Protolith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<Cynthalith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<Protolith>(), 20, amountDroppedMinimum: 15, amountDroppedMaximum: 150));
+
 
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<ArtemiteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<SeleniteOre>(), 10));
@@ -176,7 +189,7 @@ namespace Macrocosm.Content.Machines
 
                     // Jungle loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.MudBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new SceneDataConditions.IsJungle(scene)));
-                    Loot.Add(new TEDropWithConditionRule(this, ItemID.ChlorophyteOre, 12, condition: new ConditionsChain.All(new SceneDataConditions.IsJungle(scene), new Conditions.IsHardmode())));
+                    Loot.Add(new TEDropWithConditionRule(this, ItemID.ChlorophyteOre, 12, condition: new ConditionsChain.All(new SceneDataConditions.IsJungle(scene), new Conditions.DownedPlantera())));
 
                     // Underworld loot 
                     // TODO: maybe exclude common drops from underworld and keep only these?

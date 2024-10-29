@@ -115,7 +115,7 @@ namespace Macrocosm.Content.Rockets
                 if (!rocket.ActiveInCurrentWorld)
                     continue;
 
-                rocket.PreDrawBeforeTiles(Main.spriteBatch, rocket.Position - Main.screenPosition);
+                rocket.PreDrawBeforeTiles(Main.spriteBatch, rocket.Position - Main.screenPosition, inWorld: true);
             }
         }
 
@@ -159,7 +159,7 @@ namespace Macrocosm.Content.Rockets
                 if (rocket.DrawLayer != layer)
                     continue;
 
-                rocket.PostDraw(Main.spriteBatch, rocket.Position - Main.screenPosition);
+                rocket.PostDraw(Main.spriteBatch, rocket.Position - Main.screenPosition, inWorld: true);
             }
         }
 
@@ -215,7 +215,7 @@ namespace Macrocosm.Content.Rockets
                 Array.Copy(rockets, Rockets, rockets.Length);
             }
 
-            OnWorldSpawn();
+            OnWorldLoaded();
         }
 
         private static void OnWorldSpawn()
@@ -231,7 +231,24 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public override void PostWorldGen() => OnWorldGenerated();
+        public override void OnWorldLoad() => OnWorldLoaded();
+        private static void OnWorldLoaded()
+        {
+            if (WorldGen.gen)
+                return;
+
+            for (int i = 0; i < MaxRockets; i++)
+            {
+                Rocket rocket = Rockets[i];
+
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
+
+                rocket.OnWorldLoad();
+            }
+        }
+
+        public override void PostWorldGen() => base.PostWorldGen();
 
         public static void OnWorldGenerated()
         {
@@ -323,7 +340,7 @@ namespace Macrocosm.Content.Rockets
         {
             orig(self);
 
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
             DrawOverlays();
             Main.spriteBatch.End();
         }

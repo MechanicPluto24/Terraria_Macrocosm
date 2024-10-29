@@ -1,0 +1,11 @@
+LaunchpadMarker: {
+	TooClose: The launch pad markers are too close to each other.
+	SolidBlock: There is a solid block, can't place launch pad here.
+	FoundGap: The area is not flat, can't place launchpad here.
+	NoPair: Found no other valid launch pad marker in the vicinity.
+}
+
+MeteorStorm: {
+	Start: Meteors are falling from the sky!
+	End: Meteors have stopped falling from the sky.
+}

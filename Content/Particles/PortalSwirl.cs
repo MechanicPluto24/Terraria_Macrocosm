@@ -11,12 +11,14 @@ namespace Macrocosm.Content.Particles
     public class PortalSwirl : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override int SpawnTimeLeft => 150;
         public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
-
-        public Color Color { get; set; } = Color.White;
-
         public Vector2 TargetCenter { get; set; }
+
+        public override void SetDefaults()
+        {
+            TimeToLive = 150;
+            TargetCenter = default;
+        }
 
         public override void OnSpawn()
         {
@@ -31,7 +33,7 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
-            if (Scale < 0.1f)
+            if (Scale.X < 0.1f)
                 Kill();
 
             if (Velocity.LengthSquared() < 0.5f)
@@ -57,7 +59,7 @@ namespace Macrocosm.Content.Particles
                 glowTex,
                 Position - screenPosition,
                 null,
-                color,
+                color * FadeFactor,
                 Velocity.ToRotation(),
                 glowTex.Size() * 0.5f,
                 new Vector2(Math.Clamp(speed, 0, 2), Math.Clamp(speed, 0, 0.5f)) * 0.15f * Scale,

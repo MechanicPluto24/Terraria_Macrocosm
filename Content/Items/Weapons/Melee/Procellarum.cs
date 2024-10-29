@@ -18,17 +18,17 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            Item.damage = 450;
+            Item.damage = 550;
             Item.DamageType = DamageClass.Melee;
             Item.knockBack = 5;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT3>();
-            Item.useTime = 48;
+            Item.useTime = 30;
             Item.noUseGraphic = true;
             Item.shoot = ModContent.ProjectileType<Procellarum_HalberdProjectile>();
             Item.autoReuse = true;
             Item.useStyle = ItemUseStyleID.Shoot;
-            Item.useAnimation = 48;
+            Item.useAnimation = 30;
             Item.shootSpeed = 1f;
             Item.channel = true;
         }
@@ -42,15 +42,17 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             if (Main.mouseRight)
             {
-                Item.useTime = 90;
-                Item.useAnimation = 90;
+                Item.damage = 280;
+                Item.useTime = 30;
+                Item.useAnimation = 30;
                 Item.autoReuse = true;
-                Item.channel = true;
+                Item.channel = false;
             }
             else
-            {
-                Item.useTime = 48;
-                Item.useAnimation = 48;
+            { 
+                Item.damage = 550;
+                Item.useTime = 30;
+                Item.useAnimation = 30;
                 Item.autoReuse = true;
                 Item.channel = true;
             }

@@ -16,6 +16,7 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
+using Macrocosm.Content.Items.Keys;
 using Macrocosm.Content.NPCs.TownNPCs;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -28,9 +29,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
@@ -92,11 +91,11 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    Particle.CreateParticle<PortalSwirl>(p =>
+                    Particle.Create<PortalSwirl>(p =>
                     {
                         p.Position = info.center + Main.rand.NextVector2CircularEdge(140, 140) * info.scale * Main.rand.NextFloat(0.5f, 1f);
                         p.Velocity = Vector2.One * 24;
-                        p.Scale = (0.14f + Main.rand.NextFloat(0.1f)) * info.scale;
+                        p.Scale = new((0.14f + Main.rand.NextFloat(0.1f)) * info.scale);
                         p.Color = new Color(92, 206, 130);
                         p.TargetCenter = info.center;
                         p.CustomDrawer = owner;
@@ -291,13 +290,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
 			 /*PhantasmalPortalCount       */ { 0, 1, 1, 2, 1, 2, 2, 3 },
 
-             /*ChargeAttackCountMin        */ { 2, 3, 2, 4, 2, 4, 2, 4 },                       
+             /*ChargeAttackCountMin        */ { 1, 2, 2, 4, 2, 4, 2, 4 },                       
 			 /*ChargeAttackCountMax        */ { 3, 4, 3, 5, 3, 5, 3, 5 },
 			 /*ChargeWaitTime              */ { 60, 20, 50, 15, 45, 10, 45, 10 },    
 			 /*ChargeSlowdownDelay         */ { 30, 16, 26, 14, 45, 22, 12, 18 },    
 			 
 			 /*PortalWaitTimeMin           */ { 80, 70, 40, 30, 20, 10, 5, 0 },                   
-			 /*PortalWaitTimeMax           */ { 160, 150, 80, 70, 40, 30, 10, 5 },                
+			 /*PortalWaitTimeMax           */ { 160, 140, 80, 70, 40, 30, 10, 5 },                
 			 /*PortalIdleTime              */ { 60, 55, 35, 30, 25, 20, 15, 10 },                 
 			 /*PortalChargeAttackCountMin  */ { 1, 2, 1, 2, 1, 2, 1, 2 },                       
 			 /*PortalChargeAttackCountMax  */ { 2, 3, 2, 3, 2, 3, 2, 3 },
@@ -429,8 +428,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPC.knockBackResist = 0f;
 
             NPC.defense = 150;
-            NPC.damage = 80;
-            NPC.lifeMax = 100000;
+            NPC.damage = 50;
+            NPC.lifeMax = 80000;
 
             NPC.boss = true;
             NPC.noGravity = true;
@@ -442,6 +441,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             NPC.npcSlots = 40f;
             NPC.HitSound = SoundID.NPCHit2;
+
+            NPC.BossBar = ModContent.GetInstance<CraterDemonBossBar>();
 
             if (!Main.dedServ)
                 Music = MusicLoader.GetMusicSlot(Mod, "Assets/Music/SpaceInvader");
@@ -485,6 +486,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         {
             // common drops (non-boss bag)
             npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CraterDemonTrophy>(), 10));
+
+            npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<XaocKey>()));//FOR NOW
 
             // EM drop
             npcLoot.Add(ItemDropRule.BossBag(ModContent.ItemType<CraterDemonBossBag>()));
@@ -656,8 +659,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             if (AI_Attack == AttackState.SummonPhantasmals)
             {
-                int maxTimer = GetInitialTimer(AttackState.SummonPhantasmals);
-                float progress = MathHelper.Clamp((float)(AI_Timer - maxTimer * 0.9f) / (maxTimer - maxTimer * 0.9f), 0f, 1f);
+                float maxTimer = GetDifficultyInfo(DifficultyInfo.PhantasmalImpShootPeriod) * GetDifficultyScaling(DifficultyScale.AttackDurationScaling);
+                float timer = AI_Timer % maxTimer;
+                float progress = Utility.CubicEaseInOut(timer / maxTimer);
                 float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
                 spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
             }
@@ -1187,7 +1191,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                         Vector2 velocity = new Vector2(MathF.Abs((new Vector2(posX, posY) - player.Center).ToRotation()) > MathHelper.PiOver2 ? 1 : -1, 1).RotatedByRandom(MathHelper.ToRadians(30)) * Main.rand.NextFloat(8f, 16f);
                         int damage = Utility.TrueDamage(Main.masterMode ? 240 : Main.expertMode ? 120 : 60);
                         NPC meteor = NPC.NewNPCDirect(NPC.GetSource_FromAI(), (int)posX, (int)posY, ModContent.NPCType<FlamingMeteor>());
-                       
+
                         meteor.velocity = velocity;
                         meteor.netUpdate = true;
                     }
