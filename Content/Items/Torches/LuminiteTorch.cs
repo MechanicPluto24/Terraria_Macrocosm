@@ -1,5 +1,6 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Drops;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -54,7 +55,7 @@ namespace Macrocosm.Content.Items.Torches
         public override void AddRecipes()
         {
             CreateRecipe(100)
-                .AddIngredient(ItemID.Torch, 100)
+                .AddIngredient<SpaceDust>(1)
                 .AddIngredient(ItemID.LunarBar, 1)
                 .Register();
         }

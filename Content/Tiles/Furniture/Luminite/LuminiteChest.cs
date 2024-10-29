@@ -114,7 +114,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                 default: break;
             }
 
-            if(Main.netMode != NetmodeID.MultiplayerClient)
+            if(!flag && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (float f = 0f; f < 10f; f += 1f)
                 {
@@ -134,7 +134,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                         p.AdditiveAmount = 0.35f;
                         p.DrawHorizontalAxis = true;
                         p.DrawVerticalAxis = true;
-                    });
+                    }, shouldSync: true);
                 }
 
                 WorldFlags.SetFlag(ref flag, true);
@@ -180,6 +180,12 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             Chest.DestroyChest(i, j);
+        }
+
+        // Disabled for now, since it's buggy
+        public override bool CanReplace(int i, int j, int tileTypeBeingPlaced)
+        {
+            return false;
         }
 
         public override bool RightClick(int i, int j)

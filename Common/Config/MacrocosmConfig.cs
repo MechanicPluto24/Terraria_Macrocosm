@@ -2,15 +2,15 @@
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
+#pragma warning disable CA2211 // Non-constant fields should not be visible
+
 namespace Macrocosm.Common.Config
 {
     /// <summary> Config class for miscellaneous configuration, client-side only </summary>
     public class MacrocosmConfig : ModConfig
     {
         /// <summary> This config's instance, assigned by tML before Macrocosm content loads! </summary>
-#pragma warning disable CA2211 // Non-constant fields should not be visible
         public static MacrocosmConfig Instance;
-#pragma warning restore CA2211
 
         /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
         public event EventHandler OnConfigChanged;
@@ -23,10 +23,6 @@ namespace Macrocosm.Common.Config
 
         [DefaultValue(true)]
         public bool GunRecoilEffects { get; set; }
-
-        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GraphicsHeader")]
-        [DefaultValue(false)]
-        public bool HighResolutionEffects { get; set; }
 
         [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.UIHeader")]
         [DrawTicks]
@@ -45,6 +41,11 @@ namespace Macrocosm.Common.Config
         [DefaultValue(true)]
         public bool DisplayGravityInGs { get; set; }
 
+        /*
+        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GraphicsHeader")]
+        [DefaultValue(false)]
+        public bool HighResolutionEffects { get; set; }
+        */
         public override void OnChanged()
         {
             OnConfigChanged?.Invoke(this, EventArgs.Empty);

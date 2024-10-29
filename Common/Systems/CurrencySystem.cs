@@ -4,20 +4,16 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
 {
-    public class CurrencySystem : ILoadable
+    public class CurrencySystem 
     {
         public static int MoonStone { get; set; }
 
-        public void Load(Mod mod)
+        public static void Load()
         {
             MoonStone = CustomCurrencyManager.RegisterCurrency(new MoonstoneData
             (
-                ModContent.ItemType<Moonstone>(), 999999L, "Mods.Macrocosm.Items.Moonstone.DisplayName"
+                ModContent.ItemType<Moonstone>(), 999L, "Mods.Macrocosm.Items.Moonstone.DisplayName"
             ));
-        }
-
-        public void Unload()
-        {
         }
     }
 }

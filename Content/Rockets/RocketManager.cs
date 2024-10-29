@@ -218,19 +218,6 @@ namespace Macrocosm.Content.Rockets
             OnWorldLoaded();
         }
 
-        private static void OnWorldSpawn()
-        {
-            for (int i = 0; i < MaxRockets; i++)
-            {
-                Rocket rocket = Rockets[i];
-
-                if (!rocket.ActiveInCurrentWorld)
-                    continue;
-
-                rocket.OnWorldSpawn();
-            }
-        }
-
         public override void OnWorldLoad() => OnWorldLoaded();
         private static void OnWorldLoaded()
         {

@@ -47,10 +47,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
+            Projectile.timeLeft = 240;
             maxPenetrateCount = 0;
             maxDropTime = 20;
         }
-
 
         public virtual void OnStick()
         {
@@ -104,10 +104,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override bool PreAI()
         {
-            Projectile.oldVelocity = Projectile.velocity;
+            if (Projectile.timeLeft <= 3)
+                ForceRecall();
 
-            if (AI_State != ActionState.Returning)
-                Projectile.timeLeft++;
+            Projectile.oldVelocity = Projectile.velocity;
 
             switch (AI_State)
             {
