@@ -33,8 +33,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.UseSound = SoundID.Item1;
             Item.rare = ModContent.RarityType<MoonRarityT3>();
         }
-        public override bool AltFunctionUse(Player player) => player.GetItemAltUseCooldown(Type) <= 0;
-      
+
+        public override bool AltFunctionUse(Player player)
+        {
+            return (player.ownedProjectileCounts[ModContent.ProjectileType<ManisolBladeSol>()] > 0 || player.ownedProjectileCounts[ModContent.ProjectileType<ManisolBladeMoon>()] > 0) && player.GetItemAltUseCooldown(Type) <= 0;
+        }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
@@ -49,26 +52,18 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             if (player.ownedProjectileCounts[ModContent.ProjectileType<ManisolBladeSol>()] > 1 && player.ownedProjectileCounts[ModContent.ProjectileType<ManisolBladeMoon>()] > 1)
                 return false;
             */
-            if(player.AltFunction()){
-                for (int i = 0; i < Main.maxProjectiles; i++)
-                {
-                Projectile projectile = Main.projectile[i];
 
-                if (projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeSol sol && sol.AI_State == ManisolBladeBase.ActionState.Stick)
-                    sol.ForceRecall();
-
-                if (projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeMoon moon && moon.AI_State == ManisolBladeBase.ActionState.Stick)
-                    moon.ForceRecall();
-                }
-            }
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 Projectile projectile = Main.projectile[i];
 
-                if (type == ModContent.ProjectileType<ManisolBladeSol>() && projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeSol sol && sol.AI_State == ManisolBladeBase.ActionState.Stick)
+                if (projectile.owner != player.whoAmI)
+                    continue;
+
+                if ((type == ModContent.ProjectileType<ManisolBladeSol>() || player.AltFunction()) && projectile.active && projectile.ModProjectile is ManisolBladeSol sol && sol.AI_State == ManisolBladeBase.ActionState.Stick)
                     sol.ForceRecall();
 
-                if (type == ModContent.ProjectileType<ManisolBladeMoon>() && projectile.owner == player.whoAmI && projectile.active && projectile.ModProjectile is ManisolBladeMoon moon && moon.AI_State == ManisolBladeBase.ActionState.Stick)
+                if ((type == ModContent.ProjectileType<ManisolBladeMoon>() || player.AltFunction()) && projectile.active && projectile.ModProjectile is ManisolBladeMoon moon && moon.AI_State == ManisolBladeBase.ActionState.Stick)
                     moon.ForceRecall();
             }
 

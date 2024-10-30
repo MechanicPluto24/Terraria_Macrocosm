@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -105,6 +107,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             Projectile.NewProjectile(Projectile.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), damageDone, hit.Knockback * 5, Projectile.owner, Strength, target.Center.X, target.Center.Y);
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center + oldVelocity, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), Projectile.damage, Projectile.knockBack * 5, Projectile.owner, Strength, Projectile.Center.X, Projectile.Center.Y);
+            return true;
         }
     }
 }

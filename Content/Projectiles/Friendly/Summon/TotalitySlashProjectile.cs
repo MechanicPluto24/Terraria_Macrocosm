@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -81,7 +83,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
                     oldPosLerped[i] = Vector2.Lerp(oldPosLerped[i], oldPosLerped[i] + Projectile.velocity, 0.1f);
                     oldPosLerped[i] = Vector2.Lerp(oldPosLerped[i], Projectile.oldPos[i], 0.00001f * i);
-                    Lighting.AddLight(oldPosLerped[i], color.ToVector3() * 0.5f * Projectile.Opacity);
                 }
             }
             else
@@ -93,7 +94,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
                     oldPosLerped[i] = Projectile.oldPos[i];
                     oldRotLerped[i] = Projectile.oldRot[i];
-                    Lighting.AddLight(Projectile.oldPos[i], color.ToVector3() * 0.5f * Projectile.Opacity);
                 }
 
                 Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.Pi / 80 * slashDir);
@@ -102,6 +102,24 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
             Projectile.Opacity = Projectile.timeLeft / 480f;
+
+            for (int i = 0; i < oldPosLerped.Length; i++)
+            {
+                if (oldPosLerped[i] == default)
+                    continue;
+
+                if(Main.rand.NextBool(100))
+                Particle.Create<DarkCelestialStar>((p) =>
+                {
+                    p.Position = oldPosLerped[i] + Projectile.Size / 2f;
+                    p.Velocity = Vector2.Zero;
+                    p.Scale = new Vector2(1f, 1f) * Main.rand.NextFloat(0.7f) * Projectile.Opacity;
+                    p.TimeToLive = 15;
+                    p.Color = color;
+                });
+
+                Lighting.AddLight(oldPosLerped[i] + Projectile.Size / 2f, color.ToVector3() * 0.5f * Projectile.Opacity);
+            }
 
             if (Projectile.soundDelay == 0)
             {

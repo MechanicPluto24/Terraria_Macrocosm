@@ -6,27 +6,43 @@ namespace Macrocosm.Content.Sounds
     {
         public const string SFXPath = Macrocosm.SFXPath;
 
-        public static readonly SoundStyle AssaultRifle = new(SFXPath + "AssaultRifle_", 4);
-        public static readonly SoundStyle GrenadeLauncherThunk = new(SFXPath + "GrenadeLauncherThunk");
-        public static readonly SoundStyle MinigunWindup = new(SFXPath + "MinigunWindup");
-        public static readonly SoundStyle MinigunFire = new(SFXPath + "MinigunFire");
-        public static readonly SoundStyle MinigunWinddown = new(SFXPath + "MinigunWinddown");
-        public static readonly SoundStyle Ricochet = new(SFXPath + "Ricochet_", 6);
-        public static readonly SoundStyle HandheldThrusterFlame = new(SFXPath + "HandheldThrusterFlame");
-        public static readonly SoundStyle HandheldThrusterOverheat = new(SFXPath + "HandheldThrusterOverheat");
-        public static readonly SoundStyle DesertEagleShoot = new(SFXPath + "DesertEagleShoot");
-        public static readonly SoundStyle RocketLoop = new(SFXPath + "RocketLoop");
-        public static readonly SoundStyle RocketLaunch = new(SFXPath + "RocketLaunch");
-        public static readonly SoundStyle RocketLandingLeg = new(SFXPath + "RocketLandingLeg");
-        public static readonly SoundStyle RobotSummon = new(SFXPath + "RobotSummon");
-        public static readonly SoundStyle WaveGunJoin = new(SFXPath + "WaveGunJoin");
-        public static readonly SoundStyle WaveGunSplit = new(SFXPath + "WaveGunSplit");
-        public static readonly SoundStyle WaveGunShot = new(SFXPath + "WaveGunShot");
-        public static readonly SoundStyle WaveGunShotRifle = new(SFXPath + "WaveGunShotRifle");
-        public static readonly SoundStyle ZombieDeath = new(SFXPath + "ZombieDeath");
-        public static readonly SoundStyle Zombie = new(SFXPath + "ZombieDeath");
-        public static readonly SoundStyle ZombieEngineerSprint = new(SFXPath + "ZombieEngineerSprint");
-        public static readonly SoundStyle ZombieEngineerGasLeak = new(SFXPath + "ZombieEngineerGasLeak");
-        public static readonly SoundStyle ZombieEngineerDeath = new(SFXPath + "ZombieEngineerDeath");
+        // Common
+        public static SoundStyle BigExplosion { get; } = new(SFXPath + "BigExplosion_", 3);
+
+
+        // Bosses
+        public static SoundStyle CDLaugh { get; } = new(SFXPath + "CDLaugh");
+
+        // Rocket
+        public static SoundStyle RocketLandingLeg { get; } = new(SFXPath + "RocketLandingLeg");
+        public static SoundStyle RocketLaunch { get; } = new(SFXPath + "RocketLaunch");
+        public static SoundStyle RocketLoop { get; } = new(SFXPath + "RocketLoop");
+
+        // NPCs
+        public static SoundStyle Zombie { get; } = new(SFXPath + "ZombieDeath");
+        public static SoundStyle ZombieDeath { get; } = new(SFXPath + "ZombieDeath");
+        public static SoundStyle ZombieEngineerDeath { get; } = new(SFXPath + "ZombieEngineerDeath");
+        public static SoundStyle ZombieEngineerGasLeak { get; } = new(SFXPath + "ZombieEngineerGasLeak");
+        public static SoundStyle ZombieEngineerSprint { get; } = new(SFXPath + "ZombieEngineerSprint");
+
+        // Ranged Weapons
+        public static SoundStyle AssaultRifle { get; } = new(SFXPath + "AssaultRifle_", 4);
+        public static SoundStyle DesertEagleShot { get; } = new(SFXPath + "DesertEagleShot");
+        public static SoundStyle Ricochet { get; } = new(SFXPath + "Ricochet_", 6);
+        public static SoundStyle GrenadeLauncherThunk { get; } = new(SFXPath + "GrenadeLauncherThunk");
+        public static SoundStyle MinigunFire { get; } = new(SFXPath + "MinigunFire");
+        public static SoundStyle MinigunWinddown { get; } = new(SFXPath + "MinigunWinddown");
+        public static SoundStyle MinigunWindup { get; } = new(SFXPath + "MinigunWindup");
+
+        // Magic weapons
+        public static SoundStyle HandheldThrusterFlame { get; } = new(SFXPath + "HandheldThrusterFlame");
+        public static SoundStyle HandheldThrusterOverheat { get; } = new(SFXPath + "HandheldThrusterOverheat");
+        public static SoundStyle WaveGunJoin { get; } = new(SFXPath + "WaveGunJoin");
+        public static SoundStyle WaveGunShot { get; } = new(SFXPath + "WaveGunShot");
+        public static SoundStyle WaveGunShotRifle { get; } = new(SFXPath + "WaveGunShotRifle");
+        public static SoundStyle WaveGunSplit { get; } = new(SFXPath + "WaveGunSplit");
+
+        // Summon weapons
+        public static SoundStyle RobotSummon { get; } = new(SFXPath + "RobotSummon");
     }
 }

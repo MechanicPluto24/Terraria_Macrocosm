@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Utils
             return (text.Value == key) ? LocalizedText.Empty : text;
         }
 
-        public static LocalizedText[] FindAllThatStartWith(string prefix) => Language.FindAll(new LanguageSearchFilter((key, _) => key.StartsWith(prefix)));
+        public static LocalizedText[] FindAllLocalizationThatStartsWith(string prefix) => Language.FindAll(new LanguageSearchFilter((key, _) => key.StartsWith(prefix)));
 
         public static string TrimTrailingZeroesAndDot(string decimalNumberText) => string.Format("{0:n}", decimalNumberText).TrimEnd('0').TrimEnd('.');
 

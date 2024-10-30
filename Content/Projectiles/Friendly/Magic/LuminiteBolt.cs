@@ -6,6 +6,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -90,10 +91,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 dust.noGravity = true;
             }
 
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 60; i++)
             {
-                Particle.Create<LuminiteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(9, 2), new(5f), 0f);
-                Particle.Create<LuminiteSpark>(Projectile.Center + Projectile.oldVelocity, Main.rand.NextVector2Circular(2, 9), new(5f), 0f);
+                Vector2 velocity = i % 2 == 0 ? Main.rand.NextVector2Circular(2, 9) : Main.rand.NextVector2Circular(9, 2);
+                Particle.Create<TintableSpark>((p) =>
+                {
+                    p.Position = Projectile.Center + Projectile.oldVelocity;
+                    p.Velocity = velocity;
+                    p.Scale = new(5f);
+                    p.Rotation = 0f;
+                    p.Color = new List<Color>() {
+                        new(44, 209, 147),
+                        new(0, 141, 92)
+                    }.GetRandom();
+                });
             }
 
             float count = 80 * trailMultiplier;

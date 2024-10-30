@@ -27,6 +27,11 @@ namespace Macrocosm.Common.Utils
             return random.Next(range.Start.Value, range.End.Value);
         }
 
+        public static int NextDirection(this UnifiedRandom random)
+        {
+            return (random.NextBool() ? 1 : -1);
+        }
+
         public static int NextDirection(this UnifiedRandom random, Range range)
         {
             return random.Next(range) * (random.NextBool() ? 1 : -1);

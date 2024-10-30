@@ -1,10 +1,12 @@
-﻿using System;
-using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -52,14 +54,54 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+
             if (trailMultiplier < 1f + (0.15f * Projectile.extraUpdates))
                 trailMultiplier += 0.03f * (0.2f + Projectile.ai[0] * 0.9f);
-            if (Projectile.ai[0] == 0) Lighting.AddLight(Projectile.Center, colour1.ToVector3());
-            else if (Projectile.ai[0] == 1) Lighting.AddLight(Projectile.Center, colour2.ToVector3() * 1.25f);
+
+            if (Projectile.ai[0] == 0)
+            {
+                Lighting.AddLight(Projectile.Center, colour1.ToVector3());
+            }
+            else if (Projectile.ai[0] == 1)
+            {
+                Lighting.AddLight(Projectile.Center, colour2.ToVector3() * 1.25f);
+            }
             else
             {
-                Lighting.AddLight(Projectile.Center, Color.Lerp(colour1, colour2, MathF.Pow(MathF.Cos(colourLerpProg/10f), 3)).ToVector3() * 1.5f);
+                Lighting.AddLight(Projectile.Center, Color.Lerp(colour1, colour2, MathF.Pow(MathF.Cos(colourLerpProg / 10f), 3)).ToVector3() * 1.5f);
                 colourLerpProg++;
+            }
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            SoundEngine.PlaySound(SoundID.Item10);
+
+            for (int i = 0; i < 65; i++)
+            {
+                Particle.Create<TintableSpark>((p) =>
+                {
+                    p.Position = Projectile.Center + Projectile.oldVelocity;
+                    p.Velocity = Main.rand.NextVector2Circular(4, 4) * Main.rand.NextFloat();
+                    p.Scale = new(6f, Main.rand.NextFloat(2.5f, 3.5f));
+                    p.Color = Main.rand.NextBool() ? colour1 : colour2;
+                });
+            }
+
+            float count = Projectile.oldVelocity.Length() * trailMultiplier;
+            for (int i = 1; i < count; i++)
+            {
+                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * i * 0.4f;
+                for (int j = 0; j < 2; j++)
+                {
+                    Particle.Create<TintableSpark>((p) =>
+                    {
+                        p.Position = trailPosition;
+                        p.Velocity = Vector2.Zero;
+                        p.Scale = new(Main.rand.NextFloat(1f, 2f) * (1f - i / count));
+                        p.Color = Main.rand.NextBool() ? colour1 : colour2;
+                    });
+                }
             }
         }
 
@@ -74,8 +116,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             float count = Projectile.velocity.LengthSquared() * trailMultiplier;
             Color color;
-            if (Projectile.ai[0] == 0) color = colour1;
-            else if (Projectile.ai[0] == 1) color = colour2;
+            if (Projectile.ai[0] == 0)
+            {
+                color = colour1;
+            }
+            else if (Projectile.ai[0] == 1)
+            {
+                color = colour2;
+            }
             else
             {
                 color = Color.Lerp(colour1, colour2, MathF.Pow(MathF.Cos(colourLerpProg / 10f), 3)) * 1.5f;
@@ -92,28 +140,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             spriteBatch.Begin(state);
 
             return false;
-        }
-
-        public override void OnKill(int timeLeft)
-        {
-            SoundEngine.PlaySound(SoundID.Item10);
-
-            for (int i = 0; i < 35; i++)
-            {
-                Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity, ModContent.DustType<SeleniteBrightDust>(), Main.rand.NextVector2CircularEdge(10, 10) * Main.rand.NextFloat(1f), Scale: Main.rand.NextFloat(1f, 2f));
-                dust.noGravity = true;
-            }
-
-            float count = Projectile.oldVelocity.Length() * trailMultiplier;
-            for (int i = 1; i < count; i++)
-            {
-                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * i * 0.4f;
-                for (int j = 0; j < 2; j++)
-                {
-                    Dust dust = Dust.NewDustDirect(trailPosition, 1, 1, ModContent.DustType<SeleniteBrightDust>(), 0, 0, Scale: Main.rand.NextFloat(1f, 2f) * (1f - i / count));
-                    dust.noGravity = true;
-                }
-            }
         }
     }
 }
