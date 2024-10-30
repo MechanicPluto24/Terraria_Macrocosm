@@ -1,6 +1,6 @@
 displayName = Macrocosm
 author = MechanicPluto24 and the Dev team
-version = 0.0.0.1
+version = 0.1.0.0
 modReferences = SubworldLibrary, StructureHelper
 hideCode = false
 buildIgnore = References/*
