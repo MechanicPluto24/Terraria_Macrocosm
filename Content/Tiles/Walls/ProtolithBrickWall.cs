@@ -8,6 +8,8 @@ namespace Macrocosm.Content.Tiles.Walls
 {
     public class ProtolithBrickWall : ModWall
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         private static int[][] wallFrameNumberLookup;
 
         public override void SetStaticDefaults()
