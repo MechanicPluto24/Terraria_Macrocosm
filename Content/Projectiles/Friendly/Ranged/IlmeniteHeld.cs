@@ -143,7 +143,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-                float rotation = Projectile.rotation + EffectTimer;
+                float rotation = Projectile.rotation + MathHelper.PiOver2;
                 float progress = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
                 float scale = 0.5f * Projectile.scale * progress;
                 byte alpha = (byte)(255 - MathHelper.Clamp(64 + Opacity, 0, 255));
@@ -152,7 +152,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 if (AI_Charge < MaxCharge)
                 {
                     scale += 0.3f * Utility.QuadraticEaseOut(progress);
-                    rotation += 0.75f * Utility.CubicEaseInOut(progress);
                     Opacity += 1f;
                     offset = Main.rand.NextVector2Circular(1, 1) * progress;
                 }
@@ -160,16 +159,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 if (AI_Charge >= MaxCharge)
                 {
                     scale += 0.3f;
-                    rotation += 0.75f;
                     offset = Main.rand.NextVector2Circular(1, 1);
                     EffectTimer += 0.001f;
                     Opacity += 3f;
                 }
 
-                Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(20, 0), Projectile.rotation) + offset;
+                Vector2 rotPoint1 = Utility.RotatingPoint(Projectile.Center, new Vector2(20 + 5f * EffectTimer, -5), Projectile.rotation) + offset;
+                Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(20 + 5f * EffectTimer, 5), Projectile.rotation) + offset;
                 colour1.A = alpha;
                 colour2.A = alpha;
-                Utility.DrawStar(rotPoint - Main.screenPosition, (int)(5 * progress), Color.Lerp(colour1, colour2, MathF.Cos(AI_Charge / MinCharge)), scale, rotation);
+                Utility.DrawStar(rotPoint1 - Main.screenPosition, 1, Color.Lerp(colour2, colour1, MathF.Cos(AI_Charge / MinCharge)), scale, rotation);
+                Utility.DrawStar(rotPoint2 - Main.screenPosition, 1, Color.Lerp(colour1, colour2, MathF.Cos(AI_Charge / MinCharge)), scale, rotation);
 
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.AlphaBlend, state);

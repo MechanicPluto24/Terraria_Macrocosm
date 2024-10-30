@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Debuffs.Environment
         }
         public override void Update(Player player, ref int buffIndex)
         {
-            player.lifeRegen -= (int)(0.1f * player.statLifeMax2);
+            player.lifeRegen -= (int)(0.2f * player.statLifeMax2);
         }
     }
 }

@@ -222,41 +222,16 @@ namespace Macrocosm.Content.Rockets
         public void OnWorldSpawn()
         {
             ResetAnimation();
-            if (State == ActionState.Landing && ActiveInCurrentWorld)
-            {
-                // Travel to spawn point if a specific launchpad has not been set
-                if (TargetLandingPosition == default)
-                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 4);
-
-                Center = new(TargetLandingPosition.X, Center.Y);
-            }
         }
 
         public void OnWorldLoad()
         {
             ResetAnimation();
-            /*
-            if (State == ActionState.Landing && ActiveInCurrentWorld)
-            {
-                // Travel to spawn point if a specific launchpad has not been set
-                if (TargetLandingPosition == default)
-                    TargetLandingPosition = Utility.SpawnWorldPosition;
-
-                Center = new(TargetLandingPosition.X, Center.Y);
-            }
-            */
         }
 
         /// <summary> Called when a subworld is generated </summary>
         public void OnSubworldGenerated()
         {
-            if (State == ActionState.Landing && ActiveInCurrentWorld)
-            {
-                // Target landing position always defaults to the spawn point just set on worldgen
-                TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 4);
-
-                Center = new(TargetLandingPosition.X, Center.Y);
-            }
         }
 
         /// <summary> Update the rocket </summary>
@@ -346,10 +321,18 @@ namespace Macrocosm.Content.Rockets
 
                 case ActionState.Landing:
 
+                    if (TargetLandingPosition == default && LandingProgress < float.Epsilon)
+                    {
+                        Point landingSite = Utility.GetClosestTile(Utility.SpawnTilePoint, -1, 100, (tile) => Main.tileSolid[tile.TileType]);
+                        TargetLandingPosition = landingSite.ToWorldCoordinates();
+                        if (landingSite == default)
+                            TargetLandingPosition = Utility.SpawnWorldPosition;
+                    }
+
                     float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
                     float landingDuration = 10f * 60f * (1f / gravityFactor);
                     float landingIncrement = landingDistance / landingDuration;
-                    Position = new Vector2(Position.X, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, EasedLandingProgress));
+                    Position = new Vector2(TargetLandingPosition.X - Width / 2 - 8, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, EasedLandingProgress));
                     LandingProgress += landingIncrement / landingDistance;
                     LandingProgress = MathHelper.Clamp(LandingProgress, 0f, 1f);
 
@@ -1032,7 +1015,7 @@ namespace Macrocosm.Content.Rockets
 
                 // For same world travel assign the correct position here
                 if (TargetLandingPosition == default)
-                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(16, 16);
+                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 2);
 
                 Center = new(TargetLandingPosition.X, Center.Y);
 

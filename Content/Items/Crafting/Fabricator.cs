@@ -27,6 +27,7 @@ namespace Macrocosm.Content.Items.Crafting
                 .AddIngredient<SteelBar>(10)
                 .AddIngredient<PrintedCircuitBoard>(2)
                 .AddIngredient(ItemID.Diamond, 1)
+                .AddTile(TileID.MythrilAnvil)
                 .Register();
 
             CreateRecipe()
@@ -34,6 +35,7 @@ namespace Macrocosm.Content.Items.Crafting
                 .AddIngredient<SteelBar>(10)
                 .AddIngredient<PrintedCircuitBoard>(2)
                 .AddIngredient(ItemID.Diamond, 1)
+                .AddTile(TileID.MythrilAnvil)
                 .Register();
         }
     }

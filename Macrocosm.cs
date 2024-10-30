@@ -1,5 +1,6 @@
 using Macrocosm.Common.Config;
 using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Systems;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -21,7 +22,8 @@ namespace Macrocosm
         public const string EmptyTexPath = TexturesPath + "Empty";
         public const string SymbolsPath = TexturesPath + "UI/Symbols/";
         public const string ButtonsPath = TexturesPath + "UI/Buttons/";
-        public static string TextureEffectsPath => TexturesPath + (MacrocosmConfig.Instance.HighResolutionEffects ? "HighRes/" : "LowRes/");
+
+        public static string TextureEffectsPath => TexturesPath + "LowRes/";
 
         public const string ShadersPath = "Macrocosm/Assets/Effects/";
         public const string MusicPath = "Macrocosm/Assets/Music/";
@@ -34,10 +36,11 @@ namespace Macrocosm
 
         public override void Load()
         {
+            CurrencySystem.Load();
+
             if (!Main.dedServ)
             {
                 EmptyTex = ModContent.Request<Texture2D>(EmptyTexPath);
-
                 LoadResprites();
                 LoadEffects();
             }

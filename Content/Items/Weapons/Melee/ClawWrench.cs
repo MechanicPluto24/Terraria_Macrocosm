@@ -29,6 +29,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.useStyle = ItemUseStyleID.Swing;
             Item.DamageType = DamageClass.Melee;
             Item.noUseGraphic = true;
+            Item.UseSound = SoundID.Item1;
             Item.rare = ModContent.RarityType<MoonRarityT2>();
 
         }

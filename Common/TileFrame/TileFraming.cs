@@ -21,11 +21,11 @@ namespace Macrocosm.Common.TileFrame
         /// Style currently used for plating blocks with special frames (e.g. Industrial Plating) 
         /// Adapted from the Gemspark blend style 
         /// </summary>
-        public static void PlatingStyle(int i, int j, bool resetFrame = false, bool countHalfBlocks = false)
+        public static void PlatingStyle(int i, int j, bool resetFrame = false, bool countHalfBlocks = false, int? customVariation = null)
         {
             Tile tile = Main.tile[i, j];
             //var info = new TileNeighbourInfo(i, j).TypedSolid(tile.TileType);
-            CommonFraming(i, j, resetFrame, countHalfBlocks);
+            CommonFraming(i, j, resetFrame, countHalfBlocks, customVariation);
 
             // TODO: integrate this slope check logic to a TileNeightbourInfo delegate (if possible)
 

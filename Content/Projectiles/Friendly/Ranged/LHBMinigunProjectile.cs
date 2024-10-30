@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -101,11 +102,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     if (StillInUse && AI_Windup % fireFreq == 0)
                     {
                         Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(40, 8 * Projectile.spriteDirection), Projectile.rotation);
-                        if (Player.PickAmmo(currentItem, out int projToShoot, out float speed, out int damage, out float knockback, out _))
+                        if (Player.PickAmmo(currentItem, out int projToShoot, out float speed, out int damage, out float knockback, out int ammoItemId))
                         {
                             // We want to disable knockback for this weapon but keep it able to receive the Unreal modifier
                             knockback = 0f;
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * speed, projToShoot, damage, knockback, Projectile.owner);
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, ammoItemId), rotPoint, Vector2.Normalize(Projectile.velocity).RotatedByRandom(MathHelper.ToRadians(14)) * speed, projToShoot, damage, knockback, Projectile.owner);
                         }
                         else
                         {
