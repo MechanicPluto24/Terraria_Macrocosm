@@ -642,7 +642,7 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Copernicus
-	Tooltip: Every 5th shot also shoots a rocket.
+	Tooltip: Every 5th shot also shoots a rocket
 }
 
 Cruithne: {
@@ -1135,6 +1135,11 @@ SpaceInvaderMusicBox: {
 
 StygiaMusicBox: {
 	DisplayName: Music Box (Stygia)
+	Tooltip: ""
+}
+
+IntoTheUnknownMusicBox: {
+	DisplayName: Music Box (Into The Unknown)
 	Tooltip: ""
 }
 
@@ -1875,7 +1880,7 @@ AirVent: {
 
 Sledgehammer: {
 	DisplayName: Sledgehammer
-	Tooltip: ""
+	Tooltip: Breaks more walls than a regular hammer
 }
 
 IrradiatedAltar: {

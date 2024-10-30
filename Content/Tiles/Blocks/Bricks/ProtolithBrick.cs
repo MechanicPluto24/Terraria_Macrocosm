@@ -9,6 +9,8 @@ namespace Macrocosm.Content.Tiles.Blocks.Bricks
 {
     public class ProtolithBrick : ModTile
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
