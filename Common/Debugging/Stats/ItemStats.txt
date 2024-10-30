@@ -2867,7 +2867,6 @@ BurnerGenerator
 		Fabricator
 
 
-
 OilRefinery
 	Value: 5 gold
 	Research count: 1
@@ -2878,14 +2877,6 @@ OilRefinery
 		Canister x 2
 		at
 		Fabricator
-
-		Steel Bar x 10
-		Tin Bar x 12
-		Aluminum Bar x 6
-		Canister x 2
-		at
-		Fabricator
-
 
 		Steel Bar x 10
 		Tin Bar x 12
@@ -2916,15 +2907,6 @@ OreExcavator
 		Fabricator
 
 
-		Steel Bar x 20
-		Wire x 50
-		Titanium Bar x 10
-		Aluminum Bar x 20
-		Diamond x 50
-		at
-		Fabricator
-
-
 SolarPanelLarge
 	Value: 5 gold
 	Research count: 1
@@ -2934,7 +2916,6 @@ SolarPanelLarge
 		Wire x 16
 		at
 		Fabricator
-
 
 
 SolarPanelSmall
