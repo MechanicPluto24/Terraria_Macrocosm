@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Debuffs.Environment
 
         public override void Load()
         {
-            for (int i = 0; i < Utility.FindAllThatStartWith("Mods.Macrocosm.DeathMessages.Depressurized").Length; i++)
+            for (int i = 0; i < Utility.FindAllLocalizationThatStartsWith("Mods.Macrocosm.DeathMessages.Depressurized").Length; i++)
                 DeathMessages.Add(Language.GetOrRegister($"Mods.Macrocosm.DeathMessages.Depressurized.Message{i}"));
         }
 

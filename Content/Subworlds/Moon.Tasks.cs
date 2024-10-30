@@ -21,7 +21,6 @@ using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.Tiles.Furniture.Luminite;
-using Macrocosm.Content.Tiles.Ores;
 using Macrocosm.Content.Tiles.Walls;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Macrocosm.Content.WorldGeneration.Structures.LunarOutposts;
@@ -34,7 +33,6 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
@@ -827,10 +825,10 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OrePass");
 
             int protolithType = TileType<Protolith>();
-            GenerateOre(TileType<Content.Tiles.Ores.ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
-            GenerateOre(TileType<Content.Tiles.Ores.ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
-            GenerateOre(TileType<Content.Tiles.Ores.DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
-            GenerateOre(TileType<Content.Tiles.Ores.SeleniteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<Tiles.Ores.ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<Tiles.Ores.ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<Tiles.Ores.DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<Tiles.Ores.SeleniteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
 
             GenerateOre(TileID.LunarOre, 0.00005, WorldGen.genRand.Next(9, 15), WorldGen.genRand.Next(9, 15), protolithType);
         }
@@ -1120,7 +1118,6 @@ namespace Macrocosm.Content.Subworlds
                 return false;
             if (Vector2.Distance(housePosition, gen_CosmicEmberShrinePosition.ToWorldCoordinates()) < 1500f)
                 return false;
-
             return true;
         }
 
@@ -1150,10 +1147,11 @@ namespace Macrocosm.Content.Subworlds
                         i--;
                     }
                 }
+
             }
         }
 
-        //[Task]
+        [Task]
         private void CheeseHouse(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
@@ -1326,113 +1324,184 @@ namespace Macrocosm.Content.Subworlds
                 {
                     if (Main.tile[chest.x, chest.y].TileType == TileType<IndustrialChest>())
                     {
-                        ManageIndustrialChest(chest);
+                        ManageIndustrialChest(chest, i);
                     }
 
                     if (Main.tile[chest.x, chest.y].TileType == TileType<LuminiteChest>())
                     {
-                        if (Main.tile[chest.x, chest.y].TileFrameX == (int)LuminiteStyle.Luminite)
-                        {
-                            ManageLuminiteChest(chest);
-                        }
-                        else
-                        {
-                            LuminiteStyle style = (LuminiteStyle)(Main.tile[chest.x, chest.y].TileFrameX / (18 * 2));
-                            ManageShrineChest(chest, style);
-                        }
+                        LuminiteStyle style = (LuminiteStyle)(Main.tile[chest.x, chest.y].TileFrameX / (18 * 2 * 2));
+                        ManageLuminiteChest(chest, i, style);
                     }
                 }
             }
         }
 
-        public void ManageLuminiteChest(Chest chest)
+        public void ManageLuminiteChest(Chest chest, int index, LuminiteStyle style)
         {
             int slot = 0;
-            int random = WorldGen.genRand.Next(1, 10);
-            switch (random)
-            {
-                case 1:
-                    chest.item[slot++].SetDefaults(ItemType<RyuguStaff>());
-                    break;
-                case 2:
-                    chest.item[slot++].SetDefaults(ItemType<CrescentMoon>());
-                    break;
-                case 3:
-                    chest.item[slot++].SetDefaults(ItemType<ArmstrongGauntlets>());
-                    break;
-                case 4:
-                    chest.item[slot++].SetDefaults(ItemType<WornLunarianDagger>());
-                    break;
-                case 5:
-                    chest.item[slot].SetDefaults(ItemType<RocheChakram>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(50, 251);
-                    break;
-                case 6:
-                    chest.item[slot++].SetDefaults(ItemType<ArcaneBarnacle>());
-                    break;
-                case 7:
-                    chest.item[slot++].SetDefaults(ItemType<MomentumLash>());
-                    break;
-                case 8:
-                    chest.item[slot++].SetDefaults(ItemType<TempestuousBand>());
-                    break;
-                case 9:
-                    chest.item[slot++].SetDefaults(ItemType<ThaumaturgicWard>());
-                    break;
-            }
+            int random;
 
-            random = WorldGen.genRand.Next(1, 5);
-            switch (random)
+            if (style is LuminiteStyle.Luminite)
             {
-                case 1:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
-                    break;
-                case 2:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.ChandriumOre>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
-                    break;
-                case 3:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.DianiteOre>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
-                    break;
-                case 4:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
-                    break;
-            }
+                switch ((index % 9) + 1)
+                {
+                    case 1:
+                        chest.item[slot++].SetDefaults(ItemType<RyuguStaff>());
+                        break;
+                    case 2:
+                        chest.item[slot++].SetDefaults(ItemType<CrescentMoon>());
+                        break;
+                    case 3:
+                        chest.item[slot++].SetDefaults(ItemType<ArmstrongGauntlets>());
+                        break;
+                    case 4:
+                        chest.item[slot++].SetDefaults(ItemType<WornLunarianDagger>());
+                        break;
+                    case 5:
+                        chest.item[slot].SetDefaults(ItemType<RocheChakram>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(50, 251);
+                        break;
+                    case 6:
+                        chest.item[slot++].SetDefaults(ItemType<ArcaneBarnacle>());
+                        break;
+                    case 7:
+                        chest.item[slot++].SetDefaults(ItemType<MomentumLash>());
+                        break;
+                    case 8:
+                        chest.item[slot++].SetDefaults(ItemType<TempestuousBand>());
+                        break;
+                    case 9:
+                        chest.item[slot++].SetDefaults(ItemType<ThaumaturgicWard>());
+                        break;
+                }
 
-            if (WorldGen.genRand.NextBool(2))
-            {
-                chest.item[slot].SetDefaults(ItemID.LunarOre);
-                chest.item[slot++].stack = WorldGen.genRand.Next(36, 105);
-            }
+                random = WorldGen.genRand.Next(1, 5);
+                switch (random)
+                {
+                    case 1:
+                        chest.item[slot].SetDefaults(ItemType<ArtemiteBar>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                        break;
+                    case 2:
+                        chest.item[slot].SetDefaults(ItemType<ChandriumBar>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                        break;
+                    case 3:
+                        chest.item[slot].SetDefaults(ItemType<DianiteBar>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                        break;
+                    case 4:
+                        chest.item[slot].SetDefaults(ItemType<SeleniteBar>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                        break;
+                }
 
-            random = WorldGen.genRand.Next(1, 5);
-            switch (random)
+                random = WorldGen.genRand.Next(1, 5);
+                switch (random)
+                {
+                    case 1:
+                        chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                        break;
+                    case 2:
+                        chest.item[slot].SetDefaults(ItemType<Items.Ores.ChandriumOre>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                        break;
+                    case 3:
+                        chest.item[slot].SetDefaults(ItemType<Items.Ores.DianiteOre>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                        break;
+                    case 4:
+                        chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
+                        chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                        break;
+                }
+            }
+            else
             {
-                case 1:
+                Chest.Lock(chest.x, chest.y);
+
+                switch (style)
+                {
+                    case LuminiteStyle.Heavenforge:
+                        chest.item[slot++].SetDefaults(ItemType<Procellarum>());
+                        break;
+                    case LuminiteStyle.Mercury:
+                        chest.item[slot++].SetDefaults(ItemType<ManisolBlades>());
+                        break;
+                    case LuminiteStyle.LunarRust:
+                        chest.item[slot++].SetDefaults(ItemType<Ilmenite>());
+                        break;
+                    case LuminiteStyle.StarRoyale:
+                        chest.item[slot++].SetDefaults(ItemType<StarDestroyer>());
+                        break;
+                    case LuminiteStyle.Cryocore:
+                        chest.item[slot++].SetDefaults(ItemType<FrigorianGaze>());
+                        break;
+                    case LuminiteStyle.Astra:
+                        chest.item[slot++].SetDefaults(ItemType<Micronova>());
+                        break;
+                    case LuminiteStyle.DarkCelestial:
+                        chest.item[slot++].SetDefaults(ItemType<Totality>());
+                        break;
+                    case LuminiteStyle.CosmicEmber:
+                        chest.item[slot++].SetDefaults(ItemType<GreatstaffOfHorus>());
+                        break;
+                    default:
+                        break;
+                }
+
+                if (style is LuminiteStyle.Heavenforge or LuminiteStyle.Mercury)
+                {
                     chest.item[slot].SetDefaults(ItemType<ArtemiteBar>());
                     chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                    break;
-                case 2:
-                    chest.item[slot].SetDefaults(ItemType<ChandriumBar>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                    break;
-                case 3:
-                    chest.item[slot].SetDefaults(ItemType<DianiteBar>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                    break;
-                case 4:
+                    chest.item[slot].SetDefaults(ItemType<ArtemiteOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                    chest.item[slot].SetDefaults(ItemID.FragmentSolar);
+                    chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
+                }
+
+                if (style is LuminiteStyle.LunarRust or LuminiteStyle.StarRoyale)
+                {
                     chest.item[slot].SetDefaults(ItemType<SeleniteBar>());
                     chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                    break;
+                    chest.item[slot].SetDefaults(ItemType<SeleniteOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                    chest.item[slot].SetDefaults(ItemID.FragmentVortex);
+                    chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
+                }
+
+                if (style is LuminiteStyle.Cryocore or LuminiteStyle.Astra)
+                {
+                    chest.item[slot].SetDefaults(ItemType<DianiteBar>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                    chest.item[slot].SetDefaults(ItemType<DianiteOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                    chest.item[slot].SetDefaults(ItemID.FragmentNebula);
+                    chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
+                }
+
+                if (style is LuminiteStyle.DarkCelestial or LuminiteStyle.CosmicEmber)
+                {
+                    chest.item[slot].SetDefaults(ItemType<ChandriumBar>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
+                    chest.item[slot].SetDefaults(ItemType<ChandriumOre>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                    chest.item[slot].SetDefaults(ItemID.FragmentStardust);
+                    chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
+                }
             }
 
-            if (WorldGen.genRand.NextBool(2))
+            if (WorldGen.genRand.NextBool())
             {
                 chest.item[slot].SetDefaults(ItemID.LunarBar);
                 chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+            }
+
+            if (WorldGen.genRand.NextBool())
+            {
+                chest.item[slot].SetDefaults(ItemID.LunarOre);
+                chest.item[slot++].stack = WorldGen.genRand.Next(36, 105);
             }
 
             if (WorldGen.genRand.NextBool(3))
@@ -1471,11 +1540,12 @@ namespace Macrocosm.Content.Subworlds
             chest.item[slot++].stack = WorldGen.genRand.Next(1, 20);
         }
 
-        public void ManageIndustrialChest(Chest chest)
+        public void ManageIndustrialChest(Chest chest, int index)
         {
             int slot = 0;
-            int random = WorldGen.genRand.Next(1, 9);
-            switch (random)
+            int random;
+
+            switch ((index % 8) + 1)
             {
                 case 1:
                     chest.item[slot++].SetDefaults(ItemType<ClawWrench>());
@@ -1605,76 +1675,6 @@ namespace Macrocosm.Content.Subworlds
 
             chest.item[slot].SetDefaults(ItemType<Moonstone>());
             chest.item[slot++].stack = WorldGen.genRand.Next(1, 20);
-        }
-
-        private void ManageShrineChest(Chest chest, LuminiteStyle style)
-        {
-            int slot = 0;
-            switch (style)
-            {
-                case LuminiteStyle.Heavenforge:
-                    chest.item[slot++].SetDefaults(ItemType<Procellarum>());
-                    break;
-                case LuminiteStyle.Mercury:
-                    chest.item[slot++].SetDefaults(ItemType<ManisolBlades>());
-                    break;
-                case LuminiteStyle.LunarRust:
-                    chest.item[slot++].SetDefaults(ItemType<Ilmenite>());
-                    break;
-                case LuminiteStyle.StarRoyale:
-                    chest.item[slot++].SetDefaults(ItemType<StarDestroyer>());
-                    break;
-                case LuminiteStyle.Cryocore:
-                    chest.item[slot++].SetDefaults(ItemType<FrigorianGaze>());
-                    break;
-                case LuminiteStyle.Astra:
-                    chest.item[slot++].SetDefaults(ItemType<Micronova>());
-                    break;
-                case LuminiteStyle.DarkCelestial:
-                    chest.item[slot++].SetDefaults(ItemType<Totality>());
-                    break;
-                case LuminiteStyle.CosmicEmber:
-                    chest.item[slot++].SetDefaults(ItemType<GreatstaffOfHorus>());
-                    break;
-            }
-            if (style is LuminiteStyle.Heavenforge or LuminiteStyle.Mercury)
-            {
-                chest.item[slot].SetDefaults(ItemType<ArtemiteBar>());
-                chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
-                chest.item[slot].SetDefaults(ItemID.FragmentSolar);
-                chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
-            }
-
-            if (style is LuminiteStyle.LunarRust or LuminiteStyle.StarRoyale)
-            {
-                chest.item[slot].SetDefaults(ItemType<SeleniteBar>());
-                chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
-                chest.item[slot].SetDefaults(ItemID.FragmentVortex);
-                chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
-            }
-
-            if (style is LuminiteStyle.Cryocore or LuminiteStyle.Astra)
-            {
-                chest.item[slot].SetDefaults(ItemType<DianiteBar>());
-                chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
-                chest.item[slot].SetDefaults(ItemID.FragmentNebula);
-                chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
-            }
-
-            if (style is LuminiteStyle.DarkCelestial or LuminiteStyle.CosmicEmber)
-            {
-                chest.item[slot].SetDefaults(ItemType<ChandriumBar>());
-                chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
-                chest.item[slot].SetDefaults(ItemID.FragmentStardust);
-                chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
-            }
-
-            chest.item[slot].SetDefaults(ItemType<LunarCrystal>());
-            chest.item[slot++].stack = WorldGen.genRand.Next(30, 60);
-            chest.item[slot].SetDefaults(ItemType<Moonstone>());
-            chest.item[slot++].stack = WorldGen.genRand.Next(30, 60);
-
-            Chest.Lock(chest.x, chest.y);
         }
     }
 }

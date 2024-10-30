@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Steamworks;
@@ -17,8 +19,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
     public class IlmeniteExplosion : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
-        public Color colour1 = new(188, 89, 134);
-        public Color colour2 = new(33, 188, 190);
+
+        public float Strength
+        {
+            get => MathHelper.Clamp(Projectile.ai[0], 0f, 1f);
+            set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
+        }
 
         public override void SetStaticDefaults()
         {
@@ -49,22 +55,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            var spriteBatch = Main.spriteBatch;
-
-            state.SaveState(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(BlendState.Additive, state);
-
-            for (int i = 0; i < 20 - Projectile.timeLeft; i++)
+            for (int i = 0; i < 10 * Strength; i++)
             {
-                Color NColor = Main.rand.NextBool() == true ? colour1 : colour2;
-                Vector2 NPosition = Projectile.Center + Main.rand.NextVector2Circular(40 - Projectile.timeLeft * 2, 40 - Projectile.timeLeft) * 2;
-                Lighting.AddLight(NPosition, NColor.ToVector3());
-                Utility.DrawStar(NPosition - Main.screenPosition, Main.rand.Next(1, 4), NColor, Main.rand.NextFloat(Projectile.ai[0]), 0, entity: true);
+                Vector2 position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height);
+                Vector2 velocty = new Vector2(5 * Main.rand.NextFloat() * Strength).RotatedBy((position - Projectile.Center).ToRotation() - MathHelper.PiOver2);
+                Particle.Create<LunarRustStar>((p) =>
+                {
+                    p.Position = position;
+                    p.Velocity = Vector2.Zero;
+                    p.Rotation = Utility.RandomRotation();
+                    p.Scale = new Vector2(1f * (0.6f + Strength * 0.15f)) * Main.rand.NextFloat(0.5f, 1.2f);
+                });
             }
-
-            spriteBatch.End();
-            spriteBatch.Begin(state);
 
             return false;
         }
