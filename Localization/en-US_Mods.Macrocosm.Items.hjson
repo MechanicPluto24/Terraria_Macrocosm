@@ -1138,6 +1138,11 @@ StygiaMusicBox: {
 	Tooltip: ""
 }
 
+IntoTheUnknownMusicBox: {
+	DisplayName: Music Box (Into The Unknown)
+	Tooltip: ""
+}
+
 OsmiumBoots: {
 	DisplayName: Osmium Boots
 	Tooltip: Increases player's fall speed

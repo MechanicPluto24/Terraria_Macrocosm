@@ -7,6 +7,8 @@ namespace Macrocosm.Content.Items.Walls
 {
     public class ProtolithBrickWall : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 400;
