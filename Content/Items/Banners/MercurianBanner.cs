@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -8,6 +9,7 @@ namespace Macrocosm.Content.Items.Banners
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.UnobtainableItem[Type] = true;
             Utility.AddVariationToRubblemakers(Type, ModContent.TileType<Tiles.Banners.MercurianBanner>(), 0);
         }
 
