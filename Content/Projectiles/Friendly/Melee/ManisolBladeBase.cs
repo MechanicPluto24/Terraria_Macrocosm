@@ -1,10 +1,8 @@
-﻿using Macrocosm.Content.Subworlds;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
-using Macrocosm.Common.Utils;
-
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
@@ -47,13 +45,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.ignoreWater = true;
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
+            Projectile.timeLeft = 240;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
             maxPenetrateCount = 0;
             maxDropTime = 20;
         }
 
-        bool hasStartedToReturn=false;
+        bool hasStartedToReturn = false;
         public virtual void OnStick()
         {
         }
@@ -70,10 +69,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             AI_State = ActionState.Returning;
             Projectile.velocity = new Vector2(10, 10);
-            Projectile.timeLeft = 300;  
-            if(!hasStartedToReturn)
+            Projectile.timeLeft = 300;
+
+            if (!hasStartedToReturn)
                 OnRecalled();
-            hasStartedToReturn=true;
+
+            hasStartedToReturn = true;
             Projectile.netUpdate = true;
         }
 
@@ -108,14 +109,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override bool PreAI()
         {
+            if (Projectile.timeLeft <= 3)
+                ForceRecall();
+
             Projectile.oldVelocity = Projectile.velocity;
 
             Player player = Main.player[Projectile.owner];
-            if(player.AltFunction())
-                ForceRecall();
-
-            if (AI_State != ActionState.Returning)
-                Projectile.timeLeft++;
 
             switch (AI_State)
             {
@@ -172,7 +171,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                             npcStick = -1;
                             DropTimer = 11;
                             Projectile.velocity = new Vector2(10, 10);
-                            Projectile.timeLeft = 300; 
+                            Projectile.timeLeft = 300;
                             AI_State = ActionState.Returning;
                             OnRecalled();
                         }

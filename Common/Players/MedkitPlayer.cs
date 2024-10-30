@@ -25,18 +25,26 @@ namespace Macrocosm.Common.Players
         {
             if (MedkitActive)
             {
-                int healPeriod = Medkit.HealPeriod;
-                if (medkitTimer++ >= healPeriod)
+                if (Player.statLife < Player.statLifeMax2 && medkitTimer++ >= Medkit.HealPeriod)
                 {
                     medkitTimer = 0;
                     int healAmount = Medkit.HealthPerPeriod;
 
                     if (Player.HasBuff<MedkitLow>())
-                        Player.Heal((int)(healAmount * 0.33f));
-                    else if (Player.HasBuff<MedkitMedium>())
-                        Player.Heal((int)(healAmount * 0.66f));
-                    else if (Player.HasBuff<MedkitHigh>())
-                        Player.Heal(healAmount);
+                        healAmount = (int)(healAmount * 0.33f);
+
+                    if (Player.HasBuff<MedkitMedium>())
+                        healAmount = (int)(healAmount * 0.66f);
+
+                    healAmount = Math.Min(healAmount, Player.statLifeMax2 - Player.statLife);
+                    Player.Heal(healAmount);
+                }
+
+                if (Player.statLife >= Player.statLifeMax2)
+                {
+                    Player.ClearBuff(ModContent.BuffType<MedkitLow>());
+                    Player.ClearBuff(ModContent.BuffType<MedkitMedium>());
+                    Player.ClearBuff(ModContent.BuffType<MedkitHigh>());
                 }
 
                 if (medkitHitCooldown > 0)

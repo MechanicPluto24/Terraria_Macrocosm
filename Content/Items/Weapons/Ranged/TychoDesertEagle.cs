@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
         {
             if (!Main.dedServ)
-                SoundEngine.PlaySound(SFX.DesertEagleShoot with { Volume = 0.1f }, position);
+                SoundEngine.PlaySound(SFX.DesertEagleShot with { Volume = 0.1f }, position);
 
             Particle.Create<GunFireRing>(position + new Vector2(14, 0).RotatedBy(velocity.ToRotation()), velocity * 0.25f, new(1f), velocity.ToRotation(), false);
 

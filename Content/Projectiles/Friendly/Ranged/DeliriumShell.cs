@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Graphics.PackedVector;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -108,6 +109,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnKill(int timeLeft)
         {
+            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+
             var explosion = Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity;

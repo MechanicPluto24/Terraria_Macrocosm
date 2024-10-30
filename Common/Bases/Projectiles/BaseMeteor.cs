@@ -1,8 +1,10 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -21,7 +23,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public override void Load()
         {
-            for (int i = 0; i < Utility.FindAllThatStartWith("Mods.Macrocosm.DeathMessages.Meteor").Length; i++)
+            for (int i = 0; i < Utility.FindAllLocalizationThatStartsWith("Mods.Macrocosm.DeathMessages.Meteor").Length; i++)
                 DeathMessages.Add(Language.GetOrRegister($"Mods.Macrocosm.DeathMessages.Meteor.Message{i}"));
         }
 
@@ -61,6 +63,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             {
                 ImpactEffects();
                 ImpactScreenshake();
+                ImpactSound();
             }
 
             // handled by server 
@@ -80,7 +83,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            if(Projectile.timeLeft > 3)
+            if (Projectile.timeLeft > 3)
                 Projectile.timeLeft = 3;
 
             Projectile.velocity *= 0f;
@@ -124,6 +127,12 @@ namespace Macrocosm.Common.Bases.Projectiles
                     }
                 }
             }
+        }
+
+        public virtual void ImpactSound()
+        {
+            // broken, for some reason
+            //SoundEngine.PlaySound(SFX.BigExplosion, Projectile.Center);
         }
     }
 }

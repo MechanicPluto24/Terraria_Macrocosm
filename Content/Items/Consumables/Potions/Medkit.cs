@@ -67,6 +67,7 @@ namespace Macrocosm.Content.Items.Consumables.Potions
             healValue = 0;
         }
 
+        public override bool CanUseItem(Player player) => player.statLife < player.statLifeMax2;
         public sealed override bool? UseItem(Player player)
         {
             player.AddBuff(ModContent.BuffType<MedkitHigh>(), Duration);

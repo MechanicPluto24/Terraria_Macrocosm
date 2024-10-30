@@ -31,6 +31,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
