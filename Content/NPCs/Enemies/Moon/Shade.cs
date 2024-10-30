@@ -64,7 +64,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void AI()
         {
+            if (Main.rand.NextBool(2)){
+                Dust d = Dust.NewDustDirect(NPC.position,NPC.width,NPC.height,54,Main.rand.NextFloat(-0.2f, 0.2f),Main.rand.NextFloat(-0.2f, 0.2f), Scale: Main.rand.NextFloat(0.5f, 1.5f));
+                d.noGravity=true;
+            }
             NPC.TargetClosest(true);
+
             Player player = Main.player[NPC.target];
             bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
             NPC.direction = NPC.Center.X < player.Center.X ? 1 : -1;
@@ -184,8 +189,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             SpriteEffects effects = NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
             Texture2D texture = TextureAssets.Npc[Type].Value;
-            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, (new Color(255,255,255) * (NPC.Opacity)*0.2f), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
-            spriteBatch.Draw(texture, NPC.position - Main.screenPosition, null, drawColor * (NPC.Opacity), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, (new Color(255,255,255) * (NPC.Opacity)*0.2f), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
+            spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, drawColor * (NPC.Opacity), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
 
             /*
             // Debug collision hitbox
