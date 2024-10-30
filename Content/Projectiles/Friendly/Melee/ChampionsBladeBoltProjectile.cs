@@ -67,7 +67,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Projectile.velocity = Projectile.velocity.RotatedBy(SkewMultiplier * 0.05f);
             {
-                Particle.Create<LuminiteSpark>(particle =>
+                Particle.Create<TintableSpark>(particle =>
                 {
                     particle.Position = Projectile.Center;
                     particle.Scale = new(Main.rand.NextFloat(2f, 6f));
@@ -88,7 +88,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             for (var i = 0; i < 10; i++)
             {
-                Particle.Create<LuminiteSpark>(particle =>
+                Particle.Create<TintableSpark>(particle =>
                 {
                     particle.Position = Projectile.Center;
                     particle.Scale = new(Main.rand.NextFloat(2f, 6f));

@@ -376,17 +376,6 @@ IrradiatedBrick
 		Irradiated Brick Wall x 4
 
 
-ProtolithBrick
-	Value: No value
-	Research count: 100
-	Recipes:
-		Protolith x 2
-		at
-		Work Bench
-
-		Protolith Brick Wall x 4
-
-
 RegolithBrick
 	Value: No value
 	Research count: 100
@@ -2978,6 +2967,18 @@ DeadworldMusicBox
 	Value: 10 gold
 	Research count: 1
 
+IntoTheUnknownMusicBox
+	Value: 10 gold
+	Research count: 1
+	Recipes:
+		Music Box (Deadworld) x 1
+		Music Box (Requiem) x 1
+		Music Box (Stygia) x 1
+		Music Box (Space Invader) x 1
+		at
+		Tinkerer's Workshop
+
+
 RequiemMusicBox
 	Value: 10 gold
 	Research count: 1
@@ -3660,26 +3661,6 @@ LexanGlassWall
 	Research count: 400
 	Recipes:
 		Lexan Glass x 1
-		at
-		Work Bench
-			=> x4
-
-
-ProtolithBrickWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Protolith Brick x 1
-		at
-		Work Bench
-			=> x4
-
-
-ProtolithBrickWallUnsafe
-	Value: No value
-	Research count: 400
-	Recipes:
-		Protolith Brick x 1
 		at
 		Work Bench
 			=> x4

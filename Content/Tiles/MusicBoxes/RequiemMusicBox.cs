@@ -17,6 +17,8 @@ namespace Macrocosm.Content.Tiles.MusicBoxes
             TileObjectData.newTile.LavaDeath = false;
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleMultiplier = 2;
             TileObjectData.addTile(Type);
 
             DustType = -1;

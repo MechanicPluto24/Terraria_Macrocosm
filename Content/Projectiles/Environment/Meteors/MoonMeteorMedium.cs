@@ -87,7 +87,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             for (int i = 0; i < DebrisCount; i++)
             {
                 Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
-                new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-4f, -1f)),
+                new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-10f, -4f)),
                 DebrisType, 0, 0f, 255);
             }
         }
