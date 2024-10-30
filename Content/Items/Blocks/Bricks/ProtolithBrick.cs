@@ -8,6 +8,8 @@ namespace Macrocosm.Content.Items.Blocks.Bricks
 {
     public class ProtolithBrick : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
