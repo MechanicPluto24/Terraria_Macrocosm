@@ -642,7 +642,7 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Copernicus
-	Tooltip: Every 5th shot also shoots a rocket
+	Tooltip: Every 5th shot also shoots a rocket.
 }
 
 Cruithne: {
@@ -1929,7 +1929,7 @@ Fridge: {
 }
 
 IVPole: {
-	DisplayName: I V Pole
+	DisplayName: IV Pole
 	Tooltip: ""
 }
 
@@ -1949,7 +1949,7 @@ CrescentMoon: {
 }
 
 RocheChakram: {
-	DisplayName: Roche Chakram
+	DisplayName: Roche
 	Tooltip: ""
 }
 
@@ -2071,7 +2071,7 @@ ArcaneBarnacle: {
 	DisplayName: Arcane Barnacle
 	Tooltip:
 		'''
-		15% increased magic damage
+		10% increased magic damage
 		70% increased mana cost
 		Hitting an enemy leeches 2% of damage as mana
 		Items that instantly restore mana are disabled
@@ -2087,7 +2087,7 @@ Ilmenite: {
 	DisplayName: Ilmenite
 	Tooltip:
 		'''
-		<left> click to fire bolts of light that take on the 
+		<left> to fire bolts of light
 		Hold <right> to charge up an explosive vortex of light
 		'''
 }
@@ -2115,7 +2115,7 @@ HummingbirdDroneRemote: {
 
 GreatstaffOfHorus: {
 	DisplayName: Greatstaff Of Horus
-	Tooltip: ""
+	Tooltip: Summons a Lesser Granule to fight for you.
 }
 
 LuminiteTorch: {
@@ -2124,8 +2124,8 @@ LuminiteTorch: {
 }
 
 RyuguStaff: {
-	DisplayName: Ryugu Staff
-	Tooltip: ""
+	DisplayName: Mortar Staff
+	Tooltip: Summons a Ryugu to fight for you.
 }
 
 AstraDoor: {
@@ -2175,5 +2175,430 @@ StarRoyaleDoor: {
 
 SolarCell: {
 	DisplayName: Solar Cell
+	Tooltip: ""
+}
+
+LaserSight: {
+	DisplayName: Laser Sight
+	Tooltip: -50% ranged weapon spread
+}
+
+ProtolithBrick: {
+	DisplayName: Protolith Brick
+	Tooltip: ""
+}
+
+ProtolithBrickWall: {
+	DisplayName: Protolith Brick Wall
+	Tooltip: ""
+}
+
+ProtolithBrickWallUnsafe: {
+	DisplayName: Protolith Brick Wall Unsafe
+	Tooltip: ""
+}
+
+AstraBathtub: {
+	DisplayName: Astra Bathtub
+	Tooltip: ""
+}
+
+AstraBed: {
+	DisplayName: Astra Bed
+	Tooltip: ""
+}
+
+AstraChandelier: {
+	DisplayName: Astra Chandelier
+	Tooltip: ""
+}
+
+AstraDresser: {
+	DisplayName: Astra Dresser
+	Tooltip: ""
+}
+
+AstraLamp: {
+	DisplayName: Astra Lamp
+	Tooltip: ""
+}
+
+AstraPiano: {
+	DisplayName: Astra Piano
+	Tooltip: ""
+}
+
+AstraSink: {
+	DisplayName: Astra Sink
+	Tooltip: ""
+}
+
+AstraSofa: {
+	DisplayName: Astra Sofa
+	Tooltip: ""
+}
+
+AstraTable: {
+	DisplayName: Astra Table
+	Tooltip: ""
+}
+
+CosmicEmberBathtub: {
+	DisplayName: Cosmic Ember Bathtub
+	Tooltip: ""
+}
+
+CosmicEmberBed: {
+	DisplayName: Cosmic Ember Bed
+	Tooltip: ""
+}
+
+CosmicEmberChandelier: {
+	DisplayName: Cosmic Ember Chandelier
+	Tooltip: ""
+}
+
+CosmicEmberDresser: {
+	DisplayName: Cosmic Ember Dresser
+	Tooltip: ""
+}
+
+CosmicEmberLamp: {
+	DisplayName: Cosmic Ember Lamp
+	Tooltip: ""
+}
+
+CosmicEmberPiano: {
+	DisplayName: Cosmic Ember Piano
+	Tooltip: ""
+}
+
+CosmicEmberSink: {
+	DisplayName: Cosmic Ember Sink
+	Tooltip: ""
+}
+
+CosmicEmberSofa: {
+	DisplayName: Cosmic Ember Sofa
+	Tooltip: ""
+}
+
+CosmicEmberTable: {
+	DisplayName: Cosmic Ember Table
+	Tooltip: ""
+}
+
+CryocoreBathtub: {
+	DisplayName: Cryocore Bathtub
+	Tooltip: ""
+}
+
+CryocoreBed: {
+	DisplayName: Cryocore Bed
+	Tooltip: ""
+}
+
+CryocoreChandelier: {
+	DisplayName: Cryocore Chandelier
+	Tooltip: ""
+}
+
+CryocoreDresser: {
+	DisplayName: Cryocore Dresser
+	Tooltip: ""
+}
+
+CryocoreLamp: {
+	DisplayName: Cryocore Lamp
+	Tooltip: ""
+}
+
+CryocorePiano: {
+	DisplayName: Cryocore Piano
+	Tooltip: ""
+}
+
+CryocoreSink: {
+	DisplayName: Cryocore Sink
+	Tooltip: ""
+}
+
+CryocoreSofa: {
+	DisplayName: Cryocore Sofa
+	Tooltip: ""
+}
+
+CryocoreTable: {
+	DisplayName: Cryocore Table
+	Tooltip: ""
+}
+
+DarkCelestialBathtub: {
+	DisplayName: Dark Celestial Bathtub
+	Tooltip: ""
+}
+
+DarkCelestialBed: {
+	DisplayName: Dark Celestial Bed
+	Tooltip: ""
+}
+
+DarkCelestialChandelier: {
+	DisplayName: Dark Celestial Chandelier
+	Tooltip: ""
+}
+
+DarkCelestialDresser: {
+	DisplayName: Dark Celestial Dresser
+	Tooltip: ""
+}
+
+DarkCelestialLamp: {
+	DisplayName: Dark Celestial Lamp
+	Tooltip: ""
+}
+
+DarkCelestialPiano: {
+	DisplayName: Dark Celestial Piano
+	Tooltip: ""
+}
+
+DarkCelestialSink: {
+	DisplayName: Dark Celestial Sink
+	Tooltip: ""
+}
+
+DarkCelestialSofa: {
+	DisplayName: Dark Celestial Sofa
+	Tooltip: ""
+}
+
+DarkCelestialTable: {
+	DisplayName: Dark Celestial Table
+	Tooltip: ""
+}
+
+HeavenforgeBathtub: {
+	DisplayName: Heavenforge Bathtub
+	Tooltip: ""
+}
+
+HeavenforgeBed: {
+	DisplayName: Heavenforge Bed
+	Tooltip: ""
+}
+
+HeavenforgeChandelier: {
+	DisplayName: Heavenforge Chandelier
+	Tooltip: ""
+}
+
+HeavenforgeDresser: {
+	DisplayName: Heavenforge Dresser
+	Tooltip: ""
+}
+
+HeavenforgeLamp: {
+	DisplayName: Heavenforge Lamp
+	Tooltip: ""
+}
+
+HeavenforgePiano: {
+	DisplayName: Heavenforge Piano
+	Tooltip: ""
+}
+
+HeavenforgeSink: {
+	DisplayName: Heavenforge Sink
+	Tooltip: ""
+}
+
+HeavenforgeSofa: {
+	DisplayName: Heavenforge Sofa
+	Tooltip: ""
+}
+
+HeavenforgeTable: {
+	DisplayName: Heavenforge Table
+	Tooltip: ""
+}
+
+LuminiteBathtub: {
+	DisplayName: Luminite Bathtub
+	Tooltip: ""
+}
+
+LuminiteBed: {
+	DisplayName: Luminite Bed
+	Tooltip: ""
+}
+
+LuminiteChandelier: {
+	DisplayName: Luminite Chandelier
+	Tooltip: ""
+}
+
+LuminiteDresser: {
+	DisplayName: Luminite Dresser
+	Tooltip: ""
+}
+
+LuminiteLamp: {
+	DisplayName: Luminite Lamp
+	Tooltip: ""
+}
+
+LuminitePiano: {
+	DisplayName: Luminite Piano
+	Tooltip: ""
+}
+
+LuminiteSink: {
+	DisplayName: Luminite Sink
+	Tooltip: ""
+}
+
+LuminiteSofa: {
+	DisplayName: Luminite Sofa
+	Tooltip: ""
+}
+
+LuminiteTable: {
+	DisplayName: Luminite Table
+	Tooltip: ""
+}
+
+LunarRustBathtub: {
+	DisplayName: Lunar Rust Bathtub
+	Tooltip: ""
+}
+
+LunarRustBed: {
+	DisplayName: Lunar Rust Bed
+	Tooltip: ""
+}
+
+LunarRustChandelier: {
+	DisplayName: Lunar Rust Chandelier
+	Tooltip: ""
+}
+
+LunarRustDresser: {
+	DisplayName: Lunar Rust Dresser
+	Tooltip: ""
+}
+
+LunarRustLamp: {
+	DisplayName: Lunar Rust Lamp
+	Tooltip: ""
+}
+
+LunarRustPiano: {
+	DisplayName: Lunar Rust Piano
+	Tooltip: ""
+}
+
+LunarRustSink: {
+	DisplayName: Lunar Rust Sink
+	Tooltip: ""
+}
+
+LunarRustSofa: {
+	DisplayName: Lunar Rust Sofa
+	Tooltip: ""
+}
+
+LunarRustTable: {
+	DisplayName: Lunar Rust Table
+	Tooltip: ""
+}
+
+MercuryBathtub: {
+	DisplayName: Mercury Bathtub
+	Tooltip: ""
+}
+
+MercuryBed: {
+	DisplayName: Mercury Bed
+	Tooltip: ""
+}
+
+MercuryChandelier: {
+	DisplayName: Mercury Chandelier
+	Tooltip: ""
+}
+
+MercuryDresser: {
+	DisplayName: Mercury Dresser
+	Tooltip: ""
+}
+
+MercuryLamp: {
+	DisplayName: Mercury Lamp
+	Tooltip: ""
+}
+
+MercuryPiano: {
+	DisplayName: Mercury Piano
+	Tooltip: ""
+}
+
+MercurySink: {
+	DisplayName: Mercury Sink
+	Tooltip: ""
+}
+
+MercurySofa: {
+	DisplayName: Mercury Sofa
+	Tooltip: ""
+}
+
+MercuryTable: {
+	DisplayName: Mercury Table
+	Tooltip: ""
+}
+
+StarRoyaleBathtub: {
+	DisplayName: Star Royale Bathtub
+	Tooltip: ""
+}
+
+StarRoyaleBed: {
+	DisplayName: Star Royale Bed
+	Tooltip: ""
+}
+
+StarRoyaleChandelier: {
+	DisplayName: Star Royale Chandelier
+	Tooltip: ""
+}
+
+StarRoyaleDresser: {
+	DisplayName: Star Royale Dresser
+	Tooltip: ""
+}
+
+StarRoyaleLamp: {
+	DisplayName: Star Royale Lamp
+	Tooltip: ""
+}
+
+StarRoyalePiano: {
+	DisplayName: Star Royale Piano
+	Tooltip: ""
+}
+
+StarRoyaleSink: {
+	DisplayName: Star Royale Sink
+	Tooltip: ""
+}
+
+StarRoyaleSofa: {
+	DisplayName: Star Royale Sofa
+	Tooltip: ""
+}
+
+StarRoyaleTable: {
+	DisplayName: Star Royale Table
 	Tooltip: ""
 }

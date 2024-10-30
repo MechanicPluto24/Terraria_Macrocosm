@@ -11,6 +11,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
@@ -258,6 +259,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
             if (shootTimer > 100 && shootTimer % 4 == 0 && Projectile.owner == Main.myPlayer)
             {
+                SoundEngine.PlaySound(SoundID.Item11,Projectile.Center);
                 Vector2 position = Projectile.Center + (Projectile.spriteDirection == 1 ? new Vector2(30, 6) : new Vector2(-30, 6));
                 Vector2 velocity = (target - position).RotatedByRandom(MathHelper.Pi / 10).SafeNormalize(Vector2.UnitX) * 28f;
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<HummingbirdBullet>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);

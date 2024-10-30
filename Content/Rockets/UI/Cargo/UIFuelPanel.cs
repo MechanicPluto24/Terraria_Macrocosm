@@ -133,6 +133,11 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             fuelPlacementPanel.Append(dumpFuelButton);
         }
 
+        public void OnRocketChanged()
+        {
+            fuelPlacementPanel.ReplaceChildWith(liquidContainerItemSlot, liquidContainerItemSlot = CreateFuelCanisterItemSlot());
+        }
+
         private UIInventorySlot CreateFuelCanisterItemSlot()
         {
             liquidContainerItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_FuelTank);
@@ -148,12 +153,6 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public void FixedUpdate()
         {
-            
-
-            // Animate canister buffer
-
-            // Animate rocket tank
-            
         }
 
         public override void Update(GameTime gameTime)
@@ -210,7 +209,6 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public void RefreshItemSlot()
         {
-            fuelPlacementPanel.ReplaceChildWith(liquidContainerItemSlot, liquidContainerItemSlot = CreateFuelCanisterItemSlot());
         }
 
         private void DumpFuel()

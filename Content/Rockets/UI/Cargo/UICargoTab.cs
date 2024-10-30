@@ -67,16 +67,18 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public void OnRocketChanged()
         {
-            cacheSize = InventorySize;
-            this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
-            fuelPanel.RefreshItemSlot();
+            RefreshInventory();
         }
 
         public void OnTabOpen()
         {
+            RefreshInventory();
+        }
+
+        private void RefreshInventory()
+        {
             cacheSize = InventorySize;
             this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
-            fuelPanel.RefreshItemSlot();
         }
 
         public override void Update(GameTime gameTime)
@@ -147,8 +149,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             if (cacheSize != InventorySize)
             {
-                cacheSize = InventorySize;
-                this.ReplaceChildWith(inventoryPanel, inventoryPanel = CreateInventoryPanel());
+                RefreshInventory();
             }
 
             if (Rocket is not null && Main.netMode == NetmodeID.MultiplayerClient)

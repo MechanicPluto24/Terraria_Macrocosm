@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Audio;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
@@ -216,6 +217,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     if(Projectile.frame==-2){
                         ProjFrame=7;
                         Projectile.frame=FireFrames[7]-1;
+                        SoundEngine.PlaySound(SoundID.Item11,Projectile.Center);
                         Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, (targetNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX) * 16f, ModContent.ProjectileType<RyuguShell>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
                     }
                 }

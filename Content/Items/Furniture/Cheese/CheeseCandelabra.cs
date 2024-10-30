@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Items.Blocks;
+using Macrocosm.Content.Items.Torches;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -23,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.Cheese
         {
             CreateRecipe()
                 .AddIngredient<CheeseBlock>(5)
-                .AddIngredient(ItemID.Torch, 3)
+                .AddIngredient<LuminiteTorch>(3)
                 .AddTile(TileID.WorkBenches)
                 .Register();
         }

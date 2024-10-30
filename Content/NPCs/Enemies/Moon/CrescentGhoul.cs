@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Food;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -70,6 +71,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void ModifyNPCLoot(NPCLoot loot)
         {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 3));
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 15, 25, 65));
         }
 
         /// <summary> Adapted from Corite AI </summary>

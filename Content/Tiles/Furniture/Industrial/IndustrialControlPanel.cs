@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
             int ticksPerFrame = 10;
-            int frameCount = 6;
+            int frameCount = 5;
             if (++frameCounter >= ticksPerFrame)
             {
                 frameCounter = 0;

@@ -57,6 +57,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             {
                 NPC.velocity = (-Vector2.UnitY).RotatedByRandom(MathHelper.PiOver2) * Main.rand.NextFloat(12f, 16f);
                 spawnPosition = NPC.position;
+                Terraria.Audio.SoundEngine.PlaySound(SoundID.Item20, NPC.Center);
                 spawned = true;
             }
 

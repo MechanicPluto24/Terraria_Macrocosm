@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.UI;
 
 namespace Macrocosm.Common.Systems.UI
@@ -35,7 +37,9 @@ namespace Macrocosm.Common.Systems.UI
         {
             base.Update(gameTime);
 
-            if (Main.LocalPlayer.UICloseConditions())
+            var machine = MachineUI.MachineTE;
+            Rectangle rect = new(machine.Position.X * 16, machine.Position.Y * 16, machine.MachineTile.Width * 16, machine.MachineTile.Height * 16);
+            if (Main.LocalPlayer.UICloseConditions() || !rect.InPlayerInteractionRange(TileReachCheckSettings.Simple))
                 UISystem.Hide();
         }
     }

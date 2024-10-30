@@ -83,7 +83,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 spawned = true;
             }
 
-            Projectile.velocity.Y += 0.9f * (0.5f + 0.5f * MacrocosmSubworld.CurrentGravityMultiplier);
+            Projectile.velocity.Y += 0.9f * (0.3f + 0.7f * MacrocosmSubworld.CurrentGravityMultiplier);
 
             if (Projectile.timeLeft < timeUntilMandatoryBreak)
             {
@@ -138,7 +138,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
                 Particle.Create<PrettySparkle>((p) =>
                 {
-                    p.Position = Projectile.Center;
+                    p.Position = Projectile.Center + Projectile.oldVelocity;
                     p.Velocity = Vector2.Zero;
                     p.DrawHorizontalAxis = true;
                     p.DrawVerticalAxis = true;
@@ -147,7 +147,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     p.ScaleVelocity = -new Vector2(Main.rand.NextFloat(0.01f, 0.02f));
                     p.Color = (Main.rand.NextBool() ? new Color(56, 188, 173) : new Color(93, 81, 164));
                     p.Rotation = 0f;
-                    p.TimeToLive = 40;
+                    p.TimeToLive = 30;
                     p.FadeInNormalizedTime = 0f;
                     p.FadeOutNormalizedTime = 0.5f;
                 });
@@ -173,10 +173,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             if (Projectile.owner == Main.myPlayer)
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
+                for(int i = 0; i < Main.rand.Next(1, 4); i++)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
+                }
             }
+
+            SoundEngine.PlaySound(SoundID.Item107 with
+            {
+                Volume = 1,
+                Pitch = 0f
+            },
+            Projectile.position);
 
             for (int i = 0; i < 5; i++)
                 Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Projectile.velocity * 0.1f, Mod.Find<ModGore>("FrigorianGore3").Type);

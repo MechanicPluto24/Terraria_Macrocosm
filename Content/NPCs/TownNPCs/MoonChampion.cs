@@ -4,6 +4,7 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Consumables.Throwable;
+using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
@@ -160,14 +161,13 @@ namespace Macrocosm.Content.NPCs.TownNPCs
                 }, conditions);
             }
 
-            // TODO: for testing, subject to change - Feldy
-            AddNewSlot(ItemID.SuperHealingPotion, 3);
-
-            AddNewSlot(ModContent.ItemType<LunarCrystal>(), 1);
+            //AddNewSlot(ModContent.ItemType<RocketFuelCanister>(), 2);
 
             AddNewSlot(ModContent.ItemType<AstronautHelmet>(), 20);
             AddNewSlot(ModContent.ItemType<AstronautSuit>(), 20);
             AddNewSlot(ModContent.ItemType<AstronautLeggings>(), 20);
+
+            AddNewSlot(ModContent.ItemType<LunarCrystal>(), 1);
 
             AddNewSlot(ModContent.ItemType<CrescentScripture>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.LuminiteShrineUnlocked));
             AddNewSlot(ModContent.ItemType<Procellarum>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.HeavenforgeShrineUnlocked));
@@ -186,7 +186,10 @@ namespace Macrocosm.Content.NPCs.TownNPCs
         {
             foreach (Item item in items)
             {
-                if (item is not null && item.type == ModContent.ItemType<LunarCrystal>())
+                if (item is null)
+                    continue;
+
+                if (item.type == ModContent.ItemType<LunarCrystal>())
                     item.stack = 20;
             }
         }

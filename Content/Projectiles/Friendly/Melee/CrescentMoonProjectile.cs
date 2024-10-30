@@ -4,6 +4,7 @@ using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -67,6 +68,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             }
 
             timer++;
+
+            if (Projectile.soundDelay == 0)
+            {
+                Projectile.soundDelay = 8;
+                SoundEngine.PlaySound(SoundID.Item7, Projectile.position);
+            }
         }
 
         // Only called on the owner 
@@ -139,8 +146,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
 
             return false;
         }

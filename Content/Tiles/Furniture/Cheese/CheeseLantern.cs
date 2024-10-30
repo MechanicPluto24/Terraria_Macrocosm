@@ -84,12 +84,16 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
+            int offsetY = 0;
+            if (WorldGen.SolidTile(i, j - 1))
+                offsetY = 10;
+
             for (int k = 0; k < 7; k++)
             {
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy + 10), drawColor: new Color(30, 30, 30, 0));
+                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy + offsetY), drawColor: new Color(30, 30, 30, 0));
             }
         }
     }
