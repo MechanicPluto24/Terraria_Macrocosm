@@ -1865,7 +1865,7 @@ StarRoyaleLantern: {
 
 WiringKit: {
 	DisplayName: Wiring Kit
-	Tooltip: ""
+	Tooltip: Used for circuitry troubleshooting
 }
 
 AntiRadiationPills: {

@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             Main.tileNoAttach[Type] = true;
 
             TileID.Sets.HasOutlines[Type] = true;
-            //TileID.Sets.BasicChest[Type] = true;
+            TileID.Sets.BasicDresser[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
             TileID.Sets.AvoidedByNPCs[Type] = true;
             TileID.Sets.InteractibleByNPCs[Type] = true;

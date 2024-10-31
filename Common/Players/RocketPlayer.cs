@@ -143,9 +143,25 @@ namespace Macrocosm.Common.Players
             }
         }
 
+        public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
+        {
+            if (InRocket && RocketManager.Rockets[RocketID].State != Rocket.ActionState.Idle)
+                return false;
+
+            return true;
+        }
+
+        public override bool CanBeHitByProjectile(Projectile proj)
+        {
+            if (InRocket && RocketManager.Rockets[RocketID].State != Rocket.ActionState.Idle)
+                return false;
+
+            return true;
+        }
+
         public override void OnHurt(Player.HurtInfo info)
         {
-            if (Player.whoAmI == Main.myPlayer)
+            if (Player.whoAmI == Main.myPlayer && InRocket && RocketManager.Rockets[RocketID].State == Rocket.ActionState.Idle)
             {
                 UISystem.Hide();
                 DisembarkFromRocket();
