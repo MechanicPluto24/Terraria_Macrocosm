@@ -1151,7 +1151,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
-        [Task]
+        // [Task]
         private void CheeseHouse(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");

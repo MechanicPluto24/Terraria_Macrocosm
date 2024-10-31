@@ -376,6 +376,17 @@ IrradiatedBrick
 		Irradiated Brick Wall x 4
 
 
+ProtolithBrick
+	Value: No value
+	Research count: 100
+	Recipes:
+		Protolith x 2
+		at
+		Work Bench
+
+		Protolith Brick Wall x 4
+
+
 RegolithBrick
 	Value: No value
 	Research count: 100
@@ -738,6 +749,14 @@ AstraPiano
 		Book x 1
 		at
 		Mythril Anvil
+
+
+AstraPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Astra Brick x 1
+			=> x2
 
 
 AstraSink
@@ -1114,6 +1133,14 @@ CosmicEmberPiano
 		Mythril Anvil
 
 
+CosmicEmberPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Cosmic Ember Brick x 1
+			=> x2
+
+
 CosmicEmberSink
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1297,6 +1324,14 @@ CryocorePiano
 		Mythril Anvil
 
 
+CryocorePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Cryocore Brick x 1
+			=> x2
+
+
 CryocoreSink
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -1478,6 +1513,14 @@ DarkCelestialPiano
 		Book x 1
 		at
 		Mythril Anvil
+
+
+DarkCelestialPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Dark Celestial Brick x 1
+			=> x2
 
 
 DarkCelestialSink
@@ -1692,6 +1735,14 @@ HeavenforgePiano
 		Book x 1
 		at
 		Mythril Anvil
+
+
+HeavenforgePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Heavenforge Brick x 1
+			=> x2
 
 
 HeavenforgeSink
@@ -2183,6 +2234,14 @@ LuminitePiano
 		Mythril Anvil
 
 
+LuminitePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Luminite Brick x 1
+			=> x2
+
+
 LuminiteSink
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -2366,6 +2425,14 @@ LunarRustPiano
 		Mythril Anvil
 
 
+LunarRustPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Lunar Rust Brick x 1
+			=> x2
+
+
 LunarRustSink
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -2547,6 +2614,14 @@ MercuryPiano
 		Book x 1
 		at
 		Mythril Anvil
+
+
+MercuryPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Mercury Brick x 1
+			=> x2
 
 
 MercurySink
@@ -2738,6 +2813,14 @@ StarRoyalePiano
 		Book x 1
 		at
 		Mythril Anvil
+
+
+StarRoyalePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Star Royale Brick x 1
+			=> x2
 
 
 StarRoyaleSink
@@ -3642,6 +3725,26 @@ LexanGlassWall
 	Research count: 400
 	Recipes:
 		Lexan Glass x 1
+		at
+		Work Bench
+			=> x4
+
+
+ProtolithBrickWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Protolith Brick x 1
+		at
+		Work Bench
+			=> x4
+
+
+ProtolithBrickWallUnsafe
+	Value: No value
+	Research count: 400
+	Recipes:
+		Protolith Brick x 1
 		at
 		Work Bench
 			=> x4

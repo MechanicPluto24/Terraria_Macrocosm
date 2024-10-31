@@ -25,11 +25,6 @@
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Content\Items\Walls\ProtolithBrickWall.png" />
-    <None Remove="Content\Tiles\Furniture\Luminite\LuminiteSofa_Highlight.png" />
-    <None Remove="Content\Tiles\Walls\ProtolithBrickWall.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="SubworldLibrary">
       <HintPath>References\SubworldLibrary.dll</HintPath>
     </Reference>
