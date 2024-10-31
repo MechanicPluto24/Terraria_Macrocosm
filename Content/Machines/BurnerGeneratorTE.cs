@@ -15,12 +15,12 @@ namespace Macrocosm.Content.Machines
     {
         public override MachineTile MachineTile => ModContent.GetInstance<BurnerGenerator>();
 
-        public override MachineType MachineType => MachineType.Generator; 
+        public override MachineType MachineType => MachineType.Generator;
 
         /// <summary> The hull heat progress, 0 to 1, increases when burning and decreases otherwise. </summary>
-        public float HullHeatProgress 
-        { 
-            get => hullHeatProgress; 
+        public float HullHeatProgress
+        {
+            get => hullHeatProgress;
             set => hullHeatProgress = MathHelper.Clamp(value, 0f, 1f);
         }
         protected float hullHeatProgress;

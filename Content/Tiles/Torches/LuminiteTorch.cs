@@ -1,4 +1,3 @@
-using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;

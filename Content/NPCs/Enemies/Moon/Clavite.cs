@@ -61,10 +61,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             return spawnInfo.Player.InModBiome<MoonBiome>() && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
         }
 
-        public override void ModifyNPCLoot(NPCLoot loot) 
+        public override void ModifyNPCLoot(NPCLoot loot)
         {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 4));
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 50, 1, 20)); 
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 50, 1, 20));
         }
 
         private Vector2? flyToOffset = null;

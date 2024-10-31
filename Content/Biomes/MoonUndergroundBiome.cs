@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Biomes
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUndergroundBackgroundStyle>();
 
         public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/MoonUnderground";
-        public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/MoonUnderground"; 
+        public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/MoonUnderground";
         public override string MapBackground => BackgroundPath;
         public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Stygia");
 

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Content.Debuffs;
-using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

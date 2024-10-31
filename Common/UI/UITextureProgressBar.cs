@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria;
-using Terraria.ModLoader;
-using Terraria.UI;
 using System.Collections.Generic;
+using Terraria;
+using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
@@ -49,7 +48,7 @@ namespace Macrocosm.Common.UI
         private Color GetInterpolatedColor(float progress)
         {
             if (FillColors.Count == 1)
-                return FillColors[0];  
+                return FillColors[0];
 
             float scaledProgress = progress * (FillColors.Count - 1);
             int index = (int)scaledProgress;

@@ -5,7 +5,6 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
@@ -45,14 +44,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             if (!spawned)
             {
                 Player player = Main.player[Projectile.owner];
-                if(player.whoAmI == Main.myPlayer)
+                if (player.whoAmI == Main.myPlayer)
                 {
-                    Vector2 position = Projectile.Center ;
-                    Vector2 velocity = (Projectile.velocity * 2.4f).RotatedBy(MathHelper.Pi/3 * -player.direction) ;
+                    Vector2 position = Projectile.Center;
+                    Vector2 velocity = (Projectile.velocity * 2.4f).RotatedBy(MathHelper.Pi / 3 * -player.direction);
                     float rotation = velocity.ToRotation();
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<TotalitySlashProjectile>(), (int)((float)Projectile.damage), 0f, Main.myPlayer, rotation);
                 }
-               
+
                 spawned = true;
             }
 

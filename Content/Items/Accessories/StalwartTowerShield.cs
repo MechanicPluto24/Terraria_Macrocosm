@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Macrocosm.Common.Players;
+﻿using Macrocosm.Common.Players;
 using Terraria;
 using Terraria.ModLoader;
 

@@ -75,11 +75,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 float trailFactor = (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length);
                 Color color = (Projectile.GetAlpha(lightColor) * trailFactor * 0.6f).WithAlpha((byte)(64 * trailFactor));
                 SpriteEffects effect = Projectile.oldSpriteDirection[i] == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-                Main.EntitySpriteDraw(texture, drawPos,null, color * 0.6f, Projectile.oldRot[i], texture.Size() / 2, Projectile.scale * trailFactor, effect, 0f);
+                Main.EntitySpriteDraw(texture, drawPos, null, color * 0.6f, Projectile.oldRot[i], texture.Size() / 2, Projectile.scale * trailFactor, effect, 0f);
             }
 
             Main.EntitySpriteDraw(texture, Projectile.position - Main.screenPosition, null, Projectile.GetAlpha(lightColor), Projectile.rotation, texture.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None);
-            
+
             return false;
         }
     }

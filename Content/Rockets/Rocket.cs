@@ -354,7 +354,7 @@ namespace Macrocosm.Content.Rockets
 
             }
 
-            if(Transparency < 1f)
+            if (Transparency < 1f)
                 Transparency += 0.01f;
 
             if (Transparency > 1f)
@@ -683,11 +683,11 @@ namespace Macrocosm.Content.Rockets
         {
             if (State == ActionState.Flight)
             {
-               
+
             }
             else if (State == ActionState.Landing)
             {
-               
+
             }
             else
             {

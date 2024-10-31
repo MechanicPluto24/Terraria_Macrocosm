@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.ignoreWater = true;
             Projectile.aiStyle = -1;
             Projectile.Opacity = 0f;
-            Projectile.timeLeft=300;
+            Projectile.timeLeft = 300;
             trail = new();
         }
 
@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 if (i % 3 == 0 && speedUp)
                 {
                     Dust dust = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(35, 75).RotatedBy(Projectile.rotation), ModContent.DustType<ArtemiteBrightDust>(), default, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
-                    dust.velocity = Projectile.velocity ;
+                    dust.velocity = Projectile.velocity;
                     dust.color = Color.White.WithAlpha((byte)Main.rand.Next(255)) * Main.rand.NextFloat();
                     dust.noGravity = true;
                 }

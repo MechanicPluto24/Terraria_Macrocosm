@@ -1,7 +1,6 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -64,7 +63,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             var dummy = Item.Clone();
             dummy.useAmmo = AmmoID.Rocket;
 
-            if(player.ItemUseCount(Type) % 5 == 0 && player.PickAmmo(dummy, out _, out float speed, out damage, out knockback, out _, dontConsume: false))
+            if (player.ItemUseCount(Type) % 5 == 0 && player.PickAmmo(dummy, out _, out float speed, out damage, out knockback, out _, dontConsume: false))
             {
                 int projToShoot = Utility.GetRocketAmmoProjectileID(player, ItemID.RocketLauncher);
                 Projectile.NewProjectile(source, position + new Vector2(30, 8 * player.direction).RotatedBy(velocity.ToRotation()), velocity, projToShoot, damage, knockback, player.whoAmI);

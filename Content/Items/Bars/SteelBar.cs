@@ -35,13 +35,13 @@ namespace Macrocosm.Content.Items.Bars
         {
             CreateRecipe(5)
                 .AddIngredient(ItemID.IronBar, 5)
-                .AddIngredient(ItemType<Coal>(), 2)
+                .AddIngredient(ItemType<Coal>(), 3)
                 .AddTile(TileID.Hellforge)
                 .Register();
 
             CreateRecipe(5)
                 .AddIngredient(ItemID.LeadBar, 5)
-                .AddIngredient(ItemType<Coal>(), 2)
+                .AddIngredient(ItemType<Coal>(), 3)
                 .AddTile(TileID.Hellforge)
                 .Register();
         }

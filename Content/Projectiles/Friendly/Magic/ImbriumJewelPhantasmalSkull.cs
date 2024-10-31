@@ -118,7 +118,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 {
                     p.Position = Projectile.Center + Projectile.velocity * 3;
                     p.Velocity = Vector2.Zero;
-                }, 
+                },
                 shouldSync: true
                 );
 

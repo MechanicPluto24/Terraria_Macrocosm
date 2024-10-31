@@ -1,12 +1,12 @@
 ﻿using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
 {
@@ -45,8 +45,8 @@ namespace Macrocosm.Content.Items.Weapons.Summon
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             player.AddBuff(Item.buffType, 2);
-           
-            var projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, Main.myPlayer, ai1:(float)player.ownedProjectileCounts[type]);
+
+            var projectile = Projectile.NewProjectileDirect(source, position, velocity, type, damage, knockback, Main.myPlayer, ai1: (float)player.ownedProjectileCounts[type]);
             projectile.originalDamage = Item.damage;
 
             return false;

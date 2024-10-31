@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -100,7 +99,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                             Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<LuminiteBolt>(), damage, knockback, Projectile.owner, 1f);
 
                             AI_Timer = 0;
-                            SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.4f, Pitch = 0.2f}, Projectile.position);
+                            SoundEngine.PlaySound(SoundID.Item43 with { Volume = 0.4f, Pitch = 0.2f }, Projectile.position);
                         }
                         else if (itemUseTimer <= 0)
                         {

@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
                 Item.channel = false;
             }
             else
-            { 
+            {
                 Item.damage = 550;
                 Item.useTime = 30;
                 Item.useAnimation = 30;

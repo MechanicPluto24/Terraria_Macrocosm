@@ -5,7 +5,6 @@ using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
@@ -106,7 +105,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                                 SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest
                             }, Projectile.position);
                             for (int i = 0; i < 15 * currentChargeStage; i++)
-                                Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<LuminiteBrightDust>(), Utility.PolarVector(Main.rand.Next(3,5), CursorRotation + (MathHelper.Pi / currentChargeStage * Main.rand.Next(0, 2 * currentChargeStage))));
+                                Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<LuminiteBrightDust>(), Utility.PolarVector(Main.rand.Next(3, 5), CursorRotation + (MathHelper.Pi / currentChargeStage * Main.rand.Next(0, 2 * currentChargeStage))));
                         }
                         if (!Main.mouseRight)
                         {
@@ -291,7 +290,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             }
             else
             {
-                if (currentChargeStage > 0) SoundEngine.PlaySound(SoundID.Thunder with { Volume = 0.1f * currentChargeStage}, Projectile.position);
+                if (currentChargeStage > 0) SoundEngine.PlaySound(SoundID.Thunder with { Volume = 0.1f * currentChargeStage }, Projectile.position);
                 chargeState = ProcellarumState.End;
                 npcHitPostition = target.Center;
             }

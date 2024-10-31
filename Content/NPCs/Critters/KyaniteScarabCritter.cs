@@ -1,9 +1,9 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.NPCs.Enemies.Moon;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.NPCs.Enemies.Moon;
 
 namespace Macrocosm.Content.NPCs.Critters
 {
@@ -22,7 +22,8 @@ namespace Macrocosm.Content.NPCs.Critters
             NPCSets.DropsMoonstone[Type] = false;
         }
 
-        public override bool CanBeHitByNPC(NPC 	attacker){
+        public override bool CanBeHitByNPC(NPC attacker)
+        {
             if (attacker.type == ModContent.NPCType<KyaniteScarabSmall>())
                 return false;
             return true;

@@ -412,7 +412,7 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (OverrideBackDraw is null)
                 {
-                    if(ResetSpritebatch) spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, backShader, state.Matrix);
+                    if (ResetSpritebatch) spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, backShader, state.Matrix);
                     spriteBatch.Draw(backTexture.Value, Center, backSourceRect, Color, Rotation, backTexture.Size() / 2, Scale, default, 0f);
                     if (ResetSpritebatch) spriteBatch.End();
                 }

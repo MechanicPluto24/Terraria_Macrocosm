@@ -2,9 +2,11 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Food;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using System;
 using System.IO;
@@ -13,8 +15,6 @@ using Terraria.DataStructures;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Sounds;
-using Macrocosm.Content.Items.Food;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {

@@ -1,12 +1,10 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -274,7 +272,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             else
             {
                 Player.direction = -1;
-                Projectile.spriteDirection = -1* (int)Player.gravDir;
+                Projectile.spriteDirection = -1 * (int)Player.gravDir;
             }
 
             if (Projectile.spriteDirection == 1)

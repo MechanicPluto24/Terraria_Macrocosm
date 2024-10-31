@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Content.Items.Walls;
 using Terraria;
-using Terraria.ModLoader;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Blocks.Terrain
 {
@@ -62,7 +62,7 @@ namespace Macrocosm.Content.Items.Blocks.Terrain
                 .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentStardust, 1)
                 .Register();
-            
+
         }
     }
 }

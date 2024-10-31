@@ -57,9 +57,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 if (nestCoords != default && hasRock)
                 {
                     Utility.AIFighter(NPC, ref NPC.ai, nestPosition);
-                    if (Vector2.Distance(NPC.Center, nestPosition) < 17f){
-                    NPC.active = false;
-                    NPC.life = 0;
+                    if (Vector2.Distance(NPC.Center, nestPosition) < 17f)
+                    {
+                        NPC.active = false;
+                        NPC.life = 0;
                     }
                 }
                 else

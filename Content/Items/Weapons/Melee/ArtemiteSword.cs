@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteSwordSwing>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: player.GetAdjustedItemScale(Item));
 
             if (player.ItemUseCount(Type) % 2 == 0)
-                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity*1.5f, ModContent.ProjectileType<ArtemiteSwordSlash>(), damage, knockback, player.whoAmI, ai1: Item.shootSpeed);
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity * 1.5f, ModContent.ProjectileType<ArtemiteSwordSlash>(), damage, knockback, player.whoAmI, ai1: Item.shootSpeed);
 
             return false;
         }

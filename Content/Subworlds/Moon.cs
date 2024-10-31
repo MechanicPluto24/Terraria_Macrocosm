@@ -2,6 +2,7 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
@@ -9,13 +10,12 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Localization;
 using Terraria.DataStructures;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -48,9 +48,9 @@ namespace Macrocosm.Content.Subworlds
         {
             float temperature;
 
-            if (Main.time < 0.2f * DayLength) 
+            if (Main.time < 0.2f * DayLength)
                 temperature = Utility.ScaleNoonToMidnight(-183f, 106f);
-            else if (Main.time > 0.8f * Main.dayLength) 
+            else if (Main.time > 0.8f * Main.dayLength)
                 temperature = Utility.ScaleNoonToMidnight(106f, -183f);
             else
                 temperature = (Main.time < Main.dayLength / 2) ? -183f : 106f;

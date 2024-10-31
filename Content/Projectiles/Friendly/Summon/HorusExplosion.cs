@@ -2,9 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Drawing;
@@ -48,7 +46,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             target.AddBuff(ModContent.BuffType<HorusBurn>(), 260, false);
         }
 
-        
+
 
         public override void OnKill(int timeLeft)
         {

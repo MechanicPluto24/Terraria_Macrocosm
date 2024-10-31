@@ -10,7 +10,6 @@ using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
@@ -102,10 +101,10 @@ namespace Macrocosm.Common.Subworlds
             {
                 // Return to the main world (Earth)
                 //if (Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel)
-                    return base.ReturnDestination;
+                return base.ReturnDestination;
                 // Go to main menu
                 //else
-                    //return int.MinValue;
+                //return int.MinValue;
             }
         }
 

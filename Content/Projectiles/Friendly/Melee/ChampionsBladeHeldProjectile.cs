@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.CameraModifiers;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -233,7 +232,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             // This draws a large star sparkle at the front of the projectile.
             Vector2 drawPos2 = position + (rotation + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection).ToRotationVector2() * (swing.Width * 0.5f - 4f) * scale;
-            Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f , middleMediumColor * (1f - stacksMultiplier), progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(progress, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
+            Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor * (1f - stacksMultiplier), progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(progress, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
         }
 
         private void DrawSwingEmpowered()
@@ -252,9 +251,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
             Color color = new Color(30, 255, 105);
-            Color backDarkColor = (color * 0.4f).WithOpacity(progressScale) ;
-            Color middleMediumColor = color ;
-            Color frontLightColor = (color * 1.4f).WithAlpha(127) ;
+            Color backDarkColor = (color * 0.4f).WithOpacity(progressScale);
+            Color middleMediumColor = color;
+            Color frontLightColor = (color * 1.4f).WithAlpha(127);
 
             float rotation = Projectile.rotation - ((MathHelper.PiOver4 - MathHelper.Pi / 8) * SwingDirection);
 

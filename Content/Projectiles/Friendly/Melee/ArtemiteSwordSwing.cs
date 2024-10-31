@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             for (int i = 0; i < 2; i++)
             {
                 Vector2 dustVelocity = player.velocity;
-                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(120f * Projectile.scale * Main.rand.NextFloat(0.2f , 0.8f), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1.2f));
+                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(120f * Projectile.scale * Main.rand.NextFloat(0.2f, 0.8f), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1.2f));
                 dust.noGravity = true;
 
                 if (Main.rand.NextBool(8) && i == 0)

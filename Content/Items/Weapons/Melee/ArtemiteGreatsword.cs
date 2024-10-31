@@ -124,9 +124,9 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             {
                 Vector2 starPosition = greatsword.Projectile.Center + ((greatsword.Projectile.rotation - MathHelper.PiOver4) * greatsword.Player.direction + (greatsword.Player.direction == -1 ? MathHelper.Pi : 0f)).ToRotationVector2() * greatsword.SwordLength * 0.9f + new Vector2(greatsword.SwordWidth, 0) * greatsword.Player.direction;
                 Utility.DrawStar(starPosition + Main.rand.NextVector2Circular(1, 1) - Main.screenPosition, 2, new Color(130, 220, 199).WithOpacity(1f - greatsword.Charge), new Vector2(1f, 3.2f) * Utility.QuadraticEaseIn(greatsword.Charge) * 0.4f, 0f, entity: true);
-                
+
                 // TODO: find a better way to do this lol
-                if(greatsword.Charge == 1f && greatsword.Projectile.soundDelay != -1)
+                if (greatsword.Charge == 1f && greatsword.Projectile.soundDelay != -1)
                 {
                     SoundEngine.PlaySound(SoundID.Item29 with { Pitch = 0.2f, Volume = 0.35f }, greatsword.Projectile.position);
                     greatsword.Projectile.soundDelay = -1;
