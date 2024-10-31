@@ -70,7 +70,7 @@ Irradiated: {
 
 Blindness: {
 	DisplayName: Blindness
-	Description: Mods.Macrocosm.Buffs.Blindness.Description
+	Description: You cannot see...
 }
 
 MildNecrosis: {
