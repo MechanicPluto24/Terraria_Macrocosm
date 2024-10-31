@@ -37,12 +37,12 @@ SnowyStarfall - Programmer
 sucss - Programmer
 Yttrium - Tester
 
-[[Contributors]]
+[[ Contributors ]]
 Dandy - Spriter
 Ebon1 - Programmer
 EduaRRdo - Spriter
 Nicola - Artist
 Nurby - Programmer
 
-[[Special thanks]]
+[[ Special thanks ]]
 4mbr0s3, absoluteAquarian, ADVERSE KC, Almarduk, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat, Thanatos
