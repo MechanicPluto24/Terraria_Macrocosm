@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Tools;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void Load()
         {
+            On_Main.DrawWires += On_Main_DrawWires;
             On_WorldGen.PlaceWire += On_WorldGen_PlaceWire;
             On_WorldGen.PlaceWire2 += On_WorldGen_PlaceWire2;
             On_WorldGen.PlaceWire3 += On_WorldGen_PlaceWire3;
@@ -30,6 +32,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void Unload()
         {
+            On_Main.DrawWires -= On_Main_DrawWires;
             On_WorldGen.PlaceWire -= On_WorldGen_PlaceWire;
             On_WorldGen.PlaceWire2 -= On_WorldGen_PlaceWire2;
             On_WorldGen.PlaceWire3 -= On_WorldGen_PlaceWire3;
@@ -108,8 +111,11 @@ namespace Macrocosm.Common.Systems.Power
                 circuit.Solve();
         }
 
-        private static void DebugDrawMachines(SpriteBatch spriteBatch)
+
+        private void On_Main_DrawWires(On_Main.orig_DrawWires orig, Main self)
         {
+            orig(self);
+            MachineTE.DrawMachinePowerInfo(Main.spriteBatch);
         }
 
         private bool On_WorldGen_PlaceWire(On_WorldGen.orig_PlaceWire orig, int i, int j)

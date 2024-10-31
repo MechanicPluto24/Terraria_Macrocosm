@@ -2,6 +2,7 @@
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Tools;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
@@ -234,16 +235,18 @@ namespace Macrocosm.Common.Systems.Power
         public string GetMachineNameAndStatusInfo()
             => $"{Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0))} - {GetFullStatusInfo()}";
 
-        public static void DebugDrawMachines(SpriteBatch spriteBatch)
+        public static void DrawMachinePowerInfo(SpriteBatch spriteBatch)
         {
+            if (Main.LocalPlayer.CurrentItem().type != ModContent.ItemType<WiringKit>())
+                return;
+
             foreach (var kvp in ByID)
             {
                 if (kvp.Value is MachineTE machine)
                 {
-                    string activePower = machine.ActivePower.ToString("F2");
-                    string nominalPower = machine.Power.ToString("F2");
+                    Color color = machine.MachineType is MachineType.Generator or MachineType.Battery ? Color.LimeGreen : Color.Orange;
                     Vector2 position = machine.Position.ToWorldCoordinates() - new Vector2(8, 16 + 8) - Main.screenPosition;
-                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, $"{activePower}/{nominalPower}", position, Color.Wheat, 0f, Vector2.Zero, Vector2.One);
+                    ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, machine.GetStatusInfo(), position, color, 0f, Vector2.Zero, Vector2.One);
                 }
             }
         }

@@ -245,11 +245,6 @@ namespace Macrocosm.Content.Rockets.Customization
                 Macrocosm.Instance.Logger.Error(ex.Message);
             }
 
-            for (int i = 0; i < 60; i++)
-            {
-                AddPattern("EngineModule", $"Test{i}", true);
-            }
-
             string logstring = "Loaded " + patterns.Count.ToString() + " pattern" + (patterns.Count == 1 ? "" : "s") + ":\n";
 
             foreach (string moduleName in Rocket.DefaultModuleNames)
