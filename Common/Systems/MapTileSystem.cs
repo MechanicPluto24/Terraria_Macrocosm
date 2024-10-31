@@ -25,7 +25,14 @@ namespace Macrocosm.Common.Systems
 
         public override void Unload()
         {
+            /*
             MapHelper.Initialize();
+            mapTileColorLookupBySubworld = null;
+            */
+
+            if(defaultColorLookup is not null)
+                typeof(MapHelper).SetFieldValue("colorLookup", defaultColorLookup);
+
             mapTileColorLookupBySubworld = null;
         }
 

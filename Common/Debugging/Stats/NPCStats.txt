@@ -43,7 +43,7 @@ Clavite
 	Damage: 45
 	Drops:
 		Alien Residue, 25%
-		Cheese, (25-65) 6.67%
+		Cheese, (1-20) 2%
 		Moonstone, (1-5) 10%
 
 CraterCrawlerBody
@@ -59,7 +59,7 @@ CraterCrawlerHead
 	Damage: 65
 	Drops:
 		Alien Residue, (1-2) 50%
-		Cheese, (25-65) 6.67%
+		Cheese, (1-20) 2%
 		Moonstone, (1-5) 10%
 
 CraterCrawlerTail
@@ -75,7 +75,7 @@ CrescentGhoul
 	Damage: 55
 	Drops:
 		Alien Residue, 33.33%
-		Cheese, (25-65) 6.67%
+		Cheese, (1-20) 2%
 		Moonstone, (1-5) 10%
 
 KyaniteScarabSmall
