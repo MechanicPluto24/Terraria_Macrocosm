@@ -376,17 +376,6 @@ IrradiatedBrick
 		Irradiated Brick Wall x 4
 
 
-ProtolithBrick
-	Value: No value
-	Research count: 100
-	Recipes:
-		Protolith x 2
-		at
-		Work Bench
-
-		Protolith Brick Wall x 4
-
-
 RegolithBrick
 	Value: No value
 	Research count: 100
@@ -3725,26 +3714,6 @@ LexanGlassWall
 	Research count: 400
 	Recipes:
 		Lexan Glass x 1
-		at
-		Work Bench
-			=> x4
-
-
-ProtolithBrickWall
-	Value: No value
-	Research count: 400
-	Recipes:
-		Protolith Brick x 1
-		at
-		Work Bench
-			=> x4
-
-
-ProtolithBrickWallUnsafe
-	Value: No value
-	Research count: 400
-	Recipes:
-		Protolith Brick x 1
 		at
 		Work Bench
 			=> x4
