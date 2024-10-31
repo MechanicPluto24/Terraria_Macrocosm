@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Crafting
             CreateRecipe()
                 .AddIngredient(ItemID.TitaniumBar, 10)
                 .AddIngredient<SteelBar>(10)
-                .AddTile(TileID.Anvils)
+                .AddTile(TileID.MythrilAnvil)
                 .Register();
         }
     }

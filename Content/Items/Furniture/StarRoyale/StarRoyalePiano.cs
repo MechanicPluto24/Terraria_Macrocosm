@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.StarRoyale
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.StarRoyaleBrick, 15)
+                .AddIngredient(ItemID.StarRoyaleBrick, 15)
                 .AddIngredient(ItemID.Bone, 4)
                 .AddIngredient(ItemID.Book, 1)
                 .AddTile(TileID.MythrilAnvil)

@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.Cryocore
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.CryocoreBrick, 8)
+                .AddIngredient(ItemID.CryocoreBrick, 8)
                 .AddTile(TileID.WorkBenches)
                 .Register();
         }

@@ -1292,7 +1292,7 @@ Cheese: {
 
 CapstoneRush: {
 	DisplayName: Capstone Rush
-	Tooltip: ""
+	Tooltip: "{$CommonItemTooltip.MajorStats}"
 }
 
 CheeseBathtub: {
@@ -2650,5 +2650,15 @@ MercuryPlatform: {
 
 StarRoyalePlatform: {
 	DisplayName: Star Royale Platform
+	Tooltip: ""
+}
+
+CheesePlatform: {
+	DisplayName: Cheese Platform
+	Tooltip: ""
+}
+
+CheeseWall: {
+	DisplayName: Cheese Wall
 	Tooltip: ""
 }

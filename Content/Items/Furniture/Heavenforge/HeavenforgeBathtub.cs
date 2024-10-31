@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.Heavenforge
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.HeavenforgeBrick, 14)
+                .AddIngredient(ItemID.HeavenforgeBrick, 14)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

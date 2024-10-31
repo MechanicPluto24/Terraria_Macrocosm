@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.DarkCelestial
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.DarkCelestialBrick, 8)
+                .AddIngredient(ItemID.DarkCelestialBrick, 8)
                 .AddTile(TileID.WorkBenches)
                 .Register();
         }

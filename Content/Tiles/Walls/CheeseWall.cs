@@ -15,5 +15,4 @@ namespace Macrocosm.Content.Tiles.Walls
             DustType = ModContent.DustType<CheeseDust>();
         }
     }
-
 }
