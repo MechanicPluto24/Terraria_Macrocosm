@@ -32,10 +32,12 @@ namespace Macrocosm.Content.Items.Drops
         {
             Recipe.Create(Type, 5)
                 .AddIngredient(ItemID.FallenStar, 1)
+                .AddTile(TileID.LunarCraftingStation)
                 .Register();
 
             Recipe.Create(ItemID.FallenStar, 1)
                 .AddIngredient(Type, 5)
+                .AddTile(TileID.LunarCraftingStation)
                 .Register();
         }
     }

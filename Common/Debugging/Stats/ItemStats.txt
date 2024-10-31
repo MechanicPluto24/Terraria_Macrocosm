@@ -335,13 +335,13 @@ SteelBar
 	Research count: 25
 	Recipes:
 		Iron Bar x 5
-		Coal x 2
+		Coal x 3
 		at
 		Hellforge
 			=> x5
 
 		Lead Bar x 5
-		Coal x 2
+		Coal x 3
 		at
 		Hellforge
 			=> x5
@@ -522,14 +522,12 @@ Fabricator
 	Recipes:
 		Adamantite Bar x 10
 		Steel Bar x 10
-		Printed Circuit Board x 2
 		Diamond x 1
 		at
 		Mythril Anvil
 
 		Titanium Bar x 10
 		Steel Bar x 10
-		Printed Circuit Board x 2
 		Diamond x 1
 		at
 		Mythril Anvil
@@ -598,6 +596,8 @@ SpaceDust
 	Research count: 25
 	Recipes:
 		Fallen Star x 1
+		at
+		Ancient Manipulator
 			=> x5
 
 
@@ -3210,6 +3210,12 @@ Battery
 		Lithium x 10
 		Coal x 2
 		Tin Bar x 4
+		at
+		Fabricator
+
+		Lithium x 10
+		Coal x 2
+		Copper Bar x 4
 		at
 		Fabricator
 

@@ -28,7 +28,6 @@ namespace Macrocosm.Content.Tiles.Ores
             HitSound = SoundID.Tink;
 
             MinPick = 40;
-            MineResist = 5f;
         }
     }
 }

@@ -30,6 +30,13 @@ namespace Macrocosm.Content.Items.Tech
                 .AddIngredient(ItemID.TinBar, 4)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
+
+            CreateRecipe()
+                .AddIngredient<LithiumOre>(10)
+                .AddIngredient<Coal>(2)
+                .AddIngredient(ItemID.CopperBar, 4)
+                .AddTile<Tiles.Crafting.Fabricator>()
+                .Register();
         }
     }
 }
