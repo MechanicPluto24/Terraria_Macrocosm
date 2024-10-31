@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.LunarBrick, 14)
+                .AddIngredient(ItemID.LunarBrick, 14)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

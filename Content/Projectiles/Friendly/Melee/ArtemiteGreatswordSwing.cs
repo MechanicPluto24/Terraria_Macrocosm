@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) - Projectile.velocity;
             Projectile.scale = scaleAdder + progress * scaleMultiplier;
 
-            for(int i = 0; i < 2; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 2 * Projectile.velocity.Length() * progress), 0).RotatedBy(Projectile.rotation * Projectile.direction) + Main.player[Projectile.owner].velocity;
                 Dust dust = Dust.NewDustDirect(player.Center + new Vector2(102f * Projectile.scale * Main.rand.NextFloat(0.2f, 1f), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1.2f));

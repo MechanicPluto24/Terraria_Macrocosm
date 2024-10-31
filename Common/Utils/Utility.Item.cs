@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
@@ -161,7 +160,7 @@ namespace Macrocosm.Common.Utils
 
         public static int GetItemTypeFromWingID(int wingID)
         {
-            foreach(var kvp in ContentSamples.ItemsByType)
+            foreach (var kvp in ContentSamples.ItemsByType)
             {
                 int type = kvp.Key;
                 Item item = kvp.Value;

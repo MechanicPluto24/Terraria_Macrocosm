@@ -518,19 +518,22 @@ namespace Macrocosm.Common.Sets
         /// Applies a tooltip indicating if the item is stronger or weaker.
         /// </summary>
         public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f,
-            ItemID.Zenith, 0.45f,
-            ItemID.LastPrism, 0.35f,
+            ItemID.Zenith, 0.28f,
+            ItemID.LastPrism, 0.36f,
             ItemID.StarWrath, 0.63f,
             ItemID.StardustDragonStaff, 0.25f,
-            ItemID.Terrarian, 0.55f,
-            ItemID.NebulaBlaze, 0.8f,
-            ItemID.Meowmere, 0.62f,
-            ItemID.Celeb2, 0.45f,
-            ItemID.LunarFlareBook, 1.13f,
-            ItemID.EmpressBlade, 0.65f,
+            ItemID.Terrarian, 0.45f,
+            ItemID.NebulaBlaze, 0.6f,
+            ItemID.Meowmere, 0.5f,
+            ItemID.Celeb2, 0.28f,
+            ItemID.LunarFlareBook, 1.05f,
+            ItemID.EmpressBlade, 0.5f,
             ItemID.MoonlordArrow, 0.88f,
             ItemID.RainbowCrystalStaff, 0.3f,
-            ItemID.MoonlordTurretStaff, 0.2f
+            ItemID.MoonlordTurretStaff, 0.2f,
+            ItemID.SDMG, 0.8f,
+            ItemID.MiniNukeI, 0.4f,
+            ItemID.MiniNukeII, 0.4f
         );
 
         public static bool[] WingTimeDependsOnAtmosphericDensity { get; } = ItemID.Sets.Factory.CreateBoolSet(

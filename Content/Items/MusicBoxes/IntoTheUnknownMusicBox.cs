@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.MusicBoxes
                 .AddIngredient<StygiaMusicBox>()
                 .AddIngredient<SpaceInvaderMusicBox>()
                 .AddTile(TileID.TinkerersWorkbench)
-                .Register();    
+                .Register();
         }
     }
 }

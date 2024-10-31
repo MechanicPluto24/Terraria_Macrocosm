@@ -453,7 +453,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
             {
                 if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() <= 0.1f || Vector2.Distance(NPC.Center, target.Center) > 350f)
                     AI_State = ActionState.Stalk;
-                else if(Vector2.Distance(NPC.Center, target.Center) < 250f&&Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() > 0.1f)
+                else if (Vector2.Distance(NPC.Center, target.Center) < 250f && Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() > 0.1f)
                     AI_State = ActionState.Flee;
             }
             else
@@ -483,8 +483,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 
                 if (AI_State == ActionState.Stalk)
                 {
-                    speed +=0.1f;
-                    speed = Math.Clamp(speed,-4f,2f);
+                    speed += 0.1f;
+                    speed = Math.Clamp(speed, -4f, 2f);
                     if (anyLegTouchingGround)
                     {
                         NPC.velocity = direction * speed;
@@ -498,8 +498,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
                 }
                 if (AI_State == ActionState.Flee)
                 {
-                    speed -=0.1f;
-                    speed = Math.Clamp(speed,-4f,2f);
+                    speed -= 0.1f;
+                    speed = Math.Clamp(speed, -4f, 2f);
                     if (anyLegTouchingGround)
                     {
                         NPC.velocity = direction * speed;
@@ -513,8 +513,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
                 }
                 if (AI_State == ActionState.Enrage)
                 {
-                    speed +=0.1f;
-                    speed = Math.Clamp(speed,-4f,8f);
+                    speed += 0.1f;
+                    speed = Math.Clamp(speed, -4f, 8f);
                     if (anyLegTouchingGround)
                     {
                         NPC.velocity = direction * speed;

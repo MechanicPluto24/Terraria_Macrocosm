@@ -2,8 +2,6 @@ using Macrocosm.Content.Items.Ores;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Refined;
 
 namespace Macrocosm.Content.Items.Refined
 {

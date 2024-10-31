@@ -3,7 +3,6 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Threading;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -71,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Projectile.Kill();
             }
 
-            if(AI_Timer > 40)
+            if (AI_Timer > 40)
             {
                 float closestDistance = 3000f;
                 for (int i = 0; i < Main.maxNPCs; i++)

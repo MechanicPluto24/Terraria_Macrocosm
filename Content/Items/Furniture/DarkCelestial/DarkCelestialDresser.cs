@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.DarkCelestial
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.DarkCelestialBrick, 16)
+                .AddIngredient(ItemID.DarkCelestialBrick, 16)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
@@ -8,7 +9,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Consumables.BossSummons
@@ -54,7 +54,8 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<AlienResidue>(7)
+                .AddIngredient<Protolith>(20)
+                .AddIngredient<AlienResidue>(5)
                 .AddIngredient<SpaceDust>(5)
                 .AddIngredient(ItemID.LunarBar, 10)
                 .AddTile(ModContent.TileType<IrradiatedAltar>())

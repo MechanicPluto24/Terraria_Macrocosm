@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

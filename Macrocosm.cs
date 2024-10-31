@@ -1,4 +1,3 @@
-using Macrocosm.Common.Config;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Microsoft.Xna.Framework.Graphics;

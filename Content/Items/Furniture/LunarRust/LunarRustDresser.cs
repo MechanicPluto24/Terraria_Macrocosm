@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.LunarRust
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.LunarRustBrick, 16)
+                .AddIngredient(ItemID.LunarRustBrick, 16)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

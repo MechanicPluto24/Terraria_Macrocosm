@@ -1,8 +1,4 @@
 ﻿using Macrocosm.Content.Liquids;
-using System;
-using System.ComponentModel.DataAnnotations;
-using Terraria.GameContent;
-using Terraria.ID;
 
 namespace Macrocosm.Common.DataStructures
 {
@@ -13,7 +9,7 @@ namespace Macrocosm.Common.DataStructures
         public int EmptyContainerType { get; init; }
         public bool Empty { get; init; }
 
-        public LiquidContainerData() 
+        public LiquidContainerData()
         {
             LiquidType = LiquidType.None;
             Capacity = 0;
@@ -30,8 +26,8 @@ namespace Macrocosm.Common.DataStructures
         }
 
         public static LiquidContainerData CreateEmpty(float capacity)
-        { 
-            return new() 
+        {
+            return new()
             {
                 Empty = true,
                 Capacity = capacity
@@ -47,7 +43,7 @@ namespace Macrocosm.Common.DataStructures
             };
         }
 
-        public bool Infinite => Capacity == int.MaxValue;    
+        public bool Infinite => Capacity == int.MaxValue;
         public bool Valid => Capacity > 0;
 
         public static int GetEmptyType(LiquidContainerData[] data, int filledType)
@@ -56,7 +52,7 @@ namespace Macrocosm.Common.DataStructures
             if (!filledTypeData.Valid || filledTypeData.Empty)
                 return 0;
 
-            return filledTypeData.EmptyContainerType; 
+            return filledTypeData.EmptyContainerType;
         }
 
         public static int GetFillType(LiquidContainerData[] data, LiquidType liquidType, int emptyType)
@@ -73,7 +69,7 @@ namespace Macrocosm.Common.DataStructures
                     return type;
                 }
             }
-            
+
             return 0;
         }
 

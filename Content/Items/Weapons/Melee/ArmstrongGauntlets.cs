@@ -1,11 +1,9 @@
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
 using Terraria;
-using System;
-using Terraria.ID;
 using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
@@ -18,7 +16,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetDefaults()
         {
-            Item.damage = 440;
+            Item.damage = 350;
             Item.DamageType = DamageClass.Melee;
             Item.width = 36;
             Item.height = 36;

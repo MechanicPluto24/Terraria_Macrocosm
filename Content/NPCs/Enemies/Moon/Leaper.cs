@@ -4,7 +4,6 @@ using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
@@ -43,7 +42,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
 
-        
+
 
         private float lightValueFlee = 0.1f; // This light value causes the leaper to flee.
         private float lightValueRage = 0.5f; // This light value causes the leaper to enrage faster.
@@ -181,9 +180,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         // Manages the leaper's rage
-        private float GetRage(float lightlevel) 
+        private float GetRage(float lightlevel)
         {
-            if (Vector2.Distance(Main.player[NPC.target].Center,NPC.Center)<700f)
+            if (Vector2.Distance(Main.player[NPC.target].Center, NPC.Center) < 700f)
                 return -0.01f; // Calms down when in darkness
             if (lightlevel < lightValueFlee)
                 return -0.03f; // Calms down when in darkness
@@ -193,7 +192,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (lightlevel >= lightValueRage)
                 return 0.09f; // Becomes enrages quickly while in bright light
-                
+
             return 0f; // Fallback
         }
 

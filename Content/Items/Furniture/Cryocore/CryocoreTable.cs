@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Items.Furniture.Cryocore
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.CryocoreBrick, 8)
+                .AddIngredient(ItemID.CryocoreBrick, 8)
                 .AddTile(TileID.WorkBenches)
                 .Register();
         }

@@ -176,14 +176,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 {
                     SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
 
-                    if(Main.netMode != NetmodeID.MultiplayerClient)
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         for (int i = 0; i < Main.rand.Next(3, 6); i++)
                         {
                             Vector2 projVelocity = Utility.PolarVector(8f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
                             Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
                         }
-                    }               
+                    }
                 }
 
                 AI_Timer = 0;
@@ -239,7 +239,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
                     if (HealTimer++ % 10 == 0)
                     {
-                        SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.2f, PitchRange = (0f, 0.2f)}, NPC.Center);
+                        SoundEngine.PlaySound(SoundID.Item4 with { Volume = 0.2f, PitchRange = (0f, 0.2f) }, NPC.Center);
 
                         if (Main.netMode != NetmodeID.MultiplayerClient)
                         {

@@ -24,8 +24,8 @@ namespace Macrocosm.Content.Items.Furniture.CosmicEmber
         {
             CreateRecipe()
                 .AddIngredient(ItemID.CosmicEmberBrick, 5)
-                .AddIngredient<LunarCrystal>(3) 
-                .AddTile(TileID.MythrilAnvil)   
+                .AddIngredient<LunarCrystal>(3)
+                .AddTile(TileID.MythrilAnvil)
                 .Register();
         }
     }

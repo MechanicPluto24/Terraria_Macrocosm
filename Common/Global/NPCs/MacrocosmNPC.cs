@@ -3,7 +3,6 @@ using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Items.Food;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

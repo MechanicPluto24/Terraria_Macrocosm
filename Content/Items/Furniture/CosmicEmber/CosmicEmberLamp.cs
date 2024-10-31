@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Blocks;
 using Macrocosm.Content.Items.Consumables.Throwable;
 using Terraria;
 using Terraria.ID;

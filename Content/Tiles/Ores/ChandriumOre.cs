@@ -1,4 +1,3 @@
-using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;

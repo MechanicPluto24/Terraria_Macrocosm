@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Tech
             CreateRecipe()
                 .AddIngredient<SteelBar>(20)
                 .AddIngredient(ItemID.PalladiumBar, 20)
-                .AddIngredient(ItemID.TungstenBar, 10)
+                .AddIngredient(ItemID.SilverBar, 10)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }

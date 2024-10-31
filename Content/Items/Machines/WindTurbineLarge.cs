@@ -1,8 +1,8 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Macrocosm.Content.Items.Bars;
+﻿using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.Refined;
+using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Machines
 {
@@ -17,17 +17,17 @@ namespace Macrocosm.Content.Items.Machines
             Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.WindTurbineLarge>());
             Item.width = 28;
             Item.height = 56;
-            Item.value =  Item.sellPrice(silver:25);
+            Item.value = Item.sellPrice(silver: 25);
             Item.mech = true;
         }
         public override void AddRecipes()
         {
-             CreateRecipe()
-                .AddIngredient<SteelBar>(40)
-                .AddIngredient(ItemID.Wire, 32)
-                .AddIngredient<Plastic>(8)
-                .AddTile<Tiles.Crafting.Fabricator>()
-                .Register();
+            CreateRecipe()
+               .AddIngredient<SteelBar>(40)
+               .AddIngredient(ItemID.Wire, 32)
+               .AddIngredient<Plastic>(8)
+               .AddTile<Tiles.Crafting.Fabricator>()
+               .Register();
         }
     }
 }

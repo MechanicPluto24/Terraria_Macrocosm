@@ -147,7 +147,7 @@ namespace Macrocosm.Content.Machines
                 HAlign = 0.5f,
                 VAlign = 0.5f
             };
-            burnItemIconProgressBar.Append(itemIcon);          
+            burnItemIconProgressBar.Append(itemIcon);
         }
 
         public override void Update(GameTime gameTime)
@@ -162,7 +162,7 @@ namespace Macrocosm.Content.Machines
             hullHeatProgressBar.Progress = BurnerGenerator.HullHeatProgress;
 
             float temperature = MacrocosmSubworld.GetCurrentAmbientTemperature() + BurnerGenerator.HullHeat;
-            if(MacrocosmConfig.Instance.UnitSystem is MacrocosmConfig.UnitSystemType.Metric)
+            if (MacrocosmConfig.Instance.UnitSystem is MacrocosmConfig.UnitSystemType.Metric)
                 hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatMetric").Format((int)temperature));
             else if (MacrocosmConfig.Instance.UnitSystem is MacrocosmConfig.UnitSystemType.Imperial)
                 hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)));

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Items.Furniture.Heavenforge
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.HeavenforgeBrick, 8)
+                .AddIngredient(ItemID.HeavenforgeBrick, 8)
                 .AddTile(TileID.WorkBenches)
                 .Register();
         }

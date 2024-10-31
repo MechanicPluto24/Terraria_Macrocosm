@@ -1,9 +1,7 @@
-using Macrocosm.Content.Dusts;
-using Microsoft.Xna.Framework;
-using Terraria;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using System;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent.ObjectInteractions;

@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Projectile.scale = 1f + (float)Main.rand.Next(30) * 0.01f;
             Projectile.extraUpdates = 2;
             Projectile.timeLeft = 480;
-         
+
 
             oldPosLerped = new Vector2[ProjectileID.Sets.TrailCacheLength[Type]];
             oldRotLerped = new float[ProjectileID.Sets.TrailCacheLength[Type]];
@@ -108,15 +108,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 if (oldPosLerped[i] == default)
                     continue;
 
-                if(Main.rand.NextBool(100))
-                Particle.Create<DarkCelestialStar>((p) =>
-                {
-                    p.Position = oldPosLerped[i] + Projectile.Size / 2f;
-                    p.Velocity = Vector2.Zero;
-                    p.Scale = new Vector2(1f, 1f) * Main.rand.NextFloat(0.7f) * Projectile.Opacity;
-                    p.TimeToLive = 15;
-                    p.Color = color;
-                });
+                if (Main.rand.NextBool(100))
+                    Particle.Create<DarkCelestialStar>((p) =>
+                    {
+                        p.Position = oldPosLerped[i] + Projectile.Size / 2f;
+                        p.Velocity = Vector2.Zero;
+                        p.Scale = new Vector2(1f, 1f) * Main.rand.NextFloat(0.7f) * Projectile.Opacity;
+                        p.TimeToLive = 15;
+                        p.Color = color;
+                    });
 
                 Lighting.AddLight(oldPosLerped[i] + Projectile.Size / 2f, color.ToVector3() * 0.5f * Projectile.Opacity);
             }
@@ -131,7 +131,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
             int length = ProjectileID.Sets.TrailCacheLength[Type];
-            
+
             for (int i = 0; i < oldPosLerped.Length; i++)
             {
                 if (i == length)
@@ -140,9 +140,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 if (i % 12 == 0)
                 {
                     Vector2 position = oldPosLerped[i]; //+ Projectile.Size / 2f - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY);
-                    Vector2 position2 = oldPosLerped[i+1]; //+ Projectile.Size / 2f - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY);
+                    Vector2 position2 = oldPosLerped[i + 1]; //+ Projectile.Size / 2f - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY);
                     float nul = 0f;
-                    if (position != Vector2.Zero && Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(),position,position2, 10,ref nul))
+                    if (position != Vector2.Zero && Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), position, position2, 10, ref nul))
                         return true;
                 }
             }

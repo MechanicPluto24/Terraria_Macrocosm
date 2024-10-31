@@ -191,8 +191,9 @@ ZombieSecurity
 	KB resist: 0.5
 	Damage: 65
 	Drops:
-		Tycho .50, 15.97%, This is an Expert Mode drop rate
-		Tycho .50, 8.33%
+		Tycho .50, 8.16%, This is an Expert Mode drop rate
+		Tycho .50, 4.17%
+		Capstone Rush, 1.43%
 		Moonstone, (1-5) 10%
 
 MoonChampion

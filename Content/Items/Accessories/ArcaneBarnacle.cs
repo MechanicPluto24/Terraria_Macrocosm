@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Players;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Accessories

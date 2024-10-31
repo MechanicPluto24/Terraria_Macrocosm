@@ -4,12 +4,10 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
-using System.ComponentModel;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Macrocosm.Content.Machines
 {
@@ -80,7 +78,7 @@ namespace Macrocosm.Content.Machines
 
         private void Extract()
         {
-            for(int i = 2; i < Inventory.Size; i++)
+            for (int i = 2; i < Inventory.Size; i++)
             {
                 Item inputItem = Inventory[i];
                 LiquidExtractData data = ItemSets.LiquidExtractData[inputItem.type];
@@ -105,7 +103,7 @@ namespace Macrocosm.Content.Machines
                 {
                     inputExtractTimer = 0;
                 }
-            }  
+            }
         }
 
         private void Refine()
@@ -145,10 +143,12 @@ namespace Macrocosm.Content.Machines
                         fillTimer = 0;
 
                         int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.RocketFuel, ContainerSlot.type);
-                        if(fillType > 0)
+                        if (fillType > 0 && (OutputSlot.type == fillType || OutputSlot.IsAir))
                         {
-                            OutputSlot.type = fillType;
-                            OutputSlot.stack++;
+                            if (OutputSlot.IsAir)
+                                OutputSlot.SetDefaults(fillType);
+                            else
+                                OutputSlot.stack++;
 
                             if (ContainerSlot.stack <= 1)
                                 ContainerSlot.TurnToAir();
@@ -156,7 +156,7 @@ namespace Macrocosm.Content.Machines
                                 ContainerSlot.stack--;
 
                             OutputTankAmount -= ItemSets.LiquidContainerData[fillType].Capacity;
-                        }                       
+                        }
                     }
                 }
             }

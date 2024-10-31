@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Macrocosm.Content.Items.Bars;
 using Terraria.ID;
 using Terraria.ModLoader;
 

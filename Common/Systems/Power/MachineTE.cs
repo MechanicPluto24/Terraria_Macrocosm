@@ -17,7 +17,7 @@ using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Systems.Power
 {
-    public enum MachineType 
+    public enum MachineType
     {
         Consumer,
         Generator,
@@ -98,7 +98,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void OnKill()
         {
-            if(this is IInventoryOwner inventoryOwner)
+            if (this is IInventoryOwner inventoryOwner)
             {
                 inventoryOwner.Inventory.DropAllItems(inventoryOwner.InventoryItemDropLocation);
             }

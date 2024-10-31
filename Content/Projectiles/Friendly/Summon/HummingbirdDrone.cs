@@ -1,17 +1,14 @@
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Minions;
-using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Audio;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
@@ -259,7 +256,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
             if (shootTimer > 100 && shootTimer % 4 == 0 && Projectile.owner == Main.myPlayer)
             {
-                SoundEngine.PlaySound(SoundID.Item11,Projectile.Center);
+                SoundEngine.PlaySound(SoundID.Item11, Projectile.Center);
                 Vector2 position = Projectile.Center + (Projectile.spriteDirection == 1 ? new Vector2(30, 6) : new Vector2(-30, 6));
                 Vector2 velocity = (target - position).RotatedByRandom(MathHelper.Pi / 10).SafeNormalize(Vector2.UnitX) * 28f;
                 Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<HummingbirdBullet>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
@@ -484,7 +481,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             if (Projectile.alpha > 0)
                 Main.EntitySpriteDraw(glowmask.Value, pos, glowmask.Frame(1, Main.projFrames[Type], frameY: Projectile.frame), (Color.White * (Projectile.alpha / 255f)), Projectile.rotation, Projectile.Size / 2, Projectile.scale, effects, 0f);
 
-            if(flashFrame >= 0)
+            if (flashFrame >= 0)
             {
                 flash ??= ModContent.Request<Texture2D>(Texture + "_Flash");
                 Vector2 flashPos = Projectile.Center + (Projectile.spriteDirection == 1 ? new Vector2(24, 3) : new Vector2(-24, 3)).RotatedBy(Projectile.rotation) - Main.screenPosition;

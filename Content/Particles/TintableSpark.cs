@@ -3,11 +3,9 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
@@ -47,7 +45,7 @@ namespace Macrocosm.Content.Particles
             Lighting.AddLight(Center, new Vector3(1f, 1f, 1f) * Scale.X * 0.02f);
 
             if (Scale.Y < 0.1f)
-            	Kill();
+                Kill();
         }
     }
 }

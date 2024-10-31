@@ -55,7 +55,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void ModifyNPCLoot(NPCLoot loot)
         {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 2, 1, 2));
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 15, 25, 65));
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 50, 1, 20));
         }
 
         public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

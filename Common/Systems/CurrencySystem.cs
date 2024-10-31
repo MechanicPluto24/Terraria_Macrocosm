@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
 {
-    public class CurrencySystem 
+    public class CurrencySystem
     {
         public static int MoonStone { get; set; }
 

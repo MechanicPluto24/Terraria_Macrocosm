@@ -1,8 +1,6 @@
-﻿using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Projectiles.Friendly.Summon;
+﻿using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Summon
@@ -24,6 +22,6 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             Item.channel = true;
         }
 
-        
+
     }
 }

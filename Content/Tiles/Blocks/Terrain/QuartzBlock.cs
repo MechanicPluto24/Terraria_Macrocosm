@@ -1,7 +1,5 @@
-using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

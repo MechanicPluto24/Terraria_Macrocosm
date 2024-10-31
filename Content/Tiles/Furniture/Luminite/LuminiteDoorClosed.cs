@@ -1,14 +1,11 @@
-using Macrocosm.Content.Dusts;
-using Microsoft.Xna.Framework;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
+using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
-using Macrocosm.Common.Enums;
-using Macrocosm.Common.Utils;
-using System;
-
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;

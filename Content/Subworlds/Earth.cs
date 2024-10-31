@@ -33,9 +33,9 @@ namespace Macrocosm.Content.Subworlds
             else if (player.ZoneSnow)
             {
                 if (player.ZoneRockLayerHeight || player.ZoneDirtLayerHeight)
-                    temperature = -10f;  
+                    temperature = -10f;
                 else
-                    temperature = Utility.ScaleNoonToMidnight(-10, -2); 
+                    temperature = Utility.ScaleNoonToMidnight(-10, -2);
             }
             else if (player.ZoneRockLayerHeight || player.ZoneDirtLayerHeight)
             {

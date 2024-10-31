@@ -1,15 +1,8 @@
 ﻿using Macrocosm.Common.Players;
-using Macrocosm.Common.Sets;
-using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Items.Accessories;
-using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework;
-using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Global.Items
