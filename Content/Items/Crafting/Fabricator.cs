@@ -25,7 +25,6 @@ namespace Macrocosm.Content.Items.Crafting
             CreateRecipe()
                 .AddIngredient(ItemID.AdamantiteBar, 10)
                 .AddIngredient<SteelBar>(10)
-                .AddIngredient<PrintedCircuitBoard>(2)
                 .AddIngredient(ItemID.Diamond, 1)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
@@ -33,7 +32,6 @@ namespace Macrocosm.Content.Items.Crafting
             CreateRecipe()
                 .AddIngredient(ItemID.TitaniumBar, 10)
                 .AddIngredient<SteelBar>(10)
-                .AddIngredient<PrintedCircuitBoard>(2)
                 .AddIngredient(ItemID.Diamond, 1)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
