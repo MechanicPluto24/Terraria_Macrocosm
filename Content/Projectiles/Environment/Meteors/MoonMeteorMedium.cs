@@ -97,7 +97,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             if (Main.rand.NextBool(3))
             {
                 int type = ModContent.ItemType<MeteoricChunk>();
-                int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center,  type);
+                int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center, type);
                 NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
             }
 

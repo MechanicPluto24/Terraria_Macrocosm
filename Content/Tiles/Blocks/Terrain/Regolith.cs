@@ -1,4 +1,3 @@
-using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;

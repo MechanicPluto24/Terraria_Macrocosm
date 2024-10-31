@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Global.Items
 
         public override void SetDefaults(Item item)
         {
-            if(ItemSets.DeveloperItem[item.type])
+            if (ItemSets.DeveloperItem[item.type])
                 item.rare = ModContent.RarityType<DevRarity>();
         }
 

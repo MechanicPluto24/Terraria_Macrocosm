@@ -10,7 +10,6 @@ using System.Linq;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using static Macrocosm.Content.Tiles.Furniture.Industrial.IndustrialChest;
 
 namespace Macrocosm.Content.Menus
 {

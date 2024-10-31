@@ -1,16 +1,11 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.DataStructures;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
-using Macrocosm.Common.Sets;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Players
 {

@@ -4,7 +4,6 @@ using Macrocosm.Content.Items.Refined;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools

@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Items.Accessories
 
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
-            player.GetModPlayer<MacrocosmPlayer>().ShootSpreadReduction += 0.5f;
+            player.GetModPlayer<MacrocosmPlayer>().ShootSpreadReduction += 0.30f;
         }
     }
 }

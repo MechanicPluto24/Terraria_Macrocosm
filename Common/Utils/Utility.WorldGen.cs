@@ -1,14 +1,14 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Microsoft.Xna.Framework;
+using ReLogic.Utilities;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ObjectData;
-using ReLogic.Utilities;
-using static Terraria.WorldGen;
 using Terraria.WorldBuilding;
+using static Terraria.WorldGen;
 
 namespace Macrocosm.Common.Utils
 {
@@ -1202,196 +1202,221 @@ namespace Macrocosm.Common.Utils
 
         #region Custom TileRunners
 
-    public static void TileRunnerButItDoesntIgnoreAir(int i, int j, double strength, int steps, int type, bool addTile = false, double speedX = 0.0, double speedY = 0.0, bool noYChange = false, bool overRide = true)//Get a better name for this lol
-	{
-		if (!GenVars.mudWall) {
-			if (drunkWorldGen) {
-				strength *= 1.0 + (double)genRand.Next(-80, 81) * 0.01;
-				steps = (int)((double)steps * (1.0 + (double)genRand.Next(-80, 81) * 0.01));
-			}
-			else if (remixWorldGen) {
-				strength *= 1.0 + (double)genRand.Next(-50, 51) * 0.01;
-			}
-			else if (getGoodWorldGen && type != 57) {
-				strength *= 1.0 + (double)genRand.Next(-80, 81) * 0.015;
-				steps += genRand.Next(3);
-			}
-		}
+        public static void TileRunnerButItDoesntIgnoreAir(int i, int j, double strength, int steps, int type, bool addTile = false, double speedX = 0.0, double speedY = 0.0, bool noYChange = false, bool overRide = true)//Get a better name for this lol
+        {
+            if (!GenVars.mudWall)
+            {
+                if (drunkWorldGen)
+                {
+                    strength *= 1.0 + (double)genRand.Next(-80, 81) * 0.01;
+                    steps = (int)((double)steps * (1.0 + (double)genRand.Next(-80, 81) * 0.01));
+                }
+                else if (remixWorldGen)
+                {
+                    strength *= 1.0 + (double)genRand.Next(-50, 51) * 0.01;
+                }
+                else if (getGoodWorldGen && type != 57)
+                {
+                    strength *= 1.0 + (double)genRand.Next(-80, 81) * 0.015;
+                    steps += genRand.Next(3);
+                }
+            }
 
-		double num = strength;
-		double num2 = steps;
-		Vector2D vector2D = default(Vector2D);
-		vector2D.X = i;
-		vector2D.Y = j;
-		Vector2D vector2D2 = default(Vector2D);
-		vector2D2.X = (double)genRand.Next(-10, 11) * 0.1;
-		vector2D2.Y = (double)genRand.Next(-10, 11) * 0.1;
-		if (speedX != 0.0 || speedY != 0.0) {
-			vector2D2.X = speedX;
-			vector2D2.Y = speedY;
-		}
+            double num = strength;
+            double num2 = steps;
+            Vector2D vector2D = default(Vector2D);
+            vector2D.X = i;
+            vector2D.Y = j;
+            Vector2D vector2D2 = default(Vector2D);
+            vector2D2.X = (double)genRand.Next(-10, 11) * 0.1;
+            vector2D2.Y = (double)genRand.Next(-10, 11) * 0.1;
+            if (speedX != 0.0 || speedY != 0.0)
+            {
+                vector2D2.X = speedX;
+                vector2D2.Y = speedY;
+            }
 
-		bool flag = type == 368;
-		bool flag2 = type == 367;
-		bool lava = false;
-		
-		while (num > 0.0 && num2 > 0.0) {
-			if (drunkWorldGen && genRand.Next(30) == 0) {
-				vector2D.X += (double)genRand.Next(-100, 101) * 0.05;
-				vector2D.Y += (double)genRand.Next(-100, 101) * 0.05;
-			}
+            bool flag = type == 368;
+            bool flag2 = type == 367;
+            bool lava = false;
 
-			if (vector2D.Y < 0.0 && num2 > 0.0 && type == 59)
-				num2 = 0.0;
+            while (num > 0.0 && num2 > 0.0)
+            {
+                if (drunkWorldGen && genRand.Next(30) == 0)
+                {
+                    vector2D.X += (double)genRand.Next(-100, 101) * 0.05;
+                    vector2D.Y += (double)genRand.Next(-100, 101) * 0.05;
+                }
 
-			num = strength * (num2 / (double)steps);
-			num2 -= 1.0;
-			int num3 = (int)(vector2D.X - num * 0.5);
-			int num4 = (int)(vector2D.X + num * 0.5);
-			int num5 = (int)(vector2D.Y - num * 0.5);
-			int num6 = (int)(vector2D.Y + num * 0.5);
-			if (num3 < 1)
-				num3 = 1;
+                if (vector2D.Y < 0.0 && num2 > 0.0 && type == 59)
+                    num2 = 0.0;
 
-			if (num4 > Main.maxTilesX - 1)
-				num4 = Main.maxTilesX - 1;
+                num = strength * (num2 / (double)steps);
+                num2 -= 1.0;
+                int num3 = (int)(vector2D.X - num * 0.5);
+                int num4 = (int)(vector2D.X + num * 0.5);
+                int num5 = (int)(vector2D.Y - num * 0.5);
+                int num6 = (int)(vector2D.Y + num * 0.5);
+                if (num3 < 1)
+                    num3 = 1;
 
-			if (num5 < 1)
-				num5 = 1;
+                if (num4 > Main.maxTilesX - 1)
+                    num4 = Main.maxTilesX - 1;
 
-			if (num6 > Main.maxTilesY - 1)
-				num6 = Main.maxTilesY - 1;
+                if (num5 < 1)
+                    num5 = 1;
 
-			for (int k = num3; k < num4; k++) {
-				if (k < beachDistance + 50 || k >= Main.maxTilesX - beachDistance - 50)
-					lava = false;
+                if (num6 > Main.maxTilesY - 1)
+                    num6 = Main.maxTilesY - 1;
 
-				for (int l = num5; l < num6; l++) {
-					
+                for (int k = num3; k < num4; k++)
+                {
+                    if (k < beachDistance + 50 || k >= Main.maxTilesX - beachDistance - 50)
+                        lava = false;
 
-					if (addTile) {
-						Main.tile[k, l].LiquidAmount = 0;
-					}
+                    for (int l = num5; l < num6; l++)
+                    {
 
-                    FastPlaceTile(k, l, (ushort)type);
-				}
-			}
 
-			vector2D += vector2D2;
-			if ((!drunkWorldGen || genRand.Next(3) != 0) && num > 50.0) {
-				vector2D += vector2D2;
-				num2 -= 1.0;
-				vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-				vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-				if (num > 100.0) {
-					vector2D += vector2D2;
-					num2 -= 1.0;
-					vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-					vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-					if (num > 150.0) {
-						vector2D += vector2D2;
-						num2 -= 1.0;
-						vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-						vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-						if (num > 200.0) {
-							vector2D += vector2D2;
-							num2 -= 1.0;
-							vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-							vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-							if (num > 250.0) {
-								vector2D += vector2D2;
-								num2 -= 1.0;
-								vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-								vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-								if (num > 300.0) {
-									vector2D += vector2D2;
-									num2 -= 1.0;
-									vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-									vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-									if (num > 400.0) {
-										vector2D += vector2D2;
-										num2 -= 1.0;
-										vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-										vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-										if (num > 500.0) {
-											vector2D += vector2D2;
-											num2 -= 1.0;
-											vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-											vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-											if (num > 600.0) {
-												vector2D += vector2D2;
-												num2 -= 1.0;
-												vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-												vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-												if (num > 700.0) {
-													vector2D += vector2D2;
-													num2 -= 1.0;
-													vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-													vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-													if (num > 800.0) {
-														vector2D += vector2D2;
-														num2 -= 1.0;
-														vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-														vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-														if (num > 900.0) {
-															vector2D += vector2D2;
-															num2 -= 1.0;
-															vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-															vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
+                        if (addTile)
+                        {
+                            Main.tile[k, l].LiquidAmount = 0;
+                        }
 
-			vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
-			if (drunkWorldGen)
-				vector2D2.X += (double)genRand.Next(-10, 11) * 0.25;
+                        FastPlaceTile(k, l, (ushort)type);
+                    }
+                }
 
-			if (vector2D2.X > 1.0)
-				vector2D2.X = 1.0;
+                vector2D += vector2D2;
+                if ((!drunkWorldGen || genRand.Next(3) != 0) && num > 50.0)
+                {
+                    vector2D += vector2D2;
+                    num2 -= 1.0;
+                    vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                    vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                    if (num > 100.0)
+                    {
+                        vector2D += vector2D2;
+                        num2 -= 1.0;
+                        vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                        vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                        if (num > 150.0)
+                        {
+                            vector2D += vector2D2;
+                            num2 -= 1.0;
+                            vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                            vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                            if (num > 200.0)
+                            {
+                                vector2D += vector2D2;
+                                num2 -= 1.0;
+                                vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                if (num > 250.0)
+                                {
+                                    vector2D += vector2D2;
+                                    num2 -= 1.0;
+                                    vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                    vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                    if (num > 300.0)
+                                    {
+                                        vector2D += vector2D2;
+                                        num2 -= 1.0;
+                                        vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                        vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                        if (num > 400.0)
+                                        {
+                                            vector2D += vector2D2;
+                                            num2 -= 1.0;
+                                            vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                            vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                            if (num > 500.0)
+                                            {
+                                                vector2D += vector2D2;
+                                                num2 -= 1.0;
+                                                vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                                vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                                if (num > 600.0)
+                                                {
+                                                    vector2D += vector2D2;
+                                                    num2 -= 1.0;
+                                                    vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                                    vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                                    if (num > 700.0)
+                                                    {
+                                                        vector2D += vector2D2;
+                                                        num2 -= 1.0;
+                                                        vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                                        vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                                        if (num > 800.0)
+                                                        {
+                                                            vector2D += vector2D2;
+                                                            num2 -= 1.0;
+                                                            vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                                            vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                                            if (num > 900.0)
+                                                            {
+                                                                vector2D += vector2D2;
+                                                                num2 -= 1.0;
+                                                                vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                                                                vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
-			if (vector2D2.X < -1.0)
-				vector2D2.X = -1.0;
+                vector2D2.X += (double)genRand.Next(-10, 11) * 0.05;
+                if (drunkWorldGen)
+                    vector2D2.X += (double)genRand.Next(-10, 11) * 0.25;
 
-			if (!noYChange) {
-				vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
-				if (vector2D2.Y > 1.0)
-					vector2D2.Y = 1.0;
+                if (vector2D2.X > 1.0)
+                    vector2D2.X = 1.0;
 
-				if (vector2D2.Y < -1.0)
-					vector2D2.Y = -1.0;
-			}
-			else if (type != 59 && num < 3.0) {
-				if (vector2D2.Y > 1.0)
-					vector2D2.Y = 1.0;
+                if (vector2D2.X < -1.0)
+                    vector2D2.X = -1.0;
 
-				if (vector2D2.Y < -1.0)
-					vector2D2.Y = -1.0;
-			}
+                if (!noYChange)
+                {
+                    vector2D2.Y += (double)genRand.Next(-10, 11) * 0.05;
+                    if (vector2D2.Y > 1.0)
+                        vector2D2.Y = 1.0;
 
-			if (type == 59 && !noYChange) {
-				if (vector2D2.Y > 0.5)
-					vector2D2.Y = 0.5;
+                    if (vector2D2.Y < -1.0)
+                        vector2D2.Y = -1.0;
+                }
+                else if (type != 59 && num < 3.0)
+                {
+                    if (vector2D2.Y > 1.0)
+                        vector2D2.Y = 1.0;
 
-				if (vector2D2.Y < -0.5)
-					vector2D2.Y = -0.5;
+                    if (vector2D2.Y < -1.0)
+                        vector2D2.Y = -1.0;
+                }
 
-				if (vector2D.Y < Main.rockLayer + 100.0)
-					vector2D2.Y = 1.0;
+                if (type == 59 && !noYChange)
+                {
+                    if (vector2D2.Y > 0.5)
+                        vector2D2.Y = 0.5;
 
-				if (vector2D.Y > (double)(Main.maxTilesY - 300))
-					vector2D2.Y = -1.0;
-			}
-		}
-	}
+                    if (vector2D2.Y < -0.5)
+                        vector2D2.Y = -0.5;
+
+                    if (vector2D.Y < Main.rockLayer + 100.0)
+                        vector2D2.Y = 1.0;
+
+                    if (vector2D.Y > (double)(Main.maxTilesY - 300))
+                        vector2D2.Y = -1.0;
+                }
+            }
+        }
 
 
 

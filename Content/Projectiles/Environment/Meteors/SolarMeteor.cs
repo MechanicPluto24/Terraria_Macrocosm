@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.GrabBags;
@@ -51,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
 
         public override void ImpactEffects()
         {
-            int impactDustCount = Main.rand.Next(550, 580); 
+            int impactDustCount = Main.rand.Next(550, 580);
             for (int i = 0; i < impactDustCount; i++)
             {
                 int dist = 160;
@@ -63,7 +62,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                     p.DustType = DustID.SolarFlare;
                     p.Position = dustPosition;
                     p.Velocity = velocity;
-                    p.Scale = new Vector2(Main.rand.NextFloat(1.2f, 2f)) ;
+                    p.Scale = new Vector2(Main.rand.NextFloat(1.2f, 2f));
                     p.NoGravity = true;
                     p.NormalUpdate = true;
                 }));
@@ -118,7 +117,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
         public override void SpawnItems()
         {
             int type = ModContent.ItemType<SolarChunk>();
-            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center,  type);
+            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center, type);
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
         }
     }

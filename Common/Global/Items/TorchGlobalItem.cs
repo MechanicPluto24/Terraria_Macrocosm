@@ -1,6 +1,5 @@
 using Macrocosm.Common.Sets;
 using SubworldLibrary;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

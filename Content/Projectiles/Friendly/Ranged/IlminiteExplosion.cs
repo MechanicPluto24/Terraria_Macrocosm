@@ -2,16 +2,10 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Steamworks;
-using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
@@ -53,7 +47,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         }
 
         SpriteBatchState state;
-        public override bool PreDraw(ref Color lightColor)
+        public override void AI()
         {
             for (int i = 0; i < 10 * Strength; i++)
             {
@@ -67,6 +61,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     p.Scale = new Vector2(1f * (0.6f + Strength * 0.15f)) * Main.rand.NextFloat(0.5f, 1.2f);
                 });
             }
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+
 
             return false;
         }

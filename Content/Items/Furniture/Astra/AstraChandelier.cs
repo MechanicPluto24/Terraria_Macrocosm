@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Blocks;
 using Macrocosm.Content.Items.Consumables.Throwable;
 using Terraria;
 using Terraria.ID;
@@ -24,8 +23,8 @@ namespace Macrocosm.Content.Items.Furniture.Astra
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.AstraBrick, 4)
-                .AddIngredient<LunarCrystal>(4) 
+                .AddIngredient(ItemID.AstraBrick, 4)
+                .AddIngredient<LunarCrystal>(4)
                 .AddIngredient(ItemID.Chain, 1)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

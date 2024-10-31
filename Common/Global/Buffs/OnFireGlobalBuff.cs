@@ -1,9 +1,4 @@
 ﻿using Macrocosm.Content.Debuffs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,7 +9,7 @@ namespace Macrocosm.Common.Global.Buffs
     {
         public override void Update(int type, NPC npc, ref int buffIndex)
         {
-            if(type is BuffID.OnFire or BuffID.OnFire3)
+            if (type is BuffID.OnFire or BuffID.OnFire3)
             {
                 int time = npc.buffTime[buffIndex];
 

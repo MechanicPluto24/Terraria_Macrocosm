@@ -2,9 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent.Drawing;

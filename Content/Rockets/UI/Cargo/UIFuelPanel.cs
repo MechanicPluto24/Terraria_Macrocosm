@@ -4,7 +4,6 @@ using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.LiquidContainers;
-using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -177,7 +176,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 dumpButtonInteractible = false;
 
             LiquidContainerData data = ItemSets.LiquidContainerData[liquidContainerItemSlot.Item.type];
-            if (data.Valid&& !data.Empty)
+            if (data.Valid && !data.Empty)
             {
                 float availableFuel = data.Capacity * liquidContainerItemSlot.Item.stack;
 

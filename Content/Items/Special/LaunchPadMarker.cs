@@ -1,7 +1,7 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Items.Bars;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Items.Bars;
 
 namespace Macrocosm.Content.Items.Special
 {

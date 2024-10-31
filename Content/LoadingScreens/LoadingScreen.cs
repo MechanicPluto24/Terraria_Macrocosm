@@ -1,18 +1,14 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
-using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.LoadingScreens.WorldGen;
 using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ModLoader;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
 

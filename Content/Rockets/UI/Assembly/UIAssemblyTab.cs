@@ -120,7 +120,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
                     for (int particle = 0; particle < item.stack; particle++)
                     {
-                        if(Main.rand.NextBool(6))
+                        if (Main.rand.NextBool(6))
                             Particle.Create<ItemTransferParticle>((p) =>
                             {
                                 p.StartPosition = LaunchPad.CenterWorld;

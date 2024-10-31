@@ -1,10 +1,8 @@
-﻿using Terraria;
-using Terraria.ModLoader;
-using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Refined;
+﻿using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.LiquidContainers;
-
+using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Machines
 {
@@ -19,7 +17,7 @@ namespace Macrocosm.Content.Items.Machines
             Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.OilRefinery>());
             Item.width = 42;
             Item.height = 32;
-            Item.value =  Item.sellPrice(gold:1);
+            Item.value = Item.sellPrice(gold: 1);
             Item.mech = true;
         }
         public override void AddRecipes()

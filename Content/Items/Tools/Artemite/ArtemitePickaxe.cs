@@ -1,9 +1,9 @@
 ﻿using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Macrocosm.Content.Items.Bars;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Artemite
@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Items.Tools.Artemite
             Lighting.AddLight(player.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
             #endregion
         }
-         public override void AddRecipes()
+        public override void AddRecipes()
         {
             CreateRecipe()
             .AddIngredient<ArtemiteBar>(12)

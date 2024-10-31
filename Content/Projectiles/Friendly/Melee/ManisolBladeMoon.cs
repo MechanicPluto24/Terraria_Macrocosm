@@ -1,12 +1,10 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
@@ -30,7 +28,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             base.OnHitNPC(target, hit, damageDone);
 
-            if(AI_State == ActionState.Returning && target.whoAmI != npcStick)
+            if (AI_State == ActionState.Returning && target.whoAmI != npcStick)
             {
                 target.AddBuff(BuffID.BrokenArmor, 300, false);
 

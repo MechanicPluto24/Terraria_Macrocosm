@@ -12,7 +12,6 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent.ObjectInteractions;
-using Terraria.Graphics.Renderers;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -114,7 +113,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                 default: break;
             }
 
-            if(!flag && Main.netMode != NetmodeID.MultiplayerClient)
+            if (!flag && Main.netMode != NetmodeID.MultiplayerClient)
             {
                 for (float f = 0f; f < 10f; f += 1f)
                 {

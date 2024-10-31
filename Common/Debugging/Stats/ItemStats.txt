@@ -334,17 +334,17 @@ SteelBar
 	Value: 1 gold 75 silver
 	Research count: 25
 	Recipes:
-		Iron Bar x 8
-		Coal x 1
+		Iron Bar x 5
+		Coal x 2
 		at
 		Hellforge
-			=> x3
+			=> x5
 
-		Lead Bar x 8
-		Coal x 1
+		Lead Bar x 5
+		Coal x 2
 		at
 		Hellforge
-			=> x3
+			=> x5
 
 
 CoalBrick
@@ -393,6 +393,12 @@ CheeseBlock
 	Recipes:
 		Cheese x 1
 			=> x10
+
+		Cheese Platform x 2
+
+		Cheese Wall x 4
+		at
+		Work Bench
 
 
 IndustrialPlating
@@ -476,7 +482,8 @@ CraterDemonSummon
 	Value: No value
 	Research count: 3
 	Recipes:
-		Alien Residue x 7
+		Protolith x 20
+		Alien Residue x 5
 		Space Dust x 5
 		Luminite Bar x 10
 		at
@@ -506,7 +513,7 @@ AdamantiteLoom
 		Adamantite Bar x 10
 		Steel Bar x 10
 		at
-		Anvil
+		Mythril Anvil
 
 
 Fabricator
@@ -535,7 +542,7 @@ TitaniumLoom
 		Titanium Bar x 10
 		Steel Bar x 10
 		at
-		Anvil
+		Mythril Anvil
 
 
 KyaniteScarabCritter
@@ -606,7 +613,7 @@ AstraBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Keybrand x 14
+		Astra Brick x 14
 		at
 		Mythril Anvil
 
@@ -615,7 +622,7 @@ AstraBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Keybrand x 15
+		Astra Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -664,7 +671,7 @@ AstraChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Keybrand x 4
+		Astra Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -704,7 +711,7 @@ AstraDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Keybrand x 16
+		Astra Brick x 16
 		at
 		Mythril Anvil
 
@@ -733,18 +740,26 @@ AstraPiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Keybrand x 15
+		Astra Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+AstraPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Astra Brick x 1
+			=> x2
+
+
 AstraSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Keybrand x 6
+		Astra Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -754,7 +769,7 @@ AstraSofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Keybrand x 5
+		Astra Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -764,7 +779,7 @@ AstraTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Keybrand x 8
+		Astra Brick x 8
 		at
 		Work Bench
 
@@ -927,6 +942,14 @@ CheesePiano
 		Work Bench
 
 
+CheesePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Cheese Block x 1
+			=> x2
+
+
 CheeseSink
 	Value: 1 silver 50 copper
 	Research count: 1
@@ -980,7 +1003,7 @@ CosmicEmberBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cutlass x 14
+		Cosmic Ember Brick x 14
 		at
 		Mythril Anvil
 
@@ -989,7 +1012,7 @@ CosmicEmberBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cutlass x 15
+		Cosmic Ember Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -1038,7 +1061,7 @@ CosmicEmberChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cutlass x 4
+		Cosmic Ember Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -1078,7 +1101,7 @@ CosmicEmberDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cutlass x 16
+		Cosmic Ember Brick x 16
 		at
 		Mythril Anvil
 
@@ -1107,18 +1130,26 @@ CosmicEmberPiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cutlass x 15
+		Cosmic Ember Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+CosmicEmberPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Cosmic Ember Brick x 1
+			=> x2
+
+
 CosmicEmberSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cutlass x 6
+		Cosmic Ember Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -1128,7 +1159,7 @@ CosmicEmberSofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cutlass x 5
+		Cosmic Ember Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -1138,7 +1169,7 @@ CosmicEmberTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Cutlass x 8
+		Cosmic Ember Brick x 8
 		at
 		Work Bench
 
@@ -1163,7 +1194,7 @@ CryocoreBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Boreal Wood Work Bench x 14
+		Cryocore Brick x 14
 		at
 		Mythril Anvil
 
@@ -1172,7 +1203,7 @@ CryocoreBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Boreal Wood Work Bench x 15
+		Cryocore Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -1221,7 +1252,7 @@ CryocoreChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Boreal Wood Work Bench x 4
+		Cryocore Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -1261,7 +1292,7 @@ CryocoreDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Boreal Wood Work Bench x 16
+		Cryocore Brick x 16
 		at
 		Mythril Anvil
 
@@ -1290,18 +1321,26 @@ CryocorePiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Boreal Wood Work Bench x 15
+		Cryocore Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+CryocorePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Cryocore Brick x 1
+			=> x2
+
+
 CryocoreSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Boreal Wood Work Bench x 6
+		Cryocore Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -1311,7 +1350,7 @@ CryocoreSofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Boreal Wood Work Bench x 5
+		Cryocore Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -1321,7 +1360,7 @@ CryocoreTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Boreal Wood Work Bench x 8
+		Cryocore Brick x 8
 		at
 		Work Bench
 
@@ -1346,7 +1385,7 @@ DarkCelestialBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Ice Boomerang x 14
+		Dark Celestial Brick x 14
 		at
 		Mythril Anvil
 
@@ -1355,7 +1394,7 @@ DarkCelestialBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Ice Boomerang x 15
+		Dark Celestial Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -1404,7 +1443,7 @@ DarkCelestialChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Ice Boomerang x 4
+		Dark Celestial Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -1444,7 +1483,7 @@ DarkCelestialDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Ice Boomerang x 16
+		Dark Celestial Brick x 16
 		at
 		Mythril Anvil
 
@@ -1473,18 +1512,26 @@ DarkCelestialPiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Ice Boomerang x 15
+		Dark Celestial Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+DarkCelestialPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Dark Celestial Brick x 1
+			=> x2
+
+
 DarkCelestialSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Ice Boomerang x 6
+		Dark Celestial Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -1494,7 +1541,7 @@ DarkCelestialSofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Ice Boomerang x 5
+		Dark Celestial Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -1504,7 +1551,7 @@ DarkCelestialTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Ice Boomerang x 8
+		Dark Celestial Brick x 8
 		at
 		Work Bench
 
@@ -1560,7 +1607,7 @@ HeavenforgeBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Frostbrand x 14
+		Heavenforge Brick x 14
 		at
 		Mythril Anvil
 
@@ -1569,7 +1616,7 @@ HeavenforgeBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Frostbrand x 15
+		Heavenforge Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -1618,7 +1665,7 @@ HeavenforgeChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Frostbrand x 4
+		Heavenforge Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -1658,7 +1705,7 @@ HeavenforgeDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Frostbrand x 16
+		Heavenforge Brick x 16
 		at
 		Mythril Anvil
 
@@ -1687,18 +1734,26 @@ HeavenforgePiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Frostbrand x 15
+		Heavenforge Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+HeavenforgePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Heavenforge Brick x 1
+			=> x2
+
+
 HeavenforgeSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Frostbrand x 6
+		Heavenforge Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -1708,7 +1763,7 @@ HeavenforgeSofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Frostbrand x 5
+		Heavenforge Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -1718,7 +1773,7 @@ HeavenforgeTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Frostbrand x 8
+		Heavenforge Brick x 8
 		at
 		Work Bench
 
@@ -2049,7 +2104,7 @@ LuminiteBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Pearlstone Block x 14
+		Luminite Brick x 14
 		at
 		Mythril Anvil
 
@@ -2058,7 +2113,7 @@ LuminiteBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Pearlstone Block x 15
+		Luminite Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -2107,7 +2162,7 @@ LuminiteChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Pearlstone Block x 4
+		Luminite Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -2147,7 +2202,7 @@ LuminiteDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Pearlstone Block x 16
+		Luminite Brick x 16
 		at
 		Mythril Anvil
 
@@ -2176,18 +2231,26 @@ LuminitePiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Pearlstone Block x 15
+		Luminite Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+LuminitePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Luminite Brick x 1
+			=> x2
+
+
 LuminiteSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Pearlstone Block x 6
+		Luminite Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -2197,7 +2260,7 @@ LuminiteSofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Pearlstone Block x 5
+		Luminite Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -2207,7 +2270,7 @@ LuminiteTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Pearlstone Block x 8
+		Luminite Brick x 8
 		at
 		Work Bench
 
@@ -2232,7 +2295,7 @@ LunarRustBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Fish x 14
+		Lunar Rust Brick x 14
 		at
 		Mythril Anvil
 
@@ -2241,7 +2304,7 @@ LunarRustBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Fish x 15
+		Lunar Rust Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -2290,7 +2353,7 @@ LunarRustChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Fish x 4
+		Lunar Rust Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -2330,7 +2393,7 @@ LunarRustDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Fish x 16
+		Lunar Rust Brick x 16
 		at
 		Mythril Anvil
 
@@ -2359,18 +2422,26 @@ LunarRustPiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Fish x 15
+		Lunar Rust Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+LunarRustPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Lunar Rust Brick x 1
+			=> x2
+
+
 LunarRustSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Fish x 6
+		Lunar Rust Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -2380,7 +2451,7 @@ LunarRustSofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Fish x 5
+		Lunar Rust Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -2390,7 +2461,7 @@ LunarRustTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		Fish x 8
+		Lunar Rust Brick x 8
 		at
 		Work Bench
 
@@ -2415,7 +2486,7 @@ MercuryBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Excalibur x 14
+		Mercury Brick x 14
 		at
 		Mythril Anvil
 
@@ -2424,7 +2495,7 @@ MercuryBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Excalibur x 15
+		Mercury Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -2473,7 +2544,7 @@ MercuryChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Excalibur x 4
+		Mercury Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -2513,7 +2584,7 @@ MercuryDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Excalibur x 16
+		Mercury Brick x 16
 		at
 		Mythril Anvil
 
@@ -2542,18 +2613,26 @@ MercuryPiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Excalibur x 15
+		Mercury Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+MercuryPlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Mercury Brick x 1
+			=> x2
+
+
 MercurySink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Excalibur x 6
+		Mercury Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -2563,7 +2642,7 @@ MercurySofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Excalibur x 5
+		Mercury Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -2573,7 +2652,7 @@ MercuryTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Excalibur x 8
+		Mercury Brick x 8
 		at
 		Mythril Anvil
 
@@ -2606,7 +2685,7 @@ StarRoyaleBathtub
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Night's Edge x 14
+		Star Royale Brick x 14
 		at
 		Mythril Anvil
 
@@ -2615,7 +2694,7 @@ StarRoyaleBed
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Night's Edge x 15
+		Star Royale Brick x 15
 		Silk x 5
 		at
 		Mythril Anvil
@@ -2664,7 +2743,7 @@ StarRoyaleChandelier
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Night's Edge x 4
+		Star Royale Brick x 4
 		Lunar Crystal x 4
 		Chain x 1
 		at
@@ -2704,7 +2783,7 @@ StarRoyaleDresser
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Night's Edge x 16
+		Star Royale Brick x 16
 		at
 		Mythril Anvil
 
@@ -2733,18 +2812,26 @@ StarRoyalePiano
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Night's Edge x 15
+		Star Royale Brick x 15
 		Bone x 4
 		Book x 1
 		at
 		Mythril Anvil
 
 
+StarRoyalePlatform
+	Value: No value
+	Research count: 200
+	Recipes:
+		Star Royale Brick x 1
+			=> x2
+
+
 StarRoyaleSink
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Night's Edge x 6
+		Star Royale Brick x 6
 		Water Bucket x 1
 		at
 		Mythril Anvil
@@ -2754,7 +2841,7 @@ StarRoyaleSofa
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Night's Edge x 5
+		Star Royale Brick x 5
 		Silk x 2
 		at
 		Mythril Anvil
@@ -2764,7 +2851,7 @@ StarRoyaleTable
 	Value: 1 silver 50 copper
 	Research count: 1
 	Recipes:
-		True Night's Edge x 8
+		Star Royale Brick x 8
 		at
 		Work Bench
 
@@ -2836,14 +2923,6 @@ Canister
 RocketFuelCanister
 	Value: 1 silver
 	Research count: 100
-	Recipes:
-		Glass x 2
-		Steel Bar x 2
-		Plastic x 6
-		at
-		Mythril Anvil
-			=> x25
-
 
 BurnerGenerator
 	Value: 5 gold
@@ -2883,7 +2962,7 @@ OreExcavator
 		Wire x 50
 		Adamantite Bar x 10
 		Aluminum Bar x 20
-		Diamond x 50
+		Diamond x 10
 		at
 		Fabricator
 
@@ -2891,7 +2970,7 @@ OreExcavator
 		Wire x 50
 		Titanium Bar x 10
 		Aluminum Bar x 20
-		Diamond x 50
+		Diamond x 10
 		at
 		Fabricator
 
@@ -3166,7 +3245,7 @@ EngineComponent
 
 		Steel Bar x 20
 		Palladium Bar x 20
-		Tungsten Bar x 10
+		Silver Bar x 10
 		at
 		Fabricator
 
@@ -3516,6 +3595,16 @@ LuminiteTorch
 CraterDemonTrophy
 	Value: 1 gold
 	Research count: 1
+
+CheeseWall
+	Value: No value
+	Research count: 400
+	Recipes:
+		Cheese Block x 1
+		at
+		Work Bench
+			=> x4
+
 
 IndustrialHazardWall
 	Value: No value

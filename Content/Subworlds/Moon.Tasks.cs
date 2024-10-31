@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.Accessories;
+using Macrocosm.Content.Items.Armor.Vanity.Employee;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.Consumables.BossSummons;
 using Macrocosm.Content.Items.Consumables.Potions;
@@ -1151,7 +1152,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
-        [Task]
+        // [Task]
         private void CheeseHouse(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
@@ -1169,12 +1170,11 @@ namespace Macrocosm.Content.Subworlds
             float largeRockSpawnChance = 0.01f;
             float altarChance = 0.01f;
             float kyaniteNestChance = 0.0045f;
-            float chestChance = 0.0065f;
+            float chestChance = 0.003f;
 
             ushort regolithType = (ushort)TileType<Regolith>();
             ushort protolithType = (ushort)TileType<Protolith>();
             ushort irradiatedRockType = (ushort)TileType<IrradiatedRock>();
-            ushort quartzType = (ushort)TileType<QuartzBlock>();
 
             for (int i = 0; i < Main.maxTilesX - 1; i++)
             {
@@ -1545,30 +1545,36 @@ namespace Macrocosm.Content.Subworlds
             int slot = 0;
             int random;
 
-            switch ((index % 8) + 1)
+            switch ((index % 9) + 1)
             {
                 case 1:
                     chest.item[slot++].SetDefaults(ItemType<ClawWrench>());
                     break;
                 case 2:
-                    chest.item[slot++].SetDefaults(ItemType<WaveGunRed>());
+                    chest.item[slot++].SetDefaults(ItemType<StopSign>());
+                    chest.item[slot++].SetDefaults(ItemType<EmployeeVisor>());
+                    chest.item[slot++].SetDefaults(ItemType<EmployeeSuit>());
+                    chest.item[slot++].SetDefaults(ItemType<EmployeeBoots>());
                     break;
                 case 3:
-                    chest.item[slot++].SetDefaults(ItemType<Copernicus>());
+                    chest.item[slot++].SetDefaults(ItemType<WaveGunRed>());
                     break;
                 case 4:
-                    chest.item[slot++].SetDefaults(ItemType<HummingbirdDroneRemote>());
+                    chest.item[slot++].SetDefaults(ItemType<Copernicus>());
                     break;
                 case 5:
-                    chest.item[slot++].SetDefaults(ItemType<OsmiumBoots>());
+                    chest.item[slot++].SetDefaults(ItemType<HummingbirdDroneRemote>());
                     break;
                 case 6:
-                    chest.item[slot++].SetDefaults(ItemType<StalwartTowerShield>());
+                    chest.item[slot++].SetDefaults(ItemType<OsmiumBoots>());
                     break;
                 case 7:
-                    chest.item[slot++].SetDefaults(ItemType<Sledgehammer>());
+                    chest.item[slot++].SetDefaults(ItemType<StalwartTowerShield>());
                     break;
                 case 8:
+                    chest.item[slot++].SetDefaults(ItemType<Sledgehammer>());
+                    break;
+                case 9:
                     chest.item[slot++].SetDefaults(ItemType<LaserSight>());
                     break;
             }

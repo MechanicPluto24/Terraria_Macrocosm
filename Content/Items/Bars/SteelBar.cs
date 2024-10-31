@@ -33,15 +33,15 @@ namespace Macrocosm.Content.Items.Bars
 
         public override void AddRecipes()
         {
-            CreateRecipe(3)
-                .AddIngredient(ItemID.IronBar, 8)
-                .AddIngredient(ItemType<Coal>())
+            CreateRecipe(5)
+                .AddIngredient(ItemID.IronBar, 5)
+                .AddIngredient(ItemType<Coal>(), 3)
                 .AddTile(TileID.Hellforge)
                 .Register();
 
-            CreateRecipe(3)
-                .AddIngredient(ItemID.LeadBar, 8)
-                .AddIngredient(ItemType<Coal>())
+            CreateRecipe(5)
+                .AddIngredient(ItemID.LeadBar, 5)
+                .AddIngredient(ItemType<Coal>(), 3)
                 .AddTile(TileID.Hellforge)
                 .Register();
         }

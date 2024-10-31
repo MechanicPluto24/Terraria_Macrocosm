@@ -4,7 +4,6 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Armor.Astronaut;
 using Macrocosm.Content.Items.Consumables.Throwable;
-using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;

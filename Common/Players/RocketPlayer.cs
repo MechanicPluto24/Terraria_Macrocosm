@@ -145,7 +145,7 @@ namespace Macrocosm.Common.Players
 
         public override void OnHurt(Player.HurtInfo info)
         {
-            if(Player.whoAmI == Main.myPlayer)
+            if (Player.whoAmI == Main.myPlayer)
             {
                 UISystem.Hide();
                 DisembarkFromRocket();

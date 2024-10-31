@@ -35,6 +35,10 @@ namespace Macrocosm.Content.DrawLayers
                 drawInfo.projectileDrawPosition = drawInfo.DrawDataCache.Count;
 
             Item heldItem = drawInfo.heldItem;
+
+            if (heldItem is null)
+                return;
+
             int itemID = heldItem.type;
             float adjustedItemScale = drawInfo.drawPlayer.GetAdjustedItemScale(heldItem);
             Main.instance.LoadItem(itemID);

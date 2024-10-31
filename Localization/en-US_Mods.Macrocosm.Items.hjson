@@ -1287,12 +1287,12 @@ CheeseBlock: {
 
 Cheese: {
 	DisplayName: Cheese
-	Tooltip: ""
+	Tooltip: "{$CommonItemTooltip.MajorStats}"
 }
 
 CapstoneRush: {
 	DisplayName: Capstone Rush
-	Tooltip: ""
+	Tooltip: "{$CommonItemTooltip.MajorStats}"
 }
 
 CheeseBathtub: {
@@ -2185,7 +2185,7 @@ SolarCell: {
 
 LaserSight: {
 	DisplayName: Laser Sight
-	Tooltip: -50% ranged weapon spread
+	Tooltip: 30% reduced ranged weapon spread
 }
 
 ProtolithBrick: {
@@ -2605,5 +2605,60 @@ StarRoyaleSofa: {
 
 StarRoyaleTable: {
 	DisplayName: Star Royale Table
+	Tooltip: ""
+}
+
+AstraPlatform: {
+	DisplayName: Astra Platform
+	Tooltip: ""
+}
+
+CosmicEmberPlatform: {
+	DisplayName: Cosmic Ember Platform
+	Tooltip: ""
+}
+
+CryocorePlatform: {
+	DisplayName: Cryocore Platform
+	Tooltip: ""
+}
+
+DarkCelestialPlatform: {
+	DisplayName: Dark Celestial Platform
+	Tooltip: ""
+}
+
+HeavenforgePlatform: {
+	DisplayName: Heavenforge Platform
+	Tooltip: ""
+}
+
+LuminitePlatform: {
+	DisplayName: Luminite Platform
+	Tooltip: ""
+}
+
+LunarRustPlatform: {
+	DisplayName: Lunar Rust Platform
+	Tooltip: ""
+}
+
+MercuryPlatform: {
+	DisplayName: Mercury Platform
+	Tooltip: ""
+}
+
+StarRoyalePlatform: {
+	DisplayName: Star Royale Platform
+	Tooltip: ""
+}
+
+CheesePlatform: {
+	DisplayName: Cheese Platform
+	Tooltip: ""
+}
+
+CheeseWall: {
+	DisplayName: Cheese Wall
 	Tooltip: ""
 }

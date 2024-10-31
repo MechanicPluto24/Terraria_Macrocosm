@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.useTime = 13;
             Item.UseSound = SoundID.Item71;
             Item.autoReuse = true;
-            Item.damage = 220;
+            Item.damage = 200;
             Item.knockBack = 6.5f;
             Item.noUseGraphic = true;
             Item.DamageType = DamageClass.MeleeNoSpeed;

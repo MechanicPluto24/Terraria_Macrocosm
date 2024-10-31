@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleMultiplier = 2;
-            TileObjectData.newTile.StyleWrapLimit = 2;  
+            TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Origin = new Point16(0, 1);

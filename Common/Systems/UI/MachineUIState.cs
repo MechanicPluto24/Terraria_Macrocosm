@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;

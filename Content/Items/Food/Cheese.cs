@@ -48,7 +48,6 @@ namespace Macrocosm.Content.Items.Food
         public override void OnConsumeItem(Player player)
         {
             //player.AddBuff(BuffID.SugarRush, 3600);
-
         }
     }
 }

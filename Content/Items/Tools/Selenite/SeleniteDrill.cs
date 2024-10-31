@@ -1,5 +1,5 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
-using Macrocosm.Content.Items.Bars;
+﻿using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Projectiles.Friendly.Tools;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ID;

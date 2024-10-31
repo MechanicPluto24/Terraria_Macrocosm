@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -24,7 +23,7 @@ namespace Macrocosm.Content.Items.Furniture.DarkCelestial
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.DarkCelestialBrick, 5)
+                .AddIngredient(ItemID.DarkCelestialBrick, 5)
                 .AddIngredient(ItemID.Silk, 2)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

@@ -1,12 +1,12 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Terraria;
-using Terraria.ID;
 using Macrocosm.Content.Items.LiquidContainers;
-using Terraria.ModLoader;
-using Terraria.GameContent.ItemDropRules;
 using Macrocosm.Content.Sounds;
+using Terraria;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
