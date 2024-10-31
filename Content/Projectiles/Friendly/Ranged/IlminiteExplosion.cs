@@ -53,8 +53,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         }
 
         SpriteBatchState state;
-        public override bool PreDraw(ref Color lightColor)
-        {
+        public override void AI(){
             for (int i = 0; i < 10 * Strength; i++)
             {
                 Vector2 position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height);
@@ -67,6 +66,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     p.Scale = new Vector2(1f * (0.6f + Strength * 0.15f)) * Main.rand.NextFloat(0.5f, 1.2f);
                 });
             }
+        }
+        public override bool PreDraw(ref Color lightColor)
+        {
+            
 
             return false;
         }
