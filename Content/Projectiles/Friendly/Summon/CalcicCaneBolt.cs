@@ -5,7 +5,6 @@ using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using static tModPorter.ProgressUpdate;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {

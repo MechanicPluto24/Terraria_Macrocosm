@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Threading;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -66,7 +65,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
             AI_Timer++;
 
-            if(AI_Timer > 10)
+            if (AI_Timer > 10)
                 Projectile.friendly = true;
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;

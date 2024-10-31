@@ -1,7 +1,6 @@
 using Macrocosm.Common.Sets;
 using SubworldLibrary;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,7 +14,7 @@ namespace Macrocosm.Common.Global.Items
             {
                 // Grass seeds - typically placed on dirt or mud
                 // Modded seeds might not add their grass seeds to this set!
-                if (ItemID.Sets.GrassSeeds[item.type]) 
+                if (ItemID.Sets.GrassSeeds[item.type])
                     return false;
 
                 // Flower packets

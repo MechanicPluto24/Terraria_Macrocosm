@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

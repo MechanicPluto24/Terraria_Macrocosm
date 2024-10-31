@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
 
         bool spawned = false;
-        bool preformingProjectileAttack=false;
+        bool preformingProjectileAttack = false;
         public override void OnSpawn(IEntitySource source)
         {
         }
@@ -270,60 +270,60 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             {
                 if (!preformingProjectileAttack)
                 {
-                if (AttackTimer < 120)
-                {
-                    AttackTimer++;
-                }
-                else if (AttackTimer < 140)
-                {
-                    speed = 0f;
-                    AttackTimer++;
+                    if (AttackTimer < 120)
+                    {
+                        AttackTimer++;
+                    }
+                    else if (AttackTimer < 140)
+                    {
+                        speed = 0f;
+                        AttackTimer++;
+                    }
+                    else
+                    {
+                        AttackTimer = 0;
+                        speed *= 30f * MathHelper.Clamp(distanceFromTarget, 0, 100) / 100;
+                        inertia = 10f;
+                        dash = true;
+                    }
+
+                    // Minion has a target: attack (here, fly towards the enemy)
+                    if (distanceFromTarget > 60f || dash)
+                    {
+                        // The immediate range around the target (so it doesn't latch onto it when close)
+                        Vector2 direction = targetCenter - Projectile.Center;
+                        direction.Normalize();
+
+                        direction *= speed;
+                        Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
+                    }
+                    if (dash)
+                        if (Main.rand.NextBool(3))
+                            preformingProjectileAttack = true;
                 }
                 else
                 {
-                    AttackTimer = 0;
-                    speed *= 30f * MathHelper.Clamp(distanceFromTarget, 0, 100) / 100;
-                    inertia = 10f;
-                    dash = true;
-                }
+                    speed = 6f;
+                    AttackTimer++;
+                    if (distanceFromTarget > 270f)
+                    {
+                        // The immediate range around the target (so it doesn't latch onto it when close)
+                        Vector2 direction = targetCenter - Projectile.Center;
+                        direction.Normalize();
 
-                // Minion has a target: attack (here, fly towards the enemy)
-                if (distanceFromTarget > 60f || dash)
-                {
-                    // The immediate range around the target (so it doesn't latch onto it when close)
-                    Vector2 direction = targetCenter - Projectile.Center;
-                    direction.Normalize();
-
-                    direction *= speed;
-                    Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
-                }
-                if(dash)
-                    if(Main.rand.NextBool(3))
-                        preformingProjectileAttack=true;
-                }
-                else
-                {
-                speed = 6f;
-                AttackTimer++;
-                if (distanceFromTarget > 270f)
-                {
-                    // The immediate range around the target (so it doesn't latch onto it when close)
-                    Vector2 direction = targetCenter - Projectile.Center;
-                    direction.Normalize();
-
-                    direction *= speed;
-                    Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
-                } 
-                if (AttackTimer%60==0&&Projectile.owner == Main.myPlayer)
-                {
-                Vector2 position = Projectile.Center;
-                Projectile.NewProjectile(Projectile.GetSource_FromAI(),position,(targetCenter- position).SafeNormalize(Vector2.UnitX)*11f, ModContent.ProjectileType<CalcicCaneBolt>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
-                }
-                if(AttackTimer>250)
-                {
-                    AttackTimer=0;
-                    preformingProjectileAttack=false;
-                }
+                        direction *= speed;
+                        Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
+                    }
+                    if (AttackTimer % 60 == 0 && Projectile.owner == Main.myPlayer)
+                    {
+                        Vector2 position = Projectile.Center;
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, (targetCenter - position).SafeNormalize(Vector2.UnitX) * 11f, ModContent.ProjectileType<CalcicCaneBolt>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
+                    }
+                    if (AttackTimer > 250)
+                    {
+                        AttackTimer = 0;
+                        preformingProjectileAttack = false;
+                    }
                 }
             }
             else

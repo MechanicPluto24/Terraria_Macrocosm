@@ -5,7 +5,6 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
@@ -40,7 +39,7 @@ namespace Macrocosm.Common.Utils
             }
 
             //Return false if we couldn't generate an NPC
-            return npc != Main.maxNPCs; 
+            return npc != Main.maxNPCs;
         }
 
         public static void SummonBossOnPlayerWithMessage(Player player, int type, SoundStyle? sound = null)

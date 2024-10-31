@@ -171,8 +171,8 @@ namespace Macrocosm.Common.Systems
             DarkCelestialShrineUnlocked = bb2[0];
             MercuryShrineUnlocked = bb2[1];
             StarRoyaleShrineUnlocked = bb2[2];
-            CryocoreShrineUnlocked = bb2[3]; 
-            CosmicEmberShrineUnlocked = bb2[4]; 
+            CryocoreShrineUnlocked = bb2[3];
+            CosmicEmberShrineUnlocked = bb2[4];
             FoundVulcan = bb2[5];
             DeimosReturn = bb2[6];
         }

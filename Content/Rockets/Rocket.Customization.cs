@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
-using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;

@@ -1,11 +1,9 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 

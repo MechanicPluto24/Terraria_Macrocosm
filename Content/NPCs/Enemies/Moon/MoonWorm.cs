@@ -160,14 +160,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         public bool burst = false; // Has the worm bursted out of the ground.
-        public int TouchedGround=0;
+        public int TouchedGround = 0;
         public override void AI()
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 if (CheckCollision())
-                   TouchedGround=20;
-                
+                    TouchedGround = 20;
+
 
                 NPC.despawnEncouraged = false;
                 // tick down the attack counter.
@@ -177,7 +177,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 Player target = Main.player[NPC.target];
 
                 // If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
-                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 2000 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1) && burst == false&&(TouchedGround>=1))
+                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 2000 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1) && burst == false && (TouchedGround >= 1))
                 {
                     SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
                     burst = true;

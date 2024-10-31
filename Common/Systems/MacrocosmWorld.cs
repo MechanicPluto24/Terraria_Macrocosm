@@ -2,16 +2,11 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Subworlds;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SubworldLibrary;
 using System;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -244,6 +239,6 @@ namespace Macrocosm.Common.Systems
             }
 
             return false;
-        } 
+        }
     }
 }

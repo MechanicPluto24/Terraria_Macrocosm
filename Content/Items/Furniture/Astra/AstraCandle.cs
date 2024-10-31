@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.Astra
         {
             CreateRecipe()
                 .AddIngredient(ItemID.AstraBrick, 4)
-                .AddIngredient<LunarCrystal>(1)  
+                .AddIngredient<LunarCrystal>(1)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

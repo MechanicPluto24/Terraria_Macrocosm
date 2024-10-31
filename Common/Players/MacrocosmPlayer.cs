@@ -1,15 +1,11 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Content.Buffs.Potions;
 using Macrocosm.Content.Debuffs.Environment;
-using Macrocosm.Content.Items.Consumables.Potions;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.IO;
 using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -45,9 +41,9 @@ namespace Macrocosm.Common.Players
         /// <summary>
         /// Percentage of regular shoot spread reduction of ranged weapons.
         /// </summary>
-        public float ShootSpreadReduction 
+        public float ShootSpreadReduction
         {
-            get => shootSpreadReduction; 
+            get => shootSpreadReduction;
             set => shootSpreadReduction = MathHelper.Clamp(value, 0f, 1f);
         }
         private float shootSpreadReduction = 0f;
@@ -159,7 +155,7 @@ namespace Macrocosm.Common.Players
 
             return consumeAmmo;
         }
-        
+
         // FIXME: Not working atm
         public override void ModifyShootStats(Item item, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {

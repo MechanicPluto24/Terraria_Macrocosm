@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.GrabBags;
@@ -92,7 +91,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
         public override void SpawnItems()
         {
             int type = ModContent.ItemType<NebulaChunk>();
-            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center,  type);
+            int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center, type);
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
         }
     }

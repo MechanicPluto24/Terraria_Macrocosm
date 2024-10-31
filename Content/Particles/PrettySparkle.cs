@@ -1,10 +1,10 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Renderers;
-using Terraria;
-using Macrocosm.Common.Drawing.Particles;
-using Microsoft.Xna.Framework;
 using Terraria.ID;
 
 namespace Macrocosm.Content.Particles

@@ -27,7 +27,7 @@ namespace Macrocosm.Common.Subworlds
         public bool TriggeredSubworldTravel { get; set; } = false;
 
         /// <summary> Whether the player has exited a subworld by clicking the "Save & Exit"/"Return" button or other means </summary>
-        private bool exitedBySaveAndExit  = false;
+        private bool exitedBySaveAndExit = false;
 
         /// <summary>
         /// The subworlds this player has visited.

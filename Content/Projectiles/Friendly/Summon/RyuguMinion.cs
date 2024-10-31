@@ -1,17 +1,12 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Minions;
-using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
-using Terraria;
 using System.Collections.Generic;
-using Terraria.GameContent;
+using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.Audio;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
@@ -22,18 +17,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
     // If it isn't attacking, it will float near the player with minimal movement
     public class RyuguMinion : ModProjectile
     {
-        
+
 
         public override void SetStaticDefaults()
         {
-            
+
             // Sets the amount of frames this minion has on its spritesheet
             Main.projFrames[Projectile.type] = 15;
             // This is necessary for right-click targeting
             ProjectileID.Sets.MinionTargettingFeature[Projectile.type] = true;
 
             Main.projPet[Projectile.type] = true; // Denotes that this projectile is a pet or minion
-            
+
             ProjectileID.Sets.MinionSacrificable[Projectile.type] = true; // This is needed so your minion can properly spawn when summoned and replaced when other minions are summoned
             ProjectileID.Sets.CultistIsResistantTo[Projectile.type] = true; // Make the cultist resistant to this projectile, as it's resistant to all homing projectiles.
         }
@@ -50,9 +45,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Projectile.DamageType = DamageClass.Summon; // Declares the damage type (needed for it to deal damage)
             Projectile.minionSlots = 1f; // Amount of slots this minion occupies from the total minion slots available to the player (more on that later)
             Projectile.penetrate = -1; // Needed so the minion doesn't despawn on collision with enemies or tiles
-          
+
         }
-        bool Firing =false;
+        bool Firing = false;
         // Here you can decide if your minion breaks things like grass or pots
         public override bool? CanCutTiles()
         {
@@ -68,25 +63,26 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         // The AI of this minion is split into multiple methods to avoid bloat. This method just passes values between calls actual parts of the AI.
         bool foundTarget;
         bool spawned;
-        float mult=0f;
-        float FireDist=0f;
-        int shootTimer=0;
+        float mult = 0f;
+        float FireDist = 0f;
+        int shootTimer = 0;
         NPC targetNPC;
         float distanceFromTarget;
         Vector2 targetCenter;
         public override void AI()
         {
-            if(!spawned){
-                spawned=true;
-                mult=Main.rand.NextFloat(0.5f,1.5f);
-                FireDist=Main.rand.NextFloat(500f,750f);
+            if (!spawned)
+            {
+                spawned = true;
+                mult = Main.rand.NextFloat(0.5f, 1.5f);
+                FireDist = Main.rand.NextFloat(500f, 750f);
             }
             Player owner = Main.player[Projectile.owner];
 
-            if(Vector2.Distance(owner.Center, Projectile.Center)>6000f)
-                Projectile.Center=owner.Center;
+            if (Vector2.Distance(owner.Center, Projectile.Center) > 6000f)
+                Projectile.Center = owner.Center;
 
-            
+
             if (!CheckActive(owner))
             {
                 return;
@@ -127,25 +123,27 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                         {
                             distanceFromTarget = between;
                             targetCenter = npc.Center;
-                            targetNPC= npc;
+                            targetNPC = npc;
                             foundTarget = true;
                         }
                     }
                 }
             }
-            if (foundTarget&&(Vector2.Distance(targetNPC.Center,Projectile.Center)>FireDist||Projectile.velocity.Y !=0))
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f*mult, (int)(3*mult), (int)(14*mult), (proj, owner) => { return targetNPC;});
+            if (foundTarget && (Vector2.Distance(targetNPC.Center, Projectile.Center) > FireDist || Projectile.velocity.Y != 0))
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f * mult, (int)(3 * mult), (int)(14 * mult), (proj, owner) => { return targetNPC; });
             else
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.1f*mult, (int)(8*mult), (int)(14*mult), (proj, owner) => {return owner;});
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.1f * mult, (int)(8 * mult), (int)(14 * mult), (proj, owner) => { return owner; });
 
 
-            if (foundTarget&&Vector2.Distance(targetNPC.Center,Projectile.Center)<=FireDist&&Projectile.velocity.Y ==0){
-                Projectile.velocity.X=0;
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f*mult, 0, (int)(14*mult), (proj, owner) => { return targetNPC;});
-                Firing=true;
+            if (foundTarget && Vector2.Distance(targetNPC.Center, Projectile.Center) <= FireDist && Projectile.velocity.Y == 0)
+            {
+                Projectile.velocity.X = 0;
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f * mult, 0, (int)(14 * mult), (proj, owner) => { return targetNPC; });
+                Firing = true;
             }
-            else{
-                Firing=false;
+            else
+            {
+                Firing = false;
             }
 
             Visuals();
@@ -168,59 +166,63 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             return true;
         }
 
-        
+
         int ProjFrame;
         private void Visuals()
         {
-            List<int> WalkFrames = new List<int>{1,2,3};
-            List<int> AirFrame = new  List<int>{4}; 
-            List<int> FireFrames = new  List<int>{5,6,7,8,9,10,-1,11,12,13,14,15};
+            List<int> WalkFrames = new List<int> { 1, 2, 3 };
+            List<int> AirFrame = new List<int> { 4 };
+            List<int> FireFrames = new List<int> { 5, 6, 7, 8, 9, 10, -1, 11, 12, 13, 14, 15 };
             // So it will lean slightly towards the direction it's moving
-            
-            
+
+
             // This is a simple "loop through all frames from top to bottom" animation
             int frameSpeed = 5;
 
-            
-
-            
-                if(Projectile.velocity.Y !=0){
-                    Firing=false;
-                    Projectile.frame=AirFrame[0]-1;
-                    ProjFrame=20;
-                }
-                else if (!Firing){
-                    Projectile.frameCounter++;
-                    if (Projectile.frameCounter %frameSpeed==0)
-                    {
-                        ProjFrame++;
-                    }
-                    if (ProjFrame<20)
-                        ProjFrame=20;
-                    Projectile.frame=WalkFrames[ProjFrame%3]-1;
-                }
-                else if (Firing){
-                    Projectile.direction = Math.Sign(targetNPC.Center.X - Projectile.Center.X);
-                    Projectile.spriteDirection = Projectile.direction;
 
 
-                    if (ProjFrame>=20)
-                        ProjFrame=0;
-                    Projectile.frameCounter++;
-                    if (Projectile.frameCounter %5==0)
-                    {
-                        ProjFrame++;
-                    }
-                    if(ProjFrame>11)
-                        ProjFrame=0;
-                    Projectile.frame=FireFrames[ProjFrame]-1;
-                    if(Projectile.frame==-2){
-                        ProjFrame=7;
-                        Projectile.frame=FireFrames[7]-1;
-                        SoundEngine.PlaySound(SoundID.Item11,Projectile.Center);
-                        Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, (targetNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX) * 16f, ModContent.ProjectileType<RyuguShell>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
-                    }
+
+            if (Projectile.velocity.Y != 0)
+            {
+                Firing = false;
+                Projectile.frame = AirFrame[0] - 1;
+                ProjFrame = 20;
+            }
+            else if (!Firing)
+            {
+                Projectile.frameCounter++;
+                if (Projectile.frameCounter % frameSpeed == 0)
+                {
+                    ProjFrame++;
                 }
+                if (ProjFrame < 20)
+                    ProjFrame = 20;
+                Projectile.frame = WalkFrames[ProjFrame % 3] - 1;
+            }
+            else if (Firing)
+            {
+                Projectile.direction = Math.Sign(targetNPC.Center.X - Projectile.Center.X);
+                Projectile.spriteDirection = Projectile.direction;
+
+
+                if (ProjFrame >= 20)
+                    ProjFrame = 0;
+                Projectile.frameCounter++;
+                if (Projectile.frameCounter % 5 == 0)
+                {
+                    ProjFrame++;
+                }
+                if (ProjFrame > 11)
+                    ProjFrame = 0;
+                Projectile.frame = FireFrames[ProjFrame] - 1;
+                if (Projectile.frame == -2)
+                {
+                    ProjFrame = 7;
+                    Projectile.frame = FireFrames[7] - 1;
+                    SoundEngine.PlaySound(SoundID.Item11, Projectile.Center);
+                    Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center, (targetNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX) * 16f, ModContent.ProjectileType<RyuguShell>(), (int)(Projectile.damage), 1f, Main.myPlayer, 1f);
+                }
+            }
+        }
     }
-}
 }

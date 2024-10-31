@@ -173,7 +173,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             if (Projectile.owner == Main.myPlayer)
             {
-                for(int i = 0; i < Main.rand.Next(1, 4); i++)
+                for (int i = 0; i < Main.rand.Next(1, 4); i++)
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
                 }

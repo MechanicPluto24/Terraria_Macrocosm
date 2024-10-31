@@ -78,7 +78,7 @@ namespace Macrocosm.Common.Systems.UI
                     tab.OnTabClose();
             });
 
-            if(LaunchPad is not null)
+            if (LaunchPad is not null)
                 LaunchPad.Inventory.InteractingPlayer = 255;
         }
 

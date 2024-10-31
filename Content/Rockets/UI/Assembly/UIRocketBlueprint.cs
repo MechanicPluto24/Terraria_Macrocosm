@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

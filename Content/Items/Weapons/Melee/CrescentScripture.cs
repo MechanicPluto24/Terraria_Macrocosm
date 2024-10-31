@@ -1,9 +1,6 @@
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Items.Weapons.Melee
@@ -34,7 +31,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override bool AltFunctionUse(Player player) => false;
         public float SwingDirection { get; private set; } = -1;
 
-       public override bool CanUseItem(Player player)
+        public override bool CanUseItem(Player player)
         {
             SwingDirection = -SwingDirection;
             return base.CanUseItem(player);

@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Rockets
 
                 tag[nameof(Inventory)] = Inventory;
 
-                if (TargetLandingPosition != Vector2.Zero) 
+                if (TargetLandingPosition != Vector2.Zero)
                     tag[nameof(TargetLandingPosition)] = TargetLandingPosition;
 
                 tag[nameof(Nameplate)] = Nameplate;
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Rockets
             rocket.Active = tag.ContainsKey(nameof(Active));
 
             if (rocket.Active)
-            { 
+            {
                 if (tag.ContainsKey(nameof(WhoAmI)))
                     rocket.WhoAmI = tag.GetInt(nameof(WhoAmI));
 

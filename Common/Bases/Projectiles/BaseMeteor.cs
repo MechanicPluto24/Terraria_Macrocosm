@@ -132,7 +132,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         public virtual void ImpactSound()
         {
             // broken, for some reason
-            SoundEngine.PlaySound(SFX.BigExplosion with { Volume = 0.4f, PitchRange = (-0.5f, 0.5f)}, Projectile.Center);
+            SoundEngine.PlaySound(SFX.BigExplosion with { Volume = 0.4f, PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
         }
     }
 }

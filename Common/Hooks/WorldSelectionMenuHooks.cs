@@ -2,8 +2,8 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria.Audio;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -60,6 +60,6 @@ namespace Macrocosm.Common.Hooks
 
             icon.Left.Pixels = buttonLabel.Left.Pixels - 6;
             buttonLabel.Left.Pixels += icon.Width.Pixels * 0.84f;
-    }    
+        }
     }
 }

@@ -9,6 +9,7 @@ using Macrocosm.Content.Items.Consumables.BossBags;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.Items.Furniture;
+using Macrocosm.Content.Items.Keys;
 using Macrocosm.Content.Items.Pets;
 using Macrocosm.Content.Items.Relics;
 using Macrocosm.Content.Items.Trophies;
@@ -16,7 +17,6 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
-using Macrocosm.Content.Items.Keys;
 using Macrocosm.Content.NPCs.TownNPCs;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -31,7 +31,6 @@ using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {

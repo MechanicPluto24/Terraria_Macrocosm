@@ -1,5 +1,4 @@
 using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Blocks.Sands;
 using Macrocosm.Content.Items.Ores;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -29,6 +28,13 @@ namespace Macrocosm.Common.Global.Items
                 }
             }
 
+            // 2% chance to override result with Silicon
+            if (Main.rand.NextBool(50))
+            {
+                resultType = ModContent.ItemType<Silicon>();
+                resultStack = Main.rand.Next(1, 6);
+            }
+
             // if extractinating desert fossils 
             if (extractType == ItemID.DesertFossil)
             {
@@ -49,13 +55,22 @@ namespace Macrocosm.Common.Global.Items
                     resultType = ModContent.ItemType<Silicon>();
                     resultStack = Main.rand.Next(1, 11);
                 }
+
+                // 5% chance to override result with (1-5) Coal
+                if (Main.rand.NextBool(20))
+                {
+                    resultType = ModContent.ItemType<Coal>();
+                    resultStack = Main.rand.Next(1, 6);
+                }
             }
         }
 
         public override void ModifyItemLoot(Item item, ItemLoot itemLoot)
         {
+            int coalType = ModContent.ItemType<Coal>();
             int aluminumOreType = ModContent.ItemType<AluminumOre>();
             int aluminumBarType = ModContent.ItemType<AluminumBar>();
+            int steelBarType = ModContent.ItemType<SteelBar>();
             int lithiumType = ModContent.ItemType<LithiumOre>();
             int oilShaleType = ModContent.ItemType<OilShale>();
             int siliconType = ModContent.ItemType<Silicon>();
@@ -66,11 +81,13 @@ namespace Macrocosm.Common.Global.Items
             {
                 if (item.type == ItemID.WoodenCrate)
                 {
+                    itemLoot.Add(ItemDropRule.NotScalingWithLuck(coalType, 7 * 4, 4, 15));
                     itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumOreType, 7 * 4, 4, 15));
                     itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumBarType, 9 * 4, 2, 5));
                 }
                 else if (item.type == ItemID.WoodenCrateHard)
                 {
+                    itemLoot.Add(ItemDropRule.NotScalingWithLuck(coalType, 14 * 4, 4, 15));
                     itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumOreType, 14 * 4, 4, 15));
                     itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumBarType, 19 * 4, 2, 5));
                 }
@@ -87,15 +104,17 @@ namespace Macrocosm.Common.Global.Items
                 else if (item.type == ItemID.GoldenCrate)
                 {
                     itemLoot.Add(ItemDropRule.NotScalingWithLuck(lithiumType, 5 * 4, 25, 34));
+                    itemLoot.Add(ItemDropRule.NotScalingWithLuck(steelBarType, 4 * 4, 8, 11));
                 }
                 else if (item.type == ItemID.GoldenCrateHard)
                 {
                     itemLoot.Add(ItemDropRule.NotScalingWithLuck(lithiumType, 10 * 4, 25, 34));
+                    itemLoot.Add(ItemDropRule.NotScalingWithLuck(steelBarType, 8 * 4, 8, 11));
                 }
                 else if (ItemID.Sets.IsFishingCrateHardmode[item.type])
                 {
-
                     itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumBarType, 12 * 4, 10, 20));
+                    //itemLoot.Add(ItemDropRule.NotScalingWithLuck(steelBarType, 12 * 4, 6, 16));
 
                     // this is to avoid getting both lithium & aluminum ores
                     itemLoot.Add(ItemDropRule.SequentialRulesNotScalingWithLuck(14 * 4,
@@ -114,6 +133,7 @@ namespace Macrocosm.Common.Global.Items
                 else
                 {
                     itemLoot.Add(ItemDropRule.NotScalingWithLuck(aluminumBarType, 12 * 4, 10, 20));
+                    //itemLoot.Add(ItemDropRule.NotScalingWithLuck(steelBarType, 12 * 4, 6, 16));
 
                     // this is to avoid getting both lithium & aluminum ores
                     itemLoot.Add(ItemDropRule.SequentialRulesNotScalingWithLuck(14 * 4,

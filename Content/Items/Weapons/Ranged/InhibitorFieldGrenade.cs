@@ -1,6 +1,4 @@
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -41,7 +39,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(source, position, velocity, Item.shoot, damage, knockback, Main.myPlayer,ai0: 850, ai1: 200);
+            Projectile.NewProjectile(source, position, velocity, Item.shoot, damage, knockback, Main.myPlayer, ai0: 850, ai1: 200);
             return false;
         }
 
@@ -53,6 +51,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             return null;
         }
 
-      
+
     }
 }

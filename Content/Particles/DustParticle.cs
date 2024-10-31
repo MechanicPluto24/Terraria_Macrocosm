@@ -1,12 +1,10 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria;
-using Microsoft.Xna.Framework;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 
 namespace Macrocosm.Content.Particles
 {
@@ -33,12 +31,12 @@ namespace Macrocosm.Content.Particles
 
         public override void SetDefaults()
         {
-            TimeToLive = 3600; 
+            TimeToLive = 3600;
         }
 
         public override void OnSpawn()
         {
-            if(DustType < 0 || (DustType >= DustID.Count && DustLoader.GetDust(DustType) is null))
+            if (DustType < 0 || (DustType >= DustID.Count && DustLoader.GetDust(DustType) is null))
             {
                 Kill();
                 return;
@@ -90,7 +88,7 @@ namespace Macrocosm.Content.Particles
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            if(DustLoader.GetDust(dust.type) is not ModDust modDust || modDust.PreDraw(dust))
+            if (DustLoader.GetDust(dust.type) is not ModDust modDust || modDust.PreDraw(dust))
             {
                 Texture2D texture = dust.GetTexture();
                 spriteBatch.Draw(texture, dust.position - screenPosition, GetFrame(), lightColor * FadeFactor, dust.GetVisualRotation(), new Vector2(4f, 4f), dust.GetVisualScale(), SpriteEffects.None, 0f);

@@ -1,10 +1,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Ores;
 using Macrocosm.Content.Liquids;
-using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Refined;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

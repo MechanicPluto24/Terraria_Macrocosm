@@ -26,7 +26,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             if (!npc.active)
                 return false;
 
-            if(bossHeadIndex == -1)
+            if (bossHeadIndex == -1)
                 bossHeadIndex = npc.GetBossHeadTextureIndex();
 
             life = npc.life;

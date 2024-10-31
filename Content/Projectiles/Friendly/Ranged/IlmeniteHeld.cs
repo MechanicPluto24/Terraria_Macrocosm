@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
 using Macrocosm.Common.Players;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -63,7 +63,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 if (Main.mouseRight)
                 {
                     Player.channel = true;
-                    
+
                     AI_Charge += 1f * Player.GetAttackSpeed(DamageClass.Ranged);
 
                     if (AI_Charge == MaxCharge)

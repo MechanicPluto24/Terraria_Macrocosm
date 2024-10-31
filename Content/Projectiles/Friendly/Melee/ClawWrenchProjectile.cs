@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -12,7 +11,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
     public class ClawWrenchProjectile : ModProjectile
     {
         public override bool ShouldUpdatePosition() => Alt;
-         public bool Alt => Projectile.ai[1] == 1f;
+        public bool Alt => Projectile.ai[1] == 1f;
         public override void SetDefaults()
         {
             Projectile.friendly = true;
@@ -31,20 +30,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public ref float SwingTime => ref Projectile.ai[0];
 
-       
+
 
         public override void OnSpawn(IEntitySource source)
         {
         }
 
         private bool spawned = false;
-        private int Timer = 0;  
-        
+        private int Timer = 0;
+
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            if (Alt){
-            Projectile.velocity.X = oldVelocity.X * -0.6f;
-            Projectile.velocity.Y = oldVelocity.Y * -0.6f;
+            if (Alt)
+            {
+                Projectile.velocity.X = oldVelocity.X * -0.6f;
+                Projectile.velocity.Y = oldVelocity.Y * -0.6f;
             }
             return false;
         }
@@ -84,33 +84,35 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 OwnerPlayer.ChangeDir(Math.Sign(Projectile.velocity.X));
                 OwnerPlayer.heldProj = Projectile.whoAmI;
                 OwnerPlayer.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, rotation - MathHelper.PiOver2);
-               
+
             }
             else
             {
                 Timer++;
-                Projectile.velocity.X*=0.98f;
+                Projectile.velocity.X *= 0.98f;
                 Projectile.rotation += MathHelper.PiOver4 / 3;
                 Projectile.velocity.Y += 0.2f;
-                if (Timer >= SwingTime){
+                if (Timer >= SwingTime)
+                {
                     Projectile.velocity = (OwnerPlayer.Center - Projectile.Center).SafeNormalize(Vector2.UnitX) * 35f;
                     Projectile.tileCollide = false;
 
                 }
-                if (Timer >= SwingTime&& Vector2.Distance(Projectile.Center,OwnerPlayer.Center)<20f){
+                if (Timer >= SwingTime && Vector2.Distance(Projectile.Center, OwnerPlayer.Center) < 20f)
+                {
                     Projectile.Kill();
 
                 }
-                
-                
-                
+
+
+
 
             }
         }
 
-        
 
-        
+
+
 
         public override bool PreDraw(ref Color lightColor)
         {

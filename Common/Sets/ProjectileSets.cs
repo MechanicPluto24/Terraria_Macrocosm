@@ -12,10 +12,10 @@ namespace Macrocosm.Common.Sets
         public static bool[] HitsTiles { get; } = ProjectileID.Sets.Factory.CreateBoolSet();
 
         /// <summary>  </summary>
-        public static float[] DamageAdjustment { get; } = ProjectileID.Sets.Factory.CreateFloatSet(defaultState: 1f, 
-            ProjectileID.StardustDragon1, 0.6f,   
-            ProjectileID.StardustDragon2, 0.6f,   
-            ProjectileID.StardustDragon3, 0.6f,   
+        public static float[] DamageAdjustment { get; } = ProjectileID.Sets.Factory.CreateFloatSet(defaultState: 1f,
+            ProjectileID.StardustDragon1, 0.6f,
+            ProjectileID.StardustDragon2, 0.6f,
+            ProjectileID.StardustDragon3, 0.6f,
             ProjectileID.StardustDragon4, 0.6f,
             ProjectileID.LastPrismLaser, 0.6f,
             ProjectileID.MiniNukeMineI, 0.4f,
