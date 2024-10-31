@@ -2185,7 +2185,7 @@ SolarCell: {
 
 LaserSight: {
 	DisplayName: Laser Sight
-	Tooltip: -50% ranged weapon spread
+	Tooltip: 30% reduced ranged weapon spread
 }
 
 ProtolithBrick: {
