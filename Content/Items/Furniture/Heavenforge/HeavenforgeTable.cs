@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.Heavenforge
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.HeavenforgeBrick, 8)
+                .AddIngredient(ItemID.HeavenforgeBrick, 8)
                 .AddTile(TileID.WorkBenches)
                 .Register();
         }

@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.Astra
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.AstraBrick, 8)
+                .AddIngredient(ItemID.AstraBrick, 8)
                 .AddTile(TileID.WorkBenches)
                 .Register();
         }

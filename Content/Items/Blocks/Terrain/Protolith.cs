@@ -23,39 +23,43 @@ namespace Macrocosm.Content.Items.Blocks.Terrain
                 .AddIngredient<ProtolithWall>(4)
                 .Register();
 
-            Recipe.Create(ItemID.SolarBrick, 1)
+            Recipe.Create(ItemID.SolarBrick, 10)
                 .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentSolar, 1)
                 .Register();
-            Recipe.Create(ItemID.LunarBlockSolar, 1)
-                .AddIngredient(Type, 5)
+
+            Recipe.Create(ItemID.LunarBlockSolar, 10)
+                .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentSolar, 1)
                 .Register();
 
-            Recipe.Create(ItemID.VortexBrick, 1)
+            Recipe.Create(ItemID.VortexBrick, 10)
                 .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentVortex, 1)
                 .Register();
-            Recipe.Create(ItemID.LunarBlockVortex, 1)
-                .AddIngredient(Type, 5)
+
+            Recipe.Create(ItemID.LunarBlockVortex, 10)
+                .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentVortex, 1)
                 .Register();
 
-            Recipe.Create(ItemID.NebulaBrick, 1)
+            Recipe.Create(ItemID.NebulaBrick, 10)
                 .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentNebula, 1)
                 .Register();
-            Recipe.Create(ItemID.LunarBlockNebula, 1)
-                .AddIngredient(Type, 5)
+
+            Recipe.Create(ItemID.LunarBlockNebula, 01)
+                .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentNebula, 1)
                 .Register();
 
-            Recipe.Create(ItemID.StardustBrick, 1)
+            Recipe.Create(ItemID.StardustBrick, 10)
                 .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentStardust, 1)
                 .Register();
-            Recipe.Create(ItemID.LunarBlockStardust, 1)
-                .AddIngredient(Type, 5)
+
+            Recipe.Create(ItemID.LunarBlockStardust, 10)
+                .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentStardust, 1)
                 .Register();
             

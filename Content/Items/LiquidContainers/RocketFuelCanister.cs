@@ -34,15 +34,5 @@ namespace Macrocosm.Content.Items.LiquidContainers
         public override void OnStack(Item source, int numToTransfer)
         {
         }
-
-        public override void AddRecipes()
-        {
-            CreateRecipe(25)
-                .AddIngredient(ItemID.Glass,2)
-                .AddIngredient<SteelBar>(2)
-                .AddIngredient<Plastic>(6)
-                .AddTile(TileID.MythrilAnvil)
-                .Register();
-        }
     }
 }

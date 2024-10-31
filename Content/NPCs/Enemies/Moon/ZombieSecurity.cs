@@ -14,6 +14,7 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Sounds;
+using Macrocosm.Content.Items.Food;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -86,8 +87,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
-            // drop gun, 1/12 normal mode, twice in expert
-            loot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<TychoDesertEagle>(), 12, 1));
+            // drop gun, 1/24 normal mode, twice in expert
+            loot.Add(ItemDropRule.ExpertGetsRerolls(ModContent.ItemType<TychoDesertEagle>(), 24, 1));
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<CapstoneRush>(), 70, 1));
         }
 
         public override void OnSpawn(IEntitySource source)

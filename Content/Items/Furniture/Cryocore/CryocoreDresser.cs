@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Furniture.Cryocore
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.CryocoreBrick, 16)
+                .AddIngredient(ItemID.CryocoreBrick, 16)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();
         }

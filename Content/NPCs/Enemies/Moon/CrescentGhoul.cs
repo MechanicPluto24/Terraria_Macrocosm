@@ -71,7 +71,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void ModifyNPCLoot(NPCLoot loot)
         {
             loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 3));
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 15, 25, 65));
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 50, 1, 20));
         }
 
         /// <summary> Adapted from Corite AI </summary>

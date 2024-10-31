@@ -1,9 +1,11 @@
 using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Blocks.Sands;
 using Macrocosm.Content.Items.Ores;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 namespace Macrocosm.Common.Global.Items
 {
@@ -18,22 +20,34 @@ namespace Macrocosm.Common.Global.Items
                 // 20% chance to override with Macrocosm ores 
                 if (Main.rand.NextBool(5))
                 {
-                    // if overriden, spawn Aluminum or Lithium with 50% chance each
-                    if (Main.rand.NextBool())
-                        resultType = ModContent.ItemType<AluminumOre>();
-                    else
-                        resultType = ModContent.ItemType<LithiumOre>();
+                    // 45% chance for coal, 45% for aluminum, 10% for lithium
+                    WeightedRandom<int> weightedRandom = new(Main.rand);
+                    weightedRandom.Add(ModContent.ItemType<Coal>(), 0.45f);
+                    weightedRandom.Add(ModContent.ItemType<AluminumOre>(), 0.45f);
+                    weightedRandom.Add(ModContent.ItemType<LithiumOre>(), 0.1f);
+                    resultType = weightedRandom.Get();
                 }
             }
 
             // if extractinating desert fossils 
             if (extractType == ItemID.DesertFossil)
             {
-                // 4% chance to override result  with (1-5) Oil Shales 
+                // 4% chance to override result with (1-5) Oil Shales 
                 if (Main.rand.NextBool(25))
                 {
                     resultType = ModContent.ItemType<OilShale>();
                     resultStack = Main.rand.Next(1, 6);
+                }
+            }
+
+            // Silicon extractable items (e.g. silica sand)
+            if (extractType == ModContent.ItemType<Silicon>())
+            {
+                // 20% chance to override result with (1-10) silicon
+                if (Main.rand.NextBool(5))
+                {
+                    resultType = ModContent.ItemType<Silicon>();
+                    resultStack = Main.rand.Next(1, 11);
                 }
             }
         }

@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.CosmicEmber
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.CosmicEmberBrick, 8)
+                .AddIngredient(ItemID.CosmicEmberBrick, 8)
                 .AddTile(TileID.WorkBenches)
                 .Register();
         }

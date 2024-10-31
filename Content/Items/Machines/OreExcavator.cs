@@ -28,15 +28,16 @@ namespace Macrocosm.Content.Items.Machines
                 .AddIngredient(ItemID.Wire, 50)
                 .AddIngredient(ItemID.AdamantiteBar, 10)
                 .AddIngredient<AluminumBar>(20)
-                .AddIngredient(ItemID.Diamond, 50)
+                .AddIngredient(ItemID.Diamond, 10)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
+
             CreateRecipe()
                 .AddIngredient<SteelBar>(20)
                 .AddIngredient(ItemID.Wire, 50)
                 .AddIngredient(ItemID.TitaniumBar, 10)
                 .AddIngredient<AluminumBar>(20)
-                .AddIngredient(ItemID.Diamond, 50)
+                .AddIngredient(ItemID.Diamond, 10)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
         }

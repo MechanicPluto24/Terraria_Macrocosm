@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.StarRoyale
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient(TileID.StarRoyaleBrick, 4)
+                .AddIngredient(ItemID.StarRoyaleBrick, 4)
                 .AddIngredient<LunarCrystal>(4) 
                 .AddIngredient(ItemID.Chain, 1)
                 .AddTile(TileID.WorkBenches)
