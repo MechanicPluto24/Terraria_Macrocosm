@@ -102,6 +102,7 @@ namespace Macrocosm.Content.Subworlds
 
         public override void PreUpdateWorld()
         {
+            Main.bloodMoon=false;//useful
             UpdateBloodMoon();
             UpdateMeteorStorm();
             UpdateSolarStorm();

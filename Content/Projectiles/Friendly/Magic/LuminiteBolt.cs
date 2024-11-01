@@ -16,6 +16,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class LuminiteBolt : ModProjectile
     {
+        // The targeted NPC whoAmI
+        private int targetNPC;
+
+        // The targeted NPC 
+        private NPC TargetNPC => Main.npc[targetNPC];
+        private float originalSpeed;
+
         public override string Texture => Macrocosm.EmptyTexPath;
 
         public float Strenght
@@ -51,9 +58,40 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 20;
         }
-
+        bool spawned =false;
         public override void AI()
         {
+            if (!spawned){
+                originalSpeed = Projectile.velocity.Length();
+                spawned =true;
+            }
+            float homingDistance = 200f;
+            float closestDistance = homingDistance;
+
+                    for (int i = 0; i < Main.maxNPCs; i++)
+                    {
+                        NPC npc = Main.npc[i];
+                        if (npc.CanBeChasedBy(Projectile))
+                        {
+                            float distance = Vector2.Distance(Projectile.Center, npc.Center);
+                            if (distance < closestDistance)
+                            {
+                                closestDistance = distance;
+                                targetNPC = npc.whoAmI;
+                            }
+                        }
+                    }
+                if (TargetNPC is not null && Vector2.Distance(Projectile.Center, TargetNPC.Center) < homingDistance && TargetNPC.CanBeChasedBy(Projectile))
+                {
+                        Vector2 direction = (TargetNPC.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
+                        Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * originalSpeed, 0.015f);
+                }
+                
+
+
+
+
+
             if (Projectile.owner == Main.myPlayer && Projectile.timeLeft <= 3)
                 Projectile.PrepareBombToBlow();
 
