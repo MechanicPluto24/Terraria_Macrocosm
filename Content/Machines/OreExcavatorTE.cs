@@ -98,6 +98,7 @@ namespace Macrocosm.Content.Machines
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<ChandriumOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<DianiteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ItemID.LunarOre, 8));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<NickelOre>(), 16));
 
                     break;
 
@@ -107,10 +108,12 @@ namespace Macrocosm.Content.Machines
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Coal>(), 6));
                     Loot.Add(new TECommonDrop(this, ItemID.CopperOre, 6));
                     Loot.Add(new TECommonDrop(this, ItemID.TinOre, 6));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<AluminumOre>(), 7));
                     Loot.Add(new TECommonDrop(this, ItemID.IronOre, 8));
                     Loot.Add(new TECommonDrop(this, ItemID.LeadOre, 8));
                     Loot.Add(new TECommonDrop(this, ItemID.SilverOre, 10));
                     Loot.Add(new TECommonDrop(this, ItemID.TungstenOre, 10));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<LithiumOre>(), 11));
                     Loot.Add(new TECommonDrop(this, ItemID.GoldOre, 12));
                     Loot.Add(new TECommonDrop(this, ItemID.PlatinumOre, 12));
 
