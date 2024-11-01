@@ -533,7 +533,12 @@ namespace Macrocosm.Common.Sets
             ItemID.MoonlordTurretStaff, 0.2f,
             ItemID.SDMG, 0.8f,
             ItemID.MiniNukeI, 0.4f,
-            ItemID.MiniNukeII, 0.4f
+            ItemID.MiniNukeII, 0.4f,
+            ItemID.SolarEruption, 0.78f,
+            ItemID.DayBreak, 0.67f,
+            ItemID.VortexBeater, 0.9f,
+            ItemID.Phantasm, 0.9f,
+            ItemID.StardustCellStaff, 0.9f
         );
 
         public static bool[] WingTimeDependsOnAtmosphericDensity { get; } = ItemID.Sets.Factory.CreateBoolSet(
