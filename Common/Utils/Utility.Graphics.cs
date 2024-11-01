@@ -134,7 +134,7 @@ namespace Macrocosm.Common.Utils
                     BlendState.AlphaBlend,
                     Main.DefaultSamplerState,
                     DepthStencilState.Default,
-                    RasterizerState.CullCounterClockwise,
+                    RasterizerState.CullNone,
                     null,
                     Main.GameViewMatrix.TransformationMatrix
                 );

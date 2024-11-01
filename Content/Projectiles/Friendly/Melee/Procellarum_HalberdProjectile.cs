@@ -53,7 +53,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void OnSpawn(IEntitySource source)
         {
             base.OnSpawn(source);
-            if (Projectile.ai[0] == 2) Projectile.friendly = false;
+            if (Projectile.ai[0] == 2)
+            {
+                Projectile.friendly = false;
+            }
+
             chargeState = ProcellarumState.Release;
         }
 
@@ -297,13 +301,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         }
         public override bool? CanHitNPC(NPC target)
         {
-            if(target.friendly==true)
-                return false;
-            if (Projectile.ai[0] == 1)
-            {
-                return base.CanHitNPC(target)
-                ;
-            }
+            if (Projectile.ai[0] == 1 || target.friendly)
+                return base.CanHitNPC(target);
+
             else return chargeState == ProcellarumState.Travel;
         }
 

@@ -93,6 +93,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
             AI_Timer++;
 
+            Projectile.tileCollide = AI_Timer > 10;
             Lighting.AddLight(Projectile.Center, lightColor);
         }
 
