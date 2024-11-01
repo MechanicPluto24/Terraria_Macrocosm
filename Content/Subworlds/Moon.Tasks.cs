@@ -1504,7 +1504,7 @@ namespace Macrocosm.Content.Subworlds
                 chest.item[slot++].stack = WorldGen.genRand.Next(36, 105);
             }
 
-            if (WorldGen.genRand.NextBool(3))
+            if (WorldGen.genRand.NextBool(15))
             {
                 chest.item[slot++].SetDefaults(ItemType<CraterDemonSummon>());
             }

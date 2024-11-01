@@ -1,4 +1,5 @@
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -59,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 float opacity = (1f - Projectile.alpha / 255f);
                 float progress = n / count;
                 Color color = Color.White * (0.7f - progress) * opacity;
-                Vector2 trailPosition = Projectile.position - Projectile.velocity.SafeNormalize(default) * n * 6f;
+                Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * 6f;
                 Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1f * (1f - progress), SpriteEffects.None, 0);
             }
 

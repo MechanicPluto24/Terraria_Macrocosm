@@ -38,7 +38,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void SetDefaults()
         {
             NPC.CloneDefaults(NPCID.DiggerHead);
-            NPC.lifeMax = 2000;
+            NPC.lifeMax = 4000;
             NPC.damage = 65;
             NPC.defense = 100;
             NPC.width = 20;

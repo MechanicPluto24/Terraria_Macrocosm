@@ -3,6 +3,7 @@ using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoMod.Core.Utils;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -136,7 +137,6 @@ namespace Macrocosm.Content.Menus
             ];
         }
 
-
         private CelestialBody grabbed;
         private readonly Dictionary<CelestialBody, int> released = new();
         private readonly List<CelestialBody> destroyed = new();
@@ -152,11 +152,74 @@ namespace Macrocosm.Content.Menus
 
         public override void OnSelected()
         {
-            Stars.SpawnStars(350, 500, baseScale: 0.8f);
-            SetupCelestialBodies();
+            Setup();
         }
 
         public override void OnDeselected()
+        {
+            Clear();
+        }
+
+        private void Setup()
+        {
+            Stars.SpawnStars(350, 500, baseScale: 0.8f);
+
+            foreach (CelestialBody body in celestialBodies)
+            {
+                body.ShouldUpdate = true;
+                body.Scale = 0.6f;
+                body.SetLighting(Sun);
+                body.ConfigureBodySphericalShader = ConfigureBodyShader;
+            }
+
+            Sun.Center = Utility.ScreenCenter;
+            Sun.OverrideBodyShader = Sun_GetShader;
+
+            SetUpAsteroidBelt();
+            SetUpKuiperBelt();
+
+            Vulcan.SetOrbitParent(Sun, 174, Rand(), 0.0022f);
+            Mercury.SetOrbitParent(Sun, 204, Rand(), 0.0018f);
+            Venus.SetOrbitParent(Sun, 238, Rand(), 0.0014f);
+
+            Earth.SetOrbitParent(Sun, 288, Rand(), 0.001f);
+            Luna.SetOrbitParent(Earth, new Vector2(36, 10), 0f, Rand(), 0.018f);
+
+            Mars.SetOrbitParent(Sun, 330, Rand(), 0.0008f);
+            Phobos.SetOrbitParent(Mars, new Vector2(20, 8), 0.2f, Rand(), 0.014f);
+            Deimos.SetOrbitParent(Mars, new Vector2(24, 10), -0.4f, Rand(), 0.016f);
+
+            Ceres.SetOrbitParent(Sun, 362, Rand(), 0.0006f);
+
+            Jupiter.SetOrbitParent(Sun, 410, Rand(), 0.0004f);
+            Io.SetOrbitParent(Jupiter, new Vector2(48, 20), 0.2f, Rand(), 0.012f);
+            Europa.SetOrbitParent(Jupiter, new Vector2(54, 18), 0.1f, Rand(), 0.01f);
+
+            Saturn.SetOrbitParent(Sun, 514, Rand(), 0.00037f);
+            Saturn.ConfigureBackRadialShader = Saturn_ConfigureRingsShader;
+            Saturn.ConfigureFrontRadialShader = Saturn_ConfigureRingsShader;
+            Saturn.OverrideBackDraw = Saturn_DrawRings_Back;
+            Saturn.OverrideFrontDraw = Saturn_DrawRings_Front;
+            Titan.SetOrbitParent(Saturn, new Vector2(52, 28), 0.8f, Rand(), 0.012f);
+
+            Ouranos.SetOrbitParent(Sun, 622, Rand(), 0.0003f);
+            Ouranos.OverrideBackDraw = Ouranos_DrawRings_Back;
+            Ouranos.OverrideFrontDraw = Ouranos_DrawRings_Front;
+            Miranda.SetOrbitParent(Ouranos, new Vector2(42, 18), 0f, Rand(), 0.017f);
+
+            Neptune.SetOrbitParent(Sun, 700, Rand(), 0.00027f);
+            Triton.SetOrbitParent(Neptune, new Vector2(36, 26), 0.9f, Rand(), 0.018f);
+
+            plutoBarycenter.SetOrbitParent(Sun, new Vector2(760, 620), 0.28f, Rand(), 0.00022f);
+            plutoBarycenter.AddOrbitChild(Pluto, 4, 0f, 0.005f);
+            plutoBarycenter.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
+
+            Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
+        }
+
+        private static float Rand() => Utility.RandomRotation();
+
+        private void Clear()
         {
             Stars.Clear();
             Sun.ClearOrbitChildren();
@@ -164,6 +227,12 @@ namespace Macrocosm.Content.Menus
             KuiperBelt.Clear();
             released.Clear();
             destroyed.Clear();
+        }
+
+        public override void Update(bool isOnTitleScreen)
+        {
+            drawOldLogo = destroyed.Count > 8;
+            Interact();
         }
 
         private SpriteBatchState state1, state2;
@@ -221,69 +290,10 @@ namespace Macrocosm.Content.Menus
             Sun.Draw(spriteBatch);
             DrawSunLightEffects(spriteBatch);
 
-            drawOldLogo = destroyed.Count > 0;
-            Interact();
-
             return true;
         }
 
         private float SolarFlareProgress => Utility.PositiveSineWave(450, MathF.PI / 2);
-
-        private void SetupCelestialBodies()
-        {
-            foreach (CelestialBody body in celestialBodies)
-            {
-                body.ShouldUpdate = true;
-                body.Scale = 0.6f;
-                body.SetLighting(Sun);
-                body.ConfigureBodySphericalShader = ConfigureBodyShader;
-            }
-
-            Sun.Center = Utility.ScreenCenter;
-            Sun.OverrideBodyShader = Sun_GetShader;
-
-            SetUpAsteroidBelt();
-            SetUpKuiperBelt();
-
-            Vulcan.SetOrbitParent(Sun, 174, Rand(), 0.0022f);
-            Mercury.SetOrbitParent(Sun, 204, Rand(), 0.0018f);
-            Venus.SetOrbitParent(Sun, 238, Rand(), 0.0014f);
-
-            Earth.SetOrbitParent(Sun, 288, Rand(), 0.001f);
-            Luna.SetOrbitParent(Earth, new Vector2(36, 10), 0f, Rand(), 0.018f);
-
-            Mars.SetOrbitParent(Sun, 330, Rand(), 0.0008f);
-            Phobos.SetOrbitParent(Mars, new Vector2(20, 8), 0.2f, Rand(), 0.014f);
-            Deimos.SetOrbitParent(Mars, new Vector2(24, 10), -0.4f, Rand(), 0.016f);
-
-            Ceres.SetOrbitParent(Sun, 362, Rand(), 0.0006f);
-
-            Jupiter.SetOrbitParent(Sun, 410, Rand(), 0.0004f);
-            Io.SetOrbitParent(Jupiter, new Vector2(48, 20), 0.2f, Rand(), 0.012f);
-            Europa.SetOrbitParent(Jupiter, new Vector2(54, 18), 0.1f, Rand(), 0.01f);
-
-            Saturn.SetOrbitParent(Sun, 514, Rand(), 0.00037f);
-            Saturn.ConfigureBackRadialShader = Saturn_ConfigureRingsShader;
-            Saturn.ConfigureFrontRadialShader = Saturn_ConfigureRingsShader;
-            Saturn.OverrideBackDraw = Saturn_DrawRings_Back;
-            Saturn.OverrideFrontDraw = Saturn_DrawRings_Front;
-            Titan.SetOrbitParent(Saturn, new Vector2(52, 28), 0.8f, Rand(), 0.012f);
-
-            Ouranos.SetOrbitParent(Sun, 622, Rand(), 0.0003f);
-            Ouranos.OverrideBackDraw = Ouranos_DrawRings_Back;
-            Ouranos.OverrideFrontDraw = Ouranos_DrawRings_Front;
-            Miranda.SetOrbitParent(Ouranos, new Vector2(42, 18), 0f, Rand(), 0.017f);
-
-            Neptune.SetOrbitParent(Sun, 700, Rand(), 0.00027f);
-            Triton.SetOrbitParent(Neptune, new Vector2(36, 26), 0.9f, Rand(), 0.018f);
-
-            plutoBarycenter.SetOrbitParent(Sun, new Vector2(760, 620), 0.28f, Rand(), 0.00022f);
-            plutoBarycenter.AddOrbitChild(Pluto, 4, 0f, 0.005f);
-            plutoBarycenter.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
-
-            Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
-        }
-        private static float Rand() => Utility.RandomRotation();
 
         private void SetUpAsteroidBelt()
         {
