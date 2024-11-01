@@ -113,7 +113,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                             chargeState = ProcellarumState.Travel;
                             Projectile.friendly = true;
                         }
-
+                        
                         if (Player.direction == 1)
                             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, CursorRotation - MathHelper.ToRadians(70));
                         else
@@ -297,6 +297,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         }
         public override bool? CanHitNPC(NPC target)
         {
+            if(target.friendly==true)
+                return false;
             if (Projectile.ai[0] == 1)
             {
                 return base.CanHitNPC(target)
