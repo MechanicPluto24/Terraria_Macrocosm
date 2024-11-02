@@ -27,7 +27,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.damage = 65;
             NPC.defense = 90;
             NPC.lifeMax = 1700;
-            NPC.HitSound = SFX.Zombie;
+            NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SFX.ZombieDeath;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = 3;
