@@ -7,6 +7,11 @@ Using the Subworld Library, players can explore far and wide, from the acidic su
 -The Moon is the only celestial body currently added, and is still in development
 -Multiplayer is still in development and is currently unplayable
 
+[[ HOW TO BUILD THE ROCKET ]]
+-Start by acquiring two launchpad markers. Place them on a perfectly flat surface of whatever materials you desire, so long as there are no imperfections in the ground, or obstructions between the markers.
+-Gather the required resources that each segment of the rocket desires, and deposit them into their respective slots.
+-Press the [ASSEMBLE] button and you're done!
+
 [[ Developer Team ]]
 MechanicPluto24 - Creator, Artist, Lead Developer
 
