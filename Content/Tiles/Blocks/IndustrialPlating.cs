@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Tiles.Blocks
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
-            MinPick = 225;
+            MinPick = 100;
             MineResist = 4f;
 
             AddMapEntry(new Color(180, 180, 180));
