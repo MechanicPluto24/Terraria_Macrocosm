@@ -19,6 +19,7 @@ namespace Macrocosm.Common.Players
         {
             if (StalwartShield)
             {
+                Player.noKnockback=true;
                 if (decreaseTick < 180 && defenceBonus > 0)
                 {
                     decreaseTick++;
