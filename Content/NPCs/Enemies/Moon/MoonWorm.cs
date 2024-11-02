@@ -133,8 +133,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public static void CommonWormInit(Worm worm)
         {
             // These two properties handle the movement of the worm
-            worm.MoveSpeed = 15.5f;
-            worm.Acceleration = 0.12f;
+            worm.MoveSpeed = 18.5f;
+            worm.Acceleration = 0.25f;
         }
 
         private int attackCounter;

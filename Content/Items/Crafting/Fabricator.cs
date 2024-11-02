@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Tech;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
