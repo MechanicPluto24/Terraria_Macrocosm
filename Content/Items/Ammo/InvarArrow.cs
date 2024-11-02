@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Ammo
 
         public override void SetDefaults()
         {
-            Item.damage = 18;
+            Item.damage = 30;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 14;
             Item.height = 38;

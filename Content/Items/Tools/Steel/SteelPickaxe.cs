@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Tools.Steel
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.useTurn = true;
-            Item.pick = 100;
+            Item.pick = 55;
         }
 
         public override void AddRecipes()

@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Armor.Steel
             Item.height = 20;
             Item.value = Item.sellPrice(silver: 80);
             Item.rare = ItemRarityID.Orange;
-            Item.defense = 8;
+            Item.defense = 5;
         }
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
