@@ -20,12 +20,12 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         }
         public override void SetDefaults()
         {
-            Item.damage = 150;
+            Item.damage = 145;
             Item.DamageType = DamageClass.Melee;
             Item.width = 40;
             Item.height = 40;
-            Item.useTime = 15;
-            Item.useAnimation = 15;
+            Item.useTime = 18;
+            Item.useAnimation = 18;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 5;
             Item.value = 10000;
