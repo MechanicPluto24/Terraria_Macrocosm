@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileBlockLight[Type] = false;
             Main.tileLighted[Type] = true;
             Main.tileMergeDirt[Type] = false;
-            MinPick = 225;
+            MinPick = 100;
             MineResist = 4f;
             AddMapEntry(new Color(50, 50, 50), CreateMapEntryName());
         }
