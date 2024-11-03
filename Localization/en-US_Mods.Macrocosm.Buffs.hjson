@@ -1,11 +1,11 @@
 Fear: {
 	DisplayName: Fear
-	Description: OH GOD WHAT IS THAT!?
+	Description: OH GOD WHAT IS THAT?!
 }
 
 SuitBreach: {
 	DisplayName: Suit Breach
-	Description: A hole has appeared in your suit, your blood begins to boil!
+	Description: You are exposed to the elements!
 }
 
 Depressurized: {
@@ -20,12 +20,12 @@ ChandriumWhipBuff: {
 
 CalcicCaneMinionBuff: {
 	DisplayName: Crater Imp
-	Description: This lesser demon will fight for you!
+	Description: The crater imp will fight for you
 }
 
 ChandriumStaffMinionBuff: {
 	DisplayName: Crescent Ghoul
-	Description: This Crescent Ghoul will fight for you!
+	Description: The crescent ghoul will fight for you
 }
 
 SpaceShuttle: {
@@ -65,7 +65,7 @@ MedkitMedium: {
 
 Irradiated: {
 	DisplayName: Irradiated
-	Description: You have been exposed to radiation
+	Description: You have radiation sickness
 }
 
 Blindness: {
@@ -80,17 +80,17 @@ MildNecrosis: {
 
 Necrosis: {
 	DisplayName: Necrosis
-	Description: Your body is dying!
+	Description: Your body is rapidly decaying
 }
 
 OrganFailure: {
 	DisplayName: Organ Failure
-	Description: Your organs are failing!
+	Description: Your organs are failing
 }
 
 Paralysis: {
 	DisplayName: Paralysis
-	Description: You cannot move...
+	Description: You cannot move!
 }
 
 WeakBones: {
@@ -115,12 +115,12 @@ Melting: {
 
 HummingbirdDroneSummonBuff: {
 	DisplayName: P.D.C.D. "Hummingbird"
-	Description: The combat drone will fight for you!
+	Description: The combat drone will protect you
 }
 
 GreatstaffOfHorusMinionBuff: {
 	DisplayName: Greatstaff Of Horus Minion Buff
-	Description: A cosmic granule will fight for you!
+	Description: The solar granule will fight for you
 }
 
 HorusBurn: {
@@ -130,5 +130,5 @@ HorusBurn: {
 
 RyuguSummonBuff: {
 	DisplayName: Ryugu Summon Buff
-	Description: The Ryugu will fight for you!
+	Description: The Ryugu will fight for you
 }
