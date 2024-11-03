@@ -70,12 +70,12 @@ Irradiated: {
 
 Blindness: {
 	DisplayName: Blindness
-	Description: You cannot see...
+	Description: Decreased vision
 }
 
 MildNecrosis: {
 	DisplayName: Mild Necrosis
-	Description: Dark patches begin to appear...
+	Description: Your body is decaying
 }
 
 Necrosis: {
