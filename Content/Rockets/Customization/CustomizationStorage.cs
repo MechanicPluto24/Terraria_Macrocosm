@@ -286,7 +286,8 @@ namespace Macrocosm.Content.Rockets.Customization
                     string module = split[0];
                     string detail = split[1].Replace(".rawimg", "");
 
-                    AddDetail(module, detail, true);
+                    if (!IsDetailExcludedByRegion(detail))
+                        AddDetail(module, detail, true);
                 }
             }
 
@@ -297,7 +298,7 @@ namespace Macrocosm.Content.Rockets.Customization
                 foreach (var kvp in details)
                 {
                     (string DetailModuleName, string detailName) = kvp.Key;
-                    if (DetailModuleName == moduleName)
+                    if (DetailModuleName == moduleName && !IsDetailExcludedByRegion(detailName))
                         logstring += $"{detailName} ";
                 }
                 logstring += "\n\n";
@@ -305,6 +306,19 @@ namespace Macrocosm.Content.Rockets.Customization
 
             if (shouldLogLoadedItems)
                 Macrocosm.Instance.Logger.Info(logstring);
+        }
+
+        private static bool IsDetailExcludedByRegion(string detailName)
+        {
+            string country = System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName;
+
+            if (country == "CN" && detailName == "Flag_TWN")
+                return true;
+
+            if(country == "TW" && detailName == "Flag_CHN")
+                return true;
+
+            return false;
         }
     }
 }

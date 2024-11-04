@@ -8,7 +8,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools
 {
-    public class WiringKit : ModItem
+    [LegacyName("WiringKit")]
+    public class CircuitProbe : ModItem
     {
         public override void SetStaticDefaults()
         {
