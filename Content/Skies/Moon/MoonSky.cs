@@ -1,8 +1,10 @@
 ﻿using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Macrocosm.Common.DataStructures;
 using ReLogic.Content;
 using SubworldLibrary;
 using System;
@@ -14,6 +16,7 @@ namespace Macrocosm.Content.Skies.Moon
 {
     public class MoonSky : CustomSky, ILoadable
     {
+        
         private bool active;
         private float intensity;
 
@@ -134,8 +137,15 @@ namespace Macrocosm.Content.Skies.Moon
             Color darkColor = new Color(35, 35, 35);
             Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
 
+            
+
             if (Main.dayTime)
             {
+                var MoonInstance=ModContent.GetInstance<Content.Subworlds.Moon>();
+
+                if(MoonInstance.IsDemonSun())
+                    return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1))),new Color(150,80,80), MoonInstance.DemonSunIntesnity());
+
                 if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
                     return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1)));
                 else if (Main.time > MacrocosmSubworld.CurrentDayLength * 0.9)
@@ -154,7 +164,7 @@ namespace Macrocosm.Content.Skies.Moon
             }
         }
 
-
+        private SpriteBatchState state1, state2;
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             if (SubworldSystem.IsActive<Subworlds.Moon>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)
@@ -168,13 +178,56 @@ namespace Macrocosm.Content.Skies.Moon
                 float nightStarBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.1f, 0.8f);
 
                 DrawMoonNebula(nebulaBrightness);
-
+                var MoonInstance=ModContent.GetInstance<Content.Subworlds.Moon>();
                 starsDay.Draw(spriteBatch);
                 starsNight.Draw(spriteBatch, nightStarBrightness);
 
+                if (MoonInstance.IsDemonSun())
+                    DrawDemonSunEffects(spriteBatch,sun);
                 sun.Draw(spriteBatch);
+                if (MoonInstance.IsDemonSun())
+                    DrawDemonSunFrontEffects(spriteBatch,sun);
                 earth.Draw(spriteBatch);
             }
+        }
+        private void DrawDemonSunEffects(SpriteBatch spriteBatch,CelestialBody Sun)
+        {
+           
+            var MoonInstance=ModContent.GetInstance<Content.Subworlds.Moon>();
+
+            float intensity=MoonInstance.DemonSunVisualIntensity;
+            var flare = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3").Value;
+            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1").Value;
+            var scorch2 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2").Value;
+            var glow = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Circle7").Value;
+            var beam = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scratch2").Value;
+            float pulse =Utility.PositiveSineWave(450, MathF.PI / 2);
+
+            spriteBatch.Draw(scorch1, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0) * (0.25f + 0.01f * pulse)*intensity, MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, (0.5f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(scorch2, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0) * (0.2f + 0.01f * pulse)*intensity, MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, (0.5f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
+
+            spriteBatch.Draw(glow, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0)*intensity, MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, (0.4f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(glow, Sun.Center, null, new Color(255, 255, 255,0) *intensity, MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f,(0.2f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(glow, Sun.Center, null, new Color(255, 255, 255,0) *intensity, MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f,(0.1f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
+
+            spriteBatch.Draw(flare, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0)*intensity*0.5f, 0f, scorch2.Size() / 2f, (2.5f)*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(beam, Sun.Center, null, new Color(255, 255, 255,0) *intensity,MathHelper.Pi/4, beam.Size() / 2f,0.8f*intensity, SpriteEffects.None, 0);
+           
+        }
+        private void DrawDemonSunFrontEffects(SpriteBatch spriteBatch,CelestialBody Sun)
+        {
+           
+            var MoonInstance=ModContent.GetInstance<Content.Subworlds.Moon>();
+
+            float intensity=MoonInstance.DemonSunVisualIntensity;
+
+   
+            var circle = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Circle7").Value;
+
+            spriteBatch.Draw(circle, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0)*intensity, 0f, circle.Size() / 2f, 0.9f*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(circle, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0)*intensity, 0f, circle.Size() / 2f, 0.9f*intensity, SpriteEffects.None, 0);
+
+
         }
 
         private void DrawMoonNebula(float brightness)
@@ -201,7 +254,6 @@ namespace Macrocosm.Content.Skies.Moon
         {
             if (!SubworldSystem.IsActive<Subworlds.Moon>())
                 active = false;
-
             earth.Color = Color.White; // colorize Earth here
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
             SetEarthTextures();
