@@ -3483,6 +3483,16 @@ ChandriumPickaxe
 		Ancient Manipulator
 
 
+CircuitProbe
+	Value: 1 gold
+	Research count: 1
+	Recipes:
+		Wire x 50
+		Plastic x 5
+		at
+		Tinkerer's Workshop
+
+
 DianiteAxe
 	Value: 1 gold
 	Research count: 1
@@ -3577,16 +3587,6 @@ SteelPickaxe
 		Wood x 4
 		at
 		Anvil
-
-
-WiringKit
-	Value: 1 gold
-	Research count: 1
-	Recipes:
-		Wire x 50
-		Plastic x 5
-		at
-		Tinkerer's Workshop
 
 
 LuminiteTorch
