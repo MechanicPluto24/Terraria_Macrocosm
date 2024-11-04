@@ -202,6 +202,7 @@ namespace Macrocosm.Content.Skies.Moon
             if (!SubworldSystem.IsActive<Subworlds.Moon>())
                 active = false;
 
+            earth.Color = Color.White; // colorize Earth here
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
             SetEarthTextures();
         }
