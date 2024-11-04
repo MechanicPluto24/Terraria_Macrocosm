@@ -233,12 +233,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                         float between = Vector2.Distance(npc.Center, Projectile.Center);
                         bool closest = Vector2.Distance(Projectile.Center, targetCenter) > between;
                         bool inRange = between < distanceFromTarget;
-                        bool lineOfSight = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height);
-                        // Additional check for this specific minion behavior, otherwise it will stop attacking once it dashed through an enemy while flying though tiles afterwards
-                        // The number depends on various parameters seen in the movement code below. Test different ones out until it works alright
-                        bool closeThroughWall = between < 100f;
+                       
 
-                        if (((closest && inRange) || !foundTarget) && (lineOfSight || closeThroughWall))
+                        if (((closest && inRange) || !foundTarget))
                         {
                             distanceFromTarget = between;
                             targetCenter = npc.Center;
@@ -269,7 +266,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
             // Default movement parameters (here for attacking)
             float speed = 45f;
-            float inertia = 60f;
+            float inertia = 30f;
             Vector2 vectorToIdlePosition = owner.Center - Projectile.Center;
             float distanceToIdlePosition = Vector2.Distance(Projectile.Center, owner.Center);
             if (foundTarget)
