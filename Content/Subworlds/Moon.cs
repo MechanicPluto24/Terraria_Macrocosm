@@ -50,6 +50,11 @@ namespace Macrocosm.Content.Subworlds
         public float DemonSunIntensity=0f;
         public float DemonSunVisualIntensity=0f;
 
+        public bool SolarStorm=false;
+        public float SolarStormIntensity=0f;
+        public bool IsSolarStorm()=>SolarStorm;
+        public float GetSolarStormIntensity()=>SolarStormIntensity;
+
         public override float GetAmbientTemperature()
         {
             float temperature;
@@ -85,8 +90,10 @@ namespace Macrocosm.Content.Subworlds
 
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
-            DemonSun=true;
+            DemonSun=false;
             DemonSunIntensity=0f;
+            SolarStorm=false;
+
         }
 
         public override void OnExitWorld()
@@ -94,6 +101,8 @@ namespace Macrocosm.Content.Subworlds
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
             DemonSun=false;
             DemonSunIntensity=0f;
+            SolarStorm=false;
+            SolarStormIntensity=0f;
         }
 
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
@@ -134,7 +143,12 @@ namespace Macrocosm.Content.Subworlds
         }
 
         //TODO 
-        private void UpdateSolarStorm() { }
+        private void UpdateSolarStorm() {
+            if (SolarStorm&&SolarStormIntensity<0.8f)
+                SolarStormIntensity+=0.005f;
+            if (!SolarStorm&&SolarStormIntensity>0f)
+                SolarStormIntensity-=0.005f;
+        }
 
         public bool MeteorStormActive { get; set; } = false;
         public float MeteorBoost { get; set; } = 1f;
