@@ -29,8 +29,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.alpha = 255;
         }
         public override bool OnTileCollide(Vector2 oldVelocity)
-        {            
-            return Projectile.timeLeft<400;
+        {
+            return Projectile.timeLeft < 400;
         }
 
         public override void AI()

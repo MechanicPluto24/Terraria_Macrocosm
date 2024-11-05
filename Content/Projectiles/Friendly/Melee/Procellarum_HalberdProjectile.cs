@@ -1,9 +1,9 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Content.Particles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -119,7 +119,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                             chargeState = ProcellarumState.Travel;
                             Projectile.friendly = true;
                         }
-                        
+
                         if (Player.direction == 1)
                             Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, CursorRotation - MathHelper.ToRadians(70));
                         else
@@ -286,29 +286,31 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 */
             }
         }
-        public override void OnKill(int timeLeft){
+        public override void OnKill(int timeLeft)
+        {
             if (Projectile.ai[0] == 2)
             {
-                for (int i=0; i<70;i++){
-                Particle.Create<TintableSpark>((p) =>
+                for (int i = 0; i < 70; i++)
                 {
-                    p.Position = Projectile.Center;
-                    p.Velocity = Projectile.velocity.RotatedByRandom(MathHelper.TwoPi)*Main.rand.NextFloat(0.1f,0.3f);
-                    p.Scale = new(3f);
-                    p.Rotation = 0f;
-                    p.Color = new List<Color>() {
+                    Particle.Create<TintableSpark>((p) =>
+                    {
+                        p.Position = Projectile.Center;
+                        p.Velocity = Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.3f);
+                        p.Scale = new(3f);
+                        p.Rotation = 0f;
+                        p.Color = new List<Color>() {
                         new(77, 99, 124),
                         new(90, 83, 92),
                         new(232, 239, 255)
-                    }.GetRandom();
-                });
+                        }.GetRandom();
+                    });
                 }
                 Particle.Create<TintableFlash>((p) =>
                 {
-                p.Position = Projectile.Center;
-                p.Scale = new(0.01f);
-                p.ScaleVelocity = new(0.3f);
-                p.Color = new Color(232, 239, 255);
+                    p.Position = Projectile.Center;
+                    p.Scale = new(0.01f);
+                    p.ScaleVelocity = new(0.3f);
+                    p.Color = new Color(232, 239, 255);
                 });
             }
         }

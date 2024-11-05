@@ -315,7 +315,7 @@ namespace Macrocosm.Content.Rockets.Customization
             if (country == "CN" && detailName == "Flag_TWN")
                 return true;
 
-            if(country == "TW" && detailName == "Flag_CHN")
+            if (country == "TW" && detailName == "Flag_CHN")
                 return true;
 
             return false;

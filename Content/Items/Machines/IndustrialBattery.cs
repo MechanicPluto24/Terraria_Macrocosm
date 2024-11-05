@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Items.Refined;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Items.Refined;
 using Macrocosm.Content.Items.Tech;
 using Terraria;
 using Terraria.ID;
@@ -10,6 +11,7 @@ namespace Macrocosm.Content.Items.Machines
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()
