@@ -44,6 +44,12 @@ namespace Macrocosm.Content.Subworlds
             //new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
         };
 
+        public bool IsDemonSun()=>DemonSun;
+        public float DemonSunIntesnity()=>DemonSunVisualIntensity;
+        public bool DemonSun=false;
+        public float DemonSunIntensity=0f;
+        public float DemonSunVisualIntensity=0f;
+
         public override float GetAmbientTemperature()
         {
             float temperature;
@@ -79,11 +85,15 @@ namespace Macrocosm.Content.Subworlds
 
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
+            DemonSun=true;
+            DemonSunIntensity=0f;
         }
 
         public override void OnExitWorld()
         {
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
+            DemonSun=false;
+            DemonSunIntensity=0f;
         }
 
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
@@ -116,6 +126,11 @@ namespace Macrocosm.Content.Subworlds
         //TODO
         private void UpdateBloodMoon()
         {
+            if (DemonSunVisualIntensity<DemonSunIntensity)
+                DemonSunVisualIntensity+=0.005f;
+            if (DemonSunVisualIntensity>DemonSunIntensity)
+                DemonSunVisualIntensity-=0.005f;
+            
         }
 
         //TODO 
