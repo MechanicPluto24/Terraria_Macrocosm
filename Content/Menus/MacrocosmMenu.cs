@@ -3,7 +3,6 @@ using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoMod.Core.Utils;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -394,7 +393,7 @@ namespace Macrocosm.Content.Menus
 
             Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height() / 2);
             Vector2 position = saturn.Center;
-            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(sourceRect.Width / 2, sourceRect.Height), saturn.Scale * 0.96f, default, 0f);
+            spriteBatch.Draw(rings.Value, position, sourceRect, saturn.Color, 0f, new Vector2(sourceRect.Width / 2, sourceRect.Height), saturn.Scale * 0.96f, default, 0f);
 
             spriteBatch.End();
         }
@@ -405,7 +404,7 @@ namespace Macrocosm.Content.Menus
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
             Vector2 position = saturn.Center + new Vector2(0, 0);
-            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, 0f, new Vector2(rings.Height() / 2f, 0), saturn.Scale * 0.96f, default, 0f);
+            spriteBatch.Draw(rings.Value, position, sourceRect, saturn.Color, 0f, new Vector2(rings.Height() / 2f, 0), saturn.Scale * 0.96f, default, 0f);
 
             spriteBatch.End();
         }
@@ -436,7 +435,7 @@ namespace Macrocosm.Content.Menus
 
             Rectangle sourceRect = new(0, 0, rings.Width(), rings.Height() / 2);
             Vector2 position = ouranos.Center;
-            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, MathHelper.PiOver2, new Vector2(sourceRect.Width / 2, sourceRect.Height), ouranos.Scale * 1f, default, 0f);
+            spriteBatch.Draw(rings.Value, position, sourceRect, ouranos.Color, MathHelper.PiOver2, new Vector2(sourceRect.Width / 2, sourceRect.Height), ouranos.Scale * 1f, default, 0f);
 
             spriteBatch.End();
         }
@@ -447,7 +446,7 @@ namespace Macrocosm.Content.Menus
 
             Rectangle sourceRect = new(0, rings.Height() / 2, rings.Width(), rings.Height() / 2);
             Vector2 position = ouranos.Center + new Vector2(0, 0);
-            spriteBatch.Draw(rings.Value, position, sourceRect, Color.White, MathHelper.PiOver2, new Vector2(rings.Height() / 2f, 0), ouranos.Scale * 1f, default, 0f);
+            spriteBatch.Draw(rings.Value, position, sourceRect, ouranos.Color, MathHelper.PiOver2, new Vector2(rings.Height() / 2f, 0), ouranos.Scale * 1f, default, 0f);
 
             spriteBatch.End();
         }

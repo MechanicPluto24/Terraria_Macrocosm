@@ -71,7 +71,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.damage = 65;
             NPC.defense = 100;
             NPC.lifeMax = 1800;
-            NPC.HitSound = SFX.Zombie;
+            NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SFX.ZombieDeath;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = -1;
@@ -245,7 +245,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             // Orient the NPC towards the player 
             NPC.direction = Main.player[NPC.target].position.X < NPC.position.X ? -1 : 1;
 
-            int projDamage = Utility.TrueDamage(NPC.damage * 3/2);
+            int projDamage = Utility.TrueDamage(NPC.damage * 3 / 2);
             int projType = ModContent.ProjectileType<ZombieSecurityBullet>();
             float projSpeed = 120;
 

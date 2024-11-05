@@ -371,9 +371,11 @@ IrradiatedBrick
 	Recipes:
 		Irradiated Rock x 2
 		at
-		Work Bench
+		Furnace
 
 		Irradiated Brick Wall x 4
+		at
+		Work Bench
 
 
 RegolithBrick
@@ -382,9 +384,11 @@ RegolithBrick
 	Recipes:
 		Regolith x 2
 		at
-		Work Bench
+		Furnace
 
 		Regolith Brick Wall x 4
+		at
+		Work Bench
 
 
 CheeseBlock
@@ -413,12 +417,20 @@ IndustrialPlating
 			=> x5
 
 		Industrial Plating Wall x 4
+		at
+		Work Bench
 
 		Industrial Hazard Wall x 4
+		at
+		Work Bench
 
 		Industrial Square Paneled Wall x 4
+		at
+		Work Bench
 
 		Industrial Trimming Wall x 4
+		at
+		Work Bench
 
 
 LexanGlass
@@ -431,6 +443,8 @@ LexanGlass
 		Glass Kiln
 
 		Lexan Glass Wall x 4
+		at
+		Work Bench
 
 
 SilicaCrimsand
@@ -458,6 +472,8 @@ IrradiatedRock
 	Research count: 100
 	Recipes:
 		Irradiated Rock Wall x 4
+		at
+		Work Bench
 
 
 Protolith
@@ -465,6 +481,8 @@ Protolith
 	Research count: 100
 	Recipes:
 		Protolith Wall x 4
+		at
+		Work Bench
 
 
 Regolith
@@ -472,6 +490,8 @@ Regolith
 	Research count: 100
 	Recipes:
 		Regolith Wall x 4
+		at
+		Work Bench
 
 
 CraterDemonBossBag
@@ -2879,6 +2899,12 @@ TeddyBear
 XFLR6
 	Value: 5 silver
 	Research count: 1
+	Recipes:
+		Aluminum Bar x 10
+		Plastic x 25
+		at
+		Anvil
+
 
 MeteoricChunk
 	Value: 2 gold 50 silver
@@ -3483,6 +3509,16 @@ ChandriumPickaxe
 		Ancient Manipulator
 
 
+CircuitProbe
+	Value: 1 gold
+	Research count: 1
+	Recipes:
+		Wire x 50
+		Plastic x 5
+		at
+		Tinkerer's Workshop
+
+
 DianiteAxe
 	Value: 1 gold
 	Research count: 1
@@ -3577,16 +3613,6 @@ SteelPickaxe
 		Wood x 4
 		at
 		Anvil
-
-
-WiringKit
-	Value: 1 gold
-	Research count: 1
-	Recipes:
-		Wire x 50
-		Plastic x 5
-		at
-		Tinkerer's Workshop
 
 
 LuminiteTorch

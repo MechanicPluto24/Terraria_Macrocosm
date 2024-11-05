@@ -315,12 +315,18 @@ namespace Macrocosm.Common.Subworlds
 
         private void SaveEarthSpecificData(TagCompound tag)
         {
+            if (SubworldSystem.AnyActive() && !SubworldSystem.AnyActive<Macrocosm>())
+                return;
+
             // Save Earth's world size for other subworlds to use 
             tag[nameof(Earth) + nameof(Earth.WorldSize)] = Earth.WorldSize;
         }
 
         private void LoadEarthSpecificData(TagCompound tag)
         {
+            if(SubworldSystem.AnyActive() && !SubworldSystem.AnyActive<Macrocosm>())
+                return;
+
             // Read world size and apply it here. 
             // In SubLib maxTiles are assigned before the data is read.
             // ReadCopiedMainWorldData is called before worldgen so it can be safely used there.

@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Armor.Steel
             Item.height = 20;
             Item.value = Item.sellPrice(silver: 50);
             Item.rare = ItemRarityID.Orange;
-            Item.defense = 7;
+            Item.defense = 5;
         }
 
         public override void AddRecipes()

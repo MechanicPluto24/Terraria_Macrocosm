@@ -393,6 +393,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     backShader.Parameters["uRadius"].SetValue(radius);
                     backShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
                     backShader.Parameters["uSourceRect"].SetValue(sourceRect);
+                    backShader.Parameters["uColor"].SetValue(Color.ToVector4());
                 }
                 else if (ConfigureBackSphericalShader is not null)
                 {
@@ -404,6 +405,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     backShader.Parameters["uEntitySize"].SetValue(backTexture.Size());
                     backShader.Parameters["uRadius"].SetValue(radius);
                     backShader.Parameters["uPixelSize"].SetValue(pixelSize);
+                    backShader.Parameters["uColor"].SetValue(Color.ToVector4());
                 }
 
             }
@@ -441,6 +443,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     bodyShader.Parameters["uRadius"].SetValue(radius);
                     bodyShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
                     bodyShader.Parameters["uSourceRect"].SetValue(sourceRect);
+                    bodyShader.Parameters["uColor"].SetValue(Color.ToVector4());
                 }
                 else if (ConfigureBodySphericalShader is not null)
                 {
@@ -452,6 +455,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     bodyShader.Parameters["uEntitySize"].SetValue(bodyTexture.Size());
                     bodyShader.Parameters["uRadius"].SetValue(radius);
                     bodyShader.Parameters["uPixelSize"].SetValue(pixelSize);
+                    bodyShader.Parameters["uColor"].SetValue(Color.ToVector4());
                 }
             }
 
@@ -488,6 +492,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     frontShader.Parameters["uRadius"].SetValue(radius);
                     frontShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
                     frontShader.Parameters["uSourceRect"].SetValue(sourceRect);
+                    frontShader.Parameters["uColor"].SetValue(Color.ToVector4());
                 }
                 else if (ConfigureFrontSphericalShader is not null)
                 {
@@ -499,6 +504,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     frontShader.Parameters["uEntitySize"].SetValue(frontTexture.Size());
                     frontShader.Parameters["uRadius"].SetValue(radius);
                     frontShader.Parameters["uPixelSize"].SetValue(pixelSize);
+                    frontShader.Parameters["uColor"].SetValue(Color.ToVector4());
                 }
             }
 

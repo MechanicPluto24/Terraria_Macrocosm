@@ -22,11 +22,12 @@ namespace Macrocosm.Content.Items.Blocks.Bricks
         {
             CreateRecipe()
                 .AddIngredient<IrradiatedRock>(2)
-                .AddTile(TileID.WorkBenches)
+                .AddTile(TileID.Furnaces)
                 .Register();
 
             CreateRecipe()
                 .AddIngredient<IrradiatedBrickWall>(4)
+                .AddTile(TileID.WorkBenches)
                 .Register();
         }
     }

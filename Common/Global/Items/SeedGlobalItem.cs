@@ -28,6 +28,12 @@ namespace Macrocosm.Common.Global.Items
                 // Tree seeds (Acorn, Sakura, )
                 if (ItemSets.TreeSeed[item.type])
                     return false;
+
+                if (item.type == ItemID.StaffofRegrowth)
+                    return false;
+
+                if (item.type == ItemID.AcornAxe)
+                    return false;
             }
 
             return true;

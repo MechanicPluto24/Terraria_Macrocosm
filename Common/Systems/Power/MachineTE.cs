@@ -237,7 +237,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public static void DrawMachinePowerInfo(SpriteBatch spriteBatch)
         {
-            if (Main.LocalPlayer.CurrentItem().type != ModContent.ItemType<WiringKit>())
+            if (Main.LocalPlayer.CurrentItem().type != ModContent.ItemType<CircuitProbe>())
                 return;
 
             foreach (var kvp in ByID)

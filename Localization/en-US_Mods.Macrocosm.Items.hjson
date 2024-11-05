@@ -389,12 +389,12 @@ RegolithWall: {
 
 AdamantiteLoom: {
 	DisplayName: Adamantite Loom
-	Tooltip: ""
+	Tooltip: Used to make spacesuit fabric
 }
 
 TitaniumLoom: {
 	DisplayName: Titanium Loom
-	Tooltip: ""
+	Tooltip: Used to make spacesuit fabric
 }
 
 SolarPanelLarge: {
@@ -564,7 +564,7 @@ CraterDemonMask: {
 
 DianiteFork: {
 	DisplayName: Dianite Fork
-	Tooltip: ""
+	Tooltip: Fire swirling magic at your enemies!
 }
 
 DianiteTome: {
@@ -578,7 +578,7 @@ DianiteTome: {
 
 ImbriumJewel: {
 	DisplayName: Imbrium Jewel
-	Tooltip: ""
+	Tooltip: Fires phantasmal skulls around you
 }
 
 AluminumBroadsword: {
@@ -608,7 +608,7 @@ ArtemiteSword: {
 
 ClawWrench: {
 	DisplayName: Claw Wrench
-	Tooltip: ""
+	Tooltip: <right> to throw the wrench
 }
 
 Crucible: {
@@ -670,7 +670,7 @@ NWARocketLauncher: {
 
 SeleniteBow: {
 	DisplayName: Selenite Bow
-	Tooltip: ""
+	Tooltip: Fires two arrows
 }
 
 SeleniteMagnum: {
@@ -720,17 +720,29 @@ TychoDesertEagle: {
 
 ChampionsBladeBroken: {
 	DisplayName: Champion's Blade
-	Tooltip: ""
+	Tooltip:
+		'''
+		Repeated hits with the blade strengthen it
+		This effect wears off after some time when not hitting with the blade
+		'''
 }
 
 ChampionsBladeRepaired: {
 	DisplayName: Champion's Blade
-	Tooltip: ""
+	Tooltip:
+		'''
+		Repeated hits with the blade strengthen it
+		This effect wears off after some time when not hitting with the blade
+		'''
 }
 
 ChampionsBlade: {
 	DisplayName: Champion's Blade
-	Tooltip: ""
+	Tooltip:
+		'''
+		Repeated hits with the blade strengthen it
+		This effect wears off after some time when not hitting with the blade
+		'''
 }
 
 SilicaCrimsand: {
@@ -1030,12 +1042,12 @@ XFLR6: {
 
 InvarArrow: {
 	DisplayName: Invar Arrow
-	Tooltip: ""
+	Tooltip: High velocity arrows that pierce enemies
 }
 
 InvarBullet: {
 	DisplayName: Invar Bullet
-	Tooltip: ""
+	Tooltip: Might ricochet between enemies
 }
 
 SpaceTeddy: {
@@ -1215,7 +1227,7 @@ ReactorHousing: {
 
 Fabricator: {
 	DisplayName: Fabricator
-	Tooltip: ""
+	Tooltip: Used to craft machines and rocket components
 }
 
 Battery: {
@@ -1488,12 +1500,12 @@ Medkit: {
 
 FrigorianGaze: {
 	DisplayName: Frigorian Gaze
-	Tooltip: ""
+	Tooltip: Consume your enemies in a swirl of chilling projectiles
 }
 
 StarDestroyer: {
 	DisplayName: Star Destroyer
-	Tooltip: ""
+	Tooltip: Fires a legion of stars at your enemies
 }
 
 WaveGunBlue: {
@@ -1863,11 +1875,6 @@ StarRoyaleLantern: {
 	Tooltip: ""
 }
 
-WiringKit: {
-	DisplayName: Wiring Kit
-	Tooltip: Used for circuitry troubleshooting
-}
-
 AntiRadiationPills: {
 	DisplayName: Anti Radiation Pills
 	Tooltip: ""
@@ -1915,7 +1922,7 @@ RegolithWallUnsafe: {
 
 Micronova: {
 	DisplayName: Micronova
-	Tooltip: ""
+	Tooltip: Spawns two portals to fire beams at your cursor
 }
 
 LexanGlassWall: {
@@ -1965,7 +1972,7 @@ CrescentScripture: {
 
 Totality: {
 	DisplayName: Totality
-	Tooltip: ""
+	Tooltip: Slash a rift into the fabric of reality!
 }
 
 AstraWorkbench: {
@@ -2035,12 +2042,21 @@ QuartzFragment: {
 
 ManisolBlades: {
 	DisplayName: Manisol Blades
-	Tooltip: ""
+	Tooltip:
+		'''
+		Throw blades at your enemies
+		Sol blades stick to enemies and explode when returning to you
+		Mani blades pierce through enemies when thrown and when returning
+		'''
 }
 
 ArmstrongGauntlets: {
 	DisplayName: Armstrong Gauntlets
-	Tooltip: ""
+	Tooltip:
+		'''
+		Throws a flurry of punches
+		Every few punches you will leap forward
+		'''
 }
 
 WornLunarianDagger: {
@@ -2115,7 +2131,11 @@ ThaumaturgicWard: {
 
 HummingbirdDroneRemote: {
 	DisplayName: P.D.C.D. Controller
-	Tooltip: Summons a Hummingbird drone to fight for you
+	Tooltip:
+		'''
+		Summons a Hummingbird drone to fight for you
+		At low health they will surround you in a defensive position
+		'''
 }
 
 GreatstaffOfHorus: {
@@ -2661,4 +2681,9 @@ CheesePlatform: {
 CheeseWall: {
 	DisplayName: Cheese Wall
 	Tooltip: ""
+}
+
+CircuitProbe: {
+	DisplayName: Circuit Probe
+	Tooltip: Used for circuitry troubleshooting
 }

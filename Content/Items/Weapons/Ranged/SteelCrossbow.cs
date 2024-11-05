@@ -16,12 +16,12 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.damage = 22;
+            Item.damage = 16;
             Item.DamageType = DamageClass.Ranged;
             Item.width = 70;
             Item.height = 16;
-            Item.useTime = 16;
-            Item.useAnimation = 16;
+            Item.useTime = 40;
+            Item.useAnimation = 40;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 4.5f;

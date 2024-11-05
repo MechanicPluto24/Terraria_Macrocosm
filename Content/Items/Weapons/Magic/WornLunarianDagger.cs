@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         }
         public override void SetDefaults()
         {
-            Item.DefaultToMagicWeapon(ModContent.ProjectileType<WornLunarianDaggerHeld>(), 18, 20f, true);
+            Item.DefaultToMagicWeapon(ModContent.ProjectileType<WornLunarianDaggerHeld>(), 18, 12f, true);
 
             Item.damage = 240;
             Item.knockBack = 4;
