@@ -389,12 +389,12 @@ RegolithWall: {
 
 AdamantiteLoom: {
 	DisplayName: Adamantite Loom
-	Tooltip: used to make spacesuit fabric
+	Tooltip: Used to make spacesuit fabric
 }
 
 TitaniumLoom: {
 	DisplayName: Titanium Loom
-	Tooltip: used to make spacesuit fabric
+	Tooltip: Used to make spacesuit fabric
 }
 
 SolarPanelLarge: {
@@ -720,26 +720,29 @@ TychoDesertEagle: {
 
 ChampionsBladeBroken: {
 	DisplayName: Champion's Blade
-	Tooltip: '''
-	         Repeated hits with the blade strengthen it
-			 This effect wears off after some time when not hitting with the blade
-			 '''
+	Tooltip:
+		'''
+		Repeated hits with the blade strengthen it
+		This effect wears off after some time when not hitting with the blade
+		'''
 }
 
 ChampionsBladeRepaired: {
 	DisplayName: Champion's Blade
-	Tooltip: '''
-	         Repeated hits with the blade strengthen it
-			 This effect wears off after some time when not hitting with the blade
-			 '''
+	Tooltip:
+		'''
+		Repeated hits with the blade strengthen it
+		This effect wears off after some time when not hitting with the blade
+		'''
 }
 
 ChampionsBlade: {
 	DisplayName: Champion's Blade
-	Tooltip: '''
-	         Repeated hits with the blade strengthen it
-			 This effect wears off after some time when not hitting with the blade
-			 '''
+	Tooltip:
+		'''
+		Repeated hits with the blade strengthen it
+		This effect wears off after some time when not hitting with the blade
+		'''
 }
 
 SilicaCrimsand: {
@@ -1044,7 +1047,7 @@ InvarArrow: {
 
 InvarBullet: {
 	DisplayName: Invar Bullet
-	Tooltip: might ricochet between enemies
+	Tooltip: Might ricochet between enemies
 }
 
 SpaceTeddy: {
@@ -2041,7 +2044,7 @@ ManisolBlades: {
 	DisplayName: Manisol Blades
 	Tooltip:
 		'''
-		fires two blades to strike your enemies
+		Throw blades at your enemies
 		Sol blades stick to enemies and explode when returning to you
 		Mani blades pierce through enemies when thrown and when returning
 		'''
@@ -2051,8 +2054,8 @@ ArmstrongGauntlets: {
 	DisplayName: Armstrong Gauntlets
 	Tooltip:
 		'''
-		throws a flurry of punches
-		every few punches you will leap forward
+		Throws a flurry of punches
+		Every few punches you will leap forward
 		'''
 }
 

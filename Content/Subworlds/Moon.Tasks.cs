@@ -738,7 +738,7 @@ namespace Macrocosm.Content.Subworlds
                             return;
                         }
 
-                       
+
                         if (Main.tile[i1, j1].WallType != WallID.None || j1 > CynthalithlithLayerHeight + SurfaceHeight(i1))
                         {
                             FastPlaceWall(i1, j1, irradiationWallType);
@@ -752,13 +752,15 @@ namespace Macrocosm.Content.Subworlds
                 );
             }
             //Cave at the bottom
-            for (int i=0;i<WorldGen.genRand.Next(3,4);i++){
-                WorldGen.TileRunner(irradiationCenter+ WorldGen.genRand.NextDirection(4..8), (int)Main.worldSurface + irradiationHeight + WorldGen.genRand.NextDirection(4..8), WorldGen.genRand.Next(40, 80), WorldGen.genRand.Next(200, 400), -1);
+            for (int i = 0; i < WorldGen.genRand.Next(3, 4); i++)
+            {
+                WorldGen.TileRunner(irradiationCenter + WorldGen.genRand.NextDirection(4..8), (int)Main.worldSurface + irradiationHeight + WorldGen.genRand.NextDirection(4..8), WorldGen.genRand.Next(40, 80), WorldGen.genRand.Next(200, 400), -1);
             }
-            for (int i=0;i<WorldGen.genRand.Next(8,14);i++){
-                WorldGen.TileRunner(irradiationCenter+ WorldGen.genRand.NextDirection(30..100), (int)Main.worldSurface + WorldGen.genRand.Next(irradiationHeight), WorldGen.genRand.Next(20, 26), WorldGen.genRand.Next(7, 15), -1);
+            for (int i = 0; i < WorldGen.genRand.Next(8, 14); i++)
+            {
+                WorldGen.TileRunner(irradiationCenter + WorldGen.genRand.NextDirection(30..100), (int)Main.worldSurface + WorldGen.genRand.Next(irradiationHeight), WorldGen.genRand.Next(20, 26), WorldGen.genRand.Next(7, 15), -1);
             }
-           //get crystals to generate
+            //get crystals to generate
             GenerateOre(TileID.Lead, 0.001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), irradiationRockType);//replace with uranium
         }
 
@@ -1197,7 +1199,7 @@ namespace Macrocosm.Content.Subworlds
                                 );
                         }
                     }
-                    if (WorldGen.genRand.NextFloat() < altarChance*16f && CheckEmptyAboveWithSolidToTheRight(i, j, 3, 2)&&j>(int)Main.worldSurface +100)
+                    if (WorldGen.genRand.NextFloat() < altarChance * 16f && CheckEmptyAboveWithSolidToTheRight(i, j, 3, 2) && j > (int)Main.worldSurface + 100)
                     {
                         if (tile.TileType == irradiatedRockType)
                         {
@@ -1324,7 +1326,7 @@ namespace Macrocosm.Content.Subworlds
                         break;
                 }
 
-                
+
 
                 random = WorldGen.genRand.Next(1, 5);
                 switch (random)
@@ -1422,7 +1424,7 @@ namespace Macrocosm.Content.Subworlds
                 }
             }
 
-            
+
 
             if (WorldGen.genRand.NextBool())
             {

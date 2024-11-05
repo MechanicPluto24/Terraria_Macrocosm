@@ -29,7 +29,7 @@ namespace Macrocosm.Common.Systems
         public static string SeedText => Main.ActiveWorldFileData.SeedText;
         public override void OnWorldLoad()
         {
-            if (!SubworldSystem.AnyActive())
+            if (!SubworldSystem.AnyActive<Macrocosm>())
                 Earth.WorldSize = WorldSize.Current;
         }
 

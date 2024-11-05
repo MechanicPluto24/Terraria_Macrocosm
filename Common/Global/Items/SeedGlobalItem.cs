@@ -29,9 +29,10 @@ namespace Macrocosm.Common.Global.Items
                 if (ItemSets.TreeSeed[item.type])
                     return false;
 
-                if (item.type==213)
+                if (item.type == ItemID.StaffofRegrowth)
                     return false;
-                if (item.type==5295)
+
+                if (item.type == ItemID.AcornAxe)
                     return false;
             }
 
