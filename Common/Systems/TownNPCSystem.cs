@@ -269,8 +269,7 @@ namespace Macrocosm.Common.Systems
 
             if (!result)
             {
-                NPC npc = ContentSamples.NpcsByNetId[Type];
-                if (npc.ModNPC != null && npc.townNPC)
+                if (ContentSamples.NpcsByNetId.TryGetValue(Type, out NPC npc) && npc.ModNPC != null && npc.townNPC)
                     return !IsTownNPCAllowedToSpawnHere(Type); // If not allowed to spawn, the method returns true
             }
 

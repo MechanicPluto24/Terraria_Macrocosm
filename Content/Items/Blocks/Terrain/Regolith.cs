@@ -1,5 +1,6 @@
 using Macrocosm.Content.Items.Walls;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Blocks.Terrain
@@ -20,6 +21,7 @@ namespace Macrocosm.Content.Items.Blocks.Terrain
         {
             CreateRecipe()
                 .AddIngredient<RegolithWall>(4)
+                .AddTile(TileID.WorkBenches)
                 .Register();
         }
     }

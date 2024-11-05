@@ -1,10 +1,11 @@
 sampler uImage0 : register(s0);
 
-float2 uOffset;          // The center of the shade/spotlight
-float  uIntensity;       // The intensity of the shade (if positive) / spotlight (if negative)
+float2 uOffset; // The center of the shade/spotlight
+float uIntensity; // The intensity of the shade (if positive) / spotlight (if negative)
 float2 uShadeResolution; // The resolution of the shade/spotlight   
-float  uRadius;          // The radius of the shade (0 to 1)
-float4 uSourceRect;      // The source rectangle (x, y, width, height) in normalized texture coordinates
+float uRadius; // The radius of the shade (0 to 1)
+float4 uSourceRect; // The source rectangle (x, y, width, height) in normalized texture coordinates
+float4 uColor = float4(1.0, 1.0, 1.0, 1.0); // Color for colorization
 
 static const float PI = 3.14159265f;
  
@@ -20,10 +21,10 @@ float4 RadialLighting(float2 texCoord : TEXCOORD) : COLOR
     float distance = length(sampleCoord - center);
 	 
     // spotlight
-    if (uIntensity < 0) 
+    if (uIntensity < 0)
     {
         float2 range = float2(0.4, 0.7) * uRadius;
-        color.rgb *= clamp((smoothstep(range.x, range.y, distance) + (1 + uIntensity)), 0, 1); 
+        color.rgb *= clamp((smoothstep(range.x, range.y, distance) + (1 + uIntensity)), 0, 1);
     }
     else // shade
     {
@@ -31,14 +32,14 @@ float4 RadialLighting(float2 texCoord : TEXCOORD) : COLOR
         color.rgb -= color.rgb * smoothstep(range.x, range.y, distance) * uIntensity;
     }
 
+    color *= uColor;
     return color;
 }
 
-technique 
+technique
 {
     pass RadialLighting
     {
         PixelShader = compile ps_3_0 RadialLighting();
     }
 }
-

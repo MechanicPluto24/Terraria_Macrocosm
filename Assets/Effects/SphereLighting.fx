@@ -6,6 +6,7 @@ float2 uTextureSize;
 float2 uEntitySize;
 float uRadius = 0.138;
 int uPixelSize;
+float4 uColor = float4(1.0, 1.0, 1.0, 1.0);
 
 float4 SphereLighting(float2 uv : TEXCOORD0) : COLOR0
 {
@@ -24,7 +25,9 @@ float4 SphereLighting(float2 uv : TEXCOORD0) : COLOR0
     float diffuse = max(0.1, dot(normal, normalize(uLightSource - uvWorld)));
     diffuse = pow(diffuse, 2);
     float4 color = tex2D(uImage0, uv);
-    return float4(color.rgb * max(diffuse, 0.05), color.a) * color.a;
+    
+    float4 finalColor = float4(color.rgb * max(diffuse, 0.05), color.a) * color.a * uColor;
+    return finalColor;
 }
 
 technique

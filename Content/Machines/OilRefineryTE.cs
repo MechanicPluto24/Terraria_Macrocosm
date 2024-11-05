@@ -97,13 +97,12 @@ namespace Macrocosm.Content.Machines
                         InputTankAmount += data.ExtractedAmount;
                     }
 
-                    break;
+                    return;
                 }
-                else
-                {
-                    inputExtractTimer = 0;
-                }
+
             }
+
+            inputExtractTimer = 0;
         }
 
         private void Refine()

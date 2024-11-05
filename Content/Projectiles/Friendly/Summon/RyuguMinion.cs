@@ -66,7 +66,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         float mult = 0f;
         float FireDist = 0f;
         int shootTimer = 0;
-        NPC targetNPC;
+        Entity targetNPC;
         float distanceFromTarget;
         Vector2 targetCenter;
         public override void AI()
@@ -77,22 +77,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 mult = Main.rand.NextFloat(0.5f, 1.5f);
                 FireDist = Main.rand.NextFloat(500f, 750f);
             }
-            Player owner = Main.player[Projectile.owner];
+            Player Owner = Main.player[Projectile.owner];
 
-            if (Vector2.Distance(owner.Center, Projectile.Center) > 6000f)
-                Projectile.Center = owner.Center;
+            if (Vector2.Distance(Owner.Center, Projectile.Center) > 6000f)
+                Projectile.Center = Owner.Center;
 
 
-            if (!CheckActive(owner))
+            if (!CheckActive(Owner))
             {
                 return;
             }
             foundTarget = false;
 
             // This code is required if your minion weapon has the targeting feature
-            if (owner.HasMinionAttackTargetNPC)
+            if (Owner.HasMinionAttackTargetNPC)
             {
-                NPC npc = Main.npc[owner.MinionAttackTargetNPC];
+                NPC npc = Main.npc[Owner.MinionAttackTargetNPC];
                 float between = Vector2.Distance(npc.Center, Projectile.Center);
 
                 // Reasonable distance away so it doesn't target across multiple screens
@@ -129,16 +129,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     }
                 }
             }
+            if (!foundTarget)
+            {
+                targetNPC = Owner;
+            }
             if (foundTarget && (Vector2.Distance(targetNPC.Center, Projectile.Center) > FireDist || Projectile.velocity.Y != 0))
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f * mult, (int)(3 * mult), (int)(14 * mult), (proj, owner) => { return targetNPC; });
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, Owner, false, 14, 14, 120, 1000, 2000, 0.04f * mult, (int)(3 * mult), (int)(14 * mult), (proj, owner) => { return targetNPC == Owner ? Owner : targetNPC; });
             else
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.1f * mult, (int)(8 * mult), (int)(14 * mult), (proj, owner) => { return owner; });
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, Owner, false, 14, 14, 120, 1000, 2000, 0.1f * mult, (int)(8 * mult), (int)(14 * mult), (proj, owner) => { return targetNPC == Owner ? Owner : targetNPC; });
 
 
             if (foundTarget && Vector2.Distance(targetNPC.Center, Projectile.Center) <= FireDist && Projectile.velocity.Y == 0)
             {
                 Projectile.velocity.X = 0;
-                Utility.AIMinionFighter(Projectile, ref Projectile.ai, owner, false, 14, 14, 120, 4000, 6000, 0.04f * mult, 0, (int)(14 * mult), (proj, owner) => { return targetNPC; });
+                Utility.AIMinionFighter(Projectile, ref Projectile.ai, Owner, false, 14, 14, 120, 4000, 6000, 0.04f * mult, 0, (int)(14 * mult), (proj, owner) => { return targetNPC == Owner ? Owner : targetNPC; });
                 Firing = true;
             }
             else
@@ -150,15 +154,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         }
 
         // This is the "active check", makes sure the minion is alive while the player is alive, and despawns if not
-        private bool CheckActive(Player owner)
+        private bool CheckActive(Player Owner)
         {
-            if (owner.dead || !owner.active)
+            if (Owner.dead || !Owner.active)
             {
-                owner.ClearBuff(ModContent.BuffType<RyuguSummonBuff>());
+                Owner.ClearBuff(ModContent.BuffType<RyuguSummonBuff>());
                 return false;
             }
 
-            if (owner.HasBuff(ModContent.BuffType<RyuguSummonBuff>()))
+            if (Owner.HasBuff(ModContent.BuffType<RyuguSummonBuff>()))
             {
                 Projectile.timeLeft = 2;
             }
@@ -172,7 +176,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         {
             List<int> WalkFrames = new List<int> { 1, 2, 3 };
             List<int> AirFrame = new List<int> { 4 };
-            List<int> FireFrames = new List<int> { 5, 6, 7, 8, 9, 10, -1, 11, 12, 13, 14, 15 };
+            List<int> FireFrames = new List<int> { 5, 6, 7, 8, 9, 10, -1, 11, 12, 13, 14, 15, 15, 15, 15 };
             // So it will lean slightly towards the direction it's moving
 
 
@@ -212,7 +216,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 {
                     ProjFrame++;
                 }
-                if (ProjFrame > 11)
+                if (ProjFrame > 14)
                     ProjFrame = 0;
                 Projectile.frame = FireFrames[ProjFrame] - 1;
                 if (Projectile.frame == -2)

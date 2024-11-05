@@ -29,6 +29,10 @@ namespace Macrocosm.Content.Tiles.Tech
             TileObjectData.newTile.Width = 4;
             TileObjectData.newTile.Height = 3;
 
+            TileObjectData.newTile.StyleHorizontal = false;
+            TileObjectData.newTile.StyleLineSkip = 3;
+            TileObjectData.newTile.StyleWrapLimit = 3;
+
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;

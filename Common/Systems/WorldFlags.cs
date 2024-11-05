@@ -63,10 +63,8 @@ namespace Macrocosm.Common.Systems
             DownedMoonBeast = false;
             DownedDementoxin = false;
             DownedLunalgamate = false;
-            LuminiteShrineUnlocked = false;
-            FoundVulcan = false;
-            DeimosReturn = false;
 
+            LuminiteShrineUnlocked = false;
             HeavenforgeShrineUnlocked = false;
             LunarRustShrineUnlocked = false;
             AstraShrineUnlocked = false;
@@ -75,6 +73,9 @@ namespace Macrocosm.Common.Systems
             StarRoyaleShrineUnlocked = false;
             CryocoreShrineUnlocked = false;
             CosmicEmberShrineUnlocked = false;
+
+            FoundVulcan = false;
+            DeimosReturn = false;
         }
 
         public override void SaveWorldData(TagCompound tag) => SaveData(tag);
