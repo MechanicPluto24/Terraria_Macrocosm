@@ -6,6 +6,7 @@ using MonoMod.Cil;
 using SubworldLibrary;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -269,8 +270,7 @@ namespace Macrocosm.Common.Systems
 
             if (!result)
             {
-                NPC npc = ContentSamples.NpcsByNetId[Type];
-                if (npc.ModNPC != null && npc.townNPC)
+                if (ContentSamples.NpcsByNetId.TryGetValue(Type, out NPC npc) && npc.ModNPC != null && npc.townNPC)
                     return !IsTownNPCAllowedToSpawnHere(Type); // If not allowed to spawn, the method returns true
             }
 

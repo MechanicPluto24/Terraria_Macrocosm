@@ -678,11 +678,11 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.IrradiationPass");
             //So many variables, but hey, this is how I do world gen. It does make it consice.
-            ushort rrradiationRockType = (ushort)TileType<IrradiatedRock>();
+            ushort irradiationRockType = (ushort)TileType<IrradiatedRock>();
             ushort irradiationWallType = (ushort)WallType<IrradiatedRockWall>();
             int irradiationCenter = gen_IsIrradiationRight ? (int)(Main.maxTilesX / 2) + WorldGen.genRand.Next(500, 600) : (int)(Main.maxTilesX / 2) - WorldGen.genRand.Next(500, 600);
-            int irradiationHeight = 400;
-            int irradiationWidth = WorldGen.genRand.Next(240, 260);
+            int irradiationHeight = 200;
+            int irradiationWidth = WorldGen.genRand.Next(170, 230);
 
             for (int radius, x = 0; x < irradiationHeight; x += 1 + (int)(radius * 0.1f))
             {
@@ -715,7 +715,7 @@ namespace Macrocosm.Content.Subworlds
 
                         if (Main.tile[i1, j1].HasTile)
                         {
-                            FastPlaceTile(i1, j1, rrradiationRockType);
+                            FastPlaceTile(i1, j1, irradiationRockType);
                         }
                     }
                 );
@@ -738,9 +738,7 @@ namespace Macrocosm.Content.Subworlds
                             return;
                         }
 
-                        float iDistance = Math.Abs(iOffset - i1) / (radius * 0.5f);
-                        float jDistance = Math.Abs(jOffset - j1) / (radius * 0.5f);
-
+                       
                         if (Main.tile[i1, j1].WallType != WallID.None || j1 > CynthalithlithLayerHeight + SurfaceHeight(i1))
                         {
                             FastPlaceWall(i1, j1, irradiationWallType);
@@ -753,71 +751,15 @@ namespace Macrocosm.Content.Subworlds
                     }
                 );
             }
-
-            int radius2 = (int)((float)irradiationWidth * 0.5f);
-            int iOffset2 = irradiationCenter + WorldGen.genRand.NextDirection(2..4);
-            int jOffset2 = (int)Main.worldSurface + (int)(irradiationHeight / 1.5) - WorldGen.genRand.NextDirection(20..30);
-
-            //Right facing tunnels
-            for (int i = 0; i < WorldGen.genRand.Next(2, 5); i++)
-            {
-                float a = WorldGen.genRand.NextFloat(1.0f, 20.0f);
-                int b = WorldGen.genRand.Next(0, 22);
-                int count = 0;
-                for (int j = 0; j < WorldGen.genRand.Next(100, 150); j++)
-                {
-                    ForEachInCircle(
-                            iOffset2 + count,
-                            jOffset2 + IrradiationEquation(count, a, b),
-                            WorldGen.genRand.Next(5, 8),
-                            (i1, j1) =>
-                            {
-                                if (CoordinatesOutOfBounds(i1, j1))
-                                {
-                                    return;
-                                }
-
-                                float iDistance = Math.Abs(iOffset2 - i1) / (radius2 * 0.5f);
-                                float jDistance = Math.Abs(jOffset2 - j1) / (radius2 * 0.5f);
-                                FastRemoveTile(i1, j1);
-                                FastPlaceWall(i1, j1, irradiationWallType);
-                            }
-                        );
-                    count++;
-                }
-
+            //Cave at the bottom
+            for (int i=0;i<WorldGen.genRand.Next(3,4);i++){
+                WorldGen.TileRunner(irradiationCenter+ WorldGen.genRand.NextDirection(4..8), (int)Main.worldSurface + irradiationHeight + WorldGen.genRand.NextDirection(4..8), WorldGen.genRand.Next(40, 80), WorldGen.genRand.Next(200, 400), -1);
             }
-
-            for (int i = 0; i < WorldGen.genRand.Next(2, 5); i++)
-            {
-
-                float a = WorldGen.genRand.NextFloat(1.0f, 20.0f);
-                int b = WorldGen.genRand.Next(0, 22);
-                int count = 0;
-                for (int j = 0; j < WorldGen.genRand.Next(100, 150); j++)
-                {
-                    ForEachInCircle(
-                            iOffset2 + count,
-                            jOffset2 + IrradiationEquation(count, a, b),
-                            WorldGen.genRand.Next(5, 8),
-                            (i1, j1) =>
-                            {
-                                if (CoordinatesOutOfBounds(i1, j1))
-                                {
-                                    return;
-                                }
-
-                                float iDistance = Math.Abs(iOffset2 - i1) / (radius2 * 0.5f);
-                                float jDistance = Math.Abs(jOffset2 - j1) / (radius2 * 0.5f);
-
-                                FastRemoveTile(i1, j1);
-                                FastPlaceWall(i1, j1, irradiationWallType);
-                            }
-                        );
-                    count--;
-                }
-
+            for (int i=0;i<WorldGen.genRand.Next(8,14);i++){
+                WorldGen.TileRunner(irradiationCenter+ WorldGen.genRand.NextDirection(30..100), (int)Main.worldSurface + WorldGen.genRand.Next(irradiationHeight), WorldGen.genRand.Next(20, 26), WorldGen.genRand.Next(7, 15), -1);
             }
+           //get crystals to generate
+            GenerateOre(TileID.Lead, 0.001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), irradiationRockType);//replace with uranium
         }
 
         [Task]
@@ -1255,6 +1197,13 @@ namespace Macrocosm.Content.Subworlds
                                 );
                         }
                     }
+                    if (WorldGen.genRand.NextFloat() < altarChance*16f && CheckEmptyAboveWithSolidToTheRight(i, j, 3, 2)&&j>(int)Main.worldSurface +100)
+                    {
+                        if (tile.TileType == irradiatedRockType)
+                        {
+                            WorldGen.PlaceTile(i, j - 1, TileType<IrradiatedAltar>(), mute: true);
+                        }
+                    }
 
                     if (WorldGen.genRand.NextFloat() < kyaniteNestChance && CheckEmptyAboveWithSolidToTheRight(i, j, 4, 3))
                     {
@@ -1375,45 +1324,26 @@ namespace Macrocosm.Content.Subworlds
                         break;
                 }
 
-                random = WorldGen.genRand.Next(1, 5);
-                switch (random)
-                {
-                    case 1:
-                        chest.item[slot].SetDefaults(ItemType<ArtemiteBar>());
-                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                        break;
-                    case 2:
-                        chest.item[slot].SetDefaults(ItemType<ChandriumBar>());
-                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                        break;
-                    case 3:
-                        chest.item[slot].SetDefaults(ItemType<DianiteBar>());
-                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                        break;
-                    case 4:
-                        chest.item[slot].SetDefaults(ItemType<SeleniteBar>());
-                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                        break;
-                }
+                
 
                 random = WorldGen.genRand.Next(1, 5);
                 switch (random)
                 {
                     case 1:
                         chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
-                        chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
                         break;
                     case 2:
                         chest.item[slot].SetDefaults(ItemType<Items.Ores.ChandriumOre>());
-                        chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
                         break;
                     case 3:
                         chest.item[slot].SetDefaults(ItemType<Items.Ores.DianiteOre>());
-                        chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
                         break;
                     case 4:
                         chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
-                        chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
+                        chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
                         break;
                 }
             }
@@ -1492,11 +1422,7 @@ namespace Macrocosm.Content.Subworlds
                 }
             }
 
-            if (WorldGen.genRand.NextBool())
-            {
-                chest.item[slot].SetDefaults(ItemID.LunarBar);
-                chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
-            }
+            
 
             if (WorldGen.genRand.NextBool())
             {

@@ -39,6 +39,8 @@ namespace Macrocosm.Content.Machines
             TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleLineSkip = 6;
+            TileObjectData.newTile.StyleWrapLimit = 6;
 
             TileObjectData.newTile.DrawYOffset = 2;
 

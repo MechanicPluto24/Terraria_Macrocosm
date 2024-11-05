@@ -1872,11 +1872,6 @@ StarRoyaleLantern: {
 	Tooltip: ""
 }
 
-WiringKit: {
-	DisplayName: Wiring Kit
-	Tooltip: Used for circuitry troubleshooting
-}
-
 AntiRadiationPills: {
 	DisplayName: Anti Radiation Pills
 	Tooltip: ""
@@ -2683,4 +2678,9 @@ CheesePlatform: {
 CheeseWall: {
 	DisplayName: Cheese Wall
 	Tooltip: ""
+}
+
+CircuitProbe: {
+	DisplayName: Circuit Probe
+	Tooltip: Used for circuitry troubleshooting
 }

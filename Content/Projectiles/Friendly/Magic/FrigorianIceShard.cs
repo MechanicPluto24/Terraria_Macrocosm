@@ -18,13 +18,19 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void SetDefaults()
         {
-            Projectile.width = 8;
-            Projectile.height = 8;
+            Projectile.width = 4;
+            Projectile.height = 4;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.timeLeft = 500;
             Projectile.penetrate = 1;
+            Projectile.tileCollide = false;
+
             Projectile.alpha = 255;
+        }
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {            
+            return Projectile.timeLeft<400;
         }
 
         public override void AI()

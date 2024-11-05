@@ -43,33 +43,26 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
 
         public override void ModifyItemLoot(ItemLoot itemLoot)
         {
-            // Drop a special weapon/accessory etc. specific to this crate's theme (i.e. Sky Crate dropping Fledgling Wings or Starfury)
-            int[] themedDrops = [
-                ModContent.ItemType<Copernicus>(),
-                ModContent.ItemType<HandheldEngine>(),
-                ModContent.ItemType<ClawWrench>(),
-                //ModContent.ItemType<SomeSummonWeapon>(),
-            ];
-            itemLoot.Add(ItemDropRule.OneFromOptionsNotScalingWithLuck(10, themedDrops));
+            
 
             // Drop coins
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 4, 5, 13));
 
             IItemDropRule[] oreTypes = [
-                ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 1, 30, 50),
-                ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 1, 30, 50),
-                ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 1, 30, 50),
-                ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 1, 30, 50),
+                ItemDropRule.Common(ModContent.ItemType<ArtemiteOre>(), 1, 10, 15),
+                ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 1, 10, 15),
+                ItemDropRule.Common(ModContent.ItemType<ChandriumOre>(), 1, 10, 15),
+                ItemDropRule.Common(ModContent.ItemType<DianiteOre>(), 1, 10, 15),
                 ItemDropRule.Common(ItemID.LunarOre, 1, 30, 50),
             ];
             itemLoot.Add(new OneFromRulesRule(7, oreTypes));
 
             // Drop pre-hm bars (except copper/tin), with the addition of one from ExampleMod
             IItemDropRule[] oreBars = [
-                ItemDropRule.Common(ModContent.ItemType<ArtemiteBar>(), 1, 10, 21),
-                ItemDropRule.Common(ModContent.ItemType<SeleniteBar>(), 1, 10, 21),
-                ItemDropRule.Common(ModContent.ItemType<ChandriumBar>(), 1, 10, 21),
-                ItemDropRule.Common(ModContent.ItemType<DianiteBar>(), 1, 10, 21),
+                ItemDropRule.Common(ModContent.ItemType<ArtemiteBar>(), 1, 3, 6),
+                ItemDropRule.Common(ModContent.ItemType<SeleniteBar>(), 1, 3, 6),
+                ItemDropRule.Common(ModContent.ItemType<ChandriumBar>(), 1, 3, 6),
+                ItemDropRule.Common(ModContent.ItemType<DianiteBar>(), 1, 3, 6),
                 ItemDropRule.Common(ItemID.LunarBar, 1, 10, 21),
             ];
             itemLoot.Add(new OneFromRulesRule(4, oreBars));
