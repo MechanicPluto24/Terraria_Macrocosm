@@ -145,6 +145,8 @@ namespace Macrocosm.Content.Skies.Moon
 
                 if(MoonInstance.IsDemonSun())
                     return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1))),new Color(150,80,80), MoonInstance.DemonSunIntesnity());
+                if(MoonInstance.IsSolarStorm())
+                    return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1))),new Color(255,255,200)*1.5f, MoonInstance.GetSolarStormIntensity());
 
                 if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
                     return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1)));
@@ -155,6 +157,12 @@ namespace Macrocosm.Content.Skies.Moon
             }
             else
             {
+                var MoonInstance=ModContent.GetInstance<Content.Subworlds.Moon>();
+
+                if(MoonInstance.IsDemonSun())
+                    return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.CurrentNightLength - Main.time) / (MacrocosmSubworld.CurrentNightLength - MacrocosmSubworld.CurrentNightLength * 0.8))),new Color(50,20,20), MoonInstance.DemonSunIntesnity());
+
+
                 if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
                     return Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.CurrentNightLength * 0.2)));
                 else if (Main.time > MacrocosmSubworld.CurrentNightLength * 0.8)
@@ -182,11 +190,13 @@ namespace Macrocosm.Content.Skies.Moon
                 starsDay.Draw(spriteBatch);
                 starsNight.Draw(spriteBatch, nightStarBrightness);
 
-                if (MoonInstance.IsDemonSun())
+                if (MoonInstance.IsDemonSun()&&Main.dayTime)
                     DrawDemonSunEffects(spriteBatch,sun);
                 sun.Draw(spriteBatch);
-                if (MoonInstance.IsDemonSun())
+                if (MoonInstance.IsDemonSun()&&Main.dayTime)
                     DrawDemonSunFrontEffects(spriteBatch,sun);
+                if (MoonInstance.IsSolarStorm()&&Main.dayTime)
+                    DrawSolarStormEffects(spriteBatch,sun);
                 earth.Draw(spriteBatch);
             }
         }
@@ -210,9 +220,29 @@ namespace Macrocosm.Content.Skies.Moon
             spriteBatch.Draw(glow, Sun.Center, null, new Color(255, 255, 255,0) *intensity, MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f,(0.2f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
             spriteBatch.Draw(glow, Sun.Center, null, new Color(255, 255, 255,0) *intensity, MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f,(0.1f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
 
-            spriteBatch.Draw(flare, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0)*intensity*0.5f, 0f, scorch2.Size() / 2f, (2.5f)*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(flare, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0)*intensity*0.5f, 0f, glow.Size() / 2f, (2.5f)*intensity, SpriteEffects.None, 0);
             spriteBatch.Draw(beam, Sun.Center, null, new Color(255, 255, 255,0) *intensity,MathHelper.Pi/4, beam.Size() / 2f,0.8f*intensity, SpriteEffects.None, 0);
            
+        }
+        private void DrawSolarStormEffects(SpriteBatch spriteBatch,CelestialBody Sun)
+        {
+           
+            var MoonInstance=ModContent.GetInstance<Content.Subworlds.Moon>();
+
+            float intensity=MoonInstance.GetSolarStormIntensity();
+            var flare = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Star4").Value;
+            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1").Value;
+            var scorch2 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2").Value;
+            var glow = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Circle7").Value;
+            var beam = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scratch2").Value;
+            float pulse =Utility.PositiveSineWave(450, MathF.PI / 2);
+            Color colour = new Color(255,255,200+(int)(55*intensity),0);
+            spriteBatch.Draw(flare, Sun.Center, null,colour*intensity*0.5f, 0f, flare.Size() / 2f, (2f)*intensity, SpriteEffects.None, 0);
+
+            spriteBatch.Draw(scorch1, Sun.Center, null, colour * (0.3f + 0.01f * pulse)*intensity, MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, (1.7f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(scorch2, Sun.Center, null, colour * (0.4f + 0.01f * pulse)*intensity, MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, (1f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
+
+            spriteBatch.Draw(glow, Sun.Center, null, colour*intensity, MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), glow.Size() / 2f, (0.4f + 0.01f * pulse)*intensity, SpriteEffects.None, 0);
         }
         private void DrawDemonSunFrontEffects(SpriteBatch spriteBatch,CelestialBody Sun)
         {
@@ -224,8 +254,8 @@ namespace Macrocosm.Content.Skies.Moon
    
             var circle = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Circle7").Value;
 
-            spriteBatch.Draw(circle, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0)*intensity, 0f, circle.Size() / 2f, 0.9f*intensity, SpriteEffects.None, 0);
-            spriteBatch.Draw(circle, Sun.Center, null, new Color(255, (int)(193*(1f-intensity)), 0,0)*intensity, 0f, circle.Size() / 2f, 0.9f*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(circle, Sun.Center, null, new Color(255, (int)(193*(1f-(intensity*0.5f))), 0,0)*intensity, 0f, circle.Size() / 2f, 0.9f*intensity, SpriteEffects.None, 0);
+            spriteBatch.Draw(circle, Sun.Center, null, new Color(255, (int)(193*(1f-(intensity*0.5f))), 0,0)*intensity, 0f, circle.Size() / 2f, 0.9f*intensity, SpriteEffects.None, 0);
 
 
         }
@@ -254,7 +284,15 @@ namespace Macrocosm.Content.Skies.Moon
         {
             if (!SubworldSystem.IsActive<Subworlds.Moon>())
                 active = false;
-            earth.Color = Color.White; // colorize Earth here
+                var MoonInstance=ModContent.GetInstance<Content.Subworlds.Moon>();
+
+            float dsintensity=MoonInstance.DemonSunVisualIntensity;
+            if (MoonInstance.IsDemonSun())
+                earth.Color =new Color(255, (int)(255*(1f-(dsintensity*0.5f))), (int)(255*(1f-(dsintensity*0.5f)))); // colorize Earth here
+            if(MoonInstance.SolarStorm)
+                earth.Color =new Color(255,255,200+(int)(55*(1f-MoonInstance.GetSolarStormIntensity())))*(1f+(0.5f*MoonInstance.GetSolarStormIntensity()));
+            else
+                earth.Color =Color.White;
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
             SetEarthTextures();
         }
