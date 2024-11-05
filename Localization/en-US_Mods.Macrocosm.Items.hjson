@@ -720,17 +720,26 @@ TychoDesertEagle: {
 
 ChampionsBladeBroken: {
 	DisplayName: Champion's Blade
-	Tooltip: repeated hits strengthen the blade
+	Tooltip: '''
+	         Repeated hits with the blade strengthen it
+			 This effect wears off after some time when not hitting with the blade
+			 '''
 }
 
 ChampionsBladeRepaired: {
 	DisplayName: Champion's Blade
-	Tooltip: repeated hits strengthen the blade
+	Tooltip: '''
+	         Repeated hits with the blade strengthen it
+			 This effect wears off after some time when not hitting with the blade
+			 '''
 }
 
 ChampionsBlade: {
 	DisplayName: Champion's Blade
-	Tooltip: repeated hits strengthen the blade
+	Tooltip: '''
+	         Repeated hits with the blade strengthen it
+			 This effect wears off after some time when not hitting with the blade
+			 '''
 }
 
 SilicaCrimsand: {
