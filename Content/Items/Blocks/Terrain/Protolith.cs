@@ -21,6 +21,7 @@ namespace Macrocosm.Content.Items.Blocks.Terrain
         {
             CreateRecipe()
                 .AddIngredient<ProtolithWall>(4)
+                .AddTile(TileID.WorkBenches)
                 .Register();
 
             Recipe.Create(ItemID.SolarBrick, 10)
@@ -48,7 +49,7 @@ namespace Macrocosm.Content.Items.Blocks.Terrain
                 .AddIngredient(ItemID.FragmentNebula, 1)
                 .Register();
 
-            Recipe.Create(ItemID.LunarBlockNebula, 01)
+            Recipe.Create(ItemID.LunarBlockNebula, 10)
                 .AddIngredient(Type, 10)
                 .AddIngredient(ItemID.FragmentNebula, 1)
                 .Register();

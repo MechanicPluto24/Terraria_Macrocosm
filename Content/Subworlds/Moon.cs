@@ -2,6 +2,7 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
@@ -37,18 +38,20 @@ namespace Macrocosm.Content.Subworlds
 
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
-        public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
+        public float DemonSunIntensity { get; set; } = 0f;
+        public float DemonSunVisualIntensity { get; set; } = 0f;
+
+        public float MeteorBoost { get; set; } = 1f;
+
+        private double meteorTimePass = 0.0;
+        private int meteorStormCounter = 0;
+        private int meteorStormWaitTimeToStart;
+        private int meteorStormWaitTimeToEnd;
 
         public override ChecklistConditionCollection LaunchConditions => new()
         {
-            //new ChecklistCondition("MoonLord", () => NPC.downedMoonlord, hideIfMet: true) // placeholder for now
         };
-
-        public bool IsDemonSun()=>DemonSun;
-        public float DemonSunIntesnity()=>DemonSunVisualIntensity;
-        public bool DemonSun=false;
-        public float DemonSunIntensity=0f;
-        public float DemonSunVisualIntensity=0f;
+        public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
         public override float GetAmbientTemperature()
         {
@@ -75,25 +78,19 @@ namespace Macrocosm.Content.Subworlds
             {MapColorType.Underworld,  new Color(30, 30, 30)}
         };
 
-        public Moon()
-        {
-        }
-
         public override void OnEnterWorld()
         {
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
 
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
-            DemonSun=true;
-            DemonSunIntensity=0f;
+            DemonSunIntensity = 0f;
         }
 
         public override void OnExitWorld()
         {
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
-            DemonSun=false;
-            DemonSunIntensity=0f;
+            DemonSunIntensity = 0f;
         }
 
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
@@ -112,8 +109,10 @@ namespace Macrocosm.Content.Subworlds
 
         public override void PreUpdateWorld()
         {
-            Main.bloodMoon=false;//useful
-            UpdateBloodMoon();
+            // Disable Vanilla Blood Moons
+            Main.bloodMoon = false; 
+
+            UpdateDemonSun();
             UpdateMeteorStorm();
             UpdateSolarStorm();
         }
@@ -123,47 +122,38 @@ namespace Macrocosm.Content.Subworlds
             UpdateMeteorSpawn();
         }
 
-        //TODO
-        private void UpdateBloodMoon()
+        private void UpdateDemonSun()
         {
-            if (DemonSunVisualIntensity<DemonSunIntensity)
-                DemonSunVisualIntensity+=0.005f;
-            if (DemonSunVisualIntensity>DemonSunIntensity)
-                DemonSunVisualIntensity-=0.005f;
-            
+            if (DemonSunVisualIntensity < DemonSunIntensity)
+                DemonSunVisualIntensity += 0.005f;
+
+            if (DemonSunVisualIntensity > DemonSunIntensity)
+                DemonSunVisualIntensity -= 0.005f;
         }
 
         //TODO 
         private void UpdateSolarStorm() { }
-
-        public bool MeteorStormActive { get; set; } = false;
-        public float MeteorBoost { get; set; } = 1f;
-
-        private double meteorTimePass = 0.0;
-        private int meteorStormCounter = 0;
-        private int meteorStormWaitTimeToStart;
-        private int meteorStormWaitTimeToEnd;
         private void UpdateMeteorStorm()
         {
             meteorStormCounter++;
 
-            if (meteorStormWaitTimeToStart <= meteorStormCounter && !MeteorStormActive)
+            if (meteorStormWaitTimeToStart <= meteorStormCounter && !EventSystem.MoonMeteorStorm)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.Start"), Color.Gray);
-                MeteorStormActive = true;
+                EventSystem.MoonMeteorStorm = true;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             }
 
-            if (MeteorStormActive && meteorStormWaitTimeToEnd <= meteorStormCounter)
+            if (EventSystem.MoonMeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.End"), Color.Gray);
-                MeteorStormActive = false;
+                EventSystem.MoonMeteorStorm = false;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
             }
 
-            if (MeteorStormActive)
+            if (EventSystem.MoonMeteorStorm)
                 MeteorBoost = 1000f;
             else
                 MeteorBoost = 1f;

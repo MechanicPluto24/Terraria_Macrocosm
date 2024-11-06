@@ -81,7 +81,7 @@ namespace Macrocosm.Common.Subworlds
             if (Main.netMode == NetmodeID.SinglePlayer)
             {
                 currentMainWorldUniqueId = MacrocosmSubworld.MainWorldUniqueID;
-                if (!SubworldSystem.AnyActive<Macrocosm>() && !TriggeredSubworldTravel && !exitedBySaveAndExit && TryGetReturnSubworld(currentMainWorldUniqueId, out string subworldId))
+                if (!SubworldSystem.AnyActive() && !TriggeredSubworldTravel && !exitedBySaveAndExit && TryGetReturnSubworld(currentMainWorldUniqueId, out string subworldId))
                 {
                     if (subworldId is not Earth.ID)
                     {

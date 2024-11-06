@@ -233,7 +233,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                         float between = Vector2.Distance(npc.Center, Projectile.Center);
                         bool closest = Vector2.Distance(Projectile.Center, targetCenter) > between;
                         bool inRange = between < distanceFromTarget;
-                       
+
 
                         if (((closest && inRange) || !foundTarget))
                         {

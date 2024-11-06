@@ -1,9 +1,6 @@
 ﻿using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Ores;
-using Macrocosm.Content.Items.Weapons.Magic;
-using Macrocosm.Content.Items.Weapons.Melee;
-using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -43,8 +40,6 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
 
         public override void ModifyItemLoot(ItemLoot itemLoot)
         {
-            
-
             // Drop coins
             itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 4, 5, 13));
 

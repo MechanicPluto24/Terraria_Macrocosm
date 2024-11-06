@@ -1,4 +1,7 @@
-﻿using Terraria;
+﻿using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Refined;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture
@@ -15,6 +18,15 @@ namespace Macrocosm.Content.Items.Furniture
             Item.width = 26;
             Item.height = 32;
             Item.value = 500;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<AluminumBar>(10)
+                .AddIngredient<Plastic>(25)
+                .AddTile(TileID.Anvils)
+                .Register();
         }
     }
 }

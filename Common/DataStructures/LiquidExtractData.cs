@@ -8,7 +8,11 @@ namespace Macrocosm.Common.DataStructures
 
         public float ExtractedAmount { get; init; }
 
-        public LiquidExtractData() { }
+        public LiquidExtractData() 
+        { 
+            LiquidType = LiquidType.None;
+        }
+
         public LiquidExtractData(LiquidType liquidType, float extractedAmount)
         {
             LiquidType = liquidType;

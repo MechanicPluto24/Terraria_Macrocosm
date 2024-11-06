@@ -8,10 +8,12 @@ using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using ReLogic.Utilities;
 using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
@@ -35,6 +37,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
         }
+
+        private ActiveSound sound1;    
+        private ActiveSound sound2;    
+        private SlotId slot1;    
+        private SlotId slot2;  
 
         private readonly Range headRaiseFrame = 0..2;
         private readonly Range idleFrames = 3..14;
@@ -71,6 +78,19 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.02f : 0f;
         }
+        public override void OnKill()
+        {
+            if (sound1 != null)
+            {
+                sound1.Stop();
+                slot1 = SlotId.Invalid;
+            }
+            if (sound2 != null)
+            {
+                sound2.Stop();
+                slot2 = SlotId.Invalid;
+            }
+        }
 
         private Vector2 idleDirection = new Vector2(1, 0);
         private bool raisedHead = false;
@@ -99,11 +119,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             }
         }
-
+     
         public override void AI()
         {
             NPC.TargetClosest();
             Player target = Main.player[NPC.target];
+            SoundEngine.TryGetActiveSound(slot1, out sound1);
+            SoundEngine.TryGetActiveSound(slot2, out sound2);
             bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, target.position, target.width, target.height);
             if (AI_State != ActionState.Jump && AI_State != ActionState.RaiseHead)
             {
@@ -183,14 +205,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Utility.AIFighter(NPC, ref NPC.ai, player.Center, accelerationFactor: 0.08f, velMax: 4f, maxJumpTilesX: 2, maxJumpTilesY: 1);
             if (!runNoise)
             {
-                SoundEngine.PlaySound(SFX.ZombieEngineerSprint, NPC.position);
+                if (sound1 == null)
+                    slot1 = SoundEngine.PlaySound(SFX.ZombieEngineerSprint, NPC.position);
                 runNoise = true;
             }
 
             if (Vector2.Distance(NPC.Center, player.Center) < 300f && !gasLeak)
             {
                 gasLeak = true;
-                SoundEngine.PlaySound(SFX.ZombieEngineerGasLeak, NPC.position);
+                if (sound2 == null)
+                    slot2 = SoundEngine.PlaySound(SFX.ZombieEngineerGasLeak, NPC.position);
+                
             }
 
 

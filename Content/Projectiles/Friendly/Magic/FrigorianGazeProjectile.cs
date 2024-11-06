@@ -31,8 +31,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = -1;
         }
-        int IceCrystals=9;
-        public int AI_Timer
+
+        public int IceShardCounter
         {
             get => (int)Projectile.ai[0];
             set => Projectile.ai[0] = value;
@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Broke = true;
             Projectile.oldVelocity = -Projectile.velocity;
             Bounce(Projectile.oldVelocity);
-            
+
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -85,11 +85,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if (!spawned)
             {
+                IceShardCounter = 9;
                 Projectile.frame = 0;
                 spawned = true;
             }
 
-            Projectile.velocity.Y += 0.6f * (0.3f + 0.7f * MacrocosmSubworld.CurrentGravityMultiplier)*(0.6f+((IceCrystals+1)/9));
+            Projectile.velocity.Y += 0.6f * (0.3f + 0.7f * MacrocosmSubworld.CurrentGravityMultiplier) * (0.6f + ((IceShardCounter + 1) / 9));
 
             if (Projectile.timeLeft < timeUntilMandatoryBreak)
             {
@@ -100,15 +101,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Broke)
             {
                 Projectile.rotation += Projectile.velocity.X * 0.01f;
-                AI_Timer++;
             }
             else
             {
                 Projectile.rotation += Projectile.velocity.X * 0.01f;
             }
-
-            
-                    
 
             if (BounceCounter > numBounces)
                 CreateALotOfIce();
@@ -127,7 +124,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 if (!Main.dedServ && BounceCounter > 0)
                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, Mod.Find<ModGore>($"FrigorianGore{BounceCounter}").Type);
             }
-            
+
 
             if (BounceCounter < numBounces)
             {
@@ -141,13 +138,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
                     dust.noGravity = true;
                 }
-                for (int i = 0; i < Main.rand.Next(2,3); i++)
+                for (int i = 0; i < Main.rand.Next(2, 3); i++)
                 {
                     if (Projectile.owner == Main.myPlayer)
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, -Projectile.oldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage / 4, 2, -1);
-                    IceCrystals--;
+                    IceShardCounter--;
                 }
-                
+
 
                 Particle.Create<PrettySparkle>((p) =>
                 {
@@ -186,10 +183,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             if (Projectile.owner == Main.myPlayer)
             {
-                for (int i = 0; i < IceCrystals; i++)
+                for (int i = 0; i < IceShardCounter; i++)
                 {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center,Projectile.oldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage / 4, 2, -1);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.oldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage / 4, 2, -1);
                 }
+
                 for (int i = 0; i < 2; i++)
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
@@ -225,8 +223,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.02f;
                 dust.noGravity = true;
             }
-
-            
 
             Projectile.Kill();
         }
