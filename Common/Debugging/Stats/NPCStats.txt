@@ -37,8 +37,8 @@ KyaniteScarabCritter
 	Damage: 0
 
 Clavite
-	Life: 950
-	Defense: 110
+	Life: 1300
+	Defense: 30
 	KB resist: 0
 	Damage: 45
 	Drops:
@@ -48,13 +48,13 @@ Clavite
 
 CraterCrawlerBody
 	Life: 200
-	Defense: 45
+	Defense: 60
 	KB resist: 0
 	Damage: 60
 
 CraterCrawlerHead
 	Life: 4000
-	Defense: 100
+	Defense: 40
 	KB resist: 0
 	Damage: 65
 	Drops:
@@ -64,7 +64,7 @@ CraterCrawlerHead
 
 CraterCrawlerTail
 	Life: 200
-	Defense: 50
+	Defense: 80
 	KB resist: 0
 	Damage: 50
 
@@ -79,24 +79,24 @@ CrescentGhoul
 		Moonstone, (1-5) 10%
 
 KyaniteScarabSmall
-	Life: 500
-	Defense: 90
+	Life: 700
+	Defense: 20
 	KB resist: 0.6
 	Damage: 40
 	Drops:
 		Moonstone, (1-5) 10%
 
 Leaper
-	Life: 1200
-	Defense: 70
+	Life: 1700
+	Defense: 30
 	KB resist: 0.03
 	Damage: 55
 	Drops:
 		Moonstone, (1-5) 10%
 
 LuminiteElemental
-	Life: 1500
-	Defense: 100
+	Life: 1600
+	Defense: 80
 	KB resist: 0.2
 	Damage: 55
 	Drops:
@@ -104,8 +104,8 @@ LuminiteElemental
 		Moonstone, (1-5) 10%
 
 LuminiteSlime
-	Life: 1000
-	Defense: 80
+	Life: 1400
+	Defense: 40
 	KB resist: 0.5
 	Damage: 50
 	Drops:
@@ -114,7 +114,7 @@ LuminiteSlime
 
 LuminiteSlimeVolatile
 	Life: 650
-	Defense: 70
+	Defense: 40
 	KB resist: 0.5
 	Damage: 60
 	Drops:
@@ -123,13 +123,13 @@ LuminiteSlimeVolatile
 
 MoonWormBody
 	Life: 200
-	Defense: 69
+	Defense: 110
 	KB resist: 0
 	Damage: 120
 
 MoonWormHead
 	Life: 20000
-	Defense: 160
+	Defense: 70
 	KB resist: 0
 	Damage: 100
 	Drops:
@@ -138,13 +138,13 @@ MoonWormHead
 
 MoonWormTail
 	Life: 200
-	Defense: 75
+	Defense: 170
 	KB resist: 0
 	Damage: 100
 
 MoonZombie
-	Life: 1700
-	Defense: 90
+	Life: 2000
+	Defense: 40
 	KB resist: 0.5
 	Damage: 65
 	Drops:
@@ -160,8 +160,8 @@ RadioactiveSlime
 		Moonstone, (1-5) 10%
 
 RegolithSlime
-	Life: 900
-	Defense: 60
+	Life: 1100
+	Defense: 30
 	KB resist: 0.5
 	Damage: 40
 	Drops:
@@ -169,8 +169,8 @@ RegolithSlime
 		Moonstone, (1-5) 10%
 
 Shade
-	Life: 950
-	Defense: 60
+	Life: 1100
+	Defense: 30
 	KB resist: 0
 	Damage: 50
 	Drops:
@@ -179,15 +179,15 @@ Shade
 
 ZombieEngineer
 	Life: 1100
-	Defense: 60
+	Defense: 40
 	KB resist: 0.01
 	Damage: 65
 	Drops:
 		Moonstone, (1-5) 10%
 
 ZombieSecurity
-	Life: 1800
-	Defense: 100
+	Life: 2300
+	Defense: 50
 	KB resist: 0.5
 	Damage: 65
 	Drops:
