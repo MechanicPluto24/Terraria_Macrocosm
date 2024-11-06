@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Walls
 {
-
     public class LexanGlassWall : ModItem
     {
         public override void SetStaticDefaults()

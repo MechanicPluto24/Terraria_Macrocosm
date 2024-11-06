@@ -28,6 +28,7 @@ namespace Macrocosm.Content.Items.Blocks
 
             CreateRecipe()
                 .AddIngredient<LexanGlassWall>(4)
+                .AddTile(TileID.WorkBenches)
                 .Register();
         }
     }

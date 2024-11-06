@@ -53,7 +53,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.value = 60f;
             NPC.knockBackResist = 0f;
             NPC.noGravity = true;
-            NPC.noTileCollide = true;
+            NPC.noTileCollide = false;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

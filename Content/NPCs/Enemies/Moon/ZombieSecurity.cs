@@ -245,7 +245,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             // Orient the NPC towards the player 
             NPC.direction = Main.player[NPC.target].position.X < NPC.position.X ? -1 : 1;
 
-            int projDamage = Utility.TrueDamage(NPC.damage * 3/2);
+            int projDamage = Utility.TrueDamage(NPC.damage * 3 / 2);
             int projType = ModContent.ProjectileType<ZombieSecurityBullet>();
             float projSpeed = 120;
 

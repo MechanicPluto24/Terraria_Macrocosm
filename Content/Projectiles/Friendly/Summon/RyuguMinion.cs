@@ -129,7 +129,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                     }
                 }
             }
-            if(!foundTarget){
+            if (!foundTarget)
+            {
                 targetNPC = Owner;
             }
             if (foundTarget && (Vector2.Distance(targetNPC.Center, Projectile.Center) > FireDist || Projectile.velocity.Y != 0))
@@ -175,7 +176,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         {
             List<int> WalkFrames = new List<int> { 1, 2, 3 };
             List<int> AirFrame = new List<int> { 4 };
-            List<int> FireFrames = new List<int> { 5, 6, 7, 8, 9, 10, -1, 11, 12, 13, 14, 15,15,15,15 };
+            List<int> FireFrames = new List<int> { 5, 6, 7, 8, 9, 10, -1, 11, 12, 13, 14, 15, 15, 15, 15 };
             // So it will lean slightly towards the direction it's moving
 
 

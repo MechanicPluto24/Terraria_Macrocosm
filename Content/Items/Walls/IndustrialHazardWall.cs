@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Walls
                 .AddIngredient<IndustrialPlating>()
                 .AddTile(TileID.WorkBenches)
                 .DisableDecraft()
-                .AddCustomShimmerResult(ModContent.ItemType<IndustrialPlatingWallUnsafe>())
+                .AddCustomShimmerResult(ModContent.ItemType<IndustrialHazardWallUnsafe>())
                 .Register();
         }
     }

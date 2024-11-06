@@ -1,4 +1,3 @@
-using Macrocosm.Common.Sets;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -12,9 +11,9 @@ namespace Macrocosm.Common.Global.Items
         {
             if (SubworldSystem.AnyActive<Macrocosm>()) // TODO: Add check, if airless environment
             {
-                if (item.type==ItemID.BloodMoonStarter)
+                if (item.type == ItemID.BloodMoonStarter)
                     return false;
-                
+
             }
 
             return true;

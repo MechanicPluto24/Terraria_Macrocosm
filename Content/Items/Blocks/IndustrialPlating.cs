@@ -29,18 +29,22 @@ namespace Macrocosm.Content.Items.Blocks
 
             CreateRecipe()
                 .AddIngredient<IndustrialPlatingWall>(4)
+                .AddTile(TileID.WorkBenches)
                 .Register();
 
             CreateRecipe()
                 .AddIngredient<IndustrialHazardWall>(4)
+                .AddTile(TileID.WorkBenches)
                 .Register();
 
             CreateRecipe()
                 .AddIngredient<IndustrialSquarePaneledWall>(4)
+                .AddTile(TileID.WorkBenches)
                 .Register();
 
             CreateRecipe()
                 .AddIngredient<IndustrialTrimmingWall>(4)
+                .AddTile(TileID.WorkBenches)
                 .Register();
         }
     }

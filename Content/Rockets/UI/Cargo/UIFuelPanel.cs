@@ -143,7 +143,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             liquidContainerItemSlot.Top = new(0, 0.1f);
             liquidContainerItemSlot.Left = new(0, 0.5f);
             liquidContainerItemSlot.AddReserved(
-                (item) => ItemSets.LiquidContainerData[item.type].Valid,
+                (item) => ItemSets.LiquidContainerData[item.type].Valid && ItemSets.LiquidContainerData[item.type].LiquidType == Liquids.LiquidType.RocketFuel,
                 Lang.GetItemName(ModContent.ItemType<Canister>()),
                 ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
             );
