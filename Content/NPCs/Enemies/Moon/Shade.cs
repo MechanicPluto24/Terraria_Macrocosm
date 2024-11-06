@@ -39,15 +39,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
+            NPCID.Sets.TrailCacheLength[NPC.type] = 8;
+            NPCID.Sets.TrailingMode[NPC.type] = 0;
         }
 
         public override void SetDefaults()
         {
             NPC.width = 32;
             NPC.height = 32;
-            NPC.lifeMax = 1100;
+            NPC.lifeMax = 950;
             NPC.damage = 50;
-            NPC.defense = 30;
+            NPC.defense = 60;
             NPC.HitSound = SoundID.NPCHit36 with { Volume = 0.5f };
             NPC.DeathSound = SoundID.NPCDeath6;
             NPC.value = 60f;
@@ -192,7 +194,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Texture2D texture = TextureAssets.Npc[Type].Value;
             spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, (new Color(255, 255, 255) * (NPC.Opacity) * 0.2f), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
             spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, drawColor * (NPC.Opacity), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
-
+             for (int i = 0; i < NPC.oldPos.Length; i++)
+            {
+                Vector2 drawPos = NPC.oldPos[i] + NPC.Size / 2 - Main.screenPosition;
+                Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
+                SpriteEffects effect = NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.3f,  NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, NPC.Size / 2, NPC.scale, effect, 0f);
+            }
             /*
             // Debug collision hitbox
             Rectangle hitbox = collisionHitbox;
