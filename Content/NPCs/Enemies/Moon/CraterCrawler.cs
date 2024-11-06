@@ -38,9 +38,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void SetDefaults()
         {
             NPC.CloneDefaults(NPCID.DiggerHead);
-            NPC.lifeMax = 4000;
+            NPC.lifeMax = 3200;
             NPC.damage = 65;
-            NPC.defense = 100;
+            NPC.defense = 40;
             NPC.width = 20;
             NPC.height = 20;
             SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
@@ -146,7 +146,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.CloneDefaults(NPCID.DiggerBody);
             NPC.damage = 60;
-            NPC.defense = 45;
+            NPC.defense = 60;
             NPC.npcSlots = 0f;
             NPC.width = 16;
             NPC.height = 16;
@@ -206,7 +206,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             NPC.CloneDefaults(NPCID.DiggerTail);
             NPC.damage = 50;
-            NPC.defense = 50;
+            NPC.defense = 80;
             NPC.width = 30;
             NPC.height = 30;
             NPC.npcSlots = 0f;
