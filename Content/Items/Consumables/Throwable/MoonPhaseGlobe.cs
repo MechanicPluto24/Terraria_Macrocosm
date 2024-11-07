@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Thrown;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Projectiles.Friendly.Thrown;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -9,6 +10,7 @@ namespace Macrocosm.Content.Items.Consumables.Throwable
     {
         public override void SetStaticDefaults()
         {
+            ItemSets.UnobtainableItem[Type] = true;
         }
 
         public override void SetDefaults()
