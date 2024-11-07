@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Microsoft.Xna.Framework;
 using ReLogic.Utilities;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ObjectData;
 using Terraria.WorldBuilding;
 using static Terraria.WorldGen;
@@ -97,6 +99,127 @@ namespace Macrocosm.Common.Utils
         public static void ForEachInCircle(int i, int j, int radius, Action<int, int> action)
         {
             ForEachInCircle(i, j, radius * 2, radius * 2, action);
+        }
+
+        /// <summary>
+        /// Convert a single wall tile to its specified variant (Normal, Unsafe, or Natural).
+        /// </summary>
+        /// <param name="x">The x-coordinate of the tile.</param>
+        /// <param name="y">The y-coordinate of the tile.</param>
+        /// <param name="variant">The variant type to convert to.</param>
+        public static void ConvertWallSafety(int x, int y, WallSafetyType variant)
+        {
+            var tile = Main.tile[x, y];
+            int currentWallType = tile.WallType;
+
+            string baseTypeName = ModContent.GetModWall(currentWallType)?.Name;
+            if (baseTypeName == null)
+                return;
+
+            string variantSuffix = variant switch
+            {
+                WallSafetyType.Normal => "",
+                WallSafetyType.Natural => "Natural",
+                WallSafetyType.Unsafe => "Unsafe",
+                _ => ""
+            };
+
+            string targetTypeName = baseTypeName.Replace("Unsafe", "").Replace("Natural", "") + variantSuffix;
+            int targetType = ModContent.TryFind(targetTypeName, out ModWall modWall) ? modWall.Type : currentWallType;
+
+            tile.WallType = (ushort)targetType;
+        }
+
+        /// <summary>
+        /// Convert a rectangular area of walls to their specified variant.
+        /// </summary>
+        /// <param name="startX">The starting x-coordinate of the area.</param>
+        /// <param name="startY">The starting y-coordinate of the area.</param>
+        /// <param name="width">The width of the area.</param>
+        /// <param name="height">The height of the area.</param>
+        /// <param name="variant">The variant type to convert to.</param>
+        public static void ConvertWallSafetyInArea(int startX, int startY, int width, int height, WallSafetyType variant)
+        {
+            for (int x = startX; x < startX + width; x++)
+            {
+                for (int y = startY; y < startY + height; y++)
+                {
+                    ConvertWallSafety(x, y, variant);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Convert a rectangular area of walls to their specified variant, using a Rectangle.
+        /// </summary>
+        /// <param name="area">The Rectangle defining the area to convert.</param>
+        /// <param name="variant">The variant type to convert to.</param>
+        public static void ConvertWallSafetyInArea(Rectangle area, WallSafetyType variant)
+            => ConvertWallSafetyInArea(area.X, area.Y, area.Width, area.Height, variant);
+
+        /// <summary> This implementation also allows for tile removal (<paramref name="type"/> = -1) </summary>
+        /// <inheritdoc cref="WorldGen.OreRunner(int, int, double, int, ushort)"/>
+        public static void SafeTileRunner(int i, int j, double strength, int steps, int type)
+        {
+            double stepsD = steps;
+            Vector2D position = new Vector2D(i, j);
+            Vector2D movement = new((double)genRand.Next(-10, 11) * 0.1, (double)genRand.Next(-10, 11) * 0.1);
+
+            while (strength > 0.0 && stepsD > 0.0)
+            {
+                if (position.Y < 0.0 && stepsD > 0.0 && type == 59)
+                    stepsD = 0.0;
+
+                strength = strength * (stepsD / (double)steps);
+                stepsD -= 1.0;
+                int left = (int)(position.X - strength * 0.5);
+                int right = (int)(position.X + strength * 0.5);
+                int top = (int)(position.Y - strength * 0.5);
+                int bottom = (int)(position.Y + strength * 0.5);
+
+                if (left < 0)
+                    left = 0;
+
+                if (right > Main.maxTilesX)
+                    right = Main.maxTilesX;
+
+                if (top < 0)
+                    top = 0;
+
+                if (bottom > Main.maxTilesY)
+                    bottom = Main.maxTilesY;
+
+                for (int k = left; k < right; k++)
+                {
+                    for (int l = top; l < bottom; l++)
+                    {
+                        if (Math.Abs((double)k - position.X) + Math.Abs((double)l - position.Y) < strength * 0.5 * (1.0 + (double)genRand.Next(-10, 11) * 0.015) && Main.tile[k, l].HasTile && (TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[k, l].TileType] || (Main.remixWorld && Main.tile[k, l].TileType == 230) || (Main.tile[k, l].TileType == 225 && Main.tile[k, l].TileType != 108)))
+                        {
+                            if(type > 0)
+                            {
+                                Main.tile[k, l].TileType = (ushort)type;
+                            }
+                            else
+                            {
+                                WorldUtils.ClearTile(k, l, false);
+                            }
+
+                            Main.tile[k, l].ClearBlockPaintAndCoating();
+                            SquareTileFrame(k, l);
+                            if (Main.netMode == NetmodeID.Server)
+                                NetMessage.SendTileSquare(-1, k, l);
+                        }
+                    }
+                }
+
+                position += movement;
+                movement.X += (double)genRand.Next(-10, 11) * 0.05;
+                if (movement.X > 1.0)
+                    movement.X = 1.0;
+
+                if (movement.X < -1.0)
+                    movement.X = -1.0;
+            }
         }
 
         /// <summary>
