@@ -198,7 +198,7 @@ namespace Macrocosm.Content.Subworlds
                         choice.Add(ProjectileID.FallingStar, 30.0);
 
                         choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
-                        choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 33.0);
+                        choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 30.0);
                         choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
 
                         choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);

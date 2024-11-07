@@ -84,7 +84,7 @@ namespace Macrocosm.Content.Items.GrabBags
             Texture2D texture = TextureAssets.Item[Type].Value;
             SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             Rectangle sourceRect = texture.Frame(1, 4, frameY: frameY);
-            spriteBatch.Draw(texture, position, sourceRect, color, rotation, new Vector2(texture.Width / 2, texture.Height / (4 * 2)), scale, effects, 0f);
+            spriteBatch.Draw(texture, position, sourceRect, color, rotation, sourceRect.Size() / 2f, scale, effects, 0f);
         }
     }
 }

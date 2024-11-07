@@ -1157,7 +1157,11 @@ IntoTheUnknownMusicBox: {
 
 OsmiumBoots: {
 	DisplayName: Osmium Boots
-	Tooltip: Increases player's fall speed
+	Tooltip:
+		'''
+		Increases player's fall speed.
+		Double tab down to further increase fall speed. 
+		'''
 }
 
 EarthGlobe: {
@@ -2686,4 +2690,14 @@ CheeseWall: {
 CircuitProbe: {
 	DisplayName: Circuit Probe
 	Tooltip: Used for circuitry troubleshooting
+}
+
+IndustrialBattery: {
+	DisplayName: Industrial Battery
+	Tooltip: ""
+}
+
+AdvancedCircuitBoard: {
+	DisplayName: Advanced Circuit Board
+	Tooltip: ""
 }

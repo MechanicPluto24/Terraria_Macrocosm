@@ -61,10 +61,10 @@ namespace Macrocosm.Common.Players
         /// <summary> Whether the dash makes a player afterimage </summary>
         public bool AccDashAfterImage { get; set; }
 
-        /// <summary> Action called when starting the dash, used mainly for visual and sound effects </summary>
+        /// <summary> Action called when starting the dash, called on the local client, used mainly for visual and sound effects </summary>
         public Action<Player> AccDashStartVisuals { get; set; }
 
-        /// <summary> Action called for the duration of the dash, used mainly for visual and sound effects </summary>
+        /// <summary> Action called for the duration of the dash, called on the local client, used mainly for visual and sound effects </summary>
         public Action<Player> AccDashVisuals { get; set; }
 
         public enum Direction { Down, Up, Right, Left, None = -1 }
@@ -85,7 +85,7 @@ namespace Macrocosm.Common.Players
         /// <summary> Whether the player has collided during the dash with an NPC this frame </summary>
         public bool CollidedWithNPC { get; set; }
 
-        /// <summary> Action called when colliding with an NPC </summary>
+        /// <summary> Action called when colliding with an NPC. Called on the local client </summary>
         public Action<Player, NPC> OnCollisionWithNPC { get; set; }
 
         public override void PostUpdateBuffs()
