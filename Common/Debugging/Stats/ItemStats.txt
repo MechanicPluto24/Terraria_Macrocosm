@@ -2961,6 +2961,21 @@ BurnerGenerator
 		Fabricator
 
 
+IndustrialBattery
+	Value: 4 gold 50 silver
+	Research count: 1
+	Recipes:
+		Battery x 6
+		Lead Bar x 3
+		at
+		Fabricator
+
+		Battery x 6
+		Iron Bar x 3
+		at
+		Fabricator
+
+
 OilRefinery
 	Value: 5 gold
 	Research count: 1
@@ -3219,6 +3234,10 @@ LaunchPadMarker
 		Fabricator
 			=> x2
 
+
+AdvancedCircuitBoard
+	Value: 1 silver
+	Research count: 5
 
 AirVent
 	Value: 1 silver

@@ -194,12 +194,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Texture2D texture = TextureAssets.Npc[Type].Value;
             spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, (new Color(255, 255, 255) * (NPC.Opacity) * 0.2f), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
             spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, drawColor * (NPC.Opacity), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
-             for (int i = 0; i < NPC.oldPos.Length; i++)
+            for (int i = 0; i < NPC.oldPos.Length; i++)
             {
-                Vector2 drawPos = NPC.oldPos[i] + NPC.Size / 2 - Main.screenPosition;
+                Vector2 drawPos = NPC.oldPos[i] + NPC.Size / 2f - Main.screenPosition;
                 Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-                SpriteEffects effect = NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, NPC.frame, color * 0.3f,  NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, NPC.Size / 2, NPC.scale, effect, 0f);
+                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, null, color * 0.3f,  NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0f);
             }
             /*
             // Debug collision hitbox
