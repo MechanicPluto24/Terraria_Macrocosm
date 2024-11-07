@@ -125,10 +125,20 @@ namespace Macrocosm.Common.Utils
             };
 
             string targetTypeName = baseTypeName.Replace("Unsafe", "").Replace("Natural", "") + variantSuffix;
-            int targetType = ModContent.TryFind(targetTypeName, out ModWall modWall) ? modWall.Type : currentWallType;
+
+            int targetType = currentWallType;
+            foreach (var modWall in ModContent.GetContent<ModWall>())
+            {
+                if (modWall.Name == targetTypeName)
+                {
+                    targetType = modWall.Type;
+                    break;
+                }
+            }
 
             tile.WallType = (ushort)targetType;
         }
+
 
         /// <summary>
         /// Convert a rectangular area of walls to their specified variant.

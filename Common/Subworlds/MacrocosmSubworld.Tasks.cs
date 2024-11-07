@@ -83,10 +83,8 @@ namespace Macrocosm.Common.Subworlds
                      ));
                 }
 
-                // (Re)construct structure map of this subworld when SubLib fetches worldgen tasks (i.e. subworld generation commences)
+                // Reset structure map 
                 StructureMap = new();
-                RocketManager.OnWorldGenerated();
-
                 return tasks;
             }
         }

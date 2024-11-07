@@ -1,9 +1,11 @@
 ﻿using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Ores;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.WorldBuilding;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 {
@@ -16,22 +18,25 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 
         public override void PostPlace(Point16 origin)
         {
-            int max = WorldGen.genRand.Next(30, 41);
+            WorldUtils.Gen(new Point(origin.X - Size.Y / 4, origin.Y + 10), new CustomShapes.Chasm(30, 1, 10, 2, 0, dir: false), Actions.Chain(new CustomActions.ClearTileSafelyPostGen()));
+            WorldUtils.Gen(new Point(origin.X - Size.Y / 4, origin.Y + 10), new CustomShapes.Chasm(30, 10, 140, 2, 0, dir: true), Actions.Chain(new CustomActions.ClearTileSafelyPostGen()));
+
+            int max = WorldGen.genRand.Next(20, 31);
             for (int vein = 0; vein < max; vein++)
             {
                 WorldGen.OreRunner(
-                    i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(1.5f)),
+                    i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(2.5f)),
                     j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
-                    strength: WorldGen.genRand.Next(2, 5),
-                    steps: WorldGen.genRand.Next(6, 8),
+                    strength: WorldGen.genRand.Next(3, 6),
+                    steps: WorldGen.genRand.Next(8, 12),
                     type: (ushort)ModContent.TileType<ArtemiteOre>()
                 );
 
                 WorldGen.OreRunner(
-                    i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(1.5f)),
+                    i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(2.5f)),
                     j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
-                    strength: WorldGen.genRand.Next(2, 5),
-                    steps: WorldGen.genRand.Next(6, 8),
+                    strength: WorldGen.genRand.Next(3, 6),
+                    steps: WorldGen.genRand.Next(8, 12),
                     type: TileID.LunarBlockSolar
                 );
             }
