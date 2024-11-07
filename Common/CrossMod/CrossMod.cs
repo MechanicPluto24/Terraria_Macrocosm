@@ -129,7 +129,7 @@ namespace Macrocosm.Common.Crossmod
         {
             if (ModLoader.TryGetMod("Wikithis", out Mod wikithis) && !Main.dedServ)
             {
-                wikithis.Call("AddModURL", Mod, "https://terrariamods.fandom.com/wiki/Macrocosm/{}");
+                wikithis.Call("AddModURL", Mod, "https://terrariamods.wiki.gg/wiki/Macrocosm/{}");
             }
         }
     }
