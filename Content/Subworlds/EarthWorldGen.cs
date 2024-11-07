@@ -124,7 +124,7 @@ namespace Macrocosm.Content.Subworlds
             for (int i = 0; i < maxPatches; i++)
             {
                 int x = WorldGen.genRand.Next(0, WorldGen.beachDistance);
-                int y = WorldGen.genRand.Next((int)Main.worldSurface + 100, (int)GenVars.rockLayerHigh);
+                int y = WorldGen.genRand.Next((int)Main.worldSurface + 100, (int)GenVars.rockLayerHigh + 100);
 
                 if (WorldGen.genRand.NextBool())
                     x = WorldGen.genRand.Next(Main.maxTilesX - WorldGen.beachDistance, Main.maxTilesX);

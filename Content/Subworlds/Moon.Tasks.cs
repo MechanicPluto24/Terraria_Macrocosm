@@ -685,18 +685,24 @@ namespace Macrocosm.Content.Subworlds
 
             Structure shrine = new LuminiteShrine();
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3.5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 3.5 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.45f), (int)(Main.maxTilesY * 0.55f));
-            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
 
-            bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidDown && shrine.Place(new Point16(solidGround.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.8f)), StructureMap))
-                return;
+                bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(solidGround.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.8f));
 
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y - shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y - shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
+                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+
+                if (validPositionFound && shrine.Place(origin, StructureMap))
+                {
+                    WorldUtils.Gen(new Point(origin.X + shrine.Size.X / 2, origin.Y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
+                    WorldUtils.Gen(new Point(origin.X + shrine.Size.X / 2, origin.Y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
+                }
+            }
         }
 
         [Task]
@@ -705,20 +711,22 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             Structure shrine = new HeavenforgeShrine();
-
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 0 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 0 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
-            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
 
-            bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidDown && shrine.Place(new Point16(solidGround.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.8f)), StructureMap))
-                return;
+                bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(solidGround.X - shrine.Size.X / 2, solidGround.Y);
 
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
+                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+
+                if (validPositionFound)
+                    shrine.Place(origin, StructureMap);
+            }
         }
 
         [Task]
@@ -727,20 +735,22 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             Structure shrine = new MercuryShrine();
-
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 1 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 1 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
-            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
 
-            bool solidUp = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidUp && shrine.Place(new Point16(solidGround.X + shrine.Size.X / 2 - 1, solidGround.Y - 10), StructureMap))
-                return;
+                bool solidUp = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(solidGround.X + shrine.Size.X / 2 - 1, solidGround.Y - 10);
 
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y), new CustomShapes.Chasm(30, 1, 10, 2, 0, dir: false), Actions.Chain(new CustomActions.ClearTileSafelyPostGen(), new Actions.ClearWall()));
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y), new CustomShapes.Chasm(30, 10, 140, 2, 0, dir: true), Actions.Chain(new CustomActions.ClearTileSafelyPostGen(), new Actions.ClearWall()));
+                validPositionFound = solidUp && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+
+                if (validPositionFound)
+                    shrine.Place(origin, StructureMap);
+            }
         }
 
         [Task]
@@ -749,20 +759,22 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             Structure shrine = new LunarRustShrine();
-
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 2 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 2 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
-            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
 
-            bool solidUp = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidUp && shrine.Place(new Point16(x + shrine.Size.X / 4, solidGround.Y - 10), StructureMap))
-                return;
+                bool solidUp = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(x + shrine.Size.X / 4, solidGround.Y - 10);
 
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y), new CustomShapes.Chasm(65, 1, 10, 2, 0, dir: false), Actions.Chain(new CustomActions.ClearTileSafelyPostGen(), new Actions.ClearWall()));
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y), new CustomShapes.Chasm(65, 10, 180, 2, 0, dir: true), Actions.Chain(new CustomActions.ClearTileSafelyPostGen(), new Actions.ClearWall()));
+                validPositionFound = solidUp && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+
+                if (validPositionFound)
+                    shrine.Place(origin, StructureMap);
+            }
         }
 
         [Task]
@@ -772,19 +784,21 @@ namespace Macrocosm.Content.Subworlds
 
             Structure shrine = new StarRoyaleShrine();
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 3 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
-            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
 
-            bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidDown && shrine.Place(new Point16(x - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 1.1f)), StructureMap))
-                return;
+                bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(x - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 1.1f));
 
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(30, 10, 100, 3, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(30, 10, 100, 3, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
-            SafeTileRunner(x + shrine.Size.X / 2, y + shrine.Size.Y / 2, shrine.Size.X * 1.2, 2, -1);
+                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+
+                if (validPositionFound)
+                    shrine.Place(origin, StructureMap);
+            }
         }
 
         [Task]
@@ -793,19 +807,22 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             Structure shrine = new CryocoreShrine();
-
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 4 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 4 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
-            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
 
-            bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidDown && shrine.Place(new Point16(x - shrine.Size.X / 2, solidGround.Y - shrine.Size.Y - (int)(shrine.Size.Y * 0.2f)), StructureMap))
-                return;
+                bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(x - shrine.Size.X / 2, solidGround.Y - shrine.Size.Y - (int)(shrine.Size.Y * 0.2f));
 
-            SafeTileRunner(x + shrine.Size.X / 2, y + shrine.Size.Y / 2 - 1, shrine.Size.X * 1.2, 1, -1);
+                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+
+                if (validPositionFound)
+                    shrine.Place(origin, StructureMap);
+            }
         }
 
         [Task]
@@ -814,22 +831,24 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             Structure shrine = new AstraShrine();
-
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 5 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
-            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
 
-            bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidDown && shrine.Place(new Point16(x - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y)), StructureMap))
-                return;
+                bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(x - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y));
 
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(18, 16, 50, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(18, 16, 50, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
-            SafeTileRunner(x + shrine.Size.X / 2, y + shrine.Size.Y / 2 - 1, shrine.Size.X * 1.25f, 1, -1);
+                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+
+                if (validPositionFound)
+                    shrine.Place(origin, StructureMap);
+            }
         }
+
 
         [Task]
         private void PlaceDarkCelestialShrine(GenerationProgress progress)
@@ -837,21 +856,22 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             Structure shrine = new DarkCelestialShrine();
-
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 6 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 6 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
-            } while (!StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _));
 
-            bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidDown && shrine.Place(new Point16(x - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.9f)), StructureMap))
-                return;
+                bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(x - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.9f));
 
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(30, 10, 100, 3, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
-            WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(30, 10, 100, 3, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
-            SafeTileRunner(x + shrine.Size.X / 2, y + shrine.Size.Y / 2, shrine.Size.X * 1.2, 3, -1);
+                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+
+                if (validPositionFound)
+                    shrine.Place(origin, StructureMap);
+            }
         }
 
         [Task]
@@ -860,21 +880,24 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
             Structure shrine = new CosmicEmberShrine();
-
             int x, y;
-            do
+            bool validPositionFound = false;
+
+            while (!validPositionFound)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 7 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 7 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
-            } while (!(StructureMap.CanPlace(new Rectangle(x, y, shrine.Size.X, shrine.Size.Y)) && WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Rectangle(shrine.Size.X, shrine.Size.Y), new Conditions.IsSolid()), out _)));
 
+                bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+                Point16 origin = new(x - shrine.Size.X / 2, solidGround.Y - shrine.Size.Y);
 
-            bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            if (solidDown && shrine.Place(new Point16(x - shrine.Size.X / 2, solidGround.Y - shrine.Size.Y), StructureMap))
-                return;
+                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
 
-            SafeTileRunner(x + shrine.Size.X / 2, y + shrine.Size.Y / 2 - 1, shrine.Size.X * 2f, 1, -1);
+                if (validPositionFound)
+                    shrine.Place(origin, StructureMap);
+            }
         }
+
 
         [Task]
         private void OutpostsTasks(GenerationProgress progress)

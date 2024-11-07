@@ -235,21 +235,6 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        public override void PostWorldGen() => base.PostWorldGen();
-
-        public static void OnWorldGenerated()
-        {
-            for (int i = 0; i < MaxRockets; i++)
-            {
-                Rocket rocket = Rockets[i];
-
-                if (!rocket.ActiveInCurrentWorld)
-                    continue;
-
-                rocket.OnSubworldGenerated();
-            }
-        }
-
         private static SpriteBatchState state1, state2;
 
         private void On_Main_DoDraw_DrawNPCsBehindTiles(On_Main.orig_DoDraw_DrawNPCsBehindTiles orig, Main self)
