@@ -84,9 +84,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
-            int offsetY = 0;
-            if (WorldGen.SolidTile(i, j - 1))
-                offsetY = 10;
+            int offsetY = 8;
+            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
+                offsetY -= 8;
 
             for (int k = 0; k < 7; k++)
             {

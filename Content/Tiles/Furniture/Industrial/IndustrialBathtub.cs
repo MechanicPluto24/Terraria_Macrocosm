@@ -25,6 +25,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();
             AdjTiles = [TileID.Bathtubs];
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialBathtub>());
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;

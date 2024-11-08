@@ -48,6 +48,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Dresser"));
             AdjTiles = [TileID.Dressers];
             DustType = ModContent.DustType<IndustrialPlatingDust>();
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialDresser>());
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;

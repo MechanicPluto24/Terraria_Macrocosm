@@ -19,15 +19,16 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1xX);
-            TileObjectData.newTile.Height = 3;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+            TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Lamps, 0));
             TileObjectData.addTile(Type);
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.FloorLamp"));
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialLamp>());
         }
 
         public override void HitWire(int i, int j)
@@ -51,7 +52,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameX == 0)
+            if (tile.TileFrameX < 18 && tile.TileFrameY < 18 * 3)
             {
                 r = 1f;
                 g = 1f;

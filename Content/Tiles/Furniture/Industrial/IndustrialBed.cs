@@ -43,6 +43,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Bed"));
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialBed>());
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
