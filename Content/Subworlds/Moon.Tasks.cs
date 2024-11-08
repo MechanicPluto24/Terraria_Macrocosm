@@ -23,6 +23,7 @@ using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.Tiles.Furniture.Luminite;
 using Macrocosm.Content.Tiles.Walls;
+using Macrocosm.Content.WorldGeneration.DunGen;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Macrocosm.Content.WorldGeneration.Structures.LunarOutposts;
 using Macrocosm.Content.WorldGeneration.Structures.Shrines;
@@ -671,12 +672,42 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
-        private void SmoothTask(GenerationProgress progress)
+        private void MoonBaseTest(GenerationProgress progress)
+        {
+            gen_IsMoonBaseRight = WorldGen.genRand.NextBool();
+
+            if (gen_IsMoonBaseRight)
+                gen_MoonBaseLocationX = WorldGen.genRand.Next((int)((double)Main.maxTilesX * 0.8), Main.maxTilesX - 50);
+            else
+                gen_MoonBaseLocationX = WorldGen.genRand.Next(50, (int)((double)Main.maxTilesX * 0.2));
+
+            progress.Set(1.0);
+            int dungeonLocation = gen_MoonBaseLocationX;
+            int tileYStart = (int)((Main.worldSurface + Main.rockLayer) / 2.0) + WorldGen.genRand.Next(-200, 200);
+            int tileYEnd = (int)((Main.worldSurface + Main.rockLayer) / 2.0) + 200;
+            int y = tileYStart;
+            bool solid = false;
+            for (int j = 0; j < 10; j++)
+            {
+                if (WorldGen.SolidTile(dungeonLocation, y + j))
+                {
+                    solid = true;
+                    break;
+                }
+            }
+
+            if (!solid)
+            {
+                for (; y < tileYEnd && !WorldGen.SolidTile(dungeonLocation, y + 10); y++)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
             SmoothWorld(progress);
         }
+            }
 
+            var builder = new MoonBaseBuilder(dungeonLocation);
+            builder.MakeDungeon(dungeonLocation, y);
+        }
 
         [Task]
         private void PlaceLuminiteShrine(GenerationProgress progress)
