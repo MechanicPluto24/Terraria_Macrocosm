@@ -5,7 +5,10 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
+using System.IO;
+
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     // incomplete
@@ -41,7 +44,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
-
+       
 
 
         private float lightValueFlee = 0.1f; // This light value causes the leaper to flee.
@@ -54,6 +57,24 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private bool fear = false; // is it fleeing?
         private bool jumping = false;
         private bool performingWallAnimation = false;
+        public override void SendExtraAI(BinaryWriter writer)
+        {
+            writer.Write(timeSinceLastJump);
+            writer.Write(rage);
+            writer.Write(fear);
+            writer.Write(jumping);
+            writer.Write(performingWallAnimation);
+        }
+
+        public override void ReceiveExtraAI(BinaryReader reader)
+        {
+            timeSinceLastJump = reader.ReadInt32();
+            rage = reader.ReadSingle();
+            fear = reader.ReadBoolean();
+            jumping = reader.ReadBoolean();
+            performingWallAnimation = reader.ReadBoolean();
+       }
+
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
@@ -102,6 +123,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 NPC.velocity.Y += 0.1f;
 
             timeSinceLastJump--;
+            NPC.netUpdate = true;
         }
 
         // Adaption of FighterAI
@@ -182,6 +204,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         // Manages the leaper's rage
         private float GetRage(float lightlevel)
         {
+            if (Main.netMode == NetmodeID.Server)
+                return 0f;
+
+            
+            
             if (Vector2.Distance(Main.player[NPC.target].Center, NPC.Center) < 700f)
                 return -0.01f; // Calms down when in darkness
             if (lightlevel < lightValueFlee)

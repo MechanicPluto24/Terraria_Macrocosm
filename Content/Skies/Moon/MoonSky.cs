@@ -52,8 +52,8 @@ namespace Macrocosm.Content.Skies.Moon
 
         public MoonSky()
         {
-            if (Main.dedServ)
-                return;
+            //if (Main.dedServ)
+             //   return;
 
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
             skyTexture = ModContent.Request<Texture2D>(Path + "MoonSky", mode);
