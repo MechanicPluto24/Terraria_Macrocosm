@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -43,6 +44,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Bed"));
+
+            TileSets.RandomStyles[Type] = 2;
 
             // All styles
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialBed>());

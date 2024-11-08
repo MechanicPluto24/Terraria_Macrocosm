@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Cheese
 {
-    public class CheeseCandle : ModTile
+    public class CheeseCandle : ModTile, IToggleable
     {
         private static Asset<Texture2D> flameTexture;
 
@@ -39,7 +40,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             AddMapEntry(new Color(220, 216, 121), Language.GetText("MapObject.Candle"));
         }
 
-        public override void HitWire(int i, int j)
+        public void Toggle(int i, int j, bool skipWire = false)
         {
             if (Main.tile[i, j].TileFrameX >= 18)
                 Main.tile[i, j].TileFrameX -= 18;
@@ -48,18 +49,16 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, i, j, 1, 1);
+        }   
+
+        public override void HitWire(int i, int j)
+        {
+            Toggle(i, j, skipWire: true);
         }
 
         public override bool RightClick(int i, int j)
         {
-            if (Main.tile[i, j].TileFrameX >= 18)
-                Main.tile[i, j].TileFrameX -= 18;
-            else
-                Main.tile[i, j].TileFrameX += 18;
-
-            if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.SendTileSquare(-1, i, j, 1, 1);
-
+            Toggle(i, j, skipWire: false);
             return true;
         }
 

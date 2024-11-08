@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -9,7 +11,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseLamp")]
-    public class IndustrialLamp : ModTile
+    public class IndustrialLamp : ModTile, IToggleable
     {
         public override void SetStaticDefaults()
         {
@@ -27,11 +29,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.FloorLamp"));
 
+            TileSets.RandomStyles[Type] = 2;
+
             // All styles
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialLamp>());
         }
 
-        public override void HitWire(int i, int j)
+        public void Toggle(int i, int j, bool skipWire = false)
         {
             Tile tile = Main.tile[i, j];
             int topY = j - tile.TileFrameY / 18 % 3;
@@ -41,12 +45,17 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             {
                 Main.tile[i, y].TileFrameX += frameAdjustment;
 
-                if (Wiring.running)
+                if (skipWire && Wiring.running)
                     Wiring.SkipWire(i, y);
             }
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, i, topY, 1, 3);
+        }
+
+        public override void HitWire(int i, int j)
+        {
+            Toggle(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

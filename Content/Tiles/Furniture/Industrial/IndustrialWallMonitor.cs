@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
@@ -13,7 +15,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseWallMonitor")]
-    public class IndustrialWallMonitor : ModTile
+    public class IndustrialWallMonitor : ModTile, IToggleable
     {
         private static Asset<Texture2D> glowmask;
 
@@ -38,6 +40,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
+
+            TileSets.RandomStyles[Type] = 2;
 
             // All styles
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialWallMonitor>());
