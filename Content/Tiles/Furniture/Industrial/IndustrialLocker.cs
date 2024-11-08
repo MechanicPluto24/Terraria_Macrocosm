@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -43,6 +44,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             DustType = ModContent.DustType<IndustrialPlatingDust>();
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName(), MapChestName);
             AdjTiles = [TileID.Containers];
+
+            TileSets.RandomStyles[Type] = 2;
 
             // All styles
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialLocker>());

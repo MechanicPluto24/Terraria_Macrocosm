@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -26,6 +27,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             AdjTiles = [TileID.Pianos];
             DustType = ModContent.DustType<IndustrialPlatingDust>();
+
+            TileSets.RandomStyles[Type] = 2;
 
             // All styles
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialPiano>());

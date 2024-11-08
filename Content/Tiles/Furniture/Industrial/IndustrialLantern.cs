@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -12,7 +14,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseLantern")]
-    public class IndustrialLantern : ModTile
+    public class IndustrialLantern : ModTile, IToggleable
     {
         public override void SetStaticDefaults()
         {
@@ -37,11 +39,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Lantern"));
 
+            TileSets.RandomStyles[Type] = 2;
+
             // All styles
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialLantern>());
         }
 
-        public override void HitWire(int i, int j)
+        public void Toggle(int i, int j, bool skipWire = false)
         {
             Tile tile = Main.tile[i, j];
             int topY = j - tile.TileFrameY / 18 % 2;
@@ -51,12 +55,17 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             {
                 Main.tile[i, y].TileFrameX += frameAdjustment;
 
-                if (Wiring.running)
+                if (skipWire && Wiring.running)
                     Wiring.SkipWire(i, y);
             }
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, i, topY, 1, 2);
+        }   
+
+        public override void HitWire(int i, int j)
+        {
+            Toggle(i, j, skipWire: true);
         }
 
         // Workaround for platform hanging, alternates don't work currently

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.Accessories;
@@ -670,15 +671,6 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
-        [Task]
-        private void SmoothTask(GenerationProgress progress)
-        {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
-            SmoothWorld(progress);
-        }
-
-
-        [Task]
         private void PlaceLuminiteShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -686,8 +678,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new LuminiteShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3.5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 3.5 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.45f), (int)(Main.maxTilesY * 0.55f));
@@ -702,10 +696,16 @@ namespace Macrocosm.Content.Subworlds
                     WorldUtils.Gen(new Point(origin.X + shrine.Size.X / 2, origin.Y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
                     WorldUtils.Gen(new Point(origin.X + shrine.Size.X / 2, origin.Y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
                 }
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.LuminiteShrineUnlocked, true);
             }
         }
 
-        [Task]
         private void PlaceHeavenforgeShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -713,8 +713,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new HeavenforgeShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 0 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 0 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
@@ -726,10 +728,16 @@ namespace Macrocosm.Content.Subworlds
 
                 if (validPositionFound)
                     shrine.Place(origin, StructureMap);
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.HeavenforgeShrineUnlocked, true);
             }
         }
 
-        [Task]
         private void PlaceMercuryShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -737,8 +745,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new MercuryShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 1 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 1 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
@@ -750,10 +760,16 @@ namespace Macrocosm.Content.Subworlds
 
                 if (validPositionFound)
                     shrine.Place(origin, StructureMap);
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.MercuryShrineUnlocked, true);
             }
         }
 
-        [Task]
         private void PlaceLunarRustShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -761,8 +777,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new LunarRustShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 2 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 2 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
@@ -774,10 +792,16 @@ namespace Macrocosm.Content.Subworlds
 
                 if (validPositionFound)
                     shrine.Place(origin, StructureMap);
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.LunarRustShrineUnlocked, true);
             }
         }
 
-        [Task]
         private void PlaceStarRoyaleShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -785,8 +809,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new StarRoyaleShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 3 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
@@ -798,10 +824,16 @@ namespace Macrocosm.Content.Subworlds
 
                 if (validPositionFound)
                     shrine.Place(origin, StructureMap);
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.StarRoyaleShrineUnlocked, true);
             }
         }
 
-        [Task]
         private void PlaceCryocoreShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -809,8 +841,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new CryocoreShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 4 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 4 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
@@ -822,10 +856,16 @@ namespace Macrocosm.Content.Subworlds
 
                 if (validPositionFound)
                     shrine.Place(origin, StructureMap);
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.StarRoyaleShrineUnlocked, true);
             }
         }
 
-        [Task]
         private void PlaceAstraShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -833,8 +873,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new AstraShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 5 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
@@ -846,11 +888,16 @@ namespace Macrocosm.Content.Subworlds
 
                 if (validPositionFound)
                     shrine.Place(origin, StructureMap);
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.AstraShrineUnlocked, true);
             }
         }
 
-
-        [Task]
         private void PlaceDarkCelestialShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -858,8 +905,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new DarkCelestialShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 6 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 6 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
@@ -871,10 +920,16 @@ namespace Macrocosm.Content.Subworlds
 
                 if (validPositionFound)
                     shrine.Place(origin, StructureMap);
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.DarkCelestialShrineUnlocked, true);
             }
         }
 
-        [Task]
         private void PlaceCosmicEmberShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -882,8 +937,10 @@ namespace Macrocosm.Content.Subworlds
             Structure shrine = new CosmicEmberShrine();
             int x, y;
             bool validPositionFound = false;
+            int maxAttempts = 1000;
+            int attempts = 0;
 
-            while (!validPositionFound)
+            while (!validPositionFound && attempts < maxAttempts)
             {
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 7 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 7 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.55f), (int)(Main.maxTilesY * 0.65f));
@@ -895,9 +952,15 @@ namespace Macrocosm.Content.Subworlds
 
                 if (validPositionFound)
                     shrine.Place(origin, StructureMap);
+
+                attempts++;
+            }
+
+            if (!validPositionFound)
+            {
+                WorldFlags.SetFlag(ref WorldFlags.CosmicEmberShrineUnlocked, true);
             }
         }
-
 
         [Task]
         private void OutpostsTasks(GenerationProgress progress)
