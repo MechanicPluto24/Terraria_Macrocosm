@@ -43,6 +43,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.addAlternate(1);
             TileObjectData.addTile(Type);
+
+            // Including broken styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChair>(), 0, 1);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChairSleek>(), 2, 3);
         }
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)

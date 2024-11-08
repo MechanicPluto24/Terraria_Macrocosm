@@ -940,6 +940,13 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
+        private void SmoothTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothPass");
+            SmoothWorld(progress);
+        }
+
         // [Task]
         private void CheeseHouse(GenerationProgress progress)
         {

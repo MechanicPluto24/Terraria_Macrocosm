@@ -34,6 +34,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(200, 200, 200), name);
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialNeonTube>());
         }
 
         public override void HitWire(int i, int j)
@@ -58,7 +61,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameX == 0)
+            if (tile.TileFrameX < 18 * 3 && tile.TileFrameY < 18)
             {
                 r = 1f;
                 g = 1f;

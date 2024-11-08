@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialControlStation>(), 1);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialControlStation>());
             Item.width = 34;
             Item.height = 28;
             Item.value = 500;

@@ -97,8 +97,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
 
             int offsetY = 8;
-            if (Main.tileSolidTop[Main.tile[i, j - 1].TileType])
-                offsetY = 0;
+            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
+                offsetY -= 8;
 
             Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, new Vector2(0, offsetY));
         }

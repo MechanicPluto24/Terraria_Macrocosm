@@ -33,6 +33,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialGurney>());
         }
 
         public override void NumDust(int x, int y, bool fail, ref int num)
