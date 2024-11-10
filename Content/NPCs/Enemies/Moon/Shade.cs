@@ -161,7 +161,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (AI_Speed > 8f)
                 AI_Speed = 8f;
             if (Vector2.Distance(player.Center,NPC.Center)>200f)
-            NPC.velocity = ((NPC.velocity + (direction *1f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
+            NPC.velocity = ((NPC.velocity + (direction *3f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
