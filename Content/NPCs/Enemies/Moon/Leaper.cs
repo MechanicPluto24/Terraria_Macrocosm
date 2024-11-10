@@ -4,6 +4,7 @@ using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Terraria.ID;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -78,7 +79,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.Player.ZoneRockLayerHeight ? .1f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? .1f : 0f;
         }
 
         public override void AI()
