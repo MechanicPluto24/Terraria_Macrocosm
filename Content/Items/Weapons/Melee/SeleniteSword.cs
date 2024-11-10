@@ -12,7 +12,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    public class ArtemiteSword : ModItem
+    [LegacyName("ArtemiteSword")]
+    public class SeleniteSword : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -32,13 +33,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<ArtemiteSwordSwing>();
+            Item.shoot = ModContent.ProjectileType<SeleniteSwordSwing>();
             Item.shootSpeed = 10f;
         }
 
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.Create<ArtemiteStar>((p) =>
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
@@ -50,10 +51,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteSwordSwing>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: player.GetAdjustedItemScale(Item));
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<SeleniteSwordSwing>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: player.GetAdjustedItemScale(Item));
 
             if (player.ItemUseCount(Type) % 2 == 0)
-                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity * 1.5f, ModContent.ProjectileType<ArtemiteSwordSlash>(), damage, knockback, player.whoAmI, ai1: Item.shootSpeed);
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.MountedCenter, velocity * 1.5f, ModContent.ProjectileType<SeleniteSwordSlash>(), damage, knockback, player.whoAmI, ai1: Item.shootSpeed);
 
             return false;
         }
@@ -61,7 +62,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<ArtemiteBar>(12)
+            .AddIngredient<SeleniteBar>(12)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
         }

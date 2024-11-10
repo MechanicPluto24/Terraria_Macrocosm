@@ -24,7 +24,7 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
                     j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(1f)),
                     strength: WorldGen.genRand.Next(2, 5),
                     steps: WorldGen.genRand.Next(4, 8),
-                    type: (ushort)ModContent.TileType<SeleniteOre>()
+                    type: (ushort)ModContent.TileType<ArtemiteOre>()
                 );
 
                 WorldGen.OreRunner(

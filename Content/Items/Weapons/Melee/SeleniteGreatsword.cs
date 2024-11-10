@@ -15,14 +15,15 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    public class ArtemiteGreatsword : GreatswordHeldProjectileItem
+    [LegacyName("ArtemiteGreatsword")]
+    public class SeleniteGreatsword : GreatswordHeldProjectileItem
     {
         public override Vector2 SpriteHandlePosition => new(23, 68);
         public override bool RightClickUse => true;
         public override (float min, float max) ChargeBasedDamageRatio => (0.8f, 1.5f);
         public override int MaxCharge => 50;
 
-        public override GreatswordSwingStyle SwingStyle => new ArtemiteGreatswordSwingStyle();
+        public override GreatswordSwingStyle SwingStyle => new SeleniteGreatswordSwingStyle();
 
         public override void SetStaticDefaults()
         {
@@ -63,7 +64,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.Create<ArtemiteStar>((p) =>
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
@@ -77,8 +78,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             if (!rightClick)
             {
-                Projectile.NewProjectileDirect(source, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: player.GetAdjustedItemScale(Item));
-                //Projectile.NewProjectileDirect(source, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing2>(), damage, knockback, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver2 * 0.5f);
+                Projectile.NewProjectileDirect(source, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<SeleniteGreatswordSwing>(), damage, knockback, player.whoAmI, ai0: player.direction * player.gravDir, ai1: player.itemAnimationMax, ai2: player.GetAdjustedItemScale(Item));
+                //Projectile.NewProjectileDirect(source, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<SeleniteGreatswordSwing2>(), damage, knockback, player.whoAmI, player.direction * player.gravDir, 12, -MathHelper.PiOver2 * 0.5f);
             }
         }
 
@@ -87,15 +88,15 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             float charge = (damage - (Item.damage * ChargeBasedDamageRatio.min)) / ((Item.damage * ChargeBasedDamageRatio.max) - (Item.damage * ChargeBasedDamageRatio.min));
             if (charge > 0.65f)
             {
-                Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), 0, 0, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
-                Projectile swing2 = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwingEmpowered>(), damage, 5, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
+                Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<SeleniteGreatswordSwing>(), 0, 0, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
+                Projectile swing2 = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<SeleniteGreatswordSwingEmpowered>(), damage, 5, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
                 swing2.scale = charge;
                 swing.alpha = (byte)(255f * (1f - charge));
                 swing2.netUpdate = true;
             }
             else
             {
-                Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<ArtemiteGreatswordSwing>(), damage, 0, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
+                Projectile swing = Projectile.NewProjectileDirect(null, player.MountedCenter, new Vector2(player.direction, 0f), ModContent.ProjectileType<SeleniteGreatswordSwing>(), damage, 0, player.whoAmI, ai0: player.direction * player.gravDir, ai1: 24, ai2: player.GetAdjustedItemScale(Item));
                 swing.scale = 1.15f - (0.2f * (1f - charge));
                 swing.netUpdate = true;
             }
@@ -104,13 +105,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<ArtemiteBar>(12)
+            .AddIngredient<SeleniteBar>(12)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
         }
     }
 
-    public class ArtemiteGreatswordSwingStyle : DefaultGreatswordSwingStyle
+    public class SeleniteGreatswordSwingStyle : DefaultGreatswordSwingStyle
     {
         public override bool PreDrawSword(GreatswordHeldProjectile greatsword, Color lightColor, ref Color? drawColor)
         {

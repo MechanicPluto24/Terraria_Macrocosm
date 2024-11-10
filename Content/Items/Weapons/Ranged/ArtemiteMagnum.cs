@@ -11,7 +11,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class SeleniteMagnum : GunHeldProjectileItem
+    [LegacyName("SeleniteMagnum")]
+    public class ArtemiteMagnum : GunHeldProjectileItem
     {
         public override GunHeldProjectileData GunHeldProjectileData => new()
         {
@@ -93,7 +94,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<SeleniteBar>(12)
+            .AddIngredient<ArtemiteBar>(12)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
         }

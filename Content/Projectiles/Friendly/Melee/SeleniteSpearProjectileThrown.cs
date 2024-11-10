@@ -12,7 +12,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class ArtemiteSpearProjectileThrown : ModProjectile
+    public class SeleniteSpearProjectileThrown : ModProjectile
     {
         public override string Texture => base.Texture.Replace("Thrown", "");
 
@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 }
             }
 
-            Particle.Create<ArtemiteStar>((p) =>
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = Projectile.Center;
                 p.Velocity = Projectile.velocity * 0.1f;
@@ -136,7 +136,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
                 if (!Main.dedServ)
                 {
-                    int type = Main.rand.NextBool() ? ModContent.DustType<ArtemiteBrightDust>() : ModContent.DustType<ArtemiteDust>();
+                    int type = Main.rand.NextBool() ? ModContent.DustType<SeleniteBrightDust>() : ModContent.DustType<SeleniteDust>();
                     Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, type, Projectile.velocity.X / -64f, Projectile.velocity.Y / -16f, Scale: 0.8f);
                     dust.noGravity = true;
                 }
@@ -149,7 +149,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 for (int i = 0; i < Main.rand.Next(30, 40); i++)
                 {
-                    int type = Main.rand.NextBool() ? ModContent.DustType<ArtemiteBrightDust>() : ModContent.DustType<ArtemiteDust>();
+                    int type = Main.rand.NextBool() ? ModContent.DustType<SeleniteBrightDust>() : ModContent.DustType<SeleniteDust>();
                     Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, type, Main.rand.NextFloat(-1.6f, 1.6f), Main.rand.NextFloat(-1.6f, 1.6f), Scale: Main.rand.NextFloat(0.7f, 1f));
                     dust.noGravity = true;
                     dust = Dust.NewDustDirect(Projectile.oldPos.ToList().GetRandom(), Projectile.width, Projectile.height, type, Main.rand.NextFloat(-1.6f, 1.6f), Main.rand.NextFloat(-1.6f, 1.6f), Scale: Main.rand.NextFloat(0.7f, 1f));
@@ -160,7 +160,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Particle.Create<ArtemiteStar>((p) =>
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = Projectile.Center - oldVelocity;
                 p.Velocity = oldVelocity * 0.4f;

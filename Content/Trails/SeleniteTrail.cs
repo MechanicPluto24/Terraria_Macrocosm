@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Trails
 {
-    public class ArtemiteTrail : VertexTrail
+    public class SeleniteTrail : VertexTrail
     {
         public Color Color { get; set; } = new Color(130, 220, 199, 255) * 1.4f;
         public float WidthMult;
