@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void AddRecipes()
         {
             CreateRecipe(20)
-            .AddIngredient<SeleniteBar>(1)
+            .AddIngredient<ArtemiteBar>(1)
             .AddIngredient(ItemID.LunarBar, 1)
             .AddTile(TileID.LunarCraftingStation)
             .Register();

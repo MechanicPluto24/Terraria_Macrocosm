@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class ArtemiteSwordProjectile : ModProjectile
+    public class SeleniteSwordProjectile : ModProjectile
     {
         public override string Texture => Macrocosm.TexturesPath + "Swing";
 
@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.Create<ArtemiteStar>((p) =>
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;

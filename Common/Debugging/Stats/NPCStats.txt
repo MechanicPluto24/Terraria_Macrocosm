@@ -47,7 +47,7 @@ Clavite
 		Moonstone, (1-5) 10%
 
 CraterCrawlerBody
-	Life: 200
+	Life: 100
 	Defense: 60
 	KB resist: 0
 	Damage: 60
@@ -63,7 +63,7 @@ CraterCrawlerHead
 		Moonstone, (1-5) 10%
 
 CraterCrawlerTail
-	Life: 200
+	Life: 100
 	Defense: 80
 	KB resist: 0
 	Damage: 50
@@ -122,7 +122,7 @@ LuminiteSlimeVolatile
 		Moonstone, (1-5) 10%
 
 MoonWormBody
-	Life: 200
+	Life: 100
 	Defense: 110
 	KB resist: 0
 	Damage: 120
@@ -137,7 +137,7 @@ MoonWormHead
 		Moonstone, (1-5) 10%
 
 MoonWormTail
-	Life: 200
+	Life: 100
 	Defense: 170
 	KB resist: 0
 	Damage: 100

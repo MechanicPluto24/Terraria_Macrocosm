@@ -96,7 +96,7 @@ ArtemiteBreastplate
 		Ancient Manipulator
 
 
-ArtemiteHelmet
+ArtemiteHeadgear
 	Value: 50 gold
 	Research count: 1
 	Recipes:
@@ -205,7 +205,7 @@ SeleniteBreastplate
 		Ancient Manipulator
 
 
-SeleniteHeadgear
+SeleniteHelmet
 	Value: 50 gold
 	Research count: 1
 	Recipes:
@@ -3477,8 +3477,13 @@ AluminumPickaxe
 
 
 ArtemiteAxe
-	Value: 30 gold
+	Value: 1 gold
 	Research count: 1
+	Recipes:
+		Artemite Bar x 12
+		at
+		Ancient Manipulator
+
 
 ArtemiteDrill
 	Value: 40 gold
@@ -3490,11 +3495,16 @@ ArtemiteDrill
 
 
 ArtemiteHammer
-	Value: 30 gold
+	Value: 1 gold
 	Research count: 1
+	Recipes:
+		Artemite Bar x 12
+		at
+		Ancient Manipulator
+
 
 ArtemitePickaxe
-	Value: 40 gold
+	Value: 1 gold
 	Research count: 1
 	Recipes:
 		Artemite Bar x 12
@@ -3575,13 +3585,8 @@ DianitePickaxe
 
 
 SeleniteAxe
-	Value: 1 gold
+	Value: 30 gold
 	Research count: 1
-	Recipes:
-		Selenite Bar x 12
-		at
-		Ancient Manipulator
-
 
 SeleniteDrill
 	Value: 40 gold
@@ -3593,16 +3598,11 @@ SeleniteDrill
 
 
 SeleniteHammer
-	Value: 1 gold
+	Value: 30 gold
 	Research count: 1
-	Recipes:
-		Selenite Bar x 12
-		at
-		Ancient Manipulator
-
 
 SelenitePickaxe
-	Value: 1 gold
+	Value: 40 gold
 	Research count: 1
 	Recipes:
 		Selenite Bar x 12
@@ -3925,33 +3925,6 @@ ArmstrongGauntlets
 	Value: 98 silver 45 copper
 	Research count: 1
 
-ArtemiteGreatsword
-	Value: 1 gold
-	Research count: 1
-	Recipes:
-		Artemite Bar x 12
-		at
-		Ancient Manipulator
-
-
-ArtemiteSpear
-	Value: 5 gold
-	Research count: 1
-	Recipes:
-		Artemite Bar x 12
-		at
-		Ancient Manipulator
-
-
-ArtemiteSword
-	Value: 1 gold
-	Research count: 1
-	Recipes:
-		Artemite Bar x 12
-		at
-		Ancient Manipulator
-
-
 ChampionsBlade
 	Value: 1 gold
 	Research count: 1
@@ -3992,6 +3965,33 @@ RapaciousBrand
 	Value: 1 gold
 	Research count: 1
 
+SeleniteGreatsword
+	Value: 1 gold
+	Research count: 1
+	Recipes:
+		Selenite Bar x 12
+		at
+		Ancient Manipulator
+
+
+SeleniteSpear
+	Value: 5 gold
+	Research count: 1
+	Recipes:
+		Selenite Bar x 12
+		at
+		Ancient Manipulator
+
+
+SeleniteSword
+	Value: 1 gold
+	Research count: 1
+	Recipes:
+		Selenite Bar x 12
+		at
+		Ancient Manipulator
+
+
 SteelZweihander
 	Value: 1 gold
 	Research count: 1
@@ -4017,6 +4017,24 @@ AluminumBow
 ArchersLine
 	Value: 1 gold
 	Research count: 1
+
+ArtemiteBow
+	Value: 1 gold
+	Research count: 1
+	Recipes:
+		Artemite Bar x 12
+		at
+		Ancient Manipulator
+
+
+ArtemiteMagnum
+	Value: 1 gold
+	Research count: 1
+	Recipes:
+		Artemite Bar x 12
+		at
+		Ancient Manipulator
+
 
 Copernicus
 	Value: 1 gold
@@ -4046,29 +4064,11 @@ RocheChakram
 	Value: 20 silver
 	Research count: 1
 	Recipes:
-		Selenite Bar x 1
+		Artemite Bar x 1
 		Luminite Bar x 1
 		at
 		Ancient Manipulator
 			=> x20
-
-
-SeleniteBow
-	Value: 1 gold
-	Research count: 1
-	Recipes:
-		Selenite Bar x 12
-		at
-		Ancient Manipulator
-
-
-SeleniteMagnum
-	Value: 1 gold
-	Research count: 1
-	Recipes:
-		Selenite Bar x 12
-		at
-		Ancient Manipulator
 
 
 StarDestroyer
