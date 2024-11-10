@@ -23,6 +23,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Width = 2;
             TileObjectData.newTile.Height = 3;
+            TileObjectData.newTile.Origin = new(0, 2);
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleHorizontal = true;
 

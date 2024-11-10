@@ -629,9 +629,6 @@ namespace Macrocosm.Content.Subworlds
                                 }
 
                                 TileRunnerButItDoesntIgnoreAir(i1, j1, WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 10), (ushort)quartzType);
-
-
-
                             }
                         );
                         ForEachInCircle(
@@ -671,6 +668,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceLuminiteShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -706,6 +704,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceHeavenforgeShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -738,6 +737,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceMercuryShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -770,6 +770,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceLunarRustShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -802,6 +803,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceStarRoyaleShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -834,6 +836,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceCryocoreShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -866,6 +869,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceAstraShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -898,6 +902,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceDarkCelestialShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -930,6 +935,7 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        [Task]
         private void PlaceCosmicEmberShrine(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
@@ -967,41 +973,49 @@ namespace Macrocosm.Content.Subworlds
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructurePass");
 
-            int tries = 10000;
+            int maxAttempts = 10000;
+            int attempts = 0;
             int count = WorldGen.genRand.Next(10, 30);
-            for (int i = 0; i < count; i++)
-            {
-                if (tries <= 0)
-                    break;
+            int placedOutposts = 0;
 
-                progress.Set((double)i / count);
+            while (placedOutposts < count && attempts < maxAttempts)
+            {
+                attempts++;
+
                 int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
                 int tileY = WorldGen.genRand.Next((int)(SurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);
-                int random = WorldGen.genRand.Next(0, 9);
 
+                int random = WorldGen.genRand.Next(0, 9);
                 Structure outpost = random switch
                 {
-                    1 => new LunarHouse1(),
-                    2 => new LunarHouse2(),
-                    3 => new LunarHouse3(),
-                    4 => new LunarHouse4(),
-                    5 => new LunarHouse5(),
-                    6 => new LunarHouse6(),
-                    7 => new LunarHouse7(),
-                    8 => new LunarHouse8(),
-                    _ => new LunarHouse9(),
+                    1 => new StorageOutpostSmall(),
+                    2 => new StorageOutpostLarge(),
+                    3 => new LabOutpost(),
+                    4 => new LabOutpost2(),
+                    5 => new MedicOutpost(),
+                    6 => new MedicOutpost2(),
+                    7 => new ServerOutpost(),
+                    8 => new MiningOutpost(),
+                    _ => new MiningOutpost2(),
                 };
 
-                if (StructureMap.CanPlace(new(tileX, tileY, outpost.Size.X, outpost.Size.Y)))
+                bool solidDown = WorldUtils.Find(new Point(tileX, tileY), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+                if (solidDown)
                 {
-                    if (!outpost.Place(new(tileX, tileY), StructureMap))
+                    Point16 origin = new(tileX - outpost.Size.X / 2, solidGround.Y - outpost.Size.Y);
+
+                    if (StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, outpost.Size.X, outpost.Size.Y)))
                     {
-                        tries--;
-                        i--;
+                        if (outpost.Place(origin, StructureMap))
+                        {
+                            placedOutposts++;
+                            progress.Set((double)placedOutposts / count);
+                        }
                     }
                 }
             }
         }
+
 
         [Task]
         private void SmoothTask(GenerationProgress progress)

@@ -100,7 +100,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameX < 18 * 2 && tile.TileFrameY < 18 * 2)
+            if (tile.TileFrameX < 18 * 2 * 2 && tile.TileFrameY < 18 * 2)
             {
                 r = 0f;
                 g = 0.25f;

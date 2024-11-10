@@ -5,7 +5,7 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
 {
-    public class LunarHouse2 : BaseLunarOutpost
+    public class MedicOutpost2 : BaseLunarOutpost
     {
     }
 }
