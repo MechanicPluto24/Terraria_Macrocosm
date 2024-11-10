@@ -121,18 +121,18 @@ namespace Macrocosm.Common.Utils
             {
                 for (int dy = 0; dy < data.Height; dy++)
                 {
-                    Tile tile = Main.tile[x + dx, y + dy];
+                    Tile tile = Main.tile[i + dx, j + dy];
                     if (tile.HasTile)
                         return false; 
                 }
             }
 
-            PlaceObject(x, y, type);
+            bool result = PlaceObject(x, y, type, true, style, alternate);
 
             if (sync)
                 NetMessage.SendObjectPlacement(-1, i, j, type, 0, 0, -1, -1);
 
-            return true; 
+            return result; 
         }
 
         /// <summary>

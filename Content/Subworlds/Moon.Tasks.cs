@@ -975,7 +975,7 @@ namespace Macrocosm.Content.Subworlds
 
             int maxAttempts = 10000;
             int attempts = 0;
-            int count = WorldGen.genRand.Next(10, 30);
+            int count = WorldGen.genRand.Next(20, 31);
             int placedOutposts = 0;
 
             while (placedOutposts < count && attempts < maxAttempts)
