@@ -5,10 +5,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Armor.Artemite
+namespace Macrocosm.Content.Items.Armor.Selenite
 {
     [AutoloadEquip(EquipType.Head)]
-    public class ArtemiteHelmet : ModItem
+    [LegacyName("ArtemiteHelmet")]
+    public class SeleniteHelmet : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -34,7 +35,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return head.type == ModContent.ItemType<ArtemiteHelmet>() && body.type == ModContent.ItemType<ArtemiteBreastplate>() && legs.type == ModContent.ItemType<ArtemiteLeggings>();
+            return head.type == ModContent.ItemType<SeleniteHelmet>() && body.type == ModContent.ItemType<SeleniteBreastplate>() && legs.type == ModContent.ItemType<SeleniteLeggings>();
         }
 
         public override void UpdateArmorSet(Player player)
@@ -44,7 +45,7 @@ namespace Macrocosm.Content.Items.Armor.Artemite
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<ArtemiteBar>(8)
+            .AddIngredient<SeleniteBar>(8)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
         }

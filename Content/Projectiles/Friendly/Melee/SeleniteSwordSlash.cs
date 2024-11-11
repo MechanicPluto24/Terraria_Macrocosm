@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class ArtemiteSwordSlash : ModProjectile
+    public class SeleniteSwordSlash : ModProjectile
     {
         public override string Texture => Macrocosm.TexturesPath + "Swing";
 
@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public ref float Timer => ref Projectile.ai[0];
         public ref float Speed => ref Projectile.ai[1];
 
-        private ArtemiteTrail trail;
+        private SeleniteTrail trail;
 
         public override void SetDefaults()
         {
@@ -71,14 +71,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 if (i % 3 == 0 && speedUp)
                 {
-                    Dust dust = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(35, 75).RotatedBy(Projectile.rotation), ModContent.DustType<ArtemiteBrightDust>(), default, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                    Dust dust = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(35, 75).RotatedBy(Projectile.rotation), ModContent.DustType<SeleniteBrightDust>(), default, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
                     dust.velocity = Projectile.velocity;
                     dust.color = Color.White.WithAlpha((byte)Main.rand.Next(255)) * Main.rand.NextFloat();
                     dust.noGravity = true;
                 }
 
                 if (speedUp || i % 3 == 0)
-                    Particle.Create<ArtemiteStar>((p) =>
+                    Particle.Create<SeleniteStar>((p) =>
                     {
                         p.Position = Projectile.Center + Main.rand.NextVector2Circular(80, 80);
                         p.Velocity = speedUp ? Projectile.velocity * Main.rand.NextFloat(0.4f, 0.9f) : Vector2.Zero;
@@ -110,7 +110,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.Create<ArtemiteStar>((p) =>
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
@@ -122,7 +122,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            Particle.Create<ArtemiteStar>((p) =>
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;

@@ -553,10 +553,10 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OrePass");
 
             int protolithType = TileType<Protolith>();
-            GenerateOre(TileType<Tiles.Ores.ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<Tiles.Ores.SeleniteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
             GenerateOre(TileType<Tiles.Ores.ChandriumOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
             GenerateOre(TileType<Tiles.Ores.DianiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
-            GenerateOre(TileType<Tiles.Ores.SeleniteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
+            GenerateOre(TileType<Tiles.Ores.ArtemiteOre>(), 0.0001, WorldGen.genRand.Next(5, 9), WorldGen.genRand.Next(5, 9), protolithType);
 
             GenerateOre(TileID.LunarOre, 0.00005, WorldGen.genRand.Next(9, 15), WorldGen.genRand.Next(9, 15), protolithType);
         }
@@ -1260,7 +1260,7 @@ namespace Macrocosm.Content.Subworlds
                 switch (random)
                 {
                     case 1:
-                        chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
+                        chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
                         chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
                         break;
                     case 2:
@@ -1272,7 +1272,7 @@ namespace Macrocosm.Content.Subworlds
                         chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
                         break;
                     case 4:
-                        chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
+                        chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
                         chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
                         break;
                 }
@@ -1313,9 +1313,9 @@ namespace Macrocosm.Content.Subworlds
 
                 if (style is LuminiteStyle.Heavenforge or LuminiteStyle.Mercury)
                 {
-                    chest.item[slot].SetDefaults(ItemType<ArtemiteBar>());
+                    chest.item[slot].SetDefaults(ItemType<SeleniteBar>());
                     chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                    chest.item[slot].SetDefaults(ItemType<ArtemiteOre>());
+                    chest.item[slot].SetDefaults(ItemType<SeleniteOre>());
                     chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
                     chest.item[slot].SetDefaults(ItemID.FragmentSolar);
                     chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
@@ -1323,9 +1323,9 @@ namespace Macrocosm.Content.Subworlds
 
                 if (style is LuminiteStyle.LunarRust or LuminiteStyle.StarRoyale)
                 {
-                    chest.item[slot].SetDefaults(ItemType<SeleniteBar>());
+                    chest.item[slot].SetDefaults(ItemType<ArtemiteBar>());
                     chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
-                    chest.item[slot].SetDefaults(ItemType<SeleniteOre>());
+                    chest.item[slot].SetDefaults(ItemType<ArtemiteOre>());
                     chest.item[slot++].stack = WorldGen.genRand.Next(24, 65);
                     chest.item[slot].SetDefaults(ItemID.FragmentVortex);
                     chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
@@ -1489,7 +1489,7 @@ namespace Macrocosm.Content.Subworlds
             switch (random)
             {
                 case 1:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
+                    chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
                     chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
                     break;
                 case 2:
@@ -1501,7 +1501,7 @@ namespace Macrocosm.Content.Subworlds
                     chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
                     break;
                 case 4:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
+                    chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
                     chest.item[slot++].stack = WorldGen.genRand.Next(12, 45);
                     break;
 

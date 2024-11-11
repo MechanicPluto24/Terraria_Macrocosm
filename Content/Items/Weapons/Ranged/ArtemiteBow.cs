@@ -8,7 +8,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class SeleniteBow : ModItem
+    [LegacyName("SeleniteBow")]
+    public class ArtemiteBow : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -50,7 +51,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<SeleniteBar>(12)
+            .AddIngredient<ArtemiteBar>(12)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
         }
