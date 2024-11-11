@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Loot;
 using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Common.Loot.DropRules;
@@ -21,11 +22,9 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    public class OreExcavatorTE : MachineTE, IInventoryOwner
+    public class OreExcavatorTE : ConsumerTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();
-
-        public override MachineType MachineType => MachineType.Consumer;
 
         public SimpleLootTable Loot { get; set; }
         protected virtual int OreGenerationRate => 60;
@@ -59,7 +58,7 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            Power = 25f;
+            RequiredPower = 25f;
 
             if (Operating)
             {

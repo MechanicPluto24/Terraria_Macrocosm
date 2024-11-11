@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Systems.Power
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
             MachineTE.Kill(i, j);
-            CircuitSystem.SearchCircuits();
+            CircuitSystem.SearchCircuitsAround(i, j);
         }
     }
 }

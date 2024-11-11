@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Systems;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -334,6 +335,54 @@ namespace Macrocosm.Common.Utils
         {
             return Main.tileSolid[type] && Main.tileSolidTop[type];
         }
+
+        public static bool HasWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
+
+        public static bool HasWire(this Tile tile, VanillaWireType wireType)
+        {
+            return wireType switch
+            {
+                VanillaWireType.Red => tile.RedWire,
+                VanillaWireType.Blue => tile.BlueWire,
+                VanillaWireType.Green => tile.GreenWire,
+                VanillaWireType.Yellow => tile.YellowWire,
+                _ => false
+            };
+        }
+
+        public static IEnumerable<Point16> GetWireNeighbors(int x, int y, VanillaWireType? wireType = null)
+        {
+            Point16[] directions =
+            [
+                new(-1, 0), // Left
+                new(1, 0),  // Right
+                new(0, -1), // Up
+                new(0, 1)   // Down
+            ];
+
+            foreach (var dir in directions)
+            {
+                int nx = x + dir.X;
+                int ny = y + dir.Y;
+
+                if (!WorldGen.InWorld(nx, ny)) 
+                    continue;
+
+                Tile neighborTile = Main.tile[nx, ny];
+
+                if(wireType.HasValue)
+                {
+                    if (HasWire(neighborTile, wireType.Value))
+                        yield return new Point16(nx, ny);
+                }
+                else
+                {
+                    if (HasWire(neighborTile))
+                        yield return new Point16(nx, ny);
+                }
+            }
+        }
+
 
         public static bool AlchemyFlower(int type) { return type is 82 or 83 or 84; }
 

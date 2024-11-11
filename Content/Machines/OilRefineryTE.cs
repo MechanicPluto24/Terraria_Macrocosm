@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
@@ -11,11 +12,9 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    public class OilRefineryTE : MachineTE, IInventoryOwner
+    public class OilRefineryTE : ConsumerTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OilRefinery>();
-
-        public override MachineType MachineType => MachineType.Consumer;
 
         public float InputTankAmount { get; private set; }
         public virtual float SourceTankCapacity => 100f;
@@ -66,7 +65,7 @@ namespace Macrocosm.Content.Machines
         {
             StartRefining();
 
-            Power = 5f;
+            RequiredPower = 5f;
 
             Extract();
             Refine();
