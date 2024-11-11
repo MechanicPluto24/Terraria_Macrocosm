@@ -36,7 +36,8 @@ namespace Macrocosm.Common.Netcode
         {
             MessageType messageType = (MessageType)reader.ReadByte();
 
-            DebugPackets(messageType, reader.BaseStream.Length, whoAmI);
+            if(DebugModeActive)
+                DebugPackets(messageType, whoAmI);
 
             switch (messageType)
             {
@@ -94,11 +95,11 @@ namespace Macrocosm.Common.Netcode
             }
         }
 
-        public static bool DebugModeActive { get; set; }
+        public static bool DebugModeActive { get; set; } = false;
 
-        static private void DebugPackets(MessageType messageType, long length, int sender)
+        private static void DebugPackets(MessageType messageType, int sender)
         {
-            string message = $"Received message of type {messageType} of length {length} from {sender}";
+            string message = $"Received message of type {messageType} from {sender}";
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {
