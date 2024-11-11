@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Tiles.Ores
             Regolith.TileMerge[Type] = true;
 
             LocalizedText name = CreateMapEntryName();
-            AddMapEntry(new Color(139, 146, 161), name);
+            AddMapEntry(new Color(137, 155, 170), name);
 
             DustType = ModContent.DustType<ArtemiteDust>();
             HitSound = SoundID.Tink;

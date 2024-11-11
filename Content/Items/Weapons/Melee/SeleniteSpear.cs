@@ -11,7 +11,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    public class ArtemiteSpear : ModItem
+    [LegacyName("ArtemiteSpear")]
+    public class SeleniteSpear : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -34,7 +35,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.MeleeNoSpeed;
             Item.noMelee = true;
             Item.shootSpeed = 1f;
-            Item.shoot = ModContent.ProjectileType<ArtemiteSpearProjectile>();
+            Item.shoot = ModContent.ProjectileType<SeleniteSpearProjectile>();
         }
 
         public override bool AltFunctionUse(Player player) => player.GetItemAltUseCooldown(Type) <= 0;
@@ -49,7 +50,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
                 player.SetItemAltUseCooldown(Type, 25);
                 return true;
             }
-            else if (player.ownedProjectileCounts[ModContent.ProjectileType<ArtemiteSpearProjectile>()] < 1)
+            else if (player.ownedProjectileCounts[ModContent.ProjectileType<SeleniteSpearProjectile>()] < 1)
             {
                 Item.useAnimation = 18;
                 Item.useTime = 24;
@@ -64,11 +65,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             if (player.AltFunction())
             {
-                Projectile.NewProjectile(source, position, velocity * 25, ModContent.ProjectileType<ArtemiteSpearProjectileThrown>(), damage, knockback, Main.myPlayer, ai0: 0f);
+                Projectile.NewProjectile(source, position, velocity * 25, ModContent.ProjectileType<SeleniteSpearProjectileThrown>(), damage, knockback, Main.myPlayer, ai0: 0f);
             }
             else
             {
-                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ArtemiteSpearProjectile>(), damage, knockback, Main.myPlayer, ai0: 0f);
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<SeleniteSpearProjectile>(), damage, knockback, Main.myPlayer, ai0: 0f);
             }
 
             return false;
@@ -86,7 +87,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<ArtemiteBar>(12)
+            .AddIngredient<SeleniteBar>(12)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
         }

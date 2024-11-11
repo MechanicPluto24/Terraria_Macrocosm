@@ -22,12 +22,14 @@ namespace Macrocosm.Content.Tiles.Bars
             TileObjectData.addTile(Type);
 
             LocalizedText name = CreateMapEntryName();
-            AddMapEntry(new Color(28, 54, 210), name);
+            AddMapEntry(new Color(96, 98, 109), name);
         }
+
         public override bool CreateDust(int i, int j, ref int type)
         {
             type = Dust.NewDust(new Vector2(i, j).ToWorldCoordinates(), 16, 16, ModContent.DustType<SeleniteDust>());
             return false;
         }
+
     }
 }

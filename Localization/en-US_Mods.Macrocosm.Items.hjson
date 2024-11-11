@@ -28,18 +28,18 @@ AluminumHelmet: {
 	Tooltip: ""
 }
 
-ArtemiteBreastplate: {
-	DisplayName: Artemite Breastplate
+SeleniteBreastplate: {
+	DisplayName: Selenite Breastplate
 	Tooltip: 6% increased melee critical strike chance
 }
 
-ArtemiteHelmet: {
-	DisplayName: Artemite Helmet
+SeleniteHelmet: {
+	DisplayName: Selenite Helmet
 	Tooltip: 18% increased melee damage
 }
 
-ArtemiteLeggings: {
-	DisplayName: Artemite Leggings
+SeleniteLeggings: {
+	DisplayName: Selenite Leggings
 	Tooltip: 15% increased melee and movement speed
 }
 
@@ -108,13 +108,13 @@ DianiteVisor: {
 		'''
 }
 
-SeleniteBreastplate: {
-	DisplayName: Selenite Breastplate
+ArtemiteBreastplate: {
+	DisplayName: Artemite Breastplate
 	Tooltip: 12% increased ranged critical strike chance
 }
 
-SeleniteHeadgear: {
-	DisplayName: Selenite Headgear
+ArtemiteHeadgear: {
+	DisplayName: Artemite Headgear
 	Tooltip:
 		'''
 		10% increased ranged damage
@@ -122,8 +122,8 @@ SeleniteHeadgear: {
 		'''
 }
 
-SeleniteLeggings: {
-	DisplayName: Selenite Leggings
+ArtemiteLeggings: {
+	DisplayName: Artemite Leggings
 	Tooltip:
 		'''
 		5% increased ranged damage
@@ -187,13 +187,13 @@ AluminumOre: {
 	Tooltip: ""
 }
 
-ArtemiteBar: {
-	DisplayName: Artemite Bar
+SeleniteBar: {
+	DisplayName: Selenite Bar
 	Tooltip: ""
 }
 
-ArtemiteOre: {
-	DisplayName: Artemite Ore
+SeleniteOre: {
+	DisplayName: Selenite Ore
 	Tooltip: ""
 }
 
@@ -267,13 +267,13 @@ PrintedCircuitBoard: {
 	Tooltip: ""
 }
 
-SeleniteBar: {
-	DisplayName: Selenite Bar
+ArtemiteBar: {
+	DisplayName: Artemite Bar
 	Tooltip: ""
 }
 
-SeleniteOre: {
-	DisplayName: Selenite Ore
+ArtemiteOre: {
+	DisplayName: Artemite Ore
 	Tooltip: ""
 }
 
@@ -477,23 +477,23 @@ AluminumPickaxe: {
 	Tooltip: ""
 }
 
-ArtemiteAxe: {
-	DisplayName: Artemite Axe
+SeleniteAxe: {
+	DisplayName: Selenite Axe
 	Tooltip: ""
 }
 
-ArtemiteDrill: {
-	DisplayName: Artemite Drill
+SeleniteDrill: {
+	DisplayName: Selenite Drill
 	Tooltip: ""
 }
 
-ArtemiteHammer: {
-	DisplayName: Artemite Hammer
+SeleniteHammer: {
+	DisplayName: Selenite Hammer
 	Tooltip: ""
 }
 
-ArtemitePickaxe: {
-	DisplayName: Artemite Pickaxe
+SelenitePickaxe: {
+	DisplayName: Selenite Pickaxe
 	Tooltip: ""
 }
 
@@ -537,23 +537,23 @@ DianitePickaxe: {
 	Tooltip: ""
 }
 
-SeleniteAxe: {
-	DisplayName: Selenite Axe
+ArtemiteAxe: {
+	DisplayName: Artemite Axe
 	Tooltip: ""
 }
 
-SeleniteDrill: {
-	DisplayName: Selenite Drill
+ArtemiteDrill: {
+	DisplayName: Artemite Drill
 	Tooltip: ""
 }
 
-SeleniteHammer: {
-	DisplayName: Selenite Hammer
+ArtemiteHammer: {
+	DisplayName: Artemite Hammer
 	Tooltip: ""
 }
 
-SelenitePickaxe: {
-	DisplayName: Selenite Pickaxe
+ArtemitePickaxe: {
+	DisplayName: Artemite Pickaxe
 	Tooltip: ""
 }
 
@@ -591,18 +591,18 @@ AluminumShortsword: {
 	Tooltip: ""
 }
 
-ArtemiteGreatsword: {
-	DisplayName: Artemite Greatsword
+SeleniteGreatsword: {
+	DisplayName: Selenite Greatsword
 	Tooltip: Hold <right> for a charged up swing
 }
 
-ArtemiteSpear: {
-	DisplayName: Artemite Spear
+SeleniteSpear: {
+	DisplayName: Selenite Spear
 	Tooltip: <right> to throw the spear
 }
 
-ArtemiteSword: {
-	DisplayName: Artemite Straightsword
+SeleniteSword: {
+	DisplayName: Selenite Straightsword
 	Tooltip: ""
 }
 
@@ -668,13 +668,13 @@ NWARocketLauncher: {
 	Tooltip: <right> to lock onto an enemy
 }
 
-SeleniteBow: {
-	DisplayName: Selenite Bow
+ArtemiteBow: {
+	DisplayName: Artemite Bow
 	Tooltip: Fires two arrows
 }
 
-SeleniteMagnum: {
-	DisplayName: Selenite Magnum
+ArtemiteMagnum: {
+	DisplayName: Artemite Magnum
 	Tooltip: <right> to rapidly fan six bullets
 }
 
@@ -2699,5 +2699,20 @@ IndustrialBattery: {
 
 AdvancedCircuitBoard: {
 	DisplayName: Advanced Circuit Board
+	Tooltip: ""
+}
+
+ClydersHood: {
+	DisplayName: Clyders Hood
+	Tooltip: ""
+}
+
+ClydersRobe: {
+	DisplayName: Clyders Robe
+	Tooltip: ""
+}
+
+ClydersWings: {
+	DisplayName: Clyders Wings
 	Tooltip: ""
 }

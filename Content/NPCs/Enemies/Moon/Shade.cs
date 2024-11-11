@@ -80,14 +80,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (NPC.HasPlayerTarget && clearLineOfSight && AI_State == ActionState.Idle)
                 AI_State = ActionState.Attack;
-
+            if (Main.netMode != NetmodeID.Server){
             if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() >= 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
                 AI_Rage += 0.01f;
-
+            }
             if (AI_Rage > 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
                 AI_State = ActionState.Flee;
             else
                 AI_State = ActionState.Attack;
+            
 
             if (AI_Rage > 3f || NPC.life < (NPC.lifeMax / 2))
                 AI_State = ActionState.Enrage;
@@ -116,6 +117,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 NPC.dontTakeDamage = false;
             else
                 NPC.dontTakeDamage = true;
+            NPC.netUpdate = true;
         }
 
         public void Idle()
@@ -159,7 +161,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (AI_Speed > 8f)
                 AI_Speed = 8f;
             if (Vector2.Distance(player.Center,NPC.Center)>200f)
-            NPC.velocity = ((NPC.velocity + (direction *1f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
+            NPC.velocity = ((NPC.velocity + (direction *3f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

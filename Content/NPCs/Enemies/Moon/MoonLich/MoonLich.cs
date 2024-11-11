@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
@@ -60,7 +61,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.rockLayer ? .002f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? .002f : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
