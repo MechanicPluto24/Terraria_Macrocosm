@@ -6,7 +6,7 @@ using Terraria;
 
 namespace Macrocosm.Content.Particles
 {
-    public class ArtemiteStar : Particle
+    public class SeleniteStar : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
         public override int MaxPoolCount => 100;

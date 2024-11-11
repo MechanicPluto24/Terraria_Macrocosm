@@ -12,7 +12,6 @@ namespace Macrocosm.Content.Items.Armor.Selenite
     {
         public override void SetStaticDefaults()
         {
-
         }
 
         public override void SetDefaults()
@@ -21,13 +20,13 @@ namespace Macrocosm.Content.Items.Armor.Selenite
             Item.height = 18;
             Item.value = Item.sellPrice(gold: 10);
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 8;
+            Item.defense = 10;
         }
 
         public override void UpdateEquip(Player player)
         {
-            player.GetDamage<RangedDamageClass>() += 0.05f;
-            player.moveSpeed += 0.2f;
+            player.GetAttackSpeed<MeleeDamageClass>() += 0.15f;
+            player.moveSpeed += 0.15f;
             player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 

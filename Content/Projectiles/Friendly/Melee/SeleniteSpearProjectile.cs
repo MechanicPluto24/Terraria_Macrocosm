@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class ArtemiteSpearProjectile : ModProjectile
+    public class SeleniteSpearProjectile : ModProjectile
     {
         protected virtual float HoldoutRangeMin => 50f;
         protected virtual float HoldoutRangeMax => 160f;
@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 			{
 				Vector2 shootPosition = Projectile.Center;
 				Vector2 shootVelocity = Projectile.velocity * 15f;
-				Projectile.NewProjectile(Projectile.GetSource_FromThis(), shootPosition, shootVelocity, ModContent.ProjectileType<ArtemiteSpearProjectileShoot>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
+				Projectile.NewProjectile(Projectile.GetSource_FromThis(), shootPosition, shootVelocity, ModContent.ProjectileType<SeleniteSpearProjectileShoot>(), Projectile.damage, Projectile.knockBack, Projectile.owner);
 			}
 			*/
 
@@ -77,11 +77,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             if (!Main.dedServ)
             {
                 if (Main.rand.NextBool(3))
-                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 0.6f);
+                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 0.6f);
 
                 if (Main.rand.NextBool(3))
                 {
-                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteBrightDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 0.6f);
+                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>(), Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f, Scale: 0.6f);
                     dust.noGravity = true;
                 }
             }
@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.Create<ArtemiteStar>((p) =>
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = Projectile.Center;
                 p.Velocity = new Vector2(3f, 0).RotatedBy(Projectile.velocity.ToRotation());
