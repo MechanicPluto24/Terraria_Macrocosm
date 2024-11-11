@@ -28,9 +28,17 @@ namespace Macrocosm.Content.Items.Dev
 
         public override bool? UseItem(Player player)
         {
+            /*
             Microsoft.Xna.Framework.Point point = Utility.GetClosestTile(player.Center, ModContent.TileType<KyaniteNest>(), 10000);
             if (point != default)
                 player.Teleport(point.ToWorldCoordinates());
+            */
+
+            if (Main.wallHouse[Main.tile[Player.tileTargetX, Player.tileTargetY].WallType])
+                Main.NewText("Wall is safe");
+            else
+                Main.NewText("Wall is unsafe");
+
             return true;
         }
     }

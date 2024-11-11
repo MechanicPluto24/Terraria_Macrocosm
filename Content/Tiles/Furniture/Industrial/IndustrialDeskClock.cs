@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +15,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseDeskClock")]
-    public class IndustrialDeskClock : ModTile
+    public class IndustrialDeskClock : ModTile, IToggleable
     {
         private static Asset<Texture2D> glowmask;
 
@@ -37,7 +39,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
         }
 
-        public override void HitWire(int i, int j)
+        public void Toggle(int i, int j, bool skipWire = false)
         {
             Tile tile = Main.tile[i, j];
             int leftX = i - tile.TileFrameX / 18 % 2;
@@ -53,6 +55,11 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, leftX, j, 1, 2);
+        }
+
+        public override void HitWire(int i, int j)
+        {
+            Toggle(i, j, true);
         }
 
         public override void NearbyEffects(int i, int j, bool closer)

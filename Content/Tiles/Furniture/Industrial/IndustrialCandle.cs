@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -9,7 +11,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseCandle")]
-    public class IndustrialCandle : ModTile
+    public class IndustrialCandle : ModTile, IToggleable
     {
         public override void SetStaticDefaults()
         {
@@ -28,9 +30,14 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Candle"));
+
+            TileSets.RandomStyles[Type] = 2;
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialCandle>());
         }
 
-        public override void HitWire(int i, int j)
+        public void Toggle(int i, int j, bool skipWire = false)
         {
             if (Main.tile[i, j].TileFrameX >= 18)
                 Main.tile[i, j].TileFrameX -= 18;
@@ -41,13 +48,14 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                 NetMessage.SendTileSquare(-1, i, j, 1, 1);
         }
 
+        public override void HitWire(int i, int j)
+        {
+            Toggle(i, j, skipWire: true);
+        }
+
         public override bool RightClick(int i, int j)
         {
-            if (Main.tile[i, j].TileFrameX >= 18)
-                Main.tile[i, j].TileFrameX -= 18;
-            else
-                Main.tile[i, j].TileFrameX += 18;
-
+            Toggle(i, j, skipWire: false);
             return true;
         }
 
@@ -63,7 +71,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameX == 0)
+            if (tile.TileFrameX < 18 && tile.TileFrameY < 18)
             {
                 r = 1f;
                 g = 1f;
