@@ -194,7 +194,7 @@ namespace Macrocosm.Common.Players
             if (dashDelay > 0)
                 dashDelay--;
 
-            if (dashDelay == 0)
+            if (dashDelay == 0 && DashAccessoryEquipped && AccDashDamage > 0)
                 Player.eocHit = -1;
 
             if (dashTimer > 0)
