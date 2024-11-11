@@ -136,14 +136,18 @@ namespace Macrocosm.Common.Subworlds
 
         #region Common updates
 
-        public override void Update()
+        public sealed override void Update()
         {
             SubworldSystem.hideUnderworld = true;
             SubworldSystem.noReturn = false;
 
             UpdateTime();
-            GameMechanicsUpdates();
-            FreezeEnvironment();
+            UpdateWiring();
+            UpdateTileEntities();
+            UpdateLiquids();
+            UpdateInvasions();
+            UpdateWeather();
+            CreditsRollEvent.UpdateTime();
         }
 
         // Updates the time 
@@ -201,37 +205,50 @@ namespace Macrocosm.Common.Subworlds
         }
 
         // Updates wiring, TEs and liquids 
-        private void GameMechanicsUpdates()
+        private void UpdateWiring()
         {
-            if (Current.ShouldUpdateWiring)
-                Wiring.UpdateMech();
+            if (!Current.ShouldUpdateWiring)
+                return;
 
+            Wiring.UpdateMech();
+        }
+
+        private void UpdateTileEntities()
+        {
             TileEntity.UpdateStart();
             foreach (TileEntity te in TileEntity.ByID.Values)
             {
                 te.Update();
             }
             TileEntity.UpdateEnd();
+        }
 
+        private void UpdateLiquids()
+        {
             if (++Liquid.skipCount > 1)
             {
                 Liquid.UpdateLiquid();
                 Liquid.skipCount = 0;
             }
+        }
 
-            CreditsRollEvent.UpdateTime();
+        private void UpdateInvasions()
+        {
+            Main.bloodMoon = false;
+            Main.pumpkinMoon = false;
+            Main.snowMoon = false;
+            Main.eclipse = false;
+            Main.invasionType = 0;
+            DD2Event.StopInvasion();
         }
 
         // Freezes environment variables such as rain or clouds. 
-        private void FreezeEnvironment()
+        private void UpdateWeather()
         {
             // TODO: make these per-subworld if using Terraria's weather system for future planets
             Main.numClouds = 0;
             Main.windSpeedCurrent = 0;
             Main.weatherCounter = 0;
-
-            // Tricky way to stop vanilla fallen stars  
-            Star.starfallBoost = 0;
 
             Main.slimeRain = false;
             Main.slimeRainTime = 0;
@@ -242,7 +259,6 @@ namespace Macrocosm.Common.Subworlds
             // Rain, rain, go away, come again another day
             Main.StopRain();
         }
-
         #endregion
 
         public override void DrawMenu(GameTime gameTime)
@@ -324,7 +340,7 @@ namespace Macrocosm.Common.Subworlds
 
         private void LoadEarthSpecificData(TagCompound tag)
         {
-            if(SubworldSystem.AnyActive() && !SubworldSystem.AnyActive<Macrocosm>())
+            if (SubworldSystem.AnyActive() && !SubworldSystem.AnyActive<Macrocosm>())
                 return;
 
             // Read world size and apply it here. 

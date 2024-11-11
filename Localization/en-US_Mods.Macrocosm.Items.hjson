@@ -2701,3 +2701,18 @@ AdvancedCircuitBoard: {
 	DisplayName: Advanced Circuit Board
 	Tooltip: ""
 }
+
+ClydersHood: {
+	DisplayName: Clyders Hood
+	Tooltip: ""
+}
+
+ClydersRobe: {
+	DisplayName: Clyders Robe
+	Tooltip: ""
+}
+
+ClydersWings: {
+	DisplayName: Clyders Wings
+	Tooltip: ""
+}
