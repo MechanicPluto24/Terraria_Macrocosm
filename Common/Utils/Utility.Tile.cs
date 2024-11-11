@@ -9,16 +9,47 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Map;
+using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        /// <summary> Get the ModTile of a <see cref="Tile"/>. Returns <langword>null</langword> if it doesn't exist. </summary>
+        public static ModTile GetModTile(this Tile tile) => TileLoader.GetTile(tile.TileType);
+
+        /// <summary> Extension method to set the tile frame values </summary>
         public static void SetFrame(this Tile tile, int x, int y)
         {
             tile.TileFrameX = (short)x;
             tile.TileFrameY = (short)y;
+        }
+        /// <summary>
+        /// Sets the tile <paramref name="style"/> and <paramref name="alternate"/> placement at the specified <paramref name="x"/> and <paramref name="y"/> coordinates.
+        /// Uses <see cref="WorldGen.PlaceObject"/> to set the tile, ensuring multi-tile structures are placed at their origin.
+        /// </summary>
+        public static void SetTileStyle(int x, int y, int style, int alternate = 0)
+        {
+            Tile setTile = Main.tile[x, y];
+            if (setTile == null || !setTile.HasTile)
+                return;
+
+            int type = setTile.TileType;
+            if (type < 0)
+                return;
+
+            var data = TileObjectData.GetTileData(setTile);
+            if (data is null)
+                return;
+
+            // Get the top-left corner of the multi-tile (origin)
+            Point16 topLeft = new(x, y);
+            if (data.Width > 1 || data.Height > 1)
+                topLeft = GetMultitileTopLeft(x, y);
+
+            WorldGen.KillTile(topLeft.X, topLeft.Y, noItem: true);
+            WorldGen.PlaceObject(topLeft.X + data.Origin.X, topLeft.Y + data.Origin.Y, type, mute: true, style, alternate);
         }
 
         /// <summary>

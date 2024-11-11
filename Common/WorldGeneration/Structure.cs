@@ -78,7 +78,7 @@ namespace Macrocosm.Common.WorldGeneration
 
             if (success)
             {
-                structures?.AddProtectedStructure(area, padding: 10);
+                structures?.AddProtectedStructure(area, padding: 50);
                 PostPlace(origin);
             }
 
