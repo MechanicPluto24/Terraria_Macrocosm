@@ -7,13 +7,12 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class ArtemiteGreatswordSwing : ModProjectile
+    public class SeleniteSwordSwing : ModProjectile
     {
         public override string Texture => Macrocosm.TexturesPath + "Swing";
 
@@ -64,29 +63,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float adjustedRotation = MathHelper.Pi * SwingDirection * progress + velocityRotation + SwingDirection * MathHelper.Pi + player.fullRotation;
 
             Projectile.rotation = adjustedRotation; // Set the rotation to our to the new rotation we calculated.
-
-            float scaleMultiplier = 0.6f; // Excalibur, Terra Blade, and The Horseman's Blade is 0.6f; True Excalibur is 1f; default is 0.2f 
-            float scaleAdder = 1.4f; // Excalibur, Terra Blade, and The Horseman's Blade is 1f; True Excalibur is 1.2f; default is 1f 
-
             Projectile.Center = player.RotatedRelativePoint(player.MountedCenter) - Projectile.velocity;
-            Projectile.scale = scaleAdder + progress * scaleMultiplier;
+
+            Projectile.scale = 0.9f + progress * MathHelper.SmoothStep(0, 1, progress) * 1.4f;
 
             for (int i = 0; i < 2; i++)
             {
-                Vector2 dustVelocity = new Vector2(Main.rand.NextFloat(1, 2 * Projectile.velocity.Length() * progress), 0).RotatedBy(Projectile.rotation * Projectile.direction) + Main.player[Projectile.owner].velocity;
-                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(102f * Projectile.scale * Main.rand.NextFloat(0.2f, 1f), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<ArtemiteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1.2f));
+                Vector2 dustVelocity = player.velocity;
+                Dust dust = Dust.NewDustDirect(player.Center + new Vector2(120f * Projectile.scale * Main.rand.NextFloat(0.2f, 0.8f), 0).RotatedBy(Projectile.rotation), 1, 1, ModContent.DustType<SeleniteBrightDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1.2f));
                 dust.noGravity = true;
 
-                if (i == 0 && Main.rand.NextBool(4))
+                if (Main.rand.NextBool(8) && i == 0)
                 {
-                    dust = Dust.NewDustDirect(player.Center + new Vector2(102f * Projectile.scale * Main.rand.NextFloat(), 0).RotatedBy(Projectile.rotation), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<ArtemiteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
+                    dust = Dust.NewDustDirect(player.Center + new Vector2(40 * Projectile.scale * Main.rand.NextFloat(), 0).RotatedBy(Projectile.rotation), Projectile.width / 2, Projectile.height / 2, ModContent.DustType<SeleniteDust>(), dustVelocity.X, dustVelocity.Y, Scale: Main.rand.NextFloat(0.6f, 1f)); ;
                     dust.noGravity = true;
                 }
             }
 
-            Projectile.scale *= Scale; // Set the scale of the projectile to the scale of the item.
+            Projectile.scale *= Scale;
 
-            // If the projectile is as old as the max animation time, kill the projectile.
             if (Timer >= MaxTime)
                 Projectile.Kill();
 
@@ -153,7 +148,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Particle.Create<ArtemiteStar>((p) =>
+            hit.HitDirection = (Main.player[Projectile.owner].Center.X < target.Center.X) ? 1 : (-1);
+
+            Particle.Create<SeleniteStar>((p) =>
             {
                 p.Position = target.Center;
                 p.Velocity = -Vector2.UnitY * 0.4f;
@@ -161,25 +158,22 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 p.Rotation = MathHelper.PiOver4;
             }, shouldSync: true
             );
-
-            // You could also spawn dusts at the enemy position. Here is simple an example:
-            // Dust.NewDust(Main.rand.NextVector2FromRectangle(target.Hitbox), 0, 0, ModContent.DustType<Content.Dusts.Sparkle>());
-
-            // Set the target's hit direction to away from the player so the knockback is in the correct direction.
-            hit.HitDirection = (Main.player[Projectile.owner].Center.X < target.Center.X) ? 1 : (-1);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            ParticleOrchestrator.RequestParticleSpawn(clientOnly: false, ParticleOrchestraType.NightsEdge,
-                new ParticleOrchestraSettings { PositionInWorld = Main.rand.NextVector2FromRectangle(target.Hitbox) },
-                Projectile.owner);
-
             info.HitDirection = (Main.player[Projectile.owner].Center.X < target.Center.X) ? 1 : (-1);
+
+            Particle.Create<SeleniteStar>((p) =>
+            {
+                p.Position = target.Center;
+                p.Velocity = -Vector2.UnitY * 0.4f;
+                p.Scale = new(1f);
+                p.Rotation = MathHelper.PiOver4;
+            }, shouldSync: true
+            );
         }
 
-        // Taken from Main.DrawProj_Excalibur()
-        // Look at the source code for the other sword types.
         public override bool PreDraw(ref Color lightColor)
         {
             Vector2 position = Projectile.Center - Main.screenPosition;
@@ -188,14 +182,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             float scale = Projectile.scale * 1.1f;
             SpriteEffects spriteEffects = ((!(SwingDirection >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
             float progress = Timer / MaxTime;
-
             float lerpTime = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
             float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
             lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);
             float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
             Color color = new Color(130, 220, 199);
-            Color backDarkColor = (color * 0.7f).WithOpacity(progressScale);
+            Color backDarkColor = (color * 0.4f).WithOpacity(progressScale);
             Color middleMediumColor = color;
             Color frontLightColor = (color * 1.4f).WithAlpha(255); ;
 
@@ -221,7 +214,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 3), Color.White * 0.4f * lerpTime, Projectile.rotation + SwingDirection * -0.1f, origin, scale * 0.6f, spriteEffects, 0f);
 
             // This draws some sparkles around the circumference of the swing.
-            for (float i = 0f; i < 12f; i += 1f)
+            for (float i = 0f; i < 8f; i += 1f)
             {
                 float edgeRotation = Projectile.rotation + SwingDirection * i * (MathHelper.Pi * -2f) * 0.025f + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection;
                 Vector2 drawPos = position + edgeRotation.ToRotationVector2() * ((float)texture.Width * 0.5f - 6f) * scale;
@@ -230,11 +223,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             // This draws a large star sparkle at the front of the projectile.
             Vector2 drawPos2 = position + (Projectile.rotation + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4) * SwingDirection).ToRotationVector2() * ((float)texture.Width * 0.5f - 4f) * scale;
-            Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(1.4f, Utils.Remap(progress, 0f, 1f, 1.4f, 1f)) * scale, Vector2.One * scale);
-
-            // Uncomment this line for a visual representation of the projectile's size.
-            // Main.EntitySpriteDraw(TextureAssets.MagicPixel.Value, position, sourceRectangle, Color.Orange * 0.75f, 0f, origin, scale, spriteEffects);
-
+            Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor, progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(progress, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
             return false;
         }
     }

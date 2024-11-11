@@ -18,8 +18,8 @@ namespace Macrocosm.Content.Items.Tools.Selenite
         {
             Item.damage = 55;
             Item.DamageType = DamageClass.Melee;
-            Item.width = 42;
-            Item.height = 24;
+            Item.width = 44;
+            Item.height = 22;
             Item.useTime = 2;
             Item.useAnimation = 15;
             Item.useStyle = ItemUseStyleID.Shoot;

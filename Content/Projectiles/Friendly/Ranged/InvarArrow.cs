@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             //for(int i = 0; i < 2; i++)
             //{
-            //	Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>(), 0, 0, Scale: Main.rand.NextFloat(0.8f, 1f));
+            //	Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteBrightDust>(), 0, 0, Scale: Main.rand.NextFloat(0.8f, 1f));
             //	dust.noGravity = true;
             //}
 

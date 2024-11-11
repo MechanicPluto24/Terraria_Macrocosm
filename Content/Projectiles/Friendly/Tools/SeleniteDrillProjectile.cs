@@ -11,8 +11,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
         public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.SolarFlareDrill);
-            Projectile.width = 24;
-            Projectile.height = 42;
+            Projectile.width = 22;
+            Projectile.height = 44;
         }
 
         public override bool PreAI()
@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
             Player player = Main.player[Projectile.owner];
             Rectangle hitbox = Projectile.Hitbox;
 
-            float lightMultiplier = 0.35f;
+            float lightMultiplier = 0.25f;
             #endregion
 
             #region Offset
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
             #endregion
 
             #region Lighting
-            Lighting.AddLight(player.position, 0.61f * lightMultiplier, 0.26f * lightMultiplier, 0.85f * lightMultiplier);
+            Lighting.AddLight(player.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
             #endregion
 
             return true;
