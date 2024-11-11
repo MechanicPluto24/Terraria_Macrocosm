@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,64 +18,131 @@ namespace Macrocosm.Common.Systems.Power
             machines.Add(machine);
         }
 
-        public void Solve()
+        public void Remove(MachineTE machine)
         {
-            float inputPower = 0;
-            float consumedPower = 0;
+            machines.Remove(machine);
+        }
+
+        public void Solve(int updateRate)
+        {
+            float totalGeneratorOutput = 0f;
+            float totalConsumerDemand = 0f;
+            float totalBatteryStoredEnergy = 0f;
+            float totalBatteryCapacity = 0f;
+
+            var generators = new List<GeneratorTE>();
+            var consumers = new List<ConsumerTE>();
+            var batteries = new List<BatteryTE>();
+
             foreach (var machine in machines)
             {
-                if (machine.MachineType is MachineType.Generator)
-                    inputPower += machine.Power;
-
-                if (machine.MachineType is MachineType.Consumer)
-                    consumedPower += machine.Power;
+                switch (machine)
+                {
+                    case GeneratorTE generator:
+                        generators.Add(generator);
+                        totalGeneratorOutput += generator.GeneratedPower;
+                        break;
+                    case ConsumerTE consumer:
+                        consumers.Add(consumer);
+                        totalConsumerDemand += consumer.RequiredPower;
+                        break;
+                    case BatteryTE battery:
+                        batteries.Add(battery);
+                        totalBatteryStoredEnergy += battery.StoredEnergy;
+                        totalBatteryCapacity += battery.EnergyCapacity;
+                        break;
+                }
             }
 
-            bool enoughPower = inputPower >= consumedPower;
-            float powerShortageFactor = enoughPower ? 1 : inputPower / consumedPower;
-            float totalPowerDistributedToConsumers = 0;
+            float netPower = totalGeneratorOutput - totalConsumerDemand;
 
-            foreach (var consumer in machines.Where(machine => machine.MachineType is MachineType.Consumer))
+            if (netPower >= 0f)
             {
-                if (enoughPower && !consumer.PoweredOn && consumer.CanAutoPowerOn)
-                    consumer.PowerOn();
+                DistributePowerToConsumers(consumers, 1f);
 
-                if (!enoughPower && consumer.PoweredOn && consumer.CanAutoPowerOff)
-                    consumer.PowerOff();
+                float excessPower = netPower;
+                StoreExcessPowerInBatteries(batteries, excessPower, updateRate);
+            }
+            else
+            {
+                float powerNeeded = -netPower;
 
-                if (consumer.Operating)
+                if (totalBatteryStoredEnergy >= powerNeeded)
                 {
-                    float powerReceived = consumer.Power * powerShortageFactor;
-                    consumer.ActivePower = powerReceived;
-                    totalPowerDistributedToConsumers += powerReceived;
+                    DistributePowerToConsumers(consumers, 1f);
+                    DrawPowerFromBatteries(batteries, powerNeeded, updateRate);
                 }
                 else
                 {
-                    consumer.ActivePower = 0;
+                    float totalAvailablePower = totalGeneratorOutput + totalBatteryStoredEnergy;
+                    float powerFactor = totalAvailablePower / totalConsumerDemand;
+
+                    DistributePowerToConsumers(consumers, powerFactor);
+                    DrainAllBatteries(batteries);
                 }
             }
+        }
 
-            foreach (var generator in machines.Where(machine => machine.MachineType is MachineType.Generator))
+        private void DistributePowerToConsumers(List<ConsumerTE> consumers, float powerFactor)
+        {
+            foreach (var consumer in consumers)
             {
-                float remainingPower = generator.Power - (totalPowerDistributedToConsumers / inputPower * generator.Power);
-                generator.ActivePower = generator.PoweredOn ? remainingPower : 0;
+                consumer.InputPower = consumer.RequiredPower * powerFactor;
+            }
+        }
 
-                if (generator.Power > 0 && !generator.PoweredOn && generator.CanAutoPowerOn)
-                    generator.PowerOn();
+        private void StoreExcessPowerInBatteries(List<BatteryTE> batteries, float excessPower, int updateRate)
+        {
+            float deltaTime = updateRate / 60f;
+            float energyToStore = excessPower * deltaTime; // kW * s = kJ
 
-                if (generator.Power <= 0 && generator.PoweredOn && generator.CanAutoPowerOff)
-                    generator.PowerOff();
+            foreach (var battery in batteries)
+            {
+                float capacityLeft = battery.EnergyCapacity - battery.StoredEnergy;
+                float energyStored = Math.Min(energyToStore, capacityLeft);
+
+                battery.StoredEnergy += energyStored;
+                energyToStore -= energyStored;
+
+                if (energyToStore <= 0f)
+                    break;
+            }
+        }
+
+        private void DrawPowerFromBatteries(List<BatteryTE> batteries, float powerNeeded, int updateRate)
+        {
+            float deltaTime = updateRate / 60f;
+            float energyNeeded = powerNeeded * deltaTime; // kW * s = kJ
+
+            foreach (var battery in batteries)
+            {
+                float energyAvailable = battery.StoredEnergy;
+                float energyDrawn = Math.Min(energyNeeded, energyAvailable);
+
+                battery.StoredEnergy -= energyDrawn;
+                energyNeeded -= energyDrawn;
+
+                if (energyNeeded <= 0f)
+                    break;
+            }
+        }
+
+        private void DrainAllBatteries(List<BatteryTE> batteries)
+        {
+            foreach (var battery in batteries)
+            {
+                battery.StoredEnergy = 0f;
             }
         }
 
         public IEnumerator<MachineTE> GetEnumerator()
         {
-            return ((IEnumerable<MachineTE>)machines).GetEnumerator();
+            return machines.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable)machines).GetEnumerator();
+            return GetEnumerator();
         }
     }
 }

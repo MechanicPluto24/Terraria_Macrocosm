@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Sets;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Tiles.Ambient;
 using Terraria;
@@ -28,9 +29,7 @@ namespace Macrocosm.Content.Items.Dev
 
         public override bool? UseItem(Player player)
         {
-            Microsoft.Xna.Framework.Point point = Utility.GetClosestTile(player.Center, ModContent.TileType<KyaniteNest>(), 10000);
-            if (point != default)
-                player.Teleport(point.ToWorldCoordinates());
+            CircuitSystem.SearchAllCircuits();
             return true;
         }
     }

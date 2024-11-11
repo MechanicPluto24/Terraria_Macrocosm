@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
@@ -11,11 +12,9 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    public class BurnerGeneratorTE : MachineTE, IInventoryOwner
+    public class BurnerGeneratorTE : GeneratorTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<BurnerGenerator>();
-
-        public override MachineType MachineType => MachineType.Generator;
 
         /// <summary> The hull heat progress, 0 to 1, increases when burning and decreases otherwise. </summary>
         public float HullHeatProgress
@@ -98,8 +97,8 @@ namespace Macrocosm.Content.Machines
 
                     if (!fuelFound)
                     {
-                        Power = 0;
-                        MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
+                        GeneratedPower = 0;
+                        PowerOff();
                     }
                 }
             }
@@ -108,7 +107,7 @@ namespace Macrocosm.Content.Machines
                 HullHeatProgress -= HullHeatRate;
             }
 
-            Power = HullHeatProgress * MaxPower;
+            GeneratedPower = HullHeatProgress * MaxPower;
         }
 
         public override void NetSend(BinaryWriter writer)

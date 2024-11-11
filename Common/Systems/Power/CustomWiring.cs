@@ -114,7 +114,6 @@ namespace Macrocosm.Common.Systems.Power
             private set
             {
                 wireMap[point] = value;
-                CircuitSystem.SearchCircuits();
             }
         }
 

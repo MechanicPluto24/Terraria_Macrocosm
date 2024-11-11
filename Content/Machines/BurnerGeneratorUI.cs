@@ -155,7 +155,7 @@ namespace Macrocosm.Content.Machines
             base.Update(gameTime);
             Inventory.ActiveInventory = BurnerGenerator.Inventory;
 
-            powerStatusText.SetText($"{Language.GetTextValue("Mods.Macrocosm.Machines.Common.GeneratedPower")}: {MachineTE.GetPowerInfo()}");
+            powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format($"{BurnerGenerator.GeneratedPower}:F2"));
 
             burnItemIconProgressBar.Progress = BurnerGenerator.BurnProgress;
 
