@@ -141,7 +141,7 @@ namespace Macrocosm.Content.Machines
         {
             Player player = Main.LocalPlayer;
 
-            if (!UISystem.Active && !player.mouseInterface)
+            if (!player.mouseInterface)
             {
                 player.noThrow = 2;
                 Point16 origin = Utility.GetMultitileTopLeft(i, j);

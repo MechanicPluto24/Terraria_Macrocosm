@@ -142,7 +142,8 @@ namespace Macrocosm.Common.UI
                 shouldNetsync = false;
             }
 
-            Main.LocalPlayer.mouseInterface = IsMouseHovering;
+            if(IsMouseHovering)
+                Main.LocalPlayer.mouseInterface = true;
         }
 
         private void HandleCursor(ref Item item)
