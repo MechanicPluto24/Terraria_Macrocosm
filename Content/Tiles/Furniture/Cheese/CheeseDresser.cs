@@ -22,6 +22,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Main.tileTable[Type] = true;
             Main.tileContainer[Type] = true;
             Main.tileLavaDeath[Type] = true;
+
             TileID.Sets.HasOutlines[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
             TileID.Sets.BasicDresser[Type] = true;
@@ -51,7 +52,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
-        public override LocalizedText DefaultContainerName(int frameX, int frameY) => Lang._mapLegendCache[MapHelper.TileToLookup(Type, 0)];
+        public override LocalizedText DefaultContainerName(int frameX, int frameY) => this.GetLocalization("MapEntry");
 
         public override void ModifySmartInteractCoords(ref int width, ref int height, ref int frameWidth, ref int frameHeight, ref int extraY)
         {

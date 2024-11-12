@@ -241,7 +241,7 @@ namespace Macrocosm.Content.Rockets
         {
             orig(self);
 
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
             PreDrawBeforeTiles();
             Main.spriteBatch.End();
         }
@@ -251,12 +251,12 @@ namespace Macrocosm.Content.Rockets
             SpriteBatch spriteBatch = Main.spriteBatch;
             state1.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawRockets(RocketDrawLayer.BeforeNPCs);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
 
             PostDrawRockets(RocketDrawLayer.BeforeNPCs);
 
@@ -267,12 +267,12 @@ namespace Macrocosm.Content.Rockets
 
             state2.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawRockets(RocketDrawLayer.AfterNPCs);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
 
             PostDrawRockets(RocketDrawLayer.AfterNPCs);
 
@@ -283,12 +283,12 @@ namespace Macrocosm.Content.Rockets
         private void DrawRockets_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawRockets(RocketDrawLayer.BeforeProjectiles);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
 
             PostDrawRockets(RocketDrawLayer.BeforeProjectiles);
 
@@ -296,12 +296,12 @@ namespace Macrocosm.Content.Rockets
 
             orig(self);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawRockets(RocketDrawLayer.AfterProjectiles);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
 
             PostDrawRockets(RocketDrawLayer.AfterProjectiles);
 
@@ -312,7 +312,7 @@ namespace Macrocosm.Content.Rockets
         {
             orig(self);
 
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, RasterizerState.CullNone, default, Main.Transform);
             DrawOverlays();
             Main.spriteBatch.End();
         }
