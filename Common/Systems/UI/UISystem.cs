@@ -238,12 +238,8 @@ namespace Macrocosm.Common.Systems.UI
             }
 
             lastGameTime = gameTime;
-
             if (UserInterface?.CurrentState != null)
             {
-                Main.LocalPlayer.mouseInterface = true;
-                Main.mouseRightRelease = false;
-
                 UserInterface.Update(gameTime);
             }
         }
