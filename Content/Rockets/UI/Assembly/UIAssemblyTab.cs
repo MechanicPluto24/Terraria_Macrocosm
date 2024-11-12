@@ -68,6 +68,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         public void OnTabOpen()
         {
+            Main.stackSplit = 600;
         }
 
         public void OnTabClose()

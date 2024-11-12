@@ -8,6 +8,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -18,9 +19,23 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
     {
         public override void SetStaticDefaults()
         {
+            Main.tileContainer[Type] = true;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
+
+            TileID.Sets.HasOutlines[Type] = true;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            TileID.Sets.AvoidedByNPCs[Type] = true;
+            TileID.Sets.InteractibleByNPCs[Type] = true;
+            TileID.Sets.IsAContainer[Type] = true;
+
+            // For proper function (DefaultContainerName being applied)
+            // Causes MP serialization and tileswap issues
+            // TODO: find something better
+            TileID.Sets.BasicDresser[Type] = true;
+
+            TileSets.CustomContainerSize[Type] = new(1, 3);
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
             TileObjectData.newTile.Height = 3;
@@ -42,7 +57,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             HitSound = SoundID.Dig;
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();
-            AddMapEntry(new Color(200, 200, 200), CreateMapEntryName(), MapChestName);
+            AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
             AdjTiles = [TileID.Containers];
 
             TileSets.RandomStyles[Type] = 2;
@@ -51,36 +66,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialLocker>());
         }
 
-        public override LocalizedText DefaultContainerName(int frameX, int frameY)
-        {
-            return this.GetLocalization("MapEntry");
-        }
-
+        public override LocalizedText DefaultContainerName(int frameX, int frameY) => this.GetLocalization("MapEntry");
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
         public override bool IsLockedChest(int i, int j) => false;
-
-        public static string MapChestName(string name, int i, int j)
-        {
-            int left = i;
-            int top = j;
-            Tile tile = Main.tile[i, j];
-
-            if (tile.TileFrameX % 36 != 0)
-                left--;
-
-            if (tile.TileFrameY != 0)
-                top--;
-
-            int chest = Chest.FindChest(left, top);
-            if (chest < 0)
-                return Language.GetTextValue("LegacyChestType.0");
-
-            if (Main.chest[chest].name == "")
-                return name;
-
-            return name + ": " + Main.chest[chest].name;
-        }
 
         public override void NumDust(int i, int j, bool fail, ref int num) => num = 1;
 
@@ -164,7 +153,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             int chest = Chest.FindChest(left, top);
             player.cursorItemIconID = -1;
             if (chest < 0)
-                player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
+            {
+                player.cursorItemIconText = tile.GetModTile().DefaultContainerName(tile.TileFrameX, tile.TileFrameY).Value;
+            }
             else
             {
                 string defaultName = TileLoader.DefaultContainerName(tile.TileType, tile.TileFrameX, tile.TileFrameY);

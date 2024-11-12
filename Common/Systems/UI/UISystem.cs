@@ -194,7 +194,10 @@ namespace Macrocosm.Common.Systems.UI
             UIMachineState = new();
             UIMachineState.MachineUI = machineUI;
             if (UIMachineState.MachineUI.MachineTE is IInventoryOwner inventoryOwner1)
+            {
+                Main.stackSplit = 600;
                 inventoryOwner1.Inventory.InteractingPlayer = Main.myPlayer;
+            }
 
             UIMachineState.Initialize();
             UIMachineState.OnShow();
