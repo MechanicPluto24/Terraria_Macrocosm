@@ -36,7 +36,6 @@ namespace Macrocosm.Content.Items.Bars
 
         public override void AddRecipes()
         {
-
             CreateRecipe()
             .AddIngredient<ArtemiteOre>(6)
             .AddTile(TileID.LunarCraftingStation)

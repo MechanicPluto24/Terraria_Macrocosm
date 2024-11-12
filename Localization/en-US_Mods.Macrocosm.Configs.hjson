@@ -2,6 +2,7 @@
 
 MacrocosmConfig: {
 	DisplayName: General Configuration
+	WorldGenHeader: World Generation
 	GameplayHeader: Gameplay
 	GraphicsHeader: Graphics
 	UIHeader: User Interface
@@ -34,6 +35,11 @@ MacrocosmConfig: {
 	SelectedUITheme: {
 		Label: UI Theme
 		Tooltip: The mod's UI display theme.
+	}
+
+	DisableSilicaSandGeneration: {
+		Label: Disable Silica Sand Generation
+		Tooltip: Disable the generation of Silica Sand underneath the Ocean, to avoid breaking other mods' biomes.
 	}
 }
 

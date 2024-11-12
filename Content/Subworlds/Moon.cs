@@ -84,7 +84,9 @@ namespace Macrocosm.Content.Subworlds
 
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
+
             DemonSunIntensity = 0f;
+            EventSystem.DemonSun = false;
         }
 
         public override void OnExitWorld()
@@ -109,9 +111,6 @@ namespace Macrocosm.Content.Subworlds
 
         public override void PreUpdateWorld()
         {
-            // Disable Vanilla Blood Moons
-            Main.bloodMoon = false; 
-
             UpdateDemonSun();
             UpdateMeteorStorm();
             UpdateSolarStorm();
@@ -198,7 +197,7 @@ namespace Macrocosm.Content.Subworlds
                         choice.Add(ProjectileID.FallingStar, 30.0);
 
                         choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
-                        choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 33.0);
+                        choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 30.0);
                         choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
 
                         choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);

@@ -9,12 +9,24 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Map;
+using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        /// <summary> Get the ModTile of a <see cref="Tile"/>. Returns <langword>null</langword> if it doesn't exist. </summary>
+        public static ModTile GetModTile(this Tile tile) => TileLoader.GetTile(tile.TileType);
+
+        public static Vector2 ToWorldCoordinates(this Point point) => new(point.X * 16f, point.Y * 16f);
+        public static Vector2 ToWorldCoordinates(this Point16 point) => new(point.X * 16f, point.Y * 16f);
+        public static bool IsSloped(this Tile tile) => (int)tile.BlockType > 1;
+        public static bool AnyWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
+
+        public static ulong GetTileFrameSeed(int i, int j) => Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i); // Don't remove any casts.
+
+        /// <summary> Extension method to set the tile frame values </summary>
         public static void SetFrame(this Tile tile, int x, int y)
         {
             tile.TileFrameX = (short)x;
@@ -75,16 +87,55 @@ namespace Macrocosm.Common.Utils
             return false;
         }
 
-        public static Vector2 ToWorldCoordinates(this Point point)
-            => new(point.X * 16f, point.Y * 16f);
+        /// <summary>
+        /// Sets the tile <paramref name="style"/> and <paramref name="alternate"/> placement at the specified <paramref name="x"/> and <paramref name="y"/> coordinates.
+        /// Uses <see cref="WorldGen.PlaceObject"/> to set the tile, ensuring multi-tile structures are placed at their origin.
+        /// </summary>
+        public static void SetTileStyle(int x, int y, int style, int alternate = 0)
+        {
+            Tile setTile = Main.tile[x, y];
+            if (!setTile.HasTile)
+                return;
 
-        public static Vector2 ToWorldCoordinates(this Point16 point)
-            => new(point.X * 16f, point.Y * 16f);
+            int type = setTile.TileType;
+            if (type < 0)
+                return;
 
-        public static bool IsSloped(this Tile tile) => (int)tile.BlockType > 1;
-        public static bool AnyWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
+            var data = TileObjectData.GetTileData(setTile);
+            if (data is null)
+                return;
 
-        public static ulong GetTileFrameSeed(int i, int j) => Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i); // Don't remove any casts.
+            // Get the top-left corner of the multi-tile 
+            Point16 topLeft = new(x, y);
+            if (data.Width > 1 || data.Height > 1)
+                topLeft = GetMultitileTopLeft(x, y);
+
+            WorldGen.KillTile(topLeft.X, topLeft.Y, noItem: true);
+            WorldGen.PlaceObject(topLeft.X + data.Origin.X, topLeft.Y + data.Origin.Y, type, mute: true, style, alternate);
+        }
+
+        public static Color GetPaintColor(Point coords) => WorldGen.paintColor(Main.tile[coords].TileColor);
+        public static Color GetPaintColor(int i, int j) => WorldGen.paintColor(Main.tile[i, j].TileColor);
+        public static Color GetPaintColor(this Tile tile) => WorldGen.paintColor(tile.TileColor);
+
+        public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
+
+        public static Color GetTileColor(int i, int j)
+        {
+            if (CoordinatesOutOfBounds(i, j))
+                return default;
+
+            if (!Main.tile[i, j].HasTile)
+                return default;
+
+            Color[] colorLookup = MapTileSystem.GetMapColorLookup();
+
+            if (colorLookup is null)
+                return default;
+
+            MapTile mapTile = MapHelper.CreateMapTile(i, j, 255);
+            return colorLookup[mapTile.Type];
+        }
 
         public static SpriteEffects GetTileSpriteEffects(int i, int j)
         {
@@ -330,12 +381,9 @@ namespace Macrocosm.Common.Utils
         /// Returns true if the tile type acts similarly to a platform.
         /// By GroxTheGreat @ BaseMod
         ///</summary>
-        public static bool IsPlatform(int type)
-        {
-            return Main.tileSolid[type] && Main.tileSolidTop[type];
-        }
+        public static bool IsPlatform(int type) => Main.tileSolid[type] && Main.tileSolidTop[type];
 
-        public static bool AlchemyFlower(int type) { return type is 82 or 83 or 84; }
+        public static bool AlchemyFlower(int type) => type is 82 or 83 or 84;
 
         ///<summary>
         /// Goes through a square area given by the x, y and width, height params, and returns true if they are all of the type given.
@@ -442,50 +490,6 @@ namespace Macrocosm.Common.Utils
                 }
             }
             return tileCount;
-        }
-
-        public static Color GetPaintColor(Point coords) => WorldGen.paintColor(Main.tile[coords].TileColor);
-        public static Color GetPaintColor(int i, int j) => WorldGen.paintColor(Main.tile[i, j].TileColor);
-        public static Color GetPaintColor(this Tile tile) => WorldGen.paintColor(tile.TileColor);
-
-        public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
-
-        public static Color GetTileColor(int i, int j)
-        {
-            if (CoordinatesOutOfBounds(i, j))
-                return default;
-
-            if (!Main.tile[i, j].HasTile)
-                return default;
-
-            Color[] colorLookup = MapTileSystem.GetMapColorLookup();
-
-            if (colorLookup is null)
-                return default;
-
-            MapTile mapTile = MapHelper.CreateMapTile(i, j, 255);
-            return colorLookup[mapTile.Type];
-        }
-
-        public static Vector2 Cast(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
-        {
-            Vector2 output = start;
-            direction.Normalize();
-            for (int i = 0; i < length; i++)
-            {
-                if (Collision.CanHitLine(output, 0, 0, output + direction, 0, 0) && (platformCheck ? !Collision.SolidTiles(output, 1, 1, platformCheck) && Main.tile[(int)output.X / 16, (int)output.Y / 16].TileType != TileID.Platforms : true))
-                    output += direction;
-                else
-                    break;
-            }
-
-            return output;
-        }
-
-        public static float CastLength(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
-        {
-            Vector2 end = Cast(start, direction, length, platformCheck);
-            return (end - start).Length();
         }
     }
 }
