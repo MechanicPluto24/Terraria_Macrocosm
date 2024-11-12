@@ -35,9 +35,9 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
             CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.TargetID)));
 
             // NOTE: This must be kept as an explicit lambda expression!
-#pragma warning disable IDE0200
+            #pragma warning disable IDE0200
             CommonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction(), checkPeriod: 10));
-#pragma warning restore IDE0200
+            #pragma warning restore IDE0200
 
             CommonLaunchConditions.Add(new ChecklistCondition("Boss", () => !Utility.BossActive && !Utility.MoonLordIncoming, hideIfMet: true));
             CommonLaunchConditions.Add(new ChecklistCondition("Invasion", () => !Utility.InvastionActive && !Utility.PillarsActive, hideIfMet: true));

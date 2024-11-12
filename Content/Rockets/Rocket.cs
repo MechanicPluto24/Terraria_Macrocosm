@@ -229,11 +229,6 @@ namespace Macrocosm.Content.Rockets
             ResetAnimation();
         }
 
-        /// <summary> Called when a subworld is generated </summary>
-        public void OnSubworldGenerated()
-        {
-        }
-
         /// <summary> Update the rocket </summary>
         public void Update()
         {

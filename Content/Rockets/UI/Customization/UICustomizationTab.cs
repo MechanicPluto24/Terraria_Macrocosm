@@ -166,14 +166,13 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             RefreshPatternConfigPanel();
             RefreshDetailConfigPanel();
-
             rocketCustomizationControlPanel.ReplaceChildWith(unlockableItemSlot, unlockableItemSlot = CreateUnlockableItemSlot());
         }
 
         public void OnTabOpen()
         {
+            Main.stackSplit = 600;
             RefreshPatternColorPickers();
-
             rocketCustomizationControlPanel.ReplaceChildWith(unlockableItemSlot, unlockableItemSlot = CreateUnlockableItemSlot());
         }
 
@@ -181,7 +180,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             Main.blockInput = false;
             AllLoseFocus();
-            Rocket.Inventory.DropItem(Rocket.SpecialInventorySlot_CustomizationUnlock, Rocket.Center, sync: false, fromClient: true);
         }
 
         public override void Update(GameTime gameTime)

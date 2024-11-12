@@ -15,7 +15,6 @@ namespace Macrocosm.Content.Items.LiquidContainers
             Item.ResearchUnlockCount = 100;
 
             ItemSets.LiquidContainerData[Type] = LiquidContainerData.CreateEmpty(20);
-            ItemSets.FuelData[Type] = new FuelData(() => (FuelPotency)(float)FuelPotency.VeryHigh, 240);
         }
 
         public override void SetDefaults()

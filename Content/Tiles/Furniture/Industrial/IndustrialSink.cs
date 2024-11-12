@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -21,8 +22,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileID.Sets.CountsAsWaterSource[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 16];
-            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.CoordinateHeights = [16, 18];
+            TileObjectData.newTile.DrawYOffset = 0;
             TileObjectData.newTile.Origin = new Point16(0, 1);
             TileObjectData.addTile(Type);
 
@@ -30,6 +31,11 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             AdjTiles = [TileID.Sinks];
             DustType = ModContent.DustType<IndustrialPlatingDust>();
+
+            TileSets.RandomStyles[Type] = 2;
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialSink>());
         }
 
         public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;

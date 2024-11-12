@@ -23,6 +23,8 @@ namespace Macrocosm.Content.Tiles.Ambient
             Main.tileNoAttach[Type] = true;
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
+            Main.tileNoFail[Type] = true;
+            TileID.Sets.BreakableWhenPlacing[Type] = true;
 
             DustType = ModContent.DustType<ProtolithDust>();
 

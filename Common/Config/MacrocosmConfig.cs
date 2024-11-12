@@ -17,6 +17,10 @@ namespace Macrocosm.Common.Config
 
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
+        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.WorldGenHeader")]
+        [DefaultValue(false)]
+        public bool DisableSilicaSandGeneration { get; set; }
+
         [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GameplayHeader")]
         [DefaultValue(false)]
         public bool AlwaysDisplayTitleCards { get; set; }

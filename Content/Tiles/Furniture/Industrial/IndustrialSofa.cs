@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,6 +47,11 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
             AdjTiles = [TileID.Benches];
             DustType = ModContent.DustType<IndustrialPlatingDust>();
+
+            TileSets.RandomStyles[Type] = 2;
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialSofa>());
         }
 
         // If on rightmost frame and there's no neighbor sofa to the right, draw extra texture to the right

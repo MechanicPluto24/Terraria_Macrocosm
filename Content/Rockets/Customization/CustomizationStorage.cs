@@ -310,12 +310,18 @@ namespace Macrocosm.Content.Rockets.Customization
 
         private static bool IsDetailExcludedByRegion(string detailName)
         {
-            string country = System.Globalization.RegionInfo.CurrentRegion.TwoLetterISORegionName;
+            string country = System.Globalization.RegionInfo.CurrentRegion.ThreeLetterISORegionName;
 
-            if (country == "CN" && detailName == "Flag_TWN")
+            if (country is "CHN" && detailName is "Flag_TWN" or "Flag_MAC" or "Flag_HKG")
                 return true;
 
-            if (country == "TW" && detailName == "Flag_CHN")
+            if (country is "MAC" && detailName is "Flag_TWN")
+                return true;
+
+            if (country is "HKG" && detailName is "Flag_TWN")
+                return true;
+
+            if (country is "TWN" && detailName is "Flag_CHN")
                 return true;
 
             return false;

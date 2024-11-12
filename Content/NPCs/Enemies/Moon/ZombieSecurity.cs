@@ -69,8 +69,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.width = 24;
             NPC.height = 44;
             NPC.damage = 65;
-            NPC.defense = 100;
-            NPC.lifeMax = 1800;
+            NPC.defense = 50;
+            NPC.lifeMax = 2300;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SFX.ZombieDeath;
             NPC.knockBackResist = 0.5f;
@@ -105,7 +105,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         #region Netcode
 
-        // Required until we fix the NetSyncAttribute thing :/
         // The NPC.ai[] array is used by BaseMod ZombieAI()
         public override void SendExtraAI(BinaryWriter writer)
         {

@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Tiles.Blocks.Sands;
 using Macrocosm.Content.Tiles.Ores;
 using System.Collections.Generic;
@@ -112,6 +114,9 @@ namespace Macrocosm.Content.Subworlds
 
         private void GenerateSilicaSand_Ocean(GenerationProgress progress, GameConfiguration configuration)
         {
+            if (MacrocosmConfig.Instance.DisableSilicaSandGeneration)
+                return;
+
             int maxPatches = (int)(Main.maxTilesX * 0.013);
             if (WorldGen.remixWorldGen)
                 maxPatches /= 4;
@@ -119,14 +124,21 @@ namespace Macrocosm.Content.Subworlds
             for (int i = 0; i < maxPatches; i++)
             {
                 int x = WorldGen.genRand.Next(0, WorldGen.beachDistance);
-                int y = WorldGen.genRand.Next((int)Main.worldSurface, (int)GenVars.rockLayerHigh);
+                int y = WorldGen.genRand.Next((int)Main.worldSurface + 100, (int)GenVars.rockLayerHigh + 100);
 
                 if (WorldGen.genRand.NextBool())
                     x = WorldGen.genRand.Next(Main.maxTilesX - WorldGen.beachDistance, Main.maxTilesX);
 
                 int strength = WorldGen.genRand.Next(15, 70);
                 int steps = WorldGen.genRand.Next(20, 130);
-                WorldGen.TileRunner(x, y, strength, steps, TileType<SilicaSand>());
+
+                Utility.BlobTileRunner(
+                    x, y, TileType<SilicaSand>(),
+                    repeatCount: 1..10, sprayRadius: 15..65, blobSize: 20..40,
+                    perTileCheck: (i, j) => WorldGen.SolidOrSlopedTile(i, j) && (
+                        TileID.Sets.Dirt[Main.tile[i, j].TileType] ||
+                        TileID.Sets.Stone[Main.tile[i, j].TileType])
+                );
             }
         }
     }

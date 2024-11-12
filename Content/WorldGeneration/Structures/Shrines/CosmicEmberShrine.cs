@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.WorldGeneration;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Ores;
 using Terraria;
 using Terraria.DataStructures;
@@ -11,6 +12,7 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
     {
         public override bool PrePlace(Point16 origin)
         {
+            Utility.SafeTileRunner(origin.X + Size.X / 2, origin.Y + Size.Y / 4, Size.X * 2.5f, 1, -1);
             return true;
         }
 

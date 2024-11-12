@@ -83,6 +83,9 @@ namespace Macrocosm.Common.UI
                     HasFocus = false;
             }
 
+            if (ContainsPoint(Main.MouseScreen))
+                Main.LocalPlayer.mouseInterface = true;
+
             Main.blockInput = HasFocus;
             textField.CurrentlyInputtingText = HasFocus;
             textField.ForceHideHintText = HasFocus;

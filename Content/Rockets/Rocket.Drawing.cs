@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 using Terraria;
+using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets
@@ -53,6 +54,10 @@ namespace Macrocosm.Content.Rockets
         /// </param>
         public void Draw(DrawMode drawMode, SpriteBatch spriteBatch, Vector2 position, bool useRenderTarget = true)
         {
+            // TODO: find a way to apply reverse gravity to Rockets with RenderTarget
+            if (Main.LocalPlayer.gravDir == -1f)
+                useRenderTarget = false;
+
             if (useRenderTarget)
             {
                 // Prepare our RenderTarget
@@ -391,6 +396,7 @@ namespace Macrocosm.Content.Rockets
             // Assign our own buffers to the GPU
             PrimitivesSystem.GraphicsDevice.SamplerStates[0] = SamplerState.PointClamp;
             PrimitivesSystem.GraphicsDevice.SetVertexBuffer(vertexBuffer);
+            PrimitivesSystem.GraphicsDevice.RasterizerState = RasterizerState.CullNone;
             PrimitivesSystem.GraphicsDevice.Indices = indexBuffer;
             PrimitivesSystem.GraphicsDevice.Textures[0] = renderTarget;
 
@@ -429,7 +435,6 @@ namespace Macrocosm.Content.Rockets
         // Events
         private void OnResolutionChanged(Matrix matrix)
         {
-
         }
     }
 }

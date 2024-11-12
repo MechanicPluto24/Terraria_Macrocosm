@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialChair>(), 1);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialChair>(), 2);
             Item.width = 16;
             Item.height = 32;
             Item.value = 500;

@@ -18,11 +18,11 @@ namespace Macrocosm.Content.Tiles.Ambient
         public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = false;
-            Main.tileSolidTop[Type] = false;
-            Main.tileTable[Type] = false;
             Main.tileNoAttach[Type] = true;
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
+            Main.tileNoFail[Type] = true;
+            TileID.Sets.BreakableWhenPlacing[Type] = true;
 
             DustType = ModContent.DustType<ProtolithDust>();
 

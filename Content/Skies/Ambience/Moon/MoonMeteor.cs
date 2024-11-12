@@ -17,7 +17,12 @@ namespace Macrocosm.Content.Skies.Ambience.Moon
             Position.Y = player.Center.ToTileCoordinates().Y - random.Next(40, 81);
 
             Effects = ((random.Next(2) != 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
-            Frame = new(1, 4) { CurrentRow = (byte)random.Next(4) };
+
+            Frame = new(1, 20);
+            if (random.NextFloat() < 0.1f)
+                Frame.CurrentRow = (byte)random.Next(4, 20);
+            else
+                Frame.CurrentRow = (byte)random.Next(4);
 
             LifeTime = random.Next(4, 7) * 240;
             OpacityNormalizedTimeToFadeIn = 0.01f;

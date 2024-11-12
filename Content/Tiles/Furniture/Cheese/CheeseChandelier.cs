@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Cheese
 {
-    public class CheeseChandelier : ModTile
+    public class CheeseChandelier : ModTile, IToggleable
     {
         private static Asset<Texture2D> flameTexture;
 
@@ -34,7 +35,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Chandelier"));
         }
 
-        public override void HitWire(int i, int j)
+        public void Toggle(int i, int j, bool skipWire = false)
         {
             int left = i - Main.tile[i, j].TileFrameX / 18 % 3;
             int top = j - Main.tile[i, j].TileFrameY / 18 % 3;
@@ -47,12 +48,17 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                     else
                         Main.tile[x, y].TileFrameX += 54;
 
-                    if (Wiring.running)
+                    if (skipWire && Wiring.running)
                         Wiring.SkipWire(x, y);
                 }
             }
 
             NetMessage.SendTileSquare(-1, left, top, 3, 3);
+        }
+
+        public override void HitWire(int i, int j)
+        {
+            Toggle(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

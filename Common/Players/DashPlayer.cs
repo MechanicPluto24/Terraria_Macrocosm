@@ -61,10 +61,10 @@ namespace Macrocosm.Common.Players
         /// <summary> Whether the dash makes a player afterimage </summary>
         public bool AccDashAfterImage { get; set; }
 
-        /// <summary> Action called when starting the dash, used mainly for visual and sound effects </summary>
+        /// <summary> Action called when starting the dash, called on the local client, used mainly for visual and sound effects </summary>
         public Action<Player> AccDashStartVisuals { get; set; }
 
-        /// <summary> Action called for the duration of the dash, used mainly for visual and sound effects </summary>
+        /// <summary> Action called for the duration of the dash, called on the local client, used mainly for visual and sound effects </summary>
         public Action<Player> AccDashVisuals { get; set; }
 
         public enum Direction { Down, Up, Right, Left, None = -1 }
@@ -85,7 +85,7 @@ namespace Macrocosm.Common.Players
         /// <summary> Whether the player has collided during the dash with an NPC this frame </summary>
         public bool CollidedWithNPC { get; set; }
 
-        /// <summary> Action called when colliding with an NPC </summary>
+        /// <summary> Action called when colliding with an NPC. Called on the local client </summary>
         public Action<Player, NPC> OnCollisionWithNPC { get; set; }
 
         public override void PostUpdateBuffs()
@@ -194,7 +194,7 @@ namespace Macrocosm.Common.Players
             if (dashDelay > 0)
                 dashDelay--;
 
-            if (dashDelay == 0)
+            if (dashDelay == 0 && DashAccessoryEquipped && AccDashDamage > 0)
                 Player.eocHit = -1;
 
             if (dashTimer > 0)
@@ -225,8 +225,8 @@ namespace Macrocosm.Common.Players
         private bool CanUseDash()
         {
             return DashAccessoryEquipped
-                && Player.dashType == DashID.None // player doesn't have Tabi or EoCShield equipped (give priority to those dashes)
-                && !Player.setSolar // player isn't wearing solar armor
+                //&& Player.dashType == DashID.None // player doesn't have Tabi or EoCShield equipped (give priority to those dashes)
+                //&& !Player.setSolar // player isn't wearing solar armor
                 && !Player.mount.Active; // player isn't mounted, since dashes on a mount look weird
         }
 
