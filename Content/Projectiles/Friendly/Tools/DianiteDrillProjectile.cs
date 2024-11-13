@@ -11,8 +11,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
         public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.SolarFlareDrill);
-            Projectile.width = 24;
-            Projectile.height = 42;
+            Projectile.width = 22;
+            Projectile.height = 22;
         }
 
         public override bool PreAI()

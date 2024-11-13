@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
         {
             Projectile.CloneDefaults(ProjectileID.SolarFlareDrill);
             Projectile.width = 22;
-            Projectile.height = 44;
+            Projectile.height = 22;
         }
 
         public override bool PreAI()
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
             #region Dust
             if (Main.rand.NextBool(4))
             {
-                int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<SeleniteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(1.25f, 1.35f));
+                int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<SeleniteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(0.5f, 1f));
                 Main.dust[swingDust].velocity *= 0.05f;
             }
             #endregion

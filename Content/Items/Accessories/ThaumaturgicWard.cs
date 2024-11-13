@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Players;
+using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -11,6 +12,8 @@ namespace Macrocosm.Content.Items.Accessories
             Item.width = 28;
             Item.height = 32;
             Item.accessory = true;
+            Item.value = Item.sellPrice(gold: 5);
+            Item.rare = ModContent.RarityType<MoonRarityT1>();
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

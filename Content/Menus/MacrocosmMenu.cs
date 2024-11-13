@@ -253,7 +253,7 @@ namespace Macrocosm.Content.Menus
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state1);
 
-            Stars.Draw(spriteBatch);
+            Stars.DrawAll(spriteBatch);
             spriteBatch.Draw(milkyWay.Value, screen, Color.White.WithOpacity(0.3f));
             spriteBatch.Draw(nebula.Value, screen, Color.White.WithOpacity(0.75f));
 
