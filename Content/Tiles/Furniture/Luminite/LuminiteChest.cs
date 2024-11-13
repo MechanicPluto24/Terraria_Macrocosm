@@ -31,6 +31,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
             Main.tileOreFinderPriority[Type] = 500;
+
             TileID.Sets.HasOutlines[Type] = true;
             TileID.Sets.BasicChest[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
