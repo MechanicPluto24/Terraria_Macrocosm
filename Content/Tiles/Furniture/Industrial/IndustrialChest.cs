@@ -57,6 +57,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileShine[Type] = 1000;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
+
             TileID.Sets.HasOutlines[Type] = true;
             TileID.Sets.BasicChest[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
@@ -64,6 +65,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsAContainer[Type] = true;
             TileID.Sets.FriendlyFairyCanLureTo[Type] = true;
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
 
             Main.tileOreFinderPriority[Type] = 1050;
 
