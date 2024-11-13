@@ -11,6 +11,7 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
+using static Macrocosm.Common.Utils.Utility;
 
 namespace Macrocosm.Content.LoadingScreens
 {
@@ -24,7 +25,6 @@ namespace Macrocosm.Content.LoadingScreens
         protected float animationTimer = 0;
 
         protected Stars stars = new();
-        protected Stars fallingStars = new();
 
         protected bool Moving => rocket is not null;
         protected Rocket rocket;
@@ -45,11 +45,16 @@ namespace Macrocosm.Content.LoadingScreens
 
         public void Setup()
         {
-            stars = new(600, 700, wrapMode: MacrocosmStar.WrapMode.Random);
-            fallingStars = new(15, 20, celledSpawn: true, wrapMode: MacrocosmStar.WrapMode.Random, falling: true, baseScale: 0.5f);
+            // 3 screens horizontally
+            // 5 screens vertically
+            Rectangle area = new(
+                -Main.screenWidth,
+                -3 * Main.screenHeight,
+                3 * Main.screenWidth,
+                5 * Main.screenHeight
+            );
 
-            fallingStars.Cast<FallingStar>().ToList().ForEach(star => star.Fall(deviationX: 0.1f, minSpeedY: 30f, maxSpeedY: 45f));
-
+            stars = new(7000, 8000, area);
             Reset();
         }
 
@@ -76,9 +81,15 @@ namespace Macrocosm.Content.LoadingScreens
                 progressBar.SetProgress((float)WorldGenerator.CurrentGenerationProgress.TotalProgress, (float)WorldGenerator.CurrentGenerationProgress.Value);
 
             Main.gameTips.Update();
-
             UpdateAnimation();
             Update();
+
+            if (Moving && Main.rand.NextBool())
+            {
+                var fallingStars = stars.ToList();
+                if (fallingStars.Count > 0)
+                    fallingStars.GetRandom().Fall(deviationX: 0.1f, minSpeedY: 30f, maxSpeedY: 45f);
+            }
         }
 
         /// <summary> Update the animation counter. Override for non-default behaviour </summary>
@@ -106,17 +117,17 @@ namespace Macrocosm.Content.LoadingScreens
 
             if (Moving)
             {
-                stars.MovementVector = new(0f, 0.25f);
+                stars.CommonVelocity = new(0f, 0.25f);
             }
 
-            stars.Draw(spriteBatch);
+            stars.DrawStationary(spriteBatch);
 
             PreDraw(spriteBatch);
 
             if (Moving)
             {
                 DrawRocket(spriteBatch);
-                fallingStars.Draw(spriteBatch);
+                stars.DrawFalling(spriteBatch);
             }
 
             if (WorldGenerator.CurrentGenerationProgress is not null)
@@ -166,40 +177,5 @@ namespace Macrocosm.Content.LoadingScreens
             spriteBatch.End();
             spriteBatch.Begin(state);
         }
-
-        /*
-        private MethodInfo preDrawMenuMethodInfo;
-        private MethodInfo drawMenuMethodInfo;
-        private MethodInfo postDrawMenuMethodInfo;
-        private void DrawVanillaMenu(GameTime gameTime)
-        {
-            preDrawMenuMethodInfo ??= typeof(Main).GetMethod("PreDrawMenu", BindingFlags.NonPublic | BindingFlags.Instance);
-            drawMenuMethodInfo ??= typeof(Main).GetMethod("DrawMenu", BindingFlags.NonPublic | BindingFlags.Instance);
-            postDrawMenuMethodInfo ??= typeof(Main).GetMethod("PostDrawMenu", BindingFlags.NonPublic | BindingFlags.Static);
-
-            Main.spriteBatch.End();
-
-            // PreDrawMenu(out var screenSizeCache, out var screenSizeCacheAfterScaling);
-            object[] parameters = new object[2]; // 'PreDrawMenu' has two out parameters
-            preDrawMenuMethodInfo.Invoke(Main.instance, parameters);
-            Point screenSizeCache = (Point)parameters[0];
-            Point screenSizeCacheAfterScaling = (Point)parameters[1];
-
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-
-            // TODO: Replace with the provided parameter
-            // Temporary fix until a future SubworldLibrary update
-            // May break some mods that use gameTime in their DrawMenu
-            gameTime = new GameTime();
-
-            // DrawMenu(gameTime);
-            drawMenuMethodInfo.Invoke(Main.instance, [gameTime]);
-
-            // PostDrawMenu(screenSizeCache, screenSizeCacheAfterScaling);
-            postDrawMenuMethodInfo.Invoke(null, [screenSizeCache, screenSizeCacheAfterScaling]);
-
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, DepthStencilState.None, Main.Rasterizer, null, Main.UIScaleMatrix);
-        }
-        */
     }
 }

@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Utilities;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
@@ -11,7 +12,7 @@ namespace Macrocosm.Common.Drawing.Sky
     {
         private readonly List<MacrocosmStar> stars = new();
 
-        public Vector2 MovementVector { get; set; }
+        public Vector2? CommonVelocity { get; set; } = null;
 
         public int Count => stars.Count;
         public bool None => Count == 0;
@@ -24,60 +25,99 @@ namespace Macrocosm.Common.Drawing.Sky
         {
         }
 
-        public Stars(int minStars, int maxStars, bool celledSpawn = false, MacrocosmStar.WrapMode wrapMode = MacrocosmStar.WrapMode.None, bool falling = false, float baseScale = 1f, float twinkleFactor = 0.4f)
+        public Stars(int minStars, int maxStars, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
         {
-            SpawnStars(minStars, maxStars, celledSpawn, wrapMode, falling, baseScale, twinkleFactor);
+            SpawnStars(minStars, maxStars, area, baseScale, twinkleFactor);
         }
 
         private bool spawningDone = false;
-        public void SpawnStars(int minStars, int maxStars, bool celledSpawn = false, MacrocosmStar.WrapMode wrapMode = MacrocosmStar.WrapMode.None, bool falling = false, float baseScale = 1f, float twinkleFactor = 0.4f)
+        public void SpawnStars(int minStars, int maxStars, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
         {
             int count = Main.rand.Next(minStars, maxStars);
+            Rectangle spawnArea;
 
-            if (celledSpawn)
+            if (area.HasValue)
             {
-                int cellWidth = Main.screenWidth / (int)Math.Sqrt(count);
-                int cellHeight = Main.screenHeight / (int)Math.Sqrt(count);
-
-                for (int i = 0; i < count; i++)
-                {
-                    int cellX = i % (Main.screenWidth / cellWidth);
-                    int cellY = i / (Main.screenWidth / cellWidth);
-
-                    int posX = cellX * cellWidth + Main.rand.Next(cellWidth);
-                    int posY = cellY * cellHeight + Main.rand.Next(cellHeight);
-
-                    Vector2 starPosition = new(posX, posY);
-
-                    if (falling)
-                        stars.Add(new FallingStar(starPosition, baseScale, twinkleFactor, wrapMode));
-                    else
-                        stars.Add(new MacrocosmStar(starPosition, baseScale, twinkleFactor, wrapMode));
-                }
+                spawnArea = area.Value;
             }
             else
             {
-                for (int i = 0; i < count; i++)
-                {
-                    if (falling)
-                        stars.Add(new FallingStar(baseScale, twinkleFactor, wrapMode));
-                    else
-                        stars.Add(new MacrocosmStar(baseScale, twinkleFactor, wrapMode));
-                }
+                spawnArea = new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                int x = Main.rand.Next(spawnArea.Left, spawnArea.Right + 1);
+                int y = Main.rand.Next(spawnArea.Top, spawnArea.Bottom + 1);
+
+                Vector2 position = new Vector2(x, y);
+                stars.Add(new MacrocosmStar(position, baseScale, twinkleFactor));
             }
 
             spawningDone = true;
         }
 
-        public void Draw(SpriteBatch spriteBatch, float brightness = 1f)
+        public void SpawnStarsCelled(int minStars, int maxStars, bool falling = false, float baseScale = 1f, float twinkleFactor = 0.4f)
+        {
+            int count = Main.rand.Next(minStars, maxStars);
+
+            int cellWidth = Main.screenWidth / (int)Math.Sqrt(count);
+            int cellHeight = Main.screenHeight / (int)Math.Sqrt(count);
+
+            for (int i = 0; i < count; i++)
+            {
+                int cellX = i % (Main.screenWidth / cellWidth);
+                int cellY = i / (Main.screenWidth / cellWidth);
+
+                int posX = cellX * cellWidth + Main.rand.Next(cellWidth);
+                int posY = cellY * cellHeight + Main.rand.Next(cellHeight);
+
+                Vector2 starPosition = new(posX, posY);
+                stars.Add(new MacrocosmStar(starPosition, baseScale, twinkleFactor));
+            }
+        }
+
+        public void DrawAll(SpriteBatch spriteBatch, float brightness = 1f)
+        {
+            DrawStationary(spriteBatch, brightness);
+            DrawFalling(spriteBatch, brightness);
+        }
+
+        public void DrawStationary(SpriteBatch spriteBatch, float brightness = 1f)
         {
             if (None || !spawningDone)
                 return;
 
             foreach (MacrocosmStar star in stars)
             {
+                if (star.Falling)
+                    continue;
+
                 star.Brightness = brightness;
-                star.UpdatePosition(MovementVector);
+
+                if (CommonVelocity.HasValue)
+                    star.Velocity = CommonVelocity.Value;
+
+                star.Update();
+                star.Draw(spriteBatch);
+            }
+        }
+
+        public void DrawFalling(SpriteBatch spriteBatch, float brightness = 1f)
+        {
+            if (None || !spawningDone)
+                return;
+
+            foreach (MacrocosmStar star in stars)
+            {
+                if (!star.Falling)
+                    continue;
+
+                star.Brightness = brightness;
+
+                if (CommonVelocity.HasValue)
+                    star.Velocity = CommonVelocity.Value;
+
                 star.Update();
                 star.Draw(spriteBatch);
             }

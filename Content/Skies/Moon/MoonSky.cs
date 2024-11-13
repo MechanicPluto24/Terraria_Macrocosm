@@ -204,8 +204,8 @@ namespace Macrocosm.Content.Skies.Moon
 
                 DrawMoonNebula(nebulaBrightness);
 
-                starsDay.Draw(spriteBatch);
-                starsNight.Draw(spriteBatch, nightStarBrightness);
+                starsDay.DrawAll(spriteBatch);
+                starsNight.DrawAll(spriteBatch, nightStarBrightness);
 
                 sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
                 
