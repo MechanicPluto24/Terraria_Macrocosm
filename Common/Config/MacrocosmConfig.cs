@@ -21,6 +21,9 @@ namespace Macrocosm.Common.Config
         [DefaultValue(false)]
         public bool DisableSilicaSandGeneration { get; set; }
 
+        [DefaultValue(false)]
+        public bool DisableOilShaleGeneration { get; set; }
+
         [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GameplayHeader")]
         [DefaultValue(false)]
         public bool AlwaysDisplayTitleCards { get; set; }
