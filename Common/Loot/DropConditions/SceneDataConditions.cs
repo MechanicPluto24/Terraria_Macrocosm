@@ -19,6 +19,10 @@ namespace Macrocosm.Common.Loot.DropConditions
         )
         { }
 
+        public class IsEvil(SceneData scene) : ConditionsChain.Any(new IsCorruption(scene), new IsCrimson(scene)) { }
+
+        public class IsSpreadableBiome(SceneData scene) : ConditionsChain.Any(new IsEvil(scene), new IsHallow(scene)) { }
+
         public class IsCorruption(SceneData scene) : BaseCondition
         {
             public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForCorruption;
@@ -59,8 +63,34 @@ namespace Macrocosm.Common.Loot.DropConditions
             public override bool CanDrop(DropAttemptInfo info) => scene.TilePosition.Y > Main.UnderworldLayer;
         }
 
-        public class IsEvil(SceneData scene) : ConditionsChain.Any(new IsCorruption(scene), new IsCrimson(scene)) { }
+        public class IsShimmerScene(SceneData scene) : BaseCondition
+        {
+            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForShimmer;
+        }
 
-        public class IsSpreadableBiome(SceneData scene) : ConditionsChain.Any(new IsEvil(scene), new IsHallow(scene)) { }
+        public class IsMeteor(SceneData scene) : BaseCondition
+        {
+            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForMeteor;
+        }
+
+        public class IsWaterCandle(SceneData scene) : BaseCondition
+        {
+            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.WaterCandleCount > 0;
+        }
+
+        public class IsPeaceCandle(SceneData scene) : BaseCondition
+        {
+            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.PeaceCandleCount > 0;
+        }
+
+        public class IsShadowCandle(SceneData scene) : BaseCondition
+        {
+            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.ShadowCandleCount > 0;
+        }
+
+        public class IsGraveyard(SceneData scene) : BaseCondition
+        {
+            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForGraveyard;
+        }
     }
 }
