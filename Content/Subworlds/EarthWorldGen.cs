@@ -62,6 +62,9 @@ namespace Macrocosm.Content.Subworlds
 
         private void GenerateOilShales(GenerationProgress progress, GameConfiguration configuration)
         {
+            if (MacrocosmConfig.Instance.DisableOilShaleGeneration)
+                return;
+
             for (int i = 0; i < Main.maxTilesX * Main.maxTilesY * 0.0005; i++)
             {
                 int tileX = WorldGen.genRand.Next(GenVars.desertHiveLeft, GenVars.desertHiveRight);
