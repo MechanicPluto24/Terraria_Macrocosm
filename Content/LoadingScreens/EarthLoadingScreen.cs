@@ -53,7 +53,7 @@ namespace Macrocosm.Content.LoadingScreens
 
             float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
             progress = (float)Math.Pow(progress, 0.6);
-            int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f);
+            int movement = 250 + (int)(Utility.QuadraticEaseIn(progress) * 500f);
 
             spriteBatch.Draw
             (

@@ -114,6 +114,7 @@ namespace Macrocosm.Content.Machines
                     Loot.Add(new TECommonDrop(this, ItemID.SilverOre, 10));
                     Loot.Add(new TECommonDrop(this, ItemID.TungstenOre, 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<LithiumOre>(), 11));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<Silicon>(), 11));
                     Loot.Add(new TECommonDrop(this, ItemID.GoldOre, 12));
                     Loot.Add(new TECommonDrop(this, ItemID.PlatinumOre, 12));
 
@@ -145,6 +146,7 @@ namespace Macrocosm.Content.Machines
 
                     // Common desert loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.DesertFossil, 25, amountDroppedMinimum: 2, amountDroppedMaximum: 10, condition: new SceneDataConditions.IsDesert(scene)));
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<OilShale>(), 50, amountDroppedMinimum: 1, amountDroppedMaximum: 5, condition: new SceneDataConditions.IsDesert(scene)));
 
                     // Pure desert loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.SandBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
