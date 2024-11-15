@@ -4,3 +4,4 @@ version = 0.1.0.7
 modReferences = SubworldLibrary, StructureHelper
 hideCode = false
 buildIgnore = References/*
+ore
