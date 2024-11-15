@@ -30,11 +30,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsAContainer[Type] = true;
 
-            // For proper function (DefaultContainerName being applied)
-            // Causes MP serialization and tileswap issues
-            // TODO: find something better
-            TileID.Sets.BasicDresser[Type] = true;
-
             TileSets.CustomContainerSize[Type] = new(1, 3);
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
