@@ -27,14 +27,9 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsAContainer[Type] = true;
 
-            // For proper function (DefaultContainerName)
-            // Causes MP serialization and tileswap issues
-            // TODO: find something better
-            TileID.Sets.BasicDresser[Type] = true;
-
             TileSets.CustomContainerSize[Type] = new(2, 3);
 
-            DustType = DustID.Iron;
+            DustType = 84;
             AdjTiles = [TileID.Containers];
 
             AddMapEntry(new Color(107, 115, 125), CreateMapEntryName());
