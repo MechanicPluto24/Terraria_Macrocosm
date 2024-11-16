@@ -1,36 +1,88 @@
 ﻿using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using static System.Net.Mime.MediaTypeNames;
 
-namespace Macrocosm.Common.Hooks
+namespace Macrocosm.Common.Global.Tiles
 {
-    public class CustomChestHooks : ILoadable
+    public class CustomContainerGlobalTile : GlobalTile
     {
-        public void Load(Mod mod)
+        public override void Load()
         {
             IL_WorldFile.SaveChests += IL_WorldFile_SaveChests;
             On_Player.IsInInteractionRangeToMultiTileHitbox += On_Player_IsInInteractionRangeToMultiTileHitbox;
             On_ChestUI.DrawName += On_ChestUI_DrawName;
         }
 
-        public void Unload()
+        public override void Unload()
         {
             IL_WorldFile.SaveChests -= IL_WorldFile_SaveChests;
             On_Player.IsInInteractionRangeToMultiTileHitbox -= On_Player_IsInInteractionRangeToMultiTileHitbox;
             On_ChestUI.DrawName -= On_ChestUI_DrawName;
         }
 
-        // This hook is used to replace the +1 check with +0, allowing containers to save even if less than 2x2
+        // This hook is used to prevent the player from destroying custom containers that are not empty, and tiles below them
+        private bool CanTileBeAltered(int i, int j, int type)
+        {
+            Tile tileAbove = default;
+            if (j >= 1)
+                tileAbove = Main.tile[i, j - 1];
+
+            if (TileSets.CustomContainerSize[tileAbove.TileType].X > 0 && TileSets.CustomContainerSize[tileAbove.TileType].Y > 0)
+            {
+                if (tileAbove.HasTile && type != tileAbove.TileType)
+                    return false;
+            }
+
+            if (TileSets.CustomContainerSize[type].X > 0 && TileSets.CustomContainerSize[type].Y > 0)
+            {
+                Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+                if (!Chest.CanDestroyChest(topLeft.X, topLeft.Y))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public override void KillTile(int i, int j, int type, ref bool fail, ref bool effectOnly, ref bool noItem)
+        {
+            if(!CanTileBeAltered(i, j, type))
+                fail = true;
+        }
+
+        public override void NumDust(int i, int j, int type, bool fail, ref int num)
+        {
+            if (!CanTileBeAltered(i, j, type))
+                num = 0;
+        }
+
+        public override bool KillSound(int i, int j, int type, bool fail)
+        {
+            if (!CanTileBeAltered(i, j, type))
+                return false;
+
+            return true;
+        }
+
+        public override bool TileFrame(int i, int j, int type, ref bool resetFrame, ref bool noBreak)
+        {
+            if (!CanTileBeAltered(i, j, type))
+                resetFrame = false;
+
+            return true;
+        }
+
+        // This hook is used to modify the SaveChest logic to allow for custom containers to be less than 2x2
         private void IL_WorldFile_SaveChests(ILContext il)
         {
             var c = new ILCursor(il);
@@ -61,11 +113,11 @@ namespace Macrocosm.Common.Hooks
         }
 
 
-        // This hook is used to allow our custom containers to get their DefaultContainerName
+        // This hook is used to allow custom containers to get their DefaultContainerName
         private void On_ChestUI_DrawName(On_ChestUI.orig_DrawName orig, Microsoft.Xna.Framework.Graphics.SpriteBatch spritebatch)
         {
             Player player = Main.LocalPlayer;
-            if (!Main.editChest && player.chest > -1) 
+            if (!Main.editChest && player.chest > -1)
             {
                 if (Main.chest[player.chest] == null)
                     Main.chest[player.chest] = new Chest();

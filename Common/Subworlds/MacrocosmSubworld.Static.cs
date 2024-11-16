@@ -105,6 +105,7 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
+        // TODO: call this on Save & Exit
         private static void SetupLoadingScreen(Rocket rocket, string targetWorld)
         {
             if (rocket is not null)

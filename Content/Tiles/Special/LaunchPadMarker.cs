@@ -191,13 +191,16 @@ namespace Macrocosm.Content.Tiles.Special
         {
             if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
             {
-                if (launchPad.HasRocket)
+                if (launchPad.HasRocket || !launchPad.Inventory.IsEmpty)
                 {
                     fail = true;
                     return;
                 }
             }
         }
+
+        public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 0 : num;
+        public override bool KillSound(int i, int j, bool fail) => !fail;
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
