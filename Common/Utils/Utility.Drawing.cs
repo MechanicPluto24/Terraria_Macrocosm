@@ -1,4 +1,5 @@
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
@@ -219,20 +220,30 @@ namespace Macrocosm.Common.Utils
             Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
         }
 
-        // TODO: - Add variation based on current subworld's day/night lengths
-        //		 - Remove magic numbers lol 
-        /// <summary> Used for linear scaling along an entire day/night cycle  </summary>
+
+        /// <summary> Used for linear scaling along an entire day/night cycle </summary>
         public static float ScaleNoonToMidnight(float min, float max)
         {
+            float dayLength = (float)MacrocosmSubworld.CurrentDayLength;
+            float nightLength = (float)MacrocosmSubworld.CurrentNightLength;
+            float totalCycleLength = dayLength + nightLength;
+
+            double totalTime = Main.dayTime ? Main.time : dayLength + Main.time;
+            double currentTime = totalTime % totalCycleLength;
+
+            float middle = (max + min) / 2f;
+            float amplitude = (max - min) / 2f;
             float brightness;
-            double totalTime = Main.dayTime ? Main.time : Main.dayLength + Main.time;
 
-            float diff = max - min;
-
-            if (totalTime <= 27000)
-                brightness = min + (max * ((diff * 0.4f) + (diff * 0.6f * ((float)totalTime / 27000))));
+            if (currentTime <= dayLength)
+            {
+                brightness = middle + amplitude * (float)Math.Sin((currentTime / dayLength) * Math.PI);
+            }
             else
-                brightness = totalTime >= 70200 ? diff * 0.4f * ((float)(totalTime - 70200) / 16200) : max - ((float)(totalTime - 27000) / 43200);
+            {
+                double nightTime = currentTime - dayLength;
+                brightness = middle + amplitude * (float)Math.Sin((nightTime / nightLength) * Math.PI + Math.PI);
+            }
 
             return brightness;
         }
