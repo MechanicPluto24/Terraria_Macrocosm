@@ -100,7 +100,6 @@ namespace Macrocosm.Common.Players
 
         public override void OnEnterWorld()
         {
-            CircuitSystem.SearchAllCircuits();
         }
 
         public override void ResetEffects()

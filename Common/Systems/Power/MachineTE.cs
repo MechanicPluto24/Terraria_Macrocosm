@@ -2,6 +2,7 @@
 using Macrocosm.Common.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -34,6 +35,10 @@ namespace Macrocosm.Common.Systems.Power
 
         public virtual void OnPowerOn() { }
         public virtual void OnPowerOff() { }
+
+        public virtual string GetPowerInfo() => "";
+
+        public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch) { }
 
         public void PowerOn()
         {
@@ -96,7 +101,12 @@ namespace Macrocosm.Common.Systems.Power
             }
 
             int placedEntity = Place(x, y);
-            CircuitSystem.SearchCircuitsAround(i, j);
+
+            if (ByID.TryGetValue(placedEntity, out TileEntity tileEntity) && tileEntity is MachineTE machine)
+            {
+                CircuitSystem.HandleMachinePlacement(machine);
+            }
+
             return placedEntity;
         }
 
@@ -105,14 +115,24 @@ namespace Macrocosm.Common.Systems.Power
             if (Main.netMode == NetmodeID.Server)
             {
                 NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
-                CircuitSystem.SearchCircuitsAround(Position.X, Position.Y);
+                CircuitSystem.HandleMachineRemoval(this);
             }
         }
 
-        public virtual string GetPowerInfo() => "";
-
-        public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch)
+        public virtual IEnumerable<Point16> GetWirePositions()
         {
+            int startX = Position.X;
+            int startY = Position.Y;
+            int width = MachineTile.Width;
+            int height = MachineTile.Height;
+
+            for (int x = startX; x < startX + width; x++)
+            {
+                for (int y = startY; y < startY + height; y++)
+                {
+                    yield return new Point16(x, y);
+                }
+            }
         }
     }
 }
