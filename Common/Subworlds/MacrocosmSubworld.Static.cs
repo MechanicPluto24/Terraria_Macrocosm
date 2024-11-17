@@ -28,7 +28,7 @@ namespace Macrocosm.Common.Subworlds
         /// Get the current active subworld string ID, matching the subworld class name with the mod name prepended. 
         /// Returns <see cref="Earth.ID"/> if none active.
         /// </summary>
-        public static string CurrentID => SubworldSystem.AnyActive() ? SubworldSystem.Current.Mod.Name + "/" + SubworldSystem.Current.Name : Earth.ID;
+        public static string CurrentID => SubworldSystem.AnyActive() ? SubworldSystem.Current.FullName : Earth.ID;
         public static bool IsValidID(string id) => SubworldSystem.GetIndex(id) >= 0 || id is Earth.ID;
 
         public static string SanitizeID(string id) => SanitizeID(id, out _);
@@ -38,12 +38,12 @@ namespace Macrocosm.Common.Subworlds
 
             if (string.IsNullOrEmpty(id))
             {
-                modName = "Macrocosm";
+                modName = nameof(Macrocosm);
                 return "";
             }
             else if (split.Length == 1)
             {
-                modName = "Macrocosm";
+                modName = nameof(Macrocosm);
                 return split[0];
             }
             else
@@ -105,8 +105,7 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        // TODO: call this on Save & Exit
-        private static void SetupLoadingScreen(Rocket rocket, string targetWorld)
+        public static void SetupLoadingScreen(Rocket rocket, string targetWorld)
         {
             if (rocket is not null)
             {
@@ -161,9 +160,14 @@ namespace Macrocosm.Common.Subworlds
 
         public class Hacks
         {
-            /// <summary>
-            /// Remove this once SubworldLibrary <see href="https://github.com/jjohnsnaill/SubworldLibrary/pull/35"/> is merged.
-            /// </summary>
+            public static Subworld SubworldSystem_Cache()
+            {
+                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
+                return (Subworld)field.GetValue(null);
+            }
+
+            public static string SubworldSystem_CacheID() => SubworldSystem_Cache().FullName;
+
             public static void SubworldSystem_NullCache()
             {
                 FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
