@@ -19,8 +19,10 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileLighted[Type] = true;
             Main.tileBlendAll[Type] = true;
 
+            // To avoid things overlapping with outposts or the Moon Base
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
+
             TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
-            //TileID.Sets.GemsparkFramingTypes[Type] = Type;
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 

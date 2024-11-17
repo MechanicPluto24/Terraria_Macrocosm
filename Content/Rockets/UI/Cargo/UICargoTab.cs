@@ -72,6 +72,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public void OnTabOpen()
         {
+            Main.stackSplit = 600;
             RefreshInventory();
         }
 

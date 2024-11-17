@@ -60,25 +60,19 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         {
             Tile tile = Framing.GetTileSafely(i, j);
 
-            //info.directionOffset = info.restingEntity is Player ? 6 : 2; // Default to 6 for players, 2 for NPCs
-            //info.visualOffset = Vector2.Zero; // Defaults to (0,0)
-
+            info.VisualOffset.X -= (tile.TileFrameX % (18 * 2) == 0) ? 6f : -10f;
             info.TargetDirection = -1;
 
-            if (tile.TileFrameX != 0)
+            if (tile.TileFrameX >= 18 * 2)
             {
-                info.TargetDirection = 1; // Facing right if sat down on the right alternate (added through addAlternate in SetStaticDefaults earlier)
+                info.VisualOffset.X -= (tile.TileFrameX % (18 * 2) == 0) ? -16f : 16f;
+                info.TargetDirection = 1;
             }
 
-            // The anchor represents the bottom-most tile of the chair. This is used to align the entity hitbox
-            // Since i and j may be from any coordinate of the chair, we need to adjust the anchor based on that
-            info.AnchorTilePosition.X = i; // Our chair is only 1 wide, so nothing special required
-            info.AnchorTilePosition.Y = j;
+            info.AnchorTilePosition = new(i, j);
 
-            if (tile.TileFrameY % (18 * 2) == 0)
-            {
-                info.AnchorTilePosition.Y++; // Here, since our chair is only 2 tiles high, we can just check if the tile is the top-most one, then move it 1 down
-            }
+            if (tile.TileFrameY == 0)
+                info.AnchorTilePosition.Y += 1;
 
             // Finally, since this is a toilet, it should generate Poo while any tier of Well Fed is active
             info.ExtraInfo.IsAToilet = true;
@@ -116,9 +110,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
             player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
-
-            if (Main.tile[i, j].TileFrameX / 18 < 2)
-                player.cursorItemIconReversed = true;
+            player.cursorItemIconReversed = Main.tile[i, j].TileFrameX < 18 * 2;
         }
 
         public override void HitWire(int i, int j)

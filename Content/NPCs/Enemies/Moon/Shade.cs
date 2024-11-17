@@ -68,7 +68,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             if (Main.rand.NextBool(2))
             {
-                Dust d = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, 54, Main.rand.NextFloat(-0.2f, 0.2f), Main.rand.NextFloat(-0.2f, 0.2f), Scale: Main.rand.NextFloat(0.5f, 1.5f));
+                Dust d = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Wraith, Main.rand.NextFloat(-0.2f, 0.2f), Main.rand.NextFloat(-0.2f, 0.2f), Scale: Main.rand.NextFloat(0.5f, 1.5f));
                 d.noGravity = true;
             }
             NPC.TargetClosest(true);

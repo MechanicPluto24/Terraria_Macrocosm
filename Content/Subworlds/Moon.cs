@@ -78,7 +78,7 @@ namespace Macrocosm.Content.Subworlds
             {MapColorType.Underworld,  new Color(30, 30, 30)}
         };
 
-        public override void OnEnterWorld()
+        public override void OnEnterSubworld()
         {
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
 
@@ -89,7 +89,7 @@ namespace Macrocosm.Content.Subworlds
             EventSystem.DemonSun = false;
         }
 
-        public override void OnExitWorld()
+        public override void OnExitSubworld()
         {
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
             DemonSunIntensity = 0f;

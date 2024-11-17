@@ -53,11 +53,14 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         {
             Tile tile = Framing.GetTileSafely(i, j);
 
-            info.VisualOffset.Y -= 1f;
-
+            info.VisualOffset.X -= (tile.TileFrameX % (18 * 2) == 0) ? 6f : -10f;
             info.TargetDirection = -1;
-            if (tile.TileFrameX / 18 % 2 == 1)
+
+            if (tile.TileFrameX >= 18 * 2)
+            {
+                info.VisualOffset.X -= (tile.TileFrameX % (18 * 2) == 0) ? -16f : 16f;
                 info.TargetDirection = 1;
+            }
 
             info.AnchorTilePosition = new(i, j);
 
@@ -87,9 +90,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
             player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
-
-            if (Main.tile[i, j].TileFrameX / 18 % 2 == 0)
-                player.cursorItemIconReversed = true;
+            player.cursorItemIconReversed = Main.tile[i, j].TileFrameX < 18 * 2;
         }
     }
 }

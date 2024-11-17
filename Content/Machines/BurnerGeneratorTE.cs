@@ -116,6 +116,8 @@ namespace Macrocosm.Content.Machines
             TagIO.Write(Inventory.SerializeData(), writer);
 
             ItemIO.Send(ConsumedItem, writer);
+
+            writer.Write(hullHeatProgress);
         }
 
         public override void NetReceive(BinaryReader reader)
@@ -124,12 +126,18 @@ namespace Macrocosm.Content.Machines
             Inventory = Inventory.DeserializeData(tag);
 
             ConsumedItem = ItemIO.Receive(reader);
+
+            hullHeatProgress = reader.ReadSingle();
         }
 
         public override void SaveData(TagCompound tag)
         {
             tag[nameof(Inventory)] = Inventory;
+
             tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
+
+            if(hullHeatProgress > 0f)
+                tag[nameof(hullHeatProgress)] = hullHeatProgress;
         }
 
         public override void LoadData(TagCompound tag)
@@ -139,6 +147,9 @@ namespace Macrocosm.Content.Machines
 
             if (tag.ContainsKey(nameof(ConsumedItem)))
                 ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));
+
+            if (tag.ContainsKey(nameof(hullHeatProgress)))
+                hullHeatProgress = tag.GetFloat(nameof(hullHeatProgress));
         }
     }
 }

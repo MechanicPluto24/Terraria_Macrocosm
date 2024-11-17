@@ -16,6 +16,6 @@ namespace Macrocosm.Content.Biomes
         public override string BackgroundPath => null;
         public override string MapBackground => null;
 
-        public override bool IsBiomeActive(Player player) => !SubworldSystem.AnyActive<Macrocosm>();
+        public override bool IsBiomeActive(Player player) => false;
     }
 }

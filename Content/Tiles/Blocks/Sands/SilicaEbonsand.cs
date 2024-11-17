@@ -31,7 +31,6 @@ namespace Macrocosm.Content.Tiles.Blocks.Sands
             TileID.Sets.FallingBlockProjectile[Type] = new(ModContent.ProjectileType<SilicaEbonsandFalling>(), FallingProjectileDamage: 15);
 
             TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
-            TileID.Sets.GeneralPlacementTiles[Type] = false;
             TileID.Sets.ChecksForMerge[Type] = true;
 
             MineResist = 0.5f;

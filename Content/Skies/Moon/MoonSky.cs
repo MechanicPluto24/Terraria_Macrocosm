@@ -111,8 +111,8 @@ namespace Macrocosm.Content.Skies.Moon
 
         public override void Activate(Vector2 position, params object[] args)
         {
-            starsDay.SpawnStars(100, 130, baseScale: 1.4f, twinkleFactor: 0.05f);
-            starsNight.SpawnStars(600, 700, baseScale: 0.8f, twinkleFactor: 0.05f);
+            starsDay.SpawnStars(120, baseScale: 1.4f, twinkleFactor: 0.05f);
+            starsNight.SpawnStars(650, baseScale: 0.8f, twinkleFactor: 0.05f);
 
             MacrocosmStar mars = starsDay.RandStar(); // :) 
             mars.OverrideColor(new Color(224, 137, 8, 220));
@@ -204,8 +204,8 @@ namespace Macrocosm.Content.Skies.Moon
 
                 DrawMoonNebula(nebulaBrightness);
 
-                starsDay.Draw(spriteBatch);
-                starsNight.Draw(spriteBatch, nightStarBrightness);
+                starsDay.DrawAll(spriteBatch);
+                starsNight.DrawAll(spriteBatch, nightStarBrightness);
 
                 sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
                 

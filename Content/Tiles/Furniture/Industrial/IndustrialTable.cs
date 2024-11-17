@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -25,13 +26,17 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             AdjTiles = [TileID.Tables];
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
-            TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.CoordinateHeights = [16, 16];
             TileObjectData.addTile(Type);
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Table"));
+
+            TileSets.RandomStyles[Type] = 2;
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialTable>());
         }
 
         public override void NumDust(int x, int y, bool fail, ref int num)

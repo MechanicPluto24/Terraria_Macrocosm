@@ -28,18 +28,18 @@ IndustrialChest: {
 LaunchPadMarker.MapEntry: Launch Pad Marker
 IndustrialLoom.MapEntry: Industrial Loom
 AluminumOre.MapEntry: Aluminum
-ArtemiteOre.MapEntry: Artemite
+SeleniteOre.MapEntry: Selenite
 ChandriumOre.MapEntry: Chandrium
 DianiteOre.MapEntry: Dianite
 LithiumOre.MapEntry: Lithium
-SeleniteOre.MapEntry: Selenite
+ArtemiteOre.MapEntry: Artemite
 OilShale.MapEntry: Oil Shale
 Coal.MapEntry: Coal
-ArtemiteBar.MapEntry: Artemite Bar
+SeleniteBar.MapEntry: Selenite Bar
 ChandriumBar.MapEntry: Chandrium Bar
 DianiteBar.MapEntry: Dianite Bar
 AluminumBar.MapEntry: Aluminum Bar
-SeleniteBar.MapEntry: Selenite Bar
+ArtemiteBar.MapEntry: Artemite Bar
 SteelBar.MapEntry: Steel Bar
 SolarPanelLarge.MapEntry: Solar Panel
 SolarPanelSmall.MapEntry: Solar Panel
