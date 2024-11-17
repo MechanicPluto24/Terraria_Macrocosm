@@ -220,6 +220,7 @@ namespace Macrocosm.Common.Utils
             Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
         }
 
+
         /// <summary> Used for linear scaling along an entire day/night cycle </summary>
         public static float ScaleNoonToMidnight(float min, float max)
         {
