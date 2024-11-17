@@ -161,7 +161,7 @@ namespace Macrocosm.Content.Menus
 
         private void Setup()
         {
-            Stars.SpawnStars(350, 500, baseScale: 0.8f);
+            Stars.SpawnStars(450, baseScale: 0.8f);
 
             foreach (CelestialBody body in celestialBodies)
             {
