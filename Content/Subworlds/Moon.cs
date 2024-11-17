@@ -53,19 +53,7 @@ namespace Macrocosm.Content.Subworlds
         };
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
-        public override float GetAmbientTemperature()
-        {
-            float temperature;
-
-            if (Main.time < 0.2f * DayLength)
-                temperature = Utility.ScaleNoonToMidnight(-183f, 106f);
-            else if (Main.time > 0.8f * Main.dayLength)
-                temperature = Utility.ScaleNoonToMidnight(106f, -183f);
-            else
-                temperature = (Main.time < Main.dayLength / 2) ? -183f : 106f;
-
-            return temperature;
-        }
+        public override float GetAmbientTemperature() => Utility.ScaleNoonToMidnight(-183f, 106f);
 
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
