@@ -25,15 +25,14 @@ namespace Macrocosm.Common.Drawing.Sky
         {
         }
 
-        public Stars(int minStars, int maxStars, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
+        public Stars(int count, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
         {
-            SpawnStars(minStars, maxStars, area, baseScale, twinkleFactor);
+            SpawnStars(count, area, baseScale, twinkleFactor);
         }
 
         private bool spawningDone = false;
-        public void SpawnStars(int minStars, int maxStars, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
+        public void SpawnStars(int count, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
         {
-            int count = Main.rand.Next(minStars, maxStars);
             Rectangle spawnArea;
 
             if (area.HasValue)
