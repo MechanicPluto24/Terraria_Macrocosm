@@ -9,6 +9,7 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Drawing;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -155,7 +156,8 @@ namespace Macrocosm.Content.Machines
             base.Update(gameTime);
             Inventory.ActiveInventory = BurnerGenerator.Inventory;
 
-            powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format($"{BurnerGenerator.GeneratedPower}:F2"));
+            string power = $"{BurnerGenerator.GeneratedPower:F2}";
+            powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format(power));
 
             burnItemIconProgressBar.Progress = BurnerGenerator.BurnProgress;
 
