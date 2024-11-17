@@ -113,23 +113,22 @@ namespace Macrocosm.Common.Subworlds
         #region Travel hooks
 
         /// <summary> Called when entering a subworld. </summary>
-        public virtual void OnEnterWorld() { }
+        public virtual void OnEnterSubworld() { }
 
         /// <summary> Called when exiting a subworld. </summary>
-        public virtual void OnExitWorld() { }
+        public virtual void OnExitSubworld() { }
 
         public sealed override void OnEnter()
         {
-            OnEnterWorld();
+            OnEnterSubworld();
             MapTileSystem.ApplyMapTileColors();
         }
 
         public sealed override void OnExit()
         {
-            OnExitWorld();
+            OnExitSubworld();
             MapTileSystem.RestoreMapTileColors();
-
-            Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().OnExit_MacrocosmSubworld();
+            Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().OnExitSubworld();
         }
 
         #endregion

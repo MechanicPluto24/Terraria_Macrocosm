@@ -45,21 +45,35 @@ namespace Macrocosm.Content.LoadingScreens
 
         public void Setup()
         {
-            // 3 screens horizontally
-            // 5 screens vertically
-            Rectangle area = new(
-                -Main.screenWidth,
-                -3 * Main.screenHeight,
-                3 * Main.screenWidth,
-                5 * Main.screenHeight
-            );
+            if (Moving)
+            {
+                // 3 screens horizontally
+                // 5 screens vertically
+                Rectangle area = new(
+                    -Main.screenWidth,
+                    -3 * Main.screenHeight,
+                    3 * Main.screenWidth,
+                    5 * Main.screenHeight
+                );
 
-            stars = new(7000, 8000, area);
+                stars = new(8000, area);
+            }
+            else
+            {
+                stars = new(600);
+            }
+
             Reset();
         }
 
         public void SetRocket(Rocket rocket)
         {
+            if (rocket is null)
+            {
+                this.rocket = null;
+                return;
+            }
+
             var visualClone = rocket.VisualClone();
             visualClone.ForcedFlightAppearance = true;
             this.rocket = visualClone;
