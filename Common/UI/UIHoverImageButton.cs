@@ -95,6 +95,9 @@ namespace Macrocosm.Common.UI
         {
             base.Update(gameTime);
 
+            if (ContainsPoint(Main.MouseScreen))
+                Main.LocalPlayer.mouseInterface = true;
+
             if (IsMouseHovering && HoverText is not null && (HoverTextOnButonNotInteractible || CheckInteractible()))
                 Main.instance.MouseText(HoverText.Value, "", 0, 0, hackedMouseX: Main.mouseX + 6, hackedMouseY: Main.mouseY + 6, noOverride: true);
 

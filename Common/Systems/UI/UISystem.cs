@@ -194,7 +194,10 @@ namespace Macrocosm.Common.Systems.UI
             UIMachineState = new();
             UIMachineState.MachineUI = machineUI;
             if (UIMachineState.MachineUI.MachineTE is IInventoryOwner inventoryOwner1)
+            {
+                Main.stackSplit = 600;
                 inventoryOwner1.Inventory.InteractingPlayer = Main.myPlayer;
+            }
 
             UIMachineState.Initialize();
             UIMachineState.OnShow();
@@ -235,12 +238,8 @@ namespace Macrocosm.Common.Systems.UI
             }
 
             lastGameTime = gameTime;
-
             if (UserInterface?.CurrentState != null)
             {
-                Main.LocalPlayer.mouseInterface = true;
-                Main.mouseRightRelease = false;
-
                 UserInterface.Update(gameTime);
             }
         }

@@ -24,8 +24,6 @@ namespace Macrocosm.Content.Rockets
 
                 tag[nameof(State)] = (int)State;
 
-                Console.WriteLine($"Rocket[{WhoAmI}]'s state was saved: {State.ToString()}");
-
                 tag[nameof(CurrentWorld)] = CurrentWorld;
                 tag[nameof(Position)] = Position;
                 tag[nameof(Fuel)] = Fuel;
@@ -63,8 +61,6 @@ namespace Macrocosm.Content.Rockets
 
                 if (tag.ContainsKey(nameof(State)))
                     rocket.State = (ActionState)tag.GetInt(nameof(State));
-
-                Console.WriteLine($"Rocket[{rocket.WhoAmI}]'s state was loaded: {rocket.State.ToString()}");
 
                 if (tag.ContainsKey(nameof(Position)))
                     rocket.Position = tag.Get<Vector2>(nameof(Position));

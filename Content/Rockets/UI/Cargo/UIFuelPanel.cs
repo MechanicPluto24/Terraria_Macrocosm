@@ -134,7 +134,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public void OnRocketChanged()
         {
-            fuelPlacementPanel.ReplaceChildWith(liquidContainerItemSlot, liquidContainerItemSlot = CreateFuelCanisterItemSlot());
+            RefreshItemSlot();
         }
 
         private UIInventorySlot CreateFuelCanisterItemSlot()
@@ -208,6 +208,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         public void RefreshItemSlot()
         {
+            fuelPlacementPanel.ReplaceChildWith(liquidContainerItemSlot, liquidContainerItemSlot = CreateFuelCanisterItemSlot());
         }
 
         private void DumpFuel()
@@ -220,7 +221,11 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 float addedFuel = Math.Min(availableFuel, neededFuel);
 
                 Rocket.Fuel += addedFuel;
-                liquidContainerItemSlot.Item.type = LiquidContainerData.GetEmptyType(ItemSets.LiquidContainerData, liquidContainerItemSlot.Item.type);
+
+                int type = LiquidContainerData.GetEmptyType(ItemSets.LiquidContainerData, liquidContainerItemSlot.Item.type);
+                int stack = liquidContainerItemSlot.Item.stack;
+                Rocket.Inventory[Rocket.SpecialInventorySlot_FuelTank] = new Item(type, stack);
+                RefreshItemSlot();
 
                 Rocket.NetSync();
                 Rocket.Inventory.SyncItem(Rocket.SpecialInventorySlot_FuelTank);

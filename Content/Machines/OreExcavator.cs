@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
@@ -17,7 +18,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Machines
 {
-    public class OreExcavator : MachineTile
+    public class OreExcavator : MachineTile, IToggleable
     {
         public override short Width => 7;
         public override short Height => 10;
@@ -93,7 +94,7 @@ namespace Macrocosm.Content.Machines
                 NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
         }
 
-        public override void HitWire(int i, int j)
+        public void Toggle(int i, int j, bool skipWire = false)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
@@ -109,7 +110,7 @@ namespace Macrocosm.Content.Machines
                         else
                             tile.TileFrameY += (short)(Height * 18);
 
-                        if (Wiring.running)
+                        if (skipWire && Wiring.running)
                             Wiring.SkipWire(x, y);
                     }
                 }
@@ -117,6 +118,11 @@ namespace Macrocosm.Content.Machines
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+        }
+
+        public override void HitWire(int i, int j)
+        {
+            Toggle(i, j, skipWire: true);
         }
 
         public override bool RightClick(int i, int j)
@@ -128,23 +134,7 @@ namespace Macrocosm.Content.Machines
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
             {
-                for (int x = origin.X; x < origin.X + Width; x++)
-                {
-                    for (int y = origin.Y; y < origin.Y + Height; y++)
-                    {
-                        Tile tile = Main.tile[x, y];
-                        if (IsPoweredOnFrame(x, y))
-                        {
-                            if (IsOperatingFrame(x, y))
-                                tile.TileFrameY -= (short)(Height * 18);
-                            else
-                                tile.TileFrameY += (short)(Height * 18);
-                        }
-                    }
-                }
-
-                if (Main.netMode != NetmodeID.SinglePlayer)
-                    NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+                Toggle(i, j, skipWire: false);
             }
             else
             {
@@ -159,7 +149,7 @@ namespace Macrocosm.Content.Machines
         {
             Player player = Main.LocalPlayer;
 
-            if (!UISystem.Active && !player.mouseInterface)
+            if (!player.mouseInterface)
             {
                 player.noThrow = 2;
 

@@ -171,6 +171,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         public void OnTabOpen()
         {
+            Main.stackSplit = 600;
             RefreshPatternColorPickers();
             rocketCustomizationControlPanel.ReplaceChildWith(unlockableItemSlot, unlockableItemSlot = CreateUnlockableItemSlot());
         }

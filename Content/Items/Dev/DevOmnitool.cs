@@ -29,6 +29,7 @@ namespace Macrocosm.Content.Items.Dev
 
         public override bool? UseItem(Player player)
         {
+
             return true;
         }
     }

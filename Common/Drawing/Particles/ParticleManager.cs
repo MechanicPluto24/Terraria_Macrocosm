@@ -209,7 +209,7 @@ namespace Macrocosm.Common.Drawing.Particles
             if (alphaBlendDrawers.Count > 0)
             {
                 Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, default, default, RasterizerState.CullNone, default, Main.Transform);
 
                 foreach (var particle in alphaBlendDrawers)
                 {
@@ -218,7 +218,7 @@ namespace Macrocosm.Common.Drawing.Particles
                 }
 
                 Main.spriteBatch.End();
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, RasterizerState.CullNone, default, Main.Transform);
             }
 
             foreach (Particle particle in Particles)
@@ -235,7 +235,7 @@ namespace Macrocosm.Common.Drawing.Particles
             SpriteBatch spriteBatch = Main.spriteBatch;
             state1.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawParticles(ParticleDrawLayer.BeforeNPCs);
 
@@ -246,26 +246,26 @@ namespace Macrocosm.Common.Drawing.Particles
 
             state2.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawParticles(ParticleDrawLayer.AfterNPCs);
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
         }
-
+            
         private void DrawParticles_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawParticles(ParticleDrawLayer.BeforeProjectiles);
 
             spriteBatch.End();
 
-            orig(self);
+            orig(self); 
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawParticles(ParticleDrawLayer.AfterProjectiles);
 
@@ -278,7 +278,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
             state3.SaveState(spriteBatch);
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawParticles(ParticleDrawLayer.BeforeTiles);
 
@@ -292,7 +292,7 @@ namespace Macrocosm.Common.Drawing.Particles
         {
             state4.SaveState(spriteBatch);
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, default, default, Main.GameViewMatrix.ZoomMatrix);
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, RasterizerState.CullNone, default, Main.Transform);
 
             DrawParticles(ParticleDrawLayer.PostInterface);
 

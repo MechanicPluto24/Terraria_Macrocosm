@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +15,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseDeskMonitor")]
-    public class IndustrialDeskMonitor : ModTile
+    public class IndustrialDeskMonitor : ModTile, IToggleable
     {
         private static Asset<Texture2D> glowmask;
 
@@ -27,7 +29,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Origin = new Point16(1, 0);
-            TileObjectData.newTile.StyleHorizontal = false;
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleLineSkip = 7;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.addTile(Type);
@@ -35,9 +38,14 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
+
+            TileSets.RandomStyles[Type] = 2;
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialDeskMonitor>());
         }
 
-        public override void HitWire(int i, int j)
+        public void Toggle(int i, int j, bool skipWire = false)
         {
             int leftX = i - Main.tile[i, j].TileFrameX / 18 % 2;
             int topY = j - Main.tile[i, j].TileFrameY / 18 % 2;
@@ -51,7 +59,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                     else
                         Main.tile[x, y].TileFrameY -= 36;
 
-                    if (Wiring.running)
+                    if (skipWire && Wiring.running)
                         Wiring.SkipWire(x, y);
                 }
             }
@@ -60,19 +68,24 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                 NetMessage.SendTileSquare(-1, leftX, topY, 2, 2);
         }
 
+        public override void HitWire(int i, int j)
+        {
+            Toggle(i, j, skipWire: true);
+        }
+
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameY >= 18 * 2)
-            {
-                frameYOffset = 18 * 2 * Main.tileFrame[type];
-            }
+            if (tile.TileFrameY < 18 * 2)
+                frameYOffset = 18 * 2 * ((Main.tileFrame[type] + i / 2) % 6);
+            else
+                frameYOffset = 18 * 2 * 5;
         }
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
             int ticksPerFrame = 10;
-            int frameCount = 5;
+            int frameCount = 6;
             if (++frameCounter >= ticksPerFrame)
             {
                 frameCounter = 0;
@@ -84,10 +97,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameY >= 18 * 2)
+            if (tile.TileFrameX < 18 * 2 && tile.TileFrameY < 18 * 2)
             {
                 r = 0f;
-                g = 0.1f;
+                g = 0.25f;
                 b = 0f;
             }
         }

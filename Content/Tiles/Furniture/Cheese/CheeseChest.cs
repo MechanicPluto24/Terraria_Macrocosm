@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Main.tileShine[Type] = 1200;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
-            Main.tileOreFinderPriority[Type] = 500;
+
             TileID.Sets.HasOutlines[Type] = true;
             TileID.Sets.BasicChest[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
@@ -30,6 +30,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsAContainer[Type] = true;
             TileID.Sets.FriendlyFairyCanLureTo[Type] = true;
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
 
             DustType = ModContent.DustType<CheeseDust>();
             AdjTiles = [TileID.Containers];

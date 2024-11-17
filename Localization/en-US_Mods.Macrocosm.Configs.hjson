@@ -41,6 +41,11 @@ MacrocosmConfig: {
 		Label: Disable Silica Sand Generation
 		Tooltip: Disable the generation of Silica Sand underneath the Ocean, to avoid breaking other mods' biomes.
 	}
+
+	DisableOilShaleGeneration: {
+		Label: Disable Oil Shale Generation
+		Tooltip: ""
+	}
 }
 
 UnitSystemType: {

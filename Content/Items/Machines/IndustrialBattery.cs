@@ -9,6 +9,7 @@ namespace Macrocosm.Content.Items.Machines
 {
     public class IndustrialBattery : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false; //disabled till wiring rework
         public override void SetStaticDefaults()
         {
         }

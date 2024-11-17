@@ -18,13 +18,13 @@ namespace Macrocosm.Content.Items.Tools.Artemite
         {
             Item.damage = 55;
             Item.DamageType = DamageClass.Melee;
-            Item.width = 44;
-            Item.height = 22;
+            Item.width = 42;
+            Item.height = 24;
             Item.useTime = 2;
             Item.useAnimation = 15;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.channel = true;
-            Item.knockBack = 0;
+            Item.knockBack = 0.5f;
             Item.value = Item.sellPrice(gold: 8);
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.UseSound = SoundID.Item23;

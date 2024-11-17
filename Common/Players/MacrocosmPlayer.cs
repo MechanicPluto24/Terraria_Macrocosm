@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs.Environment;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
