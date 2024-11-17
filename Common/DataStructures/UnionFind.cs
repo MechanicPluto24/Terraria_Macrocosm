@@ -1,45 +1,93 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.DataStructures;
 
 namespace Macrocosm.Common.DataStructures
 {
-    public class UnionFind
+    public class UnionFind<T>
     {
-        private readonly Dictionary<Point16, Point16> parent = new();
+        private readonly Dictionary<T, T> parent = new();
+        private readonly Dictionary<T, int> rank = new();
 
-        public Point16 Find(Point16 p)
+        public void MakeSet(T item)
         {
-            if (!parent.TryGetValue(p, out Point16 value))
+            if (!parent.ContainsKey(item))
             {
-                parent[p] = p;
-                return p;
+                parent[item] = item;
+                rank[item] = 0;
             }
-            else if (value != p)
-            {
-                parent[p] = Find(value);
-            }
-            return parent[p];
         }
 
-        public void Union(Point16 a, Point16 b)
+        public T Find(T item)
         {
-            Point16 rootA = Find(a);
-            Point16 rootB = Find(b);
-            if (rootA != rootB)
+            if (!parent.TryGetValue(item, out T parentItem))
+            {
+                parent[item] = item;
+                rank[item] = 0;
+                return item;
+            }
+
+            if (!EqualityComparer<T>.Default.Equals(parentItem, item))
+            {
+                parent[item] = Find(parentItem);
+            }
+
+            return parent[item];
+        }
+
+        public void Union(T itemA, T itemB)
+        {
+            T rootA = Find(itemA);
+            T rootB = Find(itemB);
+
+            if (EqualityComparer<T>.Default.Equals(rootA, rootB))
+                return; 
+
+            // Union by Rank
+            int rankA = rank[rootA];
+            int rankB = rank[rootB];
+
+            if (rankA < rankB)
+            {
+                parent[rootA] = rootB;
+            }
+            else if (rankA > rankB)
             {
                 parent[rootB] = rootA;
             }
+            else
+            {
+                parent[rootB] = rootA;
+                rank[rootA]++;
+            }
         }
 
-        public bool Connected(Point16 a, Point16 b) => Find(a) == Find(b);
+        public bool Contains(T item)
+        {
+            return parent.ContainsKey(item);
+        }
+
+        public void Remove(T item)
+        {
+            if (!parent.TryGetValue(item, out T value))
+                return;
+
+            T itemParent = value;
+            foreach (var kvp in parent)
+            {
+                if (EqualityComparer<T>.Default.Equals(kvp.Value, item))
+                {
+                    parent[kvp.Key] = itemParent;
+                }
+            }
+
+            parent.Remove(item);
+            rank.Remove(item);
+        }
 
         public void Clear()
         {
             parent.Clear();
+            rank.Clear();
         }
     }
 }

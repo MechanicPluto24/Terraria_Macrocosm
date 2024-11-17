@@ -2,12 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Systems.Power
 {
     public class Circuit : IEnumerable<MachineTE>
     {
         private readonly HashSet<MachineTE> machines = new();
+        private readonly HashSet<Point16> wireRoots = new();
 
         public int NodeCount => machines.Count;
 
@@ -21,6 +23,29 @@ namespace Macrocosm.Common.Systems.Power
         public void Remove(MachineTE machine)
         {
             machines.Remove(machine);
+        }
+
+        public bool Contains(MachineTE machine)
+        {
+            return machines.Contains(machine);
+        }
+
+        public bool IsEmpty => machines.Count == 0;
+
+        public void AddWireRoot(Point16 root)
+        {
+            wireRoots.Add(root);
+        }
+
+        public bool ContainsWireRoot(Point16 root)
+        {
+            return wireRoots.Contains(root);
+        }
+
+        public void Merge(Circuit other)
+        {
+            machines.UnionWith(other.machines);
+            wireRoots.UnionWith(other.wireRoots);
         }
 
         public void Solve(int updateRate)

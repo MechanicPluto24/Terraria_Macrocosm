@@ -29,7 +29,6 @@ namespace Macrocosm.Content.Items.Dev
 
         public override bool? UseItem(Player player)
         {
-            CircuitSystem.SearchAllCircuits();
             return true;
         }
     }
