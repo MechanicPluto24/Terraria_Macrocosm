@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Machines
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
 
-        public override void TogglePowerStateFrame(int i, int j)
+        public override void ToggleStateFrame(int i, int j)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)

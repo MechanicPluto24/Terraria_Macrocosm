@@ -21,9 +21,14 @@ namespace Macrocosm.Common.Systems.Power
         public override void UpdatePowerState()
         {
             if (PoweredOn && InputPower < RequiredPower)
-                PowerOff();
+                TurnOff();
             else if (!PoweredOn && InputPower >= RequiredPower)
-                PowerOn();
+                TurnOn();
+        }
+
+        public override void OnPowerDisconnected()
+        {
+            InputPower = 0;
         }
 
         public override Color DisplayColor => Color.Orange;

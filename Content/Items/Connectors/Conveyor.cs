@@ -34,11 +34,11 @@ namespace Macrocosm.Content.Items.Connectors
             if (player.whoAmI == Main.myPlayer)
             {
                 Point targetCoords = player.TargetCoords();
-                ConnectorData data = CustomConnectorSystem.Map[player.TargetCoords()];
+                ConnectorData data = ConnectorSystem.Map[player.TargetCoords()];
 
                 if (!data.Conveyor)
                 {
-                    CustomConnectorSystem.PlaceConnector(targetCoords, ConnectorType.Conveyor);
+                    ConnectorSystem.PlaceConnector(targetCoords, ConnectorType.Conveyor);
                     return true;
                 }
 

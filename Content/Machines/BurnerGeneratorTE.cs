@@ -57,9 +57,6 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            CanAutoPowerOn = false;
-            CanAutoPowerOff = false;
-
             if (PoweredOn)
             {
                 if (ConsumedItem.type != ItemID.None)
@@ -98,7 +95,7 @@ namespace Macrocosm.Content.Machines
                     if (!fuelFound)
                     {
                         GeneratedPower = 0;
-                        PowerOff();
+                        TurnOff();
                     }
                 }
             }

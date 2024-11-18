@@ -20,14 +20,9 @@ namespace Macrocosm.Common.Systems.Power
         public override void UpdatePowerState()
         {
             if (PoweredOn && GeneratedPower <= 0f)
-                PowerOff();
+                TurnOff();
             else if (!PoweredOn && GeneratedPower > 0f)
-                PowerOn();
-        }
-
-        public override void MachineUpdate()
-        {
-            base.MachineUpdate();
+                TurnOn();
         }
 
         public override Color DisplayColor => Color.LimeGreen;

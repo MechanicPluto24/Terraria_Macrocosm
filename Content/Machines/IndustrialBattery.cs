@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Machines
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
 
-        public override void TogglePowerStateFrame(int i, int j)
+        public override void ToggleStateFrame(int i, int j)
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameY < (Height * 18))

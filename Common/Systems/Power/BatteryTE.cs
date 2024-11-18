@@ -25,9 +25,9 @@ namespace Macrocosm.Common.Systems.Power
         public override void UpdatePowerState()
         {
             if (PoweredOn && StoredEnergy <= 0f)
-                PowerOff();
+                TurnOff();
             else if (!PoweredOn && StoredEnergy > 0f)
-                PowerOn();
+                TurnOn();
         }
 
         public override Color DisplayColor => Color.Cyan;
