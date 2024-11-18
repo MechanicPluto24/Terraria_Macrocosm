@@ -33,19 +33,6 @@ namespace Macrocosm.Common.Systems
                 Earth.WorldSize = WorldSize.Current;
         }
 
-        // TODO: check this mess
-        private static void UpdateTileEntitiesOnClient()
-        {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-                return;
-
-            foreach (var tileEntity in TileEntity.ByID.Values)
-            {
-                if (tileEntity is IClientUpdateable clientUpdateable)
-                    clientUpdateable.ClientUpdate();
-            }
-        }
-
         private static void RandomTileUpdate()
         {
             MacrocosmSubworld current = MacrocosmSubworld.Current;
@@ -218,8 +205,6 @@ namespace Macrocosm.Common.Systems
 
         public override void PostUpdateEverything()
         {
-            UpdateTileEntitiesOnClient();
-
             if (SubworldSystem.AnyActive<Macrocosm>())
                 MacrocosmSubworld.Current.PostUpdateEverything();
         }

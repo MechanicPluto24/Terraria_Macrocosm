@@ -386,19 +386,19 @@ namespace Macrocosm.Common.Utils
 
         public static bool HasWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
 
-        public static bool HasWire(this Tile tile, VanillaWireType wireType)
+        public static bool HasWire(this Tile tile, WireType wireType)
         {
             return wireType switch
             {
-                VanillaWireType.Red => tile.RedWire,
-                VanillaWireType.Blue => tile.BlueWire,
-                VanillaWireType.Green => tile.GreenWire,
-                VanillaWireType.Yellow => tile.YellowWire,
+                WireType.Red => tile.RedWire,
+                WireType.Blue => tile.BlueWire,
+                WireType.Green => tile.GreenWire,
+                WireType.Yellow => tile.YellowWire,
                 _ => false
             };
         }
 
-        public static IEnumerable<Point16> GetWireNeighbors(int x, int y, VanillaWireType? wireType = null)
+        public static IEnumerable<Point16> GetWireNeighbors(int x, int y, WireType? wireType = null)
         {
             Point16[] directions =
             [

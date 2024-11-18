@@ -1,17 +1,14 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Systems.Connectors;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Wires
+namespace Macrocosm.Content.Items.Connectors
 {
-    /// <summary> Custom wire, currently unused and disabled </summary>
-    public class CopperWire : ModItem
+    public class Conveyor : ModItem
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
@@ -37,11 +34,11 @@ namespace Macrocosm.Content.Items.Wires
             if (player.whoAmI == Main.myPlayer)
             {
                 Point targetCoords = player.TargetCoords();
-                WireData wireData = CustomWiring.Map[player.TargetCoords()];
+                ConnectorData data = CustomConnectorSystem.Map[player.TargetCoords()];
 
-                if (!wireData.CopperWire)
+                if (!data.Conveyor)
                 {
-                    CustomWiring.PlaceWire(targetCoords, WireType.Copper);
+                    CustomConnectorSystem.PlaceConnector(targetCoords, ConnectorType.Conveyor);
                     return true;
                 }
 

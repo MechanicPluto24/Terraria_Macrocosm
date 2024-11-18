@@ -141,11 +141,14 @@ namespace Macrocosm.Common.Subworlds
             SubworldSystem.noReturn = false;
 
             UpdateTime();
+
+            UpdateWeather();
+            UpdateInvasions();
+
             UpdateWiring();
             UpdateTileEntities();
             UpdateLiquids();
-            UpdateInvasions();
-            UpdateWeather();
+
             CreditsRollEvent.UpdateTime();
         }
 
@@ -246,7 +249,11 @@ namespace Macrocosm.Common.Subworlds
         {
             // TODO: make these per-subworld if using Terraria's weather system for future planets
             Main.numClouds = 0;
+
             Main.windSpeedCurrent = 0;
+            Main.windSpeedTarget = 0;
+            Main.windCounter = 0;
+
             Main.weatherCounter = 0;
 
             Main.slimeRain = false;

@@ -12,6 +12,7 @@ using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Ores;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -210,6 +211,12 @@ namespace Macrocosm.Content.Machines
 
                     break;
             }
+        }
+
+        public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
+        {
+            basePosition.X -= 12;
+            base.DrawMachinePowerInfo(spriteBatch, basePosition, lightColor);
         }
 
         public override void NetSend(BinaryWriter writer)
