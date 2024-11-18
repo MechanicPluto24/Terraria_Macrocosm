@@ -10,6 +10,7 @@ using Terraria.GameContent;
 using Terraria;
 using Terraria.Localization;
 using Terraria.UI.Chat;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -31,15 +32,19 @@ namespace Macrocosm.Common.Systems.Power
 
         public override Color DisplayColor => Color.Cyan;
         public override string GetPowerInfo() => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Battery").Format($"{StoredEnergy:F2}", $"{EnergyCapacity:F2}")}";
-        public override void DrawMachinePowerInfo(SpriteBatch spriteBatch)
+        public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
         {
-            Vector2 position = Position.ToWorldCoordinates() - Main.screenPosition;
             string active = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Energy").Format($"{StoredEnergy:F0}");
             string total = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Energy").Format($"{EnergyCapacity:F0}");
             string line = new('_', Math.Max(active.Length, total.Length) / 2);
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, active, position - new Vector2(active.Length, 50), DisplayColor, 0f, Vector2.Zero, Vector2.One);
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, line, position - new Vector2(line.Length + 5, 48), DisplayColor, 0f, Vector2.Zero, Vector2.One);
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, total, position - new Vector2(total.Length, 26), DisplayColor, 0f, Vector2.Zero, Vector2.One);
+
+            Vector2 textSize = FontAssets.MouseText.Value.MeasureString(total);
+            Vector2 position = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (textSize.X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
+            Color color = Utility.Colorize(DisplayColor, lightColor);
+
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, active, position - new Vector2(active.Length, 24), color, 0f, Vector2.Zero, Vector2.One);
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, line, position - new Vector2(line.Length + 5, 22), color, 0f, Vector2.Zero, Vector2.One);
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, total, position - new Vector2(total.Length, 0), color, 0f, Vector2.Zero, Vector2.One);
         }
     }
 }

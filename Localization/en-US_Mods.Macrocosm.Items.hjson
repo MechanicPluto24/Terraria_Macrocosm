@@ -2716,3 +2716,13 @@ ClydersWings: {
 	DisplayName: Clyders Wings
 	Tooltip: ""
 }
+
+Schroteri: {
+	DisplayName: Schroteri
+	Tooltip: ""
+}
+
+Conveyor: {
+	DisplayName: Conveyor
+	Tooltip: ""
+}

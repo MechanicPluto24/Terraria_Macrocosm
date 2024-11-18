@@ -12,7 +12,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Common.Systems.Power
 {
 
-    public abstract class MachineTE : ModTileEntity, IClientUpdateable
+    public abstract partial class MachineTE : ModTileEntity
     {
         public abstract MachineTile MachineTile { get; }
 
@@ -38,7 +38,9 @@ namespace Macrocosm.Common.Systems.Power
 
         public virtual string GetPowerInfo() => "";
 
-        public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch) { }
+        /// <summary> Draw the power info text above the machine </summary>
+        /// <param name="basePosition"> The top left in world coordinates </param>
+        public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) { }
 
         public void PowerOn()
         {
@@ -64,13 +66,18 @@ namespace Macrocosm.Common.Systems.Power
                 //    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
             }
 
+            BuildCircuit();
             MachineUpdate();
             UpdatePowerState();
         }
 
-        public void ClientUpdate()
+        public override void PreGlobalUpdate()
         {
-            Update();
+        }
+
+        public override void PostGlobalUpdate()
+        {
+            SolveAllCircuits();
         }
 
         public override void OnKill()
@@ -101,12 +108,6 @@ namespace Macrocosm.Common.Systems.Power
             }
 
             int placedEntity = Place(x, y);
-
-            if (ByID.TryGetValue(placedEntity, out TileEntity tileEntity) && tileEntity is MachineTE machine)
-            {
-                CircuitSystem.HandleMachinePlacement(machine);
-            }
-
             return placedEntity;
         }
 
@@ -115,23 +116,6 @@ namespace Macrocosm.Common.Systems.Power
             if (Main.netMode == NetmodeID.Server)
             {
                 NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
-                CircuitSystem.HandleMachineRemoval(this);
-            }
-        }
-
-        public virtual IEnumerable<Point16> GetWirePositions()
-        {
-            int startX = Position.X;
-            int startY = Position.Y;
-            int width = MachineTile.Width;
-            int height = MachineTile.Height;
-
-            for (int x = startX; x < startX + width; x++)
-            {
-                for (int y = startY; y < startY + height; y++)
-                {
-                    yield return new Point16(x, y);
-                }
             }
         }
     }
