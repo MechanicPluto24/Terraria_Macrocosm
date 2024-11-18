@@ -19,9 +19,6 @@ namespace Macrocosm.Common.Systems.Power
         public virtual bool Operating => MachineTile.IsOperatingFrame(Position.X, Position.Y);
         public virtual bool PoweredOn => MachineTile.IsPoweredOnFrame(Position.X, Position.Y);
 
-        public bool CanAutoPowerOn { get; set; } = true;
-        public bool CanAutoPowerOff { get; set; } = true;
-
         public virtual Color DisplayColor { get; } = Color.White;
 
         /// <summary> Things to happen before the first update tick. </summary>
@@ -33,8 +30,11 @@ namespace Macrocosm.Common.Systems.Power
         /// <summary> Used for power state checking </summary>
         public virtual void UpdatePowerState() { }
 
-        public virtual void OnPowerOn() { }
-        public virtual void OnPowerOff() { }
+        /// <summary> Used for updating values and things to happen when disconnected from a <see cref="WireCircuit"/> </summary>
+        public virtual void OnPowerDisconnected() { }
+
+        public virtual void OnTurnedOn() { }
+        public virtual void OnTurnedOff() { }
 
         public virtual string GetPowerInfo() => "";
 
@@ -42,16 +42,21 @@ namespace Macrocosm.Common.Systems.Power
         /// <param name="basePosition"> The top left in world coordinates </param>
         public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) { }
 
-        public void PowerOn()
+        public void TurnOn()
         {
-            MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
-            OnPowerOn();
+            MachineTile.ToggleStateFrame(Position.X, Position.Y);
+            OnTurnedOn();
         }
 
-        public void PowerOff()
+        public void TurnOff()
         {
-            MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
-            OnPowerOff();
+            MachineTile.ToggleStateFrame(Position.X, Position.Y);
+            OnTurnedOff();
+        }
+
+        public override void PreGlobalUpdate()
+        {
+            BuildCircuits();
         }
 
         private bool ranFirstUpdate = false;
@@ -66,18 +71,13 @@ namespace Macrocosm.Common.Systems.Power
                 //    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
             }
 
-            BuildCircuit();
             MachineUpdate();
             UpdatePowerState();
         }
 
-        public override void PreGlobalUpdate()
-        {
-        }
-
         public override void PostGlobalUpdate()
         {
-            SolveAllCircuits();
+            SolveCircuits();
         }
 
         public override void OnKill()

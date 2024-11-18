@@ -13,11 +13,10 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
-
-    public class CustomConnectorSystem : ModSystem
+    public class ConnectorSystem : ModSystem
     {
-        public static CustomConnectorSystem Instance => ModContent.GetInstance<CustomConnectorSystem>();
-        public static CustomConnectorSystem Map => Instance;
+        public static ConnectorSystem Instance => ModContent.GetInstance<ConnectorSystem>();
+        public static ConnectorSystem Map => Instance;
 
         private Dictionary<Point16, ConnectorData> map = new();
 

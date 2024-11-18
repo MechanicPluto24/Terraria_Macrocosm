@@ -91,14 +91,14 @@ namespace Macrocosm.Common.Subworlds
                 {
                     if (SubworldSystem.AnyActive<Macrocosm>())
                     {
-                        if (!HasVisitedSubworld(MacrocosmSubworld.CurrentID) || MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
+                        if (!HasVisitedSubworld(MacrocosmSubworld.CurrentID) || ClientConfig.Instance.AlwaysDisplayTitleCards)
                             TitleCard.Start();
 
                         visitedSubworlds.Add(MacrocosmSubworld.CurrentID);
                     }
                     else
                     {
-                        if (MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
+                        if (ClientConfig.Instance.AlwaysDisplayTitleCards)
                             TitleCard.Start();
                     }
                 }

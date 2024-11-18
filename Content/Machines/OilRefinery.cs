@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Machines
             AddMapEntry(new Color(121, 107, 91), CreateMapEntryName());
         }
 
-        public override void TogglePowerStateFrame(int i, int j)
+        public override void ToggleStateFrame(int i, int j)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)

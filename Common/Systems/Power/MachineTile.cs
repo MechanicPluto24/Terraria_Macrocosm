@@ -11,7 +11,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public virtual bool IsPoweredOnFrame(int i, int j) => false;
         public virtual bool IsOperatingFrame(int i, int j) => IsPoweredOnFrame(i, j);
-        public virtual void TogglePowerStateFrame(int i, int j) { }
+        public virtual void ToggleStateFrame(int i, int j) { }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {

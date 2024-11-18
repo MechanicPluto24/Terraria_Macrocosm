@@ -18,9 +18,9 @@ namespace Macrocosm.Common.Global.Items
             if (targetTile.AnyWire() || targetTile.HasActuator)
                 return null;
 
-            if (CustomConnectorSystem.Map[targetCoords].AnyWire)
+            if (ConnectorSystem.Map[targetCoords].AnyWire)
             {
-                CustomConnectorSystem.CutWire(targetCoords);
+                ConnectorSystem.CutWire(targetCoords);
                 return true;
             }
 
