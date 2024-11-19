@@ -35,18 +35,14 @@ namespace Macrocosm.Content.Skies.Moon
         private readonly Asset<Texture2D> earthBodyFlat;
         private readonly Asset<Texture2D> earthAtmo;
 
-        private readonly Asset<Texture2D> nebulaYellow;
-        private readonly Asset<Texture2D> nebulaRinged;
-        private readonly Asset<Texture2D> nebulaMythril;
-        private readonly Asset<Texture2D> nebulaBlue;
-        private readonly Asset<Texture2D> nebulaGreen;
-        private readonly Asset<Texture2D> nebulaPink;
-        private readonly Asset<Texture2D> nebulaOrange;
-        private readonly Asset<Texture2D> nebulaPurple;
-        private readonly Asset<Texture2D> nebulaNormal;
+        private readonly Asset<Texture2D>[] nebulaTextures = new Asset<Texture2D>[Main.maxMoons];
+        private readonly RawTexture[] nebulaRawTextures = new RawTexture[Main.maxMoons];
 
         private const float fadeOutTimeDawn = 7200f; //  4:30 -  6:30: nebula and night stars dim
         private const float fadeInTimeDusk = 46800f; // 17:30 - 19:30: nebula and night stars brighten
+
+        private bool shouldRefreshNebulaStars = true;
+        private int lastMoonType = 0;
 
         private const string Path = "Macrocosm/Content/Skies/Moon/";
 
@@ -79,15 +75,24 @@ namespace Macrocosm.Content.Skies.Moon
             earth.ConfigureBackRadialShader = ConfigureEarthAtmoShader;
             earth.ConfigureBodySphericalShader = ConfigureEarthBodyShader;
 
-            nebulaYellow = ModContent.Request<Texture2D>(Path + "NebulaYellow");
-            nebulaRinged = ModContent.Request<Texture2D>(Path + "NebulaRinged");
-            nebulaMythril = ModContent.Request<Texture2D>(Path + "NebulaMythril");
-            nebulaBlue = ModContent.Request<Texture2D>(Path + "NebulaBlue");
-            nebulaGreen = ModContent.Request<Texture2D>(Path + "NebulaGreen");
-            nebulaPink = ModContent.Request<Texture2D>(Path + "NebulaPink");
-            nebulaOrange = ModContent.Request<Texture2D>(Path + "NebulaOrange");
-            nebulaPurple = ModContent.Request<Texture2D>(Path + "NebulaPurple");
-            nebulaNormal = ModContent.Request<Texture2D>(Path + "NebulaNormal");
+            string[] nebulaNames =
+            [
+                "NebulaNormal",
+                "NebulaYellow",
+                "NebulaRinged",
+                "NebulaMythril",
+                "NebulaBlue",
+                "NebulaGreen",
+                "NebulaPink",
+                "NebulaOrange",
+                "NebulaPurple"
+            ];
+
+            for (int i = 0; i < Main.maxMoons; i++)
+                nebulaTextures[i] = ModContent.Request<Texture2D>($"{Path}{nebulaNames[i]}", mode);
+
+            for (int i = 0; i < Main.maxMoons; i++)
+                nebulaRawTextures[i] = RawTexture.FromTexture2D(nebulaTextures[i].Value);
         }
 
         public void Load(Mod mod)
@@ -102,22 +107,12 @@ namespace Macrocosm.Content.Skies.Moon
 
         public override void Reset()
         {
-            starsDay.Clear();
-            starsNight.Clear();
-            active = false;
         }
 
         public override bool IsActive() => active;
 
         public override void Activate(Vector2 position, params object[] args)
         {
-            starsDay.SpawnStars(120, baseScale: 1.4f, twinkleFactor: 0.05f);
-            starsNight.SpawnStars(650, baseScale: 0.8f, twinkleFactor: 0.05f);
-
-            MacrocosmStar mars = starsDay.RandStar(); // :) 
-            mars.OverrideColor(new Color(224, 137, 8, 220));
-            mars.Scale *= 1.4f;
-
             intensity = 0.002f;
             active = true;
         }
@@ -128,6 +123,7 @@ namespace Macrocosm.Content.Skies.Moon
             starsDay.Clear();
             starsNight.Clear();
             active = false;
+            shouldRefreshNebulaStars = true;
         }
 
         public override float GetCloudAlpha() => 0f;
@@ -200,15 +196,17 @@ namespace Macrocosm.Content.Skies.Moon
                     Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f) * intensity);
 
                 float nebulaBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.17f, 0.45f);
-                float nightStarBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0.1f, 0.8f);
+                float nightStarBrightness = ComputeBrightness(fadeOutTimeDawn, fadeInTimeDusk, 0f, 0.8f);
 
                 DrawMoonNebula(nebulaBrightness);
+
+                UpdateNebulaStars();
 
                 starsDay.DrawAll(spriteBatch);
                 starsNight.DrawAll(spriteBatch, nightStarBrightness);
 
                 sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
-                
+
                 if (EventSystem.DemonSun && Main.dayTime)
                     DrawDemonSunEffects(spriteBatch, sun);
 
@@ -218,6 +216,31 @@ namespace Macrocosm.Content.Skies.Moon
                 //    DrawDemonSunFrontEffects(spriteBatch, sun);
 
                 earth.Draw(spriteBatch);
+            }
+        }
+
+        private void UpdateNebulaStars()
+        {
+            if(lastMoonType != Main.moonType)
+                shouldRefreshNebulaStars = true;
+
+            lastMoonType = Main.moonType;
+
+            if (shouldRefreshNebulaStars)
+            {
+                starsDay.Clear();
+                starsNight.Clear();
+
+                starsDay.SpawnStars(120, baseScale: 1.4f, twinkleFactor: 0.05f);
+                starsNight.SpawnStars(650, baseScale: 0.8f, twinkleFactor: 0.05f);
+
+                MacrocosmStar mars = starsDay.RandStar(); // :) 
+                mars?.OverrideColor(new Color(224, 137, 8, 220));
+
+                starsDay?.SpawnStars(densityMap: nebulaRawTextures[Main.moonType], 600, null, baseScale: 0.6f, twinkleFactor: 0.05f);
+                starsNight?.SpawnStars(densityMap: nebulaRawTextures[Main.moonType], 2000, null, baseScale: 0.6f, twinkleFactor: 0.05f);
+
+                shouldRefreshNebulaStars = false;
             }
         }
 
@@ -249,35 +272,28 @@ namespace Macrocosm.Content.Skies.Moon
 
         private void DrawMoonNebula(float brightness)
         {
-            Texture2D nebula = Main.moonType switch
-            {
-                1 => nebulaYellow.Value,
-                2 => nebulaRinged.Value,
-                3 => nebulaMythril.Value,
-                4 => nebulaBlue.Value,
-                5 => nebulaGreen.Value,
-                6 => nebulaPink.Value,
-                7 => nebulaOrange.Value,
-                8 => nebulaPurple.Value,
-                _ => nebulaNormal.Value
-            };
+            Texture2D nebula = nebulaTextures[Main.moonType].Value;
+            Color nebulaColor = (Color.White * brightness).WithAlpha(0);
 
-            Color nebulaColor = (Color.White * brightness).WithOpacity(0f);
-
-            Main.spriteBatch.Draw(nebula, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), nebulaColor);
+            float bgTopY = (float)(-(Main.screenPosition.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 50.0);
+            Main.spriteBatch.Draw(nebula, new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight), nebulaColor);
         }
 
         public override void Update(GameTime gameTime)
         {
             if (!SubworldSystem.IsActive<Subworlds.Moon>())
                 active = false;
-            var MoonInstance = ModContent.GetInstance<Content.Subworlds.Moon>();
+
             sun.Color = new Color(255, 255, 255) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
 
-            float intensity = MoonInstance.DemonSunVisualIntensity;
-            earth.Color = new Color(255, (int)(255 * (1f - (intensity * 0.6f))), (int)(255 * (1f - (intensity * 0.6f)))); // colorize Earth here
+            float intensity = Subworlds.Moon.Instance.DemonSunVisualIntensity;
+            earth.Color = new Color(255, (int)(255 * (1f - (intensity * 0.6f))), (int)(255 * (1f - (intensity * 0.6f))));  
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
             SetEarthTextures();
+
+            float bgTopY = (float)(-(Main.screenPosition.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 50.0);
+            starsDay.CommonOffset = new Vector2(0, bgTopY);
+            starsNight.CommonOffset = new Vector2(0, bgTopY);
         }
 
         private void SetEarthTextures()

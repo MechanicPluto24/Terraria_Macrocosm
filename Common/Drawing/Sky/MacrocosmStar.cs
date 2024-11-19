@@ -79,7 +79,7 @@ namespace Macrocosm.Common.Drawing.Sky
             colorOverridden = true;
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset = default)
         {
             if(position.X > 0 && position.X < Main.screenWidth && position.Y > 0 && position.Y < Main.screenHeight)
             {
@@ -98,7 +98,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     }
                 }
 
-                spriteBatch.Draw(texture.Value, position, null, color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
+                spriteBatch.Draw(texture.Value, position + offset, null, color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
             }
         }
 
