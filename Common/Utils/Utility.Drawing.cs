@@ -23,6 +23,29 @@ namespace Macrocosm.Common.Utils
 
         public static Rectangle ScreenRectangle => new(0, 0, Main.screenWidth, Main.screenHeight);
 
+        public static void Draw(
+           this SpriteBatch spriteBatch,
+           Texture2D texture,
+           System.Drawing.RectangleF destinationRectangle,
+           Color color
+        )
+        {
+            Vector2 position = new(destinationRectangle.X, destinationRectangle.Y);
+            Vector2 scale = new(destinationRectangle.Width / texture.Width, destinationRectangle.Height / texture.Height);
+            Vector2 origin = Vector2.Zero;
+
+            spriteBatch.Draw(
+                texture,
+                position,
+                null,
+                color,
+                0.0f,
+                origin,
+                scale,
+                SpriteEffects.None,
+                0.0f
+            );
+        }
 
         /// <summary>
         /// Draw a MagicPixel trail behind a projectile, with length based on the trail cache length  

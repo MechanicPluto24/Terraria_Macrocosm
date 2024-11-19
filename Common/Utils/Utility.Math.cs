@@ -88,6 +88,17 @@ namespace Macrocosm.Common.Utils
         #endregion
 
         #region Rectangles
+
+        public static System.Drawing.RectangleF ToRectangleF(this Rectangle rectangle)
+        {
+            return new System.Drawing.RectangleF(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
+        }
+
+        public static Rectangle ToRectangle(this System.Drawing.RectangleF rectangle)
+        {
+            return new Rectangle((int)rectangle.X, (int)rectangle.Y, (int)rectangle.Width, (int)rectangle.Height);
+        }
+
         public static Rectangle ShrinkRectangle(this Rectangle rectangle, int shrinkAmount)
         {
             int newWidth = rectangle.Width - (2 * shrinkAmount);
