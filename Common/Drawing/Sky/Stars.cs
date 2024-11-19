@@ -1,3 +1,5 @@
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -12,6 +14,7 @@ namespace Macrocosm.Common.Drawing.Sky
     {
         private readonly List<MacrocosmStar> stars = new();
 
+        public Vector2 CommonOffset { get; set; } = Vector2.Zero;
         public Vector2? CommonVelocity { get; set; } = null;
 
         public int Count => stars.Count;
@@ -19,7 +22,7 @@ namespace Macrocosm.Common.Drawing.Sky
         public void Clear() => stars.Clear();
 
         public MacrocosmStar this[int index] => stars[index];
-        public MacrocosmStar RandStar() => this[Main.rand.Next(Count - 1)];
+        public MacrocosmStar RandStar() => Count > 0 ? this[Main.rand.Next(Count - 1)] : null;
 
         public Stars()
         {
@@ -55,6 +58,42 @@ namespace Macrocosm.Common.Drawing.Sky
 
             spawningDone = true;
         }
+
+        public void SpawnStars(RawTexture densityMap, int count, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
+        {
+            Rectangle spawnArea = area ?? new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
+
+            int starsSpawned = 0;
+            int maxAttempts = count * 10; 
+            int attempts = 0;
+
+            while (starsSpawned < count && attempts < maxAttempts)
+            {
+                attempts++;
+
+                int x = Main.rand.Next(spawnArea.Left, spawnArea.Right + 1);
+                int y = Main.rand.Next(spawnArea.Top, spawnArea.Bottom + 1);
+
+                float mapX = Terraria.Utils.Remap(x, spawnArea.Left, spawnArea.Right, 0, densityMap.Width - 1);
+                float mapY = Terraria.Utils.Remap(y, spawnArea.Top, spawnArea.Bottom, 0, densityMap.Height - 1);
+
+                int clampedMapX = Math.Clamp((int)mapX, 0, densityMap.Width - 1);
+                int clampedMapY = Math.Clamp((int)mapY, 0, densityMap.Height - 1);
+
+                Color pixelColor = densityMap[clampedMapX, clampedMapY];
+                float brightness = pixelColor.GetBrightness();
+
+                if (Main.rand.NextFloat(1f) <= brightness)
+                {
+                    Vector2 position = new(x, y); 
+                    stars.Add(new MacrocosmStar(position, baseScale, twinkleFactor));
+                    starsSpawned++;
+                }
+            }
+
+            spawningDone = true;
+        }
+
 
         public void SpawnStarsCelled(int minStars, int maxStars, bool falling = false, float baseScale = 1f, float twinkleFactor = 0.4f)
         {
@@ -98,7 +137,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     star.Velocity = CommonVelocity.Value;
 
                 star.Update();
-                star.Draw(spriteBatch);
+                star.Draw(spriteBatch, CommonOffset);
             }
         }
 
@@ -118,7 +157,7 @@ namespace Macrocosm.Common.Drawing.Sky
                     star.Velocity = CommonVelocity.Value;
 
                 star.Update();
-                star.Draw(spriteBatch);
+                star.Draw(spriteBatch, CommonOffset);
             }
         }
 

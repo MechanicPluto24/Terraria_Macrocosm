@@ -15,6 +15,8 @@ namespace Macrocosm.Common.DataStructures
         public readonly int Height = Height;
 
         public Color this[int index] => Data[index];
+        public Color this[int x, int y] => Data[y * Width + x];
+
         public int Length => Data.Length;
 
         public static RawTexture FromStream(Stream stream)
