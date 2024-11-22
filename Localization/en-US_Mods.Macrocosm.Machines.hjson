@@ -7,6 +7,12 @@ BurnerGenerator: {
 	HullHeatImperial: Hull Heat: {0}°F
 }
 
+KeroseneGenerator: {
+	DisplayName: Kerosene Generator
+	HullHeatMetric: Hull Heat: {0}°C
+	HullHeatImperial: Hull Heat: {0}°F
+}
+
 Common: {
 	ConsumedPower: Consumed Power: {0}kW
 	GeneratedPower: Generated Power: {0}kW
