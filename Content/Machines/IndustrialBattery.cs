@@ -42,13 +42,27 @@ namespace Macrocosm.Content.Machines
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
 
-        public override void ToggleStateFrame(int i, int j)
+        public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
-            Tile tile = Main.tile[i, j];
-            if (tile.TileFrameY < (Height * 18))
-                tile.TileFrameY += (short)(Height * 18);
-            else
-                tile.TileFrameY -= (short)(Height * 18);
+            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            for (int x = origin.X; x < origin.X + Width; x++)
+            {
+                for (int y = origin.Y; y < origin.Y + Height; y++)
+                {
+                    Tile tile = Main.tile[x, y];
+
+                    if (IsPoweredOnFrame(x, y))
+                        tile.TileFrameY -= (short)(Height * 18);
+                    else
+                        tile.TileFrameY += (short)(Height * 18);
+
+                    if (skipWire && Wiring.running)
+                        Wiring.SkipWire(x, y);
+                }
+            }
+
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)

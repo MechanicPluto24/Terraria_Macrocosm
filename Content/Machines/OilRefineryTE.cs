@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Machines
         private int fillTimer;
         private const int maxFillTimer = 60;
 
-        public bool CanRefine => Operating && InputTankAmount > 0f && OutputTankAmount < ResultTankCapacity;
+        public bool CanRefine => PoweredOn && InputTankAmount > 0f && OutputTankAmount < ResultTankCapacity;
 
         public void StartRefining()
         {
@@ -81,7 +81,7 @@ namespace Macrocosm.Content.Machines
             {
                 Item inputItem = Inventory[i];
                 LiquidExtractData data = ItemSets.LiquidExtractData[inputItem.type];
-                if (Operating && InputTankAmount < SourceTankCapacity && data.Valid)
+                if (PoweredOn && InputTankAmount < SourceTankCapacity && data.Valid)
                 {
                     inputExtractTimer++;
                     if (inputExtractTimer >= maxInputExtractTimer)
@@ -162,6 +162,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetSend(BinaryWriter writer)
         {
+            base.NetSend(writer);
+
             TagIO.Write(Inventory.SerializeData(), writer);
 
             writer.Write(InputTankAmount);
@@ -170,6 +172,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetReceive(BinaryReader reader)
         {
+            base.NetReceive(reader);
+
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
@@ -179,6 +183,8 @@ namespace Macrocosm.Content.Machines
 
         public override void SaveData(TagCompound tag)
         {
+            base.SaveData(tag);
+
             tag[nameof(Inventory)] = Inventory;
 
             if (InputTankAmount != default)
@@ -190,6 +196,8 @@ namespace Macrocosm.Content.Machines
 
         public override void LoadData(TagCompound tag)
         {
+            base.LoadData(tag);
+
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 

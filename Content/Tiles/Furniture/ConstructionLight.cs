@@ -10,7 +10,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-    public class ConstructionLight : ModTile, IToggleable
+    public class ConstructionLight : ModTile, IToggleableTile
     {
         public override void SetStaticDefaults()
         {
@@ -52,7 +52,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.ConstructionLight>(), 0, 1);
         }
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             int leftX = i - Main.tile[i, j].TileFrameX / 18 % 2;
             int topY = j - Main.tile[i, j].TileFrameY / 18 % 3;
@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Tiles.Furniture
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, skipWire: true);
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

@@ -2726,3 +2726,8 @@ Conveyor: {
 	DisplayName: Conveyor
 	Tooltip: ""
 }
+
+KeroseneGenerator: {
+	DisplayName: Kerosene Generator
+	Tooltip: ""
+}

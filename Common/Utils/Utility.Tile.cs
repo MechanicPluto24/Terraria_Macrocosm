@@ -213,39 +213,6 @@ namespace Macrocosm.Common.Utils
                 drawColor.Value, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f
             );
         }
-        public static void DrawTileExtraTextureWithOffset(int i, int j, SpriteBatch spriteBatch, Asset<Texture2D> texture, Vector2 drawOffset = default, Color? drawColor = null,float i2=0, float j2=0)
-        {
-            Tile tile = Main.tile[i, j];
-
-            if (!TileDrawing.IsVisible(tile))
-                return;
-
-            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
-
-            GetTileFrameOffset(i, j, out int addFrameX, out int addFrameY);
-
-            var data = TileObjectData.GetTileData(tile);
-            int tileSize = 16 + data.CoordinatePadding;
-            int width = data.CoordinateWidth;
-
-            if (tile.TileFrameY < 0)
-                return;
-
-            int height = data.CoordinateHeights[tile.TileFrameY / tileSize % data.Height];
-
-            drawOffset += new Vector2(data.DrawXOffset, data.DrawYOffset);
-
-            drawColor ??= Color.White;
-
-            Vector2 position = new Vector2(i, j) * 16 + zero + drawOffset+new Vector2((float)i2/10f,(float)j2/10f) - Main.screenPosition;
-
-            spriteBatch.Draw(
-                texture.Value,
-                position,
-                new Rectangle(tile.TileFrameX + addFrameX, tile.TileFrameY + addFrameY, width, height),
-                drawColor.Value, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f
-            );
-        }
 
         public static void TileRenderer_AddSpecialPoint(int x, int y, string tileCounterType)
         {

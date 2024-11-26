@@ -1,12 +1,11 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Content.Items.LiquidContainers;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
-using Macrocosm.Content.Items.LiquidContainers;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -26,32 +25,20 @@ namespace Macrocosm.Content.Machines
         protected float hullHeatProgress;
 
         /// <summary> The hull heat, in degrees Celsius </summary>
-        public float HullHeat => 1200f * HullHeatProgress;
+        public float HullHeat => 2400f * HullHeatProgress;
 
         /// <summary> The burning progress of the <see cref="ConsumedItem"/> </summary>
         public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)burnTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
         protected int burnTimer;
 
         /// <summary> The max power out that the Burner can have, at max <see cref="HullHeatProgress"/></summary>
-        public float MaxPower => 10f;
+        public float MaxPower => 15f;
 
         /// <summary> The rate at which <see cref="HullHeatProgress"/> changes. </summary>
         public float HullHeatRate => 0.0001f;
 
         /// <summary> The item currently being burned. </summary>
         public Item ConsumedItem { get; set; } = new(ItemID.None);
-        public override bool PoweredOn=>BurningOil();
-        public bool BurningOil(){
-            foreach (Item item in Inventory)
-                    {
-                        FuelData fuelData = ItemSets.FuelData[item.type];
-                        if (fuelData.Valid&&item.type==ModContent.ItemType<RocketFuelCanister>())
-                        {
-                            return true;
-                        }
-                    }
-            return false;
-        }
 
         public Inventory Inventory { get; set; }
         protected virtual int InventorySize => 1;
@@ -70,59 +57,81 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            if (PoweredOn)
+            if (!PoweredOn)
             {
-                if (ConsumedItem.type != ItemID.None)
-                {
-                    FuelData fuelData = ItemSets.FuelData[ConsumedItem.type];
-                    HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+                bool fuelFound = false;
 
-                    if (burnTimer++ >= fuelData.ConsumptionRate)
+                foreach (Item item in Inventory)
+                {
+                    if (item.stack <= 0)
+                        continue;
+
+                    var fuelData = ItemSets.FuelData[item.type];
+                    if (fuelData.Valid && item.type == ModContent.ItemType<RocketFuelCanister>())
                     {
-                        burnTimer = 0;
-                        ConsumedItem.TurnToAir(fullReset: true);
+                        fuelFound = true;
+                        break;
                     }
                 }
-                else
+
+                if (fuelFound && !ManuallyTurnedOff)
+                {
+                    TurnOn(automatic: true);
+                }
+            }
+
+            if (ConsumedItem.type == ItemID.None)
+            {
+                if (PoweredOn)
                 {
                     burnTimer = 0;
-                    bool fuelFound = false;
-
                     foreach (Item item in Inventory)
                     {
-                        FuelData fuelData = ItemSets.FuelData[item.type];
-                        if (fuelData.Valid&&item.type==ModContent.ItemType<RocketFuelCanister>())
-                        {
-                            ConsumedItem = new(item.type, stack: 1);
-                            HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+                        if (item.stack <= 0)
+                            continue;
 
+                        var fuelData = ItemSets.FuelData[item.type];
+                        if (fuelData.Valid && item.type == ModContent.ItemType<RocketFuelCanister>())
+                        {
+                            ConsumedItem = new Item(item.type, 1);
+                            HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
                             item.stack--;
-                            if (item.stack < 0)
+
+                            if (item.stack <= 0)
                                 item.TurnToAir();
 
-                            fuelFound = true;
                             break;
                         }
                     }
 
-                    if (!fuelFound)
+                    if (ConsumedItem.type == ItemID.None)
                     {
-                        GeneratedPower = 0;
-                        TurnOff();
+                        HullHeatProgress -= HullHeatRate;
                     }
                 }
             }
             else
             {
-                HullHeatProgress -= HullHeatRate;
+                var fuelData = ItemSets.FuelData[ConsumedItem.type];
+                if (fuelData.Valid && ConsumedItem.type == ModContent.ItemType<RocketFuelCanister>())
+                {
+                    HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+
+                    if (++burnTimer >= fuelData.ConsumptionRate)
+                    {
+                        burnTimer = 0;
+                        ConsumedItem.TurnToAir(fullReset: true);
+                    }
+                }
             }
 
             GeneratedPower = HullHeatProgress * MaxPower;
         }
-      
 
         public override void NetSend(BinaryWriter writer)
         {
+            base.NetSend(writer);
+
             Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
 
@@ -133,6 +142,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetReceive(BinaryReader reader)
         {
+            base.NetReceive(reader);
+
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
@@ -143,16 +154,20 @@ namespace Macrocosm.Content.Machines
 
         public override void SaveData(TagCompound tag)
         {
+            base.SaveData(tag);
+
             tag[nameof(Inventory)] = Inventory;
 
             tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
 
-            if(hullHeatProgress > 0f)
+            if (hullHeatProgress > 0f)
                 tag[nameof(hullHeatProgress)] = hullHeatProgress;
         }
 
         public override void LoadData(TagCompound tag)
         {
+            base.LoadData(tag);
+
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 

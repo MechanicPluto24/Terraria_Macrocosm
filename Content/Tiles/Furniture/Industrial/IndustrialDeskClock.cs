@@ -15,7 +15,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseDeskClock")]
-    public class IndustrialDeskClock : ModTile, IToggleable
+    public class IndustrialDeskClock : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
 
@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
         }
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             Tile tile = Main.tile[i, j];
             int leftX = i - tile.TileFrameX / 18 % 2;
@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, true);
+            ToggleTile(i, j, true);
         }
 
         public override void NearbyEffects(int i, int j, bool closer)

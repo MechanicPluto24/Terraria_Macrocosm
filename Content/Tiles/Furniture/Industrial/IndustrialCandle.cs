@@ -11,7 +11,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseCandle")]
-    public class IndustrialCandle : ModTile, IToggleable
+    public class IndustrialCandle : ModTile, IToggleableTile
     {
         public override void SetStaticDefaults()
         {
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialCandle>());
         }
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             if (Main.tile[i, j].TileFrameX >= 18)
                 Main.tile[i, j].TileFrameX -= 18;
@@ -50,12 +50,12 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, skipWire: true);
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override bool RightClick(int i, int j)
         {
-            Toggle(i, j, skipWire: false);
+            ToggleTile(i, j, skipWire: false);
             return true;
         }
 

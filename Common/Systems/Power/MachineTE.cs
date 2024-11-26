@@ -3,10 +3,13 @@ using Macrocosm.Common.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Systems.Power
@@ -16,8 +19,8 @@ namespace Macrocosm.Common.Systems.Power
     {
         public abstract MachineTile MachineTile { get; }
 
-        public virtual bool Operating => MachineTile.IsOperatingFrame(Position.X, Position.Y);
         public virtual bool PoweredOn => MachineTile.IsPoweredOnFrame(Position.X, Position.Y);
+        public bool ManuallyTurnedOff { get; set; }
 
         public virtual Color DisplayColor { get; } = Color.White;
 
@@ -33,8 +36,8 @@ namespace Macrocosm.Common.Systems.Power
         /// <summary> Used for updating values and things to happen when disconnected from a <see cref="WireCircuit"/> </summary>
         public virtual void OnPowerDisconnected() { }
 
-        public virtual void OnTurnedOn() { }
-        public virtual void OnTurnedOff() { }
+        public virtual void OnTurnedOn(bool automatic) { }
+        public virtual void OnTurnedOff(bool automatic) { }
 
         public virtual string GetPowerInfo() => "";
 
@@ -42,16 +45,41 @@ namespace Macrocosm.Common.Systems.Power
         /// <param name="basePosition"> The top left in world coordinates </param>
         public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) { }
 
-        public void TurnOn()
+        /// <summary>
+        /// Used to toggle this machine.
+        /// </summary>
+        /// <param name="automatic"> Whether the machine was toggled automatically or manually. </param>
+        /// <param name="skipWire"></param>
+        public void Toggle(bool automatic, bool skipWire = false)
         {
-            MachineTile.ToggleStateFrame(Position.X, Position.Y);
-            OnTurnedOn();
+            if (PoweredOn)
+                TurnOff(automatic, skipWire);
+            else
+                TurnOn(automatic, skipWire);
         }
 
-        public void TurnOff()
+        /// <summary>
+        /// Used to turn on this machine.
+        /// </summary>
+        /// <param name="automatic"> Whether the machine was turned on automatically or manually. </param>
+        /// <param name="skipWire"></param>
+        public void TurnOn(bool automatic, bool skipWire = false)
         {
-            MachineTile.ToggleStateFrame(Position.X, Position.Y);
-            OnTurnedOff();
+            MachineTile.OnToggleStateFrame(Position.X, Position.Y, skipWire);
+            ManuallyTurnedOff = false;
+            OnTurnedOn(automatic);
+        }
+
+        /// <summary>
+        /// Used to turn off this machine.
+        /// </summary>
+        /// <param name="automatic"> Whether the machine was turned off automatically or manually. </param>
+        /// <param name="skipWire"></param>
+        public void TurnOff(bool automatic, bool skipWire = false)
+        {
+            MachineTile.OnToggleStateFrame(Position.X, Position.Y, skipWire);
+            ManuallyTurnedOff = !automatic;
+            OnTurnedOff(automatic);
         }
 
         public override void PreGlobalUpdate()
@@ -117,6 +145,30 @@ namespace Macrocosm.Common.Systems.Power
             {
                 NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
             }
+        }
+
+        /// <summary> Net send data. Always call base when overriding </summary>
+        public override void NetSend(BinaryWriter writer)
+        {
+            writer.Write(ManuallyTurnedOff);
+        }
+
+        /// <summary> Net receive data. Always call base when overriding </summary>
+        public override void NetReceive(BinaryReader reader)
+        {
+            ManuallyTurnedOff = reader.ReadBoolean();
+        }
+
+        /// <summary> Save TE data. Always call base when overriding </summary>
+        public override void SaveData(TagCompound tag)
+        {
+            if (ManuallyTurnedOff) tag[nameof(ManuallyTurnedOff)] = true;
+        }
+
+        /// <summary> Load TE data. Always call base when overriding </summary>
+        public override void LoadData(TagCompound tag)
+        {
+            ManuallyTurnedOff = tag.ContainsKey(nameof(ManuallyTurnedOff));
         }
     }
 }
