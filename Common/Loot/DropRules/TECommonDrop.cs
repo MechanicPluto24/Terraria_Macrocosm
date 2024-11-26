@@ -41,7 +41,7 @@ namespace Macrocosm.Common.Loot.DropRules
 
             int activeMachines = 0;
             foreach (var machine in TileEntity.ByID.Values.OfType<MachineTE>().Where((te) => te.type == MachineTE.type))
-                if (machine.Operating)
+                if (machine.PoweredOn)
                     activeMachines++;
 
             int adjustedChanceDenominator = (int)(chanceDenominator * (1f + multipleEntityFactor * (activeMachines - 1)));

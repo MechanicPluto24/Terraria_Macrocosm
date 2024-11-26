@@ -46,8 +46,8 @@ namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
                     if (TileSets.RandomStyles[tile.TileType] > 1)
                         Utility.SetTileStyle(i, j, WorldGen.genRand.Next(TileSets.RandomStyles[tile.TileType]), WorldGen.genRand.Next(2));
 
-                    if (WorldGen.genRand.NextBool() && Main.tile[i, j].GetModTile() is IToggleable toggleable)
-                        toggleable.Toggle(i, j);
+                    if (WorldGen.genRand.NextBool() && Main.tile[i, j].GetModTile() is IToggleableTile toggleable)
+                        toggleable.ToggleTile(i, j);
                 }
             }
 

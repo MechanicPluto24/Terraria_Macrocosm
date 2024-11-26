@@ -1,6 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Microsoft.Xna.Framework;
@@ -57,51 +55,72 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            if (PoweredOn)
+            if (!PoweredOn)
             {
-                if (ConsumedItem.type != ItemID.None)
-                {
-                    FuelData fuelData = ItemSets.FuelData[ConsumedItem.type];
-                    HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+                bool fuelFound = false;
 
-                    if (burnTimer++ >= fuelData.ConsumptionRate)
+                foreach (Item item in Inventory)
+                {
+                    if (item.stack <= 0)
+                        continue;
+
+                    var fuelData = ItemSets.FuelData[item.type];
+                    if (fuelData.Valid)
                     {
-                        burnTimer = 0;
-                        ConsumedItem.TurnToAir(fullReset: true);
+                        fuelFound = true;
+                        break;
                     }
                 }
-                else
+
+                if (fuelFound && !ManuallyTurnedOff)
+                {
+                    TurnOn(automatic: true);
+                }
+            }
+
+            if (ConsumedItem.type == ItemID.None)
+            {
+                if (PoweredOn)
                 {
                     burnTimer = 0;
-                    bool fuelFound = false;
-
                     foreach (Item item in Inventory)
                     {
-                        FuelData fuelData = ItemSets.FuelData[item.type];
+                        if (item.stack <= 0)
+                            continue;
+
+                        var fuelData = ItemSets.FuelData[item.type];
                         if (fuelData.Valid)
                         {
-                            ConsumedItem = new(item.type, stack: 1);
+                            ConsumedItem = new Item(item.type, 1);
                             HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
-
                             item.stack--;
-                            if (item.stack < 0)
+
+                            if (item.stack <= 0)
                                 item.TurnToAir();
 
-                            fuelFound = true;
                             break;
                         }
                     }
 
-                    if (!fuelFound)
+                    if (ConsumedItem.type == ItemID.None)
                     {
-                        GeneratedPower = 0;
-                        TurnOff();
+                        HullHeatProgress -= HullHeatRate;
                     }
                 }
             }
             else
             {
-                HullHeatProgress -= HullHeatRate;
+                var fuelData = ItemSets.FuelData[ConsumedItem.type];
+                if (fuelData.Valid)
+                {
+                    HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+
+                    if (++burnTimer >= fuelData.ConsumptionRate)
+                    {
+                        burnTimer = 0;
+                        ConsumedItem.TurnToAir(fullReset: true);
+                    }
+                }
             }
 
             GeneratedPower = HullHeatProgress * MaxPower;
@@ -109,6 +128,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetSend(BinaryWriter writer)
         {
+            base.NetSend(writer);
+
             Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
 
@@ -119,6 +140,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetReceive(BinaryReader reader)
         {
+            base.NetReceive(reader);
+
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
@@ -129,16 +152,20 @@ namespace Macrocosm.Content.Machines
 
         public override void SaveData(TagCompound tag)
         {
+            base.SaveData(tag);
+
             tag[nameof(Inventory)] = Inventory;
 
             tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
 
-            if(hullHeatProgress > 0f)
+            if (hullHeatProgress > 0f)
                 tag[nameof(hullHeatProgress)] = hullHeatProgress;
         }
 
         public override void LoadData(TagCompound tag)
         {
+            base.LoadData(tag);
+
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 

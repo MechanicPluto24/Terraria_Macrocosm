@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Machines
         {
             RequiredPower = 25f;
 
-            if (Operating)
+            if (PoweredOn)
             {
                 checkTimer++;
                 sceneCheckTimer++;
@@ -221,6 +221,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetSend(BinaryWriter writer)
         {
+            base.NetSend(writer);
+
             Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
 
@@ -231,6 +233,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetReceive(BinaryReader reader)
         {
+            base.NetReceive(reader);
+
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
@@ -242,12 +246,16 @@ namespace Macrocosm.Content.Machines
 
         public override void SaveData(TagCompound tag)
         {
+            base.SaveData(tag);
+
             tag[nameof(Inventory)] = Inventory;
             tag[nameof(BlacklistedItems)] = BlacklistedItems;
         }
 
         public override void LoadData(TagCompound tag)
         {
+            base.LoadData(tag);
+
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 
