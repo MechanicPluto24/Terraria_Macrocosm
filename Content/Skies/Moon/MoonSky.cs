@@ -237,8 +237,8 @@ namespace Macrocosm.Content.Skies.Moon
                 MacrocosmStar mars = starsDay.RandStar(); // :) 
                 mars?.OverrideColor(new Color(224, 137, 8, 220));
 
-                starsDay?.SpawnStars(densityMap: nebulaRawTextures[Main.moonType], 600, null, baseScale: 0.6f, twinkleFactor: 0.05f);
-                starsNight?.SpawnStars(densityMap: nebulaRawTextures[Main.moonType], 2000, null, baseScale: 0.6f, twinkleFactor: 0.05f);
+                starsDay?.SpawnStars(densityMap: nebulaRawTextures[Main.moonType], 800, null, baseScale: 0.6f, twinkleFactor: 0.05f);
+                starsNight?.SpawnStars(densityMap: nebulaRawTextures[Main.moonType], 4600, null, baseScale: 0.6f, twinkleFactor: 0.05f);
 
                 shouldRefreshNebulaStars = false;
             }
