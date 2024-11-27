@@ -1,9 +1,8 @@
 ﻿using Macrocosm.Common.Netcode;
-using Macrocosm.Content.Items.Wires;
+using Macrocosm.Content.Items.Connectors;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -12,84 +11,20 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Common.Systems.Power
+namespace Macrocosm.Common.Systems.Connectors
 {
-    public enum WireType
+    public class ConnectorSystem : ModSystem
     {
-        None,
-        Copper,
-        // ...
-    }
+        public static ConnectorSystem Instance => ModContent.GetInstance<ConnectorSystem>();
+        public static ConnectorSystem Map => Instance;
 
-    public enum WireVisibility
-    {
-        Normal,
-        Bright,
-        Subtle,
-        Hidden
-    }
+        private Dictionary<Point16, ConnectorData> map = new();
 
-    public readonly struct WireData : TagSerializable
-    {
-        private readonly byte data;
-
-        public bool AnyWire => data != 0;
-        public bool CopperWire => (data & 0x01) != 0;
-
-        public static implicit operator WireData(byte value) => new(value);
-        public static implicit operator byte(WireData powerWireData) => powerWireData.data;
-
-        // Expand this if needed
-        private const int WireTypeMask = 0x01;
-
-        public WireData() { }
-        public WireData(WireType type)
-        {
-            data = type switch
-            {
-                WireType.None => new WireData((byte)(data & ~WireTypeMask)),
-                WireType.Copper => new WireData((byte)((data & ~WireTypeMask) | 0x01)),
-                _ => new(),
-            };
-        }
-
-        public WireData(byte data)
-        {
-            this.data = data;
-        }
-
-        public TagCompound SerializeData()
-        {
-            TagCompound tag = new();
-            tag[nameof(data)] = data;
-            return tag;
-        }
-
-        public static readonly Func<TagCompound, WireData> DESERIALIZER = DeserializeData;
-        public static WireData DeserializeData(TagCompound tag)
-        {
-            if (tag.ContainsKey(nameof(data)))
-                return new(tag.GetByte(nameof(data)));
-
-            return default;
-        }
-    }
-
-    /// <summary> Currently unused custom wiring system </summary>
-    public class CustomWiring : ModSystem
-    {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
-        public static CustomWiring Instance => ModContent.GetInstance<CustomWiring>();
-        public static CustomWiring Map => Instance;
-
-        private Dictionary<Point16, WireData> wireMap = new();
-
-        private Asset<Texture2D> wireTexture;
+        private Asset<Texture2D> texture;
 
         public override void Load()
         {
-            wireTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "PowerWire");
+            texture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Connectors");
         }
 
         public override void Unload()
@@ -98,14 +33,14 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void ClearWorld()
         {
-            wireMap = new();
+            map = new();
         }
 
-        public WireData this[Point16 point]
+        public ConnectorData this[Point16 point]
         {
             get
             {
-                if (!wireMap.TryGetValue(point, out var data))
+                if (!map.TryGetValue(point, out var data))
                     data = new();
 
                 return data;
@@ -113,18 +48,17 @@ namespace Macrocosm.Common.Systems.Power
 
             private set
             {
-                wireMap[point] = value;
-                CircuitSystem.SearchCircuits();
+                map[point] = value;
             }
         }
 
-        public WireData this[int x, int y]
+        public ConnectorData this[int x, int y]
         {
             get => this[new Point16(x, y)];
             private set => this[new Point16(x, y)] = value;
         }
 
-        public WireData this[Point point]
+        public ConnectorData this[Point point]
         {
             get => this[new Point16(point)];
             private set => this[new Point16(point)] = value;
@@ -141,15 +75,15 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        public WireVisibility CopperVisibility { get; set; } = WireVisibility.Normal;
+        public ConnectorVisibility ConveyorVisibility { get; set; } = ConnectorVisibility.Normal;
 
-        public static void PlaceWire(Point coords, WireType type, bool sync = true) => PlaceWire(coords.X, coords.Y, type, sync);
-        public static void PlaceWire(int x, int y, WireType type, bool sync = true)
+        public static void PlaceConnector(Point coords, ConnectorType type, bool sync = true) => PlaceWire(coords.X, coords.Y, type, sync);
+        public static void PlaceWire(int x, int y, ConnectorType type, bool sync = true)
         {
             Map[x, y] = new(type);
 
             if (sync && Main.netMode != NetmodeID.SinglePlayer)
-                SyncPowerWire(x, y, type);
+                SyncConnector(x, y, type);
         }
 
         public static void CutWire(Point coords, bool sync = true) => CutWire(coords.X, coords.Y, sync);
@@ -157,23 +91,23 @@ namespace Macrocosm.Common.Systems.Power
         {
             int itemDrop = -1;
             int dustType = -1;
-            if (Map[x, y].CopperWire)
+            if (Map[x, y].Conveyor)
             {
-                itemDrop = ModContent.ItemType<CopperWire>();
+                itemDrop = ModContent.ItemType<Conveyor>();
                 dustType = DustID.Copper;
             }
 
             Map[x, y] = new();
 
             if (itemDrop > 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                Item.NewItem(new EntitySource_TileBreak(x, x, "PowerWireCut"), new Vector2(x * 16 + 8, y * 16 + 8), itemDrop);
+                Item.NewItem(new EntitySource_TileBreak(x, x, "ConnectorCut"), new Vector2(x * 16 + 8, y * 16 + 8), itemDrop);
 
             if (dustType > 0)
                 for (int i = 0; i < 10; i++)
                     Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, dustType);
 
             if (sync && Main.netMode != NetmodeID.SinglePlayer)
-                SyncPowerWire(x, y, WireType.None);
+                SyncConnector(x, y, ConnectorType.None);
         }
 
         public override void PostDrawTiles()
@@ -208,33 +142,34 @@ namespace Macrocosm.Common.Systems.Power
             {
                 for (int j = startY + screenOverdrawOffset.Y; j < endY - screenOverdrawOffset.Y; j++)
                 {
-                    WireData data = this[i, j];
+                    ConnectorData data = this[i, j];
 
                     if (data.AnyWire)
                     {
-                        int frameY = 0;
-                        if (data.CopperWire)
+                        int frameY;
+                        if (data.Conveyor)
                         {
+                            frameY = 0;
                             int frameX = 0;
-                            if (this[i, j - 1].CopperWire)
+                            if (this[i, j - 1].Conveyor)
                                 frameX += 18;
 
-                            if (this[i + 1, j].CopperWire)
+                            if (this[i + 1, j].Conveyor)
                                 frameX += 36;
 
-                            if (this[i, j + 1].CopperWire)
+                            if (this[i, j + 1].Conveyor)
                                 frameX += 72;
 
-                            if (this[i - 1, j].CopperWire)
+                            if (this[i - 1, j].Conveyor)
                                 frameX += 144;
 
                             frame.Y = frameY;
                             frame.X = frameX;
 
-                            Color color = GetWireColor(i, j, CopperVisibility);
+                            Color color = GetColor(i, j, ConveyorVisibility);
 
                             if (color != Color.Transparent)
-                                spriteBatch.Draw(wireTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
+                                spriteBatch.Draw(texture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
                         }
                     }
                 }
@@ -243,25 +178,25 @@ namespace Macrocosm.Common.Systems.Power
             spriteBatch.End();
         }
 
-        private static Color GetWireColor(int i, int j, WireVisibility visibilty)
+        private static Color GetColor(int i, int j, ConnectorVisibility visibilty)
         {
             Color color = Lighting.GetColor(i, j);
             switch (visibilty)
             {
-                case WireVisibility.Bright:
+                case ConnectorVisibility.Bright:
                     color = Color.White;
                     break;
-                case WireVisibility.Subtle:
+                case ConnectorVisibility.Subtle:
                     color *= 0.5f;
                     break;
-                case WireVisibility.Hidden:
+                case ConnectorVisibility.Hidden:
                     color = Color.Transparent;
                     break;
             }
             return color;
         }
 
-        public static void SyncPowerWire(int x, int y, WireType type, int toClient = -1, int ignoreClient = -1)
+        public static void SyncConnector(int x, int y, ConnectorType type, int toClient = -1, int ignoreClient = -1)
         {
             ModPacket packet = Macrocosm.Instance.GetPacket();
 
@@ -273,26 +208,26 @@ namespace Macrocosm.Common.Systems.Power
             packet.Send(toClient, ignoreClient);
         }
 
-        public static void ReceiveSyncPowerWire(BinaryReader reader, int sender)
+        public static void ReceiveSyncConnector(BinaryReader reader, int sender)
         {
             int x = reader.ReadUInt16();
             int y = reader.ReadUInt16();
-            WireType type = (WireType)reader.ReadByte();
+            ConnectorType type = (ConnectorType)reader.ReadByte();
 
-            if (type != WireType.None)
+            if (type != ConnectorType.None)
                 PlaceWire(x, y, type, sync: false);
             else
                 CutWire(x, y, sync: false);
 
             if (Main.netMode == NetmodeID.Server)
-                SyncPowerWire(x, y, type, ignoreClient: sender);
+                SyncConnector(x, y, type, ignoreClient: sender);
         }
 
         public override void SaveWorldData(TagCompound tag)
         {
             List<TagCompound> wireTags = new();
 
-            foreach (var kvp in wireMap)
+            foreach (var kvp in map)
             {
                 TagCompound entry = new();
                 entry["coords"] = kvp.Key;
@@ -300,23 +235,23 @@ namespace Macrocosm.Common.Systems.Power
                 wireTags.Add(entry);
             }
 
-            tag[nameof(wireMap)] = wireTags;
+            tag[nameof(map)] = wireTags;
         }
 
         public override void LoadWorldData(TagCompound tag)
         {
-            wireMap = new Dictionary<Point16, WireData>();
+            map = new Dictionary<Point16, ConnectorData>();
 
-            if (tag.ContainsKey(nameof(wireMap)))
+            if (tag.ContainsKey(nameof(map)))
             {
-                var wireTags = tag.GetList<TagCompound>(nameof(wireMap));
+                var wireTags = tag.GetList<TagCompound>(nameof(map));
                 foreach (var entry in wireTags)
                 {
                     if (entry.ContainsKey("coords") && entry.ContainsKey("data"))
                     {
                         Point16 coords = entry.Get<Point16>("coords");
-                        WireData data = entry.Get<WireData>("data");
-                        wireMap[coords] = data;
+                        ConnectorData data = entry.Get<ConnectorData>("data");
+                        map[coords] = data;
                     }
                 }
             }

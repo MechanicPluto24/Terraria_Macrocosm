@@ -7,31 +7,23 @@ using Terraria.ModLoader.Config;
 namespace Macrocosm.Common.Config
 {
     /// <summary> Config class for miscellaneous configuration, client-side only </summary>
-    public class MacrocosmConfig : ModConfig
+    public class ClientConfig : ModConfig
     {
         /// <summary> This config's instance, assigned by tML before Macrocosm content loads! </summary>
-        public static MacrocosmConfig Instance;
+        public static ClientConfig Instance;
+        public override ConfigScope Mode => ConfigScope.ClientSide;
 
         /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
         public event EventHandler OnConfigChanged;
 
-        public override ConfigScope Mode => ConfigScope.ClientSide;
-
-        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.WorldGenHeader")]
-        [DefaultValue(false)]
-        public bool DisableSilicaSandGeneration { get; set; }
-
-        [DefaultValue(false)]
-        public bool DisableOilShaleGeneration { get; set; }
-
-        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GameplayHeader")]
+        [Header("$Mods.Macrocosm.Configs.ClientConfig.GameplayHeader")]
         [DefaultValue(false)]
         public bool AlwaysDisplayTitleCards { get; set; }
 
         [DefaultValue(true)]
         public bool GunRecoilEffects { get; set; }
 
-        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.UIHeader")]
+        [Header("$Mods.Macrocosm.Configs.ClientConfig.UIHeader")]
         [DrawTicks]
         [DefaultValue("Macrocosm")]
         [OptionStrings(["Macrocosm", "Terraria"])]
@@ -49,7 +41,7 @@ namespace Macrocosm.Common.Config
         public bool DisplayGravityInGs { get; set; }
 
         /*
-        [Header("$Mods.Macrocosm.Configs.MacrocosmConfig.GraphicsHeader")]
+        [Header("$Mods.Macrocosm.Configs.ClientConfig.GraphicsHeader")]
         [DefaultValue(false)]
         public bool HighResolutionEffects { get; set; }
         */

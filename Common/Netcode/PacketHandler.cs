@@ -2,7 +2,7 @@
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Systems.Connectors;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
 using System;
@@ -86,7 +86,7 @@ namespace Macrocosm.Common.Netcode
                     break;
 
                 case MessageType.SyncPowerWire:
-                    CustomWiring.ReceiveSyncPowerWire(reader, whoAmI);
+                    ConnectorSystem.ReceiveSyncConnector(reader, whoAmI);
                     break;
 
                 default:

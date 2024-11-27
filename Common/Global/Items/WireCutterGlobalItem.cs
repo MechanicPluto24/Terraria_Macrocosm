@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Systems.Connectors;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -9,8 +9,6 @@ namespace Macrocosm.Common.Global.Items
 {
     public class WireCutterGlobalItem : GlobalItem
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public override bool AppliesToEntity(Item entity, bool lateInstantiation) => entity.type == ItemID.WireCutter;
 
         public override bool? UseItem(Item item, Player player)
@@ -20,9 +18,9 @@ namespace Macrocosm.Common.Global.Items
             if (targetTile.AnyWire() || targetTile.HasActuator)
                 return null;
 
-            if (CustomWiring.Map[targetCoords].AnyWire)
+            if (ConnectorSystem.Map[targetCoords].AnyWire)
             {
-                CustomWiring.CutWire(targetCoords);
+                ConnectorSystem.CutWire(targetCoords);
                 return true;
             }
 

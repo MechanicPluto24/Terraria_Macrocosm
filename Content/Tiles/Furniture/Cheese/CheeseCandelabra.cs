@@ -14,7 +14,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Cheese
 {
-    public class CheeseCandelabra : ModTile, IToggleable
+    public class CheeseCandelabra : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> flameTexture;
 
@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         }
 
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             int leftX = i - Main.tile[i, j].TileFrameX / 18 % 2;
             int topY = j - Main.tile[i, j].TileFrameY / 18 % 2;
@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, skipWire: true);
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

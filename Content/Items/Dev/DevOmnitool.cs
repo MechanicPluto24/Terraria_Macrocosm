@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Sets;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Skies.Moon;
 using Macrocosm.Content.Tiles.Ambient;
@@ -35,8 +36,19 @@ namespace Macrocosm.Content.Items.Dev
             if (point != default)
                 player.Teleport(point.ToWorldCoordinates());
             */
+
+            /*
+            if (Main.wallHouse[Main.tile[Player.tileTargetX, Player.tileTargetY].WallType])
+                Main.NewText("Wall is safe");
+            else
+                Main.NewText("Wall is unsafe");
+            */
+
+            /*
             SkyManager.Instance["Macrocosm:MoonSky"].Deactivate();
             SkyManager.Instance["Macrocosm:MoonSky"].Activate(default);
+            */
+
             return true;
         }
     }

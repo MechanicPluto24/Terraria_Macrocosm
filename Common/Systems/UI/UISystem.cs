@@ -44,7 +44,7 @@ namespace Macrocosm.Common.Systems.UI
                 return;
 
             UserInterface = new UserInterface();
-            MacrocosmConfig.Instance.OnConfigChanged += OnConfigChanged;
+            ClientConfig.Instance.OnConfigChanged += OnConfigChanged;
         }
 
         public override void Unload()

@@ -15,7 +15,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseCeilingMonitor")]
-    public class IndustrialCeilingMonitor : ModTile, IToggleable
+    public class IndustrialCeilingMonitor : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
 
@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialCeilingMonitor>());
         }
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             int leftX = i - Main.tile[i, j].TileFrameX / 18 % 2;
             int topY = j - Main.tile[i, j].TileFrameY / 18 % 2;
@@ -76,7 +76,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, skipWire: true);
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)

@@ -12,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Cheese
 {
-    public class CheeseCandle : ModTile, IToggleable
+    public class CheeseCandle : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> flameTexture;
 
@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             AddMapEntry(new Color(220, 216, 121), Language.GetText("MapObject.Candle"));
         }
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             if (Main.tile[i, j].TileFrameX >= 18)
                 Main.tile[i, j].TileFrameX -= 18;
@@ -53,12 +53,12 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, skipWire: true);
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override bool RightClick(int i, int j)
         {
-            Toggle(i, j, skipWire: false);
+            ToggleTile(i, j, skipWire: false);
             return true;
         }
 
