@@ -1,11 +1,11 @@
 Sun: {
 	DisplayName: The Sun
-	FlavorText: default
+	FlavorText: The nuclear inferno at the heart of the solar system, a middle-aged yellow dwarf star.
 }
 
 Vulcan: {
 	DisplayName: Vulcan
-	FlavorText: default
+	FlavorText: This tiny, angry dwarf planet orbits so close to the Sun that its surface has been completely destroyed by the star's powerful gravity, melted by its infernal heat. Thousands of active volcanoes belch ash and carbon dioxide into its thin, hadean atmosphere.
 }
 
 Mercury: {
@@ -51,12 +51,12 @@ AsteroidBelt: {
 
 Ceres: {
 	DisplayName: Ceres
-	FlavorText: default
+	FlavorText: A small dwarf planet located in the expanse of debris that divides the inner and outer solar system. Strange, faint, alien signals can be traced to numerous asteroids floating near the orbit of Ceres.
 }
 
 Jupiter: {
 	DisplayName: Jupiter
-	FlavorText: default
+	FlavorText: The goliath of hydrogen and helium that dominates much of the outer solar system, a churning, ceaseless maelstrom of storms protected by a dangerously powerful magnetosphere, and surrounded by a gargantuan fleet of moons.
 }
 
 Io: {
@@ -71,7 +71,7 @@ Europa: {
 
 Saturn: {
 	DisplayName: Saturn
-	FlavorText: default
+	FlavorText: A massive gas giant surrounded by its famous systems of rings, made of trillions of particles of ice and rock. Much of its moons have been distorted and warped beyond recognition.
 }
 
 Titan: {
@@ -81,7 +81,7 @@ Titan: {
 
 Ouranos: {
 	DisplayName: Ouranos
-	FlavorText: default
+	FlavorText: A frigid ice giant orbited by thin, dark rings, knocked on its axis by an ancient collision.
 }
 
 Miranda: {
@@ -91,12 +91,12 @@ Miranda: {
 
 Neptune: {
 	DisplayName: Neptune
-	FlavorText: default
+	FlavorText: A boreal, deep blue ice giant ravaged by freezing, banshee winds that shriek across the planet at supersonic speeds.
 }
 
 Triton: {
 	DisplayName: Triton
-	FlavorText: default
+	FlavorText: Neptune's largest satellite, a frozen moon covered in fields of ice and torn asunder by geysers. Mysteriously, it orbits its planet retrograde to Neptune's rotation.
 }
 
 Pluto: {

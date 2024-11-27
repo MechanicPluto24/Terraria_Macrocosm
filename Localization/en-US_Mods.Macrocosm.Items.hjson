@@ -9,7 +9,7 @@ CelestialBulwark: {
 		'''
 		Allows the player to dash into the enemy
 		Allows for horizontal and vertical dashing
-		Double tap a direction
+		Double tap any direction to dash
 		'''
 }
 
@@ -564,7 +564,7 @@ CraterDemonMask: {
 
 DianiteFork: {
 	DisplayName: Dianite Fork
-	Tooltip: Fire swirling magic at your enemies!
+	Tooltip: Fire swirling magic at your enemies
 }
 
 DianiteTome: {
@@ -649,8 +649,8 @@ Cruithne: {
 	DisplayName: Cruithne-3753
 	Tooltip:
 		'''
-		Converts musket balls to green slugs.
-		Shoots a delirium shell.
+		Converts musket balls to green slugs
+		Shoots an explosive delirium shell
 		'''
 }
 
@@ -658,8 +658,8 @@ LHBMinigun: {
 	DisplayName: LHB-59
 	Tooltip:
 		'''
-		'What's more effective than bullets?''
-		'A whole LOT of bullets.'
+		'What's more effective than bullets?
+		A whole LOT of bullets.'
 		'''
 }
 
@@ -690,12 +690,17 @@ ChandriumStaff: {
 
 ChandriumWhip: {
 	DisplayName: Chandrium Whip
-	Tooltip: Extra damage every third hit
+	Tooltip: Dealas extra damage every third strike
 }
 
 HandheldEngine: {
 	DisplayName: Handheld Engine
-	Tooltip: Uses mana as coolant
+	Tooltip:
+		'''
+		Uses mana as coolant
+		Engine will overheat if not supplied mana for too long
+		'Yeah, ROCKET science!'
+		'''
 }
 
 HazardWall: {
@@ -723,7 +728,7 @@ ChampionsBladeBroken: {
 	Tooltip:
 		'''
 		Repeated hits with the blade strengthen it
-		This effect wears off after some time when not hitting with the blade
+		This effect wears off after some time if the blade is not used
 		'''
 }
 
@@ -732,7 +737,7 @@ ChampionsBladeRepaired: {
 	Tooltip:
 		'''
 		Repeated hits with the blade strengthen it
-		This effect wears off after some time when not hitting with the blade
+		This effect wears off after some time if the blade is not used
 		'''
 }
 
@@ -741,7 +746,7 @@ ChampionsBlade: {
 	Tooltip:
 		'''
 		Repeated hits with the blade strengthen it
-		This effect wears off after some time when not hitting with the blade
+		This effect wears off after some time if the blade is not used
 		'''
 }
 
@@ -1037,7 +1042,11 @@ ZombieFinger: {
 
 XFLR6: {
 	DisplayName: XFLR-6
-	Tooltip: Well, what do you think of that? Look what the goat created.
+	Tooltip:
+		'''
+		'Well, what do you think of that?
+		Look what the goat created.'
+		'''
 }
 
 InvarArrow: {
@@ -1159,14 +1168,14 @@ OsmiumBoots: {
 	DisplayName: Osmium Boots
 	Tooltip:
 		'''
-		Increases player's fall speed.
-		Double tab down to further increase fall speed. 
+		Increases player's fall speed
+		Double tab down to further increase fall speed
 		'''
 }
 
 EarthGlobe: {
 	DisplayName: Earth Globe
-	Tooltip: Home sweet home!
+	Tooltip: "'Home sweet home!'"
 }
 
 PowerJunction: {
@@ -1231,7 +1240,7 @@ ReactorHousing: {
 
 Fabricator: {
 	DisplayName: Fabricator
-	Tooltip: Used to craft machines and rocket components
+	Tooltip: Used to craft advanced machines and rocket components
 }
 
 Battery: {
@@ -1293,7 +1302,7 @@ GothicCoalBrick: {
 
 SpookyDookie: {
 	DisplayName: Spooky Dookie
-	Tooltip: Go ahead...
+	Tooltip: "'Go ahead...'"
 }
 
 CheeseBlock: {
@@ -1398,7 +1407,7 @@ CheeseTable: {
 
 CheeseToilet: {
 	DisplayName: Cheese Toilet
-	Tooltip: This is a horrible idea.
+	Tooltip: "'This is a horrible idea.'"
 }
 
 CheeseWorkbench: {
@@ -1453,7 +1462,7 @@ Boombox: {
 
 StopSign: {
 	DisplayName: Stop Sign
-	Tooltip: Stop right there!
+	Tooltip: "'Stop right there!'"
 }
 
 WindTurbineLarge: {
@@ -1971,12 +1980,12 @@ RocheChakram: {
 
 CrescentScripture: {
 	DisplayName: Crescent Scripture
-	Tooltip: ""
+	Tooltip: "'Etched with ancient symbols from a long-lost lunarian text.'"
 }
 
 Totality: {
 	DisplayName: Totality
-	Tooltip: Slash a rift into the fabric of reality!
+	Tooltip: Slashes leave behind rifts of umbral magic
 }
 
 AstraWorkbench: {
@@ -2060,6 +2069,7 @@ ArmstrongGauntlets: {
 		'''
 		Throws a flurry of punches
 		Every few punches you will leap forward
+		'You expect me to flee?!'
 		'''
 }
 
@@ -2144,17 +2154,17 @@ HummingbirdDroneRemote: {
 
 GreatstaffOfHorus: {
 	DisplayName: Greatstaff Of Horus
-	Tooltip: Summons a Lesser Granule to fight for you.
+	Tooltip: Summons a Lesser Granule to fight for you
 }
 
 LuminiteTorch: {
 	DisplayName: Luminite Torch
-	Tooltip: Can be used in airless environments.
+	Tooltip: Can be used in airless environments
 }
 
 RyuguStaff: {
 	DisplayName: Mortar Staff
-	Tooltip: Summons a Ryugu to fight for you.
+	Tooltip: Summons a Ryugu to fight for you
 }
 
 AstraDoor: {
