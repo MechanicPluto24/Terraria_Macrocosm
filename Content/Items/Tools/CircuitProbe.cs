@@ -1,9 +1,11 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Refined;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
+using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools
@@ -32,11 +34,7 @@ namespace Macrocosm.Content.Items.Tools
         {
             if (player.whoAmI == Main.myPlayer && Utility.TryGetTileEntityAs(Player.tileTargetX, Player.tileTargetY, out MachineTE machine))
             {
-                if (machine.MachineType is MachineType.Generator or MachineType.Battery)
-                    Main.NewText(machine.GetMachineNameAndStatusInfo(), Color.LightGreen);
-                else
-                    Main.NewText(machine.GetMachineNameAndStatusInfo(), Color.Orange);
-
+                Main.NewText($"{Lang.GetMapObjectName(MapHelper.TileToLookup(machine.MachineTile.Type, 0))} - {machine.GetPowerInfo()}", machine.DisplayColor);
                 return true;
             }
 

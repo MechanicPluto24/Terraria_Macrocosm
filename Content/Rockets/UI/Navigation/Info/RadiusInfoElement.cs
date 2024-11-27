@@ -12,10 +12,10 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 
         protected override LocalizedText GetLocalizedValueUnitText(ref float value)
         {
-            var type = MacrocosmConfig.Instance.UnitSystem;
+            var type = ClientConfig.Instance.UnitSystem;
 
             // convert to miles
-            if (type == MacrocosmConfig.UnitSystemType.Imperial)
+            if (type == ClientConfig.UnitSystemType.Imperial)
                 value *= 0.621f;
 
             value = MathF.Round(value, 2);

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
@@ -50,7 +51,7 @@ namespace Macrocosm.Content.Machines
             AddMapEntry(new Color(121, 107, 91), CreateMapEntryName());
         }
 
-        public override void TogglePowerStateFrame(int i, int j)
+        public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)

@@ -1,14 +1,13 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Systems.Power;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines
 {
-    public class SolarPanelLargeTE : MachineTE
+    public class SolarPanelLargeTE : GeneratorTE
     {
         public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelLarge>();
-        public override MachineType MachineType => MachineType.Generator;
-
         public override bool PoweredOn => Main.dayTime;
 
         public override void OnFirstUpdate()
@@ -18,9 +17,9 @@ namespace Macrocosm.Content.Machines
         public override void MachineUpdate()
         {
             if (PoweredOn)
-                Power = 2f;
+                GeneratedPower = 2f;
             else
-                Power = 0;
+                GeneratedPower = 0;
         }
     }
 }

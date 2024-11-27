@@ -13,7 +13,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Luminite
 {
-    public class LuminiteLamp : ModTile, IToggleable
+    public class LuminiteLamp : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
 
@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 3));
 
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             Tile tile = Main.tile[i, j];
             int topY = j - tile.TileFrameY / 18 % 3;
@@ -66,7 +66,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, skipWire: true);
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
