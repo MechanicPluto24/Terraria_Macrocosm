@@ -111,7 +111,7 @@ namespace Macrocosm.Content.Machines
 
                     if (ConsumedItem.type == ItemID.None)
                     {
-                        HullHeatProgress -= HullHeatRate;
+                        HullHeatProgress -= HullHeatRate * 5f;
                     }
                 }
             }

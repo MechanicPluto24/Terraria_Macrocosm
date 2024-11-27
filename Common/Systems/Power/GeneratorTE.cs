@@ -34,7 +34,7 @@ namespace Macrocosm.Common.Systems.Power
 
             Vector2 textSize = FontAssets.MouseText.Value.MeasureString(total);
             Vector2 position = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (textSize.X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
-            Color color = Utility.Colorize(DisplayColor, lightColor);
+            Color color = DisplayColor;
 
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, total, position - new Vector2(total.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
         }

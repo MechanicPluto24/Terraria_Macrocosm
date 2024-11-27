@@ -46,11 +46,15 @@ namespace Macrocosm.Content.Items.Dev
             SkyManager.Instance["Macrocosm:MoonSky"].Activate(default);
             */
 
+            /*
             foreach(var rocket in RocketManager.Rockets)
             {
                 if (rocket.Bounds.Contains((int)Main.MouseWorld.X, (int)Main.MouseWorld.Y))
                     rocket.Fuel = 0f;
             }
+            */
+
+            //Main.drunkWorld = !Main.drunkWorld;
 
             return true;
         }
