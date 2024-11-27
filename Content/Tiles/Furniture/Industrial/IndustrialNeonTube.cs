@@ -12,7 +12,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseNeonTube")]
-    public class IndustrialNeonTube : ModTile, IToggleable
+    public class IndustrialNeonTube : ModTile, IToggleableTile
     {
         public override void SetStaticDefaults()
         {
@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialNeonTube>());
         }
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             int left = i - Main.tile[i, j].TileFrameX / 18 % 3;
 
@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, skipWire: true);
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

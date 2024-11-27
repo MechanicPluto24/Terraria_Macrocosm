@@ -172,7 +172,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public override void AI()
         {
-            bool recoil = MacrocosmConfig.Instance.GunRecoilEffects;
+            bool recoil = ClientConfig.Instance.GunRecoilEffects;
 
             if (recoil && GunHeldProjectileData.FollowsAimPosition)
                 aim = Main.MouseWorld;
@@ -209,7 +209,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public override void Draw(Color lightColor)
         {
-            float recoil = MacrocosmConfig.Instance.GunRecoilEffects ? currentRecoil.X : 0f;
+            float recoil = ClientConfig.Instance.GunRecoilEffects ? currentRecoil.X : 0f;
             // 19 here is for the arm length.
             Vector2 normOrigin = GunHeldProjectileData.GunBarrelPosition + Vector2.UnitX * (recoil - 19);
             Main.EntitySpriteDraw(

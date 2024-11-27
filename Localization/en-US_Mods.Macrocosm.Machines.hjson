@@ -7,20 +7,27 @@ BurnerGenerator: {
 	HullHeatImperial: Hull Heat: {0}°F
 }
 
+KeroseneGenerator: {
+	DisplayName: Kerosene Generator
+	HullHeatMetric: Hull Heat: {0}°C
+	HullHeatImperial: Hull Heat: {0}°F
+}
+
 Common: {
-	ConsumedPower: Consumed Power
-	GeneratedPower: Generated Power
-	StoredEnergy: Stored Energy
-	PowerInfo: "{0}kW"
-	StatusInfo: "{0}kW / {1}kW"
+	ConsumedPower: Consumed Power: {0}kW
+	GeneratedPower: Generated Power: {0}kW
+	StoredEnergy: Stored Energy: {0}kJ
 	LiquidExtract: Extractable
 	LiquidContainer: Liquid Container
 	BurnFuel: Flammable
 
-	FullStatusInfo: {
+	PowerInfo: {
+		Simple: "{0}kW"
+		Energy: "{0}kJ"
+		Common: "{0}kW / {1}kW"
 		Consumer: Consumed: {0}kW / Required: {1}kW
-		Generator: Available: {0}kW / Generated: {1}kW
-		Battery: Available: {0}kW / Stored: {1}kW
+		Generator: Generated: {0}kW
+		Battery: Stored: {0}kJ / Capacity: {1}kJ
 		Controller: ""
 	}
 }

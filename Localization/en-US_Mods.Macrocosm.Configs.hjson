@@ -1,8 +1,7 @@
 # Localization file for the configs
 
-MacrocosmConfig: {
-	DisplayName: General Configuration
-	WorldGenHeader: World Generation
+ClientConfig: {
+	DisplayName: Client Configuration
 	GameplayHeader: Gameplay
 	GraphicsHeader: Graphics
 	UIHeader: User Interface
@@ -45,6 +44,33 @@ MacrocosmConfig: {
 	DisableOilShaleGeneration: {
 		Label: Disable Oil Shale Generation
 		Tooltip: ""
+	}
+}
+
+ServerConfig: {
+	DisplayName: Server Configuration
+	WorldGenHeader: World Generation
+
+	DisableSilicaSandGeneration: {
+		Label: Disable Silica Sand Generation
+		Tooltip: Disable the generation of Silica Sand underneath the Ocean, to avoid breaking other mods' biomes.
+	}
+
+	DisableOilShaleGeneration: {
+		Label: Disable Oil Shale Generation
+		Tooltip: Disable the generation of Oil Shale in the Underground Desert, to avoid breaking other mods' biomes.
+	}
+
+	Circuits: Circuits
+
+	CircuitSearchUpdateRate: {
+		Label: Circuit Search Update Rate
+		Tooltip: Adjust the update rate of circuit search. Higher values mean less frequent searches, which might improve performance.
+	}
+
+	CircuitSolveUpdateRate: {
+		Label: Circuit Solve Update Rate
+		Tooltip: Adjust the update rate of circuit solving. Higher values mean less frequent updates, which might improve performance.
 	}
 }
 

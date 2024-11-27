@@ -80,14 +80,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                     if (AI_ShotCount % 2 == 0)
                     {
-                        if (MacrocosmConfig.Instance.GunRecoilEffects)
+                        if (ClientConfig.Instance.GunRecoilEffects)
                             redRotation += 0.3f;
 
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Red);
                     }
                     else
                     {
-                        if (MacrocosmConfig.Instance.GunRecoilEffects)
+                        if (ClientConfig.Instance.GunRecoilEffects)
                             blueRotation += 0.3f;
 
                         Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);

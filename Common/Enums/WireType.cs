@@ -1,6 +1,6 @@
 ﻿namespace Macrocosm.Common.Enums
 {
-    public enum VanillaWireType
+    public enum WireType
     {
         Red,
         Blue,

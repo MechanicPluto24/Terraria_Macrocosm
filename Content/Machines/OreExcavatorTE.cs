@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Loot;
 using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Common.Loot.DropRules;
@@ -11,6 +12,7 @@ using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Ores;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -21,11 +23,9 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    public class OreExcavatorTE : MachineTE, IInventoryOwner
+    public class OreExcavatorTE : ConsumerTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();
-
-        public override MachineType MachineType => MachineType.Consumer;
 
         public SimpleLootTable Loot { get; set; }
         protected virtual int OreGenerationRate => 60;
@@ -59,9 +59,9 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            Power = 25f;
+            RequiredPower = 25f;
 
-            if (Operating)
+            if (PoweredOn)
             {
                 checkTimer++;
                 sceneCheckTimer++;
@@ -213,8 +213,16 @@ namespace Macrocosm.Content.Machines
             }
         }
 
+        public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
+        {
+            basePosition.X -= 12;
+            base.DrawMachinePowerInfo(spriteBatch, basePosition, lightColor);
+        }
+
         public override void NetSend(BinaryWriter writer)
         {
+            base.NetSend(writer);
+
             Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
 
@@ -225,6 +233,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetReceive(BinaryReader reader)
         {
+            base.NetReceive(reader);
+
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
@@ -236,12 +246,16 @@ namespace Macrocosm.Content.Machines
 
         public override void SaveData(TagCompound tag)
         {
+            base.SaveData(tag);
+
             tag[nameof(Inventory)] = Inventory;
             tag[nameof(BlacklistedItems)] = BlacklistedItems;
         }
 
         public override void LoadData(TagCompound tag)
         {
+            base.LoadData(tag);
+
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 

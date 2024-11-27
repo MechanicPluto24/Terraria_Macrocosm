@@ -12,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Cheese
 {
-    public class CheeseLamp : ModTile, IToggleable
+    public class CheeseLamp : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> flameTexture;
 
@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             AddMapEntry(new Color(220, 216, 121), Language.GetText("MapObject.FloorLamp"));
         }
 
-        public void Toggle(int i, int j, bool skipWire = false)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             Tile tile = Main.tile[i, j];
             int topY = j - tile.TileFrameY / 18 % 3;
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
         public override void HitWire(int i, int j)
         {
-            Toggle(i, j, skipWire: true);
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
