@@ -347,7 +347,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             launchLocationsList.AddRange(occupied.Cast<UIElement>().ToList());
 
             // Add the "Unknown" launch location if no vacant launchpads were found
-            if (vacant.Count == 0)
+            if (vacant.Count == 0 && subworldId != MacrocosmSubworld.CurrentID)
             {
                 spawnInfoElement = new()
                 {
@@ -365,7 +365,9 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             if (current is not null)
             {
-                launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
+                if(launchLocationsList.Any())
+                    launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
+
                 launchLocationsList.Add(current);
             }
 

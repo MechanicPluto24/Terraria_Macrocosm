@@ -50,10 +50,6 @@ namespace Macrocosm.Common.UI
 
         public float SizeLimit { get; set; } = 32f;
 
-        private Func<Item, bool> checkReserved;
-        private LocalizedText reservedTooltip;
-        private Asset<Texture2D> reservedTexture;
-
         public UIInventorySlot(Inventory inventory, int itemIndex, int itemSlotContext = Context.ChestItem, float scale = default)
         {
             this.inventory = inventory;
@@ -92,7 +88,6 @@ namespace Macrocosm.Common.UI
 
         public void SetFavoritedAppearance(Asset<Texture2D> slotFavoritedTexture, Color slotFavoritedColor)
         {
-
             this.slotFavoritedTexture = slotFavoritedTexture;
             this.slotFavoritedColor = slotFavoritedColor;
         }
@@ -105,16 +100,6 @@ namespace Macrocosm.Common.UI
         }
 
         public void ClearGlow() => glowTime = 0;
-
-        public void AddReserved(Func<Item, bool> checkReserved, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
-        {
-            this.checkReserved = checkReserved;
-            this.reservedTooltip = reservedTooltip;
-            this.reservedTexture = reservedTexture;
-        }
-
-        public void AddReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
-            => AddReserved((item) => item.type == itemType, reservedTooltip, reservedTexture);
 
         public void Consume(int amount)
         {
@@ -220,7 +205,7 @@ namespace Macrocosm.Common.UI
             if (!CanInteract)
                 return;
 
-            if (!ReservedCheck(Main.mouseItem))
+            if (!inventory.ReservedCheck(itemIndex, Main.mouseItem))
                 return;
 
             if (!(Main.mouseItem.maxStack > 1 && item.type == Main.mouseItem.type && item.stack != item.maxStack && Main.mouseItem.stack != Main.mouseItem.maxStack))
@@ -257,14 +242,6 @@ namespace Macrocosm.Common.UI
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 shouldNetsync = true;
-        }
-
-        public bool ReservedCheck(Item item)
-        {
-            if (item.type != ItemID.None && checkReserved is not null)
-                return checkReserved(item);
-
-            return true;
         }
 
         private void HandleRightClick(ref Item item)
@@ -368,11 +345,11 @@ namespace Macrocosm.Common.UI
             spriteBatch.Draw(slotTexture.Value, position, null, slotColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
             spriteBatch.Draw(slotBorderTexture.Value, position, null, slotBorderColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
-            if (IsMouseHovering && reservedTooltip is not null)
-                Main.instance.MouseTextNoOverride(reservedTooltip.Value);
+            if (IsMouseHovering && inventory.GetReservedTooltip(itemIndex) is not null)
+                Main.instance.MouseTextNoOverride(inventory.GetReservedTooltip(itemIndex).Value);
 
-            if (reservedTexture is not null && item.type == ItemID.None)
-                spriteBatch.Draw(reservedTexture.Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, slotBorderColor, 0f, reservedTexture.Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
+            if (inventory.GetReservedTexture(itemIndex) is not null && item.type == ItemID.None)
+                spriteBatch.Draw(inventory.GetReservedTexture(itemIndex).Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, slotBorderColor, 0f, inventory.GetReservedTexture(itemIndex).Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
 
             if (item.favorited)
                 spriteBatch.Draw(slotFavoritedTexture.Value, position, null, slotFavoritedColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);

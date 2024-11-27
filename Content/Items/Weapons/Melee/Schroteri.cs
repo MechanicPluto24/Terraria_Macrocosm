@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Bars;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -16,7 +15,9 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             ItemID.Sets.SkipsInitialUseSound[Type] = true;
+            ItemSets.UnobtainableItem[Type] = true;
         }
+
         public const int MaxStacks = 20;
         public int HitStacks { get; set; }
         public int ResetTimer { get; set; }
@@ -39,6 +40,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.shootSpeed = 1f;
             Item.shoot = ModContent.ProjectileType<SchroteriProjectile>();
         }
+
         public override void UpdateInventory(Player player)
         {
             if (ResetTimer >= 500)
@@ -53,7 +55,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override bool CanUseItem(Player player)
         {
-            
             if (player.ownedProjectileCounts[ModContent.ProjectileType<SchroteriProjectile>()] < 1)
             {
                 Item.useAnimation = 8;
@@ -67,10 +68,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
-            
             Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<SchroteriProjectile>(), damage, knockback, Main.myPlayer, ai0: 0f);
-            
-
             return false;
         }
 
@@ -80,9 +78,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             {
                 SoundEngine.PlaySound(Item.UseSound.Value, player.Center);
             }
+
             return null;
         }
-
-      
     }
 }

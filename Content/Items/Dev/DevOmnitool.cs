@@ -1,4 +1,10 @@
-﻿namespace Macrocosm.Content.Items.Dev
+﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Rockets;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace Macrocosm.Content.Items.Dev
 {
     class DevOmnitool : ModItem
     {
@@ -35,9 +41,16 @@
             */
 
             /*
-                         SkyManager.Instance["Macrocosm:MoonSky"].Deactivate();
+            SkyManager.Instance["Macrocosm:MoonSky"].Deactivate();
             SkyManager.Instance["Macrocosm:MoonSky"].Activate(default);
             */
+
+            foreach(var rocket in RocketManager.Rockets)
+            {
+                if (rocket.Bounds.Contains((int)Main.MouseWorld.X, (int)Main.MouseWorld.Y))
+                    rocket.Fuel = 0f;
+            }
+
             return true;
         }
     }

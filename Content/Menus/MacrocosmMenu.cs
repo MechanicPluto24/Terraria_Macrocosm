@@ -125,8 +125,7 @@ namespace Macrocosm.Content.Menus
 
             stars = new();
             stars.SpawnStars(850, baseScale: 0.8f, randomColor: true);
-            stars.SpawnStars(milkyWayRaw, 3000, baseScale: 0.6f);
-            stars.SpawnStars(nebulaRaw, 3000, baseScale: 0.6f);
+            stars.SpawnStars(milkyWayRaw, 2000, baseScale: 0.6f);
 
             sun ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Sun", immediate));
             sun.Center = Utility.ScreenCenter;

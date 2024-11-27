@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
@@ -28,9 +29,14 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
         private UIText title;
         private UIHorizontalSeparator titleSeparator;
 
+        private UIDynamicTextPanel textPanel;
+
+        private UITextPanel<string> textPanel1;
+        private UITextPanel<string> currentFuelTextPanel;
+        private UIText separator;
+
         private UIPanel fuelPlacementPanel;
-        private UILiquidTank canisterBufferTank;
-        private UIHoverImageButton overflowWarningIcon;
+
         private UIInventorySlot liquidContainerItemSlot;
         private UIHoverImageButton dumpFuelButton;
 
@@ -79,36 +85,45 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             fuelPlacementPanel = new()
             {
                 Width = new(0, 0.4f),
-                Height = new(0, 0.35f),
+                Height = new(0, 0.45f),
                 Left = new(0, 0.55f),
-                VAlign = 0.5f,
+                Top = new(0, 0.1f),
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             fuelPlacementPanel.SetPadding(4f);
             Append(fuelPlacementPanel);
 
-            overflowWarningIcon = new
-            (
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/WarningYellow"),
-                hoverText: Language.GetText("Fuel overflow!")
-            )
+            currentFuelTextPanel = new("", textScale: 1.1f)
             {
-                Left = new(0, 0.1f),
-                Top = new(0, 0f),
-                CheckInteractible = () => overflowWarningVisible,
+                Width = new(0, 0.8f),
+                Height = new(0, 0.225f),
+                HAlign = 0.5f,
+                VAlign = 0.085f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
-            overflowWarningIcon.SetVisibility(1f, 0f, 1f);
-            fuelPlacementPanel.Append(overflowWarningIcon);
+            currentFuelTextPanel.SetPadding(8f);
+            fuelPlacementPanel.Append(currentFuelTextPanel);
 
-            canisterBufferTank = new(Liquids.LiquidType.RocketFuel)
+            textPanel1 = new("", textScale: 1.1f)
             {
-                Width = new(0, 0.2f),
-                Height = new(0, 0.8f),
-                Left = new(0, 0.1f),
-                VAlign = 0.5f
+                Width = new(0, 0.8f),
+                Height = new(0, 0.1f),
+                HAlign = 0.5f,
+                VAlign = 0.4f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
-            fuelPlacementPanel.Append(canisterBufferTank);
+            textPanel1.SetPadding(8f);
+            fuelPlacementPanel.Append(textPanel1);
+
+            separator = new("___")
+            {
+                HAlign = 0.5f,
+                VAlign = 0.1f,
+            };
+            currentFuelTextPanel.Append(separator);
 
             liquidContainerItemSlot = CreateFuelCanisterItemSlot();
             fuelPlacementPanel.Append(liquidContainerItemSlot);
@@ -121,7 +136,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                Language.GetText("Mods.Macrocosm.UI.Rocket.Cargo.DumpFuel")
             )
             {
-                VAlign = 1f,
+                VAlign = 0.955f,
                 HAlign = 0.5f,
                 Rotation = MathHelper.PiOver2,
                 CheckInteractible = () => dumpButtonInteractible,
@@ -140,13 +155,8 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
         private UIInventorySlot CreateFuelCanisterItemSlot()
         {
             liquidContainerItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_FuelTank);
-            liquidContainerItemSlot.Top = new(0, 0.1f);
-            liquidContainerItemSlot.Left = new(0, 0.5f);
-            liquidContainerItemSlot.AddReserved(
-                (item) => ItemSets.LiquidContainerData[item.type].Valid && ItemSets.LiquidContainerData[item.type].LiquidType == Liquids.LiquidType.RocketFuel,
-                Lang.GetItemName(ModContent.ItemType<Canister>()),
-                ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
-            );
+            liquidContainerItemSlot.Top = new(0, 0.55f);
+            liquidContainerItemSlot.HAlign = 0.535f;
             return liquidContainerItemSlot;
         }
 
@@ -159,21 +169,21 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             base.Update(gameTime);
             overflowWarningVisible = false;
             dumpButtonInteractible = true;
-            liquidContainerItemSlot.CanInteract = true;
 
             float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
-            float canisterBufferLevel = 0f;
+            float previewLiquidLevel = 0f;
 
             if (liquidContainerItemSlot.Item.type == ItemID.None)
-            {
                 dumpButtonInteractible = false;
-
-                if (neededFuel <= 0f)
-                    liquidContainerItemSlot.CanInteract = false;
-            }
 
             if (neededFuel <= 0f)
                 dumpButtonInteractible = false;
+
+            //TODO: localize
+            string text = "";
+            text += $"{Rocket.Fuel} l\n";
+            text += $"{Rocket.FuelCapacity} l\n";
+            currentFuelTextPanel.SetText(text);
 
             LiquidContainerData data = ItemSets.LiquidContainerData[liquidContainerItemSlot.Item.type];
             if (data.Valid && !data.Empty)
@@ -181,29 +191,32 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 float availableFuel = data.Capacity * liquidContainerItemSlot.Item.stack;
 
                 if (availableFuel <= 0)
-                    dumpButtonInteractible = false;
-
-                if (availableFuel > neededFuel && liquidContainerItemSlot.Item.stack > 1)
                 {
                     dumpButtonInteractible = false;
-                    overflowWarningVisible = true;
+                }
+                else
+                {
+                    textPanel1.SetText($"+{MathHelper.Clamp(availableFuel, 0, neededFuel)} l");
                 }
 
                 if (neededFuel > 0f)
                 {
-                    canisterBufferLevel = (data.Capacity * liquidContainerItemSlot.Item.stack) / (Rocket.FuelCapacity - Rocket.Fuel);
-                    if (canisterBufferLevel > 1f)
-                        canisterBufferLevel = 1f;
+                    previewLiquidLevel = availableFuel / neededFuel;
+                    if (previewLiquidLevel > 1f)
+                        previewLiquidLevel = 1f;
                 }
             }
-
-            canisterBufferTank.LiquidLevel = MathHelper.Lerp(canisterBufferTank.LiquidLevel, canisterBufferLevel, 0.1f);
+            else
+            {
+                textPanel1.SetText("+0 l");
+            }
 
             float rocketFuelPercent = Rocket.Fuel / Rocket.FuelCapacity;
             if (rocketFuelPercent > 1f)
                 rocketFuelPercent = 1f;
 
             rocketFuelTank.LiquidLevel = MathHelper.Lerp(rocketFuelTank.LiquidLevel, rocketFuelPercent, 0.1f);
+            rocketFuelTank.PreviewLiquidLevel = MathHelper.Lerp(rocketFuelTank.PreviewLiquidLevel, previewLiquidLevel, 0.1f);
         }
 
         public void RefreshItemSlot()
@@ -216,19 +229,35 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             LiquidContainerData data = ItemSets.LiquidContainerData[liquidContainerItemSlot.Item.type];
             if (data.Valid && !data.Empty)
             {
-                float availableFuel = data.Capacity * liquidContainerItemSlot.Item.stack;
+                float fuelPerCanister = data.Capacity;
+                int availableCanisters = liquidContainerItemSlot.Item.stack;
                 float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
-                float addedFuel = Math.Min(availableFuel, neededFuel);
 
+                if (neededFuel <= 0)
+                    return; 
+
+                int canistersUsed = (int)Math.Min(availableCanisters, Math.Floor(neededFuel / fuelPerCanister));
+
+                if (canistersUsed == 0)
+                    return; 
+
+                float addedFuel = canistersUsed * fuelPerCanister;
                 Rocket.Fuel += addedFuel;
 
-                int type = LiquidContainerData.GetEmptyType(ItemSets.LiquidContainerData, liquidContainerItemSlot.Item.type);
-                int stack = liquidContainerItemSlot.Item.stack;
-                Rocket.Inventory[Rocket.SpecialInventorySlot_FuelTank] = new Item(type, stack);
-                RefreshItemSlot();
+                liquidContainerItemSlot.Item.stack -= canistersUsed;
+                if (liquidContainerItemSlot.Item.stack <= 0)
+                    liquidContainerItemSlot.Item.TurnToAir();
 
+                int emptyType = LiquidContainerData.GetEmptyType(ItemSets.LiquidContainerData, liquidContainerItemSlot.Item.type);
+                Item emptyCanisters = new(emptyType, canistersUsed);
+
+                bool addedToInventory = Rocket.Inventory.TryPlacingItem(emptyCanisters);
+                if (!addedToInventory)
+                    Main.LocalPlayer.QuickSpawnItem(new EntitySource_OverfullInventory(Main.LocalPlayer), emptyType, canistersUsed);
+
+                RefreshItemSlot();
                 Rocket.NetSync();
-                Rocket.Inventory.SyncItem(Rocket.SpecialInventorySlot_FuelTank);
+                Rocket.Inventory.SyncEverything();
             }
         }
 
@@ -246,7 +275,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                     x: (int)(fuelPlacementDimensions.Center().X - 10f),
                     y: (int)(fuelPlacementDimensions.Center().Y + fuelPlacementDimensions.Height / 2f),
                     width: 24,
-                    height: 178
+                    height: 261
                 ),
                 UITheme.Current.PanelStyle.BackgroundColor,
                 UITheme.Current.PanelStyle.BorderColor,
@@ -260,7 +289,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                     x: (int)(fuelTankDimensions.Center().X - 12f),
                     y: (int)(fuelTankDimensions.Center().Y + fuelTankDimensions.Height / 2f),
                     width: 24,
-                    height: 30
+                    height: 31
                 ),
                 UITheme.Current.PanelStyle.BackgroundColor,
                 UITheme.Current.PanelStyle.BorderColor,

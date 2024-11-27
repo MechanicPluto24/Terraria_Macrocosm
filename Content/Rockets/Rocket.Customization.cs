@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Consumables.Unlockables;
 using Macrocosm.Content.Rockets.Customization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,6 +16,20 @@ namespace Macrocosm.Content.Rockets
             Rocket visualClone = new();
             visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
             return visualClone;
+        }
+
+        public bool CheckUnlockableItemUnlocked(Item item)
+        {
+            if (item.ModItem is PatternDesign patternDesign)
+            {
+                foreach (var (moduleName, patternName) in patternDesign.Patterns)
+                {
+                    if (CustomizationStorage.GetPatternUnlockedStatus(moduleName, patternName))
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         public void ApplyCustomizationChanges(Rocket source, bool sync = true, bool reset = true)

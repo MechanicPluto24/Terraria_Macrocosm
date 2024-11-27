@@ -33,6 +33,8 @@ namespace Macrocosm.Common.UI
         public float WaveFrequency { get; set; } = 5f;
         public float WaveAmplitude { get; set; } = 0.1f;
         public bool RoundCorners { get; set; } = false;
+        public bool Bubbles { get; set; } = true;
+        public float Opacity { get; set; } = 1f;
 
         public UILiquid(LiquidType liquidType)
         {
@@ -59,7 +61,7 @@ namespace Macrocosm.Common.UI
             Rectangle fillArea = GetFillArea();
             List<Particle> bubbles = ParticleManager.GetParticlesDrawnBy(this);
 
-            if (bubbles.Count < (float)(20 * LiquidLevel))
+            if (Bubbles && bubbles.Count < (float)(20 * LiquidLevel))
             {
                 if (liquidType == LiquidType.RocketFuel)
                 {
@@ -139,16 +141,17 @@ namespace Macrocosm.Common.UI
                 int waveFillHeight = fillBottom - (int)waveTop;
                 if (waveFillHeight > 0)
                 {
-                    spriteBatch.Draw(texture.Value, new Rectangle(fillArea.X + x, (int)waveTop, sliceSize, waveFillHeight), fillSourceRectangle, Color.White);
+                    spriteBatch.Draw(texture.Value, new Rectangle(fillArea.X + x, (int)waveTop, sliceSize, waveFillHeight), fillSourceRectangle, Color.White * Opacity);
                 }
 
-                spriteBatch.Draw(texture.Value, new Vector2(fillArea.X + x, waveTop - surfaceSliceHeight), surfaceSourceRectangle, Color.White * 0.8f);
+                spriteBatch.Draw(texture.Value, new Vector2(fillArea.X + x, waveTop - surfaceSliceHeight), surfaceSourceRectangle, Color.White * 0.8f * Opacity);
 
             }
 
-            foreach (var bubble in ParticleManager.GetParticlesDrawnBy(this))
+            if (Bubbles)
             {
-                bubble.Draw(spriteBatch, Vector2.Zero, Color.White * 0.5f);
+                foreach (var bubble in ParticleManager.GetParticlesDrawnBy(this))
+                    bubble.Draw(spriteBatch, Vector2.Zero, Color.White * 0.5f);
             }
 
             if (Parent.OverflowHidden)

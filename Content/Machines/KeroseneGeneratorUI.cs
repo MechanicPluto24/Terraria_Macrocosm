@@ -111,11 +111,6 @@ namespace Macrocosm.Content.Machines
                     inputSlot.Left = new(i * 48, 0f);
                     inputSlot.VAlign = 0.5f;
                     inputSlot.SetPadding(0f);
-                    inputSlot.AddReserved(
-                         (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Valid,
-                         Language.GetText("Mods.Macrocosm.Machines.Common.BurnFuel"),
-                         ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/BurnFuel")
-                    );
                     inventoryPanel.Append(inputSlot);
                 }
             }
