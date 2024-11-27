@@ -37,13 +37,19 @@ namespace Macrocosm.Common.Drawing.Sky
         /// </summary>
         /// <param name="baseScale"> The average scaling of the stars relative to vanilla </param>
         /// <param name="twinkleFactor"> How much a star will twinkle, keep between (0f, 1f); 0.4f for vanilla effect</param>
-        public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f)
+        public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f, Color? color = null)
         {
             FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
 
             texture = TextureAssets.Star[fastRandom.Next(0, 4)];
             Brightness = 1f;
-            color = Color.White;
+
+            this.color = Color.White;
+            if (color.HasValue)
+            {
+                this.color = color.Value;
+                OverrideColor(color.Value);
+            }
 
             this.position = position;
             rotation = fastRandom.Next(628) * 0.01f;

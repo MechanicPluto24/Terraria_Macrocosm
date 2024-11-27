@@ -86,7 +86,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 if (Main.rand.NextFloat(1f) <= brightness)
                 {
                     Vector2 position = new(x, y); 
-                    stars.Add(new MacrocosmStar(position, baseScale, twinkleFactor));
+                    stars.Add(new MacrocosmStar(position, baseScale, twinkleFactor, Color.Lerp(pixelColor, Color.Gray, Main.rand.NextFloat())));
                     starsSpawned++;
                 }
             }
