@@ -1,6 +1,8 @@
 ﻿using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -28,6 +31,12 @@ namespace Macrocosm.Common.Storage
 
         private Item[] items;
         private UIInventorySlot[] uiItemSlots;
+
+        private bool[] reservedSlots;
+        private Func<Item, bool>[] reservedChecks;
+
+        private LocalizedText[] reservedTooltips;
+        private Asset<Texture2D>[] reservedTextures;
 
         public Item this[int index]
         {
@@ -85,6 +94,11 @@ namespace Macrocosm.Common.Storage
 
             items = new Item[clampedSize];
             uiItemSlots = new UIInventorySlot[clampedSize];
+
+            reservedSlots = new bool[clampedSize];
+            reservedChecks = new Func<Item, bool>[clampedSize];
+            reservedTooltips = new LocalizedText[clampedSize];
+            reservedTextures = new Asset<Texture2D>[clampedSize];
 
             for (int i = 0; i < items.Length; i++)
             {
@@ -158,6 +172,63 @@ namespace Macrocosm.Common.Storage
                 Array.Fill(items, new Item(), oldSize, newSize - oldSize);
         }
 
+        public void SetReserved(int index, Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        {
+            if (index < 0 || index >= Size)
+                return;
+
+            reservedSlots[index] = true;
+            reservedChecks[index] = checkReserved;
+            reservedTooltips[index] = tooltip;
+            reservedTextures[index] = texture;
+        }
+
+        public void SetReserved(int index, int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
+            => SetReserved(index, (item) => item.type == itemType, reservedTooltip, reservedTexture);
+
+        public void SetReserved(Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                reservedSlots[i] = true;
+                reservedChecks[i] = checkReserved;
+                reservedTooltips[i] = tooltip;
+                reservedTextures[i] = texture;
+            }
+        }
+
+        public void SetReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
+            => SetReserved((item) => item.type == itemType, reservedTooltip, reservedTexture);
+
+        public void ClearReserved(int index)
+        {
+            if (index < 0 || index >= Size)
+                return;
+
+            reservedSlots[index] = false;
+            reservedChecks[index] = null;
+            reservedTooltips[index] = null;
+            reservedTextures[index] = null;
+        }
+
+        public bool ReservedCheck(int index, Item item)
+        {
+            if (index < 0 || index >= Size || item.type == ItemID.None || !reservedSlots[index])
+                return true;
+
+            return reservedChecks[index]?.Invoke(item) ?? true;
+        }
+
+        public LocalizedText GetReservedTooltip(int index)
+        {
+            return index >= 0 && index < reservedTooltips.Length ? reservedTooltips[index] : null;
+        }
+
+        public Asset<Texture2D> GetReservedTexture(int index)
+        {
+            return index >= 0 && index < reservedTextures.Length ? reservedTextures[index] : null;
+        }
+
         public bool TryPlacingItem(Item item, bool justCheck = false, bool sound = true, bool serverSync = true, int startFromIndex = 0)
         {
             if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
@@ -174,7 +245,7 @@ namespace Macrocosm.Common.Storage
                     if (!uiItemSlots[i].CanInteract)
                         continue;
 
-                    if (!uiItemSlots[i].ReservedCheck(item))
+                    if (!ReservedCheck(i, item))
                         continue;
 
                     if (items[i].stack >= items[i].maxStack || item.type != items[i].type)
@@ -230,7 +301,7 @@ namespace Macrocosm.Common.Storage
                     if (!uiItemSlots[j].CanInteract)
                         continue;
 
-                    if (!uiItemSlots[j].ReservedCheck(item))
+                    if (!ReservedCheck(j, item))
                         continue;
 
                     if (items[j].stack != 0)
@@ -277,7 +348,7 @@ namespace Macrocosm.Common.Storage
                     if (!uiItemSlots[i].CanInteract)
                         continue;
 
-                    if (!uiItemSlots[i].ReservedCheck(item))
+                    if (!ReservedCheck(i, item))
                         continue;
 
                     if (items[i].stack >= items[i].maxStack || item.type != items[i].type)
@@ -334,7 +405,7 @@ namespace Macrocosm.Common.Storage
                     if (!uiItemSlots[j].CanInteract)
                         continue;
 
-                    if (!uiItemSlots[j].ReservedCheck(item))
+                    if (!ReservedCheck(j, item))
                         continue;
 
                     if (items[j].stack != 0)

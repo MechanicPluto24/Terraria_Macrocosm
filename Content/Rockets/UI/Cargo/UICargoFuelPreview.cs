@@ -1,7 +1,10 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 
@@ -13,7 +16,9 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private UIText title;
 
-        private UILiquidTank rocketFuelTank;
+        private UILiquidTank rocketFuelTank; 
+        private UITextPanel<string> textPanel;
+
 
         public override void OnInitialize()
         {
@@ -39,18 +44,33 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             rocketFuelTank = new(LiquidType.RocketFuel)
             {
                 Width = new(0, 0.8f),
-                Height = new(0, 0.9f),
+                Height = new(0, 0.75f),
                 Top = new(0, 0.1f),
                 HAlign = 0.5f,
                 WaveAmplitude = 1f,
                 WaveFrequency = 2f
             };
             Append(rocketFuelTank);
+
+            textPanel = new("", textScale: 0.8f)
+            {
+                Width = new(0, 0.8f),
+                Height = new(0, 0.14f),
+                Top = new(0, 0.875f),
+                HAlign = 0.5f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
+            };
+            textPanel.SetPadding(4f);
+            textPanel.PaddingTop += 4f;
+            textPanel.PaddingLeft -= 4f;
+            Append(textPanel);
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
 
             if (IsMouseHovering)
             {
@@ -63,7 +83,14 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
             }
 
-            rocketFuelTank.LiquidLevel = Rocket.Fuel / Rocket.FuelCapacity;
+            string target = Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetWorld;
+            float fuelCost = string.IsNullOrEmpty(target) ? 0f : RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentID, target);
+
+            textPanel.SetText($"-{MathHelper.Clamp(fuelCost, 0, Rocket.FuelCapacity)} l");
+            textPanel.TextColor = fuelCost > Rocket.Fuel ? Color.Red : Color.White;
+
+            rocketFuelTank.LiquidLevel = MathHelper.Lerp(rocketFuelTank.LiquidLevel, Rocket.Fuel / Rocket.FuelCapacity - fuelCost / Rocket.FuelCapacity, 0.1f);
+            rocketFuelTank.PreviewLiquidLevel = MathHelper.Lerp(rocketFuelTank.PreviewLiquidLevel, Rocket.Fuel / Rocket.FuelCapacity, 0.1f);
         }
     }
 }

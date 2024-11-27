@@ -484,24 +484,9 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             RefreshPatternColorPickers();
         }
 
-        private bool CheckUnlockableItemUnlocked(Item item)
-        {
-            if (item.ModItem is PatternDesign patternDesign)
-            {
-                foreach (var (moduleName, patternName) in patternDesign.Patterns)
-                {
-                    if (CustomizationStorage.GetPatternUnlockedStatus(moduleName, patternName))
-                        return true;
-                }
-            }
-
-            return false;
-        }
-
-
         private void ApplyUnlockableItem()
         {
-            if (CheckUnlockableItemUnlocked(ItemInUnlockableSlot))
+            if (Rocket.CheckUnlockableItemUnlocked(ItemInUnlockableSlot))
                 return;
 
             if (ItemInUnlockableSlot.ModItem is PatternDesign patternDesign)
@@ -931,7 +916,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 GrayscaleIconIfNotInteractible = true,
                 CheckInteractible = () =>
                 {
-                    return !CheckUnlockableItemUnlocked(ItemInUnlockableSlot)
+                    return !Rocket.CheckUnlockableItemUnlocked(ItemInUnlockableSlot)
                         && ItemInUnlockableSlot.ModItem is PatternDesign patternDesign;
                 }
             };
@@ -1020,7 +1005,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         private UIInventorySlot CreateUnlockableItemSlot()
         {
             unlockableItemSlot = Rocket.Inventory.ProvideItemSlot(Rocket.SpecialInventorySlot_CustomizationUnlock);
-            unlockableItemSlot.AddReserved(CheckUnlockableItemUnlocked);
             unlockableItemSlot.HAlign = 0.5f;
             unlockableItemSlot.VAlign = 0.5f;
             return unlockableItemSlot;

@@ -7,8 +7,6 @@ namespace Macrocosm.Content.Items.Machines
 {
     public class KeroseneGenerator : ModItem
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public override void SetStaticDefaults()
         {
         }
