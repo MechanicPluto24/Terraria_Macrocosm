@@ -1,8 +1,5 @@
 ﻿using Macrocosm.Common.Sets;
-using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Skies.Moon;
-using Macrocosm.Content.Tiles.Ambient;
+using Macrocosm.Content.Rockets;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
@@ -48,6 +45,12 @@ namespace Macrocosm.Content.Items.Dev
             SkyManager.Instance["Macrocosm:MoonSky"].Deactivate();
             SkyManager.Instance["Macrocosm:MoonSky"].Activate(default);
             */
+
+            foreach(var rocket in RocketManager.Rockets)
+            {
+                if (rocket.Bounds.Contains((int)Main.MouseWorld.X, (int)Main.MouseWorld.Y))
+                    rocket.Fuel = 0f;
+            }
 
             return true;
         }

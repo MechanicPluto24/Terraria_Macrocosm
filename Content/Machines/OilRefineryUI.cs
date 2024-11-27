@@ -81,11 +81,6 @@ namespace Macrocosm.Content.Machines
                     var inputSlot = OilRefinery.Inventory.ProvideItemSlot(i);
                     inputSlot.Top = new(48 * (i - 2), 0f);
                     inputSlot.HAlign = 0.5f;
-                    inputSlot.AddReserved(
-                        (item) => item.type >= ItemID.None && ItemSets.LiquidExtractData[item.type].Valid,
-                        Language.GetText("Mods.Macrocosm.Machines.Common.LiquidExtract"),
-                        ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/LiquidExtract")
-                    );
                     inventoryPanel.Append(inputSlot);
                 }
             }
@@ -169,11 +164,6 @@ namespace Macrocosm.Content.Machines
                 containerSlot = OilRefinery.Inventory.ProvideItemSlot(0);
                 containerSlot.VAlign = 0.32f;
                 containerSlot.HAlign = 0.95f;
-                containerSlot.AddReserved(
-                    (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
-                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
-                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
-                );
                 backgroundPanel.Append(containerSlot);
             }
 
@@ -191,11 +181,6 @@ namespace Macrocosm.Content.Machines
                 outputSlot = OilRefinery.Inventory.ProvideItemSlot(1);
                 outputSlot.Top = new(0, 0.65f);
                 outputSlot.HAlign = 0.95f;
-                outputSlot.AddReserved(
-                    (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
-                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
-                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
-                );
                 backgroundPanel.Append(outputSlot);
             }
         }
