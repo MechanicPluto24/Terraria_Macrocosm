@@ -9,6 +9,8 @@ namespace Macrocosm.Content.Items.Connectors
 {
     public class Conveyor : ModItem
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
