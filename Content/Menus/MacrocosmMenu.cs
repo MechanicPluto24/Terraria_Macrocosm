@@ -15,125 +15,74 @@ namespace Macrocosm.Content.Menus
 {
     public class MacrocosmMenu : ModMenu
     {
-        private const string AssetPath = "Macrocosm/Content/Menus/";
-        private const AssetRequestMode Mode = AssetRequestMode.ImmediateLoad;
+        private const string path = "Macrocosm/Content/Menus/";
+        private const AssetRequestMode immediate = AssetRequestMode.ImmediateLoad;
 
-        private readonly List<CelestialBody> celestialBodies = new();
-        private readonly List<CelestialBody> planetsWithMoons = new();
-        private readonly List<CelestialBody> interactible = new();
+        private Asset<Texture2D> logo;
+        private Asset<Texture2D> logoOld;
 
-        public readonly Stars Stars = new();
+        private List<CelestialBody> celestialBodies;
+        private List<CelestialBody> planetsWithMoons;
+        private List<CelestialBody> interactible;
 
-        public readonly CelestialBody Sun = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Sun", Mode));
+        private Stars stars;
+        private Asset<Texture2D> milkyWay;
+        private Asset<Texture2D> nebula;
+        private RawTexture milkyWayRaw;
+        private RawTexture nebulaRaw;
 
-        public readonly CelestialBody Vulcan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Vulcan", Mode));
-        public readonly CelestialBody Mercury = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mercury", Mode));
-        public readonly CelestialBody Venus = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Venus", Mode));
+        private CelestialBody sun;
+        private Asset<Texture2D> sunCorona1;
+        private Asset<Texture2D> sunCorona2;
+        private Asset<Texture2D> sunCorona3;
+        private Asset<Texture2D> sunCorona4;
+        private Asset<Texture2D> sunCorona5;
+        private Asset<Texture2D> flare;
+        private Asset<Texture2D> scorch1;
+        private Asset<Texture2D> scorch2;
+        private Asset<Effect> radialSaturation;
 
-        public readonly CelestialBody Earth = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Earth", Mode));
-        public readonly CelestialBody Luna = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Luna", Mode));
+        private CelestialBody vulcan;
 
-        public readonly CelestialBody Mars = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Mars", Mode));
-        public readonly CelestialBody Phobos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Phobos", Mode));
-        public readonly CelestialBody Deimos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Deimos", Mode));
+        private CelestialBody mercury;
 
-        public readonly CelestialBody Ceres = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ceres", Mode));
-        private readonly Asset<Texture2D> asteroids = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Asteroids", Mode);
-        public readonly List<CelestialBody> AsteroidBelt = new();
+        private CelestialBody venus;
 
-        public readonly CelestialBody Jupiter = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Jupiter", Mode));
-        public readonly CelestialBody Io = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Io", Mode));
-        public readonly CelestialBody Europa = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Europa", Mode));
+        private CelestialBody earth;
+        private CelestialBody luna;
 
-        public readonly CelestialBody Saturn = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Saturn", Mode),
-                                                    ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SaturnRings", Mode),
-                                                    ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SaturnRings", Mode));
-        public readonly CelestialBody Titan = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Titan", Mode));
+        private CelestialBody mars;
+        private CelestialBody phobos;
+        private CelestialBody deimos;
 
-        public readonly CelestialBody Ouranos = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Ouranos", Mode),
-                                                    ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode),
-                                                    ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/OuranosRings", Mode));
-        public readonly CelestialBody Miranda = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Miranda", Mode));
+        private CelestialBody ceres;
+        private Asset<Texture2D> asteroids;
+        private List<CelestialBody> asteroidBelt;
 
-        public readonly CelestialBody Neptune = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Neptune", Mode));
-        public readonly CelestialBody Triton = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Triton", Mode));
+        private CelestialBody jupiter;
+        private CelestialBody io;
+        private CelestialBody europa;
 
-        private readonly CelestialBody plutoBarycenter = new(size: new Vector2(100, 100));
-        public readonly CelestialBody Pluto = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Pluto", Mode));
-        public readonly CelestialBody Charon = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Charon", Mode));
+        private CelestialBody saturn;
+        private CelestialBody titan;
 
-        public readonly CelestialBody Eris = new(ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/Eris", Mode));
-        private readonly Asset<Texture2D> icyAsteroids = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/IcyAsteroids", Mode);
-        public readonly List<CelestialBody> KuiperBelt = new();
+        private CelestialBody ouranos;
+        private CelestialBody miranda;
 
-        private readonly Asset<Texture2D> sunCorona1 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona1", Mode);
-        private readonly Asset<Texture2D> sunCorona2 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona2", Mode);
-        private readonly Asset<Texture2D> sunCorona3 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona3", Mode);
-        private readonly Asset<Texture2D> sunCorona4 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona4", Mode);
-        private readonly Asset<Texture2D> sunCorona5 = ModContent.Request<Texture2D>(AssetPath + "CelestialBodies/SunCorona5", Mode);
+        private CelestialBody neptune;
+        private CelestialBody triton;
 
-        private readonly Asset<Texture2D> logo = ModContent.Request<Texture2D>(AssetPath + "Logo", Mode);
-        private readonly Asset<Texture2D> logoOld = ModContent.Request<Texture2D>(AssetPath + "Logo_Old", Mode);
+        private CelestialBody plutoBarycenter;
+        private CelestialBody pluto;
+        private CelestialBody charon;
 
-        private readonly Asset<Texture2D> milkyWay = ModContent.Request<Texture2D>(AssetPath + "MilkyWay", Mode);
-        private readonly Asset<Texture2D> nebula = ModContent.Request<Texture2D>(AssetPath + "Nebula", Mode);
+        private CelestialBody eris;
 
-        private readonly Asset<Effect> radialSaturation = ModContent.Request<Effect>(Macrocosm.ShadersPath + "RadialSaturation", Mode);
+        private Asset<Texture2D> icyAsteroids;
+        private List<CelestialBody> kuiperBelt;
 
         public MacrocosmMenu()
         {
-            celestialBodies =
-            [
-				//Sun,
- 				Vulcan,
-                Mercury,
-                Venus,
-                Earth,
-                Luna,
-                Mars,
-                Phobos,
-                Deimos,
-                Ceres,
-                Jupiter,
-                Io,
-                Europa,
-                Saturn,
-                Titan,
-                Ouranos,
-                Miranda,
-                Neptune,
-                Triton,
-                Pluto,
-                Charon,
-                Eris
-            ];
-
-            planetsWithMoons =
-            [
-                Earth,
-                Mars,
-                Jupiter,
-                Saturn,
-                Ouranos,
-                Neptune,
-                plutoBarycenter
-            ];
-
-            interactible =
-            [
-                Vulcan,
-                Mercury,
-                Venus,
-                Earth,
-                Mars,
-                Ceres,
-                Jupiter,
-                Saturn,
-                Ouranos,
-                Neptune,
-                plutoBarycenter,
-                Eris
-            ];
         }
 
         private CelestialBody grabbed;
@@ -161,69 +110,203 @@ namespace Macrocosm.Content.Menus
 
         private void Setup()
         {
-            Stars.SpawnStars(450, baseScale: 0.8f);
+            celestialBodies = new();
+            planetsWithMoons = new();
+            interactible = new();
+
+            logo ??= ModContent.Request<Texture2D>(path + "Logo");
+            logoOld ??= ModContent.Request<Texture2D>(path + "Logo_Old");
+
+            milkyWay ??= ModContent.Request<Texture2D>(path + "MilkyWay", immediate);
+            nebula ??= ModContent.Request<Texture2D>(path + "Nebula", immediate);
+
+            milkyWayRaw = RawTexture.FromAsset(milkyWay);
+            nebulaRaw = RawTexture.FromAsset(nebula);
+
+            stars = new();
+            stars.SpawnStars(850, baseScale: 0.8f, randomColor: true);
+            stars.SpawnStars(milkyWayRaw, 3000, baseScale: 0.6f);
+            stars.SpawnStars(nebulaRaw, 3000, baseScale: 0.6f);
+
+            sun ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Sun", immediate));
+            sun.Center = Utility.ScreenCenter;
+            sun.OverrideBodyShader = Sun_GetShader;
+            sunCorona1 ??= ModContent.Request<Texture2D>(path + "CelestialBodies/SunCorona1");
+            sunCorona2 ??= ModContent.Request<Texture2D>(path + "CelestialBodies/SunCorona2");
+            sunCorona3 ??= ModContent.Request<Texture2D>(path + "CelestialBodies/SunCorona3");
+            sunCorona4 ??= ModContent.Request<Texture2D>(path + "CelestialBodies/SunCorona4");
+            sunCorona5 ??= ModContent.Request<Texture2D>(path + "CelestialBodies/SunCorona5");
+
+            vulcan ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Vulcan", immediate));
+            vulcan.SetOrbitParent(sun, 174, Rand(), 0.0022f);
+
+            mercury ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Mercury", immediate));
+            mercury.SetOrbitParent(sun, 204, Rand(), 0.0018f);
+
+            venus ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Venus", immediate));
+            venus.SetOrbitParent(sun, 238, Rand(), 0.0014f);
+
+            earth ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Earth", immediate));
+            earth.SetOrbitParent(sun, 288, Rand(), 0.001f);
+            luna ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Luna", immediate));
+            luna.SetOrbitParent(earth, new Vector2(36, 10), 0f, Rand(), 0.018f);
+
+            mars ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Mars", immediate));
+            mars.SetOrbitParent(sun, 330, Rand(), 0.0008f);
+            phobos ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Phobos", immediate));
+            phobos.SetOrbitParent(mars, new Vector2(20, 8), 0.2f, Rand(), 0.014f);
+            deimos ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Deimos", immediate));
+            deimos.SetOrbitParent(mars, new Vector2(24, 10), -0.4f, Rand(), 0.016f);
+
+            ceres = new(ModContent.Request<Texture2D>(path + "CelestialBodies/Ceres", immediate));
+            ceres.SetOrbitParent(sun, 362, Rand(), 0.0006f);
+
+            asteroids = ModContent.Request<Texture2D>(path + "CelestialBodies/Asteroids", immediate);
+            asteroidBelt = new();
+            for (int i = 0; i < 450; i++)
+            {
+                Rectangle sourceRect = asteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
+                CelestialBody asteroid = new(asteroids, scale: 0.6f, bodySourceRect: sourceRect);
+                asteroid.ResetSpritebatch = false;
+                asteroid.SetOrbitParent(sun,
+                    orbitRadius: 370 + Main.rand.NextFloat(40) * MathF.Sin(Rand()),
+                    orbitRotation: Rand(),
+                    orbitSpeed: Main.rand.NextFloat(0.00001f, 0.00045f)
+                    );
+                asteroidBelt.Add(asteroid);
+            }
+
+            jupiter ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Jupiter", immediate));
+            jupiter.SetOrbitParent(sun, 410, Rand(), 0.0004f);
+            io ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Io", immediate));
+            io.SetOrbitParent(jupiter, new Vector2(48, 20), 0.2f, Rand(), 0.012f);
+            europa ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Europa", immediate));
+            europa.SetOrbitParent(jupiter, new Vector2(54, 18), 0.1f, Rand(), 0.01f);
+
+            saturn ??= new(
+                ModContent.Request<Texture2D>(path + "CelestialBodies/Saturn", immediate),
+                ModContent.Request<Texture2D>(path + "CelestialBodies/SaturnRings", immediate),
+                ModContent.Request<Texture2D>(path + "CelestialBodies/SaturnRings", immediate)
+            );
+            saturn.SetOrbitParent(sun, 514, Rand(), 0.00037f);
+            saturn.ConfigureBackRadialShader = Saturn_ConfigureRingsShader;
+            saturn.ConfigureFrontRadialShader = Saturn_ConfigureRingsShader;
+            saturn.OverrideBackDraw = Saturn_DrawRings_Back;
+            saturn.OverrideFrontDraw = Saturn_DrawRings_Front;
+            titan ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Titan", immediate));
+            titan.SetOrbitParent(saturn, new Vector2(52, 28), 0.8f, Rand(), 0.012f);
+
+            ouranos ??= new(
+                ModContent.Request<Texture2D>(path + "CelestialBodies/Ouranos", immediate),
+                ModContent.Request<Texture2D>(path + "CelestialBodies/OuranosRings", immediate),
+                ModContent.Request<Texture2D>(path + "CelestialBodies/OuranosRings", immediate)
+            );
+
+            ouranos.SetOrbitParent(sun, 622, Rand(), 0.0003f);
+            ouranos.OverrideBackDraw = Ouranos_DrawRings_Back;
+            ouranos.OverrideFrontDraw = Ouranos_DrawRings_Front;
+            miranda ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Miranda", immediate));
+            miranda.SetOrbitParent(ouranos, new Vector2(42, 18), 0f, Rand(), 0.017f);
+
+            neptune ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Neptune", immediate));
+            neptune.SetOrbitParent(sun, 700, Rand(), 0.00027f);
+            triton ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Triton", immediate));
+            triton.SetOrbitParent(neptune, new Vector2(36, 26), 0.9f, Rand(), 0.018f);
+
+            plutoBarycenter ??= new();
+            pluto ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Pluto", immediate));
+            plutoBarycenter.AddOrbitChild(pluto, 4, 0f, 0.005f);
+            charon ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Charon", immediate));
+            plutoBarycenter.AddOrbitChild(charon, 18, 3.14f, 0.008f);
+            plutoBarycenter.SetOrbitParent(sun, new Vector2(760, 620), 0.28f, Rand(), 0.00022f);
+
+            eris ??= new(ModContent.Request<Texture2D>(path + "CelestialBodies/Eris", immediate));
+            eris.SetOrbitParent(sun, 810, Rand(), 0.00018f);
+
+            icyAsteroids ??= ModContent.Request<Texture2D>(path + "CelestialBodies/IcyAsteroids", immediate);
+            kuiperBelt = new();
+            for (int i = 0; i < 600; i++)
+            {
+                Rectangle sourceRect = icyAsteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
+                CelestialBody icyAsteroid = new(icyAsteroids, scale: 0.6f, bodySourceRect: sourceRect);
+                icyAsteroid.ResetSpritebatch = false;
+                icyAsteroid.SetOrbitParent(sun,
+                    orbitRadius: 800 + Main.rand.NextFloat(100) * MathF.Sin(Rand()),
+                    orbitRotation: Rand(),
+                    orbitSpeed: Main.rand.NextFloat(0.00005f, 0.00015f)
+                    );
+                kuiperBelt.Add(icyAsteroid);
+            }
+
+            celestialBodies =
+            [
+                vulcan,
+                mercury,
+                venus,
+                earth,
+                luna,
+                mars,
+                phobos,
+                deimos,
+                ceres,
+                jupiter,
+                io,
+                europa,
+                saturn,
+                titan,
+                ouranos,
+                miranda,
+                neptune,
+                triton,
+                pluto,
+                charon,
+                eris
+            ];
 
             foreach (CelestialBody body in celestialBodies)
             {
                 body.ShouldUpdate = true;
                 body.Scale = 0.6f;
-                body.SetLighting(Sun);
+                body.SetLighting(sun);
                 body.ConfigureBodySphericalShader = ConfigureBodyShader;
             }
 
-            Sun.Center = Utility.ScreenCenter;
-            Sun.OverrideBodyShader = Sun_GetShader;
+            planetsWithMoons =
+            [
+                earth,
+                mars,
+                jupiter,
+                saturn,
+                ouranos,
+                neptune,
+                plutoBarycenter
+            ];
 
-            SetUpAsteroidBelt();
-            SetUpKuiperBelt();
-
-            Vulcan.SetOrbitParent(Sun, 174, Rand(), 0.0022f);
-            Mercury.SetOrbitParent(Sun, 204, Rand(), 0.0018f);
-            Venus.SetOrbitParent(Sun, 238, Rand(), 0.0014f);
-
-            Earth.SetOrbitParent(Sun, 288, Rand(), 0.001f);
-            Luna.SetOrbitParent(Earth, new Vector2(36, 10), 0f, Rand(), 0.018f);
-
-            Mars.SetOrbitParent(Sun, 330, Rand(), 0.0008f);
-            Phobos.SetOrbitParent(Mars, new Vector2(20, 8), 0.2f, Rand(), 0.014f);
-            Deimos.SetOrbitParent(Mars, new Vector2(24, 10), -0.4f, Rand(), 0.016f);
-
-            Ceres.SetOrbitParent(Sun, 362, Rand(), 0.0006f);
-
-            Jupiter.SetOrbitParent(Sun, 410, Rand(), 0.0004f);
-            Io.SetOrbitParent(Jupiter, new Vector2(48, 20), 0.2f, Rand(), 0.012f);
-            Europa.SetOrbitParent(Jupiter, new Vector2(54, 18), 0.1f, Rand(), 0.01f);
-
-            Saturn.SetOrbitParent(Sun, 514, Rand(), 0.00037f);
-            Saturn.ConfigureBackRadialShader = Saturn_ConfigureRingsShader;
-            Saturn.ConfigureFrontRadialShader = Saturn_ConfigureRingsShader;
-            Saturn.OverrideBackDraw = Saturn_DrawRings_Back;
-            Saturn.OverrideFrontDraw = Saturn_DrawRings_Front;
-            Titan.SetOrbitParent(Saturn, new Vector2(52, 28), 0.8f, Rand(), 0.012f);
-
-            Ouranos.SetOrbitParent(Sun, 622, Rand(), 0.0003f);
-            Ouranos.OverrideBackDraw = Ouranos_DrawRings_Back;
-            Ouranos.OverrideFrontDraw = Ouranos_DrawRings_Front;
-            Miranda.SetOrbitParent(Ouranos, new Vector2(42, 18), 0f, Rand(), 0.017f);
-
-            Neptune.SetOrbitParent(Sun, 700, Rand(), 0.00027f);
-            Triton.SetOrbitParent(Neptune, new Vector2(36, 26), 0.9f, Rand(), 0.018f);
-
-            plutoBarycenter.SetOrbitParent(Sun, new Vector2(760, 620), 0.28f, Rand(), 0.00022f);
-            plutoBarycenter.AddOrbitChild(Pluto, 4, 0f, 0.005f);
-            plutoBarycenter.AddOrbitChild(Charon, 18, 3.14f, 0.008f);
-
-            Eris.SetOrbitParent(Sun, 810, Rand(), 0.00018f);
+            interactible =
+            [
+                vulcan,
+                mercury,
+                venus,
+                earth,
+                mars,
+                ceres,
+                jupiter,
+                saturn,
+                ouranos,
+                neptune,
+                plutoBarycenter,
+                eris
+            ];
         }
 
         private static float Rand() => Utility.RandomRotation();
 
         private void Clear()
         {
-            Stars.Clear();
-            Sun.ClearOrbitChildren();
-            AsteroidBelt.Clear();
-            KuiperBelt.Clear();
+            stars.Clear();
+            sun.ClearOrbitChildren();
+            asteroidBelt.Clear();
+            kuiperBelt.Clear();
             released.Clear();
             destroyed.Clear();
         }
@@ -243,8 +326,8 @@ namespace Macrocosm.Content.Menus
                 logoScale *= 0.65f;
 
             drawColor = Color.White;
-            Sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
-            Sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
+            sun.SetPosition(Main.screenWidth / 2, Main.screenHeight / 2);
+            sun.Scale = 0.85f + 0.01f * Utility.SineWave(500, MathF.PI / 2);
 
             Rectangle screen = new(0, 0, Main.screenWidth + 1, Main.screenHeight + 1);
             spriteBatch.Draw(TextureAssets.BlackTile.Value, screen, Color.Black);
@@ -253,7 +336,7 @@ namespace Macrocosm.Content.Menus
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state1);
 
-            Stars.DrawAll(spriteBatch);
+            stars.DrawAll(spriteBatch);
             spriteBatch.Draw(milkyWay.Value, screen, Color.White.WithOpacity(0.3f));
             spriteBatch.Draw(nebula.Value, screen, Color.White.WithOpacity(0.75f));
 
@@ -262,9 +345,9 @@ namespace Macrocosm.Content.Menus
 
             // Draw the asteroids behind everything.
             // They do not reset the spritebatch in the draw logic.
-            foreach (CelestialBody asteroid in AsteroidBelt)
+            foreach (CelestialBody asteroid in asteroidBelt)
                 asteroid.Draw(spriteBatch);
-            foreach (CelestialBody asteroid in KuiperBelt)
+            foreach (CelestialBody asteroid in kuiperBelt)
                 asteroid.Draw(spriteBatch);
 
             spriteBatch.End();
@@ -277,7 +360,7 @@ namespace Macrocosm.Content.Menus
                 planet.DrawChildren(spriteBatch, (child) => child.OrbitRotation - MathHelper.Pi >= child.OrbitAngle);
 
             // Draw the planets behind the Sun
-            Sun.DrawChildren(spriteBatch, (child) => !(destroyed.Contains(child) || AsteroidBelt.Contains(child) || KuiperBelt.Contains(child)));
+            sun.DrawChildren(spriteBatch, (child) => !(destroyed.Contains(child) || asteroidBelt.Contains(child) || kuiperBelt.Contains(child)));
 
             // Draw the moons in front of the host planet
             foreach (CelestialBody planet in toDraw)
@@ -286,45 +369,13 @@ namespace Macrocosm.Content.Menus
             DrawSunCorona();
 
             // Draw the Sun and additive effects
-            Sun.Draw(spriteBatch);
+            sun.Draw(spriteBatch);
             DrawSunLightEffects(spriteBatch);
 
             return true;
         }
 
         private float SolarFlareProgress => Utility.PositiveSineWave(450, MathF.PI / 2);
-
-        private void SetUpAsteroidBelt()
-        {
-            for (int i = 0; i < 450; i++)
-            {
-                Rectangle sourceRect = asteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
-                CelestialBody asteroid = new(asteroids, scale: 0.6f, bodySourceRect: sourceRect);
-                asteroid.ResetSpritebatch = false;
-                asteroid.SetOrbitParent(Sun,
-                    orbitRadius: 370 + Main.rand.NextFloat(40) * MathF.Sin(Rand()),
-                    orbitRotation: Rand(),
-                    orbitSpeed: Main.rand.NextFloat(0.00001f, 0.00045f)
-                    );
-                AsteroidBelt.Add(asteroid);
-            }
-        }
-
-        private void SetUpKuiperBelt()
-        {
-            for (int i = 0; i < 600; i++)
-            {
-                Rectangle sourceRect = icyAsteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
-                CelestialBody icyAsteroid = new(icyAsteroids, scale: 0.6f, bodySourceRect: sourceRect);
-                icyAsteroid.ResetSpritebatch = false;
-                icyAsteroid.SetOrbitParent(Sun,
-                    orbitRadius: 800 + Main.rand.NextFloat(100) * MathF.Sin(Rand()),
-                    orbitRotation: Rand(),
-                    orbitSpeed: Main.rand.NextFloat(0.00005f, 0.00015f)
-                    );
-                KuiperBelt.Add(icyAsteroid);
-            }
-        }
 
         private void DrawSunCorona()
         {
@@ -335,11 +386,11 @@ namespace Macrocosm.Content.Menus
 
             spriteBatch.Begin(BlendState.AlphaBlend, state2);
 
-            spriteBatch.Draw(sunCorona1.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona2.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona3.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona4.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
-            spriteBatch.Draw(sunCorona5.Value, Sun.Center, null, (new Color(127, 127, 127, 127) * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona1.Value, sun.Center, null, (new Color(127, 127, 127, 127) * (0.4f + 0.8f * Utility.PositiveSineWave(800, 0f))), 0, sunCorona1.Size() / 2, 0.85f + 0.04f * Utility.SineWave(800, 0f), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona2.Value, sun.Center, null, (new Color(127, 127, 127, 127) * (0.6f + 0.4f * Utility.PositiveSineWave(600, MathF.PI / 8))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(600, MathF.PI / 8), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona3.Value, sun.Center, null, (new Color(127, 127, 127, 127) * (0.8f + 0.2f * Utility.PositiveSineWave(500, MathF.PI / 4))), 0, sunCorona1.Size() / 2, 0.85f + 0.03f * Utility.SineWave(500, MathF.PI / 3), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona4.Value, sun.Center, null, (new Color(127, 127, 127, 127) * (0.7f + 0.3f * Utility.PositiveSineWave(500, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f + 0.02f * Utility.SineWave(500, MathF.PI / 2), SpriteEffects.None, 0f);
+            spriteBatch.Draw(sunCorona5.Value, sun.Center, null, (new Color(127, 127, 127, 127) * (0.6f + 0.4f * Utility.PositiveSineWave(300, MathF.PI / 2))), 0, sunCorona1.Size() / 2, 0.85f * 0.95f + 0.02f * Utility.SineWave(300, MathF.PI / 2), SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
@@ -349,12 +400,12 @@ namespace Macrocosm.Content.Menus
         {
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state1);
-            var flare = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3").Value;
-            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1").Value;
-            var scorch2 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2").Value;
-            spriteBatch.Draw(flare, Sun.Center, null, new Color(255, 96, 4) * (0.9f + 0.1f * SolarFlareProgress), 0f, flare.Size() / 2f, 2.2f + 0.2f * SolarFlareProgress, SpriteEffects.None, 0);
-            spriteBatch.Draw(scorch1, Sun.Center, null, new Color(255, 193, 0) * (0.25f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
-            spriteBatch.Draw(scorch2, Sun.Center, null, new Color(255, 193, 0) * (0.2f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
+            flare ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3");
+            scorch1 ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1");
+            scorch2 ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2");
+            spriteBatch.Draw(flare.Value, sun.Center, null, new Color(255, 96, 4) * (0.9f + 0.1f * SolarFlareProgress), 0f, flare.Size() / 2f, 2.2f + 0.2f * SolarFlareProgress, SpriteEffects.None, 0);
+            spriteBatch.Draw(scorch1.Value, sun.Center, null, new Color(255, 193, 0) * (0.25f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
+            spriteBatch.Draw(scorch2.Value, sun.Center, null, new Color(255, 193, 0) * (0.2f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
             spriteBatch.End();
             spriteBatch.Begin(state1);
         }
@@ -380,6 +431,7 @@ namespace Macrocosm.Content.Menus
 
         private Effect Sun_GetShader()
         {
+            radialSaturation ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "RadialSaturation", immediate);
             Effect effect = radialSaturation.Value;
             effect.Parameters["uCenter"].SetValue(Vector2.One * 0.5f);
             effect.Parameters["uRadius"].SetValue(0.2f + 0.1f * SolarFlareProgress);
@@ -488,10 +540,10 @@ namespace Macrocosm.Content.Menus
                 Main.alreadyGrabbingSunOrMoon = true;
                 targetPosition = mousePosition;
                 grabbed.Center = Vector2.Lerp(grabbed.Center, targetPosition, 0.1f);
-                grabbed.OrbitRotation = (grabbed.Center - Sun.Center).ToRotation();
+                grabbed.OrbitRotation = (grabbed.Center - sun.Center).ToRotation();
 
                 float minDistance = 120f - (grabbed.Width * grabbed.Scale);
-                if (Vector2.DistanceSquared(mousePosition, Sun.Center) < minDistance * minDistance)
+                if (Vector2.DistanceSquared(mousePosition, sun.Center) < minDistance * minDistance)
                 {
                     destroyed.Add(grabbed);
                     grabbed = null;
@@ -511,10 +563,10 @@ namespace Macrocosm.Content.Menus
                 released[planet]--;
                 float releaseProgress = released[planet] / 30f;
 
-                Vector2 directionFromSun = planet.Center - Sun.Center;
+                Vector2 directionFromSun = planet.Center - sun.Center;
                 if (released[kvp.Key] <= 0)
                 {
-                    planet.SetOrbitParent(Sun, directionFromSun.Length(), directionFromSun.ToRotation(), planet.OrbitSpeed);
+                    planet.SetOrbitParent(sun, directionFromSun.Length(), directionFromSun.ToRotation(), planet.OrbitSpeed);
                     planet.ShouldUpdate = true;
                     toRemove.Add(planet);
                 }
