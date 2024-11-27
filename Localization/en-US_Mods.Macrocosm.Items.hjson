@@ -2741,8 +2741,3 @@ KeroseneGenerator: {
 	DisplayName: Kerosene Generator
 	Tooltip: ""
 }
-
-Schroteri: {
-	DisplayName: Schroteri
-	Tooltip: ""
-}
