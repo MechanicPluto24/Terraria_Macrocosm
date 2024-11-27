@@ -92,7 +92,7 @@ namespace Macrocosm.Content.Skies.Moon
                 nebulaTextures[i] = ModContent.Request<Texture2D>($"{Path}{nebulaNames[i]}", mode);
 
             for (int i = 0; i < Main.maxMoons; i++)
-                nebulaRawTextures[i] = RawTexture.FromTexture2D(nebulaTextures[i].Value);
+                nebulaRawTextures[i] = RawTexture.FromAsset(nebulaTextures[i]);
         }
 
         public void Load(Mod mod)
@@ -232,13 +232,13 @@ namespace Macrocosm.Content.Skies.Moon
                 starsNight.Clear();
 
                 starsDay.SpawnStars(120, baseScale: 1.4f, twinkleFactor: 0.05f);
-                starsNight.SpawnStars(650, baseScale: 0.8f, twinkleFactor: 0.05f);
+                starsNight.SpawnStars(650, randomColor: true, baseScale: 0.8f, twinkleFactor: 0.05f);
 
                 MacrocosmStar mars = starsDay.RandStar(); // :) 
-                mars?.OverrideColor(new Color(224, 137, 8, 220));
+                mars.Color = new Color(224, 137, 8);
 
-                starsDay?.SpawnStars(densityMap: nebulaRawTextures[Main.moonType], 800, null, baseScale: 0.6f, twinkleFactor: 0.05f);
-                starsNight?.SpawnStars(densityMap: nebulaRawTextures[Main.moonType], 4600, null, baseScale: 0.6f, twinkleFactor: 0.05f);
+                starsDay?.SpawnStars(colorMap: nebulaRawTextures[Main.moonType], 800, null, baseScale: 1.1f, twinkleFactor: 0.05f);
+                starsNight?.SpawnStars(colorMap: nebulaRawTextures[Main.moonType], 6000, null, baseScale: 0.6f, twinkleFactor: 0.05f);
 
                 shouldRefreshNebulaStars = false;
             }
