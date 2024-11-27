@@ -15,6 +15,10 @@ namespace Macrocosm.Common.Drawing.Sky
         public float Brightness { get; set; }
         public Vector2 Velocity { get; set; }
         public bool Falling => falling;
+        public Color Color { get; set; }
+
+        protected Color baseColor;
+
 
         protected Vector2 position;
         protected float rotation;
@@ -24,9 +28,6 @@ namespace Macrocosm.Common.Drawing.Sky
         protected float twinkleSpeed;
 
         protected readonly Asset<Texture2D> texture;
-        protected Color color;
-        protected Color newColor;
-        protected bool colorOverridden = false;
 
         private bool falling = false;
         private Vector2 fallSpeed = Vector2.Zero;
@@ -42,14 +43,9 @@ namespace Macrocosm.Common.Drawing.Sky
             FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
 
             texture = TextureAssets.Star[fastRandom.Next(0, 4)];
-            Brightness = 1f;
 
-            this.color = Color.White;
-            if (color.HasValue)
-            {
-                this.color = color.Value;
-                OverrideColor(color.Value);
-            }
+            Brightness = 1f;
+            baseColor = color ?? new Color(155, 155, 155);
 
             this.position = position;
             rotation = fastRandom.Next(628) * 0.01f;
@@ -77,17 +73,9 @@ namespace Macrocosm.Common.Drawing.Sky
             this.texture = texture;
         }
 
-        public void OverrideColor(float r, float g, float b) => OverrideColor(new Color(r, g, b));
-        public void OverrideColor(Color color)
-        {
-            newColor = color;
-            newColor.A = this.color.A;
-            colorOverridden = true;
-        }
-
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset = default)
         {
-            if(position.X > 0 && position.X < Main.screenWidth && position.Y > 0 && position.Y < Main.screenHeight)
+            if (position.X > 0 && position.X < Main.screenWidth && position.Y > 0 && position.Y < Main.screenHeight)
             {
                 if (falling)
                 {
@@ -98,13 +86,13 @@ namespace Macrocosm.Common.Drawing.Sky
                     {
                         Vector2 trailOffset = fallSpeed * j * 0.05f;
                         float trailScale = Scale * (1f - j / maxTrailLength);
-                        Color trailColor = color * (1f - j / maxTrailLength);
+                        Color trailColor = Color * (1f - j / maxTrailLength);
 
                         spriteBatch.Draw(texture.Value, position - trailOffset, null, trailColor, rotation, texture.Size() / 2, trailScale * twinkle, default, 0f);
                     }
                 }
 
-                spriteBatch.Draw(texture.Value, position + offset, null, color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
+                spriteBatch.Draw(texture.Value, position + offset, null, Color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
             }
         }
 
@@ -149,33 +137,14 @@ namespace Macrocosm.Common.Drawing.Sky
             float fade = 1f;
 
             int red, green, blue;
-            if (!colorOverridden)
-            {
-                red = (int)(155 * twinkle * fade);
-                green = (int)(155 * twinkle * fade);
-                blue = (int)(155 * twinkle * fade);
 
-                float avg = (red + green + blue) / 3;
+            red = (int)(baseColor.R * twinkle * fade);
+            green = (int)(baseColor.G * twinkle * fade);
+            blue = (int)(baseColor.B * twinkle * fade);
 
-                if (avg > 0f)
-                    red = green = blue = (int)MathHelper.Clamp(avg * 1.4f, 0, 255);
-            }
-            else
-            {
-                red = newColor.R;
-                green = newColor.G;
-                blue = newColor.B;
-            }
 
-            color = new()
-            {
-                R = (byte)red,
-                G = (byte)green,
-                B = (byte)blue,
-                A = 255
-            };
-
-            color *= Brightness;
+            Color = new Color(red, green, blue, 255);
+            Color *= Brightness;
         }
 
         public void Fall(float deviationX = 4f, float minSpeedY = 7, float maxSpeedY = 10)

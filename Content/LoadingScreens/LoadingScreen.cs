@@ -56,11 +56,11 @@ namespace Macrocosm.Content.LoadingScreens
                     5 * Main.screenHeight
                 );
 
-                stars = new(8000, area);
+                stars = new(8000, area, randomColor: true);
             }
             else
             {
-                stars = new(600);
+                stars = new(600, randomColor: true);
             }
 
             Reset();
