@@ -70,7 +70,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 ];
 
                 Color? color = null;
-                if(randomColor && Main.rand.NextBool(4))
+                if(randomColor && Main.rand.NextBool(5))
                      color = starColors[Main.rand.Next(starColors.Length)];
 
                 stars.Add(new MacrocosmStar(position, baseScale, twinkleFactor, color));

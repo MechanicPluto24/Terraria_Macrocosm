@@ -2,9 +2,11 @@
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -46,6 +48,11 @@ namespace Macrocosm.Content.Machines
         {
             // Create new inventory if none found on world load
             Inventory ??= new(InventorySize, this);
+            Inventory.SetReserved(
+                 (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Valid,
+                 Language.GetText("Mods.Macrocosm.Machines.Common.BurnFuel"),
+                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/BurnFuel")
+            );
 
             // Assign inventory owner if the inventory was found on load
             // IInvetoryOwner does not work well with TileEntities >:(

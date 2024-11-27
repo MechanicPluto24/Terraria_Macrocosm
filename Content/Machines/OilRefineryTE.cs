@@ -3,10 +3,14 @@ using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -54,6 +58,22 @@ namespace Macrocosm.Content.Machines
         {
             // Create new inventory if none found on world load
             Inventory ??= new(InventorySize, this);
+
+            for (int i = 0; i <= 1; i++)
+                Inventory.SetReserved(
+                    i,
+                    (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
+                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
+                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
+                );
+
+            for (int i = 2; i < Inventory.Size; i++)
+                Inventory.SetReserved(
+                    i,
+                    (item) => item.type >= ItemID.None && ItemSets.LiquidExtractData[item.type].Valid,
+                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidExtract"),
+                    ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/LiquidExtract")
+                );
 
             // Assign inventory owner if the inventory was found on load
             // IInvetoryOwner does not work well with TileEntities >:(

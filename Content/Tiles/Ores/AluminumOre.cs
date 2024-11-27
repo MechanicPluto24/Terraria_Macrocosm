@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Tiles.Ores
             DustType = 84;
             HitSound = SoundID.Tink;
 
-            MinPick = 40;
+            MinPick = 35;
         }
     }
 }
