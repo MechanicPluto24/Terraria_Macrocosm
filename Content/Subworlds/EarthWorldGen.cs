@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Subworlds
 
         private void GenerateOilShales(GenerationProgress progress, GameConfiguration configuration)
         {
-            if (MacrocosmConfig.Instance.DisableOilShaleGeneration)
+            if (ServerConfig.Instance.DisableOilShaleGeneration)
                 return;
 
             // If the Desert genvars are not set, skip generation
@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Subworlds
 
         private void GenerateSilicaSand_Ocean(GenerationProgress progress, GameConfiguration configuration)
         {
-            if (MacrocosmConfig.Instance.DisableSilicaSandGeneration)
+            if (ServerConfig.Instance.DisableSilicaSandGeneration)
                 return;
 
             int maxPatches = (int)(Main.maxTilesX * 0.013);

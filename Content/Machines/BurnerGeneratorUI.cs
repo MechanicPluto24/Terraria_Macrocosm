@@ -155,16 +155,17 @@ namespace Macrocosm.Content.Machines
             base.Update(gameTime);
             Inventory.ActiveInventory = BurnerGenerator.Inventory;
 
-            powerStatusText.SetText($"{Language.GetTextValue("Mods.Macrocosm.Machines.Common.GeneratedPower")}: {MachineTE.GetPowerInfo()}");
+            string power = $"{BurnerGenerator.GeneratedPower:F2}";
+            powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format(power));
 
             burnItemIconProgressBar.Progress = BurnerGenerator.BurnProgress;
 
             hullHeatProgressBar.Progress = BurnerGenerator.HullHeatProgress;
 
             float temperature = MacrocosmSubworld.GetCurrentAmbientTemperature() + BurnerGenerator.HullHeat;
-            if (MacrocosmConfig.Instance.UnitSystem is MacrocosmConfig.UnitSystemType.Metric)
+            if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Metric)
                 hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatMetric").Format((int)temperature));
-            else if (MacrocosmConfig.Instance.UnitSystem is MacrocosmConfig.UnitSystemType.Imperial)
+            else if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Imperial)
                 hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)));
 
             if (itemIcon.Item.type != BurnerGenerator.ConsumedItem.type)

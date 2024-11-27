@@ -2731,3 +2731,18 @@ Schroteri: {
 	DisplayName: Schroteri
 	Tooltip: ""
 }
+
+Conveyor: {
+	DisplayName: Conveyor
+	Tooltip: ""
+}
+
+KeroseneGenerator: {
+	DisplayName: Kerosene Generator
+	Tooltip: ""
+}
+
+Schroteri: {
+	DisplayName: Schroteri
+	Tooltip: ""
+}

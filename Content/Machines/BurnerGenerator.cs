@@ -17,7 +17,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Machines
 {
-    public class BurnerGenerator : MachineTile, IToggleable
+    public class BurnerGenerator : MachineTile
     {
         public override short Width => 4;
         public override short Height => 3;
@@ -70,27 +70,7 @@ namespace Macrocosm.Content.Machines
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
 
-        public override void TogglePowerStateFrame(int i, int j)
-        {
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
-            for (int x = origin.X; x < origin.X + Width; x++)
-            {
-                for (int y = origin.Y; y < origin.Y + Height; y++)
-                {
-                    Tile tile = Main.tile[x, y];
-
-                    if (IsPoweredOnFrame(x, y))
-                        tile.TileFrameY -= (short)(Height * 18);
-                    else
-                        tile.TileFrameY += (short)(Height * 18);
-                }
-            }
-
-            if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
-        }
-
-        public void Toggle(int i, int j, bool skipWire = false)
+        public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
@@ -113,11 +93,6 @@ namespace Macrocosm.Content.Machines
                 NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
         }
 
-        public override void HitWire(int i, int j)
-        {
-            Toggle(i, j, skipWire: true);
-        }
-
         public override bool RightClick(int i, int j)
         {
             Main.mouseRightRelease = false;
@@ -126,7 +101,7 @@ namespace Macrocosm.Content.Machines
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             if ((i >= origin.X + 2 && i <= origin.X + 3) && (j >= origin.Y + 0 && j <= origin.Y + 1))
             {
-                Toggle(i, j, skipWire: false);
+                Toggle(i, j, automatic: false, skipWire: false);
             }
             else
             {
