@@ -2687,3 +2687,8 @@ CircuitProbe: {
 	DisplayName: Circuit Probe
 	Tooltip: Used for circuitry troubleshooting
 }
+
+IndustrialBattery: {
+	DisplayName: Industrial Battery
+	Tooltip: ""
+}
