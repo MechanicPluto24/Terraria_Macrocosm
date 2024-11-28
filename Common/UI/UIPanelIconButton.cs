@@ -100,6 +100,9 @@ namespace Macrocosm.Common.UI
         {
             base.Update(gameTime);
 
+            if (ContainsPoint(Main.MouseScreen))
+                Main.LocalPlayer.mouseInterface = true;
+
             if (uIText is not null && HasChild(uIText))
             {
                 uIText.TextColor = baseTextColor;

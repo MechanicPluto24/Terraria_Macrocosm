@@ -67,7 +67,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                     SoundEngine.PlaySound(SFX.WaveGunShot, Projectile.position);
 
-                    if (MacrocosmConfig.Instance.GunRecoilEffects)
+                    if (ClientConfig.Instance.GunRecoilEffects)
                         GunRotation += 0.3f;
                 }
 

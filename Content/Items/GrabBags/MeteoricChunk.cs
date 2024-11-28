@@ -3,6 +3,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Ores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
@@ -13,6 +14,8 @@ namespace Macrocosm.Content.Items.GrabBags
 {
     public class MeteoricChunk : ModItem
     {
+        private static Asset<Texture2D> sheet;
+
         private int frameY = 0;
         private bool flip = false;
 
@@ -23,8 +26,8 @@ namespace Macrocosm.Content.Items.GrabBags
 
         override public void SetDefaults()
         {
-            Item.width = 32;
-            Item.height = 32;
+            Item.width = 26;
+            Item.height = 26;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = Item.sellPrice(silver: 50);
             Item.rare = ItemRarityID.Purple;
@@ -44,9 +47,9 @@ namespace Macrocosm.Content.Items.GrabBags
             for (int i = 0; i < Main.rand.Next(1, 5); i++)
             {
                 int itemType = Utils.SelectRandom(Main.rand,
-                    ModContent.ItemType<ArtemiteOre>(),
-                    ModContent.ItemType<ChandriumOre>(),
                     ModContent.ItemType<SeleniteOre>(),
+                    ModContent.ItemType<ChandriumOre>(),
+                    ModContent.ItemType<ArtemiteOre>(),
                     ModContent.ItemType<DianiteOre>(),
                     ModContent.ItemType<NickelOre>()
                 );
@@ -75,16 +78,16 @@ namespace Macrocosm.Content.Items.GrabBags
         /// <summary> Draw with the default appearance in the inventory </summary>
         public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
         {
-            Draw(spriteBatch, 0, false, position, drawColor, 0f, scale * 4);
+            Draw(spriteBatch, 0, false, position, drawColor, 0f, scale);
             return false;
         }
 
         private void Draw(SpriteBatch spriteBatch, int frameY, bool flip, Vector2 position, Color color, float rotation, float scale)
         {
-            Texture2D texture = TextureAssets.Item[Type].Value;
+            sheet ??= ModContent.Request<Texture2D>(Texture + "_Sheet");
             SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-            Rectangle sourceRect = texture.Frame(1, 4, frameY: frameY);
-            spriteBatch.Draw(texture, position, sourceRect, color, rotation, new Vector2(texture.Width / 2, texture.Height / (4 * 2)), scale, effects, 0f);
+            Rectangle sourceRect = sheet.Frame(1, 4, frameY: frameY);
+            spriteBatch.Draw(sheet.Value, position, sourceRect, color, rotation, sourceRect.Size() / 2f, scale, effects, 0f);
         }
     }
 }

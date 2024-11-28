@@ -68,6 +68,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         public void OnTabOpen()
         {
+            Main.stackSplit = 600;
         }
 
         public void OnTabClose()
@@ -395,13 +396,13 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     for (int i = 0; i < module.Recipe.Count(); i++)
                     {
                         AssemblyRecipeEntry recipeEntry = module.Recipe[i];
-                        UIInventorySlot slot = Inventory.ProvideItemSlot(slotCount++);
 
                         if (recipeEntry.ItemType.HasValue)
-                            slot.AddReserved(recipeEntry.ItemType.Value, recipeEntry.Description, GetBlueprintTexture(recipeEntry.ItemType.Value));
+                            Inventory.SetReserved(slotCount, recipeEntry.ItemType.Value, recipeEntry.Description, GetBlueprintTexture(recipeEntry.ItemType.Value));
                         else
-                            slot.AddReserved(recipeEntry.ItemCheck, recipeEntry.Description, GetBlueprintTexture(recipeEntry.Description.Key));
+                            Inventory.SetReserved(slotCount, recipeEntry.ItemCheck, recipeEntry.Description, GetBlueprintTexture(recipeEntry.Description.Key));
 
+                        UIInventorySlot slot = Inventory.ProvideItemSlot(slotCount++);
                         if (recipeEntry.RequiredAmount > 1)
                         {
                             UIText amountRequiredText = new("x" + recipeEntry.RequiredAmount.ToString(), textScale: 0.8f)

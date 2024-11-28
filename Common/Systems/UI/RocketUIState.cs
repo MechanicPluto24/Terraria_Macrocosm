@@ -108,35 +108,56 @@ namespace Macrocosm.Common.Systems.UI
 
         public void OnRocketChanged()
         {
-            window.ExecuteRecursively((uIElement) =>
+            navigation.ExecuteRecursively(OnRocketChanged());
+            cargo.ExecuteRecursively(OnRocketChanged());
+            customization.ExecuteRecursively(OnRocketChanged());
+
+            UIElementAction OnRocketChanged()
             {
-                if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
-                    rocketDataConsumer.Rocket = Rocket;
-            });
+                return (uIElement) =>
+                {
+                    if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
+                        rocketDataConsumer.Rocket = Rocket;
+                };
+            }
         }
 
         public void OnShow()
         {
-            window.ExecuteRecursively((uIElement) =>
-            {
-                if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
-                {
-                    rocketDataConsumer.Rocket = Rocket;
-                    rocketDataConsumer.OnRocketChanged();
-                }
+            navigation.ExecuteRecursively(OnShow());
+            cargo.ExecuteRecursively(OnShow());
+            customization.ExecuteRecursively(OnShow());
 
-                if (uIElement is ITabUIElement tab)
-                    tab.OnTabOpen();
-            });
+            UIElementAction OnShow()
+            {
+                return (uIElement) =>
+                {
+                    if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
+                    {
+                        rocketDataConsumer.Rocket = Rocket;
+                        rocketDataConsumer.OnRocketChanged();
+                    }
+
+                    if (uIElement is ITabUIElement tab)
+                        tab.OnTabOpen();
+                };
+            }
         }
 
         public void OnHide()
         {
-            window.ExecuteRecursively((uIElement) =>
+            navigation.ExecuteRecursively(OnHide());
+            cargo.ExecuteRecursively(OnHide());
+            customization.ExecuteRecursively(OnHide());
+
+            static UIElementAction OnHide()
             {
-                if (uIElement is ITabUIElement tab)
-                    tab.OnTabClose();
-            });
+                return (uIElement) =>
+                {
+                    if (uIElement is ITabUIElement tab)
+                        tab.OnTabClose();
+                };
+            }
         }
 
         private void SwitchTab(ITabUIElement newTab)

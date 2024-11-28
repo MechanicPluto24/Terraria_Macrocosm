@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Enums;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +13,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Luminite
 {
-    public class LuminiteChandelier : ModTile
+    public class LuminiteChandelier : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
 
@@ -46,7 +47,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
         public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / (18 * 2));
 
-        public override void HitWire(int i, int j)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             int left = i - Main.tile[i, j].TileFrameX / 18 % 3;
             int top = j - Main.tile[i, j].TileFrameY / 18 % 2;
@@ -59,12 +60,17 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                     else
                         Main.tile[x, y].TileFrameX += 54;
 
-                    if (Wiring.running)
+                    if (skipWire && Wiring.running)
                         Wiring.SkipWire(x, y);
                 }
             }
 
             NetMessage.SendTileSquare(-1, left, top, 3, 2);
+        }
+
+        public override void HitWire(int i, int j)
+        {
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

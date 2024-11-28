@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
@@ -72,9 +73,8 @@ namespace Macrocosm.Content.Machines
         }
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18) * 1;
-        public override bool IsOperatingFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18) * 2;
 
-        public override void TogglePowerStateFrame(int i, int j)
+        public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
@@ -82,36 +82,14 @@ namespace Macrocosm.Content.Machines
                 for (int y = origin.Y; y < origin.Y + Height; y++)
                 {
                     Tile tile = Main.tile[x, y];
+
                     if (IsPoweredOnFrame(x, y))
-                        tile.TileFrameY -= (short)(Height * 18 * (IsOperatingFrame(x, y) ? 2 : 1));
+                        tile.TileFrameY -= (short)(Height * 18);
                     else
                         tile.TileFrameY += (short)(Height * 18);
-                }
-            }
 
-            if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
-        }
-
-        public override void HitWire(int i, int j)
-        {
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
-            for (int x = origin.X; x < origin.X + Width; x++)
-            {
-                for (int y = origin.Y; y < origin.Y + Height; y++)
-                {
-                    Tile tile = Main.tile[x, y];
-
-                    if (IsPoweredOnFrame(x, y))
-                    {
-                        if (IsOperatingFrame(x, y))
-                            tile.TileFrameY -= (short)(Height * 18);
-                        else
-                            tile.TileFrameY += (short)(Height * 18);
-
-                        if (Wiring.running)
-                            Wiring.SkipWire(x, y);
-                    }
+                    if (skipWire && Wiring.running)
+                        Wiring.SkipWire(x, y);
                 }
             }
 
@@ -128,23 +106,7 @@ namespace Macrocosm.Content.Machines
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
             {
-                for (int x = origin.X; x < origin.X + Width; x++)
-                {
-                    for (int y = origin.Y; y < origin.Y + Height; y++)
-                    {
-                        Tile tile = Main.tile[x, y];
-                        if (IsPoweredOnFrame(x, y))
-                        {
-                            if (IsOperatingFrame(x, y))
-                                tile.TileFrameY -= (short)(Height * 18);
-                            else
-                                tile.TileFrameY += (short)(Height * 18);
-                        }
-                    }
-                }
-
-                if (Main.netMode != NetmodeID.SinglePlayer)
-                    NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+                Toggle(i, j, automatic: false, skipWire: false);
             }
             else
             {
@@ -159,7 +121,7 @@ namespace Macrocosm.Content.Machines
         {
             Player player = Main.LocalPlayer;
 
-            if (!UISystem.Active && !player.mouseInterface)
+            if (!player.mouseInterface)
             {
                 player.noThrow = 2;
 
@@ -167,12 +129,9 @@ namespace Macrocosm.Content.Machines
                 if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
                 {
                     if (IsPoweredOnFrame(origin.X, origin.Y))
-                    {
-                        if (IsOperatingFrame(origin.X, origin.Y))
-                            CursorIcon.Current = CursorIcon.MachineTurnOff;
-                        else
-                            CursorIcon.Current = CursorIcon.MachineTurnOn;
-                    }
+                        CursorIcon.Current = CursorIcon.MachineTurnOff;
+                    else
+                        CursorIcon.Current = CursorIcon.MachineTurnOn;
                 }
                 else
                 {
@@ -183,7 +142,7 @@ namespace Macrocosm.Content.Machines
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            if (IsOperatingFrame(i, j))
+            if (IsPoweredOnFrame(i, j))
                 frameYOffset = 18 * Height * Main.tileFrame[type];
         }
 
@@ -214,7 +173,7 @@ namespace Macrocosm.Content.Machines
             int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
             int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
 
-            if (IsOperatingFrame(i, j))
+            if (IsPoweredOnFrame(i, j))
             {
                 // Exhaust position - spawn smoke
                 if (tileOffsetX == 1 && tileOffsetY == 0)
@@ -282,9 +241,9 @@ namespace Macrocosm.Content.Machines
 
             if (tileOffsetX is 2 && tileOffsetY is 6)
             {
-                if (IsOperatingFrame(i, j))
+                if (IsPoweredOnFrame(i, j))
                     g = 0.2f;
-                else if (IsPoweredOnFrame(i, j))
+                else
                     r = 0.2f;
             }
         }

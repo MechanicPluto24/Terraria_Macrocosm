@@ -78,6 +78,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             }
 
             flashTimer++;
+            NPC.netUpdate = true;
         }
 
         public override void HitEffect(NPC.HitInfo hit)

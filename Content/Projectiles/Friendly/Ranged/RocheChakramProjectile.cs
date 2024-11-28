@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             for (int i = 0; i < 2; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>());
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteBrightDust>());
                 dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
                 dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
                 dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
@@ -82,7 +82,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             if (Main.rand.NextBool(4))
             {
-                Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteDust>());
+                Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>());
                 dust2.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
                 dust2.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
                 dust2.scale *= 1f + Main.rand.Next(-12, 13) * 0.005f;
@@ -128,13 +128,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             for (int i = 0; i < (int)15; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteBrightDust>());
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteBrightDust>());
                 dust.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
                 dust.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
                 dust.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;
                 dust.noGravity = true;
 
-                Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<SeleniteDust>());
+                Dust dust2 = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ArtemiteDust>());
                 dust2.velocity.X = Main.rand.Next(-30, 31) * 0.02f;
                 dust2.velocity.Y = Main.rand.Next(-30, 30) * 0.02f;
                 dust2.scale *= 1f + Main.rand.Next(-12, 13) * 0.01f;

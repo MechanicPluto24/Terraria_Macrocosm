@@ -183,6 +183,7 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
         public override void ModifyActiveShop(string shopName, Item[] items)
         {
+            /*
             foreach (Item item in items)
             {
                 if (item is null)
@@ -191,6 +192,7 @@ namespace Macrocosm.Content.NPCs.TownNPCs
                 if (item.type == ModContent.ItemType<LunarCrystal>())
                     item.stack = 20;
             }
+            */
         }
 
         public override void HitEffect(NPC.HitInfo hit)

@@ -13,6 +13,7 @@ namespace Macrocosm.Common.UI
         private readonly LiquidType liquidType;
 
         private UILiquid uiLiquid;
+        private UILiquid uiPreviewLiquid;
 
         public UILiquidTank(LiquidType liquidType) : base
         (
@@ -26,6 +27,7 @@ namespace Macrocosm.Common.UI
         }
 
         public float LiquidLevel { get; set; }
+        public float PreviewLiquidLevel { get; set; }
 
         public float WaveAmplitude { get; set; }
 
@@ -45,6 +47,14 @@ namespace Macrocosm.Common.UI
                 RoundCorners = true
             };
 
+            uiPreviewLiquid = new(liquidType)
+            {
+                Width = new(0, 1f),
+                Height = new(0, 1f),
+                RoundCorners = true
+            };
+
+            Append(uiPreviewLiquid);
             Append(uiLiquid);
         }
 
@@ -55,6 +65,12 @@ namespace Macrocosm.Common.UI
             uiLiquid.LiquidLevel = LiquidLevel;
             uiLiquid.WaveAmplitude = WaveAmplitude;
             uiLiquid.WaveFrequency = WaveFrequency;
+
+            uiPreviewLiquid.Bubbles = false;
+            uiPreviewLiquid.LiquidLevel = PreviewLiquidLevel;
+            uiPreviewLiquid.WaveAmplitude = WaveAmplitude;
+            uiPreviewLiquid.WaveFrequency = WaveFrequency;
+            uiPreviewLiquid.Opacity = PreviewLiquidLevel != 0 ? 0.5f : 0f;
         }
     }
 }

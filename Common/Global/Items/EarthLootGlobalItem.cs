@@ -44,6 +44,13 @@ namespace Macrocosm.Common.Global.Items
                     resultType = ModContent.ItemType<OilShale>();
                     resultStack = Main.rand.Next(1, 6);
                 }
+
+                // 5% chance to override result with (1-5) Coal
+                if (Main.rand.NextBool(20))
+                {
+                    resultType = ModContent.ItemType<Coal>();
+                    resultStack = Main.rand.Next(1, 6);
+                }
             }
 
             // Silicon extractable items (e.g. silica sand)
@@ -54,13 +61,6 @@ namespace Macrocosm.Common.Global.Items
                 {
                     resultType = ModContent.ItemType<Silicon>();
                     resultStack = Main.rand.Next(1, 11);
-                }
-
-                // 5% chance to override result with (1-5) Coal
-                if (Main.rand.NextBool(20))
-                {
-                    resultType = ModContent.ItemType<Coal>();
-                    resultStack = Main.rand.Next(1, 6);
                 }
             }
         }
@@ -127,6 +127,9 @@ namespace Macrocosm.Common.Global.Items
                     if (item.type == ItemID.OasisCrateHard)
                     {
                         itemLoot.Add(ItemDropRule.NotScalingWithLuck(oilShaleType, 2, 5, 15));
+                    }
+                    else if(item.type == ItemID.OceanCrateHard)
+                    {
                         itemLoot.Add(ItemDropRule.NotScalingWithLuck(siliconType, 2, 10, 20));
                     }
                 }
@@ -145,6 +148,9 @@ namespace Macrocosm.Common.Global.Items
                     if (item.type == ItemID.OasisCrate)
                     {
                         itemLoot.Add(ItemDropRule.NotScalingWithLuck(oilShaleType, 2, 5, 15));
+                    }
+                    else if (item.type == ItemID.OceanCrate)
+                    {
                         itemLoot.Add(ItemDropRule.NotScalingWithLuck(siliconType, 2, 10, 20));
                     }
                 }

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +14,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Cheese
 {
-    public class CheeseLantern : ModTile
+    public class CheeseLantern : ModTile, IToggleableTile
     {
 
         private static Asset<Texture2D> flameTexture;
@@ -42,7 +43,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Lantern"));
         }
 
-        public override void HitWire(int i, int j)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             Tile tile = Main.tile[i, j];
             int topY = j - tile.TileFrameY / 18 % 2;
@@ -52,12 +53,17 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             {
                 Main.tile[i, y].TileFrameX += frameAdjustment;
 
-                if (Wiring.running)
+                if (skipWire && Wiring.running)
                     Wiring.SkipWire(i, y);
             }
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, i, topY, 1, 2);
+        }
+
+        public override void HitWire(int i, int j)
+        {
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
@@ -84,9 +90,10 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
-            int offsetY = 0;
-            if (WorldGen.SolidTile(i, j - 1))
-                offsetY = 10;
+            int offsetY = 8;
+            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
+                offsetY -= 8;
 
             for (int k = 0; k < 7; k++)
             {

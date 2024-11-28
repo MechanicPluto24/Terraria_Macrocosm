@@ -2,7 +2,7 @@
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Systems.Connectors;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
 using System;
@@ -36,7 +36,8 @@ namespace Macrocosm.Common.Netcode
         {
             MessageType messageType = (MessageType)reader.ReadByte();
 
-            DebugPackets(messageType, reader.BaseStream.Length, whoAmI);
+            if(DebugModeActive)
+                DebugPackets(messageType, whoAmI);
 
             switch (messageType)
             {
@@ -85,7 +86,7 @@ namespace Macrocosm.Common.Netcode
                     break;
 
                 case MessageType.SyncPowerWire:
-                    CustomWiring.ReceiveSyncPowerWire(reader, whoAmI);
+                    ConnectorSystem.ReceiveSyncConnector(reader, whoAmI);
                     break;
 
                 default:
@@ -94,11 +95,11 @@ namespace Macrocosm.Common.Netcode
             }
         }
 
-        public static bool DebugModeActive { get; set; }
+        public static bool DebugModeActive { get; set; } = false;
 
-        static private void DebugPackets(MessageType messageType, long length, int sender)
+        private static void DebugPackets(MessageType messageType, int sender)
         {
-            string message = $"Received message of type {messageType} of length {length} from {sender}";
+            string message = $"Received message of type {messageType} from {sender}";
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {

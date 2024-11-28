@@ -58,12 +58,11 @@ namespace Macrocosm.Common.DataStructures
                 BlendState = (BlendState)type.GetField("blendState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
                 SamplerState = (SamplerState)type.GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
                 DepthStencilState = default;
-                RasterizerState = (RasterizerState)spriteBatch.GetType().GetField("rasterizerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
                 Effect = (Effect)type.GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-
                 initialized = true;
             }
 
+            RasterizerState = spriteBatch.GraphicsDevice.RasterizerState;
             Matrix = (Matrix)type.GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
         }
     }

@@ -9,6 +9,7 @@ using System.Threading;
 using Terraria;
 using Terraria.Audio;
 using Terraria.Chat;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -699,6 +700,19 @@ namespace Macrocosm.Common.Utils
                 way += jump;
             }
             return points.ToArray();
+        }
+
+        /// <summary> If called in PostDrawTiles, needs the spritebatch to be begun and ended </summary>
+        public static void DebugDrawChests()
+        {
+            for (int i = 0; i < 8000; i++)
+            {
+                Chest chest = Main.chest[i];
+                if (chest != null)
+                {
+                    Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(chest.x * 16 - (int)Main.screenPosition.X, chest.y * 16 - (int)Main.screenPosition.Y, 16, 16), Color.Green * 0.5f);
+                }
+            }
         }
     }
 }

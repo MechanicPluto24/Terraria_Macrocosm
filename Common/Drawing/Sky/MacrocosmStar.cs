@@ -11,15 +11,14 @@ namespace Macrocosm.Common.Drawing.Sky
     /// <summary> Represents a sky star. Adapted from Terraria.Star </summary>
     public class MacrocosmStar
     {
-        public enum WrapMode
-        {
-            None,
-            Exact,
-            Random
-        }
-
         public float Scale { get; set; }
         public float Brightness { get; set; }
+        public Vector2 Velocity { get; set; }
+        public bool Falling => falling;
+        public Color Color { get; set; }
+
+        protected Color baseColor;
+
 
         protected Vector2 position;
         protected float rotation;
@@ -29,26 +28,26 @@ namespace Macrocosm.Common.Drawing.Sky
         protected float twinkleSpeed;
 
         protected readonly Asset<Texture2D> texture;
-        protected Color color;
-        protected Color newColor;
-        protected bool colorOverridden = false;
 
-        protected WrapMode wrapMode = WrapMode.Random;
+        private bool falling = false;
+        private Vector2 fallSpeed = Vector2.Zero;
+        private float fallTime = 0.0f;
 
         /// <summary>
         /// Adapted from Star.SpawnStars
         /// </summary>
         /// <param name="baseScale"> The average scaling of the stars relative to vanilla </param>
         /// <param name="twinkleFactor"> How much a star will twinkle, keep between (0f, 1f); 0.4f for vanilla effect</param>
-        public MacrocosmStar(float baseScale = 1f, float twinkleFactor = 0.4f, WrapMode wrapMode = WrapMode.None)
+        public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f, Color? color = null)
         {
             FastRandom fastRandom = FastRandom.CreateWithRandomSeed();
 
             texture = TextureAssets.Star[fastRandom.Next(0, 4)];
-            Brightness = 1f;
-            color = Color.White;
 
-            position = new(fastRandom.Next(Main.screenWidth + 1), fastRandom.Next(Main.screenHeight + 1));
+            Brightness = 1f;
+            baseColor = color ?? new Color(155, 155, 155);
+
+            this.position = position;
             rotation = fastRandom.Next(628) * 0.01f;
             Scale = fastRandom.Next(70, 130) * 0.006f * baseScale;
             twinkle = Math.Clamp(fastRandom.Next(1, 101) * 0.01f, 1f - twinkleFactor, 1f);
@@ -67,78 +66,50 @@ namespace Macrocosm.Common.Drawing.Sky
                 twinkleSpeed /= 2f;
                 rotationSpeed /= 2f;
             }
-
-            this.wrapMode = wrapMode;
         }
 
-        public MacrocosmStar(Vector2 position, float baseScale = 1f, float twinkleFactor = 0.4f, WrapMode wrapMode = WrapMode.None) : this(baseScale, twinkleFactor, wrapMode)
-        {
-            this.position = position;
-        }
-
-        public MacrocosmStar(Vector2 position, Asset<Texture2D> texture, float baseScale = 1f, float twinkleFactor = 0.4f, WrapMode wrapMode = WrapMode.None) : this(position, twinkleFactor, baseScale, wrapMode)
+        public MacrocosmStar(Vector2 position, Asset<Texture2D> texture, float baseScale = 1f, float twinkleFactor = 0.4f) : this(position, twinkleFactor, baseScale)
         {
             this.texture = texture;
         }
 
-        public void OverrideColor(float r, float g, float b) => OverrideColor(new Color(r, g, b));
-        public void OverrideColor(Color color)
+        public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset = default)
         {
-            newColor = color;
-            newColor.A = this.color.A;
-            colorOverridden = true;
-        }
+            if (position.X > 0 && position.X < Main.screenWidth && position.Y > 0 && position.Y < Main.screenHeight)
+            {
+                if (falling)
+                {
+                    float maxTrailLength = 30f;
+                    float trailLength = Math.Min(fallTime, maxTrailLength);
 
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(texture.Value, position, null, color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
+                    for (int j = 1; j < trailLength; j++)
+                    {
+                        Vector2 trailOffset = fallSpeed * j * 0.05f;
+                        float trailScale = Scale * (1f - j / maxTrailLength);
+                        Color trailColor = Color * (1f - j / maxTrailLength);
+
+                        spriteBatch.Draw(texture.Value, position - trailOffset, null, trailColor, rotation, texture.Size() / 2, trailScale * twinkle, default, 0f);
+                    }
+                }
+
+                spriteBatch.Draw(texture.Value, position + offset, null, Color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
+            }
         }
 
         public virtual void Update()
         {
+            if (falling)
+            {
+                fallTime += (float)Main.desiredWorldEventsUpdateRate;
+                Velocity = fallSpeed * (float)(Main.desiredWorldEventsUpdateRate + 99.0) / 100f;
+            }
+
+            position += Velocity;
             Twinkle();
         }
 
-        public void UpdatePosition(Vector2 delta)
-        {
-            position += delta;
-
-            if ((wrapMode is WrapMode.Exact or WrapMode.Random) && delta != Vector2.Zero)
-            {
-                if (position.X > Main.screenWidth)
-                {
-                    position.X = 0;
-
-                    if (wrapMode is WrapMode.Random)
-                        position.Y = Main.rand.Next(Main.screenHeight + 1);
-                }
-                else if (position.X < 0)
-                {
-                    position.X = Main.screenWidth;
-
-                    if (wrapMode is WrapMode.Random)
-                        position.Y = Main.rand.Next(Main.screenHeight + 1);
-                }
-
-                if (position.Y > Main.screenHeight)
-                {
-                    position.Y = 0;
-
-                    if (wrapMode is WrapMode.Random)
-                        position.X = Main.rand.Next(Main.screenWidth + 1);
-                }
-                else if (position.Y < 0)
-                {
-                    position.Y = Main.screenHeight;
-
-                    if (wrapMode is WrapMode.Random)
-                        position.X = Main.rand.Next(Main.screenWidth + 1);
-                }
-            }
-        }
-
         // Adapted from Terraria.Star.Update and Terraria.Main.DrawStarsInBackround 
-        private void Twinkle()
+        protected virtual void Twinkle()
         {
             twinkle += twinkleSpeed;
             if (twinkle > 1f)
@@ -159,37 +130,29 @@ namespace Macrocosm.Common.Drawing.Sky
             if (rotation < 0f)
                 rotation += 6.28f;
 
+            if (falling)
+                return;
+
             //TODO: to add fade in/out mechanism
             float fade = 1f;
 
             int red, green, blue;
-            if (!colorOverridden)
-            {
-                red = (int)(155 * twinkle * fade);
-                green = (int)(155 * twinkle * fade);
-                blue = (int)(155 * twinkle * fade);
 
-                float avg = (red + green + blue) / 3;
+            red = (int)(baseColor.R * twinkle * fade);
+            green = (int)(baseColor.G * twinkle * fade);
+            blue = (int)(baseColor.B * twinkle * fade);
 
-                if (avg > 0f)
-                    red = green = blue = (int)MathHelper.Clamp(avg * 1.4f, 0, 255);
-            }
-            else
-            {
-                red = newColor.R;
-                green = newColor.G;
-                blue = newColor.B;
-            }
 
-            color = new()
-            {
-                R = (byte)red,
-                G = (byte)green,
-                B = (byte)blue,
-                A = 255
-            };
+            Color = new Color(red, green, blue, 255);
+            Color *= Brightness;
+        }
 
-            color *= Brightness;
+        public void Fall(float deviationX = 4f, float minSpeedY = 7, float maxSpeedY = 10)
+        {
+            fallTime = 0.0f;
+            falling = true;
+            fallSpeed.Y = Main.rand.NextFloat(minSpeedY, maxSpeedY);
+            fallSpeed.X = Main.rand.NextFloat(-deviationX, deviationX);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace Macrocosm.Common.UI.Themes
             themeStorage = null;
         }
 
-        public static UITheme Current => Get(MacrocosmConfig.Instance.SelectedUITheme);
+        public static UITheme Current => Get(ClientConfig.Instance.SelectedUITheme);
 
         public static UITheme Get(string name)
         {

@@ -16,11 +16,23 @@ namespace Macrocosm.Common.Sets
         /// <summary> Unobtainable items, other than Developer Items meant for testing. Items in this set have an "Unobtainable" tooltip </summary>
         public static bool[] UnobtainableItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
 
-        /// <summary> Set of items wiith custom potion sickness duration </summary>
-        public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
+        /// <summary> Items that can't be used on Macrocosm subworlds. Items in this set also have a tooltip to tell the player they can't the item </summary>
+        public static bool[] UnusableItems { get; } = ItemID.Sets.Factory.CreateBoolSet(
+            ItemID.BloodMoonStarter,
+            ItemID.GoblinBattleStandard,
+            ItemID.SnowGlobe,
+            ItemID.SolarTablet,
+            ItemID.PirateMap,
+            ItemID.PumpkinMoonMedallion,
+            ItemID.NaughtyPresent,
+            ItemID.CelestialSigil
+        );
 
         /// <summary> Set of torches that work in a Macrocosm subworld </summary>
         public static bool[] AllowedTorches { get; } = ItemID.Sets.Factory.CreateBoolSet();
+
+        /// <summary> Set of items wiith custom potion sickness duration </summary>
+        public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
 
         /// <summary> 
         /// If true, explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 

@@ -80,7 +80,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             bool hasTarget = TargetPlayer >= 0 && TargetPlayer < 255;
             float shootDeviation = 0.5f;
 
-            if (Main.netMode != NetmodeID.MultiplayerClient && hasTarget)
+            if (hasTarget)
             {
                 AI_Timer++;
 
@@ -93,6 +93,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
                     if (AI_Timer >= 60)
                         launched = true;
+                    
                 }
                 else if (!Fall && AI_Timer > AI_FloatTime * Main.rand.NextFloat(1.5f, 3f))
                 {
@@ -110,6 +111,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
                 Projectile.tileCollide = !WorldGen.SolidTile(Projectile.Center.ToTileCoordinates());
                 Projectile.velocity.Y += hasTarget ? 0.1f : 0.3f;
             }
+            Projectile.netUpdate=true;
         }
 
         public override void OnKill(int timeLeft)

@@ -59,6 +59,9 @@ namespace Macrocosm.Common.UI
         {
             string newString = currentText;
 
+            if (ContainsPoint(Main.MouseScreen))
+                Main.LocalPlayer.mouseInterface = true;
+
             if (CurrentlyInputtingText)
             {
                 Terraria.GameInput.PlayerInput.WritingText = CurrentlyInputtingText;

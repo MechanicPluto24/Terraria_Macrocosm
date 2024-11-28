@@ -2,10 +2,12 @@ using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Players;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Tech;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.Customization;
@@ -13,6 +15,7 @@ using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -222,16 +225,13 @@ namespace Macrocosm.Content.Rockets
         public void OnWorldSpawn()
         {
             ResetAnimation();
+            ReserveSlots();
         }
 
         public void OnWorldLoad()
         {
             ResetAnimation();
-        }
-
-        /// <summary> Called when a subworld is generated </summary>
-        public void OnSubworldGenerated()
-        {
+            ReserveSlots();
         }
 
         /// <summary> Update the rocket </summary>
@@ -322,12 +322,7 @@ namespace Macrocosm.Content.Rockets
                 case ActionState.Landing:
 
                     if (TargetLandingPosition == default && LandingProgress < float.Epsilon)
-                    {
-                        Point landingSite = Utility.GetClosestTile(Utility.SpawnTilePoint, -1, 100, (tile) => Main.tileSolid[tile.TileType]);
-                        TargetLandingPosition = landingSite.ToWorldCoordinates();
-                        if (landingSite == default)
-                            TargetLandingPosition = Utility.SpawnWorldPosition;
-                    }
+                         TargetLandingPosition = GetLandingSite(Utility.SpawnWorldPosition);
 
                     float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
                     float landingDuration = 10f * 60f * (1f / gravityFactor);
@@ -353,6 +348,9 @@ namespace Macrocosm.Content.Rockets
                     break;
 
             }
+
+            if (Position.X < 10 * 16 || Position.X > (Main.maxTilesX - 10) * 16 || Position.Y < 10 * 16 || Position.Y > (Main.maxTilesY - 10) * 16)
+                State = ActionState.Idle;  
 
             if (Transparency < 1f)
                 Transparency += 0.01f;
@@ -541,6 +539,24 @@ namespace Macrocosm.Content.Rockets
                     return false;
             }
 
+            return true;
+        }
+
+        // TODO: make this account for the Rocket's width
+        public Vector2 GetLandingSite(Vector2 initialTarget)
+        {
+            Point tileCoords = initialTarget.ToTileCoordinates();
+            int surfaceY = Utility.GetFirstTileFloor(tileCoords.X, 10, solid: true);
+
+            if(surfaceY != Main.maxTilesY - 10)
+                return new Vector2(initialTarget.X, surfaceY * 16f);
+            else
+                return initialTarget;
+        }
+
+        /// <summary> Checks whether the flight path is obstructed by solid blocks below </summary>
+        public bool CheckFlightPathObstructionDownward()
+        {
             return true;
         }
 
@@ -742,6 +758,22 @@ namespace Macrocosm.Content.Rockets
 
             canAnimate = false;
         }
+
+        private void ReserveSlots()
+        {
+            Inventory.SetReserved(
+                SpecialInventorySlot_CustomizationUnlock,
+                CheckUnlockableItemUnlocked
+            );
+
+            Inventory.SetReserved(
+                SpecialInventorySlot_FuelTank,
+                (item) => ItemSets.LiquidContainerData[item.type].Valid && ItemSets.LiquidContainerData[item.type].LiquidType == Liquids.LiquidType.RocketFuel,
+                Lang.GetItemName(ModContent.ItemType<Canister>()),
+                ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
+            );
+        }
+
 
         private void Effects()
         {

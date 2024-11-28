@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +14,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Tech
 {
-    public class OxygenSystem : ModTile
+    public class OxygenSystem : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
 
@@ -48,7 +49,8 @@ namespace Macrocosm.Content.Tiles.Tech
             AddMapEntry(new Color(253, 221, 3), name);
         }
 
-        public override void HitWire(int i, int j)
+
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             int leftX = i - Main.tile[i, j].TileFrameX / 18 % 4;
             int topY = j - Main.tile[i, j].TileFrameY / 18 % 3;
@@ -63,13 +65,18 @@ namespace Macrocosm.Content.Tiles.Tech
                     else
                         tile.TileFrameX += 72;
 
-                    if (Wiring.running)
+                    if (skipWire && Wiring.running)
                         Wiring.SkipWire(x, y);
                 }
             }
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, leftX, topY, 4, 3);
+        }
+
+        public override void HitWire(int i, int j)
+        {
+            ToggleTile(i, j, skipWire: true);
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)

@@ -23,8 +23,7 @@ namespace Macrocosm.Content.Tiles.Ores
             DustType = ModContent.DustType<CoalDust>();
             HitSound = SoundID.Tink;
 
-            MinPick = 40;
-            MineResist = 5f;
+            MinPick = 35;
         }
     }
 }

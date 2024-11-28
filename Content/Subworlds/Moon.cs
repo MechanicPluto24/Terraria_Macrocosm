@@ -53,19 +53,7 @@ namespace Macrocosm.Content.Subworlds
         };
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
-        public override float GetAmbientTemperature()
-        {
-            float temperature;
-
-            if (Main.time < 0.2f * DayLength)
-                temperature = Utility.ScaleNoonToMidnight(-183f, 106f);
-            else if (Main.time > 0.8f * Main.dayLength)
-                temperature = Utility.ScaleNoonToMidnight(106f, -183f);
-            else
-                temperature = (Main.time < Main.dayLength / 2) ? -183f : 106f;
-
-            return temperature;
-        }
+        public override float GetAmbientTemperature() => Utility.ScaleNoonToMidnight(-183f, 106f);
 
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
@@ -78,16 +66,18 @@ namespace Macrocosm.Content.Subworlds
             {MapColorType.Underworld,  new Color(30, 30, 30)}
         };
 
-        public override void OnEnterWorld()
+        public override void OnEnterSubworld()
         {
             SkyManager.Instance.Activate("Macrocosm:MoonSky");
 
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
+
             DemonSunIntensity = 0f;
+            EventSystem.DemonSun = false;
         }
 
-        public override void OnExitWorld()
+        public override void OnExitSubworld()
         {
             SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
             DemonSunIntensity = 0f;
@@ -109,9 +99,6 @@ namespace Macrocosm.Content.Subworlds
 
         public override void PreUpdateWorld()
         {
-            // Disable Vanilla Blood Moons
-            Main.bloodMoon = false; 
-
             UpdateDemonSun();
             UpdateMeteorStorm();
             UpdateSolarStorm();
@@ -198,7 +185,7 @@ namespace Macrocosm.Content.Subworlds
                         choice.Add(ProjectileID.FallingStar, 30.0);
 
                         choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
-                        choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 33.0);
+                        choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 30.0);
                         choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
 
                         choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);
