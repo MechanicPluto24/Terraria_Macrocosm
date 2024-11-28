@@ -53,7 +53,7 @@ CraterCrawlerBody
 	Damage: 60
 
 CraterCrawlerHead
-	Life: 4000
+	Life: 3200
 	Defense: 40
 	KB resist: 0
 	Damage: 65
@@ -128,7 +128,7 @@ MoonWormBody
 	Damage: 120
 
 MoonWormHead
-	Life: 20000
+	Life: 17000
 	Defense: 70
 	KB resist: 0
 	Damage: 100
