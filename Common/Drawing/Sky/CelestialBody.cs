@@ -544,7 +544,7 @@ namespace Macrocosm.Common.Drawing.Sky
             else
                 duration = Main.dayTime ? MacrocosmSubworld.Current.DayLength : MacrocosmSubworld.Current.NightLength;
 
-            double bgTop = -(Main.LocalPlayer.Center.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
+            double bgTopY = -(Main.screenPosition.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 200.0;
 
             double progress = Main.dayTime ? Main.time / duration : 1.0 - Main.time / duration;
             int timeX = (int)(progress * (Main.screenWidth + bodyTexture.Width() * 2)) - bodyTexture.Width();
@@ -558,9 +558,9 @@ namespace Macrocosm.Common.Drawing.Sky
 
             float clouldAlphaMult = Math.Max(0f, 1f - Main.cloudAlpha * 1.5f);
             Color = new Color((byte)(255f * clouldAlphaMult), (byte)(Color.White.G * clouldAlphaMult), (byte)(Color.White.B * clouldAlphaMult), (byte)(255f * clouldAlphaMult));
-            int angle = Main.dayTime ? (int)(bgTop + timeY * 250.0 + 180.0) : (int)(bgTop - timeY * 250.0 + 665.0);
+            int posY = Main.dayTime ? (int)(bgTopY + timeY * 250.0 + 180.0) : (int)(bgTopY - timeY * 250.0 + 665.0);
 
-            Center = new Vector2(timeX, angle); // TODO: add configurable vertical parallax 
+            Center = new Vector2(timeX, posY); // TODO: add configurable vertical parallax 
         }
 
         private void Orbit()

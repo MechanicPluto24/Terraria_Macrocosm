@@ -47,8 +47,6 @@ namespace Macrocosm.Common.Players
             {
                 IsCommander = false;
                 RocketID = -1;
-                Player.mouseInterface = false;
-                Player.noItems = false;
             }
         }
 
@@ -104,6 +102,7 @@ namespace Macrocosm.Common.Players
                 Player.direction = 1;
                 Player.Center = new Vector2(rocket.Center.X + Player.direction * 5, rocket.Position.Y + 110) - (IsCommander ? new Vector2(0, 50) : Vector2.Zero);
                 Player.noFallDmg = true;
+                Player.noItems = true;
 
                 if (Player.whoAmI == Main.myPlayer)
                 {

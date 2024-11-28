@@ -1,21 +1,24 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
+using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    public class OilRefineryTE : MachineTE, IInventoryOwner
+    public class OilRefineryTE : ConsumerTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OilRefinery>();
-
-        public override MachineType MachineType => MachineType.Consumer;
 
         public float InputTankAmount { get; private set; }
         public virtual float SourceTankCapacity => 100f;
@@ -43,7 +46,7 @@ namespace Macrocosm.Content.Machines
         private int fillTimer;
         private const int maxFillTimer = 60;
 
-        public bool CanRefine => Operating && InputTankAmount > 0f && OutputTankAmount < ResultTankCapacity;
+        public bool CanRefine => PoweredOn && InputTankAmount > 0f && OutputTankAmount < ResultTankCapacity;
 
         public void StartRefining()
         {
@@ -56,6 +59,22 @@ namespace Macrocosm.Content.Machines
             // Create new inventory if none found on world load
             Inventory ??= new(InventorySize, this);
 
+            for (int i = 0; i <= 1; i++)
+                Inventory.SetReserved(
+                    i,
+                    (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
+                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
+                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
+                );
+
+            for (int i = 2; i < Inventory.Size; i++)
+                Inventory.SetReserved(
+                    i,
+                    (item) => item.type >= ItemID.None && ItemSets.LiquidExtractData[item.type].Valid,
+                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidExtract"),
+                    ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/LiquidExtract")
+                );
+
             // Assign inventory owner if the inventory was found on load
             // IInvetoryOwner does not work well with TileEntities >:(
             if (Inventory.Owner is null)
@@ -66,7 +85,7 @@ namespace Macrocosm.Content.Machines
         {
             StartRefining();
 
-            Power = 5f;
+            RequiredPower = 5f;
 
             Extract();
             Refine();
@@ -82,7 +101,7 @@ namespace Macrocosm.Content.Machines
             {
                 Item inputItem = Inventory[i];
                 LiquidExtractData data = ItemSets.LiquidExtractData[inputItem.type];
-                if (Operating && InputTankAmount < SourceTankCapacity && data.Valid)
+                if (PoweredOn && InputTankAmount < SourceTankCapacity && data.Valid)
                 {
                     inputExtractTimer++;
                     if (inputExtractTimer >= maxInputExtractTimer)
@@ -163,6 +182,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetSend(BinaryWriter writer)
         {
+            base.NetSend(writer);
+
             TagIO.Write(Inventory.SerializeData(), writer);
 
             writer.Write(InputTankAmount);
@@ -171,6 +192,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetReceive(BinaryReader reader)
         {
+            base.NetReceive(reader);
+
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
@@ -180,6 +203,8 @@ namespace Macrocosm.Content.Machines
 
         public override void SaveData(TagCompound tag)
         {
+            base.SaveData(tag);
+
             tag[nameof(Inventory)] = Inventory;
 
             if (InputTankAmount != default)
@@ -191,6 +216,8 @@ namespace Macrocosm.Content.Machines
 
         public override void LoadData(TagCompound tag)
         {
+            base.LoadData(tag);
+
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 

@@ -76,13 +76,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             int spawnX = (i - (tile.TileFrameX / 18)) + (tile.TileFrameX >= 72 ? 5 : 2);
             int spawnY = j + 2;
 
-            if (tile.TileFrameY % 18 * 2 != 0)
+            if (tile.TileFrameY % (18 * 2) + 2 != 0)
             {
                 spawnY--;
             }
 
             if (!Player.IsHoveringOverABottomSideOfABed(i, j))
-            {
+            { // This assumes your bed is 4x2 with 2x2 sections. You have to write your own code here otherwise
                 if (player.IsWithinSnappngRangeToTile(i, j, PlayerSleepingHelper.BedSleepingMaxDistance))
                 {
                     player.GamepadEnableGrappleCooldown();
@@ -104,6 +104,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                     Main.NewText(Language.GetTextValue("Game.SpawnPointSet"), byte.MaxValue, 240, 20);
                 }
             }
+
+            return true;
 
             return true;
         }

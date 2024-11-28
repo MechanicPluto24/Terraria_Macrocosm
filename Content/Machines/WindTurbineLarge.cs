@@ -67,7 +67,9 @@ namespace Macrocosm.Content.Machines
         // Called once an update, can use for the rotation animation
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            rotationCounter += (MathHelper.Pi * 0.04f) * Utility.WindSpeedScaled;
+            if (Math.Abs(Utility.WindSpeedScaled) > 0.1f)
+                rotationCounter += (MathHelper.Pi * 0.04f) * Utility.WindSpeedScaled;
+
             rotationCounter = MathHelper.WrapAngle(rotationCounter);
         }
 

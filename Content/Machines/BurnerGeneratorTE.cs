@@ -1,21 +1,20 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    public class BurnerGeneratorTE : MachineTE, IInventoryOwner
+    public class BurnerGeneratorTE : GeneratorTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<BurnerGenerator>();
-
-        public override MachineType MachineType => MachineType.Generator;
 
         /// <summary> The hull heat progress, 0 to 1, increases when burning and decreases otherwise. </summary>
         public float HullHeatProgress
@@ -49,6 +48,11 @@ namespace Macrocosm.Content.Machines
         {
             // Create new inventory if none found on world load
             Inventory ??= new(InventorySize, this);
+            Inventory.SetReserved(
+                 (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Valid,
+                 Language.GetText("Mods.Macrocosm.Machines.Common.BurnFuel"),
+                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/BurnFuel")
+            );
 
             // Assign inventory owner if the inventory was found on load
             // IInvetoryOwner does not work well with TileEntities >:(
@@ -58,88 +62,125 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            CanAutoPowerOn = false;
-            CanAutoPowerOff = false;
-
-            if (PoweredOn)
+            if (!PoweredOn)
             {
-                if (ConsumedItem.type != ItemID.None)
-                {
-                    FuelData fuelData = ItemSets.FuelData[ConsumedItem.type];
-                    HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+                bool fuelFound = false;
 
-                    if (burnTimer++ >= fuelData.ConsumptionRate)
+                foreach (Item item in Inventory)
+                {
+                    if (item.stack <= 0)
+                        continue;
+
+                    var fuelData = ItemSets.FuelData[item.type];
+                    if (fuelData.Valid)
                     {
-                        burnTimer = 0;
-                        ConsumedItem.TurnToAir(fullReset: true);
+                        fuelFound = true;
+                        break;
                     }
                 }
-                else
+
+                if (fuelFound && !ManuallyTurnedOff)
+                {
+                    TurnOn(automatic: true);
+                }
+            }
+
+            if (ConsumedItem.type == ItemID.None)
+            {
+                if (PoweredOn)
                 {
                     burnTimer = 0;
-                    bool fuelFound = false;
-
                     foreach (Item item in Inventory)
                     {
-                        FuelData fuelData = ItemSets.FuelData[item.type];
+                        if (item.stack <= 0)
+                            continue;
+
+                        var fuelData = ItemSets.FuelData[item.type];
                         if (fuelData.Valid)
                         {
-                            ConsumedItem = new(item.type, stack: 1);
+                            ConsumedItem = new Item(item.type, 1);
                             HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
-
                             item.stack--;
-                            if (item.stack < 0)
+
+                            if (item.stack <= 0)
                                 item.TurnToAir();
 
-                            fuelFound = true;
                             break;
                         }
                     }
 
-                    if (!fuelFound)
+                    if (ConsumedItem.type == ItemID.None)
                     {
-                        Power = 0;
-                        MachineTile.TogglePowerStateFrame(Position.X, Position.Y);
+                        HullHeatProgress -= HullHeatRate * 5f;
                     }
                 }
             }
             else
             {
-                HullHeatProgress -= HullHeatRate;
+                var fuelData = ItemSets.FuelData[ConsumedItem.type];
+                if (fuelData.Valid)
+                {
+                    HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+
+                    if (++burnTimer >= fuelData.ConsumptionRate)
+                    {
+                        burnTimer = 0;
+                        ConsumedItem.TurnToAir(fullReset: true);
+                    }
+                }
             }
 
-            Power = HullHeatProgress * MaxPower;
+            GeneratedPower = HullHeatProgress * MaxPower;
         }
 
         public override void NetSend(BinaryWriter writer)
         {
+            base.NetSend(writer);
+
             Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
 
             ItemIO.Send(ConsumedItem, writer);
+
+            writer.Write(hullHeatProgress);
         }
 
         public override void NetReceive(BinaryReader reader)
         {
+            base.NetReceive(reader);
+
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
             ConsumedItem = ItemIO.Receive(reader);
+
+            hullHeatProgress = reader.ReadSingle();
         }
 
         public override void SaveData(TagCompound tag)
         {
+            base.SaveData(tag);
+
             tag[nameof(Inventory)] = Inventory;
+
             tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
+
+            if (hullHeatProgress > 0f)
+                tag[nameof(hullHeatProgress)] = hullHeatProgress;
         }
 
         public override void LoadData(TagCompound tag)
         {
+            base.LoadData(tag);
+
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 
             if (tag.ContainsKey(nameof(ConsumedItem)))
                 ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));
+
+            if (tag.ContainsKey(nameof(hullHeatProgress)))
+                hullHeatProgress = tag.GetFloat(nameof(hullHeatProgress));
         }
     }
 }

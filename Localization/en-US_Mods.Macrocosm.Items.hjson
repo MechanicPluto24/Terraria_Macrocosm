@@ -9,7 +9,7 @@ CelestialBulwark: {
 		'''
 		Allows the player to dash into the enemy
 		Allows for horizontal and vertical dashing
-		Double tap a direction
+		Double tap any direction to dash
 		'''
 }
 
@@ -28,18 +28,18 @@ AluminumHelmet: {
 	Tooltip: ""
 }
 
-ArtemiteBreastplate: {
-	DisplayName: Artemite Breastplate
+SeleniteBreastplate: {
+	DisplayName: Selenite Breastplate
 	Tooltip: 6% increased melee critical strike chance
 }
 
-ArtemiteHelmet: {
-	DisplayName: Artemite Helmet
+SeleniteHelmet: {
+	DisplayName: Selenite Helmet
 	Tooltip: 18% increased melee damage
 }
 
-ArtemiteLeggings: {
-	DisplayName: Artemite Leggings
+SeleniteLeggings: {
+	DisplayName: Selenite Leggings
 	Tooltip: 15% increased melee and movement speed
 }
 
@@ -108,13 +108,13 @@ DianiteVisor: {
 		'''
 }
 
-SeleniteBreastplate: {
-	DisplayName: Selenite Breastplate
+ArtemiteBreastplate: {
+	DisplayName: Artemite Breastplate
 	Tooltip: 12% increased ranged critical strike chance
 }
 
-SeleniteHeadgear: {
-	DisplayName: Selenite Headgear
+ArtemiteHeadgear: {
+	DisplayName: Artemite Headgear
 	Tooltip:
 		'''
 		10% increased ranged damage
@@ -122,8 +122,8 @@ SeleniteHeadgear: {
 		'''
 }
 
-SeleniteLeggings: {
-	DisplayName: Selenite Leggings
+ArtemiteLeggings: {
+	DisplayName: Artemite Leggings
 	Tooltip:
 		'''
 		5% increased ranged damage
@@ -187,13 +187,13 @@ AluminumOre: {
 	Tooltip: ""
 }
 
-ArtemiteBar: {
-	DisplayName: Artemite Bar
+SeleniteBar: {
+	DisplayName: Selenite Bar
 	Tooltip: ""
 }
 
-ArtemiteOre: {
-	DisplayName: Artemite Ore
+SeleniteOre: {
+	DisplayName: Selenite Ore
 	Tooltip: ""
 }
 
@@ -267,13 +267,13 @@ PrintedCircuitBoard: {
 	Tooltip: ""
 }
 
-SeleniteBar: {
-	DisplayName: Selenite Bar
+ArtemiteBar: {
+	DisplayName: Artemite Bar
 	Tooltip: ""
 }
 
-SeleniteOre: {
-	DisplayName: Selenite Ore
+ArtemiteOre: {
+	DisplayName: Artemite Ore
 	Tooltip: ""
 }
 
@@ -477,23 +477,23 @@ AluminumPickaxe: {
 	Tooltip: ""
 }
 
-ArtemiteAxe: {
-	DisplayName: Artemite Axe
+SeleniteAxe: {
+	DisplayName: Selenite Axe
 	Tooltip: ""
 }
 
-ArtemiteDrill: {
-	DisplayName: Artemite Drill
+SeleniteDrill: {
+	DisplayName: Selenite Drill
 	Tooltip: ""
 }
 
-ArtemiteHammer: {
-	DisplayName: Artemite Hammer
+SeleniteHammer: {
+	DisplayName: Selenite Hammer
 	Tooltip: ""
 }
 
-ArtemitePickaxe: {
-	DisplayName: Artemite Pickaxe
+SelenitePickaxe: {
+	DisplayName: Selenite Pickaxe
 	Tooltip: ""
 }
 
@@ -537,23 +537,23 @@ DianitePickaxe: {
 	Tooltip: ""
 }
 
-SeleniteAxe: {
-	DisplayName: Selenite Axe
+ArtemiteAxe: {
+	DisplayName: Artemite Axe
 	Tooltip: ""
 }
 
-SeleniteDrill: {
-	DisplayName: Selenite Drill
+ArtemiteDrill: {
+	DisplayName: Artemite Drill
 	Tooltip: ""
 }
 
-SeleniteHammer: {
-	DisplayName: Selenite Hammer
+ArtemiteHammer: {
+	DisplayName: Artemite Hammer
 	Tooltip: ""
 }
 
-SelenitePickaxe: {
-	DisplayName: Selenite Pickaxe
+ArtemitePickaxe: {
+	DisplayName: Artemite Pickaxe
 	Tooltip: ""
 }
 
@@ -564,7 +564,7 @@ CraterDemonMask: {
 
 DianiteFork: {
 	DisplayName: Dianite Fork
-	Tooltip: Fire swirling magic at your enemies!
+	Tooltip: Fire swirling magic at your enemies
 }
 
 DianiteTome: {
@@ -591,18 +591,18 @@ AluminumShortsword: {
 	Tooltip: ""
 }
 
-ArtemiteGreatsword: {
-	DisplayName: Artemite Greatsword
+SeleniteGreatsword: {
+	DisplayName: Selenite Greatsword
 	Tooltip: Hold <right> for a charged up swing
 }
 
-ArtemiteSpear: {
-	DisplayName: Artemite Spear
+SeleniteSpear: {
+	DisplayName: Selenite Spear
 	Tooltip: <right> to throw the spear
 }
 
-ArtemiteSword: {
-	DisplayName: Artemite Straightsword
+SeleniteSword: {
+	DisplayName: Selenite Straightsword
 	Tooltip: ""
 }
 
@@ -649,8 +649,8 @@ Cruithne: {
 	DisplayName: Cruithne-3753
 	Tooltip:
 		'''
-		Converts musket balls to green slugs.
-		Shoots a delirium shell.
+		Converts musket balls to green slugs
+		Shoots an explosive delirium shell
 		'''
 }
 
@@ -658,8 +658,8 @@ LHBMinigun: {
 	DisplayName: LHB-59
 	Tooltip:
 		'''
-		'What's more effective than bullets?''
-		'A whole LOT of bullets.'
+		'What's more effective than bullets?
+		A whole LOT of bullets.'
 		'''
 }
 
@@ -668,13 +668,13 @@ NWARocketLauncher: {
 	Tooltip: <right> to lock onto an enemy
 }
 
-SeleniteBow: {
-	DisplayName: Selenite Bow
+ArtemiteBow: {
+	DisplayName: Artemite Bow
 	Tooltip: Fires two arrows
 }
 
-SeleniteMagnum: {
-	DisplayName: Selenite Magnum
+ArtemiteMagnum: {
+	DisplayName: Artemite Magnum
 	Tooltip: <right> to rapidly fan six bullets
 }
 
@@ -690,12 +690,17 @@ ChandriumStaff: {
 
 ChandriumWhip: {
 	DisplayName: Chandrium Whip
-	Tooltip: Extra damage every third hit
+	Tooltip: Dealas extra damage every third strike
 }
 
 HandheldEngine: {
 	DisplayName: Handheld Engine
-	Tooltip: Uses mana as coolant
+	Tooltip:
+		'''
+		Uses mana as coolant
+		Engine will overheat if not supplied mana for too long
+		'Yeah, ROCKET science!'
+		'''
 }
 
 HazardWall: {
@@ -723,7 +728,7 @@ ChampionsBladeBroken: {
 	Tooltip:
 		'''
 		Repeated hits with the blade strengthen it
-		This effect wears off after some time when not hitting with the blade
+		This effect wears off after some time if the blade is not used
 		'''
 }
 
@@ -732,7 +737,7 @@ ChampionsBladeRepaired: {
 	Tooltip:
 		'''
 		Repeated hits with the blade strengthen it
-		This effect wears off after some time when not hitting with the blade
+		This effect wears off after some time if the blade is not used
 		'''
 }
 
@@ -741,7 +746,7 @@ ChampionsBlade: {
 	Tooltip:
 		'''
 		Repeated hits with the blade strengthen it
-		This effect wears off after some time when not hitting with the blade
+		This effect wears off after some time if the blade is not used
 		'''
 }
 
@@ -1037,7 +1042,11 @@ ZombieFinger: {
 
 XFLR6: {
 	DisplayName: XFLR-6
-	Tooltip: Well, what do you think of that? Look what the goat created.
+	Tooltip:
+		'''
+		'Well, what do you think of that?
+		Look what the goat created.'
+		'''
 }
 
 InvarArrow: {
@@ -1157,12 +1166,16 @@ IntoTheUnknownMusicBox: {
 
 OsmiumBoots: {
 	DisplayName: Osmium Boots
-	Tooltip: Increases player's fall speed
+	Tooltip:
+		'''
+		Increases player's fall speed
+		Double tab down to further increase fall speed
+		'''
 }
 
 EarthGlobe: {
 	DisplayName: Earth Globe
-	Tooltip: Home sweet home!
+	Tooltip: "'Home sweet home!'"
 }
 
 PowerJunction: {
@@ -1227,7 +1240,7 @@ ReactorHousing: {
 
 Fabricator: {
 	DisplayName: Fabricator
-	Tooltip: Used to craft machines and rocket components
+	Tooltip: Used to craft advanced machines and rocket components
 }
 
 Battery: {
@@ -1289,7 +1302,7 @@ GothicCoalBrick: {
 
 SpookyDookie: {
 	DisplayName: Spooky Dookie
-	Tooltip: Go ahead...
+	Tooltip: "'Go ahead...'"
 }
 
 CheeseBlock: {
@@ -1394,7 +1407,7 @@ CheeseTable: {
 
 CheeseToilet: {
 	DisplayName: Cheese Toilet
-	Tooltip: This is a horrible idea.
+	Tooltip: "'This is a horrible idea.'"
 }
 
 CheeseWorkbench: {
@@ -1449,7 +1462,7 @@ Boombox: {
 
 StopSign: {
 	DisplayName: Stop Sign
-	Tooltip: Stop right there!
+	Tooltip: "'Stop right there!'"
 }
 
 WindTurbineLarge: {
@@ -1967,12 +1980,12 @@ RocheChakram: {
 
 CrescentScripture: {
 	DisplayName: Crescent Scripture
-	Tooltip: ""
+	Tooltip: "'Etched with ancient symbols from a long-lost lunarian text.'"
 }
 
 Totality: {
 	DisplayName: Totality
-	Tooltip: Slash a rift into the fabric of reality!
+	Tooltip: Slashes leave behind rifts of umbral magic
 }
 
 AstraWorkbench: {
@@ -2056,6 +2069,7 @@ ArmstrongGauntlets: {
 		'''
 		Throws a flurry of punches
 		Every few punches you will leap forward
+		'You expect me to flee?!'
 		'''
 }
 
@@ -2140,17 +2154,17 @@ HummingbirdDroneRemote: {
 
 GreatstaffOfHorus: {
 	DisplayName: Greatstaff Of Horus
-	Tooltip: Summons a Lesser Granule to fight for you.
+	Tooltip: Summons a Lesser Granule to fight for you
 }
 
 LuminiteTorch: {
 	DisplayName: Luminite Torch
-	Tooltip: Can be used in airless environments.
+	Tooltip: Can be used in airless environments
 }
 
 RyuguStaff: {
 	DisplayName: Mortar Staff
-	Tooltip: Summons a Ryugu to fight for you.
+	Tooltip: Summons a Ryugu to fight for you
 }
 
 AstraDoor: {
@@ -2690,5 +2704,40 @@ CircuitProbe: {
 
 IndustrialBattery: {
 	DisplayName: Industrial Battery
+	Tooltip: ""
+}
+
+AdvancedCircuitBoard: {
+	DisplayName: Advanced Circuit Board
+	Tooltip: ""
+}
+
+ClydersHood: {
+	DisplayName: Clyders Hood
+	Tooltip: ""
+}
+
+ClydersRobe: {
+	DisplayName: Clyders Robe
+	Tooltip: ""
+}
+
+ClydersWings: {
+	DisplayName: Clyders Wings
+	Tooltip: ""
+}
+
+Schroteri: {
+	DisplayName: Schroteri
+	Tooltip: ""
+}
+
+Conveyor: {
+	DisplayName: Conveyor
+	Tooltip: ""
+}
+
+KeroseneGenerator: {
+	DisplayName: Kerosene Generator
 	Tooltip: ""
 }

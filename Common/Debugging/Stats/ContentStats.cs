@@ -10,7 +10,7 @@ namespace Macrocosm.Common.Debugging.Stats
 {
     public class ContentStats : ModSystem
     {
-        static string Path => Program.SavePathShared + "/ModSources/Macrocosm/Common/Debugging/Stats/";
+        static string Path => Program.SavePathShared;
 
         public override void PostSetupContent()
         {
@@ -18,7 +18,8 @@ namespace Macrocosm.Common.Debugging.Stats
 
         public override void PostSetupRecipes()
         {
-#if DEBUG
+            /*
+            #if DEBUG
             try
             {
                 if (!Main.dedServ)
@@ -28,7 +29,8 @@ namespace Macrocosm.Common.Debugging.Stats
             {
                 Utility.LogChatMessage("Failed to generate content stats", Utility.MessageSeverity.Warn);
             }
-#endif
+            #endif
+            */
         }
 
         public static void Analyze(Mod mod)

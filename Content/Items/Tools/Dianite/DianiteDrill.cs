@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Tools.Dianite
             Item.useAnimation = 15;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.channel = true;
-            Item.knockBack = 0;
+            Item.knockBack = 0.5f;
             Item.value = Item.sellPrice(gold: 8);
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.UseSound = SoundID.Item23;

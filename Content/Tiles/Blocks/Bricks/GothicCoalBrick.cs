@@ -17,8 +17,6 @@ namespace Macrocosm.Content.Tiles.Blocks.Bricks
             //TileID.Sets.AllBlocksWithSmoothBordersToResolveHalfBlockIssue[Type] = false;
             //TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
 
-            MinPick = 0;
-            MineResist = 1f;
             AddMapEntry(new Color(38, 38, 39));
 
             DustType = ModContent.DustType<CoalDust>();

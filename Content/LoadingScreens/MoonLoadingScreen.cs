@@ -13,7 +13,6 @@ namespace Macrocosm.Content.LoadingScreens
     public class MoonLoadingScreen : LoadingScreen
     {
         private static Asset<Texture2D> lunaBackground;
-        private Stars starsDrawing;
         private CelestialBody earth;
 
         private readonly float animationDuration = 1000f;
@@ -35,10 +34,6 @@ namespace Macrocosm.Content.LoadingScreens
             Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/Earth", AssetRequestMode.ImmediateLoad);
             Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
             earth ??= new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, scale: 0.7f);
-
-            starsDrawing = new();
-            starsDrawing.Clear();
-            starsDrawing.SpawnStars(200, 250, twinkleFactor: 0.1f);
         }
 
         private SpriteBatchState state;

@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
         {
             // The formatted localization texts that have units are updated
             // whenever the measure system configuration is updated
-            MacrocosmConfig.Instance.OnConfigChanged += OnConfigChanged;
+            ClientConfig.Instance.OnConfigChanged += OnConfigChanged;
 
             FormatValueUnitText(value, specialValueKey);
         }

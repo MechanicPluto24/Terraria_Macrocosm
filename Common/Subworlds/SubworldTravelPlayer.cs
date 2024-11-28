@@ -29,6 +29,9 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Whether the player has exited a subworld by clicking the "Save & Exit"/"Return" button or other means </summary>
         private bool exitedBySaveAndExit = false;
 
+        /// <summary> Flag that runs when the player enters the world </summary>
+        private bool enteredWorld = false;
+
         /// <summary>
         /// The subworlds this player has visited.
         /// Persistent. Local to the player. Not synced.
@@ -65,46 +68,58 @@ namespace Macrocosm.Common.Subworlds
         {
             if (exitedBySaveAndExit)
             {
-                exitedBySaveAndExit = false;
                 WorldGen.SaveAndQuit();
+
+                exitedBySaveAndExit = false;
+                return;
             }
+
+            if (enteredWorld)
+            {
+                if (!TriggeredSubworldTravel)
+                {
+                    currentMainWorldUniqueId = MacrocosmSubworld.MainWorldUniqueID;
+                    if (!SubworldSystem.AnyActive() && Main.netMode == NetmodeID.SinglePlayer)
+                    {
+                        if (TryGetReturnSubworld(currentMainWorldUniqueId, out string subworldId) && subworldId != Earth.ID)
+                        {
+                            MacrocosmSubworld.Travel(subworldId, trigger: false);
+                        }
+                    }
+                }
+                else 
+                {
+                    if (SubworldSystem.AnyActive<Macrocosm>())
+                    {
+                        if (!HasVisitedSubworld(MacrocosmSubworld.CurrentID) || ClientConfig.Instance.AlwaysDisplayTitleCards)
+                            TitleCard.Start();
+
+                        visitedSubworlds.Add(MacrocosmSubworld.CurrentID);
+                    }
+                    else
+                    {
+                        if (ClientConfig.Instance.AlwaysDisplayTitleCards)
+                            TitleCard.Start();
+                    }
+                }
+
+                enteredWorld = false;
+            } 
         }
 
-        internal void OnExit_MacrocosmSubworld()
+        internal void OnExitSubworld()
         {
             if (!TriggeredSubworldTravel)
+            {
+                MacrocosmSubworld.SetupLoadingScreen(null, MacrocosmSubworld.Hacks.SubworldSystem_CacheID());
                 exitedBySaveAndExit = true;
+            }
         }
 
         public override void OnEnterWorld()
         {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-            {
-                currentMainWorldUniqueId = MacrocosmSubworld.MainWorldUniqueID;
-                if (!SubworldSystem.AnyActive() && !TriggeredSubworldTravel && !exitedBySaveAndExit && TryGetReturnSubworld(currentMainWorldUniqueId, out string subworldId))
-                {
-                    if (subworldId is not Earth.ID)
-                    {
-                        MacrocosmSubworld.Travel(subworldId, trigger: false);
-                    }
-                }
-            }
-
-            if (TriggeredSubworldTravel)
-            {
-                if (SubworldSystem.AnyActive<Macrocosm>())
-                {
-                    if (!HasVisitedSubworld(MacrocosmSubworld.CurrentID) || MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
-                        TitleCard.Start();
-
-                    visitedSubworlds.Add(MacrocosmSubworld.CurrentID);
-                }
-                else
-                {
-                    if (MacrocosmConfig.Instance.AlwaysDisplayTitleCards)
-                        TitleCard.Start();
-                }
-            }
+            Main.BlackFadeIn = 255;
+            enteredWorld = true;
         }
 
         public static void ReceiveLastSubworldCheck(BinaryReader reader, int whoAmI)

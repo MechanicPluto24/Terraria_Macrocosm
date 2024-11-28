@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,7 +12,7 @@ using Terraria.ObjectData;
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
     [LegacyName("MoonBaseNeonTube")]
-    public class IndustrialNeonTube : ModTile
+    public class IndustrialNeonTube : ModTile, IToggleableTile
     {
         public override void SetStaticDefaults()
         {
@@ -34,9 +36,14 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             LocalizedText name = CreateMapEntryName();
             AddMapEntry(new Color(200, 200, 200), name);
+
+            TileSets.RandomStyles[Type] = 2;
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialNeonTube>());
         }
 
-        public override void HitWire(int i, int j)
+        public void ToggleTile(int i, int j, bool skipWire = false)
         {
             int left = i - Main.tile[i, j].TileFrameX / 18 % 3;
 
@@ -47,7 +54,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                 else
                     Main.tile[x, j].TileFrameX += 54;
 
-                if (Wiring.running)
+                if (skipWire && Wiring.running)
                     Wiring.SkipWire(x, j);
             }
 
@@ -55,10 +62,15 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                 NetMessage.SendTileSquare(-1, left, j, 3, 1);
         }
 
+        public override void HitWire(int i, int j)
+        {
+            ToggleTile(i, j, skipWire: true);
+        }
+
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameX == 0)
+            if (tile.TileFrameX < 18 * 3 && tile.TileFrameY < 18)
             {
                 r = 1f;
                 g = 1f;

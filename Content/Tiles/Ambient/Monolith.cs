@@ -18,8 +18,11 @@ namespace Macrocosm.Content.Tiles.Ambient
             Main.tileNoAttach[Type] = true;
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = false;
+
             TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
             TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type] = true;
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
+
             MinPick = 9999; // Very hard to break.
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style4x2);

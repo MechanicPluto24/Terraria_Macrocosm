@@ -15,23 +15,17 @@ namespace Macrocosm.Content.Items.Armor.Artemite
         {
         }
 
-
-        public override void Load()
-        {
-        }
-
         public override void SetDefaults()
         {
             Item.width = 18;
             Item.height = 18;
             Item.value = Item.sellPrice(gold: 10);
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.defense = 15;
+            Item.defense = 11;
         }
-
         public override void UpdateEquip(Player player)
         {
-            player.GetCritChance<MeleeDamageClass>() += 6f;
+            player.GetCritChance<RangedDamageClass>() += 12f;
             player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
         }
 

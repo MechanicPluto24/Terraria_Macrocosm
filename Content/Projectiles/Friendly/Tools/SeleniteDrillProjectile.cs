@@ -11,8 +11,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
         public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.SolarFlareDrill);
-            Projectile.width = 24;
-            Projectile.height = 42;
+            Projectile.width = 22;
+            Projectile.height = 22;
         }
 
         public override bool PreAI()
@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
             Player player = Main.player[Projectile.owner];
             Rectangle hitbox = Projectile.Hitbox;
 
-            float lightMultiplier = 0.35f;
+            float lightMultiplier = 0.25f;
             #endregion
 
             #region Offset
@@ -38,13 +38,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
             #region Dust
             if (Main.rand.NextBool(4))
             {
-                int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<SeleniteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(1.25f, 1.35f));
+                int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<SeleniteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(0.5f, 1f));
                 Main.dust[swingDust].velocity *= 0.05f;
             }
             #endregion
 
             #region Lighting
-            Lighting.AddLight(player.position, 0.61f * lightMultiplier, 0.26f * lightMultiplier, 0.85f * lightMultiplier);
+            Lighting.AddLight(player.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
             #endregion
 
             return true;

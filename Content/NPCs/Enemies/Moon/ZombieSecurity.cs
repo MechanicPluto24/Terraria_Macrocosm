@@ -105,7 +105,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         #region Netcode
 
-        // Required until we fix the NetSyncAttribute thing :/
         // The NPC.ai[] array is used by BaseMod ZombieAI()
         public override void SendExtraAI(BinaryWriter writer)
         {

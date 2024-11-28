@@ -39,6 +39,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
+            NPCID.Sets.TrailCacheLength[NPC.type] = 8;
+            NPCID.Sets.TrailingMode[NPC.type] = 0;
         }
 
         public override void SetDefaults()
@@ -66,7 +68,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             if (Main.rand.NextBool(2))
             {
-                Dust d = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, 54, Main.rand.NextFloat(-0.2f, 0.2f), Main.rand.NextFloat(-0.2f, 0.2f), Scale: Main.rand.NextFloat(0.5f, 1.5f));
+                Dust d = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Wraith, Main.rand.NextFloat(-0.2f, 0.2f), Main.rand.NextFloat(-0.2f, 0.2f), Scale: Main.rand.NextFloat(0.5f, 1.5f));
                 d.noGravity = true;
             }
             NPC.TargetClosest(true);
@@ -78,14 +80,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (NPC.HasPlayerTarget && clearLineOfSight && AI_State == ActionState.Idle)
                 AI_State = ActionState.Attack;
-
+            if (Main.netMode != NetmodeID.Server){
             if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() >= 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
                 AI_Rage += 0.01f;
-
+            }
             if (AI_Rage > 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
                 AI_State = ActionState.Flee;
             else
                 AI_State = ActionState.Attack;
+            
 
             if (AI_Rage > 3f || NPC.life < (NPC.lifeMax / 2))
                 AI_State = ActionState.Enrage;
@@ -114,6 +117,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 NPC.dontTakeDamage = false;
             else
                 NPC.dontTakeDamage = true;
+            NPC.netUpdate = true;
         }
 
         public void Idle()
@@ -157,7 +161,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (AI_Speed > 8f)
                 AI_Speed = 8f;
             if (Vector2.Distance(player.Center,NPC.Center)>200f)
-            NPC.velocity = ((NPC.velocity + (direction *1f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
+            NPC.velocity = ((NPC.velocity + (direction *3f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -192,7 +196,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Texture2D texture = TextureAssets.Npc[Type].Value;
             spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, (new Color(255, 255, 255) * (NPC.Opacity) * 0.2f), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
             spriteBatch.Draw(texture, NPC.Center - Main.screenPosition, null, drawColor * (NPC.Opacity), NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0);
-
+            for (int i = 0; i < NPC.oldPos.Length; i++)
+            {
+                Vector2 drawPos = NPC.oldPos[i] + NPC.Size / 2f - Main.screenPosition;
+                Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
+                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, null, color * 0.3f,  NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0f);
+            }
             /*
             // Debug collision hitbox
             Rectangle hitbox = collisionHitbox;

@@ -28,7 +28,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         private static Asset<Texture2D> glowmask;
         private static Asset<Texture2D> glowX4;
-
         public override void SetStaticDefaults()
         {
             base.SetStaticDefaults();
@@ -72,6 +71,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         [StateMethod(AIState.Fly)]
         private void Fly()
         {
+
             if (flyToOffset is null)
             {
                 if ((NPC.target = GetRandomTargetInRange(1000)) == -1)
@@ -84,16 +84,19 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             Player player = Main.player[NPC.target];
 
+
             NPC.Move(player.Center + flyToOffset.Value, Vector2.Zero, 5, 0.1f);
             NPC.velocity += NPC.velocity.SafeNormalize(Vector2.Zero).RotatedBy(MathHelper.PiOver2) * MathF.Sin(Main.GameUpdateCount * 0.1f);
             NPC.direction = NPC.Center.X < player.Center.X ? 1 : -1;
             NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).ToRotation();
+
 
             if (NPC.Center.DistanceSQ(player.Center) < 200f * 200f)
             {
                 flyToOffset = null;
                 SetState(AIState.Dash);
             }
+
         }
 
         private readonly int dashWaitFrames = 40;
@@ -130,6 +133,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             {
                 SetState(AIState.Fly);
             }
+            if (Utility.CastLength(NPC.Center, NPC.rotation.ToRotationVector2(), 82f, false) < 81f)
+                NPC.velocity *= -0.5f;
         }
 
         public override void FindFrame(int frameHeight)

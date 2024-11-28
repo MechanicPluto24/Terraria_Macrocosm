@@ -32,13 +32,23 @@ namespace Macrocosm.Content.Tiles.Special
             Main.tileSolid[Type] = false;
             Main.tileLighted[Type] = true;
 
+            TileID.Sets.AvoidedByMeteorLanding[Type] = true;
+            TileID.Sets.PreventsSandfall[Type] = true;
+            TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
+
             DustType = -1;
             HitSound = SoundID.Mech;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.DrawYOffset = 2;
-
+            TileObjectData.newTile.AnchorInvalidTiles = [
+                TileID.MagicalIceBlock,
+                TileID.Boulder,
+                TileID.BouncyBoulder,
+                TileID.LifeCrystalBoulder,
+                TileID.RollingCactus
+            ];
             TileObjectData.addTile(Type);
 
             LocalizedText name = CreateMapEntryName();
@@ -181,13 +191,16 @@ namespace Macrocosm.Content.Tiles.Special
         {
             if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
             {
-                if (launchPad.HasRocket)
+                if (launchPad.HasRocket || !launchPad.Inventory.IsEmpty)
                 {
                     fail = true;
                     return;
                 }
             }
         }
+
+        public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 0 : num;
+        public override bool KillSound(int i, int j, bool fail) => !fail;
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {

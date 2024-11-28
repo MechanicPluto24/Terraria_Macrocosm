@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Loot;
 using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Common.Loot.DropRules;
@@ -11,6 +12,7 @@ using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Ores;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -21,11 +23,9 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines
 {
-    public class OreExcavatorTE : MachineTE, IInventoryOwner
+    public class OreExcavatorTE : ConsumerTE, IInventoryOwner
     {
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();
-
-        public override MachineType MachineType => MachineType.Consumer;
 
         public SimpleLootTable Loot { get; set; }
         protected virtual int OreGenerationRate => 60;
@@ -59,9 +59,9 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            Power = 25f;
+            RequiredPower = 25f;
 
-            if (Operating)
+            if (PoweredOn)
             {
                 checkTimer++;
                 sceneCheckTimer++;
@@ -93,8 +93,8 @@ namespace Macrocosm.Content.Machines
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Protolith>(), 20, amountDroppedMinimum: 15, amountDroppedMaximum: 150));
 
 
-                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<ArtemiteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<SeleniteOre>(), 10));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<ArtemiteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<ChandriumOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<DianiteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ItemID.LunarOre, 8));
@@ -114,6 +114,7 @@ namespace Macrocosm.Content.Machines
                     Loot.Add(new TECommonDrop(this, ItemID.SilverOre, 10));
                     Loot.Add(new TECommonDrop(this, ItemID.TungstenOre, 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<LithiumOre>(), 11));
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<Silicon>(), 11));
                     Loot.Add(new TECommonDrop(this, ItemID.GoldOre, 12));
                     Loot.Add(new TECommonDrop(this, ItemID.PlatinumOre, 12));
 
@@ -145,30 +146,39 @@ namespace Macrocosm.Content.Machines
 
                     // Common desert loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.DesertFossil, 25, amountDroppedMinimum: 2, amountDroppedMaximum: 10, condition: new SceneDataConditions.IsDesert(scene)));
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<OilShale>(), 50, amountDroppedMinimum: 1, amountDroppedMaximum: 5, condition: new SceneDataConditions.IsDesert(scene)));
 
                     // Pure desert loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.SandBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.HardenedSand, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.Sandstone, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
-                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaSand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
 
                     // Corrupt desert loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.EbonsandBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsCorruption(scene))));
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.CorruptHardenedSand, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsCorruption(scene))));
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.CorruptSandstone, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsCorruption(scene))));
-                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaEbonsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsCorruption(scene))));
 
                     // Crimson desert loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.CrimsandBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsCrimson(scene))));
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.CrimsonHardenedSand, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsCrimson(scene))));
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.CrimsonSandstone, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsCrimson(scene))));
-                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaCrimsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsCrimson(scene))));
 
                     // Hallowed desert loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.PearlsandBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsHallow(scene))));
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.HallowHardenedSand, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsHallow(scene))));
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.HallowSandstone, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsHallow(scene))));
-                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaPearlsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsHallow(scene))));
+
+                    // Pure Ocean biome loot
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaSand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(Position.ToPoint()), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
+
+                    // Corrupt Ocean biome loot
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaEbonsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(Position.ToPoint()), new SceneDataConditions.IsCorruption(scene))));
+
+                    // Crimson Ocean biome loot
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaCrimsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(Position.ToPoint()), new SceneDataConditions.IsCrimson(scene))));
+
+                    // Hallow Ocean biome loot
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaPearlsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(Position.ToPoint()), new SceneDataConditions.IsHallow(scene))));
 
                     // Pure snow biome loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.IceBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsSnow(scene), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
@@ -203,8 +213,16 @@ namespace Macrocosm.Content.Machines
             }
         }
 
+        public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
+        {
+            basePosition.X -= 12;
+            base.DrawMachinePowerInfo(spriteBatch, basePosition, lightColor);
+        }
+
         public override void NetSend(BinaryWriter writer)
         {
+            base.NetSend(writer);
+
             Inventory ??= new(InventorySize, this);
             TagIO.Write(Inventory.SerializeData(), writer);
 
@@ -215,6 +233,8 @@ namespace Macrocosm.Content.Machines
 
         public override void NetReceive(BinaryReader reader)
         {
+            base.NetReceive(reader);
+
             TagCompound tag = TagIO.Read(reader);
             Inventory = Inventory.DeserializeData(tag);
 
@@ -226,12 +246,16 @@ namespace Macrocosm.Content.Machines
 
         public override void SaveData(TagCompound tag)
         {
+            base.SaveData(tag);
+
             tag[nameof(Inventory)] = Inventory;
             tag[nameof(BlacklistedItems)] = BlacklistedItems;
         }
 
         public override void LoadData(TagCompound tag)
         {
+            base.LoadData(tag);
+
             if (tag.ContainsKey(nameof(Inventory)))
                 Inventory = tag.Get<Inventory>(nameof(Inventory));
 

@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -21,16 +22,17 @@ namespace Macrocosm.Content.Tiles.Furniture
             Main.tileNoAttach[Type] = true;
 
             TileID.Sets.HasOutlines[Type] = true;
-            TileID.Sets.BasicDresser[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
             TileID.Sets.AvoidedByNPCs[Type] = true;
             TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsAContainer[Type] = true;
 
-            DustType = DustID.Iron;
+            TileSets.CustomContainerSize[Type] = new(2, 3);
+
+            DustType = 84;
             AdjTiles = [TileID.Containers];
 
-            AddMapEntry(new Color(107, 115, 125), CreateMapEntryName(), MapChestName);
+            AddMapEntry(new Color(107, 115, 125), CreateMapEntryName());
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Width = 2;
@@ -54,36 +56,11 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.addTile(Type);
         }
 
-        public override LocalizedText DefaultContainerName(int frameX, int frameY)
-        {
-            return this.GetLocalization("MapEntry");
-        }
+        public override LocalizedText DefaultContainerName(int frameX, int frameY) => this.GetLocalization("MapEntry");
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 
         public override bool IsLockedChest(int i, int j) => false;
-
-        public static string MapChestName(string name, int i, int j)
-        {
-            int left = i;
-            int top = j;
-            Tile tile = Main.tile[i, j];
-
-            if (tile.TileFrameX % 36 != 0)
-                left--;
-
-            if (tile.TileFrameY != 0)
-                top--;
-
-            int chest = Chest.FindChest(left, top);
-            if (chest < 0)
-                return Language.GetTextValue("LegacyChestType.0");
-
-            if (Main.chest[chest].name == "")
-                return name;
-
-            return name + ": " + Main.chest[chest].name;
-        }
 
         public override void NumDust(int i, int j, bool fail, ref int num) => num = 1;
 
@@ -167,7 +144,9 @@ namespace Macrocosm.Content.Tiles.Furniture
             int chest = Chest.FindChest(left, top);
             player.cursorItemIconID = -1;
             if (chest < 0)
-                player.cursorItemIconText = Language.GetTextValue("LegacyChestType.0");
+            {
+                player.cursorItemIconText = tile.GetModTile().DefaultContainerName(tile.TileFrameX, tile.TileFrameY).Value; 
+            }
             else
             {
                 string defaultName = TileLoader.DefaultContainerName(tile.TileType, tile.TileFrameX, tile.TileFrameY);

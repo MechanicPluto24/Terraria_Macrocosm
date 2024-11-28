@@ -1,12 +1,35 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.WorldGeneration
 {
     public class CustomActions
     {
+        public class ClearTileSafelyPostGen : GenAction
+        {
+            private readonly bool frameNeighbors;
+
+            public ClearTileSafelyPostGen(bool frameNeighbors = false)
+            {
+                this.frameNeighbors = frameNeighbors;
+            }
+
+            public override bool Apply(Point origin, int x, int y, params object[] args)
+            {
+                if(Utility.CoordinatesOutOfBounds(x, y))
+                    return false;
+
+                if (TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[x, y].TileType])
+                    WorldUtils.ClearTile(x, y, frameNeighbors);
+
+                return UnitApply(origin, x, y, args);
+            }
+        }
+
         // By GroxTheGreat
         public class SetModTile : GenAction
         {

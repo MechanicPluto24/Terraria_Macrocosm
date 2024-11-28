@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Tiles.Ores
         {
             TileID.Sets.Ore[Type] = true;
             Main.tileSpelunker[Type] = true;
-            Main.tileOreFinderPriority[Type] = 320;
+            Main.tileOreFinderPriority[Type] = 275;
             Main.tileShine2[Type] = true;
             Main.tileShine[Type] = 975;
             Main.tileSolid[Type] = true;
@@ -26,8 +26,7 @@ namespace Macrocosm.Content.Tiles.Ores
             DustType = 84;
             HitSound = SoundID.Tink;
 
-            MinPick = 40;
-            MineResist = 5f;
+            MinPick = 45;
         }
     }
 }

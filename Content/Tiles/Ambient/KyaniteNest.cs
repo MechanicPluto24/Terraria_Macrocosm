@@ -22,6 +22,8 @@ namespace Macrocosm.Content.Tiles.Ambient
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
+
             DustType = ModContent.DustType<ProtolithDust>();
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);

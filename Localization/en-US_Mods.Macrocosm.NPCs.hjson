@@ -29,7 +29,7 @@ MoonChampion: {
 		DislikeBiome: I dislike {BiomeName}.
 		HateBiome: I hate {BiomeName}.
 		LoveNPC: I love {NPCName}.
-		LikeNPC: I like {NPCName.
+		LikeNPC: I like {NPCName}.
 		DislikeNPC: I dislike {NPCName}.
 		HateNPC: I hate {NPCName}.
 		LikeNPC_Princess: I like {NPCName}.

@@ -92,8 +92,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
         public static List<LaunchPad> GetLaunchPads(string subworldId)
         {
-            if (launchPadStorage.ContainsKey(subworldId))
-                return launchPadStorage[subworldId];
+            if (launchPadStorage.TryGetValue(subworldId, out List<LaunchPad> value))
+                return value;
 
             return new List<LaunchPad>();
         }

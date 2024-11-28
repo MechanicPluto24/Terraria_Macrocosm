@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
@@ -69,27 +70,7 @@ namespace Macrocosm.Content.Machines
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
 
-        public override void TogglePowerStateFrame(int i, int j)
-        {
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
-            for (int x = origin.X; x < origin.X + Width; x++)
-            {
-                for (int y = origin.Y; y < origin.Y + Height; y++)
-                {
-                    Tile tile = Main.tile[x, y];
-
-                    if (IsPoweredOnFrame(x, y))
-                        tile.TileFrameY -= (short)(Height * 18);
-                    else
-                        tile.TileFrameY += (short)(Height * 18);
-                }
-            }
-
-            if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
-        }
-
-        public override void HitWire(int i, int j)
+        public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
@@ -103,7 +84,7 @@ namespace Macrocosm.Content.Machines
                     else
                         tile.TileFrameY += (short)(Height * 18);
 
-                    if (Wiring.running)
+                    if (skipWire && Wiring.running)
                         Wiring.SkipWire(x, y);
                 }
             }
@@ -120,20 +101,7 @@ namespace Macrocosm.Content.Machines
             Point16 origin = Utility.GetMultitileTopLeft(i, j);
             if ((i >= origin.X + 2 && i <= origin.X + 3) && (j >= origin.Y + 0 && j <= origin.Y + 1))
             {
-                for (int x = origin.X; x < origin.X + Width; x++)
-                {
-                    for (int y = origin.Y; y < origin.Y + Height; y++)
-                    {
-                        Tile tile = Main.tile[x, y];
-                        if (IsPoweredOnFrame(x, y))
-                            tile.TileFrameY -= (short)(Height * 18);
-                        else
-                            tile.TileFrameY += (short)(Height * 18);
-                    }
-                }
-
-                if (Main.netMode != NetmodeID.SinglePlayer)
-                    NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+                Toggle(i, j, automatic: false, skipWire: false);
             }
             else
             {
@@ -148,7 +116,7 @@ namespace Macrocosm.Content.Machines
         {
             Player player = Main.LocalPlayer;
 
-            if (!UISystem.Active && !player.mouseInterface)
+            if (!player.mouseInterface)
             {
                 player.noThrow = 2;
                 Point16 origin = Utility.GetMultitileTopLeft(i, j);
