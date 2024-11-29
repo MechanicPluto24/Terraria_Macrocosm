@@ -47,6 +47,7 @@ namespace Macrocosm.Common.Players
             {
                 IsCommander = false;
                 RocketID = -1;
+                TargetWorld = "";
             }
         }
 

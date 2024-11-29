@@ -121,7 +121,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             separator = new("___")
             {
                 HAlign = 0.5f,
-                VAlign = 0.1f,
+                VAlign = 0.15f,
             };
             currentFuelTextPanel.Append(separator);
 
@@ -181,8 +181,8 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             //TODO: localize
             string text = "";
-            text += $"{Rocket.Fuel} l\n";
-            text += $"{Rocket.FuelCapacity} l\n";
+            text += $"{Rocket.Fuel}\n";
+            text += $"{Rocket.FuelCapacity}\n";
             currentFuelTextPanel.SetText(text);
 
             LiquidContainerData data = ItemSets.LiquidContainerData[liquidContainerItemSlot.Item.type];
@@ -196,7 +196,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 }
                 else
                 {
-                    textPanel1.SetText($"+{MathHelper.Clamp(availableFuel, 0, neededFuel)} l");
+                    textPanel1.SetText($"+{MathHelper.Clamp(availableFuel, 0, neededFuel)}");
                 }
 
                 if (neededFuel > 0f)
@@ -208,7 +208,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             }
             else
             {
-                textPanel1.SetText("+0 l");
+                textPanel1.SetText("?");
             }
 
             float rocketFuelPercent = Rocket.Fuel / Rocket.FuelCapacity;

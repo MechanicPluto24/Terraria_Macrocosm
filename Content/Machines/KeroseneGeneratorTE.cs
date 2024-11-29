@@ -33,9 +33,6 @@ namespace Macrocosm.Content.Machines
         public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)burnTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
         protected int burnTimer;
 
-        /// <summary> The max power out that the Burner can have, at max <see cref="HullHeatProgress"/></summary>
-        public float MaxPower => 15f;
-
         /// <summary> The rate at which <see cref="HullHeatProgress"/> changes. </summary>
         public float HullHeatRate => 0.0001f;
 
@@ -132,7 +129,8 @@ namespace Macrocosm.Content.Machines
                 }
             }
 
-            GeneratedPower = HullHeatProgress * MaxPower;
+            MaxGeneratedPower = 15f;
+            GeneratedPower = HullHeatProgress * MaxGeneratedPower;
         }
 
         public override void NetSend(BinaryWriter writer)

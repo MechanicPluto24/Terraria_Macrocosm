@@ -17,10 +17,8 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            if (PoweredOn)
-                GeneratedPower = 1f * Math.Abs(Utility.WindSpeedScaled);
-            else
-                GeneratedPower = 0;
+            MaxGeneratedPower = 1f;
+            GeneratedPower = PoweredOn ? MaxGeneratedPower * Math.Abs(Utility.WindSpeedScaled) : 0;
         }
     }
 }
