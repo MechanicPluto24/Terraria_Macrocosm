@@ -33,7 +33,6 @@ namespace Macrocosm.Content.Rockets
             };
 
             RocketManager.AddRocket(rocket);
-            rocket.OnCreation();
             rocket.NetSync();
             rocket.Inventory.SyncEverything();
 

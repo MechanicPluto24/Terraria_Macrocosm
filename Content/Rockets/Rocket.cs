@@ -213,23 +213,9 @@ namespace Macrocosm.Content.Rockets
             };
         }
 
-        /// <summary> Called when initially creating the rocket </summary>
-        public void OnCreation()
+        private void OnFirstUpdate()
         {
-            CurrentWorld = MacrocosmSubworld.CurrentID;
-            OnWorldSpawn();
-            SetModuleWorldPositions();
-        }
-
-        /// <summary> Called when spawning into a new world (creation or travel) </summary>
-        public void OnWorldSpawn()
-        {
-            ResetAnimation();
-            ReserveSlots();
-        }
-
-        public void OnWorldLoad()
-        {
+            ResetRenderTarget();
             ResetAnimation();
             ReserveSlots();
         }
@@ -237,6 +223,14 @@ namespace Macrocosm.Content.Rockets
         /// <summary> Update the rocket </summary>
         public void Update()
         {
+            if (!ranFirstUpdate)
+            {
+                OnFirstUpdate();
+                ranFirstUpdate = true;
+            }
+
+            CurrentWorld = MacrocosmSubworld.CurrentID;
+
             SetModuleWorldPositions();
             Velocity = GetCollisionVelocity();
             Position += Velocity;
@@ -322,7 +316,9 @@ namespace Macrocosm.Content.Rockets
                 case ActionState.Landing:
 
                     if (TargetLandingPosition == default && LandingProgress < float.Epsilon)
-                         TargetLandingPosition = GetLandingSite(Utility.SpawnWorldPosition);
+                    {
+                        TargetLandingPosition = GetLandingSite(Utility.SpawnWorldPosition);
+                    }
 
                     float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
                     float landingDuration = 10f * 60f * (1f / gravityFactor);
@@ -350,7 +346,7 @@ namespace Macrocosm.Content.Rockets
             }
 
             if (Position.X < 10 * 16 || Position.X > (Main.maxTilesX - 10) * 16 || Position.Y < 10 * 16 || Position.Y > (Main.maxTilesY - 10) * 16)
-                State = ActionState.Idle;  
+                State = ActionState.Idle;
 
             if (Transparency < 1f)
                 Transparency += 0.01f;
@@ -359,13 +355,6 @@ namespace Macrocosm.Content.Rockets
                 Transparency = 1f;
 
             //Main.NewText(State);
-
-            // reset render target after first update to fix reload issue
-            if (!ranFirstUpdate)
-            {
-                ResetRenderTarget();
-                ranFirstUpdate = true;
-            }
         }
 
         /// <summary> Safely despawn the rocket </summary>
@@ -548,7 +537,7 @@ namespace Macrocosm.Content.Rockets
             Point tileCoords = initialTarget.ToTileCoordinates();
             int surfaceY = Utility.GetFirstTileFloor(tileCoords.X, 10, solid: true);
 
-            if(surfaceY != Main.maxTilesY - 10)
+            if (surfaceY != Main.maxTilesY - 10)
                 return new Vector2(initialTarget.X, surfaceY * 16f);
             else
                 return initialTarget;
