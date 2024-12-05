@@ -85,12 +85,16 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             string target = Main.LocalPlayer.GetModPlayer<RocketPlayer>().TargetWorld;
             float fuelCost = string.IsNullOrEmpty(target) ? 0f : RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentID, target);
+            float clampedCost = MathHelper.Clamp(fuelCost, 0, Rocket.FuelCapacity);
 
-            textPanel.SetText($"-{MathHelper.Clamp(fuelCost, 0, Rocket.FuelCapacity)} l");
+            float availableFuelLevel = Rocket.Fuel / Rocket.FuelCapacity;
+            float consumedFuelLevel = clampedCost / Rocket.FuelCapacity;
+
+            textPanel.SetText(fuelCost > 0f ? $"-{clampedCost}" : "?");
             textPanel.TextColor = fuelCost > Rocket.Fuel ? Color.Red : Color.White;
 
-            rocketFuelTank.LiquidLevel = MathHelper.Lerp(rocketFuelTank.LiquidLevel, Rocket.Fuel / Rocket.FuelCapacity - fuelCost / Rocket.FuelCapacity, 0.1f);
-            rocketFuelTank.PreviewLiquidLevel = MathHelper.Lerp(rocketFuelTank.PreviewLiquidLevel, Rocket.Fuel / Rocket.FuelCapacity, 0.1f);
+            rocketFuelTank.LiquidLevel = MathHelper.Lerp(rocketFuelTank.LiquidLevel, availableFuelLevel - consumedFuelLevel, 0.1f);
+            rocketFuelTank.PreviewLiquidLevel = MathHelper.Lerp(rocketFuelTank.PreviewLiquidLevel, availableFuelLevel, 0.1f);
         }
     }
 }

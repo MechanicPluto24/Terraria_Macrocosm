@@ -30,10 +30,6 @@ namespace Macrocosm.Content.Machines
         /// <summary> The burning progress of the <see cref="ConsumedItem"/> </summary>
         public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)burnTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
         protected int burnTimer;
-
-        /// <summary> The max power out that the Burner can have, at max <see cref="HullHeatProgress"/></summary>
-        public float MaxPower => 5f;
-
         /// <summary> The rate at which <see cref="HullHeatProgress"/> changes. </summary>
         public float HullHeatRate => 0.00005f;
 
@@ -85,7 +81,7 @@ namespace Macrocosm.Content.Machines
                 }
             }
 
-            if (ConsumedItem.type == ItemID.None)
+            if (ConsumedItem.IsAir)
             {
                 if (PoweredOn)
                 {
@@ -108,11 +104,10 @@ namespace Macrocosm.Content.Machines
                             break;
                         }
                     }
-
-                    if (ConsumedItem.type == ItemID.None)
-                    {
-                        HullHeatProgress -= HullHeatRate * 5f;
-                    }
+                }
+                else
+                {
+                    HullHeatProgress -= HullHeatRate * 5f;
                 }
             }
             else
@@ -125,12 +120,13 @@ namespace Macrocosm.Content.Machines
                     if (++burnTimer >= fuelData.ConsumptionRate)
                     {
                         burnTimer = 0;
-                        ConsumedItem.TurnToAir(fullReset: true);
+                        ConsumedItem = new(0);
                     }
                 }
             }
 
-            GeneratedPower = HullHeatProgress * MaxPower;
+            MaxGeneratedPower = 5f;
+            GeneratedPower = HullHeatProgress * MaxGeneratedPower;
         }
 
         public override void NetSend(BinaryWriter writer)

@@ -125,12 +125,16 @@ namespace Macrocosm.Common.Systems.Power
 
                         if (energyToStore > 0f)
                         {
+                            battery.PowerFlow = energyToStore;
                             battery.StoredEnergy += energyToStore;
                             totalEnergyToStore -= energyToStore;
                             anyStored = true;
 
                             if (battery.StoredEnergy >= battery.EnergyCapacity)
+                            {
                                 availableBatteries.Remove(battery);
+                                battery.PowerFlow = 0;
+                            }
                         }
                     }
 
@@ -158,12 +162,16 @@ namespace Macrocosm.Common.Systems.Power
 
                         if (energyToDraw > 0f)
                         {
+                            battery.PowerFlow = -energyToDraw;
                             battery.StoredEnergy -= energyToDraw;
                             totalEnergyNeeded -= energyToDraw;
                             anyDrawn = true;
 
                             if (battery.StoredEnergy <= 0f)
+                            {
                                 availableBatteries.Remove(battery);
+                                battery.PowerFlow = 0;
+                            }
                         }
                     }
 
@@ -177,6 +185,7 @@ namespace Macrocosm.Common.Systems.Power
             {
                 foreach (var battery in batteries)
                 {
+                    battery.PowerFlow = 0f;
                     battery.StoredEnergy = 0f;
                 }
             }

@@ -365,7 +365,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
             if (current is not null)
             {
-                if(launchLocationsList.Any())
+                if (launchLocationsList.Any())
                     launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
 
                 launchLocationsList.Add(current);
