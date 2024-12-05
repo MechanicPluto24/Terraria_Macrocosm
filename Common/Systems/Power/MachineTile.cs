@@ -40,6 +40,9 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void HitWire(int i, int j)
         {
+            if (Utility.TryGetTileEntityAs(i, j, out BatteryTE _))
+                return;
+
             Toggle(i, j, automatic: false, skipWire: true);
         }
 

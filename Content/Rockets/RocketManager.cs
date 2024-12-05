@@ -214,25 +214,6 @@ namespace Macrocosm.Content.Rockets
                 var rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
                 Array.Copy(rockets, Rockets, rockets.Length);
             }
-
-            OnWorldLoaded();
-        }
-
-        public override void OnWorldLoad() => OnWorldLoaded();
-        private static void OnWorldLoaded()
-        {
-            if (WorldGen.gen)
-                return;
-
-            for (int i = 0; i < MaxRockets; i++)
-            {
-                Rocket rocket = Rockets[i];
-
-                if (!rocket.ActiveInCurrentWorld)
-                    continue;
-
-                rocket.OnWorldLoad();
-            }
         }
 
         private static SpriteBatchState state1, state2;

@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Macrocosm.Common.Enums;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria.GameContent;
+using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.UI.Chat;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Systems.Power
 {
     public abstract class BatteryTE : MachineTE
     {
+        public float PowerFlow { get; set; }
+
         /// <summary> Current stored energy </summary>
         public float StoredEnergy { get; set; }
 
@@ -31,20 +27,32 @@ namespace Macrocosm.Common.Systems.Power
         }
 
         public override Color DisplayColor => Color.Cyan;
-        public override string GetPowerInfo() => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Battery").Format($"{StoredEnergy:F2}", $"{EnergyCapacity:F2}")}";
+        public override string GetPowerInfo()
+        {
+            string energy = $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Battery").Format($"{StoredEnergy:F2}", $"{EnergyCapacity:F2}")}";
+
+            string flow = PowerFlow >= 0 ? $"+{PowerFlow:F2}" : $"{PowerFlow:F2}";
+            flow = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format(flow);
+
+            string percent = $"{(StoredEnergy / EnergyCapacity * 100):F2}%"; 
+            
+            return energy + " (" + percent + "), " + flow;
+        }
+
         public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
         {
-            string active = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Energy").Format($"{StoredEnergy:F0}");
-            string total = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Energy").Format($"{EnergyCapacity:F0}");
-            string line = new('_', Math.Max(active.Length, total.Length) / 2);
+            string flow = PowerFlow >= 0 ? $"+{PowerFlow:F2}" : $"{PowerFlow:F2}";
+            flow = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format(flow);
 
-            Vector2 textSize = FontAssets.MouseText.Value.MeasureString(total);
-            Vector2 position = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (textSize.X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
+            string percent = $"{(StoredEnergy / EnergyCapacity * 100):F2}%";
+
+            Vector2 positionFlow = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (FontAssets.MouseText.Value.MeasureString(flow).X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
+            Vector2 positionPercent = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (FontAssets.MouseText.Value.MeasureString(percent).X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
             Color color = DisplayColor;
 
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, active, position - new Vector2(active.Length, 24), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, line, position - new Vector2(line.Length + 2, 22), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, total, position - new Vector2(total.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+            if(PowerFlow != 0)
+                ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, flow, positionFlow - new Vector2(flow.Length, 24), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, percent, positionPercent - new Vector2(percent.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
         }
     }
 }

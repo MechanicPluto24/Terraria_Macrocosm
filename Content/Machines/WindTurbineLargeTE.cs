@@ -19,10 +19,8 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            if (PoweredOn)
-                GeneratedPower = 4f * Math.Abs(Utility.WindSpeedScaled);
-            else
-                GeneratedPower = 0;
+            MaxGeneratedPower = 4f;
+            GeneratedPower = PoweredOn ? MaxGeneratedPower * Math.Abs(Utility.WindSpeedScaled) : 0;
         }
 
         public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
