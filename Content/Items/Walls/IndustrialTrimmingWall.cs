@@ -25,7 +25,6 @@ namespace Macrocosm.Content.Items.Walls
             CreateRecipe(4)
                 .AddIngredient<IndustrialPlating>()
                 .AddTile(TileID.WorkBenches)
-                .DisableDecraft()
                 .AddCustomShimmerResult(ModContent.ItemType<IndustrialTrimmingWallUnsafe>())
                 .Register();
         }
@@ -46,6 +45,13 @@ namespace Macrocosm.Content.Items.Walls
         {
             base.SetDefaults();
             Item.createWall = ModContent.WallType<Tiles.Walls.IndustrialTrimmingWallUnsafe>();
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+               .AddCustomShimmerResult(ModContent.ItemType<IndustrialTrimmingWall>())
+               .Register();
         }
     }
 }

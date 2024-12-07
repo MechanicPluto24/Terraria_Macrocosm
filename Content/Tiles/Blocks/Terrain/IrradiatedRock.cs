@@ -21,9 +21,11 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
 
             TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
 
-            MinPick = 235;
+            MinPick = 225;
             MineResist = 3f;
+
             AddMapEntry(new Color(199, 199, 184));
+
             HitSound = SoundID.Tink;
         }
 

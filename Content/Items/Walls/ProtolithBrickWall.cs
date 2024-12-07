@@ -26,7 +26,6 @@ namespace Macrocosm.Content.Items.Walls
             CreateRecipe(4)
                 .AddIngredient<ProtolithBrick>()
                 .AddTile(TileID.WorkBenches)
-                .DisableDecraft()
                 .AddCustomShimmerResult(ModContent.ItemType<ProtolithBrickWallUnsafe>())
                 .Register();
         }
@@ -46,6 +45,13 @@ namespace Macrocosm.Content.Items.Walls
         {
             base.SetDefaults();
             Item.createWall = ModContent.WallType<Tiles.Walls.ProtolithBrickWallUnsafe>();
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+               .AddCustomShimmerResult(ModContent.ItemType<ProtolithBrickWall>())
+               .Register();
         }
     }
 }

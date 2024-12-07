@@ -24,7 +24,6 @@ namespace Macrocosm.Content.Items.Walls
             CreateRecipe(4)
                 .AddIngredient<IrradiatedRock>()
                 .AddTile(TileID.WorkBenches)
-                .DisableDecraft()
                 .AddCustomShimmerResult(ModContent.ItemType<IrradiatedRockWallUnsafe>())
                 .Register();
         }
@@ -44,6 +43,13 @@ namespace Macrocosm.Content.Items.Walls
         {
             base.SetDefaults();
             Item.createWall = ModContent.WallType<Tiles.Walls.IrradiatedRockWallUnsafe>();
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+               .AddCustomShimmerResult(ModContent.ItemType<IrradiatedRockWall>())
+               .Register();
         }
     }
 }

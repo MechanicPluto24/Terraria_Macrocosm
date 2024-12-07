@@ -24,7 +24,9 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
 
             MinPick = 225;
             MineResist = 3f;
+
             AddMapEntry(new Color(180, 180, 180));
+
             HitSound = SoundID.Dig;
             DustType = ModContent.DustType<CynthalithDust>();
         }

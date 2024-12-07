@@ -5,11 +5,14 @@ using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
 using ReLogic.Content;
 using SubworldLibrary;
 using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Graphics.Effects;
+using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Skies.Moon
@@ -289,14 +292,14 @@ namespace Macrocosm.Content.Skies.Moon
             float intensity = Subworlds.Moon.Instance.DemonSunVisualIntensity;
             earth.Color = new Color(255, (int)(255 * (1f - (intensity * 0.6f))), (int)(255 * (1f - (intensity * 0.6f))));  
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
-            SetEarthTextures();
+            UpdateTextures();
 
             float bgTopY = (float)(-(Main.screenPosition.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 50.0);
             starsDay.CommonOffset = new Vector2(0, bgTopY);
             starsNight.CommonOffset = new Vector2(0, bgTopY);
         }
 
-        private void SetEarthTextures()
+        private void UpdateTextures()
         {
             if (Utility.IsAprilFools())
             {
@@ -312,6 +315,11 @@ namespace Macrocosm.Content.Skies.Moon
                 else
                     earth.SetTextures(earthBody, earthAtmo);
             }
+
+            if (Main.LocalPlayer.head == 12)
+                sun.SetTextures(TextureAssets.Sun2);
+            else
+                sun.SetTextures(sunTexture);
         }
 
         private static float ComputeBrightness(double fadeOutTimeDawn, double fadeInTimeDusk, float maxBrightnessDay, float maxBrightnessNigt)
