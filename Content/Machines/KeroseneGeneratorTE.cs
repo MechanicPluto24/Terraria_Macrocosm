@@ -16,8 +16,6 @@ namespace Macrocosm.Content.Machines
 {
     public class KeroseneGeneratorTE : GeneratorTE, IInventoryOwner
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public override MachineTile MachineTile => ModContent.GetInstance<KeroseneGenerator>();
 
         /// <summary> The hull heat progress, 0 to 1, increases when burning and decreases otherwise. </summary>

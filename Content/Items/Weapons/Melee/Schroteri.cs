@@ -12,8 +12,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class Schroteri : ModItem
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public override void SetStaticDefaults()
         {
             ItemID.Sets.SkipsInitialUseSound[Type] = true;
