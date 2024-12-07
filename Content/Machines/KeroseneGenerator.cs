@@ -19,7 +19,6 @@ namespace Macrocosm.Content.Machines
 {
     public class KeroseneGenerator : MachineTile
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
         public override short Width => 6;
         public override short Height => 4;
         public override MachineTE MachineTE => ModContent.GetInstance<KeroseneGeneratorTE>();

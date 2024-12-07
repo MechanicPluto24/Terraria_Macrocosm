@@ -17,8 +17,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 	// Values chosen mostly correspond to Iron Shortsword
 	public class SchroteriProjectile : ModProjectile
 	{
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public const int FadeInDuration = 7;
 		public const int FadeOutDuration = 4;
 
