@@ -24,7 +24,6 @@ namespace Macrocosm.Content.Items.Walls
             CreateRecipe(4)
                 .AddIngredient<RegolithBrick>()
                 .AddTile(TileID.WorkBenches)
-                .DisableDecraft()
                 .AddCustomShimmerResult(ModContent.ItemType<RegolithBrickWallUnsafe>())
                 .Register();
         }
@@ -44,6 +43,13 @@ namespace Macrocosm.Content.Items.Walls
         {
             base.SetDefaults();
             Item.createWall = ModContent.WallType<Tiles.Walls.RegolithBrickWallUnsafe>();
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+               .AddCustomShimmerResult(ModContent.ItemType<RegolithBrickWall>())
+               .Register();
         }
     }
 }

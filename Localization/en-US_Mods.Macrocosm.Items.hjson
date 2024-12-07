@@ -821,7 +821,7 @@ IndustrialHazardWall: {
 }
 
 IndustrialHazardWallUnsafe: {
-	DisplayName: Unsafe Industrial Hazard Wall
+	DisplayName: Perilous Industrial Hazard Wall
 	Tooltip: ""
 }
 
@@ -831,7 +831,7 @@ IndustrialPlatingWall: {
 }
 
 IndustrialPlatingWallUnsafe: {
-	DisplayName: Unsafe Industrial Plating Wall
+	DisplayName: Perilous Industrial Plating Wall
 	Tooltip: ""
 }
 
@@ -841,7 +841,7 @@ IndustrialSquarePaneledWall: {
 }
 
 IndustrialSquarePaneledWallUnsafe: {
-	DisplayName: Unsafe Industrial Square Paneled Wall
+	DisplayName: Perilous Industrial Square Paneled Wall
 	Tooltip: ""
 }
 
@@ -851,7 +851,7 @@ IndustrialTrimmingWall: {
 }
 
 IndustrialTrimmingWallUnsafe: {
-	DisplayName: Unsafe Industrial Trimming Wall
+	DisplayName: Perilous Industrial Trimming Wall
 	Tooltip: ""
 }
 
@@ -1909,27 +1909,27 @@ IrradiatedAltar: {
 }
 
 IrradiatedBrickWallUnsafe: {
-	DisplayName: Irradiated Brick Wall Unsafe
+	DisplayName: Perilous Irradiated Brick Wall
 	Tooltip: ""
 }
 
 IrradiatedRockWallUnsafe: {
-	DisplayName: Irradiated Rock Wall Unsafe
+	DisplayName: Perilous Irradiated Rock Wall
 	Tooltip: ""
 }
 
 ProtolithWallUnsafe: {
-	DisplayName: Protolith Wall Unsafe
+	DisplayName: Perilous Protolith Wall
 	Tooltip: ""
 }
 
 RegolithBrickWallUnsafe: {
-	DisplayName: Regolith Brick Wall Unsafe
+	DisplayName: Perilous Regolith Brick Wall
 	Tooltip: ""
 }
 
 RegolithWallUnsafe: {
-	DisplayName: Regolith Wall Unsafe
+	DisplayName: Perilous Regolith Wall
 	Tooltip: ""
 }
 
@@ -2233,7 +2233,7 @@ ProtolithBrickWall: {
 }
 
 ProtolithBrickWallUnsafe: {
-	DisplayName: Protolith Brick Wall Unsafe
+	DisplayName: Perilous Protolith Brick Wall
 	Tooltip: ""
 }
 
