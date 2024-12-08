@@ -139,6 +139,12 @@ namespace Macrocosm.Content.Rockets
                 if (State == ActionState.Landing && LandingProgress > 0.9f)
                     scale *= Utility.QuadraticEaseOut((1f - LandingProgress) * 10f);
 
+                if (State == ActionState.Docking && DockingProgress > 0.9f)
+                    scale *= Utility.QuadraticEaseOut((1f - DockingProgress) * 10f);
+
+                if (State == ActionState.Undocking && UndockingProgress < 0.1f)
+                    scale *= Utility.QuadraticEaseOut((UndockingProgress) * 10f);
+
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
                 spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }

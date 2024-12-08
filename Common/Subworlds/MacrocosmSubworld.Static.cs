@@ -9,6 +9,7 @@ using ReLogic.Content;
 using SubworldLibrary;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
@@ -74,7 +75,7 @@ namespace Macrocosm.Common.Subworlds
         /// <param name="rocket"> The spacecraft used for travel, if applicable. Will display in the loading screen. </param>
         /// <param name="trigger"> Value set to the <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/>. Normally true. </param>
         /// <returns> Whether world travel has been successful </returns>
-        public static bool Travel(string targetWorldID, Rocket rocket = null, bool trigger = true)
+        public static bool Travel(string targetWorldID, Rocket rocket = null, bool spaceStation = false, bool trigger = true)
         {
             if (Main.netMode != NetmodeID.Server)
             {
@@ -107,6 +108,7 @@ namespace Macrocosm.Common.Subworlds
 
         public static void SetupLoadingScreen(Rocket rocket, string targetWorld)
         {
+            string id = SanitizeID(OrbitSubworld.GetParentID(targetWorld));
             if (rocket is not null)
             {
                 if (!SubworldSystem.AnyActive<Macrocosm>())
@@ -115,7 +117,7 @@ namespace Macrocosm.Common.Subworlds
                 }
                 else
                 {
-                    LoadingScreen = SanitizeID(CurrentID) switch
+                    LoadingScreen = id switch
                     {
                         nameof(Moon) => new MoonLoadingScreen(),
                         _ => null,
@@ -124,7 +126,7 @@ namespace Macrocosm.Common.Subworlds
             }
             else
             {
-                LoadingScreen = SanitizeID(targetWorld) switch
+                LoadingScreen = id switch
                 {
                     nameof(Earth) => new EarthLoadingScreen(),
                     nameof(Moon) => new MoonLoadingScreen(),
@@ -132,7 +134,7 @@ namespace Macrocosm.Common.Subworlds
                 };
             }
 
-            switch (SanitizeID(targetWorld))
+            switch (id)
             {
                 case "Moon":
                     LoadingScreen?.SetProgressBar(new(

@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Subworlds
     {
         public string ID => Mod.Name + "/" + Name;
 
-        public override void SetStaticDefaults()
+        public sealed override void SetStaticDefaults()
         {
             Subworlds.Add(ID, this);
         }
@@ -289,6 +289,9 @@ namespace Macrocosm.Common.Subworlds
 
         #region Saving and loading
 
+        public virtual void SaveExtraData(TagCompound data) { }
+        public virtual void LoadExtraData(TagCompound data) { }
+
         private void SaveData(TagCompound tag)
         {
             WorldFlags.SaveData(tag);
@@ -296,6 +299,7 @@ namespace Macrocosm.Common.Subworlds
             LaunchPadManager.SaveData(tag);
             CustomizationStorage.SaveData(tag);
             TownNPCSystem.SaveData(tag);
+            SaveExtraData(tag);
         }
 
         private void LoadData(TagCompound tag)
@@ -305,6 +309,7 @@ namespace Macrocosm.Common.Subworlds
             LaunchPadManager.LoadData(tag);
             CustomizationStorage.LoadData(tag);
             TownNPCSystem.LoadData(tag);
+            LoadExtraData(tag);
         }
 
         public override void CopySubworldData()

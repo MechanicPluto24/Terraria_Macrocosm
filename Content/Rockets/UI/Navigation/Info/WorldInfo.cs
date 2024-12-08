@@ -28,9 +28,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
         public static void Add(string subworldId, params InfoElement[] infoElements)
             => worldInfoStorage.Add(subworldId, infoElements.ToList());
 
-        public static List<InfoElement> GetInfoElements(string subworldId) => worldInfoStorage[subworldId];
-
-        public static bool TryGetValue(string key, out List<InfoElement> info)
+        public static bool TryGetElements(string key, out List<InfoElement> info)
             => worldInfoStorage.TryGetValue(key, out info);
 
         public static LocalizedText GetFlavorText(string subworldId)

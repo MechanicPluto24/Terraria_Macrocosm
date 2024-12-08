@@ -289,8 +289,7 @@ namespace Macrocosm.Content.Skies.Moon
 
             sun.Color = new Color(255, 255, 255) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
 
-            float intensity = Subworlds.Moon.Instance.DemonSunVisualIntensity;
-            earth.Color = new Color(255, (int)(255 * (1f - (intensity * 0.6f))), (int)(255 * (1f - (intensity * 0.6f))));  
+            earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));  
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
             UpdateTextures();
 

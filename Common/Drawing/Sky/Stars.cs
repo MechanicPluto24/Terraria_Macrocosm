@@ -1,4 +1,5 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -77,6 +78,11 @@ namespace Macrocosm.Common.Drawing.Sky
             }
 
             spawningDone = true;
+        }
+
+        private void OnResolutionChanged(Matrix obj)
+        {
+            
         }
 
         public void SpawnStars(RawTexture colorMap, int count, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
