@@ -52,19 +52,25 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, lightColor * rocket.Transparency, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
-            if (rocket.ForcedFlightAppearance || (rocket.State != Rocket.ActionState.Idle && rocket.State != Rocket.ActionState.PreLaunch))
+            if (rocket.ForcedFlightAppearance || (rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch))
             {
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.Additive, state1);
 
-                if (rocket.State == Rocket.ActionState.StaticFire)
+                if (rocket.State is Rocket.ActionState.StaticFire)
                     DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(rocket.StaticFireProgress));
 
-                if (rocket.State == Rocket.ActionState.Flight || rocket.ForcedFlightAppearance)
+                if (rocket.State is Rocket.ActionState.Flight || rocket.ForcedFlightAppearance)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
 
-                if (rocket.State == Rocket.ActionState.Landing)
+                if (rocket.State is Rocket.ActionState.Landing)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
+
+                if (rocket.State is Rocket.ActionState.Docking)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.DockingProgress, 0f, 0.1f) * 10f));
+
+                if (rocket.State is Rocket.ActionState.Undocking)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.UndockingProgress, 0f, 0.1f) * 10f));
             }
 
             spriteBatch.End();
@@ -94,6 +100,8 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             VertexStrip strip = new();
             int stripDataCount = (int)(58 * intensity);
+            if(stripDataCount < 0)
+                stripDataCount = 0;
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
             Array.Fill(positions, new Vector2(position.X + Width / 2f, position.Y + Height - 28));

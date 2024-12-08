@@ -40,19 +40,25 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             state2.SaveState(spriteBatch, true);
 
-            if (rocket.ForcedFlightAppearance || (rocket.State != Rocket.ActionState.Idle && rocket.State != Rocket.ActionState.PreLaunch))
+            if (rocket.ForcedFlightAppearance || (rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch))
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state2);
 
-                if (rocket.State == Rocket.ActionState.StaticFire)
+                if (rocket.State is Rocket.ActionState.StaticFire)
                     DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(rocket.StaticFireProgress));
 
-                if (rocket.State == Rocket.ActionState.Flight || rocket.ForcedFlightAppearance)
+                if (rocket.State is Rocket.ActionState.Flight || rocket.ForcedFlightAppearance)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
 
-                if (rocket.State == Rocket.ActionState.Landing)
+                if (rocket.State is  Rocket.ActionState.Landing)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
+
+                if (rocket.State is Rocket.ActionState.Docking)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.DockingProgress, 0f, 0.1f) * 10f));
+
+                if (rocket.State is Rocket.ActionState.Undocking)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.UndockingProgress, 0f, 0.1f) * 10f));
 
                 spriteBatch.End();
                 spriteBatch.Begin(state2);
@@ -63,6 +69,8 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             VertexStrip strip = new();
             int stripDataCount = (int)(38 * intensity);
+            if (stripDataCount < 0)
+                stripDataCount = 0;
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
             Array.Fill(positions, new Vector2(position.X + ExhaustOffsetX, position.Y + Height));

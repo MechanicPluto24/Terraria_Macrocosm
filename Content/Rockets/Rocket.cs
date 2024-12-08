@@ -16,6 +16,7 @@ using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,9 @@ namespace Macrocosm.Content.Rockets
             PreLaunch,
             StaticFire,
             Flight,
-            Landing
+            Landing,
+            Docking,
+            Undocking
         }
 
         /// <summary> The rocket's identifier </summary>
@@ -63,7 +66,7 @@ namespace Macrocosm.Content.Rockets
         [NetSync] public string TargetWorld = "";
 
         /// <summary> The target landing position </summary>
-        [NetSync] public Vector2 TargetLandingPosition;
+        [NetSync] public Vector2 TargetTravelPosition;
         private LaunchPad targetLaunchPad;
 
         /// <summary> The amount of fuel currently stored in the rocket, as an absolute value </summary>
@@ -78,11 +81,15 @@ namespace Macrocosm.Content.Rockets
         /// <summary> The rocket's current world, "Earth" if active and not in a subworld. Other mod's subworlds have the mod name prepended </summary>
         [NetSync] public string CurrentWorld = "";
 
+        /// <summary> Whether travelling to or from orbit </summary>
+        [NetSync] public bool OrbitTravel;
+
         /// <summary> Whether the rocket is active in the current world and should be updated and visible </summary>
         public bool ActiveInCurrentWorld => Active && CurrentWorld == MacrocosmSubworld.CurrentID;
 
         /// <summary> The world Y coordinate for entering the target subworld </summary>
-        private const float WorldExitPositionY = 60 * 16f;
+        private float FlightExitPosition => 60 * 16f;
+        private float UndockingExitPosition => Main.maxTilesY * 16f -  60 * 16f;
 
         /// <summary> The rocket's bounds width </summary>
         public const int Width = 276;
@@ -138,6 +145,14 @@ namespace Macrocosm.Content.Rockets
         /// <summary> The landing sequence progress </summary>
         public float LandingProgress { get; set; }
         private float EasedLandingProgress => Utility.QuadraticEaseOut(LandingProgress);
+
+        /// <summary> The docking sequence progress </summary>
+        public float DockingProgress { get; set; }
+        private float EasedDockingProgress => Utility.QuadraticEaseOut(DockingProgress);
+
+        /// <summary> The landing sequence progress </summary>
+        public float UndockingProgress { get; set; }
+        private float EasedUndockingProgress => Utility.QuadraticEaseIn(UndockingProgress);
 
         private bool ranFirstUpdate;
         private bool canAnimate = true;
@@ -285,11 +300,11 @@ namespace Macrocosm.Content.Rockets
 
                     FlightTime++;
 
-                    float launchDistance = Math.Abs(StartPositionY - WorldExitPositionY);
+                    float launchDistance = Math.Abs(StartPositionY - FlightExitPosition);
                     float launchDuration = 10f * 60f * gravityFactor;
                     float launchIncrement = launchDistance / launchDuration;
 
-                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, WorldExitPositionY, EasedFlightProgress));
+                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, FlightExitPosition, EasedFlightProgress));
                     FlightProgress += launchIncrement / launchDistance;
                     FlightProgress = MathHelper.Clamp(FlightProgress, 0f, 1f);
 
@@ -300,13 +315,15 @@ namespace Macrocosm.Content.Rockets
                     if (GetRocketPlayer(Main.myPlayer).InRocket)
                         Main.BlackFadeIn = (int)(255f * EasedFlightProgress);
 
-                    if (CheckPlayerInRocket(Main.myPlayer) && Position.Y < WorldExitPositionY + 1)
+                    if (CheckPlayerInRocket(Main.myPlayer) && Position.Y < FlightExitPosition + 1)
                     {
                         FlightTime = 0;
                         FlightProgress = 0f;
                         LandingProgress = 0f;
+                        DockingProgress = 0f;
+                        UndockingProgress = 0f;
                         Velocity = Vector2.Zero;
-                        State = ActionState.Landing;
+                        State = OrbitTravel ? ActionState.Docking : ActionState.Landing;
                         ResetAnimation();
                         Travel();
                     }
@@ -315,15 +332,15 @@ namespace Macrocosm.Content.Rockets
 
                 case ActionState.Landing:
 
-                    if (TargetLandingPosition == default && LandingProgress < float.Epsilon)
+                    if (TargetTravelPosition == default && LandingProgress < float.Epsilon)
                     {
-                        TargetLandingPosition = GetLandingSite(Utility.SpawnWorldPosition);
+                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition);
                     }
 
-                    float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
+                    float landingDistance = Math.Abs(FlightExitPosition - TargetTravelPosition.Y + Height);
                     float landingDuration = 10f * 60f * (1f / gravityFactor);
                     float landingIncrement = landingDistance / landingDuration;
-                    Position = new Vector2(TargetLandingPosition.X - Width / 2 - 8, MathHelper.Lerp(WorldExitPositionY, TargetLandingPosition.Y - Height, EasedLandingProgress));
+                    Position = new Vector2(TargetTravelPosition.X - Width / 2 - 8, MathHelper.Lerp(FlightExitPosition, TargetTravelPosition.Y - Height, EasedLandingProgress));
                     LandingProgress += landingIncrement / landingDistance;
                     LandingProgress = MathHelper.Clamp(LandingProgress, 0f, 1f);
 
@@ -339,6 +356,62 @@ namespace Macrocosm.Content.Rockets
                     {
                         State = ActionState.Idle;
                         ResetAnimation();
+                    }
+
+                    break;
+
+                case ActionState.Docking:
+
+                    if (TargetTravelPosition == default && DockingProgress < float.Epsilon)
+                    {
+                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition);
+                    }
+
+                    float dockingDistance = Math.Abs(UndockingExitPosition - TargetTravelPosition.Y);
+                    float dockingDuration = 10f * 60f * (1f / gravityFactor);
+                    float dockingIncrement = dockingDistance / dockingDuration;
+
+                    Position = new Vector2(TargetTravelPosition.X - Width / 2 - 8, MathHelper.Lerp(UndockingExitPosition, TargetTravelPosition.Y - Height, EasedDockingProgress));
+                    DockingProgress += dockingIncrement / dockingDistance;
+                    DockingProgress = MathHelper.Clamp(DockingProgress, 0f, 1f);
+
+                    if (GetRocketPlayer(Main.myPlayer).InRocket)
+                        Main.BlackFadeIn = (int)(255f * (1f - EasedDockingProgress));
+
+                    if (DockingProgress >= 1f - float.Epsilon)
+                    {
+                        State = ActionState.Idle;
+                    }
+
+                    break;
+
+                case ActionState.Undocking:
+                    float undockingDistance = Math.Abs(StartPositionY - UndockingExitPosition);
+                    float undockingDuration = 5f * 60f * (1f / gravityFactor);
+                    float undockingIncrement = undockingDistance / undockingDuration;
+
+                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, UndockingExitPosition, EasedUndockingProgress));
+                    UndockingProgress += undockingIncrement / undockingDistance;
+                    UndockingProgress = MathHelper.Clamp(UndockingProgress, 0f, 1f);
+
+                    if (GetRocketPlayer(Main.myPlayer).InRocket)
+                        Main.BlackFadeIn = (int)(255f * EasedUndockingProgress);
+
+                    if (CheckPlayerInRocket(Main.myPlayer) && Position.Y > UndockingExitPosition - 1)
+                    {
+                        FlightTime = 0;
+                        FlightProgress = 0f;
+                        LandingProgress = 0f;
+                        DockingProgress = 0f;
+                        UndockingProgress = 0f;
+                        Velocity = Vector2.Zero;
+                        State = OrbitTravel ? ActionState.Docking : ActionState.Landing;
+
+                        if (OrbitTravel)  
+                            Position.Y = FlightExitPosition;
+     
+                        ResetAnimation();
+                        Travel();
                     }
 
                     break;
@@ -505,14 +578,21 @@ namespace Macrocosm.Content.Rockets
         public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
         {
             Main.playerInventory = false;
-            State = ActionState.PreLaunch;
+            State = SubworldSystem.Current is OrbitSubworld ? ActionState.Undocking : ActionState.PreLaunch;
             StartPositionY = Position.Y;
             TargetWorld = targetWorld;
+            OrbitTravel = false;
             this.targetLaunchPad = targetLaunchPad;
 
             Fuel -= GetFuelCost(targetWorld);
 
             NetSync();
+        }
+
+        public void Launch(OrbitSubworld targetOrbitSubworld)
+        {
+            Launch(targetOrbitSubworld.ID);
+            OrbitTravel = true;
         }
 
         public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentID, targetWorld);
@@ -636,7 +716,7 @@ namespace Macrocosm.Content.Rockets
                     }
                     else
                     {
-                        if (State == ActionState.Landing)
+                        if (State is ActionState.Landing or ActionState.Docking or ActionState.Undocking)
                             animatedModule.CurrentFrame = 0;
                         else
                             animatedModule.CurrentFrame = animatedModule.NumberOfFrames - 1;
@@ -686,18 +766,6 @@ namespace Macrocosm.Content.Rockets
         // Handles the rocket's movement during flight
         private void Movement()
         {
-            if (State == ActionState.Flight)
-            {
-
-            }
-            else if (State == ActionState.Landing)
-            {
-
-            }
-            else
-            {
-            }
-
         }
 
         private void UpdateModuleAnimation()
@@ -828,6 +896,30 @@ namespace Macrocosm.Content.Rockets
                         break;
                     }
 
+                case ActionState.Docking:
+                    {
+                        lightIntensity = 10f;
+                        screenshakeIntensity = DockingProgress < 0.05f ? 30f : 15f * (1f - Utility.QuadraticEaseOut(DockingProgress));
+
+                        //int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 2 : (int)(5f * atmoDesityFactor);
+                        //SpawnSmokeExhaustTrail(countPerTick: count);
+
+                        if (EasedFlightProgress < 0.1f)
+                            SpawnTileDust(closestTile, 2);
+                        break;
+                    }
+ 
+
+                case ActionState.Undocking:
+                    {
+                        lightIntensity = 10f;
+                        screenshakeIntensity = 15f * (Utility.QuadraticEaseOut(UndockingProgress));
+                        //int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 2 : (int)(5f * atmoDesityFactor);
+                        //SpawnSmokeExhaustTrail(countPerTick: count);
+
+                        break;
+                    }
+
                 case ActionState.Idle:
                     break;
             }
@@ -849,7 +941,7 @@ namespace Macrocosm.Content.Rockets
                 Vector2 position = new Vector2(Center.X, Position.Y + Height - 28);
 
                 Vector2 velocity = new Vector2(Main.rand.NextFloat(-0.6f, 0.6f), Main.rand.NextFloat(2, 10));
-                if (State == ActionState.Landing)
+                if (State is ActionState.Landing or ActionState.Docking)
                     velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 16));
 
                 var smoke = Particle.Create<RocketExhaustSmoke>(p =>
@@ -883,7 +975,7 @@ namespace Macrocosm.Content.Rockets
 
 
                 Vector2 velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4));
-                if (State == ActionState.Landing)
+                if (State is ActionState.Landing or ActionState.Undocking)
                     velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 12));
 
                 var smoke = Particle.Create<RocketExhaustSmoke>(p =>
@@ -967,7 +1059,7 @@ namespace Macrocosm.Content.Rockets
                 });
             }
 
-            if (State == ActionState.Flight)
+            if (State is ActionState.Flight)
             {
                 SoundEngine.PlaySound(SFX.RocketLoop with
                 {
@@ -1001,6 +1093,42 @@ namespace Macrocosm.Content.Rockets
                     return State == ActionState.Landing && ActiveInCurrentWorld;
                 });
             }
+
+            if (State == ActionState.Docking)
+            {
+                SoundEngine.PlaySound(SFX.RocketLoop with
+                {
+                    MaxInstances = 1,
+                    IsLooped = true,
+                    Volume = 1f,
+                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+                },
+                Center, updateCallback: (sound) =>
+                {
+                    sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
+                    sound.Volume = DockingProgress < 0.8f ? 1f : (DockingProgress) * 5f;
+                    sound.Position = Center;
+                    return State == ActionState.Landing && ActiveInCurrentWorld;
+                });
+            }
+
+            if (State == ActionState.Undocking)
+            {
+                SoundEngine.PlaySound(SFX.RocketLoop with
+                {
+                    MaxInstances = 1,
+                    IsLooped = true,
+                    Volume = 1f,
+                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+                },
+                Center, updateCallback: (sound) =>
+                {
+                    sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
+                    sound.Volume = UndockingProgress < 0.8f ? 1f : (1f - UndockingProgress) * 5f;
+                    sound.Position = Center;
+                    return State == ActionState.Landing && ActiveInCurrentWorld;
+                });
+            }
         }
 
         // Handles the subworld travel
@@ -1020,9 +1148,9 @@ namespace Macrocosm.Content.Rockets
             // Set as default if no launchpad has been selected (i.e. the World Spawn option) 
             // For different world travel, the correct value is assigned when spawning in that world
             if (targetLaunchPad is not null)
-                TargetLandingPosition = targetLaunchPad.CenterWorld + new Vector2(16, 16);
+                TargetTravelPosition = targetLaunchPad.CenterWorld + new Vector2(16, 16);
             else
-                TargetLandingPosition = default;
+                TargetTravelPosition = default;
 
             if (samePlanet)
             {
@@ -1030,15 +1158,15 @@ namespace Macrocosm.Content.Rockets
                 // (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
                 if (!MacrocosmSubworld.IsValidID(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
                 {
-                    TargetLandingPosition = new(Center.X, StartPositionY + Height);
+                    TargetTravelPosition = new(Center.X, StartPositionY + Height);
                     CurrentWorld = MacrocosmSubworld.CurrentID;
                 }
 
                 // For same world travel assign the correct position here
-                if (TargetLandingPosition == default)
-                    TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 2);
+                if (TargetTravelPosition == default)
+                    TargetTravelPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 2);
 
-                Center = new(TargetLandingPosition.X, Center.Y);
+                Center = new(TargetTravelPosition.X, Center.Y);
 
                 /*
                 FadeEffect.ResetFade();
@@ -1049,7 +1177,7 @@ namespace Macrocosm.Content.Rockets
             else
             {
                 if (CheckPlayerInRocket(Main.myPlayer))
-                    MacrocosmSubworld.Travel(TargetWorld, this);
+                    MacrocosmSubworld.Travel(TargetWorld, this, OrbitTravel);
             }
         }
     }
