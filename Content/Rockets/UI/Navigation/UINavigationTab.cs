@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Players;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -37,7 +38,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         private UINavigationTarget target;
 
         private LaunchPad targetLaunchPad;
-        private OrbitSubworld targetOrbitSubworld;
+        private MultiSubworld targetOrbitSubworld;
         private bool selectedSpawnLocation;
 
         private UILaunchDestinationInfoElement spawnInfoElement;
@@ -248,7 +249,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         private UIListScrollablePanel CreateWorldInfoPanel(string subworldId)
         {
-            subworldId = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(subworldId), out string modName);
+            subworldId = MacrocosmSubworld.SanitizeID(MultiSubworld.GetParentID(subworldId), out string modName);
 
             if (worldInfoPanel is null)
             {
@@ -351,21 +352,25 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             }
 
             List<UILaunchDestinationInfoElement> orbitSubworlds = new();
-            foreach (var orbitSubworld in OrbitSubworld.GetOrbitSubworlds(MacrocosmSubworld.CurrentID))
+            
+            if(target is not null && target.TargetID == MacrocosmSubworld.CurrentID)
             {
-                if(!orbitSubworld.Unlocked)
-                    continue;
-
-                UILaunchDestinationInfoElement infoElement = new(orbitSubworld)
+                foreach (var orbitSubworld in MultiSubworld.GetMultiSubworlds(target.TargetID))
                 {
-                    FocusContext = "LaunchLocations",
-                };
+                    if (!WorldFlags.SubworldUnlocked.GetValue(orbitSubworld.ID))
+                        continue;
 
-                infoElement.OnLeftClick += InfoElement_OnLeftClick;
-                infoElement.OnRightClick += InfoElement_OnRightClick;
+                    UILaunchDestinationInfoElement infoElement = new(orbitSubworld)
+                    {
+                        FocusContext = "LaunchLocations",
+                    };
 
-                infoElement.IsReachable = true;
-                orbitSubworlds.Add(infoElement);
+                    infoElement.OnLeftClick += InfoElement_OnLeftClick;
+                    infoElement.OnRightClick += InfoElement_OnRightClick;
+
+                    infoElement.IsReachable = true;
+                    orbitSubworlds.Add(infoElement);
+                }
             }
 
             launchLocationsList.AddRange(vacant.Cast<UIElement>().ToList());

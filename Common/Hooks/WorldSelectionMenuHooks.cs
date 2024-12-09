@@ -35,8 +35,8 @@ namespace Macrocosm.Common.Hooks
 
             if (player.TryGetReturnSubworld(self.Data.UniqueId, out string id))
             {
-                isSpaceStation = OrbitSubworld.IsOrbitSubworld(id);
-                subworld = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(id), out _);
+                isSpaceStation = MultiSubworld.IsMultiSubworld(id);
+                subworld = MacrocosmSubworld.SanitizeID(MultiSubworld.GetParentID(id), out _);
             }
 
 

@@ -1,5 +1,6 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Armor.Astronaut;

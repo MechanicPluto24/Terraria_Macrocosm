@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
     public class UILaunchDestinationInfoElement : UIInfoElement, IFocusable
     {
         public LaunchPad LaunchPad { get; init; }
-        public OrbitSubworld OrbitSubworld { get; init; }
+        public MultiSubworld OrbitSubworld { get; init; }
 
         public bool HasFocus { get; set; }
         public string FocusContext { get; set; }
@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
         }
 
-        public UILaunchDestinationInfoElement(OrbitSubworld orbitSubworld) : base(
+        public UILaunchDestinationInfoElement(MultiSubworld orbitSubworld) : base(
             $"Space station #{orbitSubworld.Index}",
             ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "SpaceStation", AssetRequestMode.ImmediateLoad),
             null,

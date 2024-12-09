@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
 using ReLogic.Content;
+using SteelSeries.GameSense;
 using SubworldLibrary;
 using System;
 using Terraria;
@@ -17,6 +18,7 @@ using Terraria.GameContent;
 using Terraria.Graphics.Effects;
 using Terraria.Map;
 using Terraria.ModLoader;
+using static Macrocosm.Common.Drawing.Sky.CelestialBody;
 
 namespace Macrocosm.Content.Skies.EarthOrbit
 {
@@ -44,13 +46,9 @@ namespace Macrocosm.Content.Skies.EarthOrbit
             earthTexture = ModContent.Request<Texture2D>(Path + "Earth", mode);
 
             stars = new();
-            stars.SpawnStars(850, randomColor: true, baseScale: 0.8f, twinkleFactor: 0.05f);
 
             sun = new CelestialBody(sunTexture);
             moon = new CelestialBody(TextureAssets.Moon[Main.moonType]);
-
-            sun.SetupSkyRotation(CelestialBody.SkyRotationMode.Day);
-            moon.SetupSkyRotation(CelestialBody.SkyRotationMode.Night);
         }
 
         public void Load(Mod mod)
@@ -72,6 +70,15 @@ namespace Macrocosm.Content.Skies.EarthOrbit
         public override void Activate(Vector2 position, params object[] args)
         {
             intensity = 0.002f;
+
+            Rectangle area = new(
+                0,
+                -Main.screenHeight,
+                Main.screenWidth,
+                Main.screenHeight * 2
+            );
+
+            stars.SpawnStars(850 * 5, area: area, randomColor: true, baseScale: 0.8f, twinkleFactor: 0.05f);
             active = true;
         }
 
@@ -118,7 +125,8 @@ namespace Macrocosm.Content.Skies.EarthOrbit
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
 
             sun.Color = new Color(255, 255, 255);
-            float bgTopY = (float)(-(Main.screenPosition.Y - Main.screenHeight / 2) / (Main.worldSurface * 16.0 - 600.0) * 50.0);
+
+            float bgTopY = (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;
             stars.CommonOffset = new Vector2(0, bgTopY);
 
             moon.SetSourceRectangles(bodySourceRect: TextureAssets.Moon[Main.moonType].Frame(verticalFrames: 8, frameY: Main.moonPhase));
@@ -136,8 +144,9 @@ namespace Macrocosm.Content.Skies.EarthOrbit
                     Main.screenWidth, Main.screenHeight), Color.White * Math.Min(1f, (Main.screenPosition.Y - 800f) / 1000f) * intensity);
 
                 stars.DrawAll(spriteBatch);
-                sun.Draw(spriteBatch);
-                moon.Draw(spriteBatch);
+
+                RotateSunAndMoon();
+
 
                 state.SaveState(spriteBatch);
                 spriteBatch.End();
@@ -153,6 +162,53 @@ namespace Macrocosm.Content.Skies.EarthOrbit
 
                 spriteBatch.End();
                 spriteBatch.Begin(state);
+            }
+        }
+
+        // CelestialBody.Rotate is NOT working for drawing under the surface
+        private void RotateSunAndMoon()
+        {
+            float bgTopY = (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;
+            double duration = Main.dayTime ? MacrocosmSubworld.Current.DayLength : MacrocosmSubworld.Current.NightLength;
+
+            if(Main.dayTime)
+            {
+                double progress = Main.dayTime ? Main.time / duration : 1.0 - Main.time / duration;
+                int timeX = (int)(progress * (Main.screenWidth + sun.Width * 2)) - (int)sun.Width;
+
+                double timeY = Main.time < duration / 2
+                    ? Math.Pow((Main.time / duration - 0.5) * 2.0, 2.0) // AM
+                    : Math.Pow(1.0 - Main.time / duration * 2.0, 2.0);   // PM
+
+                sun.Rotation = (float)(Main.time / duration) * 2f - 7.3f;
+                sun.Scale = (float)(1.2 - timeY * 0.4);
+
+                sun.Color = Color.White;
+
+                int posY = Main.dayTime ? (int)(bgTopY + timeY * 250.0 + 180.0) : (int)(bgTopY - timeY * 250.0 + 665.0);
+
+                sun.SetupSkyRotation(SkyRotationMode.None);
+                sun.Center = new Vector2(timeX, posY);
+                sun.Draw(Main.spriteBatch);
+            }
+            else
+            {
+                double progress = !Main.dayTime ? Main.time / duration : 1.0 - Main.time / duration;
+                int timeX = (int)(progress * (Main.screenWidth + moon.Width * 2)) - (int)moon.Width;
+
+                double timeY = Main.time < duration / 2
+                    ? Math.Pow(1.0 - Main.time / duration * 2.0, 2.0)
+                    : Math.Pow((Main.time / duration - 0.5) * 2.0, 2.0);
+
+                moon.Rotation = (float)(Main.time / duration) * 2f - 7.3f;
+                moon.Scale = (float)(1.2 - timeY * 0.4);
+
+                moon.Color = Color.White;
+                int posY = !Main.dayTime ? (int)(bgTopY + timeY * 250.0 + 360.0) : (int)(bgTopY - timeY * 250.0 + 665.0);
+
+                moon.SetupSkyRotation(SkyRotationMode.None);
+                moon.Center = new Vector2(timeX, posY);
+                moon.Draw(Main.spriteBatch);
             }
         }
     }

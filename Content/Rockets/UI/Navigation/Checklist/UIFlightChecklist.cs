@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
         public Rocket Rocket { get; set; }
         public UINavigationTarget MapTarget { get; set; }
         public LaunchPad TargetLaunchpad { get; set; }
-        public OrbitSubworld TargetOrbitSubworld { get; set; }
+        public MultiSubworld TargetOrbitSubworld { get; set; }
 
         public bool SelectedSpawnLocation { get; set; }
 

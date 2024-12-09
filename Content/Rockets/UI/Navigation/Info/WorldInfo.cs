@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Systems;
+﻿using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;

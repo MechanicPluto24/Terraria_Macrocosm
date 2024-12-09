@@ -24,7 +24,7 @@ namespace Macrocosm.Common.Hooks
 
         private void On_Main_DrawBackgroundBlackFill(On_Main.orig_DrawBackgroundBlackFill orig, Main self)
         {
-            if (SubworldSystem.Current is OrbitSubworld)
+            if (SubworldSystem.Current is MultiSubworld)
                 return;
 
             orig(self);
