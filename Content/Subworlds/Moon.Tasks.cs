@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.Accessories;
@@ -700,7 +700,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.LuminiteShrineUnlocked, true);
+                WorldFlags.LuminiteShrineUnlocked = true;
             }
         }
 
@@ -733,7 +733,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.HeavenforgeShrineUnlocked, true);
+                    
             }
         }
 
@@ -766,7 +766,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.MercuryShrineUnlocked, true);
+                WorldFlags.MercuryShrineUnlocked = true;
             }
         }
 
@@ -799,7 +799,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.LunarRustShrineUnlocked, true);
+                WorldFlags.LunarRustShrineUnlocked = true;
             }
         }
 
@@ -832,7 +832,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.StarRoyaleShrineUnlocked, true);
+                WorldFlags.StarRoyaleShrineUnlocked = true;
             }
         }
 
@@ -865,7 +865,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.StarRoyaleShrineUnlocked, true);
+                WorldFlags.StarRoyaleShrineUnlocked = true;
             }
         }
 
@@ -898,7 +898,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.AstraShrineUnlocked, true);
+                WorldFlags.AstraShrineUnlocked = true;
             }
         }
 
@@ -931,7 +931,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.DarkCelestialShrineUnlocked, true);
+                WorldFlags.DarkCelestialShrineUnlocked = true;
             }
         }
 
@@ -964,7 +964,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.SetFlag(ref WorldFlags.CosmicEmberShrineUnlocked, true);
+                WorldFlags.CosmicEmberShrineUnlocked = true;
             }
         }
 

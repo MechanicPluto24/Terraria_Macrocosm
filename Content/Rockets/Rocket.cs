@@ -577,8 +577,11 @@ namespace Macrocosm.Content.Rockets
         /// </summary>
         public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
         {
+            State = ActionState.PreLaunch;
+            if(MultiSubworld.IsMultiSubworld(CurrentWorld) && MultiSubworld.GetParentID(CurrentWorld) == targetWorld)
+                State = ActionState.Undocking;
+
             Main.playerInventory = false;
-            State = SubworldSystem.Current is OrbitSubworld ? ActionState.Undocking : ActionState.PreLaunch;
             StartPositionY = Position.Y;
             TargetWorld = targetWorld;
             OrbitTravel = false;
@@ -589,7 +592,7 @@ namespace Macrocosm.Content.Rockets
             NetSync();
         }
 
-        public void Launch(OrbitSubworld targetOrbitSubworld)
+        public void Launch(MultiSubworld targetOrbitSubworld)
         {
             Launch(targetOrbitSubworld.ID);
             OrbitTravel = true;

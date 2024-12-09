@@ -108,7 +108,7 @@ namespace Macrocosm.Common.Subworlds
 
         public static void SetupLoadingScreen(Rocket rocket, string targetWorld)
         {
-            string id = SanitizeID(OrbitSubworld.GetParentID(targetWorld));
+            string id = SanitizeID(MultiSubworld.GetParentID(targetWorld));
             if (rocket is not null)
             {
                 if (!SubworldSystem.AnyActive<Macrocosm>())

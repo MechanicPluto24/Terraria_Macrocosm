@@ -2,6 +2,7 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,7 +20,6 @@ namespace Macrocosm.Content.Skies.Moon
 {
     public class MoonSky : CustomSky, ILoadable
     {
-
         private bool active;
         private float intensity;
 
@@ -163,7 +163,7 @@ namespace Macrocosm.Content.Skies.Moon
 
             if (Main.dayTime)
             {
-                if (EventSystem.DemonSun)
+                if (WorldFlags.DemonSun)
                     return GetDemonSunDayColour();
 
                 if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
@@ -176,7 +176,7 @@ namespace Macrocosm.Content.Skies.Moon
             }
             else
             {
-                if (EventSystem.DemonSun)
+                if (WorldFlags.DemonSun)
                     return GetDemonSunNightColour();
 
                 if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
@@ -210,12 +210,12 @@ namespace Macrocosm.Content.Skies.Moon
 
                 sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
 
-                if (EventSystem.DemonSun && Main.dayTime)
+                if (WorldFlags.DemonSun && Main.dayTime)
                     DrawDemonSunEffects(spriteBatch, sun);
 
                 sun.Draw(spriteBatch);
 
-                //if (EventSystem.DemonSun&&Main.dayTime)
+                //if (WorldFlags.DemonSun&&Main.dayTime)
                 //    DrawDemonSunFrontEffects(spriteBatch, sun);
 
                 earth.Draw(spriteBatch);

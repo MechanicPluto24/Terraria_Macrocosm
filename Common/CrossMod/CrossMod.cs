@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Systems;
+﻿using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Items.Armor.Vanity.BossMasks;
 using Macrocosm.Content.Items.Consumables.BossSummons;
 using Macrocosm.Content.Items.MusicBoxes;
