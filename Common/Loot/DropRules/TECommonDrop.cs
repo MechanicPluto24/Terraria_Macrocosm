@@ -16,6 +16,7 @@ namespace Macrocosm.Common.Loot.DropRules
     {
         public MachineTE MachineTE;
         private readonly float multipleEntityFactor = 1f;
+        private readonly int? multipleEntityMaxDistance = null;
 
         /// <summary>
         /// <c>multipleEntityFactor</c> represents how chanceDenominator increases (returns per unit decrease) for multiple machines of this type. 
@@ -23,11 +24,12 @@ namespace Macrocosm.Common.Loot.DropRules
         /// <br/> 1.0f => chanceDenominator increases directly with the number of machines; returns per unit decrease; total returns are unchanged regardless of number of machines.
         /// <br/> 0.Xf => chanceDenominator increases by specified factor; returns per unit decrease by number of machines, depending on factor; total returns increase amount depends on factor (closer to 0 => high, closer to 1 => low).   
         /// </summary>
-        public TECommonDrop(MachineTE machine, int itemId, int chanceDenominator, int amountDroppedMinimum = 1, int amountDroppedMaximum = 1, int chanceNumerator = 1, float multipleEntityFactor = 0.5f)
+        public TECommonDrop(MachineTE machine, int itemId, int chanceDenominator, int amountDroppedMinimum = 1, int amountDroppedMaximum = 1, int chanceNumerator = 1, float multipleEntityFactor = 0.5f, int? multipleEntityMaxDistance = null)
             : base(itemId, chanceDenominator, amountDroppedMinimum, amountDroppedMaximum, chanceNumerator)
         {
             MachineTE = machine;
             this.multipleEntityFactor = multipleEntityFactor;
+            this.multipleEntityMaxDistance = multipleEntityMaxDistance;
         }
 
         public bool Blacklisted { get; set; }

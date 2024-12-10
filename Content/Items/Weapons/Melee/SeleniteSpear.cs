@@ -22,6 +22,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetDefaults()
         {
+            Item.width = 102;
+            Item.height = 102;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.value = Item.sellPrice(gold: 1);
             Item.useStyle = ItemUseStyleID.Shoot;
