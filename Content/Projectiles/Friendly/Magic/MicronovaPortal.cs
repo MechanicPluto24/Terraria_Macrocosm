@@ -32,6 +32,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             set => Projectile.ai[0] = value;
         }
 
+        public bool RandomAim
+        {
+            get => Projectile.ai[1] > 0f;
+            set => Projectile.ai[1] = value ? 1f : -1f;
+        }
+
+
         public override void SetDefaults()
         {
             defWidth = defHeight = Projectile.width = Projectile.height = 68;
@@ -49,7 +56,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (!spawned)
             {
                 Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
-                shootAim = target.RotatedByRandom(MathHelper.Pi / 24);
+                shootAim = RandomAim ? target.RotatedByRandom(MathHelper.Pi / 24) : target;
                 spawned = true;
             }
 

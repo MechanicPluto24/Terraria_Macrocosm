@@ -16,18 +16,24 @@ namespace Macrocosm.Common.UI;
 // Adapted from Terraria.GameContent.UI.Elements.UIBestiaryInfoItemLine
 public class UIItemDropInfo : UIPanel
 {
-    private readonly Item infoDisplayItem;
     private readonly bool hideMouseOver = false;
 
     private readonly UIInventoryItemIcon itemIcon;
     private readonly UITextPanel<string> textPanel;
 
+    public bool Blacklisted
+    {
+        get => itemIcon.Blacklisted;
+        set => itemIcon.Blacklisted = value;
+    }
+
     public int OrderInUIList { get; set; }
+    public Item Item { get; }
 
     public UIItemDropInfo(DropRateInfo info, bool locked = false, float textScale = 1f)
     {
-        infoDisplayItem = new Item();
-        infoDisplayItem.SetDefaults(info.itemId);
+        Item = new Item();
+        Item.SetDefaults(info.itemId);
         SetDropConditionDescriptionOnItem(info);
         SetPadding(0f);
         PaddingLeft = 10f;
@@ -65,7 +71,7 @@ public class UIItemDropInfo : UIPanel
         }
         else
         {
-            itemIcon = new(infoDisplayItem)
+            itemIcon = new(Item)
             {
                 IgnoresMouseInteraction = true,
                 HAlign = 0f,
@@ -91,9 +97,7 @@ public class UIItemDropInfo : UIPanel
 
     public bool ToggleBlacklisted()
     {
-        bool blacklisted = itemIcon.ToggleBlacklisted();
-        textPanel.TextColor = blacklisted ? Color.Gray : Color.White;
-        return blacklisted;
+        return false;
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -105,7 +109,7 @@ public class UIItemDropInfo : UIPanel
 
     private void DrawMouseOver()
     {
-        Main.HoverItem = infoDisplayItem;
+        Main.HoverItem = Item;
         Main.instance.MouseText("", 0, 0);
         Main.mouseText = true;
     }
@@ -134,7 +138,7 @@ public class UIItemDropInfo : UIPanel
             }
         }
 
-        infoDisplayItem.BestiaryNotes = string.Join("\n", list);
+        Item.BestiaryNotes = string.Join("\n", list);
     }
 
     private void MouseOver(UIMouseEvent evt, UIElement listeningElement)
