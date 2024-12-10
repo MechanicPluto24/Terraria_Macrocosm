@@ -80,23 +80,14 @@ namespace Macrocosm.Content.Machines
                     BorderColor = UITheme.Current.InfoElementStyle.BorderColor
                 };
 
-                foreach (var entry in OreExcavator.Loot.Entries)
-                {
-                    if (entry is IBlacklistable blacklistable)
-                    {
-                        if (dropRateInfo.itemId == blacklistable.ItemID && (OreExcavator.BlacklistedItems.Contains(dropRateInfo.itemId) || blacklistable.Blacklisted))
-                            itemDropInfo.ToggleBlacklisted();
-                    }
-                }
-
-                itemDropInfo.OnLeftClick += (_, element) => BlacklistItem(element as UIItemDropInfo, dropRateInfo);
+                itemDropInfo.OnLeftClick += (_, element) => BlacklistItem(dropRateInfo);
                 dropRateList.Add(itemDropInfo);
             }
 
             return dropRateList;
         }
 
-        private void BlacklistItem(UIItemDropInfo itemDropInfo, DropRateInfo dropRateInfo)
+        private void BlacklistItem(DropRateInfo dropRateInfo)
         {
             foreach (var entry in OreExcavator.Loot.Entries)
             {
@@ -104,10 +95,8 @@ namespace Macrocosm.Content.Machines
                 {
                     if (dropRateInfo.itemId == blacklistable.ItemID)
                     {
-                        // For UI
-                        blacklistable.Blacklisted = itemDropInfo.ToggleBlacklisted();
+                        blacklistable.Blacklisted = !blacklistable.Blacklisted;
 
-                        // For TE data
                         if (blacklistable.Blacklisted)
                             OreExcavator.BlacklistedItems.Add(blacklistable.ItemID);
                         else
@@ -122,6 +111,10 @@ namespace Macrocosm.Content.Machines
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            foreach (var dropInfo in dropRateList.Where(child => child is UIItemDropInfo).Cast<UIItemDropInfo>())
+                dropInfo.Blacklisted = OreExcavator.BlacklistedItems.Contains(dropInfo.Item.type);
+
             Inventory.ActiveInventory = OreExcavator.Inventory;
         }
     }

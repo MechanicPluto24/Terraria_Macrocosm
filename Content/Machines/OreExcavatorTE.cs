@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -70,6 +71,7 @@ namespace Macrocosm.Content.Machines
             if (checkTimer >= OreGenerationRate)
             {
                 checkTimer = 0;
+                ApplyBlacklist();
                 Loot?.Drop(Utility.GetClosestPlayer(Position, MachineTile.Width * 16, MachineTile.Height * 16));
             }
 
@@ -78,6 +80,12 @@ namespace Macrocosm.Content.Machines
                 sceneCheckTimer = 0;
                 scene?.Scan();
             }
+        }
+
+        private void ApplyBlacklist()
+        {
+            foreach (var entry in Loot.Where((rule) => rule is IBlacklistable).Cast<IBlacklistable>())
+                entry.Blacklisted = BlacklistedItems.Contains(entry.ItemID);
         }
 
         protected virtual void PopulateItemLoot()
