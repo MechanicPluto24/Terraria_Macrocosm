@@ -29,18 +29,12 @@ public class UIInventoryItemIcon : UIElement
 
     public bool ToggleBlacklisted(Color? blacklistColor = null, Color? defaultColor = null)
     {
-        Blacklisted = !Blacklisted;
-
-        if (Blacklisted)
-            Color = blacklistColor ?? Color.Gray;
-        else
-            Color = defaultColor ?? Color.White;
-
-        return Blacklisted;
+        return false;
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
+        Color = Blacklisted ? Color.Gray : Color.White;
         ItemSlot.DrawItemIcon(screenPositionForItemCenter: GetDimensions().Center(), item: Item, context: 31, spriteBatch: spriteBatch, scale: Item.scale, sizeLimit: 32f, environmentColor: Color);
 
         if (Blacklisted && DisplayCrossMarkWhenBlacklisted)

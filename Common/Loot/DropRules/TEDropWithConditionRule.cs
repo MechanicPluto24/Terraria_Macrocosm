@@ -7,8 +7,8 @@ namespace Macrocosm.Common.Loot.DropRules
     {
         public IItemDropRuleCondition Condition;
 
-        public TEDropWithConditionRule(MachineTE machineTE, int itemId, int chanceDenominator, IItemDropRuleCondition condition, int amountDroppedMinimum = 1, int amountDroppedMaximum = 1, int chanceNumerator = 1)
-            : base(machineTE, itemId, chanceDenominator, amountDroppedMinimum, amountDroppedMaximum, chanceNumerator)
+        public TEDropWithConditionRule(MachineTE machineTE, int itemId, int chanceDenominator, IItemDropRuleCondition condition, int amountDroppedMinimum = 1, int amountDroppedMaximum = 1, int chanceNumerator = 1, float multipleEntityFactor = 0.5f, int? multipleEntityMaxDistance = null)
+            : base(machineTE, itemId, chanceDenominator, amountDroppedMinimum, amountDroppedMaximum, chanceNumerator, multipleEntityFactor, multipleEntityMaxDistance)
         {
             Condition = condition;
         }

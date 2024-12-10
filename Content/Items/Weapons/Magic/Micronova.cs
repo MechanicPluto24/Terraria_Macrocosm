@@ -38,8 +38,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
         {
 
-            Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-500f, 500f), Main.rand.NextFloat(-500f, 500f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI);
-            Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-500f, 500f), Main.rand.NextFloat(-500f, 500f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI);
+            Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-250f, 250f), Main.rand.NextFloat(-250f, 250f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI, ai1: -1);
+            Projectile.NewProjectileDirect(source, position + new Vector2(Main.rand.NextFloat(-250f, 250f), Main.rand.NextFloat(-250f, 250f)), velocity, ModContent.ProjectileType<MicronovaPortal>(), damage, knockBack, player.whoAmI, ai1: 1);
 
             return false;
         }
