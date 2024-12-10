@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             float availableFuelLevel = Rocket.Fuel / Rocket.FuelCapacity;
             float consumedFuelLevel = clampedCost / Rocket.FuelCapacity;
 
-            textPanel.SetText(fuelCost > 0f ? $"-{clampedCost}" : "?");
+            textPanel.SetText(fuelCost > 0f ? $"-{fuelCost}" : "?");
             textPanel.TextColor = fuelCost > Rocket.Fuel ? Color.Red : Color.White;
 
             rocketFuelTank.LiquidLevel = MathHelper.Lerp(rocketFuelTank.LiquidLevel, availableFuelLevel - consumedFuelLevel, 0.1f);
