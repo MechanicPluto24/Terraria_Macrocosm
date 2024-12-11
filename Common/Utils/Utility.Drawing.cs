@@ -247,8 +247,8 @@ namespace Macrocosm.Common.Utils
         /// <summary> Used for linear scaling along an entire day/night cycle </summary>
         public static float ScaleNoonToMidnight(float min, float max)
         {
-            float dayLength = (float)MacrocosmSubworld.CurrentDayLength;
-            float nightLength = (float)MacrocosmSubworld.CurrentNightLength;
+            float dayLength = (float)MacrocosmSubworld.GetDayLength();
+            float nightLength = (float)MacrocosmSubworld.GetNightLength();
             float totalCycleLength = dayLength + nightLength;
 
             double totalTime = Main.dayTime ? Main.time : dayLength + Main.time;

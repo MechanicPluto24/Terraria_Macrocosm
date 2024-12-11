@@ -35,7 +35,7 @@ namespace Macrocosm.Common.Players
                     stats.FlyTime = (int)(stats.FlyTime * ItemSets.WingTimeMultiplier_Moon[wingItemType]);
 
                 if (ItemSets.WingTimeDependsOnAtmosphericDensity[wingItemType])
-                    stats.FlyTime = (int)(stats.FlyTime * MacrocosmSubworld.CurrentAtmosphericDensity);
+                    stats.FlyTime = (int)(stats.FlyTime * MacrocosmSubworld.GetAtmosphericDensity(player.Center));
 
                 player.wingTimeMax = stats.FlyTime;
             }

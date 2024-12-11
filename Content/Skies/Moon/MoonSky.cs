@@ -135,10 +135,10 @@ namespace Macrocosm.Content.Skies.Moon
         {
             Color darkColor = new Color(35, 35, 35);
             Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
-            if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
-                return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1))), new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
-            else if (Main.time > MacrocosmSubworld.CurrentDayLength * 0.9)
-                return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.CurrentDayLength - Main.time) / (MacrocosmSubworld.CurrentDayLength - MacrocosmSubworld.CurrentDayLength * 0.9))), new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            if (Main.time < MacrocosmSubworld.GetDayLength() * 0.1)
+                return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.GetDayLength() * 0.1))), new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            else if (Main.time > MacrocosmSubworld.GetDayLength() * 0.9)
+                return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.GetDayLength() - Main.time) / (MacrocosmSubworld.GetDayLength() - MacrocosmSubworld.GetDayLength() * 0.9))), new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
             else
                 return Color.Lerp(Color.White, new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
         }
@@ -147,10 +147,10 @@ namespace Macrocosm.Content.Skies.Moon
         {
             Color darkColor = new Color(35, 35, 35);
             Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
-            if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
-                return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.CurrentNightLength * 0.2))), new Color(40, 12, 12), Subworlds.Moon.Instance.DemonSunVisualIntensity);
-            else if (Main.time > MacrocosmSubworld.CurrentNightLength * 0.8)
-                return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.CurrentNightLength - Main.time) / (MacrocosmSubworld.CurrentNightLength - MacrocosmSubworld.CurrentNightLength * 0.8))), new Color(40, 12, 12), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            if (Main.time < MacrocosmSubworld.GetNightLength() * 0.2)
+                return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.GetNightLength() * 0.2))), new Color(40, 12, 12), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            else if (Main.time > MacrocosmSubworld.GetNightLength() * 0.8)
+                return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.GetNightLength() - Main.time) / (MacrocosmSubworld.GetNightLength() - MacrocosmSubworld.GetNightLength() * 0.8))), new Color(40, 12, 12), Subworlds.Moon.Instance.DemonSunVisualIntensity);
             else
                 return Color.Lerp(earthshineBlue, new Color(40, 12, 12), Subworlds.Moon.Instance.DemonSunVisualIntensity);
         }
@@ -166,10 +166,10 @@ namespace Macrocosm.Content.Skies.Moon
                 if (EventSystem.DemonSun)
                     return GetDemonSunDayColour();
 
-                if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
-                    return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1)));
-                else if (Main.time > MacrocosmSubworld.CurrentDayLength * 0.9)
-                    return Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.CurrentDayLength - Main.time) / (MacrocosmSubworld.CurrentDayLength - MacrocosmSubworld.CurrentDayLength * 0.9)));
+                if (Main.time < MacrocosmSubworld.GetDayLength() * 0.1)
+                    return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.GetDayLength() * 0.1)));
+                else if (Main.time > MacrocosmSubworld.GetDayLength() * 0.9)
+                    return Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.GetDayLength() - Main.time) / (MacrocosmSubworld.GetDayLength() - MacrocosmSubworld.GetDayLength() * 0.9)));
                 else
                     return Color.White;
 
@@ -179,10 +179,10 @@ namespace Macrocosm.Content.Skies.Moon
                 if (EventSystem.DemonSun)
                     return GetDemonSunNightColour();
 
-                if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
-                    return Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.CurrentNightLength * 0.2)));
-                else if (Main.time > MacrocosmSubworld.CurrentNightLength * 0.8)
-                    return Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.CurrentNightLength - Main.time) / (MacrocosmSubworld.CurrentNightLength - MacrocosmSubworld.CurrentNightLength * 0.8)));
+                if (Main.time < MacrocosmSubworld.GetNightLength() * 0.2)
+                    return Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.GetNightLength() * 0.2)));
+                else if (Main.time > MacrocosmSubworld.GetNightLength() * 0.8)
+                    return Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.GetNightLength() - Main.time) / (MacrocosmSubworld.GetNightLength() - MacrocosmSubworld.GetNightLength() * 0.8)));
                 else
                     return earthshineBlue;
             }

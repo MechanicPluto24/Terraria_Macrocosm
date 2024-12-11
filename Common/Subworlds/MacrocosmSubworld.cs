@@ -38,25 +38,21 @@ namespace Macrocosm.Common.Subworlds
         #region Environment parameters
 
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
-        public virtual double TimeRate { get; } = Earth.TimeRate;
+        protected virtual double TimeRate { get; } = Earth.TimeRate;
 
         /// <summary> Day length of this subworld in ticks </summary>
-        public virtual double DayLength { get; } = Earth.DayLength;
+        protected virtual double DayLength { get; } = Earth.DayLength;
 
         /// <summary> Night length of this subworld in ticks </summary>
-        public virtual double NightLength { get; } = Earth.NightLength;
+        protected virtual double NightLength { get; } = Earth.NightLength;
 
         /// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
-        public virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
+        protected virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
 
-        /// <summary> 
-        /// The atmospheric density, in terms of Earth's atmospheric density.
-        /// 0f means vacuum, 1f means equal to Earth's, >1f means higher that Earth's.
-        /// </summary>
-        public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity;
+        protected virtual float AtmosphericDensity(Vector2 position) => Earth.AtmosphericDensity;
 
         /// <summary> The ambient temperature, expressed in °C </summary>
-        public virtual float GetAmbientTemperature() => Earth.GetAmbientTemperature();
+        public virtual float AmbientTemperature(Vector2 position) => Earth.AmbientTemperature(position);
 
         /// <summary> Whether wiring should function in this subworld. Useful for solar storms :) </summary>
         public virtual bool ShouldUpdateWiring { get; set; } = true;
@@ -278,7 +274,7 @@ namespace Macrocosm.Common.Subworlds
         public override float GetGravity(Entity entity)
         {
             if (entity is Player)
-                return Player.defaultGravity * CurrentGravityMultiplier;
+                return Player.defaultGravity * GetGravityMultiplier();
 
             // This is instead modified using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC 
             if (entity is NPC)

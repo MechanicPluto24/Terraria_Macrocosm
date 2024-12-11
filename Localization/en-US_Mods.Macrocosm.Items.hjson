@@ -2741,3 +2741,13 @@ KeroseneGenerator: {
 	DisplayName: Kerosene Generator
 	Tooltip: ""
 }
+
+Barometer: {
+	DisplayName: Barometer
+	Tooltip: ""
+}
+
+GeigerMuller: {
+	DisplayName: Geiger Muller
+	Tooltip: ""
+}

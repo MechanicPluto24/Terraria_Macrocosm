@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Debris
 
         public override void AI()
         {
-            float gravity = 0.15f * (0.5f + 0.5f * MacrocosmSubworld.CurrentGravityMultiplier);
+            float gravity = 0.15f * (0.5f + 0.5f * MacrocosmSubworld.GetGravityMultiplier());
             Projectile.velocity.Y += gravity;
             Projectile.rotation += Projectile.velocity.X * 0.05f;
 
