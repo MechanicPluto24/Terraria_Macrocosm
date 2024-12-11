@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Items.Machines;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Terraria.Localization;

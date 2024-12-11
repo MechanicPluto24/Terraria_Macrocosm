@@ -135,8 +135,13 @@ namespace Macrocosm.Common.Players
                 Player.buffImmune[BuffType<Depressurized>()] = true;
                 Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + (int)(SpaceProtection / 3f));
             }
+            else if(RoomOxygenSystem.IsRoomPressurized(Player.Center))
+            {
+                Player.buffImmune[BuffType<Depressurized>()] = true;
+            }
 
-            if (HeldProjectileCooldown < 600) HeldProjectileCooldown++; // 600 ticks as none of these weapons will have a use time above 10s.
+            if (HeldProjectileCooldown < 600)
+                HeldProjectileCooldown++; // 600 ticks as none of these weapons will have a use time above 10s.
         }
 
         public override bool CanUseItem(Item item)

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.LoadingScreens;
 using Macrocosm.Content.Rockets;
@@ -60,11 +61,29 @@ namespace Macrocosm.Common.Subworlds
         public static Guid MainWorldUniqueID => SubworldSystem.AnyActive() ? typeof(SubworldSystem).GetFieldValue<WorldFileData>("main").UniqueId : Main.ActiveWorldFileData.UniqueId;
 
         public static double CurrentTimeRate => Current is not null ? Current.TimeRate : Earth.TimeRate;
-        public static double CurrentDayLength => Current is not null ? Current.DayLength : Earth.DayLength;
-        public static double CurrentNightLength => Current is not null ? Current.NightLength : Earth.NightLength;
-        public static float CurrentGravityMultiplier => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
-        public static float CurrentAtmosphericDensity => Current is not null ? Current.AtmosphericDensity : Earth.AtmosphericDensity;
-        public static float GetCurrentAmbientTemperature() => Current is not null ? Current.GetAmbientTemperature() : Earth.GetAmbientTemperature();
+
+        public static double GetDayLength() => Current is not null ? Current.DayLength : Earth.DayLength;
+
+        public static double GetNightLength() => Current is not null ? Current.NightLength : Earth.NightLength;
+
+        public static float GetGravityMultiplier() => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
+
+        public static float GetAtmosphericDensity(Vector2 position, bool checkRooms = false)
+        {
+            if (Current is not null)
+            {
+                float density = Current.AtmosphericDensity(position);
+                if (checkRooms && RoomOxygenSystem.IsRoomPressurized(position))
+                    density = Earth.AtmosphericDensity;
+                return density;
+            }
+            else
+            {
+                return Earth.AtmosphericDensity;
+            }
+        }
+
+        public static float GetAmbientTemperature(Vector2 position) => Current is not null ? Current.AmbientTemperature(position) : Earth.AmbientTemperature(position);
 
         /// <summary> The loading screen. </summary>
         public static LoadingScreen LoadingScreen { get; set; }

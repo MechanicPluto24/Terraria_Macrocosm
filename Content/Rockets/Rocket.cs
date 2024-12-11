@@ -238,7 +238,7 @@ namespace Macrocosm.Content.Rockets
             Effects();
             PlaySound();
 
-            float gravity = MacrocosmSubworld.CurrentGravityMultiplier;
+            float gravity = MacrocosmSubworld.GetGravityMultiplier();
             float gravityFactor = 0.7f + 0.3f * gravity;
 
             switch (State)
@@ -769,8 +769,8 @@ namespace Macrocosm.Content.Rockets
             if (State == ActionState.Idle)
                 return;
 
-            float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.CurrentGravityMultiplier;
-            float atmoDesityFactor = 0.5f + 0.5f * MacrocosmSubworld.CurrentAtmosphericDensity;
+            float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.GetGravityMultiplier();
+            float atmoDesityFactor = 0.5f + 0.5f * MacrocosmSubworld.GetAtmosphericDensity(Center);
 
             Point tilePos = (Position + new Vector2(Width / 2f, Height)).ToTileCoordinates();
             Point closestTile = Utility.GetClosestTile(tilePos.X, tilePos.Y, -1, 15, (t) => Main.tileSolid[t.TileType] && !t.IsActuated);
@@ -786,7 +786,7 @@ namespace Macrocosm.Content.Rockets
                         lightIntensity = StaticFireProgress;
                         screenshakeIntensity = 5f * Utility.QuadraticEaseOut(StaticFireProgress);
 
-                        int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(4f * atmoDesityFactor * StaticFireProgress);
+                        int count = MacrocosmSubworld.GetAtmosphericDensity(Center) < 1f ? 1 : (int)(4f * atmoDesityFactor * StaticFireProgress);
                         SpawnSmokeExhaustTrail(countPerTick: count);
 
                         if (Main.rand.NextFloat() < StaticFireProgress)
@@ -799,7 +799,7 @@ namespace Macrocosm.Content.Rockets
                         lightIntensity = 10f;
                         screenshakeIntensity = FlightProgress < 0.05f ? 30f : 15f * (1f - Utility.QuadraticEaseOut(FlightProgress));
 
-                        int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 2 : (int)(5f * atmoDesityFactor);
+                        int count = MacrocosmSubworld.GetAtmosphericDensity(Center) < 1f ? 2 : (int)(5f * atmoDesityFactor);
                         SpawnSmokeExhaustTrail(countPerTick: count);
 
                         if (EasedFlightProgress < 0.1f)
@@ -812,7 +812,7 @@ namespace Macrocosm.Content.Rockets
                         lightIntensity = 10f;
                         screenshakeIntensity = 2f * Utility.QuadraticEaseOut(LandingProgress);
 
-                        int count = MacrocosmSubworld.CurrentAtmosphericDensity < 1f ? 1 : (int)(3f * atmoDesityFactor);
+                        int count = MacrocosmSubworld.GetAtmosphericDensity(Center) < 1f ? 1 : (int)(3f * atmoDesityFactor);
                         SpawnSmokeExhaustTrail(countPerTick: count, speed: 2f * (1.2f - EasedLandingProgress));
 
                         if (EasedLandingProgress > 0.9f)

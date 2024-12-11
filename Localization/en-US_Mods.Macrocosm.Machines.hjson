@@ -20,6 +20,8 @@ Common: {
 	LiquidExtract: Extractable
 	LiquidContainer: Liquid Container
 	BurnFuel: Flammable
+	TemperatureMetric: "{0}°C"
+	TemperatureImperial: "{0}°F"
 
 	PowerInfo: {
 		Simple: "{0}kW"

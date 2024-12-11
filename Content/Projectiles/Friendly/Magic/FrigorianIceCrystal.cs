@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override void AI()
         {
             Projectile.rotation += Projectile.velocity.X * 0.1f;
-            Projectile.velocity.Y += 0.5f * (0.3f + 0.7f * MacrocosmSubworld.CurrentGravityMultiplier);
+            Projectile.velocity.Y += 0.5f * (0.3f + 0.7f * MacrocosmSubworld.GetGravityMultiplier());
 
             if (Main.rand.NextBool(12))
                 Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<FrigorianDust>());

@@ -13,7 +13,7 @@ namespace Macrocosm.Common.Systems.Power
 {
     public partial class MachineTE
     {
-        private class WireCircuit : Circuit<MachineTE>
+        protected class WireCircuit : Circuit<MachineTE>
         {
             public WireType WireType { get; }
 
@@ -191,7 +191,7 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        private class ConveyorCircuit : Circuit<MachineTE>
+        protected class ConveyorCircuit : Circuit<MachineTE>
         {
             public override void Merge(Circuit<MachineTE> other)
             {
@@ -222,10 +222,10 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        private WireCircuit wireCircuit = null;
-        private ConveyorCircuit conveyorCircuit = null;
+        protected WireCircuit wireCircuit = null;
+        protected ConveyorCircuit conveyorCircuit = null;
 
-        private static List<WireType> WireTypes => Enum.GetValues<WireType>().ToList();
+        protected static List<WireType> WireTypes => Enum.GetValues<WireType>().ToList();
 
         private static int buildTimer = 0;
         private void BuildCircuits()
