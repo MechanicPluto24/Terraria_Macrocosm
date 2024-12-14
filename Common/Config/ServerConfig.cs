@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Macrocosm.Common.Enums;
+using System;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
@@ -24,14 +25,15 @@ namespace Macrocosm.Common.Config
         [DefaultValue(false)]
         public bool DisableOilShaleGeneration { get; set; }
 
-        [Header("$Mods.Macrocosm.Configs.ServerConfig.Circuits")]
-        [DefaultValue(1)]
-        [Range(1, 60)]
-        public int CircuitSearchUpdateRate { get; set; }
+        [Header("$Mods.Macrocosm.Configs.ServerConfig.Updates")]
+        [DefaultValue(UpdateRate.Realtime)]
+        public UpdateRate CircuitSearchUpdateRate { get; set; }
 
-        [DefaultValue(1)]
-        [Range(1, 60)]
-        public int CircuitSolveUpdateRate { get; set; }
+        [DefaultValue(UpdateRate.Realtime)]
+        public UpdateRate CircuitSolveUpdateRate { get; set; }
+
+        [DefaultValue(UpdateRate.Realtime)]
+        public UpdateRate RoomPressureUpdateRate { get; set; }
 
         public override void OnChanged()
         {

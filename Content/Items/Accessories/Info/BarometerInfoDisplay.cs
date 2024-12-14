@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Accessories.Info
         public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
         {
             pressure = MathHelper.Lerp(pressure, MacrocosmSubworld.GetAtmosphericDensity(Main.LocalPlayer.Center, checkRooms: true), 0.1f);
-            string text = $"{pressure:F2} bar";
+            string text = $"{pressure:F2} atm";
             displayColor = Color.White;
             return text;
         }
