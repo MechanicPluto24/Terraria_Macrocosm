@@ -17,9 +17,10 @@ namespace Macrocosm.Content.Machines
 
         public override void UpdatePowerState()
         {
-            if (wireCircuit != null && wireCircuit.Where((te) => te is OxygenSystemTE oxygenSystem && oxygenSystem.PoweredOn).Any() && !PoweredOn)
+            bool oxygen = (wireCircuit != null && wireCircuit.Where((te) => te is OxygenSystemTE oxygenSystem && oxygenSystem.PoweredOn).Any());
+            if (!PoweredOn && oxygen)
                 TurnOn(automatic: true);
-            else
+            else if(PoweredOn && !oxygen)
                 TurnOff(automatic: true);
         }
 

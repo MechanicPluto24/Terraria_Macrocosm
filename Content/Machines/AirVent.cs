@@ -33,13 +33,17 @@ namespace Macrocosm.Content.Machines
             TileObjectData.newTile.Height = 1;
             TileObjectData.newTile.Origin = new Point16(0, 0);
             TileObjectData.newTile.CoordinateHeights = [16];
+
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
+            TileObjectData.newTile.UsesCustomCanPlace = true;
+
             TileObjectData.addTile(Type);
 
             TileID.Sets.DisableSmartCursor[Type] = true;
             AddMapEntry(new Color(107, 107, 110));
         }
 
-        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY > 18;
+        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= 18;
 
         public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
@@ -67,7 +71,7 @@ namespace Macrocosm.Content.Machines
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            int ticksPerFrame = 60;
+            int ticksPerFrame = 30;
             int frameCount = 2;
             if (++frameCounter >= ticksPerFrame)
             {

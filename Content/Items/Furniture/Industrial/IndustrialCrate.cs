@@ -1,6 +1,14 @@
-﻿using Macrocosm.Content.Items.Bars;
+﻿using Macrocosm.Content.Items.Accessories;
+using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Consumables.Throwable;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Ores;
+using Macrocosm.Content.Items.Tools;
+using Macrocosm.Content.Items.Torches;
+using Macrocosm.Content.Items.Weapons.Magic;
+using Macrocosm.Content.Items.Weapons.Melee;
+using Macrocosm.Content.Items.Weapons.Ranged;
+using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -40,8 +48,21 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
 
         public override void ModifyItemLoot(ItemLoot itemLoot)
         {
+            // 1/20 chance to get an Moon Base Outpost drop
+            int[] themedDrops = [
+                ModContent.ItemType<ClawWrench>(),
+                ModContent.ItemType<StopSign>(),
+                ModContent.ItemType<WaveGunRed>(),
+                ModContent.ItemType<Copernicus>(),
+                ModContent.ItemType<HummingbirdDroneRemote>(),
+                ModContent.ItemType<OsmiumBoots>(),
+                ModContent.ItemType<StalwartTowerShield>(),
+                ModContent.ItemType<Sledgehammer>(),
+                ModContent.ItemType<LaserSight>()
+            ];
+            itemLoot.Add(ItemDropRule.OneFromOptionsNotScalingWithLuck(20, themedDrops));
+
             // Drop coins
-            itemLoot.Add(ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 4, 5, 13));
 
             IItemDropRule[] oreTypes = [
                 ItemDropRule.Common(ModContent.ItemType<SeleniteOre>(), 1, 10, 15),
@@ -52,7 +73,6 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
             ];
             itemLoot.Add(new OneFromRulesRule(7, oreTypes));
 
-            // Drop pre-hm bars (except copper/tin), with the addition of one from ExampleMod
             IItemDropRule[] oreBars = [
                 ItemDropRule.Common(ModContent.ItemType<SeleniteBar>(), 1, 3, 6),
                 ItemDropRule.Common(ModContent.ItemType<ArtemiteBar>(), 1, 3, 6),
@@ -69,12 +89,14 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
             itemLoot.Add(new OneFromRulesRule(4, drugs));
             */
 
-            // Drop (pre-hm) resource potion
-            IItemDropRule[] resourcePotions = [
+            IItemDropRule[] common = [
                 ItemDropRule.Common(ItemID.SuperHealingPotion, 1, 5, 10),
                 ItemDropRule.Common(ItemID.SuperManaPotion, 1, 5, 10),
+                ItemDropRule.Common(ModContent.ItemType<Moonstone>(), 1, 5, 10),
+                ItemDropRule.Common(ModContent.ItemType<LunarCrystal>(), 1, 5, 10),
+                ItemDropRule.Common(ModContent.ItemType<LuminiteTorch>(), 1, 5, 10),
             ];
-            itemLoot.Add(new OneFromRulesRule(2, resourcePotions));
+            itemLoot.Add(new OneFromRulesRule(1, common));
         }
     }
 }

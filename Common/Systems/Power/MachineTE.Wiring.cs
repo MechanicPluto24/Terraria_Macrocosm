@@ -230,7 +230,7 @@ namespace Macrocosm.Common.Systems.Power
         private static int buildTimer = 0;
         private void BuildCircuits()
         {
-            if (buildTimer++ >= ServerConfig.Instance.CircuitSearchUpdateRate)
+            if (buildTimer++ >= (int)ServerConfig.Instance.CircuitSearchUpdateRate)
             {
                 RefreshCircuits();
                 BuildWireCircuits();
@@ -379,7 +379,7 @@ namespace Macrocosm.Common.Systems.Power
         private static int solveTimer = 0;
         private static void SolveCircuits()
         {
-            if (solveTimer++ >= ServerConfig.Instance.CircuitSolveUpdateRate)
+            if (solveTimer++ >= (int)ServerConfig.Instance.CircuitSolveUpdateRate)
             {
                 HashSet<WireCircuit> processedWireCircuits = new();
                 foreach (WireType wireType in WireTypes)
@@ -392,8 +392,7 @@ namespace Macrocosm.Common.Systems.Power
                             {
                                 if (!processedWireCircuits.Contains(machine.wireCircuit))
                                 {
-                                    //Main.NewText($"{machine.Name}{machine.ID}: {machine.wireCircuit.NodeCount}");
-                                    machine.wireCircuit.Solve(ServerConfig.Instance.CircuitSolveUpdateRate);
+                                    machine.wireCircuit.Solve((int)ServerConfig.Instance.CircuitSolveUpdateRate);
                                     processedWireCircuits.Add(machine.wireCircuit);
                                 }
                             }

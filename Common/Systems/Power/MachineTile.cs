@@ -46,6 +46,16 @@ namespace Macrocosm.Common.Systems.Power
             Toggle(i, j, automatic: false, skipWire: true);
         }
 
-        public override void KillMultiTile(int i, int j, int frameX, int frameY) => MachineTE.Kill(i, j);
+        public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
+        {
+            if(Width == 1 && Height == 1)
+                MachineTE.Kill(i, j);
+        }
+
+        public override void KillMultiTile(int i, int j, int frameX, int frameY)
+        {
+            if (Width > 1 || Height > 1)
+                MachineTE.Kill(i, j);
+        }
     }
 }
