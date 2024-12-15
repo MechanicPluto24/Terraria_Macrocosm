@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Environment.Meteors
 {
-    public class MoonMeteorSmall : BaseMeteor
+    public class TitaniumMeteorSmall : BaseMeteor
     {
         public override void SetDefaults()
         {
@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                     Projectile.position,
                     Projectile.width,
                     Projectile.height,
-                    ModContent.DustType<RegolithDust>(),
+                    DustID.Titanium,
                     0f,
                     0f,
                     Scale: Main.rand.NextFloat(dustScaleMin, dustScaleMax)
@@ -67,19 +67,19 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                     Projectile.position,
                     Projectile.width,
                     Projectile.height,
-                    ModContent.DustType<RegolithDust>(),
+                    DustID.Titanium,
                     Main.rand.NextFloat(-impactDustSpeed.X, impactDustSpeed.X),
                     Main.rand.NextFloat(0f, -impactDustSpeed.Y),
                     Scale: Main.rand.NextFloat(dustScaleMin, dustScaleMax)
                 );
 
-                dust.noGravity = true;
+                dust.noGravity = false;
             }
 
             var explosion = Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center;
-                p.Color = (new Color(120, 120, 120) * Lighting.GetColor(Projectile.Center.ToTileCoordinates()).GetBrightness()).WithOpacity(0.8f);
+                p.Color = (new Color(137, 146, 154) * Lighting.GetColor(Projectile.Center.ToTileCoordinates()).GetBrightness()).WithOpacity(0.8f);
                 p.Scale = new(1.25f);
                 p.NumberOfInnerReplicas = 8;
                 p.ReplicaScalingFactor = 0.4f;
@@ -100,7 +100,7 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
         {
             if (Main.rand.NextBool(3))
             {
-                int type = ModContent.ItemType<MeteoricChunk>();
+                int type = ModContent.ItemType<TitaniumChunk>();
                 int itemIdx = Item.NewItem(Projectile.GetSource_FromThis(), Projectile.Center, type);
                 NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIdx, 1f);
             }
