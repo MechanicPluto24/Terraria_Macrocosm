@@ -14,11 +14,11 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Content.Subworlds
 {
-    public class EarthOrbitSubworld : MultiSubworld
+    public partial class EarthOrbitSubworld : MultiSubworld
     {
         protected override int InstanceCount => 50;
         public override string ParentSubworldID => Earth.ID;
-
+        
         public override string CustomSky => nameof(EarthOrbitSky);
         public override float GravityMultiplier => 0f;
         public override float AtmosphericDensity => 0.1f;
