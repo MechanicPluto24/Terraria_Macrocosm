@@ -7,12 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.GrabBags
 {
-    public class MeteoricChunk : ModItem
+    public class IronChunk : ModItem
     {
         private static Asset<Texture2D> sheet;
 
@@ -44,11 +45,16 @@ namespace Macrocosm.Content.Items.GrabBags
         {
             (int itemType, int minAmount, int maxAmount)[] ores =
             {
-                (ModContent.ItemType<SeleniteOre>(), 25, 45),
-                (ModContent.ItemType<ArtemiteOre>(), 25, 45),
-                (ModContent.ItemType<DianiteOre>(), 25, 45),
-                (ModContent.ItemType<ChandriumOre>(), 25, 45),
-                (ModContent.ItemType<NickelOre>(), 45, 65)
+                (ItemID.CopperOre, 40, 70),
+                (ItemID.TinOre, 40, 70),
+                (ModContent.ItemType<AluminumOre>(), 35, 65),
+                (ItemID.IronOre, 30, 60),
+                (ItemID.LeadOre, 30, 60),
+                (ModContent.ItemType<LithiumOre>(), 25, 50),
+                (ItemID.SilverOre, 20, 45),
+                (ItemID.TungstenOre, 20, 45),
+                (ItemID.GoldOre, 10, 30),
+                (ItemID.PlatinumOre, 10, 30)
             };
 
             var (itemType, minAmount, maxAmount) = Utils.SelectRandom(Main.rand, ores);

@@ -188,6 +188,14 @@ namespace Macrocosm.Content.Subworlds
                         choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 30.0);
                         choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
 
+                        choice.Add(ModContent.ProjectileType<IronMeteorSmall>(), 50.0);
+                        choice.Add(ModContent.ProjectileType<IronMeteorMedium>(), 30.0);
+                        choice.Add(ModContent.ProjectileType<IronMeteorLarge>(), 12.0);
+
+                        choice.Add(ModContent.ProjectileType<TitaniumMeteorSmall>(), 50.0);
+                        choice.Add(ModContent.ProjectileType<TitaniumMeteorMedium>(), 30.0);
+                        choice.Add(ModContent.ProjectileType<TitaniumMeteorLarge>(), 12.0);
+
                         choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);
                         choice.Add(ModContent.ProjectileType<NebulaMeteor>(), 2.0);
                         choice.Add(ModContent.ProjectileType<StardustMeteor>(), 2.0);

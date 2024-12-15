@@ -5,6 +5,7 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.GrabBags;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Environment.Debris;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -21,17 +22,17 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             Projectile.width = 48;
             Projectile.height = 48;
 
-            ScreenshakeMaxDist = 110f * 16f;
-            ScreenshakeIntensity = 75f;
+            screenshakeMaxDist = 110f * 16f;
+            screenshakeIntensity = 75f;
 
-            RotationMultiplier = 0.01f;
-            BlastRadius = 168;
+            rotationMultiplier = 0.01f;
+            blastRadius = 168;
         }
 
         public override void MeteorAI()
         {
-            float DustScaleMin = 1f;
-            float DustScaleMax = 1.4f;
+            float dustScaleMin = 1f;
+            float dustScaleMax = 1.4f;
 
             if (Main.rand.NextBool(3))
             {
@@ -42,34 +43,34 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                         ModContent.DustType<RegolithDust>(),
                         0f,
                         0f,
-                        Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                        Scale: Main.rand.NextFloat(dustScaleMin, dustScaleMax)
                     );
 
                 dust.noGravity = true;
             }
         }
 
-        public override void ImpactEffects()
+        public override void ImpactEffects(int collisionTileType)
         {
-            int ImpactDustCount = Main.rand.Next(100, 120);
-            Vector2 ImpactDustSpeed = new Vector2(2f, 7.5f);
-            float DustScaleMin = 1f;
-            float DustScaleMax = 1.4f;
+            int impactDustCount = Main.rand.Next(100, 120);
+            Vector2 impactDustSpeed = new Vector2(2f, 7.5f);
+            float dustScaleMin = 1f;
+            float dustScaleMax = 1.4f;
 
-            int DebrisType = ModContent.ProjectileType<RegolithDebris>();
-            int DebrisCount = Main.rand.Next(4, 6);
-            Vector2 DebrisVelocity = new Vector2(0.5f, 0.7f);
+            int debrisType = ModContent.ProjectileType<RegolithDebris>();
+            int debrisCount = Main.rand.Next(4, 6);
+            Vector2 debrisVelocity = new Vector2(0.5f, 0.7f);
 
-            for (int i = 0; i < ImpactDustCount; i++)
+            for (int i = 0; i < impactDustCount; i++)
             {
                 Dust dust = Dust.NewDustDirect(
                     Projectile.position,
                     Projectile.width,
                     Projectile.height,
                     ModContent.DustType<RegolithDust>(),
-                    Main.rand.NextFloat(-ImpactDustSpeed.X, ImpactDustSpeed.X),
-                    Main.rand.NextFloat(0f, -ImpactDustSpeed.Y),
-                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                    Main.rand.NextFloat(-impactDustSpeed.X, impactDustSpeed.X),
+                    Main.rand.NextFloat(0f, -impactDustSpeed.Y),
+                    Scale: Main.rand.NextFloat(dustScaleMin, dustScaleMax)
                 );
 
                 dust.noGravity = true;
@@ -78,17 +79,20 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             var explosion = Particle.Create<TintableExplosion>(p =>
             {
                 p.Position = Projectile.Center;
-                p.Color = (new Color(120, 120, 120)).WithOpacity(0.8f);
+                p.Color = (new Color(120, 120, 120) * Lighting.GetColor(Projectile.Center.ToTileCoordinates()).GetBrightness()).WithOpacity(0.8f);
                 p.Scale = new(1.5f);
                 p.NumberOfInnerReplicas = 10;
                 p.ReplicaScalingFactor = 0.4f;
             });
 
-            for (int i = 0; i < DebrisCount; i++)
+            if (collisionTileType == ModContent.TileType<Regolith>())
             {
-                Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
-                new Vector2(DebrisVelocity.X * Main.rand.NextFloat(-6f, 6f), DebrisVelocity.Y * Main.rand.NextFloat(-10f, -4f)),
-                DebrisType, 0, 0f, 255);
+                for (int i = 0; i < debrisCount; i++)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center,
+                    new Vector2(debrisVelocity.X * Main.rand.NextFloat(-6f, 6f), debrisVelocity.Y * Main.rand.NextFloat(-10f, -4f)),
+                    debrisType, 0, 0f, 255);
+                }
             }
         }
 
