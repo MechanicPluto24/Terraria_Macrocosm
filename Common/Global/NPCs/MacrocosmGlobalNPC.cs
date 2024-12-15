@@ -24,6 +24,11 @@ namespace Macrocosm.Common.Global.NPCs
                 //if (SubworldSystem.IsActive<Mars>() && !NPCSets.MarsNPCs[type]) { pool.Remove(type); }
                 //...
             }
+            for (int type = 0; type < NPCLoader.NPCCount; type++)
+            {
+                if (SubworldSystem.IsActive<EarthOrbitSubworld>()) { pool.Remove(type); }
+                
+            }
         }
 
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
