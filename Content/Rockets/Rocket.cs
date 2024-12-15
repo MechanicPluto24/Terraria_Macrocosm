@@ -26,6 +26,8 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Macrocosm.Content.WorldGeneration.Structures;
+using Macrocosm.Common.WorldGeneration;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -364,7 +366,8 @@ namespace Macrocosm.Content.Rockets
 
                     if (TargetTravelPosition == default && DockingProgress < float.Epsilon)
                     {
-                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition);
+                        Structure modual = new BaseSpaceStationModual();
+                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition)+new Vector2(0,Height+(int)(modual.Size.Y*16f));
                     }
 
                     float dockingDistance = Math.Abs(UndockingExitPosition - TargetTravelPosition.Y);
