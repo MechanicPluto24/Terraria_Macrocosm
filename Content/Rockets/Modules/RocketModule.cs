@@ -25,6 +25,8 @@ namespace Macrocosm.Content.Rockets.Modules
             Templates.Add(Activator.CreateInstance(GetType()) as RocketModule);
         }
 
+        public bool Active { get; set; }
+
         public Vector2 Position { get; set; }
         public Vector2 Center
         {

@@ -6,6 +6,8 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 
@@ -13,7 +15,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 {
     public class UIRocketPreviewLarge : UIPanel, IRocketUIDataConsumer, IFixedUpdateable
     {
-        public Rocket Rocket { get; set; }
+        public Rocket Rocket { get; set; } = new();
         public Rocket RocketDummy { get; set; }
 
         public string CurrentModuleName { get; private set; } = "CommandPod";
@@ -71,9 +73,37 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         private float zoomedOutModuleOffsetY = 15f;
         private float zoomedOutZoom = 1f;
 
-        private float[] moduleZooms = [0.35f, 0.35f, 0.35f, 0.55f, 0.52f, 0.52f];
-        private float[] moduleOffsetsX = [-220f, -220f, -220f, -80f, 40f, -250f];
-        private float[] moduleOffsetsY = [140f, -40f, -320f, -460f, -520f, -520f];
+        private Vector2 GetModuleOffset(string moduleName)
+        {
+            return moduleName switch
+            {
+                "CommandPod" => new Vector2(-220f, 140f),
+                "PayloadPod" => new Vector2(-220f, 140f),
+                "ServiceModule" => new Vector2(-220f, -40f),
+                "UnmannedTug" => new Vector2(-80f, -40f),
+                "ReactorModule" => new Vector2(-220f, -320f),
+                "EngineModule" => new Vector2(-80f, -460f),
+                "BoosterLeft" => new Vector2(40f, -520f),
+                "BoosterRight" => new Vector2(-250f, -520f),
+                _ => new Vector2(0f, 0f)
+            };
+        }
+
+        private float GetModuleZoom(string moduleName)
+        {
+            return moduleName switch
+            {
+                "CommandPod" => 0.35f,
+                "PayloadPod" => 0.35f,
+                "ServiceModule" => 0.35f,
+                "UnmannedTug" => 0.35f,
+                "ReactorModule" => 0.35f,
+                "EngineModule" => 0.55f,
+                "BoosterLeft" => 0.52f,
+                "BoosterRight" => 0.52f,
+                _ => 0.35f 
+            };
+        }
 
         public UIRocketPreviewLarge()
         {
@@ -87,44 +117,69 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             BorderColor = Color.Transparent;
         }
 
+        private List<int> GetActiveModuleIndices()
+        {
+            return Rocket.Modules
+                         .Select((module, index) => module.Active ? index : -1)
+                         .Where(index => index != -1)
+                         .ToList();
+        }
+
         public void SetModule(string moduleName)
         {
-            bool changed = CurrentModuleName != moduleName;
+            var activeIndices = GetActiveModuleIndices();
+            var index = Rocket.Modules.FindIndex(m => m.Name == moduleName && m.Active);
 
-            CurrentModuleName = moduleName;
+            if (index != -1 && activeIndices.Contains(index))
+            {
+                bool changed = CurrentModuleName != moduleName;
 
-            AnimationActive = !ZoomedOut;
+                CurrentModuleName = moduleName;
+                AnimationActive = !ZoomedOut;
 
-            if (changed)
-                OnModuleChange(CurrentModuleName, CurrentModuleIndex);
+                if (changed)
+                    OnModuleChange(CurrentModuleName, CurrentModuleIndex);
+            }
         }
 
         public void SetModule(int moduleIndex)
         {
-            bool changed = CurrentModuleIndex != moduleIndex;
+            var activeIndices = GetActiveModuleIndices();
 
-            CurrentModuleIndex = moduleIndex;
+            if (activeIndices.Contains(moduleIndex))
+            {
+                bool changed = CurrentModuleIndex != moduleIndex;
 
-            AnimationActive = !ZoomedOut;
+                CurrentModuleIndex = moduleIndex;
+                AnimationActive = !ZoomedOut;
 
-            if (changed)
-                OnModuleChange(CurrentModuleName, CurrentModuleIndex);
+                if (changed)
+                    OnModuleChange(CurrentModuleName, CurrentModuleIndex);
+            }
         }
 
         public void NextModule()
         {
-            if (CurrentModuleIndex == Rocket.Modules.Count - 1)
-                SetModule(0);
+            var activeIndices = GetActiveModuleIndices();
+            if (activeIndices.Count == 0) return;
+
+            int currentIndex = activeIndices.IndexOf(CurrentModuleIndex);
+            if (currentIndex == -1 || currentIndex == activeIndices.Count - 1)
+                SetModule(activeIndices[0]);
             else
-                SetModule(CurrentModuleIndex + 1);
+                SetModule(activeIndices[currentIndex + 1]);
         }
 
         public void PreviousModule()
         {
-            if (CurrentModuleIndex == 0)
-                SetModule(Rocket.Modules.Count - 1);
+            var activeIndices = GetActiveModuleIndices();
+            if (activeIndices.Count == 0) return;
+
+            int currentIndex = activeIndices.IndexOf(CurrentModuleIndex);
+            if (currentIndex == -1 || currentIndex == 0)
+                SetModule(activeIndices[^1]);
             else
-                SetModule(CurrentModuleIndex - 1);
+                SetModule(activeIndices[currentIndex - 1]);
         }
 
         // Use for animation
@@ -139,17 +194,19 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
                 float animation = Utility.QuadraticEaseInOut(animationCounter);
 
+                Vector2 targetOffset = GetModuleOffset(CurrentModuleName);
+                float targetZoom = GetModuleZoom(CurrentModuleName);
                 if (ZoomedOut)
                 {
-                    moduleOffsetX = MathHelper.Lerp(moduleOffsetsX[CurrentModuleIndex], zoomedOutModuleOffsetX, animation);
-                    moduleOffsetY = MathHelper.Lerp(moduleOffsetsY[CurrentModuleIndex], zoomedOutModuleOffsetY, animation);
-                    zoom = MathHelper.Lerp(moduleZooms[CurrentModuleIndex], zoomedOutZoom, animation);
+                    moduleOffsetX = MathHelper.Lerp(targetOffset.X, zoomedOutModuleOffsetX, animation);
+                    moduleOffsetY = MathHelper.Lerp(targetOffset.Y, zoomedOutModuleOffsetY, animation);
+                    zoom = MathHelper.Lerp(targetZoom, zoomedOutZoom, animation);
                 }
                 else
                 {
-                    moduleOffsetX = MathHelper.Lerp(moduleOffsetX, moduleOffsetsX[CurrentModuleIndex], animation);
-                    moduleOffsetY = MathHelper.Lerp(moduleOffsetY, moduleOffsetsY[CurrentModuleIndex], animation);
-                    zoom = MathHelper.Lerp(zoom, moduleZooms[CurrentModuleIndex], animation);
+                    moduleOffsetX = MathHelper.Lerp(moduleOffsetX, targetOffset.X, animation);
+                    moduleOffsetY = MathHelper.Lerp(moduleOffsetY, targetOffset.Y, animation);
+                    zoom = MathHelper.Lerp(zoom, targetZoom, animation);
                 }
             }
         }

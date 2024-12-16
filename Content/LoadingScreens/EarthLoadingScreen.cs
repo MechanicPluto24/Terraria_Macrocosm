@@ -13,8 +13,6 @@ namespace Macrocosm.Content.LoadingScreens
     public class EarthLoadingScreen : LoadingScreen
     {
         private static List<Asset<Texture2D>> earthBackgrounds;
-        private Asset<Texture2D> earthBackground;
-
         private readonly float animationDuration = 1000f;
         protected override void UpdateAnimation()
         {
@@ -37,8 +35,6 @@ namespace Macrocosm.Content.LoadingScreens
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_NorthAmerica"),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_SouthAmerica")
             ];
-
-            earthBackground = earthBackgrounds.GetRandom();
         }
 
         private SpriteBatchState state;
@@ -54,6 +50,7 @@ namespace Macrocosm.Content.LoadingScreens
             progress = (float)Math.Pow(progress, 0.6);
             int movement = 250 + (int)(Utility.QuadraticEaseIn(progress) * 500f) * MovementDirection;
 
+            Asset<Texture2D> earthBackground = earthBackgrounds[Utility.RealTimeCycle(earthBackgrounds.Count, 1800)];
             spriteBatch.Draw
             (
                 earthBackground.Value,

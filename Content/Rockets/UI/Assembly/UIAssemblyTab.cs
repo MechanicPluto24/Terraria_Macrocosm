@@ -75,13 +75,20 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
         }
 
+        private Dictionary<string, List<string>> SwappableCategories = new()
+        {
+            { "Pod", new() { "CommandPod", "PayloadPod" } },
+            { "Utility", new() { "ServiceModule", "UnmannedTug" } }
+        };
+
         private bool CheckAssembleRecipes(bool consume)
         {
             bool met = true;
 
-            foreach (var kvp in Rocket.Modules)
+            foreach (var module in Rocket.Modules)
             {
-                RocketModule module = kvp.Value;
+                if (!module.Active)
+                    continue;
 
                 if (module.Recipe.Linked)
                     met &= assemblyElements[module.Recipe.LinkedResult.Name].Check(consume);
@@ -96,12 +103,16 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         private void AssembleRocket()
         {
             CheckAssembleRecipes(consume: true);
-            Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
 
-            foreach (var kvp in Rocket.Modules)
+            List<string> activeModules = Rocket.Modules
+                .Where(module => module.Active)
+                .Select(module => module.Name)
+                .ToList();
+
+            Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18), activeModules);
+
+            foreach (var module in Rocket.Modules)
             {
-                RocketModule module = kvp.Value;
-
                 if (module.Recipe.Linked)
                     continue;
 
@@ -130,18 +141,16 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                                 p.TimeToLive = Main.rand.Next(40, 60);
                             });
                     }
-
                 }
             }
         }
 
+
         private void DisassembleRocket()
         {
             int slot = 0;
-            foreach (var kvp in LaunchPad.Rocket.Modules)
+            foreach (var module in LaunchPad.Rocket.Modules)
             {
-                RocketModule module = kvp.Value;
-
                 if (module.Recipe.Linked)
                     continue;
 
@@ -232,9 +241,10 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
             uIRocketBlueprint.Rocket = Rocket;
 
-            foreach (var kvp in Rocket.Modules)
+            foreach (var module in Rocket.Modules)
             {
-                RocketModule module = kvp.Value;
+                if (!module.Active)
+                    continue;
 
                 if (Rocket.Active)
                 {
@@ -386,10 +396,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             int slotCount = 0;
             int assemblyElementCount = 0;
-            foreach (var kvp in Rocket.Modules)
+            foreach (var module in Rocket.Modules.Where(module => module.Active))
             {
-                RocketModule module = kvp.Value;
-
                 if (!module.Recipe.Linked)
                 {
                     List<UIInventorySlot> slots = new();
@@ -424,13 +432,13 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     assemblyElement.Left = new(0, 0.08f);
 
                     Append(assemblyElement);
+
+                    AddSwapArrows(assemblyElement, module);
                 }
             }
 
-            foreach (var kvp in Rocket.Modules)
+            foreach (var module in Rocket.Modules)
             {
-                RocketModule module = kvp.Value;
-
                 if (module.Recipe.Linked)
                 {
                     assemblyElements[module.Recipe.LinkedResult.Name].LinkedModules.Add(module);
@@ -439,6 +447,81 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             return assemblyElements;
         }
+
+        private void RefreshAssemblyElements()
+        {
+            foreach (var element in assemblyElements.Values)
+                RemoveChild(element);
+
+            CreateAssemblyElements();
+        }
+
+        private void AddSwapArrows(UIModuleAssemblyElement element, RocketModule module)
+        {
+            var category = SwappableCategories.FirstOrDefault(pair => pair.Value.Contains(module.Name));
+            if (category.Equals(default(KeyValuePair<string, List<string>>)))
+                return;
+
+            var swapTargets = category.Value;
+            int currentIndex = swapTargets.IndexOf(module.Name);
+
+            if (currentIndex > 0)
+            {
+                string previousTarget = swapTargets[currentIndex - 1];
+                UIHoverImageButton leftArrow = new(
+                    ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow"),
+                    ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder"),
+                    Language.GetText($"Mods.Macrocosm.UI.Rocket.Swap.{previousTarget}"))
+                {
+                    Width = new(20, 0),
+                    Height = new(20, 0),
+                    Left = new(25, 0f),
+                    Top = new(0, 0.5f),
+                    SpriteEffects = SpriteEffects.FlipHorizontally,
+                };
+
+                leftArrow.OnLeftClick += (_, _) =>
+                {
+                    SwapModule(module, previousTarget);
+                    RefreshAssemblyElements();
+                    UpdateBlueprint();
+                };
+
+                element.Append(leftArrow);
+            }
+
+            if (currentIndex < swapTargets.Count - 1)
+            {
+                string nextTarget = swapTargets[currentIndex + 1];
+                UIHoverImageButton rightArrow = new(
+                    ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow"),
+                    ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder"),
+                    Language.GetText($"Mods.Macrocosm.UI.Rocket.Swap.{nextTarget}"))
+                {
+                    Width = new(20, 0),
+                    Height = new(20, 0),
+                    Left = new(-25, 1f),
+                    Top = new(0, 0.5f)
+                };
+
+                rightArrow.OnLeftClick += (_, _) =>
+                {
+                    SwapModule(module, nextTarget);
+                    RefreshAssemblyElements();
+                    UpdateBlueprint();
+                };
+
+                element.Append(rightArrow);
+            }
+        }
+
+        private void SwapModule(RocketModule module, string swapTargetName)
+        {
+            module.Active = false;
+            Rocket.Modules.FirstOrDefault(m => m.Name == swapTargetName).Active = true;
+            RefreshAssemblyElements();
+        }
+
         private Asset<Texture2D> GetBlueprintTexture(int itemType)
         {
             Item item = ContentSamples.ItemsByType[itemType];

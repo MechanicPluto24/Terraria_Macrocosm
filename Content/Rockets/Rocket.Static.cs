@@ -7,17 +7,7 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket
     {
-        public static readonly List<string> DefaultModuleNames = new()
-        {
-            "CommandPod",
-            "ServiceModule",
-            "ReactorModule",
-            "EngineModule",
-            "BoosterLeft",
-            "BoosterRight"
-        };
-
-        public static Rocket Create(Vector2 position)
+        public static Rocket Create(Vector2 position, List<string> activeModules = null)
         {
             // Rocket will not be managed.. we have to avoid ever reaching this  
             if (RocketManager.ActiveRocketCount > RocketManager.MaxRockets)

@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Skies.EarthOrbit
         private readonly Asset<Texture2D> sunTexture;
 
         private static List<Asset<Texture2D>> earthBackgrounds;
-        private int backgroundIndex;
+        private static Asset<Texture2D> earthBackground;
 
         private const string Path = "Macrocosm/Content/Skies/EarthOrbit/";
 
@@ -81,7 +81,7 @@ namespace Macrocosm.Content.Skies.EarthOrbit
         {
             intensity = 0.002f;
 
-            backgroundIndex = Main.rand.Next(earthBackgrounds.Count);
+            earthBackground = earthBackgrounds[Utility.RealTimeCycle(earthBackgrounds.Count, 1800)];
 
             Rectangle area = new(
                 0,
@@ -163,11 +163,10 @@ namespace Macrocosm.Content.Skies.EarthOrbit
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
-                Asset<Texture2D> earthTexture = earthBackgrounds[backgroundIndex];
-                float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - earthTexture.Height() / 2);
+                float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - earthBackground.Height() / 2);
                 spriteBatch.Draw
                 (
-                    earthTexture.Value,
+                    earthBackground.Value,
                     new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
                     GetLightColor().WithAlpha(255)
                 );

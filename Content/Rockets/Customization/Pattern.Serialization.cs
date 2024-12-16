@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Rockets.Customization
         {
             string moduleName = jObject.Value<string>("moduleName");
 
-            if (!Rocket.DefaultModuleNames.Contains(moduleName))
+            if (!Rocket.ModuleNames.Contains(moduleName))
                 throw new SerializationException("Error: Invalid module name.");
 
             string patternName = jObject.Value<string>("patternName");
