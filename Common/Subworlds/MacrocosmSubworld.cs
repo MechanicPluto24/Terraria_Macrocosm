@@ -308,7 +308,12 @@ namespace Macrocosm.Common.Subworlds
         public override float GetGravity(Entity entity)
         {
             if (entity is Player)
-                return Player.defaultGravity * CurrentGravityMultiplier;
+            {
+                float gravity = Player.defaultGravity * CurrentGravityMultiplier;
+                if (gravity == 0f)
+                    gravity = float.Epsilon;
+                return gravity;
+            }
 
             // This is instead modified using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC 
             if (entity is NPC)

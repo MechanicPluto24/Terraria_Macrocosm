@@ -24,6 +24,14 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\Backgrounds\Blank\Blank.png" />
+    <None Remove="Content\Rockets\Customization\Patterns\PayloadPod\Basic.png" />
+    <None Remove="Content\Rockets\Customization\Patterns\PayloadPod\UnmannedTug.png" />
+    <None Remove="Content\Rockets\Modules\Blueprints\PayloadPod.png" />
+    <None Remove="Content\Rockets\Modules\Blueprints\UnmannedTug.png" />
+    <None Remove="Content\Rockets\Modules\Icons\PayloadPod.png" />
+    <None Remove="Content\Rockets\Modules\Icons\UnmannedTug.png" />
+    <None Remove="Content\Rockets\Modules\PayloadPod.png" />
+    <None Remove="Content\Rockets\Modules\UnmannedTug.png" />
     <None Remove="Content\Skies\EarthOrbit\Earth.png" />
     <None Remove="Content\Skies\EarthOrbit\EarthOrbitSky.png" />
     <None Remove="Content\Skies\EarthOrbit\Sun.png" />

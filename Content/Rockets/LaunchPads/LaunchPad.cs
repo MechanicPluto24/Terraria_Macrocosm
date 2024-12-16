@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
             unassembledRocket = new();
             foreach (var module in unassembledRocket.Modules)
-                module.Value.IsBlueprint = true;
+                module.IsBlueprint = true;
 
             assemblyInventory = new(CountRequiredAssemblyItemSlots(unassembledRocket), this);
         }
@@ -213,9 +213,8 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         private int CountRequiredAssemblyItemSlots(Rocket rocket)
         {
             int count = 0;
-            foreach (var kvp in rocket.Modules)
+            foreach (var module in rocket.Modules)
             {
-                RocketModule module = kvp.Value;
                 if (!module.Recipe.Linked)
                     count += module.Recipe.Count();
             }

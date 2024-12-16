@@ -124,14 +124,11 @@ namespace Macrocosm.Content.Rockets
         public string DisplayName
             => Nameplate.IsValid() ? Nameplate.Text : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
 
-        /// <summary> Dictionary of all the rocket's modules, by name, in the order found in <see cref="ModuleNames"/> </summary>
-        public Dictionary<string, RocketModule> Modules = new();
+        /// <summary> Dictionary of all the rocket's modules </summary>
+        public List<RocketModule> Modules = new();
 
         /// <summary> The rocket's modules ordered by their <see cref="RocketModule.DrawPriority"/> </summary>
-        public List<RocketModule> ModulesByDrawPriority => Modules.Values.OrderBy(module => module.DrawPriority).ToList();
-
-        /// <summary> List of the module names, in the customization access order </summary>
-        public List<string> ModuleNames => Modules.Keys.ToList();
+        public List<RocketModule> ModulesByDrawPriority => Modules.OrderBy(module => module.DrawPriority).ToList();
 
         public int PreLaunchDuration = 160;
 
@@ -204,23 +201,31 @@ namespace Macrocosm.Content.Rockets
         public int InventorySerializationIndex => WhoAmI;
 
         /// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
-        public Rocket()
+        public Rocket(List<string> activeModules = null)
         {
-            foreach (string moduleName in DefaultModuleNames)
+            foreach (string moduleName in ModuleNames)
             {
-                Modules[moduleName] = CreateModule(moduleName);
-                Modules[moduleName].SetRocket(this);
+                var module = CreateModule(moduleName);
+                module.Active = (activeModules ?? DefaultModuleNames).Contains(moduleName);
+                module.SetRocket(this);
+                Modules.Add(module);
             }
 
-            Inventory = new(DefaultTotalInventorySize, this);
+            Inventory = new Inventory(DefaultTotalInventorySize, this);
         }
+
+        public static readonly List<string> DefaultModuleNames = ["CommandPod", "ServiceModule", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight"];
+
+        public static readonly List<string> ModuleNames = ["CommandPod", "PayloadPod", "ServiceModule", "UnmannedTug", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight"];
 
         private RocketModule CreateModule(string moduleName)
         {
             return moduleName switch
             {
                 "CommandPod" => new CommandPod(),
+                "PayloadPod" => new PayloadPod(),
                 "ServiceModule" => new ServiceModule(),
+                "UnmannedTug" => new UnmannedTug(),
                 "ReactorModule" => new ReactorModule(),
                 "EngineModule" => new EngineModule(),
                 "BoosterLeft" => new BoosterLeft(),
@@ -465,19 +470,16 @@ namespace Macrocosm.Content.Rockets
         // Gets the position of a module with respect to the provided origin
         private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin)
         {
-            var commandPod = Modules["CommandPod"];
-            var serviceModule = Modules["ServiceModule"];
-            var reactorModule = Modules["ReactorModule"];
-            var engineModule = Modules["EngineModule"];
-
             return module switch
             {
-                CommandPod => origin + new Vector2(Width / 2f - commandPod.Width / 2f, 0),
-                ServiceModule => origin + new Vector2(Width / 2f - serviceModule.Width / 2f, commandPod.Height),
-                ReactorModule => origin + new Vector2(Width / 2f - reactorModule.Width / 2f, commandPod.Height + serviceModule.Height - 2),
-                EngineModule => origin + new Vector2(Width / 2f - engineModule.Width / 2f, commandPod.Height + serviceModule.Height + reactorModule.Height - 4),
-                BoosterLeft => origin + new Vector2(78, commandPod.Height + serviceModule.Height + reactorModule.Height + 12),
-                BoosterRight => origin + new Vector2(152, commandPod.Height + serviceModule.Height + reactorModule.Height + 12),
+                CommandPod => origin + new Vector2(Width / 2 - 34, 0),
+                PayloadPod => origin + new Vector2(Width / 2 - 34, 0),
+                ServiceModule => origin + new Vector2(Width / 2 - 40, 78),
+                UnmannedTug => origin + new Vector2(Width / 2 - 40, 78),
+                ReactorModule => origin + new Vector2(Width / 2 - 42, 188),
+                EngineModule => origin + new Vector2(Width / 2 - 60, 266),
+                BoosterLeft => origin + new Vector2(78, 280),
+                BoosterRight => origin + new Vector2(152, 280),
                 _ => default,
             };
         }
@@ -485,7 +487,7 @@ namespace Macrocosm.Content.Rockets
         // Set the rocket's modules positions in the world
         private void SetModuleWorldPositions()
         {
-            foreach (RocketModule module in Modules.Values)
+            foreach (RocketModule module in Modules)
             {
                 module.Position = GetModuleRelativePosition(module, Position);
             }
@@ -661,7 +663,7 @@ namespace Macrocosm.Content.Rockets
 
         public bool CheckTileCollision()
         {
-            foreach (RocketModule module in Modules.Values)
+            foreach (RocketModule module in Modules)
                 if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Width, module.Height).Y) > 0.1f)
                     return true;
 
@@ -711,7 +713,7 @@ namespace Macrocosm.Content.Rockets
         {
             canAnimate = true;
 
-            foreach (RocketModule module in Modules.Values)
+            foreach (RocketModule module in Modules)
             {
                 if (module is AnimatedRocketModule animatedModule)
                 {
@@ -738,7 +740,7 @@ namespace Macrocosm.Content.Rockets
         {
             Vector2 minCollisionVelocity = new(float.MaxValue, float.MaxValue);
 
-            foreach (RocketModule module in Modules.Values)
+            foreach (RocketModule module in Modules)
             {
                 Vector2 collisionVelocity = Collision.TileCollision(module.Position, Velocity, module.Width, module.Height);
                 if (collisionVelocity.LengthSquared() < minCollisionVelocity.LengthSquared())
@@ -752,7 +754,7 @@ namespace Macrocosm.Content.Rockets
             if (LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, Main.MouseWorld.ToTileCoordinates16()) != null)
                 return false;
 
-            foreach (RocketModule module in Modules.Values.Where((module) => !(module is BoosterRight) && !(module is BoosterLeft)))
+            foreach (RocketModule module in Modules.Where((module) => !(module is BoosterRight) && !(module is BoosterLeft)))
                 if (module.Hitbox.Contains(Main.MouseWorld.ToPoint()))
                     return true;
 
@@ -780,7 +782,7 @@ namespace Macrocosm.Content.Rockets
         private void UpdateModuleAnimation()
         {
             bool animationActive = false;
-            foreach (RocketModule module in Modules.Values)
+            foreach (RocketModule module in Modules)
             {
                 if (module is AnimatedRocketModule animatedModule)
                 {
@@ -797,7 +799,7 @@ namespace Macrocosm.Content.Rockets
         {
             if (canAnimate)
             {
-                foreach (RocketModule module in Modules.Values)
+                foreach (RocketModule module in Modules)
                 {
                     if (module is AnimatedRocketModule animatedModule)
                     {
@@ -973,8 +975,8 @@ namespace Macrocosm.Content.Rockets
 
             int smallSmokeCount = (int)(countPerTick * 2f);
 
-            var boosterLeft = Modules["BoosterLeft"] as Booster;
-            var boosterRight = Modules["BoosterRight"] as Booster;
+            var boosterLeft = Modules.FirstOrDefault((m) => m is BoosterLeft) as Booster;
+            var boosterRight = Modules.FirstOrDefault((m) => m is BoosterRight) as Booster;
 
             for (int i = 0; i < smallSmokeCount; i++)
             {
