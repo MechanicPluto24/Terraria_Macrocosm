@@ -48,7 +48,7 @@ namespace Macrocosm.Common.Systems.Flags
             public bool Value
             {
                 get => GetGlobalFlag(index);
-                set { if (value) SetGlobalFlag(index, value); }
+                set { if (value) SetGlobalFlag(index, true); }
             }
 
             public void Reset() => SetGlobalFlag(index, false);
@@ -75,7 +75,11 @@ namespace Macrocosm.Common.Systems.Flags
             public static implicit operator GlobalFlag(bool value) => new(0) { Value = value };
         }
 
-        /// <summary> Flags that are local to a subworld </summary>
+        /// <summary> 
+        /// <br/> Flags that are local to a subworld. 
+        /// <br/> Directly accessing the value will reflect the value associated with the current subworld.
+        /// <br/> Use <see cref="GetValue(string)"/> and <see cref="SetValue(string, bool)"/> for other subworlds.
+        /// </summary>
         public readonly struct LocalFlag
         {
             private readonly int index;

@@ -12,6 +12,7 @@ using ReLogic.Content;
 using SteelSeries.GameSense;
 using SubworldLibrary;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Enums;
 using Terraria.GameContent;
@@ -34,7 +35,9 @@ namespace Macrocosm.Content.Skies.EarthOrbit
 
         private readonly Asset<Texture2D> skyTexture;
         private readonly Asset<Texture2D> sunTexture;
-        private readonly Asset<Texture2D> earthTexture;
+
+        private static List<Asset<Texture2D>> earthBackgrounds;
+        private int backgroundIndex;
 
         private const string Path = "Macrocosm/Content/Skies/EarthOrbit/";
 
@@ -43,7 +46,14 @@ namespace Macrocosm.Content.Skies.EarthOrbit
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
             skyTexture = ModContent.Request<Texture2D>(Path + "EarthOrbitSky", mode);
             sunTexture = ModContent.Request<Texture2D>(Path + "Sun", mode);
-            earthTexture = ModContent.Request<Texture2D>(Path + "Earth", mode);
+            earthBackgrounds = [
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Africa"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Asia"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Australia"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Europe"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_NorthAmerica"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_SouthAmerica")
+            ];
 
             stars = new();
 
@@ -70,6 +80,8 @@ namespace Macrocosm.Content.Skies.EarthOrbit
         public override void Activate(Vector2 position, params object[] args)
         {
             intensity = 0.002f;
+
+            backgroundIndex = Main.rand.Next(earthBackgrounds.Count);
 
             Rectangle area = new(
                 0,
@@ -147,17 +159,17 @@ namespace Macrocosm.Content.Skies.EarthOrbit
 
                 RotateSunAndMoon();
 
-
                 state.SaveState(spriteBatch);
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
+                Asset<Texture2D> earthTexture = earthBackgrounds[backgroundIndex];
                 float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - earthTexture.Height() / 2);
                 spriteBatch.Draw
                 (
                     earthTexture.Value,
                     new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
-                    GetLightColor()
+                    GetLightColor().WithAlpha(255)
                 );
 
                 spriteBatch.End();

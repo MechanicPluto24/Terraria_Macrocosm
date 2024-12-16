@@ -7,6 +7,7 @@ using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Tech;
 using Macrocosm.Content.Particles;
@@ -14,9 +15,9 @@ using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Sounds;
+using Macrocosm.Content.WorldGeneration.Structures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,8 +27,6 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Macrocosm.Content.WorldGeneration.Structures;
-using Macrocosm.Common.WorldGeneration;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -91,7 +90,7 @@ namespace Macrocosm.Content.Rockets
 
         /// <summary> The world Y coordinate for entering the target subworld </summary>
         private float FlightExitPosition => 60 * 16f;
-        private float UndockingExitPosition => Main.maxTilesY * 16f -  60 * 16f;
+        private float UndockingExitPosition => Main.maxTilesY * 16f - 60 * 16f;
 
         /// <summary> The rocket's bounds width </summary>
         public const int Width = 276;
@@ -367,7 +366,7 @@ namespace Macrocosm.Content.Rockets
                     if (TargetTravelPosition == default && DockingProgress < float.Epsilon)
                     {
                         Structure modual = new BaseSpaceStationModual();
-                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition)+new Vector2(0,Height+(int)(modual.Size.Y*16f));
+                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition) + new Vector2(0, Height + (int)(modual.Size.Y * 16f));
                     }
 
                     float dockingDistance = Math.Abs(UndockingExitPosition - TargetTravelPosition.Y);
@@ -409,10 +408,7 @@ namespace Macrocosm.Content.Rockets
                         UndockingProgress = 0f;
                         Velocity = Vector2.Zero;
                         State = OrbitTravel ? ActionState.Docking : ActionState.Landing;
-
-                        if (OrbitTravel)  
-                            Position.Y = FlightExitPosition;
-     
+                        Position.Y = OrbitTravel ? UndockingExitPosition : FlightExitPosition;
                         ResetAnimation();
                         Travel();
                     }
@@ -580,39 +576,52 @@ namespace Macrocosm.Content.Rockets
         /// </summary>
         public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
         {
-            State = ActionState.PreLaunch;
-            if(MultiSubworld.IsMultiSubworld(CurrentWorld) && MultiSubworld.GetParentID(CurrentWorld) == targetWorld)
-                State = ActionState.Undocking;
+            State = TargetIsParentSubworld(targetWorld) ? ActionState.Undocking : ActionState.PreLaunch;
 
             Main.playerInventory = false;
+
             StartPositionY = Position.Y;
             TargetWorld = targetWorld;
+
             OrbitTravel = false;
+
             this.targetLaunchPad = targetLaunchPad;
-
             Fuel -= GetFuelCost(targetWorld);
-
             NetSync();
         }
 
-        public void Launch(MultiSubworld targetOrbitSubworld)
+        public void Launch(OrbitSubworld targetOrbitSubworld)
         {
             Launch(targetOrbitSubworld.ID);
             OrbitTravel = true;
         }
 
+        public bool TargetIsParentSubworld(string targetWorld) => OrbitSubworld.IsOrbitSubworld(CurrentWorld) && OrbitSubworld.GetParentID(CurrentWorld) == targetWorld;
+
         public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentID, targetWorld);
 
         /// <summary> Checks whether the flight path is obstructed by solid blocks </summary>
-        public bool CheckFlightPathObstruction()
+        public bool CheckObstruction(bool downwards)
         {
-            int startY = (int)((Center.Y - Height / 2) / 16);
-
-            for (int offsetX = 0; offsetX < (Width / 16); offsetX++)
+            if (!downwards)
             {
-                if (Utility.GetFirstTileCeiling((int)(Position.X / 16f) + offsetX, startY, solid: true) > 10)
-                    return false;
+                int startY = (int)(Position.Y / 16);
+                for (int offsetX = 0; offsetX < (Width / 16); offsetX++)
+                {
+                    if (Utility.GetFirstTileCeiling((int)(Position.X / 16f) + offsetX, startY, solid: true) > 10)
+                        return false;
+                }
             }
+            else
+            {
+                int startY = (int)((Position.Y + Height) / 16);
+                for (int offsetX = 0; offsetX < (Width / 16); offsetX++)
+                {
+                    if (Utility.GetFirstTileFloor((int)(Position.X / 16f) + offsetX, startY, solid: true) < Main.maxTilesY - 10)
+                        return false;
+                }
+            }
+
 
             return true;
         }
@@ -627,12 +636,6 @@ namespace Macrocosm.Content.Rockets
                 return new Vector2(initialTarget.X, surfaceY * 16f);
             else
                 return initialTarget;
-        }
-
-        /// <summary> Checks whether the flight path is obstructed by solid blocks below </summary>
-        public bool CheckFlightPathObstructionDownward()
-        {
-            return true;
         }
 
         public bool AtPosition(Vector2 position) => Vector2.Distance(Center, position) < Width;
@@ -914,7 +917,7 @@ namespace Macrocosm.Content.Rockets
                             SpawnTileDust(closestTile, 2);
                         break;
                     }
- 
+
 
                 case ActionState.Undocking:
                     {
@@ -1143,6 +1146,7 @@ namespace Macrocosm.Content.Rockets
             RocketPlayer commander = GetCommander();
 
             bool samePlanet = CurrentWorld == TargetWorld;
+            bool toParentPlanet = TargetIsParentSubworld(TargetWorld);
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
@@ -1183,7 +1187,7 @@ namespace Macrocosm.Content.Rockets
             else
             {
                 if (CheckPlayerInRocket(Main.myPlayer))
-                    MacrocosmSubworld.Travel(TargetWorld, this, OrbitTravel);
+                    MacrocosmSubworld.Travel(TargetWorld, this, downwards: toParentPlanet);
             }
         }
     }

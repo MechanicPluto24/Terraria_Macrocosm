@@ -75,14 +75,14 @@ namespace Macrocosm.Common.Subworlds
         /// <param name="rocket"> The spacecraft used for travel, if applicable. Will display in the loading screen. </param>
         /// <param name="trigger"> Value set to the <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/>. Normally true. </param>
         /// <returns> Whether world travel has been successful </returns>
-        public static bool Travel(string targetWorldID, Rocket rocket = null, bool spaceStation = false, bool trigger = true)
+        public static bool Travel(string targetWorldID, Rocket rocket = null, bool downwards = false, bool trigger = true)
         {
             if (Main.netMode != NetmodeID.Server)
             {
                 if (!trigger)
                     rocket = null;
 
-                SetupLoadingScreen(rocket, targetWorldID);
+                SetupLoadingScreen(rocket, targetWorldID, downwards);
                 TitleCard.SetTargetWorld(targetWorldID);
 
                 Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel = trigger;
@@ -106,37 +106,23 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        public static void SetupLoadingScreen(Rocket rocket, string targetWorld)
+        public static void SetupLoadingScreen(Rocket rocket, string targetWorld, bool downwards = false)
         {
-            string id = SanitizeID(MultiSubworld.GetParentID(targetWorld));
-            if (rocket is not null)
-            {
-                if (!SubworldSystem.AnyActive<Macrocosm>())
-                {
-                    LoadingScreen = new EarthLoadingScreen();
-                }
-                else
-                {
-                    LoadingScreen = id switch
-                    {
-                        nameof(Moon) => new MoonLoadingScreen(),
-                        _ => null,
-                    };
-                }
-            }
-            else
-            {
-                LoadingScreen = id switch
-                {
-                    nameof(Earth) => new EarthLoadingScreen(),
-                    nameof(Moon) => new MoonLoadingScreen(),
-                    _ => null,
-                };
-            }
+            string currentId = OrbitSubworld.GetParentID(CurrentID);
+            string targetId = OrbitSubworld.GetParentID(targetWorld);
 
-            switch (id)
+            string id = SanitizeID(rocket is not null ? currentId : targetId);
+
+            LoadingScreen = id switch
             {
-                case "Moon":
+                nameof(Earth) => new EarthLoadingScreen(),
+                nameof(Moon) => new MoonLoadingScreen(),
+                _ => null,
+            };
+
+            switch (targetId)
+            {
+                case nameof(Moon):
                     LoadingScreen?.SetProgressBar(new(
                         ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad),
                         ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad),
@@ -146,7 +132,7 @@ namespace Macrocosm.Common.Subworlds
             }
 
             if (rocket is not null)
-                LoadingScreen?.SetRocket(rocket);
+                LoadingScreen?.SetRocket(rocket, downwards);
             else
                 LoadingScreen?.ClearRocket();
 

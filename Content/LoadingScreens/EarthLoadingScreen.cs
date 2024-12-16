@@ -29,14 +29,13 @@ namespace Macrocosm.Content.LoadingScreens
         {
             ResetAnimation();
 
-            AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
             earthBackgrounds ??= [
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Africa"),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Asia", mode),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Australia", mode),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_Europe", mode),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_NorthAmerica", mode),
-                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Earth_SouthAmerica", mode)
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Africa"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Asia"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Australia"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Europe"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_NorthAmerica"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_SouthAmerica")
             ];
 
             earthBackground = earthBackgrounds.GetRandom();
@@ -53,7 +52,7 @@ namespace Macrocosm.Content.LoadingScreens
 
             float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
             progress = (float)Math.Pow(progress, 0.6);
-            int movement = 250 + (int)(Utility.QuadraticEaseIn(progress) * 500f);
+            int movement = 250 + (int)(Utility.QuadraticEaseIn(progress) * 500f) * MovementDirection;
 
             spriteBatch.Draw
             (

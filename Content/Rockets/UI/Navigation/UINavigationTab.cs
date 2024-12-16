@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         private UINavigationTarget target;
 
         private LaunchPad targetLaunchPad;
-        private MultiSubworld targetOrbitSubworld;
+        private OrbitSubworld targetOrbitSubworld;
         private bool selectedSpawnLocation;
 
         private UILaunchDestinationInfoElement spawnInfoElement;
@@ -249,7 +249,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         private UIListScrollablePanel CreateWorldInfoPanel(string subworldId)
         {
-            subworldId = MacrocosmSubworld.SanitizeID(MultiSubworld.GetParentID(subworldId), out string modName);
+            subworldId = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(subworldId), out string modName);
 
             if (worldInfoPanel is null)
             {
@@ -355,7 +355,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             
             if(target is not null && target.TargetID == MacrocosmSubworld.CurrentID)
             {
-                foreach (var orbitSubworld in MultiSubworld.GetMultiSubworlds(target.TargetID))
+                foreach (var orbitSubworld in OrbitSubworld.GetOrbitSubworlds(target.TargetID))
                 {
                     if (!WorldFlags.SubworldUnlocked.GetValue(orbitSubworld.ID))
                         continue;
