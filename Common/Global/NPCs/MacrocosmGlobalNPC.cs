@@ -15,19 +15,20 @@ namespace Macrocosm.Common.Global.NPCs
     /// <summary> Global NPC for general NPC modifications (loot, spawn pools) </summary>
     public class MacrocosmGlobalNPC : GlobalNPC
     {
-        /// <summary> For subworld specific spawn pools </summary>
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
+            if (!SubworldSystem.AnyActive<Macrocosm>())
+                return;
+
+            bool peaceful = MacrocosmSubworld.Current.PeacefulWorld;
             for (int type = 0; type < NPCLoader.NPCCount; type++)
             {
-                if (SubworldSystem.IsActive<Moon>() && !NPCSets.MoonNPC[type]) { pool.Remove(type); }
-                //if (SubworldSystem.IsActive<Mars>() && !NPCSets.MarsNPCs[type]) { pool.Remove(type); }
-                //...
-            }
-            for (int type = 0; type < NPCLoader.NPCCount; type++)
-            {
-                if (SubworldSystem.IsActive<EarthOrbitSubworld>()) { pool.Remove(type); }
-                
+                if(peaceful) 
+                    pool.Remove(type);
+                else if (SubworldSystem.IsActive<Moon>() && !NPCSets.MoonNPC[type])
+                    pool.Remove(type);
+                //if (SubworldSystem.IsActive<Mars>() && !NPCSets.MarsNPCs[type])
+                //  pool.Remove(type);
             }
         }
 

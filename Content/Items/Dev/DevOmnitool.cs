@@ -3,6 +3,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
+using SubworldLibrary;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
@@ -59,8 +60,8 @@ namespace Macrocosm.Content.Items.Dev
 
             //Main.drunkWorld = !Main.drunkWorld;
 
-            bool value = WorldFlags.SubworldUnlocked.GetValue(MultiSubworld.GetMultiSubworlds(Earth.ID)[0].ID);
-            WorldFlags.SubworldUnlocked.SetValue(MultiSubworld.GetMultiSubworlds(Earth.ID)[0].ID, !value);
+            //bool value = WorldFlags.SubworldUnlocked.GetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID);
+            //WorldFlags.SubworldUnlocked.SetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID, !value);
 
             return true;
         }

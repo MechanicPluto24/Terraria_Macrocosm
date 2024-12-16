@@ -51,6 +51,9 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Night length of this subworld in ticks </summary>
         public virtual double NightLength { get; } = Earth.NightLength;
 
+        /// <summary> Whether the subworld blocks enemy spawns or not </summary>
+        public virtual bool PeacefulWorld { get; } = false;
+
         /// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
         public virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
 

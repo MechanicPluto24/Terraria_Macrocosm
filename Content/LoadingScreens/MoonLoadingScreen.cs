@@ -29,7 +29,7 @@ namespace Macrocosm.Content.LoadingScreens
         {
             ResetAnimation();
 
-            lunaBackground ??= ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/Backgrounds/Luna", AssetRequestMode.ImmediateLoad);
+            lunaBackground ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Luna");
 
             Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/Earth", AssetRequestMode.ImmediateLoad);
             Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
@@ -48,7 +48,7 @@ namespace Macrocosm.Content.LoadingScreens
 
             float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
             progress = (float)Math.Pow(progress, 0.6);
-            int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f);
+            int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f) * MovementDirection;
 
             spriteBatch.Draw(
                     lunaBackground.Value,
@@ -59,7 +59,7 @@ namespace Macrocosm.Content.LoadingScreens
 
             progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
             progress = (float)Math.Pow(progress, 0.2);
-            movement = (int)(Utility.QuadraticEaseIn(progress) * 100f);
+            movement = (int)(Utility.QuadraticEaseIn(progress) * 100f) * MovementDirection;
 
             earth.Color = bodyColor;
             earth.Scale = scale;
