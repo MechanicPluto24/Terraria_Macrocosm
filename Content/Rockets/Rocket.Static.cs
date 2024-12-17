@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Rockets
                 throw new System.Exception("Max rockets reached. Should not ever reach this point during normal gameplay.");
             }
 
-            Rocket rocket = new()
+            Rocket rocket = new(activeModules)
             {
                 Position = position,
                 Active = true,

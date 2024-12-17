@@ -136,6 +136,7 @@ namespace Macrocosm.Content.Rockets
                 if (DebugModeActive)
                 {
                     rocket.DisplayWhoAmI();
+                    rocket.DrawDebugBounds();
                     rocket.DrawDebugModuleHitbox();
                 }
             }
