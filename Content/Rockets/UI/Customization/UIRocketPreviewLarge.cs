@@ -80,7 +80,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 "CommandPod" => new Vector2(-220f, 140f),
                 "PayloadPod" => new Vector2(-220f, 140f),
                 "ServiceModule" => new Vector2(-220f, -40f),
-                "UnmannedTug" => new Vector2(-80f, -40f),
+                "UnmannedTug" => new Vector2(-220f, -40f),
                 "ReactorModule" => new Vector2(-220f, -320f),
                 "EngineModule" => new Vector2(-80f, -460f),
                 "BoosterLeft" => new Vector2(40f, -520f),
@@ -119,7 +119,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         private List<int> GetActiveModuleIndices()
         {
-            return Rocket.Modules
+            return Rocket.AvailableModules
                          .Select((module, index) => module.Active ? index : -1)
                          .Where(index => index != -1)
                          .ToList();
@@ -128,7 +128,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         public void SetModule(string moduleName)
         {
             var activeIndices = GetActiveModuleIndices();
-            var index = Rocket.Modules.FindIndex(m => m.Name == moduleName && m.Active);
+            var index = Rocket.AvailableModules.FindIndex(m => m.Name == moduleName && m.Active);
 
             if (index != -1 && activeIndices.Contains(index))
             {

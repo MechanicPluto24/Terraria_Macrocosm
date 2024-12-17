@@ -101,6 +101,7 @@
     "moduleName": "PayloadPod",
     "unlockedByDefault": true,
     "colorData": [
+      {},
       { "color": "#FFFFFF" }
     ]
   },
@@ -200,6 +201,7 @@
     "moduleName": "UnmannedTug",
     "unlockedByDefault": true,
     "colorData": [
+      {},
       { "color": "#FFFFFF" }
     ]
   },

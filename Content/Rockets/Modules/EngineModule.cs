@@ -21,6 +21,8 @@ namespace Macrocosm.Content.Rockets.Modules
         public override int Width => 120;
         public override int Height => 302 + (RearLandingLegRaised ? 18 : 26);
 
+        public override Vector2 Offset => new Vector2(78, 268);
+
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {
             new(ModContent.ItemType<RocketPlating>(), 45),

@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Rockets
 
                 tag[nameof(Nameplate)] = Nameplate;
 
-                foreach (var module in Modules)
+                foreach (var module in AvailableModules)
                 {
                     tag[module.Name] = module;
                     tag[module.Name + "_Type"] = module.FullName;
@@ -94,7 +94,7 @@ namespace Macrocosm.Content.Rockets
                         if (moduleType != null && moduleType.IsSubclassOf(typeof(RocketModule)))
                         {
                             var module = RocketModule.DeserializeData(tag.GetCompound(moduleName), rocket);
-                            rocket.Modules.Add(module);
+                            rocket.AvailableModules.Add(module);
                         }
                     }
                 }

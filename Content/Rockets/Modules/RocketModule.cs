@@ -19,29 +19,18 @@ namespace Macrocosm.Content.Rockets.Modules
         //public LocalizedText DisplayName => this.GetLocalization("DisplayName", PrettyPrintName);
         public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
 
-        public readonly static List<RocketModule> Templates = new();
         protected sealed override void Register()
         {
-            Templates.Add(Activator.CreateInstance(GetType()) as RocketModule);
         }
 
         public bool Active { get; set; }
 
         public Vector2 Position { get; set; }
-        public Vector2 Center
-        {
-            get => Position + Size / 2f;
-            set => Position = value - Size / 2f;
-        }
+        public virtual Vector2 Offset => Vector2.Zero;
 
         public abstract int Width { get; }
         public abstract int Height { get; }
-
-        /// <summary> The module's hitbox size as a vector </summary>
-        public Vector2 Size => new(Hitbox.Width, Hitbox.Height);
-
-        /// <summary> The module's collision hitbox. </summary>
-        public virtual Rectangle Hitbox => new((int)Position.X, (int)Position.Y, Width, Height);
+        public Rectangle Bounds => new((int)Position.X, (int)Position.Y, Width, Height);
 
         public abstract AssemblyRecipe Recipe { get; }
 
@@ -58,7 +47,9 @@ namespace Macrocosm.Content.Rockets.Modules
         /// <summary> The module's draw origin </summary>
         protected virtual Vector2 Origin => new(0, 0);
 
-        public bool IsBlueprint = false;
+        public bool IsBlueprint { get; set; } = false;
+
+        public virtual bool Interactible => true;
 
         public virtual string TexturePath => Utility.GetNamespacePath(this);
         public Texture2D Texture => ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;

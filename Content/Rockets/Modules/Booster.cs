@@ -14,6 +14,8 @@ namespace Macrocosm.Content.Rockets.Modules
     public abstract class Booster : AnimatedRocketModule
     {
         public override int DrawPriority => 1;
+        public override bool Interactible => false;
+
         public abstract float ExhaustOffsetX { get; }
         protected abstract Vector2 LandingLegDrawOffset { get; }
 
