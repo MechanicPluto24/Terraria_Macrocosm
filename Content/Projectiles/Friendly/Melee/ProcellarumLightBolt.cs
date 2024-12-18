@@ -1,15 +1,22 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
+using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ProcellarumLightBolt : ModProjectile
     {
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
+        }
+
         public override void SetDefaults()
         {
             Projectile.width = 45;
@@ -52,33 +59,30 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnKill(int timeLeft)
         {
-            for (int i = 0; i < 40; i++)
-            {
-                Particle.Create<TintableSpark>((p) =>
-                {
-                    p.Position = Projectile.Center;
-                    p.Velocity = Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.05f, 0.2f);
-                    p.Scale = new(2f);
-                    p.Rotation = 0f;
-                    p.Color = new List<Color>() {
-                        new(77, 99, 124),
-                        new(90, 83, 92),
-                        new(232, 239, 255)
-                        }.GetRandom();
-                });
-            }
-            Particle.Create<TintableFlash>((p) =>
-            {
-                p.Position = Projectile.Center;
-                p.Scale = new(0.01f);
-                p.ScaleVelocity = new(0.2f);
-                p.Color = new Color(232, 239, 255);
-            });
+            float strength = 0.3f;
+            Projectile.NewProjectileDirect(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ProcellarumExplosion>(), Projectile.damage, 12f, Main.myPlayer, ai0: strength, ai1: -1f);
         }
 
+        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            return true;
+            int length = Projectile.oldPos.Length;
+
+            state.SaveState(Main.spriteBatch);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+            for (int i = 1; i < length; i++)
+            {
+                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;
+                Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
+                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, Projectile.oldRot[i], Projectile.Size / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+            Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, GetAlpha(lightColor) ?? Color.White, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            return false;
         }
 
         public override Color? GetAlpha(Color lightColor) => Color.White;

@@ -41,6 +41,26 @@ namespace Macrocosm.Common.Utils
             if (idx > 0) npc.DelBuff(idx);
         }
 
+        public static void ClearBuffs(this NPC npc)
+        {
+            for (int i = 0; i < npc.buffType.Length; i++)
+            {
+                int type = npc.buffType[i];
+                if (!Main.debuff[type])
+                    npc.DelBuff(i);
+            }
+        }
+
+        public static void ClearDebuffs(this NPC npc)
+        {
+            for (int i = 0; i < npc.buffType.Length; i++)
+            {
+                int type = npc.buffType[i];
+                if (Main.debuff[type])
+                    npc.DelBuff(i);
+            }
+        }
+
         public static bool SummonBossDirectlyWithMessage(Vector2 targetPosition, int type, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, int target = 255, SoundStyle? sound = null)
         {
             SoundEngine.PlaySound(sound, targetPosition);

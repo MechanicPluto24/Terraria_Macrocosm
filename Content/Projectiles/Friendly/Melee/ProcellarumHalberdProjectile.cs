@@ -143,50 +143,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         break;
 
                     case ProcellarumState.End:
-                        int projFired = 0;
-                        Vector2 projSpawnPosition;
-                        float firingAngle;
-                        if (currentChargeStage > 0)
-                        {
-                            int boltDamage = (int)(Projectile.damage * 0.5f * currentChargeStage);
-                            for (int i = 0; i < Main.npc.Length && projFired <= 4; i++)
-                            {
-                                if (Main.npc[i].active)
-                                {
-                                    if (Main.npc[i].HasBuff(ModContent.BuffType<ProcellarumLightningMarkDebuff>()))
-                                    {
-                                        projSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
-                                        firingAngle = (Main.npc[i].position - projSpawnPosition).ToRotation();
-                                        projFired += 1;
-                                        Projectile.NewProjectile(Projectile.GetSource_FromAI(),
-                                            projSpawnPosition,
-                                            Utility.PolarVector(40 + projFired * 4, firingAngle),
-                                            ModContent.ProjectileType<ProcellarumLightBolt>(),
-                                            boltDamage,
-                                            0,
-                                            Player.whoAmI,
-                                            i + 1,
-                                            projFired);
-                                    }
-                                }
-                            }
-                            if (projFired <= 4)
-                            {
-                                for (int i = projFired; i <= 4; i++)
-                                {
-                                    projSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
-                                    firingAngle = (npcHitPostition - projSpawnPosition).ToRotation();
-                                    projFired += 1;
-                                    Projectile.NewProjectile(Projectile.GetSource_FromAI(),
-                                        projSpawnPosition,
-                                        Utility.PolarVector(40 + projFired * 4, firingAngle),
-                                        ModContent.ProjectileType<ProcellarumLightBolt>(),
-                                        boltDamage,
-                                        0,
-                                        Player.whoAmI);
-                                }
-                            }
-                        }
                         Projectile.Kill();
                         break;
                 }
@@ -196,28 +152,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             if (Projectile.ai[0] == 2)
             {
-                for (int i = 0; i < 70; i++)
-                {
-                    Particle.Create<TintableSpark>((p) =>
-                    {
-                        p.Position = Projectile.Center;
-                        p.Velocity = Projectile.velocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.3f);
-                        p.Scale = new(3f);
-                        p.Rotation = 0f;
-                        p.Color = new List<Color>() {
-                        new(77, 99, 124),
-                        new(90, 83, 92),
-                        new(232, 239, 255)
-                        }.GetRandom();
-                    });
-                }
-                Particle.Create<TintableFlash>((p) =>
-                {
-                    p.Position = Projectile.Center;
-                    p.Scale = new(0.01f);
-                    p.ScaleVelocity = new(0.3f);
-                    p.Color = new Color(232, 239, 255);
-                });
+                float strength = 1f;
+                Projectile.NewProjectileDirect(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ProcellarumExplosion>(), Projectile.damage, 12f, Main.myPlayer, ai0: strength, ai1: 1f);
             }
         }
 
@@ -225,13 +161,18 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             if (Projectile.ai[0] != 1)
             {
-                if (currentChargeStage > 0) SoundEngine.PlaySound(SoundID.Thunder with { Volume = 0.1f * currentChargeStage }, Projectile.position);
+                if (currentChargeStage > 0) 
+                    SoundEngine.PlaySound(SoundID.Thunder with { Volume = 0.1f * currentChargeStage }, Projectile.position);
+
                 chargeState = ProcellarumState.End;
                 npcHitPostition = target.Center;
+                target.AddBuff<ProcellarumLightningMark>(3 * 60);
+            }
+            else
+            {
+                base.ModifyHitNPC(target, ref modifiers);
             }
 
-            base.ModifyHitNPC(target, ref modifiers);
-            target.AddBuff(ModContent.BuffType<ProcellarumLightningMarkDebuff>(), 4 * 60);
         }
         public override bool? CanHitNPC(NPC target)
         {

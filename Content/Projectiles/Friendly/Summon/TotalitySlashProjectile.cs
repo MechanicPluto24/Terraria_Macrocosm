@@ -138,7 +138,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Player player = Main.player[Projectile.owner];
             player.MinionAttackTargetNPC = target.whoAmI;
 
-            target.AddBuff(ModContent.BuffType<TotalitySlashed>(), 2 * 60);
+            target.AddBuff(ModContent.BuffType<TotalityTag>(), 2 * 60);
 
             float rotation = (target.Center - player.Center).ToRotation() + Main.rand.NextFloat(-MathHelper.Pi / 8, MathHelper.Pi / 8);
             for (float f = 0f; f < 1f; f += 1f / (6f * Projectile.Opacity))
