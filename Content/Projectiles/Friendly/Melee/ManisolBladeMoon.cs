@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -10,10 +12,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ManisolBladeMoon : ManisolBladeBase
     {
+        private int recallPierceLimit = 3;
+        private HashSet<int> hitList = new(); 
+
         public override void SetDefaults()
         {
             base.SetDefaults();
-            maxPenetrateCount = 5;
+            maxPenetrateCount = 0;
         }
 
         public override void OnStick()
@@ -22,6 +27,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnRecalled()
         {
+            recallPierceLimit = npcStick > -1 ? 4 : 1;
+            hitList.Clear(); 
+        }
+
+        public override void Returning()
+        {
+            if (recallPierceLimit > 0)
+            {
+                NPC target = Utility.GetClosestNPC(Projectile.position, 600f, (npc) => !hitList.Contains(npc.whoAmI) && npc.whoAmI != npcStick);
+                if (target is not null)
+                {
+                    Vector2 direction = Projectile.DirectionTo(target.Center).SafeNormalize(Vector2.Zero);
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed * 2f, 0.1f);
+                }
+                else
+                {
+                    base.Returning();
+                }
+            }
+            else
+            {
+                base.Returning();
+            }
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -30,14 +58,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             if (AI_State == ActionState.Returning && target.whoAmI != npcStick)
             {
-                target.AddBuff(BuffID.BrokenArmor, 300, false);
+                hitList.Add(target.whoAmI);
 
                 Particle.Create<PrettySparkle>((p) =>
                 {
                     p.Position = Projectile.Center;
                     p.Velocity = Projectile.velocity * 0.1f;
                     p.Color = new Color(113, 150, 150, 255);
-                    p.Scale = new Vector2(4.5f, 1.2f) * (Projectile.velocity.LengthSquared() / (returnSpeed * returnSpeed));
+                    p.Scale = new Vector2(4.5f, 1.2f);
                     p.Rotation = Projectile.velocity.ToRotation();
                     p.TimeToLive = 25;
                     p.DrawVerticalAxis = false;

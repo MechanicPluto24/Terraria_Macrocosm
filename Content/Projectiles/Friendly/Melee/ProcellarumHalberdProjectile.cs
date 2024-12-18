@@ -5,8 +5,6 @@ using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
@@ -16,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
-    public class Procellarum_HalberdProjectile : HalberdProjectile
+    public class ProcellarumHalberdProjectile : HalberdProjectile
     {
         public enum ProcellarumState
         {
@@ -24,8 +22,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Travel,
             End
         }
+
         ProcellarumState chargeState;
         // Old Vals: 75, 200, 20, 39, 64-rot
+
         public override int BaseSpeed => 30;
         public override int HalberdSize => 140;
         public override int RotPointToBlade => 16;
@@ -140,7 +140,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                             {
                                 if (Main.npc[i].active)
                                 {
-                                    if (Main.npc[i].HasBuff(ModContent.BuffType<Procellarum_LightningMarkDebuff>()))
+                                    if (Main.npc[i].HasBuff(ModContent.BuffType<ProcellarumLightningMarkDebuff>()))
                                     {
                                         ProjSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
                                         FiringAngle = (Main.npc[i].position - ProjSpawnPosition).ToRotation();
@@ -148,7 +148,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                                         Projectile.NewProjectile(Projectile.GetSource_FromAI(),
                                             ProjSpawnPosition,
                                             Utility.PolarVector(40 + ProjFired * 4, FiringAngle),
-                                            ModContent.ProjectileType<Procellarum_LightBolt>(),
+                                            ModContent.ProjectileType<ProcellarumLightBolt>(),
                                             boltDamage,
                                             0,
                                             Player.whoAmI,
@@ -167,7 +167,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                                     Projectile.NewProjectile(Projectile.GetSource_FromAI(),
                                         ProjSpawnPosition,
                                         Utility.PolarVector(40 + ProjFired * 4, FiringAngle),
-                                        ModContent.ProjectileType<Procellarum_LightBolt>(),
+                                        ModContent.ProjectileType<ProcellarumLightBolt>(),
                                         boltDamage,
                                         0,
                                         Player.whoAmI);
@@ -317,17 +317,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
         {
-            if (Projectile.ai[0] == 1)
-            {
-                base.ModifyHitNPC(target, ref modifiers);
-                target.AddBuff(ModContent.BuffType<Procellarum_LightningMarkDebuff>(), 1200);
-            }
-            else
+            if (Projectile.ai[0] != 1)
             {
                 if (currentChargeStage > 0) SoundEngine.PlaySound(SoundID.Thunder with { Volume = 0.1f * currentChargeStage }, Projectile.position);
                 chargeState = ProcellarumState.End;
                 npcHitPostition = target.Center;
             }
+
+            base.ModifyHitNPC(target, ref modifiers);
+            target.AddBuff(ModContent.BuffType<ProcellarumLightningMarkDebuff>(), 4 * 60);
         }
         public override bool? CanHitNPC(NPC target)
         {
@@ -341,42 +339,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             if (Projectile.ai[0] == 1) return base.Colliding(projHitbox, targetHitbox);
             else return targetHitbox.Intersects(projHitbox);
-        }
-    }
-    public class ProcellarumGlobalNPC : GlobalNPC
-    {
-        private static Asset<Texture2D> mark;
-
-        public override void Load()
-        {
-        }
-
-        public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            mark ??= ModContent.Request<Texture2D>("Macrocosm/Content/Debuffs/Weapons/Procellarum_LightningMark");
-
-            if (npc.HasBuff(ModContent.BuffType<Procellarum_LightningMarkDebuff>()))
-            {
-                Vector2 markPosition = new(npc.position.X + 0.5f * npc.width - 12, npc.position.Y - 36);
-                spriteBatch.Draw(mark.Value, markPosition - screenPos, Color.White);
-            }
-        }
-
-        public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
-        {
-            if (projectile.type == ModContent.ProjectileType<Procellarum_LightBolt>())
-            {
-                modifiers.FinalDamage *= 1.5f;
-            }
-        }
-        public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
-        {
-            if (projectile.type == ModContent.ProjectileType<Procellarum_LightBolt>())
-            {
-                if (npc.HasBuff(ModContent.BuffType<Procellarum_LightningMarkDebuff>()))
-                    npc.buffTime[npc.FindBuffIndex(ModContent.BuffType<Procellarum_LightningMarkDebuff>())] = 20;
-                projectile.ai[0] = 0;
-            }
         }
     }
 }

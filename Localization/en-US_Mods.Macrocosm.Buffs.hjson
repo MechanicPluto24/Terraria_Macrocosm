@@ -132,3 +132,13 @@ RyuguSummonBuff: {
 	DisplayName: Ryugu Summon Buff
 	Description: The Ryugu will fight for you
 }
+
+ProcellarumLightningMarkDebuff: {
+	DisplayName: Procellarum Lightning Mark Debuff
+	Description: Mods.Macrocosm.Buffs.ProcellarumLightningMarkDebuff.Description
+}
+
+TotalitySlashed: {
+	DisplayName: Totality Slashed
+	Description: Mods.Macrocosm.Buffs.TotalitySlashed.Description
+}

@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -70,6 +71,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Player player = Main.player[Projectile.owner];
             player.MinionAttackTargetNPC = target.whoAmI;
 
+            target.AddBuff(ModContent.BuffType<TotalitySlashed>(), 2 * 60);
+
             Color color = new List<Color>() {
                     new(44, 210, 91),
                     new(201, 125, 205),
@@ -78,21 +81,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             color.A = (byte)Main.rand.Next(120, 200);
 
             float rotation = (target.Center - player.Center).ToRotation() + Main.rand.NextFloat(-MathHelper.Pi / 8, MathHelper.Pi / 8);
-
-            Particle.Create<TintableSlash>((p) =>
-            {
-                p.Position = target.Center;
-                p.Velocity = Vector2.Zero;
-                p.Rotation = rotation;
-                p.Color = color;
-                p.SecondaryColor = (color * 2f).WithOpacity(0.2f);
-                p.FrameSpeed = 2;
-                p.Scale = new(Main.rand.NextFloat(0.3f, 0.5f), Main.rand.NextFloat(0.5f, 1f));
-                p.ScaleVelocity = new Vector2(0.01f);
-                p.FadeInNormalizedTime = 0.01f;
-                p.FadeOutNormalizedTime = 0.5f;
-            });
-
             for (float f = 0f; f < 1f; f += 1f / 4f)
             {
                 rotation = MathHelper.TwoPi * f + Main.rand.NextFloat() * MathHelper.TwoPi + Main.rand.NextFloatDirection() * 0.25f;

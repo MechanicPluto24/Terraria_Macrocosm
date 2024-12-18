@@ -2736,3 +2736,8 @@ GeigerMuller: {
 	DisplayName: Geiger Muller
 	Tooltip: ""
 }
+
+Flag: {
+	DisplayName: Flag
+	Tooltip: ""
+}
