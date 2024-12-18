@@ -81,21 +81,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             color.A = (byte)Main.rand.Next(120, 200);
 
             float rotation = (target.Center - player.Center).ToRotation() + Main.rand.NextFloat(-MathHelper.Pi / 8, MathHelper.Pi / 8);
-            for (float f = 0f; f < 1f; f += 1f / 4f)
+            for (float f = 0f; f < 1f; f += 1f / 12f)
             {
                 rotation = MathHelper.TwoPi * f + Main.rand.NextFloat() * MathHelper.TwoPi + Main.rand.NextFloatDirection() * 0.25f;
 
                 Particle.Create<LightningParticle>((p) =>
                 {
                     p.Position = target.Center;
-                    p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 4f) * new Vector2(0.6f, 1f);
+                    p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 6f) * new Vector2(0.6f, 1f);
                     p.Rotation = rotation;
-                    p.Color = (color * 0.3f).WithAlpha(255);
-                    p.OutlineColor = (color * 0.9f).WithAlpha(255);
-                    p.Scale = new(Main.rand.NextFloat(0.4f, 0.8f));
-                    p.ScaleVelocity = new Vector2(0.01f);
+                    p.Color = (color * 0.3f).WithAlpha(127);
+                    p.OutlineColor = (color * 0.9f).WithAlpha(127);
+                    p.Scale = new(Main.rand.NextFloat(0.8f, 1.4f));
+                    p.ScaleVelocity = new Vector2(-0.05f);
                     p.FadeInNormalizedTime = 0.01f;
-                    p.FadeOutNormalizedTime = 0.5f;
+                    p.FadeOutNormalizedTime = 0.7f;
                 });
             }
 

@@ -81,6 +81,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
 
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
         }
@@ -244,6 +249,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Main.npcFrameCount[Type] = 2;
 
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
@@ -374,6 +384,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }

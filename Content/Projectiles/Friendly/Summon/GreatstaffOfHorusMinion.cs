@@ -267,15 +267,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
         private void Visuals(bool foundTarget)
         {
-            // So it will lean slightly towards the direction it's moving
+            float rotation;
             if (foundTarget)
-            {
-                Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
-            }
+                rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
             else
-            {
-                Projectile.rotation = Projectile.velocity.X * 0.05f;
-            }
+                rotation = Projectile.velocity.X * 0.05f;
+
+            Projectile.rotation = MathHelper.Lerp(Projectile.rotation, MathHelper.WrapAngle(rotation), 0.2f);
+
             // This is a simple "loop through all frames from top to bottom" animation
             int frameSpeed = 5;
 

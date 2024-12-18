@@ -21,7 +21,6 @@ public static partial class Utility
         for (int k = 0; k < Main.maxNPCs; k++)
         {
             NPC target = Main.npc[k];
-
             if (target.CanBeChasedBy() && (canBeChased?.Invoke(target) ?? true))
             {
                 float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, position);

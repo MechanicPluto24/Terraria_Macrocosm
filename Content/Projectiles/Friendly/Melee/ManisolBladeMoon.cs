@@ -18,7 +18,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void SetDefaults()
         {
             base.SetDefaults();
-            maxPenetrateCount = 0;
         }
 
         public override void OnStick()
@@ -58,6 +57,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             if (AI_State == ActionState.Returning && target.whoAmI != npcStick)
             {
+                recallPierceLimit--;
                 hitList.Add(target.whoAmI);
 
                 Particle.Create<PrettySparkle>((p) =>
@@ -107,11 +107,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Color trailColor = new Color(113, 150, 150, 0) * (((float)length - i) / length) * 0.45f * (1f - Projectile.alpha / 255f);
                 Main.spriteBatch.Draw(TextureAssets.Extra[ExtrasID.SharpTears].Value, drawPos, null, trailColor, Projectile.oldRot[i] + MathHelper.PiOver2, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             }
-
-            /*
-            if(AI_State == ActionState.Returning)
-                Main.EntitySpriteDraw(TextureAssets.Extra[ExtrasID.SharpTears].Value, Projectile.Center - Main.screenPosition, null, new Color(113, 150, 150).WithAlpha(0), Projectile.rotation, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, new Vector2(Projectile.scale * 0.8f, Projectile.scale * 1.84f), Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0);
-            */
 
             return base.PreDraw(ref lightColor);
         }

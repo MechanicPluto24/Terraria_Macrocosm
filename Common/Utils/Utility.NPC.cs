@@ -21,6 +21,15 @@ namespace Macrocosm.Common.Utils
             npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * factor * balance * bossAdjustment);
         }
 
+        public static void ApplyImmunity(this NPC npc, params int[] buffIds) => ApplyImmunity(npc.type, buffIds);
+        public static void ApplyImmunity(int type, params int[] buffIds)
+        {
+            foreach (int buff in buffIds)
+            {
+                NPCID.Sets.SpecificDebuffImmunity[type][buff] = true;
+            }
+        }
+
         public static void AddBuff<T>(this NPC npc, int time, bool quiet = false) where T : ModBuff
         {
             npc.AddBuff(ModContent.BuffType<T>(), time, quiet);
