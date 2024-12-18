@@ -138,7 +138,17 @@ ProcellarumLightningMarkDebuff: {
 	Description: Mods.Macrocosm.Buffs.ProcellarumLightningMarkDebuff.Description
 }
 
+ProcellarumLightningMark: {
+	DisplayName: Procellarum Lightning Mark
+	Description: Mods.Macrocosm.Buffs.ProcellarumLightningMark.Description
+}
+
 TotalitySlashed: {
 	DisplayName: Totality Slashed
 	Description: Mods.Macrocosm.Buffs.TotalitySlashed.Description
+}
+
+TotalityTag: {
+	DisplayName: Totality Tag
+	Description: Mods.Macrocosm.Buffs.TotalityTag.Description
 }

@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Player player = Main.player[Projectile.owner];
             player.MinionAttackTargetNPC = target.whoAmI;
 
-            target.AddBuff(ModContent.BuffType<TotalitySlashed>(), 2 * 60);
+            target.AddBuff(ModContent.BuffType<TotalityTag>(), 2 * 60);
 
             Color color = new List<Color>() {
                     new(44, 210, 91),
