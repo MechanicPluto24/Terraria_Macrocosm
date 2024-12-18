@@ -22,6 +22,17 @@ namespace Macrocosm.Common.Utils
             return Main.LocalPlayer.IsInTileInteractionRange(location.X, location.Y, settings);
         }
 
+        public static void AddBuff<T>(this Player player, int time, bool quiet = false) where T : ModBuff
+        {
+            player.AddBuff(ModContent.BuffType<T>(), time, quiet);
+        }
+
+        public static void RemoveBuff<T>(this Player player) where T : ModBuff
+        {
+            int idx = player.FindBuffIndex(ModContent.BuffType<T>());
+            if (idx > 0) player.DelBuff(idx);
+        }
+
         // TODO: some sort of netsync where the server or other clients can shake a player's screen
         public static void AddScreenshake(this Player player, float intensity, string context) => Main.instance.CameraModifiers.Add(new ScreenshakeCameraModifier(intensity, context));
 

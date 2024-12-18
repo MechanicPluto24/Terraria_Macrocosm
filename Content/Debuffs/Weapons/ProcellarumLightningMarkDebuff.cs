@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Debuffs.Weapons
 {
-    public class Procellarum_LightningMarkDebuff : ModBuff
+    public class ProcellarumLightningMarkDebuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -11,6 +11,14 @@ namespace Macrocosm.Content.Debuffs.Weapons
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
             Main.pvpBuff[Type] = true;
+        }
+
+        public override void Update(NPC npc, ref int buffIndex)
+        {
+        }
+
+        public override void Update(Player player, ref int buffIndex)
+        {
         }
     }
 }

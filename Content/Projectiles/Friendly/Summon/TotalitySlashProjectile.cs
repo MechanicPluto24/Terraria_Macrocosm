@@ -1,9 +1,12 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Debuffs.Weapons;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -127,6 +130,51 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 SoundEngine.PlaySound(SoundID.Item1, Projectile.position);
             }
         }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Player player = Main.player[Projectile.owner];
+            player.MinionAttackTargetNPC = target.whoAmI;
+
+            target.AddBuff(ModContent.BuffType<TotalitySlashed>(), 2 * 60);
+
+            Color color = new List<Color>() {
+                    new(44, 210, 91),
+                    new(201, 125, 205),
+                    new(114, 111, 207)
+            }.GetRandom();
+            color.A = (byte)Main.rand.Next(120, 200);
+
+            float rotation = (target.Center - player.Center).ToRotation() + Main.rand.NextFloat(-MathHelper.Pi / 8, MathHelper.Pi / 8);
+
+            for (float f = 0f; f < 1f; f += 1f / 4f)
+            {
+                rotation = MathHelper.TwoPi * f + Main.rand.NextFloat() * MathHelper.TwoPi + Main.rand.NextFloatDirection() * 0.25f;
+
+                Particle.Create<LightningParticle>((p) =>
+                {
+                    p.Position = target.Center;
+                    p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 4f) * new Vector2(0.6f, 1f);
+                    p.Rotation = rotation;
+                    p.Color = (color * 0.3f).WithAlpha(255);
+                    p.OutlineColor = (color * 0.9f).WithAlpha(255);
+                    p.Scale = new(Main.rand.NextFloat(0.4f, 0.8f));
+                    p.ScaleVelocity = new Vector2(0.01f);
+                    p.FadeInNormalizedTime = 0.01f;
+                    p.FadeOutNormalizedTime = 0.5f;
+                });
+            }
+
+            for (float f = 0f; f < 1f; f += 1f / 24f)
+            {
+                Vector2 velocity = new Vector2(3f).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+                Dust dust = Dust.NewDustPerfect(target.Center, ModContent.DustType<ElectricSparkDust>(), velocity, Scale: Main.rand.NextFloat(0.4f, 0.6f));
+                dust.noGravity = true;
+                dust.color = color.WithLuminance(0.1f);
+                dust.alpha = 15;
+            }
+        }
+
 
         public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
