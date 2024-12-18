@@ -50,6 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void SetDefaults()
         {
             base.SetDefaults();
+            Projectile.alpha = 255;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -79,9 +80,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         Projectile.timeLeft += 1;
                         currentChargeTick += 1;
                         Projectile.rotation = angleOffset;
-                        float CursorRotation = (Main.MouseWorld - Player.MountedCenter - new Vector2(0, 6)).ToRotation();
+                        float cursorRotation = (Main.MouseWorld - Player.MountedCenter - new Vector2(0, 6)).ToRotation();
 
-                        if (CursorRotation >= -MathHelper.PiOver2 && CursorRotation < MathHelper.PiOver2)
+                        if (cursorRotation >= -MathHelper.PiOver2 && cursorRotation < MathHelper.PiOver2)
                         {
                             Player.direction = 1;
                             DrawOriginOffsetX = -(HalberdSize / 2) + RotationOffset;
@@ -97,8 +98,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                             Projectile.rotation -= MathHelper.PiOver2;
                         }
                         Projectile.spriteDirection = Player.direction;
-                        Projectile.Center = Player.MountedCenter + Utility.PolarVector(50, CursorRotation);
+                        Projectile.Center = Player.MountedCenter + Utility.PolarVector(50, cursorRotation);
                         Projectile.rotation += (Projectile.Center - Player.MountedCenter - new Vector2(-4 * Player.direction, 6 * Player.gravDir)).ToRotation();
+
+                        float stageProgress = (float)currentChargeTick / TICKS_PER_STAGE; 
+                        float targetAlpha = 255f * (1f - (currentChargeStage + stageProgress) / 3f);
+                        Projectile.alpha = (int)MathHelper.Lerp(Projectile.alpha, targetAlpha, 0.1f);
+
+                        if (currentChargeStage == 3)
+                            Projectile.alpha = 0;
+
+                        Projectile.position += Main.rand.NextVector2Circular(1f, 1f) * (1f - Projectile.alpha / 255f);
 
                         if (currentChargeTick >= TICKS_PER_STAGE && currentChargeStage < 3)
                         {
@@ -110,8 +120,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                                 Volume = 0.15f * (currentChargeStage / 3f),
                                 SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest
                             }, Projectile.position);
+
                             for (int i = 0; i < 15 * currentChargeStage; i++)
-                                Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<LuminiteBrightDust>(), Utility.PolarVector(Main.rand.Next(3, 5), CursorRotation + (MathHelper.Pi / currentChargeStage * Main.rand.Next(0, 2 * currentChargeStage))));
+                                Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<LuminiteBrightDust>(), Utility.PolarVector(Main.rand.Next(2, 4), cursorRotation + (MathHelper.Pi / currentChargeStage * Main.rand.Next(0, 2 * currentChargeStage))).RotatedByRandom(MathHelper.Pi / 64f));
                         }
                         if (!Main.mouseRight)
                         {
@@ -121,52 +132,54 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         }
 
                         if (Player.direction == 1)
-                            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, CursorRotation - MathHelper.ToRadians(70));
+                            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, cursorRotation - MathHelper.ToRadians(70));
                         else
-                            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, CursorRotation - MathHelper.ToRadians(110));
+                            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, cursorRotation - MathHelper.ToRadians(110));
                         break;
+
                     case ProcellarumState.Travel:
                         if (Projectile.spriteDirection == 1) Projectile.velocity = Utility.PolarVector(35, Projectile.rotation - angleOffset);
                         else Projectile.velocity = Utility.PolarVector(35, Projectile.rotation + angleOffset - MathHelper.Pi);
                         break;
+
                     case ProcellarumState.End:
-                        int ProjFired = 0;
-                        Vector2 ProjSpawnPosition;
-                        float FiringAngle;
+                        int projFired = 0;
+                        Vector2 projSpawnPosition;
+                        float firingAngle;
                         if (currentChargeStage > 0)
                         {
                             int boltDamage = (int)(Projectile.damage * 0.5f * currentChargeStage);
-                            for (int i = 0; i < Main.npc.Length && ProjFired <= 4; i++)
+                            for (int i = 0; i < Main.npc.Length && projFired <= 4; i++)
                             {
                                 if (Main.npc[i].active)
                                 {
                                     if (Main.npc[i].HasBuff(ModContent.BuffType<ProcellarumLightningMarkDebuff>()))
                                     {
-                                        ProjSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
-                                        FiringAngle = (Main.npc[i].position - ProjSpawnPosition).ToRotation();
-                                        ProjFired += 1;
+                                        projSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
+                                        firingAngle = (Main.npc[i].position - projSpawnPosition).ToRotation();
+                                        projFired += 1;
                                         Projectile.NewProjectile(Projectile.GetSource_FromAI(),
-                                            ProjSpawnPosition,
-                                            Utility.PolarVector(40 + ProjFired * 4, FiringAngle),
+                                            projSpawnPosition,
+                                            Utility.PolarVector(40 + projFired * 4, firingAngle),
                                             ModContent.ProjectileType<ProcellarumLightBolt>(),
                                             boltDamage,
                                             0,
                                             Player.whoAmI,
                                             i + 1,
-                                            ProjFired);
+                                            projFired);
                                     }
                                 }
                             }
-                            if (ProjFired <= 4)
+                            if (projFired <= 4)
                             {
-                                for (int i = ProjFired; i <= 4; i++)
+                                for (int i = projFired; i <= 4; i++)
                                 {
-                                    ProjSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
-                                    FiringAngle = (npcHitPostition - ProjSpawnPosition).ToRotation();
-                                    ProjFired += 1;
+                                    projSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
+                                    firingAngle = (npcHitPostition - projSpawnPosition).ToRotation();
+                                    projFired += 1;
                                     Projectile.NewProjectile(Projectile.GetSource_FromAI(),
-                                        ProjSpawnPosition,
-                                        Utility.PolarVector(40 + ProjFired * 4, FiringAngle),
+                                        projSpawnPosition,
+                                        Utility.PolarVector(40 + projFired * 4, firingAngle),
                                         ModContent.ProjectileType<ProcellarumLightBolt>(),
                                         boltDamage,
                                         0,
@@ -177,113 +190,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         Projectile.Kill();
                         break;
                 }
-
-                //Old alt attack code
-                /*
-                switch (chargeState)
-                {
-                    case ProcellarumState.Charging:
-                        Projectile.timeLeft += 1;
-
-                        int dust = Dust.NewDust(Projectile.Center, 5, 5, ModContent.DustType<LuminiteBrightDust>(), Player.velocity.X + Main.rand.Next(-5, 5), Player.velocity.Y + Main.rand.Next(-5, 5));
-                        //Main.dust[dust].scale = 1f - (currentChargeTick * 0.1f);
-
-                        //Do something like this
-                        //Particle.CreateParticle<PortalSwirl>(p =>
-                        //    {
-                        //        p.Position = info.center + Main.rand.NextVector2Circular(180, 180) * 0.95f * info.scale;
-                        //        p.Velocity = Vector2.One * 22;
-                        //        p.Scale = (0.1f + Main.rand.NextFloat(0.1f)) * info.scale;
-                        //        p.Color = new Color(92, 206, 130);
-                        //        p.TargetCenter = info.center;
-                        //        p.CustomDrawer = owner;
-                        //    });
-                         
-
-                        currentChargeTick += 1;
-                        if (currentChargeTick >= TICKS_PER_STAGE && currentChargeStage < 3)
-                        {
-                            currentChargeTick = 0;
-                            currentChargeStage += 1;
-                            //Main.NewText(currentChargeStage);
-                        }
-                        if (!Main.mouseRight)
-                        {
-                            chargeState = ProcellarumState.Release;
-                        }
-                        break;
-                    case ProcellarumState.Release:
-
-                        currentReleaseTick += 1;
-                        if (currentReleaseTick >= RELEASE_TICKS)
-                        {
-                            chargeState = ProcellarumState.End;
-                        }
-                        break;
-                    case ProcellarumState.End:
-
-                        currentEndTick += 1;
-                        if (currentEndTick >= END_TICKS)
-                        {
-                            int ProjFired = 0;
-                            Vector2 ProjSpawnPosition;
-                            float FiringAngle;
-                            for (int i = 0; i < Main.npc.Length && ProjFired <= 4; i++)
-                            {
-                                if (Main.npc[i].active)
-                                {
-                                    if (Main.npc[i].HasBuff(ModContent.BuffType<Procellarum_LightningMarkDebuff>()))
-                                    {
-                                        ProjSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
-                                        FiringAngle = (Main.npc[i].position - ProjSpawnPosition).ToRotation();
-                                        ProjFired += 1;
-                                        Projectile.NewProjectile(Projectile.GetSource_FromAI(),
-                                            ProjSpawnPosition,
-                                            Utility.PolarVector(40 + ProjFired * 4, FiringAngle),
-                                            ModContent.ProjectileType<Procellarum_LightBolt>(),
-                                            (int)(Projectile.damage * (0.5f + 1.5f * currentChargeStage)),
-                                            0,
-                                            Player.whoAmI,
-                                            i + 1,
-                                            ProjFired);
-                                    }
-                                }
-                            }
-                            if (ProjFired <= 4)
-                            {
-                                for (int i = ProjFired; i <= 4; i++)
-                                {
-                                    ProjSpawnPosition = new Vector2(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
-                                    FiringAngle = (Main.MouseWorld - ProjSpawnPosition).ToRotation();
-                                    ProjFired += 1;
-                                    Projectile.NewProjectile(Projectile.GetSource_FromAI(),
-                                        ProjSpawnPosition,
-                                        Utility.PolarVector(40 + ProjFired * 4, FiringAngle),
-                                        ModContent.ProjectileType<Procellarum_LightBolt>(),
-                                        (int)(Projectile.damage * (0.5f + 0.5f * currentChargeStage)),
-                                        0,
-                                        Player.whoAmI);
-                                }
-                            }
-                            Projectile.Kill();
-                        }
-                        break;
-                }
-                Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.ThreeQuarters, Player.direction * -MathHelper.PiOver2);
-                float holdAngle = -MathHelper.PiOver2 + MathHelper.Pi * 20 / 180 * Player.direction;
-                Projectile.Center = Player.MountedCenter + Player.direction * new Vector2(8, 0);
-                if (chargeState != ProcellarumState.End)
-                {
-                    Projectile.position.X += MathF.Cos(holdAngle) * MathHelper.Lerp(farOffset / 2, farOffset, 1 - MathF.Cos(MathHelper.TwoPi * 0.25f * currentReleaseTick / RELEASE_TICKS));
-                    Projectile.position.Y += MathF.Sin(holdAngle) * MathHelper.Lerp(farOffset / 2, farOffset, 1 - MathF.Cos(MathHelper.TwoPi * 0.25f * currentReleaseTick / RELEASE_TICKS));
-                }
-                else
-                {
-                    Projectile.position.X += MathF.Cos(holdAngle) * farOffset;
-                    Projectile.position.Y += MathF.Sin(holdAngle) * farOffset;
-                }
-                Projectile.rotation += (Projectile.Center - Player.MountedCenter - Player.direction * new Vector2(8, 0)).ToRotation();
-                */
             }
         }
         public override void OnKill(int timeLeft)

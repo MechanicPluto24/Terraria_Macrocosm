@@ -21,6 +21,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             NPCID.Sets.ProjectileNPC[Type] = true;
 
+            NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
+
             NPCID.Sets.TrailCacheLength[Type] = 20;
             NPCID.Sets.TrailingMode[Type] = 3;
 

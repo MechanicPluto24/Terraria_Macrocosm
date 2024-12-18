@@ -76,16 +76,17 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
             if (AI_Timer > 100)
             {
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, Projectile.velocity.RotatedByRandom(MathHelper.Pi) * 2 * -slashDir, 0.1f);
-                Projectile.velocity *= 0.98f;
+                Projectile.velocity = Projectile.velocity.RotatedBy(MathHelper.Pi / 128 * slashDir);
+                Projectile.velocity *= 0.995f;
 
                 for (int i = 0; i < oldPosLerped.Length; i++)
                 {
                     if (Projectile.oldPos[i] == default)
                         Projectile.oldPos[i] = Projectile.position;
 
-                    oldPosLerped[i] = Vector2.Lerp(oldPosLerped[i], oldPosLerped[i] + Projectile.velocity, 0.1f);
-                    oldPosLerped[i] = Vector2.Lerp(oldPosLerped[i], Projectile.oldPos[i], 0.00001f * i);
+                    oldRotLerped[i] = Projectile.oldRot[i];
+                    oldPosLerped[i] = Vector2.Lerp(oldPosLerped[i], Projectile.oldPos[i], 0.2f);
+                    oldPosLerped[i] += Projectile.velocity * 0.05f;
                 }
             }
             else
@@ -133,39 +134,32 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            // minions will attack the npcs hit with this whip 
             Player player = Main.player[Projectile.owner];
             player.MinionAttackTargetNPC = target.whoAmI;
 
             target.AddBuff(ModContent.BuffType<TotalitySlashed>(), 2 * 60);
 
-            Color color = new List<Color>() {
-                    new(44, 210, 91),
-                    new(201, 125, 205),
-                    new(114, 111, 207)
-            }.GetRandom();
-            color.A = (byte)Main.rand.Next(120, 200);
-
             float rotation = (target.Center - player.Center).ToRotation() + Main.rand.NextFloat(-MathHelper.Pi / 8, MathHelper.Pi / 8);
-
-            for (float f = 0f; f < 1f; f += 1f / 4f)
+            for (float f = 0f; f < 1f; f += 1f / (6f * Projectile.Opacity))
             {
                 rotation = MathHelper.TwoPi * f + Main.rand.NextFloat() * MathHelper.TwoPi + Main.rand.NextFloatDirection() * 0.25f;
 
                 Particle.Create<LightningParticle>((p) =>
                 {
                     p.Position = target.Center;
-                    p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 4f) * new Vector2(0.6f, 1f);
+                    p.Velocity = rotation.ToRotationVector2() * (Main.rand.NextFloat() * 6f) * new Vector2(0.6f, 1f);
                     p.Rotation = rotation;
-                    p.Color = (color * 0.3f).WithAlpha(255);
-                    p.OutlineColor = (color * 0.9f).WithAlpha(255);
-                    p.Scale = new(Main.rand.NextFloat(0.4f, 0.8f));
-                    p.ScaleVelocity = new Vector2(0.01f);
+                    p.Color = (color * 0.3f).WithAlpha(127);
+                    p.OutlineColor = (color * 0.9f).WithAlpha(127);
+                    p.Scale = new(Main.rand.NextFloat(0.8f, 1.4f));
+                    p.ScaleVelocity = new Vector2(-0.05f);
                     p.FadeInNormalizedTime = 0.01f;
-                    p.FadeOutNormalizedTime = 0.5f;
+                    p.FadeOutNormalizedTime = 0.7f;
                 });
             }
 
-            for (float f = 0f; f < 1f; f += 1f / 24f)
+            for (float f = 0f; f < 1f; f += 1f / 12f)
             {
                 Vector2 velocity = new Vector2(3f).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
                 Dust dust = Dust.NewDustPerfect(target.Center, ModContent.DustType<ElectricSparkDust>(), velocity, Scale: Main.rand.NextFloat(0.4f, 0.6f));
