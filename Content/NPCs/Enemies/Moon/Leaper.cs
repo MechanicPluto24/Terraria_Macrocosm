@@ -205,8 +205,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         // Manages the leaper's rage
         private float GetRage(float lightlevel)
         {
-            if (Main.netMode == NetmodeID.Server)
-                return 0f;
+         
 
             
             

@@ -54,7 +54,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.TrailCacheLength[Type] = 5;
             NPCID.Sets.TrailingMode[Type] = 3;
 
-            NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
+            NPC.ApplyImmunity
+            (
+                BuffID.Bleeding,
+                BuffID.BloodButcherer,
+                BuffID.Poisoned,
+                BuffID.Venom,
+                BuffID.Confused
+            );
 
             NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new()
             {

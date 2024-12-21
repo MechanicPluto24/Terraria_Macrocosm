@@ -34,6 +34,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Main.npcFrameCount[Type] = 25;
 
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
         }

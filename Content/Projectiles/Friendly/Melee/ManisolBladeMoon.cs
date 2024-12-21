@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -10,10 +12,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ManisolBladeMoon : ManisolBladeBase
     {
+        private int recallPierceLimit = 3;
+        private HashSet<int> hitList = new(); 
+
         public override void SetDefaults()
         {
             base.SetDefaults();
-            maxPenetrateCount = 5;
         }
 
         public override void OnStick()
@@ -22,6 +26,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnRecalled()
         {
+            recallPierceLimit = npcStick > -1 ? 4 : 1;
+            hitList.Clear(); 
+        }
+
+        public override void Returning()
+        {
+            if (recallPierceLimit > 0)
+            {
+                NPC target = Utility.GetClosestNPC(Projectile.position, 600f, (npc) => !hitList.Contains(npc.whoAmI) && npc.whoAmI != npcStick);
+                if (target is not null)
+                {
+                    Vector2 direction = Projectile.DirectionTo(target.Center).SafeNormalize(Vector2.Zero);
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed * 2f, 0.1f);
+                }
+                else
+                {
+                    base.Returning();
+                }
+            }
+            else
+            {
+                base.Returning();
+            }
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -30,14 +57,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             if (AI_State == ActionState.Returning && target.whoAmI != npcStick)
             {
-                target.AddBuff(BuffID.BrokenArmor, 300, false);
+                recallPierceLimit--;
+                hitList.Add(target.whoAmI);
 
                 Particle.Create<PrettySparkle>((p) =>
                 {
                     p.Position = Projectile.Center;
                     p.Velocity = Projectile.velocity * 0.1f;
                     p.Color = new Color(113, 150, 150, 255);
-                    p.Scale = new Vector2(4.5f, 1.2f) * (Projectile.velocity.LengthSquared() / (returnSpeed * returnSpeed));
+                    p.Scale = new Vector2(4.5f, 1.2f);
                     p.Rotation = Projectile.velocity.ToRotation();
                     p.TimeToLive = 25;
                     p.DrawVerticalAxis = false;
@@ -79,11 +107,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 Color trailColor = new Color(113, 150, 150, 0) * (((float)length - i) / length) * 0.45f * (1f - Projectile.alpha / 255f);
                 Main.spriteBatch.Draw(TextureAssets.Extra[ExtrasID.SharpTears].Value, drawPos, null, trailColor, Projectile.oldRot[i] + MathHelper.PiOver2, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             }
-
-            /*
-            if(AI_State == ActionState.Returning)
-                Main.EntitySpriteDraw(TextureAssets.Extra[ExtrasID.SharpTears].Value, Projectile.Center - Main.screenPosition, null, new Color(113, 150, 150).WithAlpha(0), Projectile.rotation, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, new Vector2(Projectile.scale * 0.8f, Projectile.scale * 1.84f), Microsoft.Xna.Framework.Graphics.SpriteEffects.None, 0);
-            */
 
             return base.PreDraw(ref lightColor);
         }
