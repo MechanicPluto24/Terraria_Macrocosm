@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
@@ -30,6 +31,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 PortraitPositionYOverride = 12f
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
@@ -138,6 +144,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
@@ -198,6 +209,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }

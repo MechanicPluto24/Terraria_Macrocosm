@@ -1,11 +1,15 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
@@ -15,6 +19,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 3;
+
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
         public override void SetDefaults()
@@ -229,9 +236,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override Color? GetAlpha(Color lightColor) => lightColor;
 
+        private SpriteBatchState state;
+
         public override bool PreDraw(ref Color lightColor)
         {
-            return base.PreDraw(ref lightColor);
+            int length = Projectile.oldPos.Length;
+            Rectangle frame = TextureAssets.Projectile[Type].Frame(verticalFrames: Main.projFrames[Type], frameY: Projectile.frame);
+
+            state.SaveState(Main.spriteBatch);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+            for (int i = 1; i < length; i++)
+            {
+                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition;
+                Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
+                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, frame, trailColor, Projectile.oldRot[i], frame.Size() / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+            Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition, frame, GetAlpha(lightColor) ?? Color.White, Projectile.rotation, frame.Size() / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            return false;
         }
 
         public override void PostDraw(Color lightColor)

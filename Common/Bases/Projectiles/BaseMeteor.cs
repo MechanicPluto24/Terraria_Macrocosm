@@ -15,11 +15,13 @@ namespace Macrocosm.Common.Bases.Projectiles
     {
         public static List<LocalizedText> DeathMessages { get; } = [];
 
-        public float ScreenshakeMaxDist;
-        public float ScreenshakeIntensity;
+        protected float screenshakeMaxDist;
+        protected float screenshakeIntensity;
 
-        public float RotationMultiplier;
-        public int BlastRadius = 128;
+        protected float rotationMultiplier;
+        protected int blastRadius = 128;
+
+        private int collisionTileType = -1;
 
         public override void Load()
         {
@@ -61,7 +63,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             // handled by clients 
             if (Main.netMode != NetmodeID.Server)
             {
-                ImpactEffects();
+                ImpactEffects(collisionTileType);
                 ImpactScreenshake();
                 ImpactSound();
             }
@@ -77,7 +79,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         {
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
-            Projectile.Resize(BlastRadius, BlastRadius);
+            Projectile.Resize(blastRadius, blastRadius);
             Projectile.knockBack = 12f;
         }
 
@@ -85,6 +87,9 @@ namespace Macrocosm.Common.Bases.Projectiles
         {
             if (Projectile.timeLeft > 3)
                 Projectile.timeLeft = 3;
+
+            if (Main.tile[Projectile.Center.ToTileCoordinates()].HasTile)
+                collisionTileType = Main.tile[Projectile.Center.ToTileCoordinates()].TileType;
 
             Projectile.velocity *= 0f;
             return false;
@@ -105,12 +110,12 @@ namespace Macrocosm.Common.Bases.Projectiles
 
         public virtual void AI_Rotation()
         {
-            Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * RotationMultiplier * Projectile.direction;
+            Projectile.rotation += (Math.Abs(Projectile.velocity.X) + Math.Abs(Projectile.velocity.Y)) * rotationMultiplier * Projectile.direction;
         }
 
         public virtual void MeteorAI() { }
 
-        public virtual void ImpactEffects() { }
+        public virtual void ImpactEffects(int collisionTileType) { }
         public virtual void SpawnItems() { }
 
         public virtual void ImpactScreenshake()
@@ -121,9 +126,9 @@ namespace Macrocosm.Common.Bases.Projectiles
                 if (player.active)
                 {
                     float distance = Vector2.Distance(player.Center, Projectile.Center);
-                    if (distance < ScreenshakeMaxDist)
+                    if (distance < screenshakeMaxDist)
                     {
-                        player.AddScreenshake(ScreenshakeIntensity - distance / ScreenshakeMaxDist * ScreenshakeIntensity, context: FullName + Projectile.whoAmI.ToString());
+                        player.AddScreenshake(screenshakeIntensity - distance / screenshakeMaxDist * screenshakeIntensity, context: FullName + Projectile.whoAmI.ToString());
                     }
                 }
             }

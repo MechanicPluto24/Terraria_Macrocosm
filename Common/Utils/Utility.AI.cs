@@ -13,7 +13,7 @@ namespace Macrocosm.Common.Utils;
 
 public static partial class Utility
 {
-    public static NPC GetClosestNPC(Vector2 position, float maxDetectDistance)
+    public static NPC GetClosestNPC(Vector2 position, float maxDetectDistance, Func<NPC, bool> canBeChased = null)
     {
         NPC closestNPC = null;
         float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
@@ -21,8 +21,7 @@ public static partial class Utility
         for (int k = 0; k < Main.maxNPCs; k++)
         {
             NPC target = Main.npc[k];
-
-            if (target.CanBeChasedBy())
+            if (target.CanBeChasedBy() && (canBeChased?.Invoke(target) ?? true))
             {
                 float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, position);
 

@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs
+namespace Macrocosm.Content.Debuffs.Weapons
 {
     public class HorusBurn : ModBuff
     {
@@ -25,7 +25,9 @@ namespace Macrocosm.Content.Debuffs
         public override void Update(NPC npc, ref int buffIndex)
         {
             npc.lifeRegen -= npc.defense;
-            DustEffects(npc);
+
+            if (!npc.dontTakeDamage)
+                DustEffects(npc);
         }
 
         private void DustEffects(Entity entity)

@@ -1,3 +1,4 @@
+using Macrocosm.Content.Debuffs.Weapons;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -5,6 +6,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
@@ -17,6 +19,46 @@ namespace Macrocosm.Common.Utils
         public static void ScaleHealthBy(this NPC npc, float factor, float balance, float bossAdjustment)
         {
             npc.lifeMax = (int)Math.Ceiling(npc.lifeMax * factor * balance * bossAdjustment);
+        }
+
+        public static void ApplyImmunity(this NPC npc, params int[] buffIds) => ApplyImmunity(npc.type, buffIds);
+        public static void ApplyImmunity(int type, params int[] buffIds)
+        {
+            foreach (int buff in buffIds)
+            {
+                NPCID.Sets.SpecificDebuffImmunity[type][buff] = true;
+            }
+        }
+
+        public static void AddBuff<T>(this NPC npc, int time, bool quiet = false) where T : ModBuff
+        {
+            npc.AddBuff(ModContent.BuffType<T>(), time, quiet);
+        }
+
+        public static void RemoveBuff<T>(this NPC npc) where T : ModBuff
+        {
+            int idx = npc.FindBuffIndex(ModContent.BuffType<T>());
+            if (idx > 0) npc.DelBuff(idx);
+        }
+
+        public static void ClearBuffs(this NPC npc)
+        {
+            for (int i = 0; i < npc.buffType.Length; i++)
+            {
+                int type = npc.buffType[i];
+                if (!Main.debuff[type])
+                    npc.DelBuff(i);
+            }
+        }
+
+        public static void ClearDebuffs(this NPC npc)
+        {
+            for (int i = 0; i < npc.buffType.Length; i++)
+            {
+                int type = npc.buffType[i];
+                if (Main.debuff[type])
+                    npc.DelBuff(i);
+            }
         }
 
         public static bool SummonBossDirectlyWithMessage(Vector2 targetPosition, int type, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, int target = 255, SoundStyle? sound = null)
