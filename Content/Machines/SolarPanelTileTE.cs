@@ -13,11 +13,12 @@ namespace Macrocosm.Content.Machines
     {
         public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelTile>();
 
+        public override bool PoweredOn => Main.dayTime;
         public override bool CanCluster => true;
 
         public override void MachineUpdate()
         {
-            MaxGeneratedPower = 0.083f * ClusterSize;
+            MaxGeneratedPower = 0.1f * ClusterSize;
             GeneratedPower = PoweredOn ? MaxGeneratedPower : 0;
         }
     }

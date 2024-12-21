@@ -1,13 +1,16 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.Storage;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.PortableExecutable;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.IO;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ObjectData;
@@ -39,11 +42,21 @@ namespace Macrocosm.Common.Systems.Power
         public virtual void OnTurnedOn(bool automatic) { }
         public virtual void OnTurnedOff(bool automatic) { }
 
+        public void PrintPowerInfo()
+        {
+            string powerInfo = GetPowerInfo();
+            if (CanCluster && Cluster != null && !IsClusterOrigin && ByPosition.TryGetValue(ClusterOrigin, out var clusterOrigin) && clusterOrigin is MachineTE machine)
+                powerInfo = machine.GetPowerInfo();
+
+            Main.NewText($"{Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0))} - {powerInfo}", DisplayColor);
+        }
+
         public virtual string GetPowerInfo() => "";
 
         /// <summary> Draw the power info text above the machine </summary>
         /// <param name="basePosition"> The top left in world coordinates </param>
         public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) { }
+        public virtual void DrawClusterPowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) => DrawMachinePowerInfo(spriteBatch, basePosition, lightColor);
 
         /// <summary>
         /// Used to toggle this machine.
