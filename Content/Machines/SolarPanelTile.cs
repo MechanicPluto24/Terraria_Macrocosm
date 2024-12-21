@@ -18,18 +18,10 @@ namespace Macrocosm.Content.Machines
 
         public override void SetStaticDefaults()
         {
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
-            TileObjectData.newTile.Width = 1;
-            TileObjectData.newTile.Height = 1;
-            TileObjectData.newTile.Origin = new Point16(0, 0);
-            
-            Main.tileFrameImportant[Type] = true;
             Main.tileSolid[Type] = true;
-            Main.tileBlockLight[Type] = false;
+            Main.tileBlockLight[Type] = true;
+
             DustType = ModContent.DustType<IndustrialPlatingDust>();
-            TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(100, 100, 200), CreateMapEntryName());
         }

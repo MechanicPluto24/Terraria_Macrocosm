@@ -84,6 +84,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void PreGlobalUpdate()
         {
+            BuildClusters();
             BuildCircuits();
         }
 
@@ -99,8 +100,11 @@ namespace Macrocosm.Common.Systems.Power
                 //    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
             }
 
-            MachineUpdate();
-            UpdatePowerState();
+            if (!InactiveInCluster)
+            {
+                MachineUpdate();
+                UpdatePowerState();
+            }
         }
 
         public override void PostGlobalUpdate()
@@ -137,6 +141,17 @@ namespace Macrocosm.Common.Systems.Power
 
             int placedEntity = Place(x, y);
             return placedEntity;
+        }
+
+        public void BlockPlacement(int i, int j)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                NetMessage.SendTileSquare(Main.myPlayer, i, j, 1, 1);
+                NetMessage.SendData(MessageID.TileEntityPlacement, number: i, number2: j, number3: Type);
+            }
+
+            Place(i, j);
         }
 
         public override void OnNetPlace()

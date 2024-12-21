@@ -41,6 +41,9 @@ namespace Macrocosm.Common.Utils
         /// <param name="j">The tile Y-coordinate</param>
         public static Point16 GetMultitileTopLeft(int i, int j)
         {
+            if (!WorldGen.InWorld(i, j))
+                return new Point16(0, 0);
+
             Tile tile = Main.tile[i, j];
 
             int frameX = 0;

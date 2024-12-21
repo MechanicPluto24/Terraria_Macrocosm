@@ -33,6 +33,9 @@ namespace Macrocosm.Common.Config
         public UpdateRate CircuitSolveUpdateRate { get; set; }
 
         [DefaultValue(UpdateRate.Realtime)]
+        public UpdateRate ClusterFindUpdateRate { get; set; }
+
+        [DefaultValue(UpdateRate.Realtime)]
         public UpdateRate RoomPressureUpdateRate { get; set; }
 
         public override void OnChanged()

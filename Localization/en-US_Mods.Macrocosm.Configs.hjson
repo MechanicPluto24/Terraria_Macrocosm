@@ -77,6 +77,11 @@ ServerConfig: {
 		Label: Room Pressure Update Frequency
 		Tooltip: ""
 	}
+
+	ClusterFindUpdateRate: {
+		Label: Cluster Find Update Rate
+		Tooltip: ""
+	}
 }
 
 UnitSystemType: {

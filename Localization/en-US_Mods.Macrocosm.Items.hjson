@@ -2751,3 +2751,8 @@ GeigerMuller: {
 	DisplayName: Geiger Muller
 	Tooltip: ""
 }
+
+SolarPanelTile: {
+	DisplayName: Solar Panel Tile
+	Tooltip: ""
+}
