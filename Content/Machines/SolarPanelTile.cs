@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Machines
         public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
-            Main.tileBlockLight[Type] = true;
+            Main.tileBlockLight[Type] = false;
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 

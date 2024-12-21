@@ -49,7 +49,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
-            if(Width == 1 && Height == 1)
+            if (Width == 1 && Height == 1 && !effectOnly)
                 MachineTE.Kill(i, j);
         }
 
@@ -59,13 +59,17 @@ namespace Macrocosm.Common.Systems.Power
                 MachineTE.Kill(i, j);
         }
 
+        // Runs for "block" tiles that function as machines, not multitiles
         public override void PlaceInWorld(int i, int j, Item item)
         {
-            // Runs for "block" tiles (not multitiles)
-            if (TileObjectData.GetTileData(Main.tile[i, j]) is null)
+            if (TileObjectData.GetTileData(Main.tile[i, j]) is null && Width == 1 && Height == 1)
             {
                 MachineTE.BlockPlacement(i, j);
             }
         }
+
+        // PlaceInWorld is NOT called on tile swap. 
+        // As a temporary fix, tile swap is disabled entirely for machines.
+        public override bool CanReplace(int i, int j, int tileTypeBeingPlaced) => false;
     }
 }

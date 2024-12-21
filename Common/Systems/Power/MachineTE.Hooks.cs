@@ -34,8 +34,18 @@ namespace Macrocosm.Common.Systems.Power
 
             foreach (var kvp in ByID)
             {
-                if (kvp.Value is MachineTE machine && !machine.InactiveInCluster)
-                    machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
+                if (kvp.Value is MachineTE machine)
+                {
+                    if (machine.CanCluster)
+                    {
+                        if (machine.Cluster != null && machine.IsClusterOrigin)
+                            machine.DrawClusterPowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
+                    }
+                    else
+                    {
+                        machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
+                    }
+                }
             }
         }
     }

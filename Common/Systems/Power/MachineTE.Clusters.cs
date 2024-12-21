@@ -13,12 +13,14 @@ namespace Macrocosm.Common.Systems.Power
         public virtual bool CanCluster => false;
 
         public List<Point16> Cluster { get; private set; } = null;
-        public int ClusterSize { get; private set; } = 1;
-        public bool IsClusterOrigin { get; private set; } = false;
+        public Point16 ClusterOrigin { get; private set; }
+
+        public int ClusterSize => Cluster != null ? Cluster.Count : 1;    
+        public bool IsClusterOrigin => Position == ClusterOrigin;
         public bool InactiveInCluster => Cluster != null && !IsClusterOrigin;
 
-        private static int clusterTimer = 0;
 
+        private static int clusterTimer = 0;
         private static void BuildClusters()
         {
             if (clusterTimer++ >= (int)ServerConfig.Instance.ClusterFindUpdateRate)
@@ -53,8 +55,7 @@ namespace Macrocosm.Common.Systems.Power
                         if (ByPosition.TryGetValue(position, out var other) && other is MachineTE otherMachine && machine.Type == otherMachine.Type)
                         {
                             otherMachine.Cluster = cluster;
-                            otherMachine.ClusterSize = cluster.Count;
-                            otherMachine.IsClusterOrigin = position == clusterOrigin;
+                            otherMachine.ClusterOrigin = clusterOrigin;
                         }
                     }
                 }
