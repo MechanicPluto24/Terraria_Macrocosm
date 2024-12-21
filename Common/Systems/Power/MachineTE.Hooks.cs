@@ -30,11 +30,11 @@ namespace Macrocosm.Common.Systems.Power
             orig(self);
 
             if (Main.LocalPlayer.CurrentItem().type != ModContent.ItemType<CircuitProbe>())
-                return;
+               return;
 
             foreach (var kvp in ByID)
             {
-                if (kvp.Value is MachineTE machine)
+                if (kvp.Value is MachineTE machine && !machine.InactiveInCluster)
                     machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
             }
         }

@@ -257,7 +257,7 @@ namespace Macrocosm.Common.Systems.Power
             {
                 foreach (var te in ByID.Values)
                 {
-                    if (te is MachineTE machine)
+                    if (te is MachineTE machine && !machine.InactiveInCluster)
                     {
                         if (machine.wireCircuit != null)
                             continue;
@@ -318,7 +318,7 @@ namespace Macrocosm.Common.Systems.Power
         {
             foreach (var te in ByID.Values)
             {
-                if (te is MachineTE machine)
+                if (te is MachineTE machine && !machine.InactiveInCluster)
                 {
                     if (machine.conveyorCircuit != null)
                     {
@@ -424,16 +424,19 @@ namespace Macrocosm.Common.Systems.Power
 
         protected virtual IEnumerable<Point16> GetConnectionPositions()
         {
-            int startX = Position.X;
-            int startY = Position.Y;
-            int width = MachineTile.Width;
-            int height = MachineTile.Height;
-
-            for (int x = startX; x < startX + width; x++)
+            if(CanCluster && Cluster != null)
             {
-                for (int y = startY; y < startY + height; y++)
+                foreach (var position in Cluster)
+                    yield return position;
+            }
+            else
+            {
+                for (int x = Position.X; x < Position.X + MachineTile.Width; x++)
                 {
-                    yield return new Point16(x, y);
+                    for (int y = Position.Y; y < Position.Y + MachineTile.Height; y++)
+                    {
+                        yield return new Point16(x, y);
+                    }
                 }
             }
         }

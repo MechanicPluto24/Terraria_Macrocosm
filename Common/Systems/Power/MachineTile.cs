@@ -4,6 +4,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -56,6 +57,15 @@ namespace Macrocosm.Common.Systems.Power
         {
             if (Width > 1 || Height > 1)
                 MachineTE.Kill(i, j);
+        }
+
+        public override void PlaceInWorld(int i, int j, Item item)
+        {
+            // Runs for "block" tiles (not multitiles)
+            if (TileObjectData.GetTileData(Main.tile[i, j]) is null)
+            {
+                MachineTE.BlockPlacement(i, j);
+            }
         }
     }
 }
