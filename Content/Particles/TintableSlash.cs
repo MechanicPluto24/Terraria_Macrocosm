@@ -40,6 +40,7 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
+            Velocity *= 0.8f;
             Lighting.AddLight(Position, Color.ToVector3() * 0.6f);
         }
 

@@ -1,4 +1,5 @@
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
 using Terraria;
@@ -13,6 +14,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
+
+            NPC.ApplyImmunity
+            (
+                BuffID.Bleeding,
+                BuffID.BloodButcherer,
+                BuffID.Poisoned,
+                BuffID.Venom
+            );
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;

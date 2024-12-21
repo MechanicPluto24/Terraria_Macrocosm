@@ -407,7 +407,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             // For the meteors
             NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type] = true;
 
-            NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
+            NPC.ApplyImmunity
+            (
+                BuffID.Bleeding,
+                BuffID.BloodButcherer,
+                BuffID.Poisoned,
+                BuffID.Venom,
+                BuffID.Confused
+            );
 
             NPCID.Sets.NPCBestiaryDrawModifiers bestiaryData = new()
             {

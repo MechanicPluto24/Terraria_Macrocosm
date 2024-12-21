@@ -60,6 +60,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
         }
 
+        public virtual void Returning()
+        {
+            Player player = Main.player[Projectile.owner];
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Vector2 direction = Projectile.DirectionTo(player.Center).SafeNormalize(Vector2.Zero);
+            Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed, 0.1f);
+        }
+
+
         public virtual void OnReturnToPlayer()
         {
         }
@@ -181,12 +190,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
                     if (Main.myPlayer == Projectile.owner)
                     {
-                        Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-                        Vector2 direction = Projectile.DirectionTo(player.Center).SafeNormalize(Vector2.Zero);
-                        Rectangle projectileHitbox = new((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
-                        Projectile.velocity = Projectile.velocity.MoveTowards(direction * returnSpeed, 6f);
-                        Rectangle playerHitbox = new((int)player.position.X, (int)player.position.Y, player.width, player.height);
+                        Returning();
 
+                        Rectangle projectileHitbox = new((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
+                        Rectangle playerHitbox = new((int)player.position.X, (int)player.position.Y, player.width, player.height);
                         if (projectileHitbox.Intersects(playerHitbox))
                         {
                             OnReturnToPlayer();
