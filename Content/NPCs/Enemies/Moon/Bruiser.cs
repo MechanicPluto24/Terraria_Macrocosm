@@ -1,4 +1,5 @@
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
 using System;
@@ -36,6 +37,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Main.npcFrameCount[Type] = 32;
 
             SpawnModBiomes = [ModContent.GetInstance<DemonSunBiome>().Type];
+
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;

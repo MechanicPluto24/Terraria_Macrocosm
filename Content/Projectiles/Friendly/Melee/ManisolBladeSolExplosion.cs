@@ -13,6 +13,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ManisolBladeSolExplosion : ModProjectile
     {
+        public ref float Strength => ref Projectile.ai[0];
+
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 5;
@@ -43,12 +45,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(ModContent.BuffType<Melting>(), 260, false);
+            target.AddBuff(ModContent.BuffType<Melting>(), (int)(180 * Strength), false);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            target.AddBuff(ModContent.BuffType<Melting>(), 260, false);
+            target.AddBuff(ModContent.BuffType<Melting>(), (int)(180 * Strength), false);
         }
 
         public override void OnKill(int timeLeft)
@@ -58,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
 
-            for (int i = 0; i < Main.rand.Next(250, 280); i++)
+            for (int i = 0; i < (int)(Main.rand.Next(250, 280) * Strength); i++)
             {
                 int dist = 20;
                 Vector2 dustPosition = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
@@ -68,7 +70,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 dust.noGravity = true;
             }
 
-            int flameParticleCount = Main.rand.Next(10, 20);
+            int flameParticleCount = (int)(Main.rand.Next(10, 20) * Strength);
             for (int i = 0; i < flameParticleCount; i++)
             {
                 int dist = 40;
@@ -82,7 +84,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             {
                 p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
                 p.Scale = new(0.4f);
-                p.ScaleVelocity = new(0.12f);
+                p.ScaleVelocity = new(0.12f * Strength);
                 p.Color = new Color(255, 164, 57);
             });
 
@@ -100,7 +102,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 p.Position = Projectile.Center;
                 p.Color = Color.White.WithAlpha(127);
                 p.Scale = new(0.2f);
-                p.ScaleVelocity = new(0.12f);
+                p.ScaleVelocity = new(0.12f * Strength);
                 p.FrameSpeed = 3;
             });
         }

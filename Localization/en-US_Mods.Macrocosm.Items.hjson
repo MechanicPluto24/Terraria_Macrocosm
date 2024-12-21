@@ -288,48 +288,38 @@ Silicon: {
 }
 
 MeteoricChunk: {
-	DisplayName: Meteoric Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Lunar Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 NebulaChunk: {
-	DisplayName: Nebula Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Nebula Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 SolarChunk: {
-	DisplayName: Solar Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Solar Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 StardustChunk: {
-	DisplayName: Stardust Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Stardust Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 VortexChunk: {
-	DisplayName: Vortex Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Vortex Meteoric Chunk
+	Tooltip: <right> to smash open!
+}
+
+IronChunk: {
+	DisplayName: Ferrous Meteoric Chunk
+	Tooltip: <right> to smash open!
+}
+
+TitaniumChunk: {
+	DisplayName: Ilmenite Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 SpaceShuttle: {
@@ -2739,5 +2729,15 @@ Conveyor: {
 
 KeroseneGenerator: {
 	DisplayName: Kerosene Generator
+	Tooltip: ""
+}
+
+GeigerMuller: {
+	DisplayName: Geiger Muller
+	Tooltip: ""
+}
+
+Flag: {
+	DisplayName: Flag
 	Tooltip: ""
 }
