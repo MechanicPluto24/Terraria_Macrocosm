@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SubworldLibrary;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using Terraria;
@@ -69,42 +70,6 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> The loading screen. </summary>
         public static LoadingScreen LoadingScreen { get; set; }
 
-        /// <summary> Travel to the specified subworld, using the specified rocket. </summary>
-        /// <param name="targetWorldID"> The world to travel to, "Earth" for returning to the main world. </param>
-        /// <param name="rocket"> The spacecraft used for travel, if applicable. Will display in the loading screen. </param>
-        /// <param name="trigger"> Value set to the <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/>. Normally true. </param>
-        /// <returns> Whether world travel has been successful </returns>
-        public static bool Travel(string targetWorldID, Rocket rocket = null, bool trigger = true)
-        {
-            if (Main.netMode != NetmodeID.Server)
-            {
-                if (!trigger)
-                    rocket = null;
-
-                SetupLoadingScreen(rocket, targetWorldID);
-                TitleCard.SetTargetWorld(targetWorldID);
-
-                Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel = trigger;
-                Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().SetReturnSubworld(targetWorldID);
-
-                if (targetWorldID == Earth.ID)
-                {
-                    SubworldSystem.Exit();
-                    return true;
-                }
-
-                bool entered = SubworldSystem.Enter(targetWorldID);
-                if (!entered)
-                    WorldTravelFailure("Error: Failed entering target subworld: " + targetWorldID + ", staying on " + CurrentID);
-
-                return entered;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
         public static void SetupLoadingScreen(Rocket rocket, string targetWorld)
         {
             if (rocket is not null)
@@ -151,34 +116,86 @@ namespace Macrocosm.Common.Subworlds
             LoadingScreen?.Setup();
         }
 
-        // Called if travel to the target subworld fails
-        public static void WorldTravelFailure(string message)
-        {
-            Utility.Chat(message, Color.Red);
-            Macrocosm.Instance.Logger.Error(message);
-        }
-
         public class Hacks
         {
-            public static Subworld SubworldSystem_Cache()
+            private static FieldInfo subworldSystem_current;
+            private static FieldInfo subworldSystem_cache;
+
+            private static MethodInfo subworldSystem_GetPacketHeader;
+            private static FieldInfo subworldSystem_links;
+            private static MethodInfo subserverLink_Send;
+
+            public static void Initialize()
             {
-                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
-                return (Subworld)field.GetValue(null);
+                if (subworldSystem_current == null)
+                {
+                    throw new Exception("Failed to find SubworldSystem.current field.");
+                }
             }
 
-            public static string SubworldSystem_CacheID() => SubworldSystem_Cache().FullName;
+            public static Subworld SubworldSystem_GetCurrent()
+            {
+                subworldSystem_current ??= typeof(SubworldSystem).GetField("current", BindingFlags.Static | BindingFlags.NonPublic);
+                return (Subworld)subworldSystem_current.GetValue(null);
+            }
+            public static void SubworldSystem_NullCurrent()
+            {
+                subworldSystem_current ??= typeof(SubworldSystem).GetField("current", BindingFlags.Static | BindingFlags.NonPublic);
+                subworldSystem_current.SetValue(null, null);
+            }
+
+            public static void SubworldSystem_SetCurrent(Subworld value)
+            {
+                subworldSystem_current ??= typeof(SubworldSystem).GetField("current", BindingFlags.Static | BindingFlags.NonPublic);
+                subworldSystem_current.SetValue(null, value);
+            }
+
+            public static Subworld SubworldSystem_GetCache()
+            {
+                subworldSystem_cache ??= typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
+                return (Subworld)subworldSystem_cache.GetValue(null);
+            }
 
             public static void SubworldSystem_NullCache()
             {
-                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
-                field.SetValue(null, null);
+                subworldSystem_cache ??= typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
+                subworldSystem_cache.SetValue(null, null);
             }
 
-            public static bool SubworldSystem_CacheIsNull()
+            public static string SubworldSystem_CacheID() => SubworldSystem_GetCache().FullName;
+            public static bool SubworldSystem_CacheIsNull() => SubworldSystem_GetCache() == null;
+
+
+            /// <summary>
+            /// Sends a packet from the specified mod directly to all subservers, except the specified one.
+            /// </summary>
+            /// <param name="mod">The mod sending the packet.</param>
+            /// <param name="data">The data to send.</param>
+            /// <param name="exceptSubserverIndex">The subserver ID to exclude.</param>
+            public static void SubworldSystem_SendToAllSubserversExcept(Mod mod, byte[] data, int exceptSubserverIndex)
             {
-                FieldInfo field = typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
-                return field.GetValue(null) is null;
+                subworldSystem_GetPacketHeader ??= typeof(SubworldSystem).GetMethod("GetPacketHeader", BindingFlags.Static | BindingFlags.NonPublic);
+                subworldSystem_links ??= typeof(SubworldSystem).GetField("links", BindingFlags.Static | BindingFlags.NonPublic);
+
+                if (subworldSystem_links.GetValue(null) is not IDictionary links)
+                    throw new Exception("Failed to retrieve SubworldSystem.links.");
+
+                int headerLength = (ModNet.NetModCount < 256) ? 5 : 6;
+                byte[] packetHeader = (byte[])subworldSystem_GetPacketHeader.Invoke(null, [data.Length + headerLength, mod.NetID]);
+                Buffer.BlockCopy(data, 0, packetHeader, headerLength, data.Length);
+
+                foreach (DictionaryEntry entry in links)
+                {
+                    int subserverID = (int)entry.Key;
+                    if (subserverID != exceptSubserverIndex)
+                    {
+                        var subserverLink = entry.Value;
+                        subserverLink_Send ??= subserverLink.GetType().GetMethod("Send", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                        subserverLink_Send.Invoke(subserverLink, [packetHeader]);
+                    }
+                }
             }
+
         }
     }
 }

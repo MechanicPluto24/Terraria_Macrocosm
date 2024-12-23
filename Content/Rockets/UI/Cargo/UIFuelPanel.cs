@@ -256,7 +256,8 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                     Main.LocalPlayer.QuickSpawnItem(new EntitySource_OverfullInventory(Main.LocalPlayer), emptyType, canistersUsed);
 
                 RefreshItemSlot();
-                Rocket.NetSync();
+
+                Rocket.SyncCommonData();
                 Rocket.Inventory.SyncEverything();
             }
         }

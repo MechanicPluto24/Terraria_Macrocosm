@@ -14,6 +14,8 @@ namespace Macrocosm.Common.DataStructures
         public readonly int Width = Width;
         public readonly int Height = Height;
 
+        public RawTexture() : this([Color.Transparent], 1, 1) { }
+
         public Color this[int index] => Data[index];
         public Color this[int x, int y] => Data[y * Width + x];
 
@@ -35,6 +37,9 @@ namespace Macrocosm.Common.DataStructures
         public static RawTexture FromAsset(Asset<Texture2D> asset) => FromTexture2D(asset.Value);
         public static RawTexture FromTexture2D(Texture2D texture)
         {
+            if(texture == null) 
+                return new();
+
             Color[] data = new Color[texture.Width * texture.Height];
             Utility.InvokeOnMainThread(() => texture.GetData(0, texture.Bounds, data, 0, texture.Width * texture.Height));
             return new(data, texture.Width, texture.Height);
