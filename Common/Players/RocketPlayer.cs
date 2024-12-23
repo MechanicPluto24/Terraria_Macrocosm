@@ -13,6 +13,7 @@ using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Players
 {
@@ -107,9 +108,10 @@ namespace Macrocosm.Common.Players
 
                 if (Player.whoAmI == Main.myPlayer)
                 {
-                    cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
+                    if (cameraModifier is not null)
+                        cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
 
-                    if (!rocket.Bounds.Contains(Player.Center.ToPoint()) || !rocket.ActiveInCurrentWorld)
+                    if (!rocket.Bounds.Contains(Player.Center.ToPoint()))
                         DisembarkFromRocket();
 
                     bool escapePressed = Main.keyState.KeyPressed(Keys.Escape) && !Main.oldKeyState.KeyPressed(Keys.Escape);
@@ -141,6 +143,12 @@ namespace Macrocosm.Common.Players
                 if (cameraModifier is not null)
                     cameraModifier.ReturnToNormalPosition = true;
             }
+        }
+
+        private void PostLoad()
+        {
+            if (InRocket)
+                EmbarkPlayerInRocket(RocketID);
         }
 
         public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
@@ -231,6 +239,35 @@ namespace Macrocosm.Common.Players
 
             if (Main.netMode == NetmodeID.Server)
                 rocketPlayer.SyncPlayer(-1, whoAmI, false);
+        }
+
+        public override void SaveData(TagCompound tag)
+        {
+            if (InRocket) 
+                tag[nameof(InRocket)] = InRocket;
+
+            if (IsCommander)  
+                tag[nameof(IsCommander)] = IsCommander;
+
+            if (RocketID >= 0) 
+                tag[nameof(RocketID)] = RocketID;
+
+            if (!string.IsNullOrEmpty(TargetWorld)) 
+                tag[nameof(TargetWorld)] = TargetWorld;
+        }
+
+        public override void LoadData(TagCompound tag)
+        {
+            InRocket = tag.ContainsKey(nameof(InRocket));
+            IsCommander = tag.ContainsKey(nameof(IsCommander));
+
+            if (tag.ContainsKey(nameof(RocketID)))
+                RocketID = tag.GetInt(nameof(RocketID));
+
+            if (tag.ContainsKey(nameof(TargetWorld)))
+                TargetWorld = tag.GetString(nameof(TargetWorld));
+
+            PostLoad();
         }
 
         private void On_Main_RefreshPlayerDrawOrder(On_Main.orig_RefreshPlayerDrawOrder orig, Main self)

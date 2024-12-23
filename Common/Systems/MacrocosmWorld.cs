@@ -210,20 +210,5 @@ namespace Macrocosm.Common.Systems
         }
 
         #endregion
-
-        // Send current main world GUID and ask player to travel to last known subworld  
-        public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
-        {
-            if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
-            {
-                ModPacket packet = Mod.GetPacket();
-                packet.Write((byte)MessageType.LastSubworldCheck);
-                Guid guid = MacrocosmSubworld.MainWorldUniqueID;
-                packet.Write(guid.ToString());
-                packet.Send(remoteClient);
-            }
-
-            return false;
-        }
     }
 }

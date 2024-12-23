@@ -135,6 +135,9 @@ namespace Macrocosm.Common.Players
 
         private void UpdateEffects()
         {
+            if (Main.dedServ)
+                return;
+
             if (RadiationNoiseIntensity >= 0.01f)
             {
                 if (!Filters.Scene["Macrocosm:RadiationNoise"].IsActive())

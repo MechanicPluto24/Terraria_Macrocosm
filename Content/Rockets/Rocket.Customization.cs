@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Rockets
             }
 
             if (sync)
-                SendCustomizationData();
+                SyncCustomizationData();
 
             if (reset)
                 ResetRenderTarget();
@@ -67,7 +67,7 @@ namespace Macrocosm.Content.Rockets
                 moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
             }
 
-            SendCustomizationData();
+            SyncCustomizationData();
         }
 
         public string GetCustomizationDataToJSON()

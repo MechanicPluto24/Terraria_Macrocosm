@@ -32,9 +32,9 @@ namespace Macrocosm.Content.Items.Dev
             if (player.whoAmI == Main.myPlayer)
             {
                 if (!SubworldSystem.AnyActive<Macrocosm>())
-                    MacrocosmSubworld.Travel(Moon.Instance.ID);
+                    SubworldTravelPlayer.Travel(Moon.Instance.ID);
                 else
-                    MacrocosmSubworld.Travel(Earth.ID);
+                    SubworldTravelPlayer.Travel(Earth.ID);
             }
 
             return true;

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Subworlds;
+using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System.IO;
 using Terraria;
 using Terraria.Chat;
@@ -9,8 +11,74 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Netcode
 {
-    public class NetHelper
+    public static class NetHelper
     {
+        /// <summary>
+        /// Gets a network identifier of the current server (main server and subservers)
+        /// <br/> Applies to both the server itself and clients currently on this server
+        /// </summary>
+        /// <returns>
+        /// <br/> -1 for the main server
+        /// <br/> 0+ for subservers
+        /// </returns>
+        public static int GetServerIndex()
+        {
+            if (!SubworldSystem.AnyActive())
+                return -1;
+
+            return SubworldSystem.GetIndex(SubworldSystem.Current.FullName);
+        }
+
+        /// <summary>
+        /// Send a <see cref="ModPacket"/> to other servers running.
+        /// <br/> If on the main server (not a subworld), the packet is sent to all the SubworldLibrary subservers, except <paramref name="ignoreSubserver"/>
+        /// <br/> If on a subserver, the packet is sent to the main server. The main server has the responsibility to relay it to the subservers, except the original sender.
+        /// </summary>
+        /// <param name="mod"> The mod the packet belongs to </param>
+        /// <param name="packet"> The packet to relay </param>
+        /// <param name="ignoreSubserver"> The subserver to ignore, if applicable </param>
+        public static void RelayToServers(this ModPacket packet, Mod mod, int ignoreSubserver = -1)
+        {
+            if (Main.netMode != NetmodeID.Server)
+                return;
+
+            byte[] data = packet.GetPayload();
+
+            if (SubworldSystem.AnyActive())
+                SubworldSystem.SendToMainServer(mod, data);
+            else if (ignoreSubserver == -1)
+                SubworldSystem.SendToAllSubservers(mod, data);
+            else
+                MacrocosmSubworld.Hacks.SubworldSystem_SendToAllSubserversExcept(mod, data, ignoreSubserver);
+        }
+
+        /// <summary>
+        /// This method converts a mod packet to a Subworld-style payload (byte[]), trimming the entire ModPacket header.
+        /// <br/> SubworldLibrary handles the packet header on its own, requires only the custom payload as a byte[].
+        /// <br/> ModPacket structure:
+        ///  <br/> - Length (ushort, 2 bytes, before <see cref="ModPacket.Send(int, int)"/>, it's a placeholder (ushort)0)
+        ///  <br/> - <see cref="MessageID.ModPacket"/> (250, 1 byte)
+        ///  <br/> - <see cref="Mod.NetID"/> (short, 2 bytes, if <see cref="ModNet.NetModCount"/> > 255, else 1 byte)
+        ///  <br/> - <b>The payload</b> 
+        /// </summary>
+        /// <returns> The payload as a byte array </returns>
+        public static byte[] GetPayload(this ModPacket packet)
+        {
+            // Length + MessageID + Mod.NetID
+            int headerSize = sizeof(ushort) + sizeof(byte) + (ModNet.NetModCount > 255 ? sizeof(short) : sizeof(byte));
+
+            int payloadSize = (int)packet.BaseStream.Length - headerSize;
+
+            if (payloadSize <= 0)
+                return [];
+
+            byte[] trimmedBuffer = new byte[payloadSize];
+            packet.BaseStream.Seek(headerSize, SeekOrigin.Begin);
+            packet.BaseStream.Read(trimmedBuffer, 0, payloadSize);
+
+            return trimmedBuffer;
+        }
+
         public static void SpawnNPCFromClient(int netID, Vector2 position, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, Vector2 velocity = default, int target = 0, bool announce = false)
         {
             var packet = Macrocosm.Instance.GetPacket();
