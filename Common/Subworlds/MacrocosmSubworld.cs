@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Subworlds
         public override bool NormalUpdates => false;
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
-        public override int ReturnDestination => -1;
+        public override int ReturnDestination => SubworldTravelPlayer.GetReturnDestination();
         #endregion
 
         #region Environment parameters

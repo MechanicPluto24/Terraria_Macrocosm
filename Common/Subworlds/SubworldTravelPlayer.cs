@@ -44,11 +44,6 @@ namespace Macrocosm.Common.Subworlds
 
         private Guid currentMainWorldUniqueId = Guid.Empty;
 
-        public override void ResetEffects()
-        {
-            triggeredSubworldTravel = false;
-        }
-
         public bool HasVisitedSubworld(string subworldId) => visitedSubworlds.Contains(subworldId);
 
         public void SetReturnSubworld(string subworldId)
@@ -61,13 +56,20 @@ namespace Macrocosm.Common.Subworlds
 
         public bool TryGetReturnSubworld(Guid worldUniqueId, out string subworldId) => lastSubworldIdByWorldUniqueId.TryGetValue(worldUniqueId, out subworldId);
 
-        internal void OnExitSubworld()
+
+        public static int GetReturnDestination()
         {
-            if (!triggeredSubworldTravel && Main.netMode == NetmodeID.SinglePlayer)
-            {
-                MacrocosmSubworld.SetupLoadingScreen(null, MacrocosmSubworld.Hacks.SubworldSystem_CacheID());
-                exitedBySaveAndExit = true;
-            }
+            var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
+
+            if (!player.triggeredSubworldTravel && Main.netMode == NetmodeID.MultiplayerClient)
+                return int.MinValue;
+
+            return -1;
+        }
+
+        public override void ResetEffects()
+        {
+            triggeredSubworldTravel = false;
         }
 
         public override void PreUpdate()
@@ -83,7 +85,7 @@ namespace Macrocosm.Common.Subworlds
             {
                 if (!triggeredSubworldTravel)
                 {
-                    if (!SubworldSystem.AnyActive() && Main.netMode == NetmodeID.SinglePlayer)
+                    if (!SubworldSystem.AnyActive<Macrocosm>() && Main.netMode == NetmodeID.SinglePlayer)
                     {
                         currentMainWorldUniqueId = MacrocosmSubworld.MainWorldUniqueID;
                         if (TryGetReturnSubworld(currentMainWorldUniqueId, out string subworldId) && subworldId != Earth.ID)
@@ -116,6 +118,15 @@ namespace Macrocosm.Common.Subworlds
         {
             Main.BlackFadeIn = 255;
             enteredWorld = true;
+        }
+
+        internal void OnExitSubworld()
+        {
+            if (!triggeredSubworldTravel && Main.netMode == NetmodeID.SinglePlayer)
+            {
+                MacrocosmSubworld.SetupLoadingScreen(null, MacrocosmSubworld.Hacks.SubworldSystem_CacheID());
+                exitedBySaveAndExit = true;
+            }
         }
 
         /// <summary> Travel to the specified subworld, using the specified rocket. </summary>
@@ -200,18 +211,18 @@ namespace Macrocosm.Common.Subworlds
 
         public static void ReceiveLastSubworldCheck(BinaryReader reader, int whoAmI)
         {
-            var macrocosmPlayer = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
+            var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
             Guid mainWorldUniqueId = new(reader.ReadString());
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
                 return;
 
-            macrocosmPlayer.currentMainWorldUniqueId = mainWorldUniqueId;
+            player.currentMainWorldUniqueId = mainWorldUniqueId;
             if
             (
                 !SubworldSystem.AnyActive<Macrocosm>()
-                && !macrocosmPlayer.triggeredSubworldTravel
-                && macrocosmPlayer.lastSubworldIdByWorldUniqueId.TryGetValue(macrocosmPlayer.currentMainWorldUniqueId, out string lastSubworldId)
+                && !player.triggeredSubworldTravel
+                && player.lastSubworldIdByWorldUniqueId.TryGetValue(player.currentMainWorldUniqueId, out string lastSubworldId)
             )
             {
                 if (lastSubworldId is not Earth.ID)
