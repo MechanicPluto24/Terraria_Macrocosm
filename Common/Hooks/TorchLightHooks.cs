@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Global.Tiles;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Systems;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -27,7 +28,10 @@ namespace Macrocosm.Common.Hooks
 
         private static void RemoveDroppedItemLight(On_Item.orig_UpdateItem_VisualEffects orig, Item item)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type] && !ItemSets.AllowedTorches[item.type])
+            if (SubworldSystem.AnyActive<Macrocosm>()
+                && ItemID.Sets.Torches[item.type]
+                && !ItemSets.AllowedTorches[item.type]
+                && !RoomOxygenSystem.IsRoomPressurized(item.Center))
                 return;
 
             orig(item);
@@ -35,7 +39,10 @@ namespace Macrocosm.Common.Hooks
 
         private static bool DisableTorchHolding(On_Player.orig_CanVisuallyHoldItem orig, Player self, Item item)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type] && !ItemSets.AllowedTorches[item.type])
+            if (SubworldSystem.AnyActive<Macrocosm>()
+                && ItemID.Sets.Torches[item.type]
+                && !ItemSets.AllowedTorches[item.type]
+                && !RoomOxygenSystem.IsRoomPressurized(item.Center))
                 return false;
 
             return orig(self, item);
@@ -43,7 +50,10 @@ namespace Macrocosm.Common.Hooks
 
         private static void RemoveHeldLight(On_Player.orig_ItemCheck_EmitHeldItemLight orig, Player self, Item item)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && ItemID.Sets.Torches[item.type] && !ItemSets.AllowedTorches[item.type])
+            if (SubworldSystem.AnyActive<Macrocosm>()
+                && ItemID.Sets.Torches[item.type]
+                && !ItemSets.AllowedTorches[item.type]
+                && !RoomOxygenSystem.IsRoomPressurized(item.Center))
                 return;
 
             orig(self, item);
@@ -51,7 +61,9 @@ namespace Macrocosm.Common.Hooks
 
         private static int RemoveTorchDust(On_WorldGen.orig_KillTile_MakeTileDust orig, int i, int j, Tile tileCache)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && LightSourceGlobalTile.IsTileWithFlame(i, j, tileCache.TileType))
+            if (SubworldSystem.AnyActive<Macrocosm>()
+                && LightSourceGlobalTile.IsTileWithFlame(i, j, tileCache.TileType)
+                && !RoomOxygenSystem.IsRoomPressurized(i, j))
                 return -1;
 
             return orig(i, j, tileCache);

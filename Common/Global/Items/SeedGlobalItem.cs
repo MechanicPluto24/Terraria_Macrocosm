@@ -1,4 +1,5 @@
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Systems;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
@@ -10,7 +11,7 @@ namespace Macrocosm.Common.Global.Items
     {
         public override bool CanUseItem(Item item, Player player)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>()) // TODO: Add check, if airless environment
+            if (SubworldSystem.AnyActive<Macrocosm>() && RoomOxygenSystem.IsRoomPressurized(Player.tileTargetX, Player.tileTargetX)) 
             {
                 // Grass seeds - typically placed on dirt or mud
                 // Modded seeds might not add their grass seeds to this set!

@@ -1,13 +1,16 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.Storage;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.PortableExecutable;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.IO;
+using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ObjectData;
@@ -39,11 +42,21 @@ namespace Macrocosm.Common.Systems.Power
         public virtual void OnTurnedOn(bool automatic) { }
         public virtual void OnTurnedOff(bool automatic) { }
 
+        public void PrintPowerInfo()
+        {
+            string powerInfo = GetPowerInfo();
+            if (CanCluster && Cluster != null && !IsClusterOrigin && ByPosition.TryGetValue(ClusterOrigin, out var clusterOrigin) && clusterOrigin is MachineTE machine)
+                powerInfo = machine.GetPowerInfo();
+
+            Main.NewText($"{Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0))} - {powerInfo}", DisplayColor);
+        }
+
         public virtual string GetPowerInfo() => "";
 
         /// <summary> Draw the power info text above the machine </summary>
         /// <param name="basePosition"> The top left in world coordinates </param>
         public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) { }
+        public virtual void DrawClusterPowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) => DrawMachinePowerInfo(spriteBatch, basePosition, lightColor);
 
         /// <summary>
         /// Used to toggle this machine.
@@ -84,6 +97,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void PreGlobalUpdate()
         {
+            BuildClusters();
             BuildCircuits();
         }
 
@@ -99,8 +113,11 @@ namespace Macrocosm.Common.Systems.Power
                 //    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
             }
 
-            MachineUpdate();
-            UpdatePowerState();
+            if (!InactiveInCluster)
+            {
+                MachineUpdate();
+                UpdatePowerState();
+            }
         }
 
         public override void PostGlobalUpdate()
@@ -137,6 +154,17 @@ namespace Macrocosm.Common.Systems.Power
 
             int placedEntity = Place(x, y);
             return placedEntity;
+        }
+
+        public void BlockPlacement(int i, int j)
+        {
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+            {
+                NetMessage.SendTileSquare(Main.myPlayer, i, j, 1, 1);
+                NetMessage.SendData(MessageID.TileEntityPlacement, number: i, number2: j, number3: Type);
+            }
+
+            Place(i, j);
         }
 
         public override void OnNetPlace()

@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
+using Microsoft.Xna.Framework;
 using Terraria;
 
 namespace Macrocosm.Content.Subworlds
@@ -9,10 +10,13 @@ namespace Macrocosm.Content.Subworlds
     public static class Earth
     {
         public const string ID = "Macrocosm/Earth";
+
         public const double TimeRate = 1.0;
         public const double DayLength = Main.dayLength;
         public const double NightLength = Main.nightLength;
+
         public const float AtmosphericDensity = 1f;
+
         public const float GoreGravity = 0.2f;
         public const float NPCGravity = 0.3f;
         public const float GravityMultiplier = 1f;
@@ -21,31 +25,33 @@ namespace Macrocosm.Content.Subworlds
         public static WorldSize WorldSize { get; set; } = WorldSize.Medium;
         public static ChecklistConditionCollection LaunchConditions { get; } = [];
 
-        public static float GetAmbientTemperature()
+        public static float AmbientTemperature(Vector2 position)
         {
-            Player player = Main.LocalPlayer;
+            SceneData scene = new(position);
+            scene.Scan(position);
+
             float temperature;
 
-            if (player.ZoneUnderworldHeight)
+            if (scene.ZoneUnderworldHeight)
             {
                 temperature = 70f;
             }
-            else if (player.ZoneSnow)
+            else if (scene.ZoneSnow)
             {
-                if (player.ZoneRockLayerHeight || player.ZoneDirtLayerHeight)
+                if (scene.ZoneRockLayerHeight || scene.ZoneDirtLayerHeight)
                     temperature = -10f;
                 else
                     temperature = Utility.ScaleNoonToMidnight(-10, -2);
             }
-            else if (player.ZoneRockLayerHeight || player.ZoneDirtLayerHeight)
+            else if (scene.ZoneRockLayerHeight || scene.ZoneDirtLayerHeight)
             {
                 temperature = 20f;
             }
-            else if (player.ZoneDesert)
+            else if (scene.ZoneDesert)
             {
                 temperature = Utility.ScaleNoonToMidnight(25, 45);
             }
-            else if (player.ZoneJungle)
+            else if (scene.ZoneJungle)
             {
                 temperature = Utility.ScaleNoonToMidnight(30, 40);
             }

@@ -1,6 +1,11 @@
-﻿using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
@@ -25,7 +30,7 @@ namespace Macrocosm.Common.Hooks
                 foreach (int liquidType in evaporatingLiquidTypes)
                 {
                     Tile tile = Main.tile[self.x, self.y];
-                    if (tile.LiquidType == liquidType && tile.LiquidAmount > 0)
+                    if (tile.LiquidType == liquidType && tile.LiquidAmount > 0 && !RoomOxygenSystem.IsRoomPressurized(self.x, self.y))
                     {
                         byte amount = 2;
                         if (tile.LiquidAmount < amount)

@@ -180,7 +180,7 @@ namespace Macrocosm.Content.Machines
                 {
                     if (Main.tileFrame[Type] % 2 == 1)
                     {
-                        float atmoDensity = (0.3f + 0.7f * MacrocosmSubworld.CurrentAtmosphericDensity);
+                        float atmoDensity = (0.3f + 0.7f * MacrocosmSubworld.GetAtmosphericDensity(new Vector2(i, j) * 16f));
                         int count = atmoDensity < 1f ? 1 : 2;
                         for (int s = 0; s < count; s++)
                         {
