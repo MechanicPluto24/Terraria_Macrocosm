@@ -111,19 +111,21 @@ namespace Macrocosm.Content.Skies.EarthOrbit
 
             if (Main.dayTime)
             {
-                if (Main.time < MacrocosmSubworld.CurrentDayLength * 0.1)
-                    return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.CurrentDayLength * 0.1)));
-                else if (Main.time > MacrocosmSubworld.CurrentDayLength * 0.9)
-                    return Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.CurrentDayLength - Main.time) / (MacrocosmSubworld.CurrentDayLength - MacrocosmSubworld.CurrentDayLength * 0.9)));
+                double dayLength = MacrocosmSubworld.GetDayLength();
+                if (Main.time < dayLength * 0.1)
+                    return Color.Lerp(darkColor, Color.White, (float)(Main.time / (dayLength * 0.1)));
+                else if (Main.time > dayLength * 0.9)
+                    return Color.Lerp(darkColor, Color.White, (float)((dayLength - Main.time) / (dayLength - dayLength * 0.9)));
                 else
                     return Color.White;
             }
             else
             {
-                if (Main.time < MacrocosmSubworld.CurrentNightLength * 0.2)
-                    return Color.Lerp(darkColor, moonLightColor, (float)(Main.time / (MacrocosmSubworld.CurrentNightLength * 0.2)));
-                else if (Main.time > MacrocosmSubworld.CurrentNightLength * 0.8)
-                    return Color.Lerp(darkColor, moonLightColor, (float)((MacrocosmSubworld.CurrentNightLength - Main.time) / (MacrocosmSubworld.CurrentNightLength - MacrocosmSubworld.CurrentNightLength * 0.8)));
+                double nightLength = MacrocosmSubworld.GetNightLength();
+                if (Main.time < nightLength * 0.2)
+                    return Color.Lerp(darkColor, moonLightColor, (float)(Main.time / (nightLength * 0.2)));
+                else if (Main.time > nightLength * 0.8)
+                    return Color.Lerp(darkColor, moonLightColor, (float)((nightLength - Main.time) / (nightLength - nightLength * 0.8)));
                 else
                     return moonLightColor;
             }
@@ -180,7 +182,7 @@ namespace Macrocosm.Content.Skies.EarthOrbit
         private void RotateSunAndMoon()
         {
             float bgTopY = (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;
-            double duration = Main.dayTime ? MacrocosmSubworld.Current.DayLength : MacrocosmSubworld.Current.NightLength;
+            double duration = Main.dayTime ? MacrocosmSubworld.GetDayLength() : MacrocosmSubworld.GetNightLength();
 
             if(Main.dayTime)
             {

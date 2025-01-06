@@ -134,14 +134,14 @@ namespace Macrocosm.Common.Subworlds
         /// <param name="rocket"> The spacecraft used for travel, if applicable. Will display in the loading screen. </param>
         /// <param name="trigger"> Value set to the <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/>. Normally true. </param>
         /// <returns> Whether world travel has been successful </returns>
-        public static bool Travel(string targetWorldID, Rocket rocket = null, bool trigger = true)
+        public static bool Travel(string targetWorldID, Rocket rocket = null, bool trigger = true, bool downwards = false)
         {
             if (Main.netMode != NetmodeID.Server)
             {
                 if (!trigger)
                     rocket = null;
 
-                MacrocosmSubworld.SetupLoadingScreen(rocket, targetWorldID);
+                MacrocosmSubworld.SetupLoadingScreen(rocket, targetWorldID, downwards);
                 TitleCard.SetTargetWorld(targetWorldID);
 
                 Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().triggeredSubworldTravel = trigger;

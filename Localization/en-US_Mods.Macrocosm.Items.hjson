@@ -2732,7 +2732,6 @@ KeroseneGenerator: {
 	Tooltip: ""
 }
 
-
 Flag: {
 	DisplayName: Flag
 	Tooltip: ""

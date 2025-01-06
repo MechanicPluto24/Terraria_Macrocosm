@@ -22,11 +22,13 @@ namespace Macrocosm.Content.Subworlds
         public override bool PeacefulWorld => true;
 
         public override string CustomSky => nameof(EarthOrbitSky);
-        public override float GravityMultiplier => 0f;
-        public override float AtmosphericDensity => 0.1f;
+        protected override float GravityMultiplier => 0f;
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
-        public override float GetAmbientTemperature() => Utility.ScaleNoonToMidnight(-65f, 125f);
+
+        protected override float AtmosphericDensity(Vector2 position) => 0.1f;
+        public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-65f, 125f);
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => new(1600, 1200);
+
         public override bool NoBackground => true;
 
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)

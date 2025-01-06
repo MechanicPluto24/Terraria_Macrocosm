@@ -90,7 +90,7 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> The loading screen. </summary>
         public static LoadingScreen LoadingScreen { get; set; }
 
-        public static void SetupLoadingScreen(Rocket rocket, string targetWorld)
+        public static void SetupLoadingScreen(Rocket rocket, string targetWorld, bool downwards = false)
         {
             string currentId = OrbitSubworld.GetParentID(CurrentID);
             string targetId = OrbitSubworld.GetParentID(targetWorld);

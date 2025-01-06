@@ -248,7 +248,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             foreach (var module in Rocket.AvailableModules)
                 module.Active = activeModules.Contains(module.Name);
 
-            Rocket.NetSync();
+            Rocket.SyncCommonData();
         }
 
         private bool CheckAssembleInteractible() => CheckAssembleRecipes(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
