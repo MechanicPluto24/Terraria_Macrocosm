@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using ReLogic.Content;
@@ -48,6 +49,17 @@ namespace Macrocosm.Common.Utils
         public static bool IsAprilFools()
         {
             return DateTime.Now.Month == 5 && DateTime.Now.Day == 1;
+        }
+
+        public static void ProgressMoonPhase()
+        {
+            if (Main.moonPhase >= 7)
+                Main.moonPhase = 0;
+            else
+                Main.moonPhase++;
+
+            Moon.Instance.SetTimeFromMoonPhase();
+            NetMessage.SendData(MessageID.WorldData);
         }
 
         public static string GetCompassCoordinates(Player player)

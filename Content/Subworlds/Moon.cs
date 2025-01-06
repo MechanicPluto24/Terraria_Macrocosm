@@ -8,10 +8,12 @@ using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.Localization;
@@ -35,7 +37,6 @@ namespace Macrocosm.Content.Subworlds
         // About 6 times lower than default (1, as on Earth)
         public override float GravityMultiplier => 0.166f;
         public override float AtmosphericDensity => 0.1f;
-
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
         public float DemonSunIntensity { get; set; } = 0f;
@@ -83,6 +84,10 @@ namespace Macrocosm.Content.Subworlds
             DemonSunIntensity = 0f;
         }
 
+        protected override void PostReadCopiedData()
+        {
+        }
+
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
         {
             return false;
@@ -97,8 +102,87 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
+        private int lastMoonPhase;
+        // Macrocosm Moon is set somewhere around Mare Tranquillitatis, which means:
+        // - The Moon's "Noon" translates to a Waxing Gibbous 
+        // - The Moon's "Midnight" translates to a Waning Crescent 
+        private void UpdateMoonPhase()
+        {
+            int moonPhase;
+            if (Main.dayTime)
+            {
+                // Daytime: 5 phases (20% each of DayLength)
+                if (Main.time < DayLength * 0.2)
+                    moonPhase = (int)MoonPhase.QuarterAtRight; // After Dawn -> Waxing Crescent
+                else if (Main.time < DayLength * 0.4)
+                    moonPhase = (int)MoonPhase.HalfAtRight; // Approaching Noon -> First Quarter
+                else if (Main.time < DayLength * 0.6)
+                    moonPhase = (int)MoonPhase.ThreeQuartersAtRight; // Around Noon -> Waxing Gibbous
+                else if (Main.time < DayLength * 0.8)
+                    moonPhase = (int)MoonPhase.Full; // Approaching Dusk -> Full Moon
+                else
+                    moonPhase = (int)MoonPhase.ThreeQuartersAtLeft; // Before Dusk -> Waning Gibbous
+            }
+            else
+            {
+                // Nighttime: 3 phases (33.33% each of NightLength)
+                if (Main.time < NightLength * (1.0 / 3.0))
+                    moonPhase = (int)MoonPhase.HalfAtLeft; // After Dusk -> Third Quarter
+                else if (Main.time < NightLength * (2.0 / 3.0))
+                    moonPhase = (int)MoonPhase.QuarterAtLeft; // Around Midnight -> Waning Crescent
+                else
+                    moonPhase = (int)MoonPhase.Empty; // Approaching Dawn -> New Moon
+            }
+
+            if (Main.moonPhase != moonPhase)
+            {
+                // If the current Moon phase does not match the last expected phase,
+                // assume it was set externally and stop forcing it
+                if (Main.moonPhase != lastMoonPhase)
+                {
+                    lastMoonPhase = Main.moonPhase;
+                    SetTimeFromMoonPhase();
+                }
+                // Otherwise, update the Moon phase to the expected value
+                else
+                {
+                    Main.moonPhase = moonPhase;
+                    lastMoonPhase = moonPhase; 
+                    NetMessage.SendData(MessageID.WorldData); 
+                }
+            }
+        }
+
+        public void SetTimeFromMoonPhase()
+        { 
+            Main.dayTime = Main.GetMoonPhase() 
+                is not MoonPhase.HalfAtLeft 
+                and not MoonPhase.QuarterAtLeft 
+                and not MoonPhase.Empty; 
+
+            // Set time as the middle of the phases
+            Main.time = Main.GetMoonPhase() switch
+            {
+                MoonPhase.QuarterAtRight => DayLength * 0.1, 
+                MoonPhase.HalfAtRight => DayLength * 0.3, 
+                MoonPhase.ThreeQuartersAtRight => DayLength * 0.5, 
+                MoonPhase.Full => DayLength * 0.7, 
+                MoonPhase.ThreeQuartersAtLeft => DayLength * 0.9, 
+
+                MoonPhase.HalfAtLeft => NightLength * (1.0 / 6.0),
+                MoonPhase.QuarterAtLeft => NightLength * (3.0 / 6.0),
+                MoonPhase.Empty => NightLength * (5.0 / 6.0),
+
+                _ => 0,
+            };
+
+            NetMessage.SendData(MessageID.WorldData);
+        }
+
         public override void PreUpdateWorld()
         {
+            UpdateMoonPhase();
+
             UpdateDemonSun();
             UpdateMeteorStorm();
             UpdateSolarStorm();

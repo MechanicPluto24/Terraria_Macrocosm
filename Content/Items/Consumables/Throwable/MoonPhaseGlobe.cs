@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Items.Consumables.Throwable
     {
         public override void SetStaticDefaults()
         {
-            ItemSets.UnobtainableItem[Type] = true;
+            ItemSets.DeveloperItem[Type] = true;
         }
 
         public override void SetDefaults()

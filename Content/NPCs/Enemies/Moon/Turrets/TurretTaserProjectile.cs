@@ -51,8 +51,8 @@ namespace  Macrocosm.Content.NPCs.Enemies.Moon.Turrets
                 Projectile.rotation = Projectile.velocity.ToRotation();
             }
             else{
-                Projectile.velocity = (OwnerTurret.Center+Turret.TurretHeight-Projectile.Center).SafeNormalize(Vector2.UnitX) * 10f;
-                if(Vector2.Distance(Projectile.Center,OwnerTurret.Center+Turret.TurretHeight)<12f)
+                Projectile.velocity = (OwnerTurret.Center+Turret.turretHeight-Projectile.Center).SafeNormalize(Vector2.UnitX) * 10f;
+                if(Vector2.Distance(Projectile.Center,OwnerTurret.Center+Turret.turretHeight)<12f)
                     Projectile.Kill();
             }
             Timer++;
@@ -75,10 +75,10 @@ namespace  Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             TaserTurret Turret = OwnerTurret.ModNPC as TaserTurret; 
 
             chainTexture ??= ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/Turrets/TaserChain");
-            int chainlength = (int)(Vector2.Distance(Projectile.Center,OwnerTurret.Center+Turret.TurretHeight) / (chainTexture.Value).Width);
+            int chainlength = (int)(Vector2.Distance(Projectile.Center,OwnerTurret.Center+Turret.turretHeight) / (chainTexture.Value).Width);
             for (int i = 0; i <= chainlength; i++)
             {
-                Main.EntitySpriteDraw(chainTexture.Value, Projectile.Center +((new Vector2(1,0)).RotatedBy((OwnerTurret.Center+Turret.TurretHeight-Projectile.Center).ToRotation())*(i* (chainTexture.Value).Width))-Main.screenPosition, null, lightColor,(OwnerTurret.Center+Turret.TurretHeight-Projectile.Center).ToRotation(), chainTexture.Size()/2f, Projectile.scale, SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(chainTexture.Value, Projectile.Center +((new Vector2(1,0)).RotatedBy((OwnerTurret.Center+Turret.turretHeight-Projectile.Center).ToRotation())*(i* (chainTexture.Value).Width))-Main.screenPosition, null, lightColor,(OwnerTurret.Center+Turret.turretHeight-Projectile.Center).ToRotation(), chainTexture.Size()/2f, Projectile.scale, SpriteEffects.None, 0);
             }
             return true;
         }

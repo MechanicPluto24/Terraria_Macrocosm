@@ -211,3 +211,18 @@ LuminiteHorror: {
 	DisplayName: Luminite Horror
 	BestiaryFlavorText: Possessed by countless souls of restless, enraged lunar spirits, this hulking mass of raw luminite patrols the Moon's caverns for new victims.
 }
+
+GunTurret: {
+	DisplayName: Gun Turret
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.GunTurret.BestiaryFlavorText
+}
+
+LaserTurret: {
+	DisplayName: Laser Turret
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.LaserTurret.BestiaryFlavorText
+}
+
+TaserTurret: {
+	DisplayName: Taser Turret
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.TaserTurret.BestiaryFlavorText
+}

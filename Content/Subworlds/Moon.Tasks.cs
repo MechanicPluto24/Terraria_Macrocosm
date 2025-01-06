@@ -1189,8 +1189,7 @@ namespace Macrocosm.Content.Subworlds
                 }
             }
 
-            Main.dayTime = true;
-            Main.time = 0;
+            SetTimeFromMoonPhase();
         }
 
         [Task]
