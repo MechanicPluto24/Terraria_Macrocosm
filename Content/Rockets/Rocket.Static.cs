@@ -8,20 +8,7 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket
     {
-        public static readonly List<string> DefaultModuleNames = new()
-        {
-            "CommandPod",
-            "ServiceModule",
-            "ReactorModule",
-            "EngineModule",
-            "BoosterLeft",
-            "BoosterRight"
-        };
-
-        /// <summary>
-        /// Creates a rocket and adds it to the manager.
-        /// </summary>
-        public static Rocket Create(Vector2 position, bool sync = true, Action<Rocket> action = null)
+        public static Rocket Create(Vector2 position, List<string> activeModules = null)
         {
             // Rocket will not be managed.. we have to avoid ever reaching this  
             if (RocketManager.ActiveRocketCount > RocketManager.MaxRockets)
@@ -30,7 +17,7 @@ namespace Macrocosm.Content.Rockets
                 throw new System.Exception("Max rockets reached. Should not ever reach this point during normal gameplay.");
             }
 
-            Rocket rocket = new()
+            Rocket rocket = new(activeModules)
             {
                 Position = position,
                 Active = true,

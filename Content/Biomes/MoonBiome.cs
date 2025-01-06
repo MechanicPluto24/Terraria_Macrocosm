@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Biomes
         public override SceneEffectPriority Priority => SceneEffectPriority.Environment;
         public override float GetWeight(Player player) => 0.5f;
 
-        public override Color? BackgroundColor => base.BackgroundColor;
+        public override Color? BackgroundColor => Color.White;
         public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
         public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUndergroundBackgroundStyle>();
 

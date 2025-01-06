@@ -75,25 +75,22 @@ namespace Macrocosm.Common.Drawing.Sky
 
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 offset = default)
         {
-            if (position.X > 0 && position.X < Main.screenWidth && position.Y > 0 && position.Y < Main.screenHeight)
+            if (falling)
             {
-                if (falling)
+                float maxTrailLength = 30f;
+                float trailLength = Math.Min(fallTime, maxTrailLength);
+
+                for (int j = 1; j < trailLength; j++)
                 {
-                    float maxTrailLength = 30f;
-                    float trailLength = Math.Min(fallTime, maxTrailLength);
+                    Vector2 trailOffset = fallSpeed * j * 0.05f;
+                    float trailScale = Scale * (1f - j / maxTrailLength);
+                    Color trailColor = Color * (1f - j / maxTrailLength);
 
-                    for (int j = 1; j < trailLength; j++)
-                    {
-                        Vector2 trailOffset = fallSpeed * j * 0.05f;
-                        float trailScale = Scale * (1f - j / maxTrailLength);
-                        Color trailColor = Color * (1f - j / maxTrailLength);
-
-                        spriteBatch.Draw(texture.Value, position - trailOffset, null, trailColor, rotation, texture.Size() / 2, trailScale * twinkle, default, 0f);
-                    }
+                    spriteBatch.Draw(texture.Value, position - trailOffset, null, trailColor, rotation, texture.Size() / 2, trailScale * twinkle, default, 0f);
                 }
-
-                spriteBatch.Draw(texture.Value, position + offset, null, Color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
             }
+
+            spriteBatch.Draw(texture.Value, position + offset, null, Color, rotation, texture.Size() / 2, Scale * twinkle, default, 0f);
         }
 
         public virtual void Update()

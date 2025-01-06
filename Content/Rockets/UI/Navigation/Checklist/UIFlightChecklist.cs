@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.UI;
+﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.LaunchPads;
@@ -15,6 +16,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
         public Rocket Rocket { get; set; }
         public UINavigationTarget MapTarget { get; set; }
         public LaunchPad TargetLaunchpad { get; set; }
+        public OrbitSubworld TargetOrbitSubworld { get; set; }
 
         public bool SelectedSpawnLocation { get; set; }
 
@@ -28,16 +30,12 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
 
         public UIFlightChecklist() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Checklist"), scale: 1.2f))
         {
-            SelectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null && (TargetLaunchpad is not null || SelectedSpawnLocation));
+            SelectedLaunchCondition = new ChecklistCondition("Selected", () => MapTarget is not null && (TargetLaunchpad is not null || TargetOrbitSubworld is not null || SelectedSpawnLocation));
             DifferentTargetLaunchCondition = new ChecklistCondition("DifferentTarget", () => !Rocket.AtCurrentLaunchpad(TargetLaunchpad, MapTarget.TargetID));
-            LaunchpadVacantCondition = new ChecklistCondition("VacantLaunchpad", () => SelectedSpawnLocation || (TargetLaunchpad is not null && !TargetLaunchpad.HasRocket));
+            LaunchpadVacantCondition = new ChecklistCondition("VacantLaunchpad", () => SelectedSpawnLocation || TargetOrbitSubworld is not null || (TargetLaunchpad is not null && !TargetLaunchpad.HasRocket));
 
             CommonLaunchConditions.Add(new ChecklistCondition("Fuel", () => Rocket.Fuel >= Rocket.GetFuelCost(MapTarget.TargetID)));
-
-            // NOTE: This must be kept as an explicit lambda expression!
-            #pragma warning disable IDE0200
-            CommonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckFlightPathObstruction(), checkPeriod: 10));
-            #pragma warning restore IDE0200
+            CommonLaunchConditions.Add(new ChecklistCondition("Obstruction", () => Rocket.CheckObstruction(downwards: Rocket.TargetIsParentSubworld(MapTarget.TargetID)), checkPeriod: 10));
 
             CommonLaunchConditions.Add(new ChecklistCondition("Boss", () => !Utility.BossActive && !Utility.MoonLordIncoming, hideIfMet: true));
             CommonLaunchConditions.Add(new ChecklistCondition("Invasion", () => !Utility.InvastionActive && !Utility.PillarsActive, hideIfMet: true));

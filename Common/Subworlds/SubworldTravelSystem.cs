@@ -36,8 +36,14 @@ namespace Macrocosm.Common.Subworlds
 
             var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
             string subworld = "Earth";
+            bool isSpaceStation = false; 
+
             if (player.TryGetReturnSubworld(self.Data.UniqueId, out string id))
-                subworld = MacrocosmSubworld.SanitizeID(id, out _);
+            {
+                isSpaceStation = OrbitSubworld.IsOrbitSubworld(id);
+                subworld = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(id), out _);
+            }
+
 
             bool exists = ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + subworld, out Asset<Texture2D> texture, AssetRequestMode.ImmediateLoad);
             UIImage icon = new(exists ? texture : Macrocosm.EmptyTex)
@@ -48,6 +54,18 @@ namespace Macrocosm.Common.Subworlds
                 VAlign = 1f,
                 ImageScale = 0.76f
             };
+
+            Texture2D spaceStation = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/SpaceStation", AssetRequestMode.ImmediateLoad).Value;
+            UIImage stationIcon = new(spaceStation)
+            {
+                Left = new(0, 0),
+                Top = new(2f, 0),
+                HAlign = 0f,
+                VAlign = 1f,
+                ImageScale = 0.76f
+            };
+
+
             if (exists)
             {
                 icon.OnMouseOver += (_, _) =>
@@ -59,12 +77,33 @@ namespace Macrocosm.Common.Subworlds
                 {
                     buttonLabel.SetText("");
                 };
+                self.Append(icon);
             }
-            self.Append(icon);
+
+            if (isSpaceStation)
+            {
+                stationIcon.OnMouseOver += (_, _) =>
+                {
+                    SoundEngine.PlaySound(SoundID.MenuTick);
+                    buttonLabel.SetText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworld + ".DisplayName"));
+                };
+                stationIcon.OnMouseOut += (_, _) =>
+                {
+                    buttonLabel.SetText("");
+                };
+                self.Append(stationIcon);
+            }
+
             self.Recalculate();
 
             icon.Left.Pixels = buttonLabel.Left.Pixels - 6;
             buttonLabel.Left.Pixels += icon.Width.Pixels * 0.84f;
+
+            if (isSpaceStation)
+            {
+                stationIcon.Left.Pixels = icon.Left.Pixels + stationIcon.Width.Pixels;
+                buttonLabel.Left.Pixels += stationIcon.Width.Pixels * 0.84f;
+            }
         }
 
         public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)

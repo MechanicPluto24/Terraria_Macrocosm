@@ -11,7 +11,6 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.UI.Chat;
 using Terraria.WorldBuilding;
-using static Macrocosm.Common.Utils.Utility;
 
 namespace Macrocosm.Content.LoadingScreens
 {
@@ -26,6 +25,8 @@ namespace Macrocosm.Content.LoadingScreens
 
         protected Stars stars = new();
 
+        protected int MovementDirection => downwards ? -1 : 1;
+        protected bool downwards;
         protected bool Moving => rocket is not null;
         protected Rocket rocket;
 
@@ -66,7 +67,7 @@ namespace Macrocosm.Content.LoadingScreens
             Reset();
         }
 
-        public void SetRocket(Rocket rocket)
+        public void SetRocket(Rocket rocket, bool downwards = false)
         {
             if (rocket is null)
             {
@@ -77,6 +78,7 @@ namespace Macrocosm.Content.LoadingScreens
             var visualClone = rocket.VisualClone();
             visualClone.ForcedFlightAppearance = true;
             this.rocket = visualClone;
+            this.downwards = downwards;
         }
 
         public void ClearRocket() => rocket = null;
@@ -102,20 +104,12 @@ namespace Macrocosm.Content.LoadingScreens
             {
                 var fallingStars = stars.ToList();
                 if (fallingStars.Count > 0)
-                    fallingStars.GetRandom().Fall(deviationX: 0.1f, minSpeedY: 30f, maxSpeedY: 45f);
+                    fallingStars.GetRandom().Fall(deviationX: 0.1f, minSpeedY: 30f * MovementDirection, maxSpeedY: 45f * MovementDirection);
             }
         }
 
-        /// <summary> Update the animation counter. Override for non-default behaviour </summary>
-        protected virtual void UpdateAnimation()
-        {
-            if (!Moving && animationTimer > 5)
-                return;
-
-            if (animationTimer <= 5)
-                animationTimer += 0.125f;
-        }
-
+        /// <summary> Update the animation </summary>
+        protected virtual void UpdateAnimation() { }
 
         /// <summary> Draw elements before the title, status messages, progress bar, etc. are drawn, but after the common background elements are drawn </summary>
         protected virtual void PreDraw(SpriteBatch spriteBatch) { }
@@ -131,7 +125,7 @@ namespace Macrocosm.Content.LoadingScreens
 
             if (Moving)
             {
-                stars.CommonVelocity = new(0f, 0.25f);
+                stars.CommonVelocity = new(0f, 0.25f * MovementDirection);
             }
 
             stars.DrawStationary(spriteBatch);

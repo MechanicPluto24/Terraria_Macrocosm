@@ -4,8 +4,8 @@
     "moduleName": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" }
     ]
   },
   {
@@ -13,13 +13,13 @@
     "moduleName": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#00008B" },
-        { "color": "#FFFFFF" },
-        {
-            "colorFunction": "Lerp",
-            "parameters": [ 1, 2, 0.5 ]
-        }
+      { "color": "#F27777" },
+      { "color": "#00008B" },
+      { "color": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "parameters": [ 1, 2, 0.5 ]
+      }
     ]
   },
   {
@@ -27,9 +27,9 @@
     "moduleName": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -37,9 +37,9 @@
     "moduleName": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -47,9 +47,9 @@
     "moduleName": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#282828" },
-        { "color": "#B0A800" }
+      { "color": "#F27777" },
+      { "color": "#282828" },
+      { "color": "#B0A800" }
     ]
   },
   {
@@ -57,23 +57,23 @@
     "moduleName": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FF0000" },
-        { "color": "#FFA500" },
-        { "color": "#FFFF00" },
-        {
-            "color": "#008000",
-            "userModifiable": false
-        },
-        {
-            "color": "#0000FF",
-            "userModifiable": false
-        },
-        {
-            "color": "#4B0082",
-            "userModifiable": false
-        },
-        { "color": "#EE82EE" }
+      { "color": "#F27777" },
+      { "color": "#FF0000" },
+      { "color": "#FFA500" },
+      { "color": "#FFFF00" },
+      {
+        "color": "#008000",
+        "userModifiable": false
+      },
+      {
+        "color": "#0000FF",
+        "userModifiable": false
+      },
+      {
+        "color": "#4B0082",
+        "userModifiable": false
+      },
+      { "color": "#EE82EE" }
     ]
   },
   {
@@ -81,9 +81,9 @@
     "moduleName": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -91,9 +91,18 @@
     "moduleName": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
+    ]
+  },
+  {
+    "patternName": "Basic",
+    "moduleName": "PayloadPod",
+    "unlockedByDefault": true,
+    "colorData": [
+      {},
+      { "color": "#FFFFFF" }
     ]
   },
   {
@@ -115,7 +124,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "parameters": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2, 0.5 ]
       }
     ]
   },
@@ -189,6 +198,15 @@
   },
   {
     "patternName": "Basic",
+    "moduleName": "UnmannedTug",
+    "unlockedByDefault": true,
+    "colorData": [
+      {},
+      { "color": "#FFFFFF" }
+    ]
+  },
+  {
+    "patternName": "Basic",
     "moduleName": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
@@ -206,7 +224,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "parameters": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2, 0.5 ]
       }
     ]
   },
@@ -230,7 +248,7 @@
       { "color": "#282828" },
       {
         "colorFunction": "Lerp",
-        "parameters": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2, 0.5 ]
       }
     ]
   },
@@ -244,24 +262,24 @@
       { "color": "#B0A800" }
     ]
   },
-    {
-        "patternName": "Helix",
-        "moduleName": "ReactorModule",
-        "unlockedByDefault": true,
-        "colorData": [
-            {},
-            { "color": "#FF0000" },
-            { "color": "#FFA500" },
-            { "color": "#FFFF00" },
-            {
-                "color": "#008000",
-                "userModifiable": false
-            },
-            { "color": "#0000FF" },
-            { "color": "#4B0082" },
-            { "color": "#EE82EE" }
-        ]
-    },
+  {
+    "patternName": "Helix",
+    "moduleName": "ReactorModule",
+    "unlockedByDefault": true,
+    "colorData": [
+      {},
+      { "color": "#FF0000" },
+      { "color": "#FFA500" },
+      { "color": "#FFFF00" },
+      {
+        "color": "#008000",
+        "userModifiable": false
+      },
+      { "color": "#0000FF" },
+      { "color": "#4B0082" },
+      { "color": "#EE82EE" }
+    ]
+  },
   {
     "patternName": "Redstone",
     "moduleName": "ReactorModule",
@@ -301,7 +319,7 @@
       { "color": "#FFFFFF" },
       {
         "colorFunction": "Lerp",
-        "parameters": [ 1, 2 , 0.5 ]
+        "parameters": [ 1, 2, 0.5 ]
       }
     ]
   },
@@ -375,8 +393,8 @@
     "moduleName": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" }
     ]
   },
   {
@@ -384,13 +402,13 @@
     "moduleName": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#00008B" },
-        { "color": "#FFFFFF" },
-        {
-            "colorFunction": "Lerp",
-            "parameters": [ 1, 2, 0.5 ]
-        }
+      { "color": "#F27777" },
+      { "color": "#00008B" },
+      { "color": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "parameters": [ 1, 2, 0.5 ]
+      }
     ]
   },
   {
@@ -398,9 +416,9 @@
     "moduleName": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -408,9 +426,9 @@
     "moduleName": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -418,9 +436,9 @@
     "moduleName": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#282828" },
-        { "color": "#B0A800" }
+      { "color": "#F27777" },
+      { "color": "#282828" },
+      { "color": "#B0A800" }
     ]
   },
   {
@@ -428,14 +446,14 @@
     "moduleName": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FF0000" },
-        { "color": "#FFA500" },
-        { "color": "#FFFF00" },
-        { "color": "#008000" },
-        { "color": "#0000FF" },
-        { "color": "#4B0082" },
-        { "color": "#EE82EE" }
+      { "color": "#F27777" },
+      { "color": "#FF0000" },
+      { "color": "#FFA500" },
+      { "color": "#FFFF00" },
+      { "color": "#008000" },
+      { "color": "#0000FF" },
+      { "color": "#4B0082" },
+      { "color": "#EE82EE" }
     ]
   },
   {
@@ -443,9 +461,9 @@
     "moduleName": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -453,9 +471,9 @@
     "moduleName": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -463,8 +481,8 @@
     "moduleName": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" }
     ]
   },
   {
@@ -472,13 +490,13 @@
     "moduleName": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#00008B" },
-        { "color": "#FFFFFF" },
-        {
-            "colorFunction": "Lerp",
-            "parameters": [ 1, 2, 0.5 ]
-        }
+      { "color": "#F27777" },
+      { "color": "#00008B" },
+      { "color": "#FFFFFF" },
+      {
+        "colorFunction": "Lerp",
+        "parameters": [ 1, 2, 0.5 ]
+      }
     ]
   },
   {
@@ -486,9 +504,9 @@
     "moduleName": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -496,9 +514,9 @@
     "moduleName": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -506,9 +524,9 @@
     "moduleName": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#282828" },
-        { "color": "#B0A800" }
+      { "color": "#F27777" },
+      { "color": "#282828" },
+      { "color": "#B0A800" }
     ]
   },
   {
@@ -516,14 +534,14 @@
     "moduleName": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FF0000" },
-        { "color": "#FFA500" },
-        { "color": "#FFFF00" },
-        { "color": "#008000" },
-        { "color": "#0000FF" },
-        { "color": "#4B0082" },
-        { "color": "#EE82EE" }
+      { "color": "#F27777" },
+      { "color": "#FF0000" },
+      { "color": "#FFA500" },
+      { "color": "#FFFF00" },
+      { "color": "#008000" },
+      { "color": "#0000FF" },
+      { "color": "#4B0082" },
+      { "color": "#EE82EE" }
     ]
   },
   {
@@ -531,9 +549,9 @@
     "moduleName": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   },
   {
@@ -541,9 +559,9 @@
     "moduleName": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
-        { "color": "#F27777" },
-        { "color": "#FFFFFF" },
-        { "color": "#282828" }
+      { "color": "#F27777" },
+      { "color": "#FFFFFF" },
+      { "color": "#282828" }
     ]
   }
 ]

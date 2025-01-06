@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
@@ -16,7 +17,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
-using Terraria.ID;
+using Terraria.Graphics.Effects;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
@@ -25,10 +26,13 @@ namespace Macrocosm.Common.Subworlds
     {
         public string ID => Mod.Name + "/" + Name;
 
-        public override void SetStaticDefaults()
+        public sealed override void SetStaticDefaults()
         {
             Subworlds.Add(ID, this);
+            PostLoad();
         }
+
+        public virtual void PostLoad() { }
 
         #region Sublib options
         public override bool NormalUpdates => false;
@@ -48,6 +52,9 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Night length of this subworld in ticks </summary>
         protected virtual double NightLength { get; } = Earth.NightLength;
 
+        /// <summary> Whether the subworld blocks enemy spawns or not </summary>
+        public virtual bool PeacefulWorld { get; } = false;
+
         /// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
         protected virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
 
@@ -62,8 +69,12 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Collection of LiquidIDs that should evaporate in this subworld </summary>
         public virtual int[] EvaporatingLiquidTypes => [];
 
+        public virtual bool NoBackground => false;
+
         /// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
         public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
+
+        public virtual string CustomSky { get; } = null;
         #endregion
 
         #region Size
@@ -98,13 +109,22 @@ namespace Macrocosm.Common.Subworlds
         public sealed override void OnEnter()
         {
             OnEnterSubworld();
+
             MapTileSystem.ApplyMapTileColors();
+
+            if (!string.IsNullOrEmpty(CustomSky))
+                SkyManager.Instance.Activate($"{Mod.Name}:{CustomSky}");
         }
 
         public sealed override void OnExit()
         {
             OnExitSubworld();
+
             MapTileSystem.RestoreMapTileColors();
+
+            if (!string.IsNullOrEmpty(CustomSky))
+                SkyManager.Instance.Deactivate($"{Mod.Name}:{CustomSky}");
+
             Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().OnExitSubworld();
         }
 
@@ -119,7 +139,9 @@ namespace Macrocosm.Common.Subworlds
 
             UpdateTime();
 
+            UpdateBackground();
             UpdateWeather();
+
             UpdateInvasions();
 
             UpdateWiring();
@@ -242,6 +264,13 @@ namespace Macrocosm.Common.Subworlds
             // Rain, rain, go away, come again another day
             Main.StopRain();
         }
+
+        private void UpdateBackground()
+        {
+            if (!string.IsNullOrEmpty(CustomSky) && !SkyManager.Instance[$"{Mod.Name}:{CustomSky}"].IsActive())
+                SkyManager.Instance.Activate($"{Mod.Name}:{CustomSky}");
+        }
+
         #endregion
 
         public override void DrawMenu(GameTime gameTime)
@@ -255,7 +284,12 @@ namespace Macrocosm.Common.Subworlds
         public override float GetGravity(Entity entity)
         {
             if (entity is Player)
-                return Player.defaultGravity * GetGravityMultiplier();
+            {
+                float gravity = Player.defaultGravity * CurrentGravityMultiplier;
+                if (gravity == 0f)
+                    gravity = float.Epsilon;
+                return gravity;
+            }
 
             // This is instead modified using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC 
             if (entity is NPC)
