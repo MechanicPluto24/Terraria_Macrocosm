@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
-using Macrocosm.Common.Players;
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.Customization;
@@ -17,9 +16,8 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
-using Terraria.IO;
+using Terraria.ID;
 using Terraria.ModLoader.IO;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -33,11 +31,10 @@ namespace Macrocosm.Common.Subworlds
         }
 
         #region Sublib options
-
         public override bool NormalUpdates => false;
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
-
+        public override int ReturnDestination => SubworldTravelPlayer.GetReturnDestination();
         #endregion
 
         #region Environment parameters
@@ -91,24 +88,6 @@ namespace Macrocosm.Common.Subworlds
 
         /// <summary> Specifies the conditions for reaching this particular subworld </summary>
         public virtual ChecklistConditionCollection LaunchConditions { get; } = new();
-
-        /// <summary> 
-        /// Determines what <see cref="SubworldSystem.Exit"/> will do. 
-        /// <br> If travelling using conventional methods, where <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/> is set, will return to the main world (Earth). </br>
-        /// <br> Otherwise, return to the main menu. This is used when clicking "Return" from the in-game settings menu, while in a subworld. </br>
-        /// </summary>
-        public override int ReturnDestination
-        {
-            get
-            {
-                // Return to the main world (Earth)
-                //if (Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel)
-                return base.ReturnDestination;
-                // Go to main menu
-                //else
-                //return int.MinValue;
-            }
-        }
 
         #endregion
 

@@ -61,7 +61,7 @@ namespace Macrocosm.Common.Storage
                     OnResize(items.Length, value);
 
                     if (Main.netMode != NetmodeID.SinglePlayer)
-                        SyncSize();
+                        SyncEverything();
                 }
             }
         }

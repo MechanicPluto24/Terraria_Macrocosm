@@ -1,24 +1,29 @@
-﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using Terraria;
-using Terraria.Audio;
-using Terraria.GameContent.UI.Elements;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using Terraria.GameContent.UI.Elements;
+using Macrocosm.Common.Utils;
+using Terraria.Audio;
+using SubworldLibrary;
 
-namespace Macrocosm.Common.Hooks
+namespace Macrocosm.Common.Subworlds
 {
-    public class WorldSelectionMenuHooks : ILoadable
+    internal class SubworldTravelSystem : ModSystem
     {
-        public void Load(Mod mod)
+        public override void Load()
         {
             On_UIWorldListItem.ctor += UIWorldListItem_ctor_AddWorldIcons;
         }
 
-        public void Unload()
+        public override void Unload()
         {
             On_UIWorldListItem.ctor -= UIWorldListItem_ctor_AddWorldIcons;
         }
@@ -60,6 +65,16 @@ namespace Macrocosm.Common.Hooks
 
             icon.Left.Pixels = buttonLabel.Left.Pixels - 6;
             buttonLabel.Left.Pixels += icon.Width.Pixels * 0.84f;
+        }
+
+        public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+        {
+            if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+            {
+                SubworldTravelPlayer.SendLastSubworldCheck(remoteClient);
+            }
+
+            return false;
         }
     }
 }
