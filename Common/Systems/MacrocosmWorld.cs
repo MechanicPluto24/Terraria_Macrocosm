@@ -10,6 +10,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Systems
 {
@@ -19,18 +20,20 @@ namespace Macrocosm.Common.Systems
     /// </summary>
     class MacrocosmWorld : ModSystem
     {
+        public static int Seed => Main.ActiveWorldFileData.Seed;
+        public static string SeedText => Main.ActiveWorldFileData.SeedText;
+
         /// <summary> Whether the dusk time boundary happened in this update tick </summary>
         public static bool IsDusk { get; set; } = false;
 
         /// <summary> Whether the dawn time boundary happened in this update tick </summary>
         public static bool IsDawn { get; set; } = false;
 
-        public static int Seed => Main.ActiveWorldFileData.Seed;
-        public static string SeedText => Main.ActiveWorldFileData.SeedText;
+        // Called before world loading but after header loading
         public override void OnWorldLoad()
         {
             if (!SubworldSystem.AnyActive())
-                Earth.WorldSize = WorldSize.Current;
+                Earth.WorldSize = new WorldSize(Main.maxTilesX, Main.maxTilesY);
         }
 
         private static void RandomTileUpdate()

@@ -84,10 +84,6 @@ namespace Macrocosm.Content.Subworlds
             DemonSunIntensity = 0f;
         }
 
-        protected override void PostReadCopiedData()
-        {
-        }
-
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
         {
             return false;
@@ -147,8 +143,10 @@ namespace Macrocosm.Content.Subworlds
                 else
                 {
                     Main.moonPhase = moonPhase;
-                    lastMoonPhase = moonPhase; 
-                    NetMessage.SendData(MessageID.WorldData); 
+                    lastMoonPhase = moonPhase;
+
+                    if (Main.netMode != NetmodeID.SinglePlayer)
+                        NetMessage.SendData(MessageID.WorldData); 
                 }
             }
         }
@@ -176,7 +174,8 @@ namespace Macrocosm.Content.Subworlds
                 _ => 0,
             };
 
-            NetMessage.SendData(MessageID.WorldData);
+            if(Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendData(MessageID.WorldData);
         }
 
         public override void PreUpdateWorld()
