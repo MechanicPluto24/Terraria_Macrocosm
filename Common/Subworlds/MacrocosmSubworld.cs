@@ -285,7 +285,7 @@ namespace Macrocosm.Common.Subworlds
         {
             if (entity is Player)
             {
-                float gravity = Player.defaultGravity * CurrentGravityMultiplier;
+                float gravity = Player.defaultGravity * GetGravityMultiplier();
                 if (gravity == 0f)
                     gravity = float.Epsilon;
                 return gravity;

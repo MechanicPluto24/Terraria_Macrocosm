@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
