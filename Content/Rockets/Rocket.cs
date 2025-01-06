@@ -187,7 +187,7 @@ namespace Macrocosm.Content.Rockets
         public Vector2 InventoryItemDropLocation => Center;
         public int InventorySerializationIndex => WhoAmI;
 
-        /// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
+        /// <summary> Instatiates a rocket. Use <see cref="Create(Vector2, Action{T})"/> for spawning in world and proper syncing. </summary>
         public Rocket()
         {
             foreach (string moduleName in DefaultModuleNames)
@@ -229,8 +229,6 @@ namespace Macrocosm.Content.Rockets
                 ranFirstUpdate = true;
             }
 
-            CurrentWorld = MacrocosmSubworld.CurrentID;
-
             SetModuleWorldPositions();
             Velocity = GetCollisionVelocity();
             Position += Velocity;
@@ -254,30 +252,34 @@ namespace Macrocosm.Content.Rockets
                 case ActionState.PreLaunch:
 
                     FlightTime++;
+                    Velocity.Y += 0.1f * gravity;
 
-                    if (FlightTime >= PreLaunchDuration)
+                    if (FlightTime >= PreLaunchDuration && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         FlightTime = 0;
                         State = ActionState.StaticFire;
+                        SyncCommonData();
                     }
-
-                    Velocity.Y += 0.1f * gravity;
 
                     break;
 
                 case ActionState.StaticFire:
 
                     FlightTime++;
+                    Velocity.Y += 0.1f * gravity;
 
                     if (FlightTime >= StaticFireDuration)
                     {
-                        FlightTime = 0;
-                        State = ActionState.Flight;
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            FlightTime = 0;
+                            State = ActionState.Flight;
+                            SyncCommonData();
+                        }
+
                         ResetAnimation();
                         SoundEngine.PlaySound(SFX.RocketLaunch with { Volume = 1f, PlayOnlyIfFocused = true });
                     }
-
-                    Velocity.Y += 0.1f * gravity;
 
                     break;
 
@@ -300,24 +302,31 @@ namespace Macrocosm.Content.Rockets
                     if (GetRocketPlayer(Main.myPlayer).InRocket)
                         Main.BlackFadeIn = (int)(255f * EasedFlightProgress);
 
-                    if (CheckPlayerInRocket(Main.myPlayer) && Position.Y < WorldExitPositionY + 1)
+                    if (Position.Y < WorldExitPositionY + 1)
                     {
-                        FlightTime = 0;
                         FlightProgress = 0f;
                         LandingProgress = 0f;
-                        Velocity = Vector2.Zero;
-                        State = ActionState.Landing;
                         ResetAnimation();
-                        Travel();
+
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
+                        {
+                            FlightTime = 0;
+                            Velocity = Vector2.Zero;
+                            State = ActionState.Landing;
+                            HandleTravel();
+
+                            SyncEverything();
+                        }
                     }
 
                     break;
 
                 case ActionState.Landing:
 
-                    if (TargetLandingPosition == default && LandingProgress < float.Epsilon)
+                    if (TargetLandingPosition == default && LandingProgress < float.Epsilon && Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         TargetLandingPosition = GetLandingSite(Utility.SpawnWorldPosition);
+                        SyncCommonData();
                     }
 
                     float landingDistance = Math.Abs(WorldExitPositionY - TargetLandingPosition.Y + Height);
@@ -345,8 +354,11 @@ namespace Macrocosm.Content.Rockets
 
             }
 
-            if (Position.X < 10 * 16 || Position.X > (Main.maxTilesX - 10) * 16 || Position.Y < 10 * 16 || Position.Y > (Main.maxTilesY - 10) * 16)
+            if (Position.X < 10 * 16 || Position.X > (Main.maxTilesX - 10) * 16 || Position.Y < 10 * 16 || Position.Y > (Main.maxTilesY - 10) * 16 && Main.netMode != NetmodeID.MultiplayerClient)
+            {
                 State = ActionState.Idle;
+                SyncCommonData();
+            }
 
             if (Transparency < 1f)
                 Transparency += 0.01f;
@@ -387,7 +399,7 @@ namespace Macrocosm.Content.Rockets
             Active = false;
 
             if (sync)
-                NetSync();
+                SyncCommonData();
         }
 
         // Gets the position of a module with respect to the provided origin
@@ -512,7 +524,7 @@ namespace Macrocosm.Content.Rockets
 
             Fuel -= GetFuelCost(targetWorld);
 
-            NetSync();
+            SyncCommonData();
         }
 
         public float GetFuelCost(string targetWorld) => RocketFuelLookup.GetFuelCost(MacrocosmSubworld.CurrentID, targetWorld);
@@ -1003,18 +1015,14 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        // Handles the subworld travel
-        private void Travel()
+        // Handles the subworld travel, never on clients
+        private void HandleTravel()
         {
-            RocketPlayer commander = GetCommander();
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
 
             bool samePlanet = CurrentWorld == TargetWorld;
-
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                CurrentWorld = TargetWorld;
-                NetSync();
-            }
+            CurrentWorld = TargetWorld;
 
             // Determine the landing location.
             // Set as default if no launchpad has been selected (i.e. the World Spawn option) 
@@ -1028,7 +1036,7 @@ namespace Macrocosm.Content.Rockets
             {
                 // This failsafe logic could be extended to hiding the rocket for an amount of time, while remotely launching satellites
                 // (no commander inside but wire triggered). Would mean also keeping the launchpad as occupied to avoid collisions on return
-                if (!MacrocosmSubworld.IsValidID(TargetWorld) || commander is null || commander.Player.dead || !commander.Player.active)
+                if (!MacrocosmSubworld.IsValidID(TargetWorld))
                 {
                     TargetLandingPosition = new(Center.X, StartPositionY + Height);
                     CurrentWorld = MacrocosmSubworld.CurrentID;
@@ -1039,17 +1047,24 @@ namespace Macrocosm.Content.Rockets
                     TargetLandingPosition = Utility.SpawnWorldPosition + new Vector2(0, 16f * 2);
 
                 Center = new(TargetLandingPosition.X, Center.Y);
-
-                /*
-                FadeEffect.ResetFade();
-                if (!FadeEffect.IsFading)
-                    FadeEffect.StartFadeIn(0.02f, selfDraw: true);
-                */
             }
             else
             {
-                if (CheckPlayerInRocket(Main.myPlayer))
-                    MacrocosmSubworld.Travel(TargetWorld, this);
+                if (Main.netMode == NetmodeID.SinglePlayer)
+                {
+                    if (CheckPlayerInRocket(Main.myPlayer))
+                        SubworldTravelPlayer.Travel(TargetWorld, this);
+                }
+                else
+                {
+                    foreach (Player player in Main.ActivePlayers)
+                    {
+                        if (CheckPlayerInRocket(player.whoAmI))
+                        {
+                            SubworldTravelPlayer.SendTravelRequest(player.whoAmI, TargetWorld, WhoAmI);
+                        }
+                    }
+                }
             }
         }
     }

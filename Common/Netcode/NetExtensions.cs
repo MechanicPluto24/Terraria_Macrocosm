@@ -21,8 +21,8 @@ namespace Macrocosm.Common.Netcode
                                     .OrderBy(fieldInfo => fieldInfo.Name).ToArray();
 
         /// <summary>
-        /// Writes all the fields of <c>this</c> that have the <see cref="NetSyncAttribute"/> to the <see cref="BinaryWriter"/>. 
-        /// If the <see cref="BitWriter"/> is not null, boolean fields are written to it instead.
+        /// Writes all the fields of <c>this</c> that have the <see cref="NetSyncAttribute"/> to the <paramref name="binaryWriter"/>. 
+        /// If the <paramref name="bitWriter"/> is not null, boolean fields are written to it instead.
         /// </summary>
         /// <returns><c>true</c> if all fields were written succesfully else <c>false</c>.</returns>
         public static bool NetWriteFields(this object obj, BinaryWriter binaryWriter, BitWriter bitWriter = null)
@@ -35,30 +35,40 @@ namespace Macrocosm.Common.Netcode
 
             foreach (FieldInfo fieldInfo in netSyncFields)
             {
-                string fieldType = fieldInfo.FieldType.Name;
+                var fieldType = fieldInfo.FieldType;
+                if (fieldType.IsEnum)
+                    fieldType = Enum.GetUnderlyingType(fieldInfo.FieldType);
 
-                if (fieldType == "Vector2")
+                if (fieldType == typeof(Vector2))
                 {
                     binaryWriter.WriteVector2((Vector2)fieldInfo.GetValue(obj));
                 }
-                else if (fieldType == "Point")
+                else if (fieldType == typeof(Point))
                 {
                     binaryWriter.WritePoint((Point)fieldInfo.GetValue(obj));
                 }
-                else if (fieldType == "Point16")
+                else if (fieldType == typeof(Point16))
                 {
                     binaryWriter.WritePoint16((Point16)fieldInfo.GetValue(obj));
                 }
-                else if (fieldType == "bool" && bitWriter is not null)
+                else if (fieldType == typeof(Rectangle))
+                {
+                    binaryWriter.WriteRectangle((Rectangle)fieldInfo.GetValue(obj));
+                }
+                else if (fieldType == typeof(Color))
+                {
+                    binaryWriter.WriteColor((Color)fieldInfo.GetValue(obj));
+                }
+                else if (fieldType == typeof(bool) && bitWriter is not null)
                 {
                     bitWriter.WriteBit((bool)fieldInfo.GetValue(obj));
                 }
                 else
                 {
-                    MethodInfo methodInfo = typeof(BinaryWriter).GetMethod("Write", new Type[] { fieldInfo.FieldType });
+                    MethodInfo methodInfo = typeof(BinaryWriter).GetMethod("Write", [fieldType]);
                     if (methodInfo is not null)
                     {
-                        methodInfo.Invoke(binaryWriter, new object[] { fieldInfo.GetValue(obj) });
+                        methodInfo.Invoke(binaryWriter, [fieldInfo.GetValue(obj)]);
                     }
                     else
                     {
@@ -81,27 +91,37 @@ namespace Macrocosm.Common.Netcode
         {
             foreach (FieldInfo fieldInfo in obj.GetNetSyncFields())
             {
-                string fieldType = fieldInfo.FieldType.Name;
+                var fieldType = fieldInfo.FieldType;
+                if (fieldType.IsEnum)
+                    fieldType = Enum.GetUnderlyingType(fieldInfo.FieldType);
 
-                if (fieldType == "Vector2")
+                if (fieldType == typeof(Vector2))
                 {
                     fieldInfo.SetValue(obj, binaryReader.ReadVector2());
                 }
-                else if (fieldType == "Point")
+                else if (fieldType == typeof(Point))
                 {
                     fieldInfo.SetValue(obj, binaryReader.ReadPoint());
                 }
-                else if (fieldType == "Point16")
+                else if (fieldType == typeof(Point16))
                 {
                     fieldInfo.SetValue(obj, binaryReader.ReadPoint16());
                 }
-                else if (fieldType == "bool" && bitReader is not null)
+                else if (fieldType == typeof(Rectangle))
+                {
+                    fieldInfo.SetValue(obj, binaryReader.ReadRectangle());
+                }
+                else if (fieldType == typeof(Color))
+                {
+                    fieldInfo.SetValue(obj, binaryReader.ReadColor());
+                }
+                else if (fieldType == typeof(bool) && bitReader is not null)
                 {
                     fieldInfo.SetValue(obj, bitReader.ReadBit());
                 }
                 else
-                {
-                    fieldInfo.SetValue(obj, typeof(BinaryReader).GetMethod($"Read{fieldInfo.FieldType.Name}").Invoke(binaryReader, null));
+                {  
+                    fieldInfo.SetValue(obj, typeof(BinaryReader).GetMethod($"Read{fieldType.Name}").Invoke(binaryReader, null));
                 }
             }
         }
@@ -130,6 +150,33 @@ namespace Macrocosm.Common.Netcode
             short x = reader.ReadInt16();
             short y = reader.ReadInt16();
             return new Point16(x, y);
+        }
+
+        public static void WriteRectangle(this BinaryWriter writer, Rectangle rectangle)
+        {
+            writer.Write(rectangle.X);
+            writer.Write(rectangle.Y);
+            writer.Write(rectangle.Width);
+            writer.Write(rectangle.Height);
+        }
+
+        public static Rectangle ReadRectangle(this BinaryReader reader)
+        {
+            int x = reader.ReadInt32();
+            int y = reader.ReadInt32();
+            int w = reader.ReadInt32();
+            int h = reader.ReadInt32();
+            return new Rectangle(x, y, w, h);
+        }
+
+        public static void WriteColor(this BinaryWriter writer, Color color)
+        {
+            writer.Write(color.PackedValue);
+        }
+
+        public static Color ReadColor(this BinaryReader reader)
+        {
+            return new Color() { PackedValue = reader.ReadUInt32() };
         }
     }
 }

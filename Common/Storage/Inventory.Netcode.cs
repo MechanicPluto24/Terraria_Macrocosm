@@ -14,9 +14,8 @@ namespace Macrocosm.Common.Storage
         public enum InventoryMessageType
         {
             SyncEverything,
-            SyncSize,
-            SyncItem,
-            SyncInteraction
+            SyncInteraction,
+            SyncItem
         }
 
         public static void HandlePacket(BinaryReader reader, int sender)
@@ -33,17 +32,13 @@ namespace Macrocosm.Common.Storage
                     ReceiveSyncInteraction(reader, sender);
                     break;
 
-                case InventoryMessageType.SyncSize:
-                    ReceiveSyncSize(reader, sender);
-                    break;
-
                 case InventoryMessageType.SyncItem:
                     ReceiveSyncItem(reader, sender);
                     break;
             }
         }
 
-        public void SyncEverything(int toClient = -1, int ignoreClient = -1)
+        public void SyncEverything(int toClient = -1, int ignoreClient = -1, bool toSubservers = false, int ignoreSubserver = -1)
         {
             if (Main.netMode == NetmodeID.SinglePlayer)
                 return;
@@ -52,21 +47,35 @@ namespace Macrocosm.Common.Storage
 
             packet.Write((byte)MessageType.SyncInventory);
             packet.Write((byte)InventoryMessageType.SyncEverything);
+
+
+            packet.Write(toSubservers);
+            packet.Write((short)NetHelper.GetServerIndex());
+
+
             packet.Write(Owner.InventoryOwnerType);
             packet.Write(Owner.InventorySerializationIndex);
+
             packet.Write((ushort)Size);
             packet.Write((byte)interactingPlayer);
 
             foreach (var item in items)
                 ItemIO.Send(item, packet, writeStack: true, writeFavorite: true);
 
+            if(toSubservers)
+                packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
+
             packet.Send(toClient, ignoreClient);
         }
 
         private static void ReceiveSyncEverything(BinaryReader reader, int sender)
         {
+            bool toSubservers = reader.ReadBoolean();
+            int senderSubserver = reader.ReadInt16();
+
             string ownerType = reader.ReadString();
             int ownerSerializationIndex = reader.ReadInt32();
+
             int newSize = reader.ReadUInt16();
             int interactingPlayer = reader.ReadByte();
 
@@ -93,44 +102,7 @@ namespace Macrocosm.Common.Storage
                     inventory[i] = items[i].Clone();
 
                 if (Main.netMode == NetmodeID.Server)
-                    inventory.SyncEverything(ignoreClient: sender);
-            }
-        }
-
-        public void SyncSize(int toClient = -1, int ignoreClient = -1)
-        {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-                return;
-
-            ModPacket packet = Macrocosm.Instance.GetPacket();
-
-            packet.Write((byte)MessageType.SyncInventory);
-            packet.Write((byte)InventoryMessageType.SyncSize);
-            packet.Write(Owner.InventoryOwnerType);
-            packet.Write(Owner.InventorySerializationIndex);
-            packet.Write((ushort)Size);
-
-            packet.Send(toClient, ignoreClient);
-        }
-
-        private static void ReceiveSyncSize(BinaryReader reader, int sender)
-        {
-            string ownerType = reader.ReadString();
-            int ownerSerializationIndex = reader.ReadInt32();
-            int newSize = reader.ReadUInt16();
-
-            IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-            Inventory inventory = owner.Inventory;
-
-            if (owner is not null)
-            {
-                int oldSize = inventory.Size;
-
-                if (oldSize != newSize)
-                    inventory.OnResize(oldSize, newSize);
-
-                if (Main.netMode == NetmodeID.Server)
-                    inventory.SyncSize(ignoreClient: sender);
+                    inventory.SyncEverything(ignoreClient: sender, toSubservers: toSubservers, ignoreSubserver: senderSubserver);
             }
         }
 
