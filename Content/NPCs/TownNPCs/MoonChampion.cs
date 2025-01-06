@@ -50,6 +50,7 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
         }
+
         public override void SetDefaults()
         {
             NPC.townNPC = true;
@@ -169,14 +170,6 @@ namespace Macrocosm.Content.NPCs.TownNPCs
             AddNewSlot(ModContent.ItemType<LunarCrystal>(), 1);
 
             AddNewSlot(ModContent.ItemType<CrescentScripture>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.LuminiteShrineUnlocked));
-            AddNewSlot(ModContent.ItemType<Procellarum>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.HeavenforgeShrineUnlocked));
-            AddNewSlot(ModContent.ItemType<Ilmenite>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.LunarRustShrineUnlocked));
-            AddNewSlot(ModContent.ItemType<Micronova>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.AstraShrineUnlocked));
-            AddNewSlot(ModContent.ItemType<Totality>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.DarkCelestialShrineUnlocked));
-            AddNewSlot(ModContent.ItemType<ManisolBlades>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.MercuryShrineUnlocked));
-            AddNewSlot(ModContent.ItemType<StarDestroyer>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.StarRoyaleShrineUnlocked));
-            AddNewSlot(ModContent.ItemType<FrigorianGaze>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.CryocoreShrineUnlocked));
-            AddNewSlot(ModContent.ItemType<GreatstaffOfHorus>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.CosmicEmberShrineUnlocked));
 
             shop.Register();
         }
@@ -254,16 +247,19 @@ namespace Macrocosm.Content.NPCs.TownNPCs
             damage = 60;
             knockback = 5f;
         }
+
         public override void DrawTownAttackSwing(ref Texture2D item, ref Rectangle itemFrame, ref int itemSize, ref float scale, ref Vector2 offset)
         {
             item = TextureAssets.Item[ItemID.None].Value;
             scale = 1f;
         }
+
         public override void TownNPCAttackSwing(ref int itemWidth, ref int itemHeight)
         {
             itemWidth = 20;
             itemHeight = NPC.height;
         }
+
         public override void TownNPCAttackCooldown(ref int cooldown, ref int randExtraCooldown)
         {
             cooldown = 20;

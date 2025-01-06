@@ -8,14 +8,18 @@ using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Stubble.Core.Classes;
 using SubworldLibrary;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
+using Terraria.IO;
 using Terraria.ModLoader.IO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -339,13 +343,13 @@ namespace Macrocosm.Common.Subworlds
 
         private void CopyVanillaData()
         {
-            SubworldSystem.CopyWorldData($"!{nameof(Earth.WorldSize)}", Earth.WorldSize);
+            SubworldSystem.CopyWorldData("!" + nameof(Earth.WorldSize), Earth.WorldSize);
             SubworldSystem.CopyWorldData(nameof(Main.moonPhase), Main.moonPhase);
         }
 
         private void ReadCopiedVanillaData()
         {
-            ApplyWorldSize(SubworldSystem.ReadCopiedWorldData<WorldSize>($"!{nameof(Earth.WorldSize)}"));
+            ApplyWorldSize(SubworldSystem.ReadCopiedWorldData<WorldSize>("!" + nameof(Earth.WorldSize)));
             Main.moonPhase = SubworldSystem.ReadCopiedWorldData<int>(nameof(Main.moonPhase));
         }
 
@@ -357,7 +361,7 @@ namespace Macrocosm.Common.Subworlds
             Earth.WorldSize = worldSize;    
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                WorldSize subworldSize = GetSubworldSize(Earth.WorldSize);
+                WorldSize subworldSize = GetSubworldSize(worldSize);
                 Main.maxTilesX = subworldSize.Width;
                 Main.maxTilesY = subworldSize.Height;
             }
