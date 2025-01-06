@@ -289,73 +289,75 @@ namespace Macrocosm.Common.Subworlds
 
         #region Saving and loading
 
-        private void SaveData(TagCompound tag)
-        {
-            WorldFlags.SaveData(tag);
-            RocketManager.SaveData(tag);
-            LaunchPadManager.SaveData(tag);
-            CustomizationStorage.SaveData(tag);
-            TownNPCSystem.SaveData(tag);
-        }
+        protected virtual void PostCopyData() { }
 
-        private void LoadData(TagCompound tag)
-        {
-            WorldFlags.LoadData(tag);
-            RocketManager.LoadData(tag);
-            LaunchPadManager.LoadData(tag);
-            CustomizationStorage.LoadData(tag);
-            TownNPCSystem.LoadData(tag);
-        }
+        protected virtual void PostReadCopiedData() { }
 
         public override void CopySubworldData()
         {
-            TagCompound subworldDataTag = new();
-            SaveData(subworldDataTag);
-            SubworldSystem.CopyWorldData("Macrocosm:subworldDataTag", subworldDataTag);
         }
 
         public override void ReadCopiedSubworldData()
         {
-            TagCompound subworldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:subworldDataTag");
-            LoadData(subworldDataTag);
         }
 
         public override void CopyMainWorldData()
         {
-            TagCompound mainWorldDataTag = new();
-            SaveData(mainWorldDataTag);
-            SaveEarthSpecificData(mainWorldDataTag);
-            SubworldSystem.CopyWorldData("Macrocosm:mainWorldDataTag", mainWorldDataTag);
+            CopyMacrocosmData();
+            CopyVanillaData();
+            PostCopyData();
         }
 
         public override void ReadCopiedMainWorldData()
         {
-            TagCompound mainWorldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:mainWorldDataTag");
-            LoadData(mainWorldDataTag);
-            LoadEarthSpecificData(mainWorldDataTag);
+            ReadCopiedMacrocosmData();
+            ReadCopiedVanillaData();
+            PostReadCopiedData();
         }
 
-        private void SaveEarthSpecificData(TagCompound tag)
+        private static void CopyMacrocosmData()
         {
-            if (SubworldSystem.AnyActive() && !SubworldSystem.AnyActive<Macrocosm>())
-                return;
+            TagCompound data = new();
 
-            // Save Earth's world size for other subworlds to use 
-            tag[nameof(Earth) + nameof(Earth.WorldSize)] = Earth.WorldSize;
+            WorldFlags.SaveData(data);
+            RocketManager.SaveData(data);
+            LaunchPadManager.SaveData(data);
+            CustomizationStorage.SaveData(data);
+            TownNPCSystem.SaveData(data);
+
+            SubworldSystem.CopyWorldData($"{nameof(Macrocosm)}:{nameof(data)}", data);
         }
 
-        private void LoadEarthSpecificData(TagCompound tag)
+        private static void ReadCopiedMacrocosmData()
         {
-            if (SubworldSystem.AnyActive() && !SubworldSystem.AnyActive<Macrocosm>())
-                return;
+            TagCompound data = SubworldSystem.ReadCopiedWorldData<TagCompound>($"{nameof(Macrocosm)}:{nameof(data)}");
 
-            // Read world size and apply it here. 
-            // In SubLib maxTiles are assigned before the data is read.
-            // ReadCopiedMainWorldData is called before worldgen so it can be safely used there.
-            if (tag.ContainsKey(nameof(Earth) + nameof(Earth.WorldSize)))
+            WorldFlags.LoadData(data);
+            RocketManager.LoadData(data);
+            LaunchPadManager.LoadData(data);
+            CustomizationStorage.LoadData(data);
+            TownNPCSystem.LoadData(data);
+        }
+
+        private void CopyVanillaData()
+        {
+            SubworldSystem.CopyWorldData("!" + nameof(Earth.WorldSize), Earth.WorldSize);
+        }
+
+        private void ReadCopiedVanillaData()
+        {
+            ApplyWorldSize(SubworldSystem.ReadCopiedWorldData<WorldSize>("!" + nameof(Earth.WorldSize)));
+        }
+
+        // Read world size and apply it here. 
+        // In SubworldLibrary maxTiles values are assigned before the data is read.
+        // ReadCopiedMainWorldData is called before worldgen so it can be safely used.
+        private void ApplyWorldSize(WorldSize worldSize)
+        {
+            Earth.WorldSize = worldSize;
+            if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                Earth.WorldSize = tag.Get<WorldSize>(nameof(Earth) + nameof(Earth.WorldSize));
-                WorldSize subworldSize = GetSubworldSize(Earth.WorldSize);
+                WorldSize subworldSize = GetSubworldSize(worldSize);
                 Main.maxTilesX = subworldSize.Width;
                 Main.maxTilesY = subworldSize.Height;
             }

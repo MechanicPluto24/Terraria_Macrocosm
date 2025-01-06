@@ -19,18 +19,19 @@ namespace Macrocosm.Common.Systems
     /// </summary>
     class MacrocosmWorld : ModSystem
     {
+        public static int Seed => Main.ActiveWorldFileData.Seed;
+        public static string SeedText => Main.ActiveWorldFileData.SeedText;
+
         /// <summary> Whether the dusk time boundary happened in this update tick </summary>
         public static bool IsDusk { get; set; } = false;
 
         /// <summary> Whether the dawn time boundary happened in this update tick </summary>
         public static bool IsDawn { get; set; } = false;
 
-        public static int Seed => Main.ActiveWorldFileData.Seed;
-        public static string SeedText => Main.ActiveWorldFileData.SeedText;
         public override void OnWorldLoad()
         {
-            if (!SubworldSystem.AnyActive<Macrocosm>())
-                Earth.WorldSize = WorldSize.Current;
+            if (!SubworldSystem.AnyActive())
+                Earth.WorldSize = new WorldSize(Main.maxTilesX, Main.maxTilesY);
         }
 
         private static void RandomTileUpdate()
