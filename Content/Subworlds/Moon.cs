@@ -3,10 +3,12 @@ using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
+using Macrocosm.Content.Skies.Moon;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System;
@@ -39,6 +41,7 @@ namespace Macrocosm.Content.Subworlds
 
         protected override float AtmosphericDensity(Vector2 position) => 0.1f;
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
+        public override string CustomSky => nameof(MoonSky);
 
         public float DemonSunIntensity { get; set; } = 0f;
         public float DemonSunVisualIntensity { get; set; } = 0f;
@@ -70,18 +73,15 @@ namespace Macrocosm.Content.Subworlds
 
         public override void OnEnterSubworld()
         {
-            SkyManager.Instance.Activate("Macrocosm:MoonSky");
-
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
 
             DemonSunIntensity = 0f;
-            EventSystem.DemonSun = false;
+            WorldFlags.DemonSun = false;
         }
 
         public override void OnExitSubworld()
         {
-            SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
             DemonSunIntensity = 0f;
         }
 
@@ -92,11 +92,6 @@ namespace Macrocosm.Content.Subworlds
 
         public override void PreUpdateEntities()
         {
-            if (!Main.dedServ)
-            {
-                if (!SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
-                    SkyManager.Instance.Activate("Macrocosm:MoonSky");
-            }
         }
 
         private int lastMoonPhase;
@@ -208,23 +203,23 @@ namespace Macrocosm.Content.Subworlds
         {
             meteorStormCounter++;
 
-            if (meteorStormWaitTimeToStart <= meteorStormCounter && !EventSystem.MoonMeteorStorm)
+            if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldFlags.MoonMeteorStorm)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.Start"), Color.Gray);
-                EventSystem.MoonMeteorStorm = true;
+                WorldFlags.MoonMeteorStorm = true;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             }
 
-            if (EventSystem.MoonMeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
+            if (WorldFlags.MoonMeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.End"), Color.Gray);
-                EventSystem.MoonMeteorStorm = false;
+                WorldFlags.MoonMeteorStorm = false;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
             }
 
-            if (EventSystem.MoonMeteorStorm)
+            if (WorldFlags.MoonMeteorStorm)
                 MeteorBoost = 1000f;
             else
                 MeteorBoost = 1f;

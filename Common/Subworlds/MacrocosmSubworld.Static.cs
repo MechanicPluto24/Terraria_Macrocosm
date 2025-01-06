@@ -11,6 +11,7 @@ using SubworldLibrary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
@@ -91,34 +92,21 @@ namespace Macrocosm.Common.Subworlds
 
         public static void SetupLoadingScreen(Rocket rocket, string targetWorld)
         {
-            if (rocket is not null)
-            {
-                if (!SubworldSystem.AnyActive<Macrocosm>())
-                {
-                    LoadingScreen = new EarthLoadingScreen();
-                }
-                else
-                {
-                    LoadingScreen = SanitizeID(CurrentID) switch
-                    {
-                        nameof(Moon) => new MoonLoadingScreen(),
-                        _ => null,
-                    };
-                }
-            }
-            else
-            {
-                LoadingScreen = SanitizeID(targetWorld) switch
-                {
-                    nameof(Earth) => new EarthLoadingScreen(),
-                    nameof(Moon) => new MoonLoadingScreen(),
-                    _ => null,
-                };
-            }
+            string currentId = OrbitSubworld.GetParentID(CurrentID);
+            string targetId = OrbitSubworld.GetParentID(targetWorld);
 
-            switch (SanitizeID(targetWorld))
+            string id = SanitizeID(rocket is not null ? currentId : targetId);
+
+            LoadingScreen = id switch
             {
-                case "Moon":
+                nameof(Earth) => new EarthLoadingScreen(),
+                nameof(Moon) => new MoonLoadingScreen(),
+                _ => null,
+            };
+
+            switch (targetId)
+            {
+                case nameof(Moon):
                     LoadingScreen?.SetProgressBar(new(
                         ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad),
                         ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad),
@@ -128,7 +116,7 @@ namespace Macrocosm.Common.Subworlds
             }
 
             if (rocket is not null)
-                LoadingScreen?.SetRocket(rocket);
+                LoadingScreen?.SetRocket(rocket, downwards);
             else
                 LoadingScreen?.ClearRocket();
 

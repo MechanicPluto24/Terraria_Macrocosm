@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using System;
