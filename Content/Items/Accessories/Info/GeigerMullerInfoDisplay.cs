@@ -22,7 +22,6 @@ namespace Macrocosm.Content.Items.Accessories.Info
         private int timer;
         private void Sounds()
         {
-            timer++;
             var irradiationPlayer = Main.LocalPlayer.GetModPlayer<IrradiationPlayer>();
             int ticksPerSecond = (int)(10 / (irradiationPlayer.IrradiationLevel + 0.1));
 
@@ -30,15 +29,21 @@ namespace Macrocosm.Content.Items.Accessories.Info
                 SoundEngine.PlaySound(SoundID.Item11, Main.LocalPlayer.position);
         }
 
+        private float smoothedIrradiationLevel = 0f;
         public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
         {
-            if(!Main.gamePaused)
+            timer++;
+
+            if (!Main.gamePaused)
                 Sounds();
 
             var irradiationPlayer = Main.LocalPlayer.GetModPlayer<IrradiationPlayer>();
-
             float irradiationLevel = irradiationPlayer.IrradiationLevel;
-            float roentgensPerHour = (float)(0.05 * Math.Pow(10, irradiationLevel / 2.0));
+
+            if (timer % 5 == 0)
+                smoothedIrradiationLevel = irradiationLevel;
+
+            float roentgensPerHour = (float)(0.05 * Math.Pow(10, smoothedIrradiationLevel / 2.0));
             string text = $"{roentgensPerHour:F2} R/h";
 
             if (irradiationLevel >= 4f)
