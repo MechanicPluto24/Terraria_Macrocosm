@@ -60,8 +60,8 @@ namespace Macrocosm.Content.Items.Dev
 
             //Main.drunkWorld = !Main.drunkWorld;
 
-            //bool value = WorldFlags.SubworldUnlocked.GetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID);
-            //WorldFlags.SubworldUnlocked.SetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID, !value);
+            bool value = WorldFlags.SubworldUnlocked.GetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID);
+            WorldFlags.SubworldUnlocked.SetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID, !value);
 
             return true;
         }

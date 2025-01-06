@@ -2,6 +2,7 @@
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
@@ -18,6 +19,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
 using Terraria.Graphics.Effects;
+using Terraria.IO;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
@@ -358,14 +360,14 @@ namespace Macrocosm.Common.Subworlds
 
         private void ReadCopiedVanillaData()
         {
-            ApplyWorldSize(SubworldSystem.ReadCopiedWorldData<WorldSize>("!" + nameof(Earth.WorldSize)));
-            Main.moonPhase = SubworldSystem.ReadCopiedWorldData<int>(nameof(Main.moonPhase));
+            SetWorldSize(SubworldSystem.ReadCopiedWorldData<WorldSize>("!" + nameof(Earth.WorldSize)));
+            SetMoonPhase(SubworldSystem.ReadCopiedWorldData<int>(nameof(Main.moonPhase)));
         }
 
         // Read world size and apply it here. 
         // In SubworldLibrary maxTiles values are assigned before the data is read.
         // ReadCopiedMainWorldData is called before worldgen so it can be safely used.
-        private void ApplyWorldSize(WorldSize worldSize)
+        private void SetWorldSize(WorldSize worldSize)
         {
             Earth.WorldSize = worldSize;    
             if (SubworldSystem.AnyActive<Macrocosm>())
@@ -374,6 +376,12 @@ namespace Macrocosm.Common.Subworlds
                 Main.maxTilesX = subworldSize.Width;
                 Main.maxTilesY = subworldSize.Height;
             }
+        }
+
+        private void SetMoonPhase(int moonPhase)
+        {
+            Main.moonPhase = moonPhase;
+            typeof(WorldFile).SetFieldValue("_tempMoonPhase", moonPhase);
         }
 
         #endregion
