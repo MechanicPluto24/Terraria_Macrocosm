@@ -32,11 +32,12 @@ namespace Macrocosm.Content.Subworlds
         public static Moon Instance => ModContent.GetInstance<Moon>();
 
         // 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
-        public override double TimeRate => 0.125;
+        protected override double TimeRate => 0.125;
 
         // About 6 times lower than default (1, as on Earth)
-        public override float GravityMultiplier => 0.166f;
-        public override float AtmosphericDensity => 0.1f;
+        protected override float GravityMultiplier => 0.166f;
+
+        protected override float AtmosphericDensity(Vector2 position) => 0.1f;
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
         public float DemonSunIntensity { get; set; } = 0f;
@@ -54,7 +55,7 @@ namespace Macrocosm.Content.Subworlds
         };
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
-        public override float GetAmbientTemperature() => Utility.ScaleNoonToMidnight(-183f, 106f);
+        public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-183f, 106f);
 
         public override Dictionary<MapColorType, Color> MapColors => new()
         {

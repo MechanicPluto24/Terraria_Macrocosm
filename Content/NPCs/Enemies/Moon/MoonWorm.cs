@@ -2,6 +2,7 @@ using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -121,7 +122,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY < Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() ? .01f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY < Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() ? (RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f: .01f) : 0f;
         }
 
         public override void Init()

@@ -61,16 +61,26 @@ ServerConfig: {
 		Tooltip: Disable the generation of Oil Shale in the Underground Desert, to avoid breaking other mods' biomes.
 	}
 
-	Circuits: Circuits
+	Updates: Updates
 
 	CircuitSearchUpdateRate: {
 		Label: Circuit Search Update Frequency
-		Tooltip: Adjust the update frequency of circuit search, in ticks. Higher values mean less frequent searches, which might improve performance.
+		Tooltip: Adjust the update frequency of circuit search.
 	}
 
 	CircuitSolveUpdateRate: {
 		Label: Circuit Solve Update Frequency
-		Tooltip: Adjust the update frequency of circuit solving, in ticks. Higher values mean less frequent updates, which might improve performance.
+		Tooltip: Adjust the update frequency of circuit solving.
+	}
+
+	RoomPressureUpdateRate: {
+		Label: Room Pressure Update Frequency
+		Tooltip: ""
+	}
+
+	ClusterFindUpdateRate: {
+		Label: Cluster Find Update Rate
+		Tooltip: ""
 	}
 }
 
@@ -78,4 +88,12 @@ UnitSystemType: {
 	Tooltip: ""
 	Metric.Label: Metric
 	Imperial.Label: Imperial
+}
+
+UpdateRate: {
+	Tooltip: ""
+	Realtime.Label: Realtime (every update tick)
+	Fast.Label: Fast (6 times per second)
+	Medium.Label: Medium (twice per second)
+	Slow.Label: Slow (once per second)
 }

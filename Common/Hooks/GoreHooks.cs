@@ -45,12 +45,6 @@ namespace Macrocosm.Common.Hooks
         }
 
         // replace gravity increment with desired value 
-        private static float GetGoreGravity()
-        {
-            if (SubworldSystem.AnyActive<Macrocosm>())
-                return Earth.GoreGravity * MacrocosmSubworld.Current.GravityMultiplier;
-
-            return Earth.GoreGravity;
-        }
+        private static float GetGoreGravity() => Earth.GoreGravity * MacrocosmSubworld.GetGravityMultiplier();
     }
 }

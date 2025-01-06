@@ -1,6 +1,7 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using System.Collections.Generic;
@@ -52,13 +53,17 @@ namespace Macrocosm.Common.Global.NPCs
                 spawnRate = (int)(spawnRate * 1f);
                 maxSpawns = (int)(maxSpawns * 1f);
             }
+            if(RoomOxygenSystem.IsRoomPressurized((int)(player.Center.X/16f), (int)(player.Center.Y/16f))){
+                spawnRate = (int)(spawnRate * 10f);
+                maxSpawns = (int)(maxSpawns * 0.6f);
+            }
         }
 
         public override void AI(NPC npc)
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                npc.GravityMultiplier *= MacrocosmSubworld.Current.GravityMultiplier;
+                npc.GravityMultiplier *= MacrocosmSubworld.GetGravityMultiplier();
                 npc.GravityIgnoresSpace = true;
             }
         }
