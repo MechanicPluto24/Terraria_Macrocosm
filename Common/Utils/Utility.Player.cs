@@ -77,6 +77,17 @@ namespace Macrocosm.Common.Utils
         public static Tile TargetTile() => Main.tile[Player.tileTargetX, Player.tileTargetY];
         public static Tile TargetTile(this Player _) => Main.tile[Player.tileTargetX, Player.tileTargetY];
 
+        public static bool CanHurtCritterAroundPosition(Vector2 position, float radius)
+        {
+            foreach(var player in Main.ActivePlayers)
+            {
+                if ((position - player.Center).Length() < radius && player.dontHurtCritters)
+                    return false;
+            }
+
+            return true;
+        }
+
         public static Rectangle GetSwungItemHitbox(this Player player)
         {
             //Found in Player.cs
