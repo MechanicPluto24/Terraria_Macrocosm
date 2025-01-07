@@ -115,7 +115,15 @@ namespace Macrocosm.Common.Utils
                 topLeft = GetMultitileTopLeft(x, y);
 
             WorldGen.KillTile(topLeft.X, topLeft.Y, noItem: true);
-            WorldGen.PlaceObject(topLeft.X + data.Origin.X, topLeft.Y + data.Origin.Y, type, mute: true, style, alternate);
+
+            int dir = 1;
+            int tileX = topLeft.X + data.Origin.X;
+            int tileY = topLeft.Y + data.Origin.Y;
+            if(TileObject.CanPlace(tileX, tileY, type, style, dir, out TileObject tileObject))
+            {
+                WorldGen.PlaceObject(tileX, tileY, type, mute: true, style, alternate);
+                TileObjectData.CallPostPlacementPlayerHook(tileX, tileY, type, style, dir, alternate, tileObject);
+            }
         }
 
         public static Color GetPaintColor(Point coords) => WorldGen.paintColor(Main.tile[coords].TileColor);
@@ -241,11 +249,7 @@ namespace Macrocosm.Common.Utils
             return top || bottom || left || right;
         }
 
-        public static bool AnyConnectedSlopeOrHalfBlock(int i, int j)
-        {
-            return AnyConnectedSlope(i, j) || Main.tile[i, j + 1].IsHalfBlock;
-        }
-
+        public static bool AnyConnectedSlopeOrHalfBlock(int i, int j) => AnyConnectedSlope(i, j) || Main.tile[i, j + 1].IsHalfBlock;
         public static bool HasBlendingFrame(int i, int j) => Main.tile[i, j].TileFrameX >= 234 || Main.tile[i, j].TileFrameY >= 90;
         public static bool HasBlendingFrame(this Tile tile) => tile.TileFrameX >= 234 || tile.TileFrameY >= 90;
 
