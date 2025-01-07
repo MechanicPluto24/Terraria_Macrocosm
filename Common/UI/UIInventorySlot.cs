@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
+using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -46,6 +48,8 @@ namespace Macrocosm.Common.UI
         public bool CanInteract { get; set; } = true;
         public bool CanTrash { get; set; } = false;
         public bool CanFavorite { get; set; } = false;
+        public bool CanRightClickSwap { get; set; } = false;
+        public bool CanOpenContainer { get; set; } = false;
         protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
 
         public float SizeLimit { get; set; } = 32f;
@@ -254,10 +258,29 @@ namespace Macrocosm.Common.UI
             if (!Main.mouseRight)
                 return;
 
+            if (CanRightClickSwap && Main.mouseRightRelease)
+                TryItemSwap(item);
+
+            if (CanOpenContainer && ItemLoader.CanRightClick(item))
+            {
+                if (Main.mouseRightRelease)
+                {
+                    if (Main.ItemDropsDB.GetRulesForItemID(item.type).Count > 0)
+                        TryOpenContainer(item, player);
+                    else
+                        ItemLoader.RightClick(item, player);
+                }
+
+                return;
+            }
+
             if (item.maxStack == 1)
             {
                 if (Main.mouseRightRelease)
-                    SwapEquip(inventory.Items, itemSlotContext, itemIndex);
+                {
+                    SwapEquip(ref item, itemSlotContext);
+                    return;
+                }
             }
 
             if (Main.stackSplit > 1)
@@ -307,6 +330,21 @@ namespace Macrocosm.Common.UI
                 Main.HoverItem = item.Clone();
                 Main.HoverItem.tooltipContext = itemSlotContext;
             }
+        }
+
+        private static MethodInfo itemSlot_TryItemSwap;
+        private static MethodInfo itemSlot_TryOpenContainer;
+
+        private static void TryItemSwap(Item item)
+        {
+            itemSlot_TryItemSwap ??= typeof(ItemSlot).GetMethod("TryItemSwap", BindingFlags.NonPublic | BindingFlags.Static);
+            itemSlot_TryItemSwap.Invoke(null, [item]);
+        }
+
+        private static void TryOpenContainer(Item item, Player player)
+        {
+            itemSlot_TryOpenContainer ??= typeof(ItemSlot).GetMethod("TryOpenContainer", BindingFlags.NonPublic | BindingFlags.Static);
+            itemSlot_TryOpenContainer.Invoke(null, [item, player]);
         }
 
         protected sealed override void DrawSelf(SpriteBatch spriteBatch)
