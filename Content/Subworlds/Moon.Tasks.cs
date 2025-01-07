@@ -1214,15 +1214,20 @@ namespace Macrocosm.Content.Subworlds
                 Chest chest = Main.chest[i];
                 if (chest != null)
                 {
+                    if (Main.tile[chest.x, chest.y].TileType == TileType<LuminiteChest>())
+                    {
+                        LuminiteStyle style = (LuminiteStyle)(Main.tile[chest.x, chest.y].TileFrameX / (18 * 2 * 2));
+                        ManageLuminiteChest(chest, i, style);
+                    }
+
                     if (Main.tile[chest.x, chest.y].TileType == TileType<IndustrialChest>())
                     {
                         ManageIndustrialChest(chest, i);
                     }
 
-                    if (Main.tile[chest.x, chest.y].TileType == TileType<LuminiteChest>())
+                    if (Main.tile[chest.x, chest.y].TileType == TileType<IndustrialLocker>())
                     {
-                        LuminiteStyle style = (LuminiteStyle)(Main.tile[chest.x, chest.y].TileFrameX / (18 * 2 * 2));
-                        ManageLuminiteChest(chest, i, style);
+                        ManageLocker(chest, i);
                     }
                 }
             }
@@ -1569,6 +1574,34 @@ namespace Macrocosm.Content.Subworlds
 
             chest.item[slot].SetDefaults(ItemType<Moonstone>());
             chest.item[slot++].stack = WorldGen.genRand.Next(1, 20);
+        }
+
+        public void ManageLocker(Chest chest, int index)
+        {
+            int slot = 0;
+            int random;
+            random = WorldGen.genRand.Next(0, 5); 
+            switch (random)
+            {
+                case 0:
+                    chest.item[slot].SetDefaults(ItemType<Medkit>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(5, 16);
+                    break;
+                case 1:
+                    chest.item[slot].SetDefaults(ItemType<AntiRadiationPills>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(5, 16);
+                    break;
+                case 2:
+                    chest.item[slot].SetDefaults(ItemType<Plastic>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                case 3:
+                    chest.item[slot].SetDefaults(ItemType<RocketFuelCanister>());
+                    chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
