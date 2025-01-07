@@ -2751,3 +2751,9 @@ SolarPanelTile: {
 	DisplayName: Solar Panel Tile
 	Tooltip: ""
 }
+
+TrailScepter: {
+	Tooltip: Fires a flurry of ruinous stars
+	DisplayName: Trail Scepter
+}
+
