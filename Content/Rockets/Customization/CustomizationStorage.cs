@@ -247,7 +247,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
             string logstring = "Loaded " + patterns.Count.ToString() + " pattern" + (patterns.Count == 1 ? "" : "s") + ":\n";
 
-            foreach (string moduleName in Rocket.DefaultModuleNames)
+            foreach (string moduleName in Rocket.ModuleNames)
             {
                 logstring += $" - Module: {moduleName}\n\t";
                 foreach (var kvp in patterns)
@@ -265,7 +265,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
         private static void LoadDetails()
         {
-            foreach (string moduleName in Rocket.DefaultModuleNames)
+            foreach (string moduleName in Rocket.ModuleNames)
                 AddDetail(moduleName, "None", true);
 
             if (Main.dedServ)
@@ -292,7 +292,7 @@ namespace Macrocosm.Content.Rockets.Customization
             }
 
             string logstring = "Loaded " + details.Count.ToString() + " detail" + (detailPaths.Count == 1 ? "" : "s") + ":\n";
-            foreach (string moduleName in Rocket.DefaultModuleNames)
+            foreach (string moduleName in Rocket.ModuleNames)
             {
                 logstring += $" - Module: {moduleName}\n\t";
                 foreach (var kvp in details)

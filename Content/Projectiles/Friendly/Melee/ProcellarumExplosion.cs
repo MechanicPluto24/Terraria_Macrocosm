@@ -83,6 +83,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         new(232, 239, 255, 0)
                     }.GetRandom();
                     p.OutlineColor = p.Color * 0.2f;
+                    p.FadeOutNormalizedTime = 0.5f;
                 });
             }
 

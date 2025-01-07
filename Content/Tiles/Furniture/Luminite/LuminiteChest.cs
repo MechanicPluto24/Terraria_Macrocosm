@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Enums;
-using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Keys;
 using Macrocosm.Content.Particles;
@@ -100,48 +100,77 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             if (style == LuminiteStyle.Luminite)
                 return true;
 
-            ref bool flag = ref WorldFlags.HeavenforgeShrineUnlocked;
             switch (style)
             {
-                case LuminiteStyle.Heavenforge: flag = ref WorldFlags.HeavenforgeShrineUnlocked; break;
-                case LuminiteStyle.LunarRust: flag = ref WorldFlags.LunarRustShrineUnlocked; break;
-                case LuminiteStyle.Astra: flag = ref WorldFlags.AstraShrineUnlocked; break;
-                case LuminiteStyle.DarkCelestial: flag = ref WorldFlags.DarkCelestialShrineUnlocked; break;
-                case LuminiteStyle.Mercury: flag = ref WorldFlags.MercuryShrineUnlocked; break;
-                case LuminiteStyle.StarRoyale: flag = ref WorldFlags.StarRoyaleShrineUnlocked; break;
-                case LuminiteStyle.Cryocore: flag = ref WorldFlags.CryocoreShrineUnlocked; break;
-                case LuminiteStyle.CosmicEmber: flag = ref WorldFlags.CosmicEmberShrineUnlocked; break;
-                default: break;
-            }
-
-            if (!flag && Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                for (float f = 0f; f < 10f; f += 1f)
-                {
-                    int time = Main.rand.Next(20, 40);
-                    Particle.Create<PrettySparkle>((p) =>
-                    {
-                        p.Position = new Vector2(i, j) * 16f + new Vector2(16f) + Main.rand.NextVector2Circular(16f, 16f);
-                        p.Color = Utility.GetLightColorFromLuminiteStyle(style);
-                        p.Scale = new Vector2(1f + Main.rand.NextFloat() * 2f, 0.7f + Main.rand.NextFloat() * 0.7f);
-                        p.Velocity = new Vector2(0f, -2f) * Main.rand.NextFloat();
-                        p.FadeInNormalizedTime = 5E-06f;
-                        p.FadeOutNormalizedTime = 0.95f;
-                        p.TimeToLive = time;
-                        p.FadeOutEnd = time;
-                        p.FadeInEnd = time / 2;
-                        p.FadeOutStart = time / 2;
-                        p.AdditiveAmount = 0.35f;
-                        p.DrawHorizontalAxis = true;
-                        p.DrawVerticalAxis = true;
-                    }, shouldSync: true);
-                }
-
-                WorldFlags.SetFlag(ref flag, true);
-                NetMessage.SendData(MessageID.WorldData);
+                case LuminiteStyle.Heavenforge:
+                    WorldFlags.HeavenforgeShrineUnlocked = true;
+                    OnFirstUnlock(WorldFlags.HeavenforgeShrineUnlocked, i, j, style);
+                    break;
+                case LuminiteStyle.LunarRust:
+                    WorldFlags.LunarRustShrineUnlocked = true;
+                    OnFirstUnlock(WorldFlags.LunarRustShrineUnlocked, i, j, style);
+                    break;
+                case LuminiteStyle.Astra:
+                    WorldFlags.AstraShrineUnlocked = true;
+                    OnFirstUnlock(WorldFlags.AstraShrineUnlocked, i, j, style);
+                    break;
+                case LuminiteStyle.DarkCelestial:
+                    WorldFlags.DarkCelestialShrineUnlocked = true;
+                    OnFirstUnlock(WorldFlags.DarkCelestialShrineUnlocked, i, j, style);
+                    break;
+                case LuminiteStyle.Mercury:
+                    WorldFlags.MercuryShrineUnlocked = true;
+                    OnFirstUnlock(WorldFlags.MercuryShrineUnlocked, i, j, style);
+                    break;
+                case LuminiteStyle.StarRoyale:
+                    WorldFlags.StarRoyaleShrineUnlocked = true;
+                    OnFirstUnlock(WorldFlags.StarRoyaleShrineUnlocked, i, j, style);
+                    break;
+                case LuminiteStyle.Cryocore:
+                    WorldFlags.CryocoreShrineUnlocked = true;
+                    OnFirstUnlock(WorldFlags.CryocoreShrineUnlocked, i, j, style);
+                    break;
+                case LuminiteStyle.CosmicEmber:
+                    WorldFlags.CosmicEmberShrineUnlocked = true;
+                    OnFirstUnlock(WorldFlags.CosmicEmberShrineUnlocked, i, j, style);
+                    break;
+                default:
+                    break;
             }
 
             return true;
+        }
+
+        private void OnFirstUnlock(bool flag, int i, int j, LuminiteStyle style)
+        {
+            if (flag)
+                return;
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                return;
+
+            for (float f = 0f; f < 10f; f += 1f)
+            {
+                int time = Main.rand.Next(20, 40);
+                Particle.Create<PrettySparkle>((p) =>
+                {
+                    p.Position = new Vector2(i, j) * 16f + new Vector2(16f) + Main.rand.NextVector2Circular(16f, 16f);
+                    p.Color = Utility.GetLightColorFromLuminiteStyle(style);
+                    p.Scale = new Vector2(1f + Main.rand.NextFloat() * 2f, 0.7f + Main.rand.NextFloat() * 0.7f);
+                    p.Velocity = new Vector2(0f, -2f) * Main.rand.NextFloat();
+                    p.FadeInNormalizedTime = 5E-06f;
+                    p.FadeOutNormalizedTime = 0.95f;
+                    p.TimeToLive = time;
+                    p.FadeOutEnd = time;
+                    p.FadeInEnd = time / 2;
+                    p.FadeOutStart = time / 2;
+                    p.AdditiveAmount = 0.35f;
+                    p.DrawHorizontalAxis = true;
+                    p.DrawVerticalAxis = true;
+                }, shouldSync: true);
+            }
+
+            NetMessage.SendData(MessageID.WorldData);
         }
 
         public override bool LockChest(int i, int j, ref short frameXAdjustment, ref bool manual)

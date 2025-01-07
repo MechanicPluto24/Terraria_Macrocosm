@@ -110,17 +110,19 @@ namespace Macrocosm.Content.Rockets
 
         public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld = true)
         {
-            foreach (RocketModule module in ModulesByDrawPriority)
+            foreach (RocketModule module in ActiveModulesByDrawPriority)
             {
-                module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
+                if(module.Active)
+                    module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
         public void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld = true)
         {
-            foreach (RocketModule module in ModulesByDrawPriority)
+            foreach (RocketModule module in ActiveModulesByDrawPriority)
             {
-                module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
+                if (module.Active)
+                    module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
@@ -138,6 +140,12 @@ namespace Macrocosm.Content.Rockets
 
                 if (State == ActionState.Landing && LandingProgress > 0.9f)
                     scale *= Utility.QuadraticEaseOut((1f - LandingProgress) * 10f);
+
+                if (State == ActionState.Docking && DockingProgress > 0.9f)
+                    scale *= Utility.QuadraticEaseOut((1f - DockingProgress) * 10f);
+
+                if (State == ActionState.Undocking && UndockingProgress < 0.1f)
+                    scale *= Utility.QuadraticEaseOut((UndockingProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
                 spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
@@ -160,9 +168,10 @@ namespace Macrocosm.Content.Rockets
         // Draw types
         private void DrawWorld(SpriteBatch spriteBatch, Vector2 position)
         {
-            foreach (RocketModule module in ModulesByDrawPriority)
+            foreach (RocketModule module in ActiveModulesByDrawPriority)
             {
-                module.Draw(spriteBatch, GetModuleRelativePosition(module, position));
+                if(module.Active) 
+                    module.Draw(spriteBatch, GetModuleRelativePosition(module, position));
             }
         }
 
@@ -194,21 +203,24 @@ namespace Macrocosm.Content.Rockets
 
         private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
         {
-            foreach (RocketModule module in ModulesByDrawPriority.OrderBy(module => module.BlueprintHighlighted))
+            foreach (RocketModule module in ActiveModulesByDrawPriority.OrderBy(module => module.BlueprintHighlighted))
             {
                 Vector2 drawPosition = GetModuleRelativePosition(module, position);
 
-                if (module.IsBlueprint)
+                if (module.Active)
                 {
-                    if (module is BoosterLeft)
-                        drawPosition.X -= 78;
+                    if (module.IsBlueprint)
+                    {
+                        if (module is BoosterLeft)
+                            drawPosition.X -= 78;
 
-                    module.DrawBlueprint(spriteBatch, drawPosition);
-                }
-                else
-                {
-                    module.PreDrawBeforeTiles(spriteBatch, drawPosition, inWorld: false);
-                    module.Draw(spriteBatch, drawPosition);
+                        module.DrawBlueprint(spriteBatch, drawPosition);
+                    }
+                    else
+                    {
+                        module.PreDrawBeforeTiles(spriteBatch, drawPosition, inWorld: false);
+                        module.Draw(spriteBatch, drawPosition);
+                    }
                 }
             }
         }

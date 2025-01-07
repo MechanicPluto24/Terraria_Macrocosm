@@ -13,7 +13,7 @@ namespace Macrocosm.Common.Systems.Power
 {
     public partial class MachineTE
     {
-        private class WireCircuit : Circuit<MachineTE>
+        protected class WireCircuit : Circuit<MachineTE>
         {
             public WireType WireType { get; }
 
@@ -191,7 +191,7 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        private class ConveyorCircuit : Circuit<MachineTE>
+        protected class ConveyorCircuit : Circuit<MachineTE>
         {
             public override void Merge(Circuit<MachineTE> other)
             {
@@ -222,15 +222,15 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        private WireCircuit wireCircuit = null;
-        private ConveyorCircuit conveyorCircuit = null;
+        protected WireCircuit wireCircuit = null;
+        protected ConveyorCircuit conveyorCircuit = null;
 
-        private static List<WireType> WireTypes => Enum.GetValues<WireType>().ToList();
+        protected static List<WireType> WireTypes => Enum.GetValues<WireType>().ToList();
 
         private static int buildTimer = 0;
         private void BuildCircuits()
         {
-            if (buildTimer++ >= ServerConfig.Instance.CircuitSearchUpdateRate)
+            if (buildTimer++ >= (int)ServerConfig.Instance.CircuitSearchUpdateRate)
             {
                 RefreshCircuits();
                 BuildWireCircuits();
@@ -257,14 +257,14 @@ namespace Macrocosm.Common.Systems.Power
             {
                 foreach (var te in ByID.Values)
                 {
-                    if (te is MachineTE machine)
+                    if (te is MachineTE machine && !machine.InactiveInCluster)
                     {
                         if (machine.wireCircuit != null)
                             continue;
 
                         ConnectionSearch<MachineTE> connectionSearch = new(
                             connectionCheck: position => Main.tile[position].HasWire(wireType),
-                            retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) ? m : null
+                            retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) && !m.InactiveInCluster ? m : null
                         );
 
                         HashSet<MachineTE> connectedNodes = connectionSearch.FindConnectedNodes(machine.GetConnectionPositions());
@@ -318,7 +318,7 @@ namespace Macrocosm.Common.Systems.Power
         {
             foreach (var te in ByID.Values)
             {
-                if (te is MachineTE machine)
+                if (te is MachineTE machine && !machine.InactiveInCluster)
                 {
                     if (machine.conveyorCircuit != null)
                     {
@@ -327,7 +327,7 @@ namespace Macrocosm.Common.Systems.Power
 
                     ConnectionSearch<MachineTE> connectionSearch = new(
                         connectionCheck: position => ConnectorSystem.Map[position].Conveyor,
-                        retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) ? m : null
+                        retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) && !m.InactiveInCluster ? m : null
                     );
 
                     HashSet<MachineTE> connectedNodes = connectionSearch.FindConnectedNodes(machine.GetConnectionPositions());
@@ -379,7 +379,7 @@ namespace Macrocosm.Common.Systems.Power
         private static int solveTimer = 0;
         private static void SolveCircuits()
         {
-            if (solveTimer++ >= ServerConfig.Instance.CircuitSolveUpdateRate)
+            if (solveTimer++ >= (int)ServerConfig.Instance.CircuitSolveUpdateRate)
             {
                 HashSet<WireCircuit> processedWireCircuits = new();
                 foreach (WireType wireType in WireTypes)
@@ -392,8 +392,7 @@ namespace Macrocosm.Common.Systems.Power
                             {
                                 if (!processedWireCircuits.Contains(machine.wireCircuit))
                                 {
-                                    //Main.NewText($"{machine.Name}{machine.ID}: {machine.wireCircuit.NodeCount}");
-                                    machine.wireCircuit.Solve(ServerConfig.Instance.CircuitSolveUpdateRate);
+                                    machine.wireCircuit.Solve((int)ServerConfig.Instance.CircuitSolveUpdateRate);
                                     processedWireCircuits.Add(machine.wireCircuit);
                                 }
                             }
@@ -425,16 +424,19 @@ namespace Macrocosm.Common.Systems.Power
 
         protected virtual IEnumerable<Point16> GetConnectionPositions()
         {
-            int startX = Position.X;
-            int startY = Position.Y;
-            int width = MachineTile.Width;
-            int height = MachineTile.Height;
-
-            for (int x = startX; x < startX + width; x++)
+            if(CanCluster && Cluster != null)
             {
-                for (int y = startY; y < startY + height; y++)
+                foreach (var position in Cluster)
+                    yield return position;
+            }
+            else
+            {
+                for (int x = Position.X; x < Position.X + MachineTile.Width; x++)
                 {
-                    yield return new Point16(x, y);
+                    for (int y = Position.Y; y < Position.Y + MachineTile.Height; y++)
+                    {
+                        yield return new Point16(x, y);
+                    }
                 }
             }
         }

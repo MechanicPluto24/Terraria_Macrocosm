@@ -107,13 +107,12 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                     continue;
 
                 var rocketPlayer = player.GetModPlayer<RocketPlayer>();
-
                 if (rocketPlayer.InRocket && rocketPlayer.RocketID == Rocket.WhoAmI)
                 {
                     if (rocketPlayer.IsCommander)
                         commander = player;
-                    else
-                        crew.Add(player);
+
+                    crew.Add(player);
                 }
             }
 
@@ -123,7 +122,6 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 crewPanel.Deactivate();
                 crewPanel.ClearList();
 
-                crewPanel.Add(new UIPlayerInfoElement(commander, large: false));
                 crew.ForEach(player => crewPanel.Add(new UIPlayerInfoElement(player, large: false)));
 
                 if (crew.Count > 0)
@@ -132,7 +130,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 prevCommander = commander;
                 prevCrew = crew;
 
-                Activate();
+                crewPanel.Activate();
             }
         }
 

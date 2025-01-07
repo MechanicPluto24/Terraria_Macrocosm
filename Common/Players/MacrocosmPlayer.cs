@@ -27,6 +27,11 @@ namespace Macrocosm.Common.Players
         /// </summary>
         public float SpaceProtection { get; set; } = 0f;
 
+        /// <summary>
+        /// The player's movement speed in zero gravity.
+        /// </summary>
+        public float ZeroGravitySpeed { get; set; } = 2f;
+
         /// <summary> 
         /// Chance to not consume ammo from equipment and weapons, stacks additively with the vanilla chance.
         /// Not synced.
@@ -107,6 +112,8 @@ namespace Macrocosm.Common.Players
         {
             SpaceProtection = 0f;
 
+            ZeroGravitySpeed = 2f;
+
             ChanceToNotConsumeAmmo = 0f;
             ShootSpreadReduction = 0f;
 
@@ -135,8 +142,13 @@ namespace Macrocosm.Common.Players
                 Player.buffImmune[BuffType<Depressurized>()] = true;
                 Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + (int)(SpaceProtection / 3f));
             }
+            else if(RoomOxygenSystem.IsRoomPressurized(Player.Center))
+            {
+                Player.buffImmune[BuffType<Depressurized>()] = true;
+            }
 
-            if (HeldProjectileCooldown < 600) HeldProjectileCooldown++; // 600 ticks as none of these weapons will have a use time above 10s.
+            if (HeldProjectileCooldown < 600)
+                HeldProjectileCooldown++; // 600 ticks as none of these weapons will have a use time above 10s.
         }
 
         public override bool CanUseItem(Item item)
@@ -156,16 +168,8 @@ namespace Macrocosm.Common.Players
             return consumeAmmo;
         }
 
-        // FIXME: Not working atm
         public override void ModifyShootStats(Item item, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            /*
-            if (ShootSpreadReduction <= 0f)
-                return;
-
-            Vector2 targetDirection = (Main.MouseWorld - position).SafeNormalize(Vector2.Zero);
-            velocity = Vector2.Lerp(velocity, targetDirection * velocity.Length(), ShootSpreadReduction);
-            */
         }
 
         public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)
@@ -181,6 +185,45 @@ namespace Macrocosm.Common.Players
 
             modifiers.CritDamage += ExtraCritDamagePercent;
             modifiers.NonCritDamage *= NonCritDamageMultiplier;
+        }
+
+        public override void PreUpdateMovement()
+        {
+        }
+
+        public override void PostUpdate()
+        {
+            HandleZeroGravity();
+        }
+
+        private void HandleZeroGravity()
+        {
+            if (Player.gravity > float.Epsilon)
+                return;
+
+            if (Player.mount.Active && (Player.mount._data.usesHover || Player.mount._data.constantJump))
+                return;
+
+            if (Collision.TileCollision(Player.position, Player.velocity, Player.width, Player.height, gravDir: (int)Player.gravDir) == Vector2.Zero)
+                Player.velocity = new Vector2(0, 0.01f);
+
+            float speed = ZeroGravitySpeed;
+
+            Player.stepSpeed = 0.5f;
+
+            if (Player.controlUp)
+                Player.velocity.Y = MathHelper.Lerp(Player.velocity.Y, -speed, 0.5f);
+            else if (Player.controlDown)
+                Player.velocity.Y = MathHelper.Lerp(Player.velocity.Y, speed, 0.5f);
+            else
+                Player.velocity.Y *= 0.99f;
+
+            if (Player.controlLeft)
+                Player.velocity.X = MathHelper.Lerp(Player.velocity.X, -speed, 0.5f);
+            else if (Player.controlRight)
+                Player.velocity.X = MathHelper.Lerp(Player.velocity.X, speed, 0.5f);
+            else
+                Player.velocity.X *= 0.99f;
         }
 
         #region Biome & Visual Effects

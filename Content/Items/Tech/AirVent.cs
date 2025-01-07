@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Tech
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Tech.AirVent>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.AirVent>());
             Item.width = 20;
             Item.height = 24;
             Item.value = 100;

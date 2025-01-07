@@ -4,9 +4,11 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public class BoosterRight : Booster
     {
-        public override int Width => 46;
-        public override int Height => 304;
-        public override Rectangle Hitbox => base.Hitbox with { Width = base.Hitbox.Width + 78, Height = base.Hitbox.Height + 8 };
+        public override int Width => 124;
+        public override int Height => 314;
+
+        public override Vector2 Offset => new(152, 284);
+
         public override float ExhaustOffsetX => 32f;
 
         protected override Vector2 LandingLegDrawOffset => new(28, 208);

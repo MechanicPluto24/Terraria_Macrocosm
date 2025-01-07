@@ -18,6 +18,7 @@ namespace Macrocosm.Content.Dusts
             base.OnSpawn(dust);
 
         }
+
         public override bool Update(Dust dust)
         {
             dust.position += dust.velocity;
@@ -27,6 +28,7 @@ namespace Macrocosm.Content.Dusts
                 dust.active = false;
             return false;
         }
+
         public static void DrawAll(SpriteBatch sb)
         {
             foreach (Dust d in Main.dust)
