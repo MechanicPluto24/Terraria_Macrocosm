@@ -2757,3 +2757,107 @@ TrailScepter: {
 	DisplayName: Trail Scepter
 }
 
+HaemonovaBrick: {
+	DisplayName: Haemonova Brick
+	Tooltip: ""
+}
+
+HaemonovaBathtub: {
+	DisplayName: Haemonova Bathtub
+	Tooltip: ""
+}
+
+HaemonovaBed: {
+	DisplayName: Haemonova Bed
+	Tooltip: ""
+}
+
+HaemonovaBookcase: {
+	DisplayName: Haemonova Bookcase
+	Tooltip: ""
+}
+
+HaemonovaCandelabra: {
+	DisplayName: Haemonova Candelabra
+	Tooltip: ""
+}
+
+HaemonovaCandle: {
+	DisplayName: Haemonova Candle
+	Tooltip: ""
+}
+
+HaemonovaChair: {
+	DisplayName: Haemonova Chair
+	Tooltip: ""
+}
+
+HaemonovaChandelier: {
+	DisplayName: Haemonova Chandelier
+	Tooltip: ""
+}
+
+HaemonovaChest: {
+	DisplayName: Haemonova Chest
+	Tooltip: ""
+}
+
+HaemonovaClock: {
+	DisplayName: Haemonova Clock
+	Tooltip: ""
+}
+
+HaemonovaDoor: {
+	DisplayName: Haemonova Door
+	Tooltip: ""
+}
+
+HaemonovaDresser: {
+	DisplayName: Haemonova Dresser
+	Tooltip: ""
+}
+
+HaemonovaLamp: {
+	DisplayName: Haemonova Lamp
+	Tooltip: ""
+}
+
+HaemonovaLantern: {
+	DisplayName: Haemonova Lantern
+	Tooltip: ""
+}
+
+HaemonovaPiano: {
+	DisplayName: Haemonova Piano
+	Tooltip: ""
+}
+
+HaemonovaPlatform: {
+	DisplayName: Haemonova Platform
+	Tooltip: ""
+}
+
+HaemonovaSink: {
+	DisplayName: Haemonova Sink
+	Tooltip: ""
+}
+
+HaemonovaSofa: {
+	DisplayName: Haemonova Sofa
+	Tooltip: ""
+}
+
+HaemonovaTable: {
+	DisplayName: Haemonova Table
+	Tooltip: ""
+}
+
+HaemonovaToilet: {
+	DisplayName: Haemonova Toilet
+	Tooltip: ""
+}
+
+HaemonovaWorkbench: {
+	DisplayName: Haemonova Workbench
+	Tooltip: ""
+}

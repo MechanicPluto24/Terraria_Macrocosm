@@ -17,6 +17,8 @@ LuminiteChest: {
 	MapEntry15: Cryocore Chest (Locked)
 	MapEntry16: Cosmic Ember Chest
 	MapEntry17: Cosmic Ember Chest (Locked)
+	MapEntry18: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry18
+	MapEntry19: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry19
 }
 
 IndustrialChest: {
