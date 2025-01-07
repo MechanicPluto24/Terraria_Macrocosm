@@ -58,10 +58,10 @@ namespace Macrocosm.Content.Machines
 
         public override void MachineUpdate()
         {
-            if (!PoweredOn)
+            // If powered off and it was not a manual action, try finding fuel and turn of if so
+            if (!PoweredOn && !ManuallyTurnedOff)
             {
                 bool fuelFound = false;
-
                 foreach (Item item in Inventory)
                 {
                     if (item.stack <= 0)
@@ -75,17 +75,21 @@ namespace Macrocosm.Content.Machines
                     }
                 }
 
-                if (fuelFound && !ManuallyTurnedOff)
+                if (fuelFound )
                 {
                     TurnOn(automatic: true);
                 }
             }
 
+            // If current item is not there (absend or consumed) ...
             if (ConsumedItem.IsAir)
             {
+                bool fuelFound = false;
                 if (PoweredOn)
                 {
                     burnTimer = 0;
+
+                    // ... find it
                     foreach (Item item in Inventory)
                     {
                         if (item.stack <= 0)
@@ -94,6 +98,8 @@ namespace Macrocosm.Content.Machines
                         var fuelData = ItemSets.FuelData[item.type];
                         if (fuelData.Valid)
                         {
+                            fuelFound = true;
+
                             ConsumedItem = new Item(item.type, 1);
                             HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
                             item.stack--;
@@ -105,13 +111,16 @@ namespace Macrocosm.Content.Machines
                         }
                     }
                 }
-                else
+
+                // Decrease heat if not found
+                if(!fuelFound)
                 {
                     HullHeatProgress -= HullHeatRate * 5f;
                 }
             }
             else
             {
+                // Consume the item
                 var fuelData = ItemSets.FuelData[ConsumedItem.type];
                 if (fuelData.Valid)
                 {
