@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Machines
             // Create new inventory if none found on world load
             Inventory ??= new(InventorySize, this);
             Inventory.SetReserved(
-                 (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Valid && item.type == ModContent.ItemType<RocketFuelCanister>(),
+                 (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>(),
                  Language.GetText("Mods.Macrocosm.Machines.Common.BurnFuel"),
                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/BurnFuel")
             );
@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Machines
                         continue;
 
                     var fuelData = ItemSets.FuelData[item.type];
-                    if (fuelData.Valid && item.type == ModContent.ItemType<RocketFuelCanister>())
+                    if (fuelData.Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>())
                     {
                         fuelFound = true;
                         break;
@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Machines
                             continue;
 
                         var fuelData = ItemSets.FuelData[item.type];
-                        if (fuelData.Valid && item.type == ModContent.ItemType<RocketFuelCanister>())
+                        if (fuelData.Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>())
                         {
                             ConsumedItem = new Item(item.type, 1);
                             HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
@@ -117,7 +117,7 @@ namespace Macrocosm.Content.Machines
             else
             {
                 var fuelData = ItemSets.FuelData[ConsumedItem.type];
-                if (fuelData.Valid && ConsumedItem.type == ModContent.ItemType<RocketFuelCanister>())
+                if (fuelData.Potency > 0 && ConsumedItem.type == ModContent.ItemType<RocketFuelCanister>())
                 {
                     HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
 

@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Liquids;
+using Terraria;
 using Terraria.ID;
 
 namespace Macrocosm.Common.Sets
@@ -63,6 +65,34 @@ namespace Macrocosm.Common.Sets
         /// <summary> Set of items that can be burned in Burners. See <see cref="DataStructures.FuelData"/> </summary>
         public static FuelData[] FuelData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new FuelData(),
 
+            // Special
+            ItemID.GuideVoodooDoll, new FuelData(FuelPotency.Low, 600)
+            {
+                Burning = (item, pos) => Utility.BurnTownNPC(NPCID.Guide),
+                OnConsumed = (item, pos) => Utility.SimulateGuideVoodooDollBurn(pos),
+            },
+
+            ItemID.ClothierVoodooDoll, new FuelData(FuelPotency.Low, 600)
+            {
+                Burning = (item, pos) => Utility.BurnTownNPC(NPCID.Clothier),
+                OnConsumed = (item, pos) => NPC.SpawnSkeletron(Utility.GetClosestPlayer(pos, 1, 1).whoAmI),
+            },
+
+            ItemID.EmpressButterfly, new FuelData(FuelPotency.Low, 600, critter: true)
+            {
+                OnConsumed = (item, pos) => Utility.SpawnAndKillNPC(null, pos, NPCID.EmpressButterfly, noPlayerInteraction: false),
+            },
+
+            ItemID.LadyBug, new FuelData(FuelPotency.Low, 100, critter: true)
+            {
+                OnConsumed = (item, pos) => NPC.LadyBugKilled(pos),
+            },
+
+            ItemID.GoldLadyBug, new FuelData(FuelPotency.Low, 100, critter: true)
+            {
+                OnConsumed = (item, pos) => NPC.LadyBugKilled(pos, GoldLadyBug: true),
+            },
+
             // Misc
             ItemID.Coal, new FuelData(FuelPotency.High, 240),
             ItemID.Cobweb, new FuelData(FuelPotency.VeryLow, 40),
@@ -77,8 +107,7 @@ namespace Macrocosm.Common.Sets
             ItemID.Present, new FuelData(FuelPotency.VeryLow, 120),
             ItemID.Sail, new FuelData(FuelPotency.Low, 80),
             ItemID.SpiderBlock, new FuelData(FuelPotency.Low, 40),
-            ItemID.FragmentSolar, new FuelData(FuelPotency.SolarFragmentHigh, 10),
-            ItemID.GuideVoodooDoll, new FuelData(FuelPotency.Low, 40, BurnContext.GuideVoodooDoll),
+            ItemID.FragmentSolar, new FuelData(FuelPotency.SolarFragmentHigh, 240),
 
             // Wood
             ItemID.Wood, new FuelData(FuelPotency.Low, 80),
@@ -434,62 +463,60 @@ namespace Macrocosm.Common.Sets
             // TODO continue...
 
             // Critters :dread:
-            ItemID.Bunny, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Squirrel, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.SquirrelRed, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Penguin, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Bird, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.BlueJay, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Cardinal, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.YellowCockatiel, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.GrayCockatiel, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Duck, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Seagull, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.MallardDuck, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Owl, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Toucan, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Grebe, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Worm, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.EnchantedNightcrawler, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Firefly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Lavafly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.LightningBug, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Frog, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Grasshopper, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Snail, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.GlowingSnail, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.MagmaSnail, new FuelData(FuelPotency.Low, 140, BurnContext.Critter),
-            ItemID.Buggy, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Grubby, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Sluggy, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Turtle, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.TurtleJungle, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Maggot, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Mouse, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Rat, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Scorpion, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.BlackScorpion, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Goldfish, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Pupfish, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.WaterStrider, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.Seahorse, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.BlackDragonfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.BlueDragonfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.GreenDragonfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.OrangeDragonfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.RedDragonfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.YellowDragonfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.JuliaButterfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.MonarchButterfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.PurpleEmperorButterfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.RedAdmiralButterfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.SulphurButterfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.TreeNymphButterfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.UlyssesButterfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.ZebraSwallowtailButterfly, new FuelData(FuelPotency.Low, 100, BurnContext.Critter),
-            ItemID.HellButterfly, new FuelData(FuelPotency.Low, 140, BurnContext.Critter),
-            ItemID.LadyBug, new FuelData(FuelPotency.Low, 100, BurnContext.CritterBadLuck),
-            ItemID.EmpressButterfly, new FuelData(FuelPotency.Low, 140, BurnContext.PrismaticLacewing),
+            ItemID.Bunny, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Squirrel, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.SquirrelRed, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Penguin, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Bird, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.BlueJay, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Cardinal, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.YellowCockatiel, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.GrayCockatiel, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Duck, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Seagull, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.MallardDuck, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Owl, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Toucan, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Grebe, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Worm, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.EnchantedNightcrawler, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Firefly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Lavafly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.LightningBug, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Frog, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Grasshopper, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Snail, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.GlowingSnail, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.MagmaSnail, new FuelData(FuelPotency.Low, 140, critter: true),
+            ItemID.Buggy, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Grubby, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Sluggy, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Turtle, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.TurtleJungle, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Maggot, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Mouse, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Rat, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Scorpion, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.BlackScorpion, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Goldfish, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Pupfish, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.WaterStrider, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.Seahorse, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.BlackDragonfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.BlueDragonfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.GreenDragonfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.OrangeDragonfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.RedDragonfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.YellowDragonfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.JuliaButterfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.MonarchButterfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.PurpleEmperorButterfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.RedAdmiralButterfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.SulphurButterfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.TreeNymphButterfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.UlyssesButterfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.ZebraSwallowtailButterfly, new FuelData(FuelPotency.Low, 100, critter: true),
+            ItemID.HellButterfly, new FuelData(FuelPotency.Low, 140, critter: true),
 
             // Fishes
             ItemID.Bass, new FuelData(FuelPotency.Low, 100),

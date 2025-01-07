@@ -1,6 +1,8 @@
-﻿using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
@@ -45,7 +47,7 @@ namespace Macrocosm.Content.Machines
             // Create new inventory if none found on world load
             Inventory ??= new(InventorySize, this);
             Inventory.SetReserved(
-                 (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Valid,
+                 (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Potency > 0,
                  Language.GetText("Mods.Macrocosm.Machines.Common.BurnFuel"),
                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/BurnFuel")
             );
@@ -68,7 +70,8 @@ namespace Macrocosm.Content.Machines
                         continue;
 
                     var fuelData = ItemSets.FuelData[item.type];
-                    if (fuelData.Valid)
+                    bool canBurn = fuelData.Potency > 0 && fuelData.CanBurn(item, Position.ToWorldCoordinates());
+                    if (canBurn)
                     {
                         fuelFound = true;
                         break;
@@ -92,7 +95,8 @@ namespace Macrocosm.Content.Machines
                             continue;
 
                         var fuelData = ItemSets.FuelData[item.type];
-                        if (fuelData.Valid)
+                        bool canBurn = fuelData.Potency > 0 && fuelData.CanBurn(item, Position.ToWorldCoordinates());
+                        if (canBurn)
                         {
                             ConsumedItem = new Item(item.type, 1);
                             HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
@@ -113,14 +117,19 @@ namespace Macrocosm.Content.Machines
             else
             {
                 var fuelData = ItemSets.FuelData[ConsumedItem.type];
-                if (fuelData.Valid)
+                if (fuelData.Potency > 0)
                 {
                     HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
 
                     if (++burnTimer >= fuelData.ConsumptionRate)
                     {
                         burnTimer = 0;
+                        fuelData.OnConsumed(ConsumedItem.Clone(), Position.ToWorldCoordinates());
                         ConsumedItem = new(0);
+                    }
+                    else
+                    {
+                        fuelData.Burning(ConsumedItem, Position.ToWorldCoordinates());
                     }
                 }
             }
