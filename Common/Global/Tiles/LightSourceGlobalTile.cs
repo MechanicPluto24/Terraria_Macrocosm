@@ -1,3 +1,4 @@
+using Macrocosm.Common.Systems;
 using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
@@ -14,7 +15,9 @@ namespace Macrocosm.Common.Global.Tiles
         /// </summary>
         public override bool TileFrame(int i, int j, int type, ref bool resetFrame, ref bool noBreak)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && IsTileWithFlame(i, j, type))
+            if (SubworldSystem.AnyActive<Macrocosm>()
+                && IsTileWithFlame(i, j, type)
+                && !RoomOxygenSystem.IsRoomPressurized(i, j))
             {
                 WorldGen.TryToggleLight(i, j, false, skipWires: false);
             }
@@ -24,7 +27,12 @@ namespace Macrocosm.Common.Global.Tiles
         /// <summary>
         /// Disables wiring on our subworlds for chosen light sources 
         /// </summary>
-        public override bool PreHitWire(int i, int j, int type) => !(SubworldSystem.AnyActive<Macrocosm>() && IsTileWithFlame(i, j, type));
+        public override bool PreHitWire(int i, int j, int type)
+        {
+            return !(SubworldSystem.AnyActive<Macrocosm>()
+                     && IsTileWithFlame(i, j, type)
+                     && !RoomOxygenSystem.IsRoomPressurized(i, j));
+        }
 
 
         /// <summary>
@@ -32,7 +40,7 @@ namespace Macrocosm.Common.Global.Tiles
         /// </summary>
         public override void RightClick(int i, int j, int type)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && type == TileID.Campfire)
+            if (SubworldSystem.AnyActive<Macrocosm>() && type == TileID.Campfire && !RoomOxygenSystem.IsRoomPressurized(i, j))
             {
                 WorldGen.TryToggleLight(i, j, false, skipWires: false);
             }

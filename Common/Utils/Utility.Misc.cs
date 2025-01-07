@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
 using ReLogic.Content;
@@ -48,6 +49,31 @@ namespace Macrocosm.Common.Utils
         public static bool IsAprilFools()
         {
             return DateTime.Now.Month == 5 && DateTime.Now.Day == 1;
+        }
+
+        /// <summary>
+        /// Determines a current cycle index based on the real-world time.
+        /// </summary>
+        /// <param name="count">The total number of items to cycle through.</param>
+        /// <param name="cycleDurationSeconds">The duration of each cycle in seconds.</param>
+        /// <returns>An index representing the current cycle (0 to count - 1).</returns>
+        public static int RealTimeCycle(int cycleMax, int cycleDurationSeconds)
+        {
+            DateTime now = DateTime.Now;
+            int currentSecond = (int)now.TimeOfDay.TotalSeconds;
+            int totalCycleDuration = cycleMax * cycleDurationSeconds;
+            return (currentSecond % totalCycleDuration) / cycleDurationSeconds;
+        }
+
+        public static void ProgressMoonPhase()
+        {
+            if (Main.moonPhase >= 7)
+                Main.moonPhase = 0;
+            else
+                Main.moonPhase++;
+
+            Moon.Instance.SetTimeFromMoonPhase();
+            NetMessage.SendData(MessageID.WorldData);
         }
 
         public static string GetCompassCoordinates(Player player)

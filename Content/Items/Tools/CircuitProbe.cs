@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Tools
         {
             if (player.whoAmI == Main.myPlayer && Utility.TryGetTileEntityAs(Player.tileTargetX, Player.tileTargetY, out MachineTE machine))
             {
-                Main.NewText($"{Lang.GetMapObjectName(MapHelper.TileToLookup(machine.MachineTile.Type, 0))} - {machine.GetPowerInfo()}", machine.DisplayColor);
+                machine.PrintPowerInfo();
                 return true;
             }
 

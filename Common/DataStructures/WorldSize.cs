@@ -16,7 +16,6 @@ namespace Macrocosm.Common.DataStructures
             Height = y;
         }
 
-        public static WorldSize Current => new(Main.maxTilesX, Main.maxTilesY);
         public static WorldSize Small => new(4200, 1200);
         public static WorldSize Medium => new(6400, 1800);
         public static WorldSize Large => new(8400, 2400);

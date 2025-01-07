@@ -2732,13 +2732,23 @@ KeroseneGenerator: {
 	Tooltip: ""
 }
 
+Flag: {
+	DisplayName: Flag
+	Tooltip: ""
+}
+
+Barometer: {
+	DisplayName: Barometer
+	Tooltip: ""
+}
+
 GeigerMuller: {
 	DisplayName: Geiger Muller
 	Tooltip: ""
 }
 
-Flag: {
-	DisplayName: Flag
+SolarPanelTile: {
+	DisplayName: Solar Panel Tile
 	Tooltip: ""
 }
 

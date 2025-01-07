@@ -93,15 +93,14 @@ namespace Macrocosm.Content.Rockets
         public static void DespawnAllRockets(bool announce = true)
         {
             if (announce)
-                Utility.Chat("Despawned all rockets from this subworld!", Color.Green);
+                Utility.Chat("Despawned all rockets!", Color.Green);
 
             for (int i = 0; i < MaxRockets; i++)
             {
                 Rocket rocket = Rockets[i];
-                if (rocket.ActiveInCurrentWorld)
-                {
+
+                if(rocket.Active)
                     rocket.Despawn();
-                }
             }
         }
 
@@ -136,6 +135,7 @@ namespace Macrocosm.Content.Rockets
                 if (DebugModeActive)
                 {
                     rocket.DisplayWhoAmI();
+                    rocket.DrawDebugBounds();
                     rocket.DrawDebugModuleHitbox();
                 }
             }
@@ -189,9 +189,7 @@ namespace Macrocosm.Content.Rockets
                 for (int i = 0; i < MaxRockets; i++)
                 {
                     var rocket = Rockets[i];
-                    rocket.NetSync(toClient: remoteClient);
-                    rocket.SendCustomizationData(toClient: remoteClient);
-                    rocket.Inventory.SyncEverything(toClient: remoteClient);
+                    rocket.SyncEverything(toClient: remoteClient);
                 }
             }
 

@@ -30,12 +30,22 @@ namespace Macrocosm.Common.Systems.Power
             orig(self);
 
             if (Main.LocalPlayer.CurrentItem().type != ModContent.ItemType<CircuitProbe>())
-                return;
+               return;
 
             foreach (var kvp in ByID)
             {
                 if (kvp.Value is MachineTE machine)
-                    machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
+                {
+                    if (machine.CanCluster)
+                    {
+                        if (machine.Cluster != null && machine.IsClusterOrigin)
+                            machine.DrawClusterPowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
+                    }
+                    else
+                    {
+                        machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
+                    }
+                }
             }
         }
     }

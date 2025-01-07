@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
@@ -54,7 +55,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public AssemblyRecipe LinkWith<T>() where T : RocketModule
         {
-            foreach (var template in RocketModule.Templates)
+            foreach (var template in ModContent.GetContent<RocketModule>())
             {
                 if (typeof(T) == template.GetType())
                 {

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
@@ -139,6 +140,25 @@ namespace Macrocosm.Common.Utils
             npc.height = (int)Math.Max(1f, baseHeight * newScale);
             npc.scale = newScale;
             npc.Center = center;
+        }
+
+
+        public static void SpawnAndKillNPC(IEntitySource source, Vector2 position, int type, int start = 0, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, int target = 255, bool noPlayerInteraction = true)
+        {
+            NPC npc = NPC.NewNPCDirect(source, position, type, start, ai0, ai1, ai2, ai3, target);
+            var hit = new NPC.HitInfo() { InstantKill = true };
+            npc.StrikeNPC(hit, fromNet: false, noPlayerInteraction: noPlayerInteraction);
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendStrikeNPC(npc, hit);
+        }
+
+        public static void BurnTownNPC(int npcType)
+        {
+            foreach (var npc in Main.ActiveNPCs)
+            {
+                if (npc.type == npcType && !npc.HasBuff(BuffID.OnFire))
+                    npc.AddBuff(BuffID.OnFire, 60);
+            }
         }
     }
 }

@@ -11,20 +11,32 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket
     {
+        public void SyncEverything(int toClient = -1, int ignoreClient = -1, int ignoreSubserver = -1)
+        {
+            SyncCommonData(toClient, ignoreClient, ignoreSubserver);
+            SyncCustomizationData(toClient, ignoreClient, ignoreSubserver);
+            Inventory.SyncEverything(toClient, ignoreClient, toSubservers: true, ignoreSubserver: ignoreSubserver);
+        }
+
         /// <summary>
         /// Syncs the rocket fields with <see cref="NetSyncAttribute"/> across all clients and the server.
         /// </summary>
-        public void NetSync(int toClient = -1, int ignoreClient = -1)
+        public void SyncCommonData(int toClient = -1, int ignoreClient = -1, int ignoreSubserver = -1)
         {
             if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0 || WhoAmI > RocketManager.MaxRockets)
                 return;
 
             ModPacket packet = Macrocosm.Instance.GetPacket();
-            packet.Write((byte)MessageType.SyncRocketData);
+            packet.Write((byte)MessageType.SyncRocketCommonData);
+
+            packet.Write((short)NetHelper.GetServerIndex()); 
             packet.Write((byte)WhoAmI);
 
             if (this.NetWriteFields(packet))
+            {
+                packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
                 packet.Send(toClient, ignoreClient);
+            }
 
             packet.Dispose();
         }
@@ -33,52 +45,40 @@ namespace Macrocosm.Content.Rockets
         /// Syncs a rocket with data from the <see cref="BinaryReader"/>. Don't use this method outside <see cref="PacketHandler.HandlePacket(BinaryReader, int)"/>
         /// </summary>
         /// <param name="reader"></param>
-        public static void ReceiveSyncRocketData(BinaryReader reader, int sender)
+        public static void ReceiveSyncRocketCommonData(BinaryReader reader, int sender)
         {
+            int senderSubserver = reader.ReadInt16();
             int rocketIndex = reader.ReadByte();
+
             Rocket rocket = RocketManager.Rockets[rocketIndex];
             rocket.WhoAmI = rocketIndex;
+
             rocket.NetReadFields(reader);
 
             if (Main.netMode == NetmodeID.Server)
-            {
-                // Bounce to all other clients, minus the sender
-                rocket.NetSync(ignoreClient: sender);
-
-                var packet = new BinaryWriter(new MemoryStream(256));
-                packet.Write((byte)MessageType.SyncRocketData);
-                packet.Write((byte)rocket.WhoAmI);
-                rocket.NetWriteFields(packet);
-
-                if (rocket.CurrentWorld == MacrocosmSubworld.CurrentID)
-                {
-                    if (SubworldSystem.AnyActive())
-                        SubworldSystem.SendToMainServer(Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());
-                    else
-                        SubworldSystem.SendToSubserver(SubworldSystem.GetIndex<Moon>(), Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());
-                }
-
-                packet.Dispose();
-            }
+                rocket.SyncCommonData(ignoreClient: sender, ignoreSubserver: senderSubserver);
         }
 
-        public void SendCustomizationData(int toClient = -1, int ignoreClient = -1)
+        public void SyncCustomizationData(int toClient = -1, int ignoreClient = -1, int ignoreSubserver = -1)
         {
             if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0 || WhoAmI > RocketManager.MaxRockets)
                 return;
 
             ModPacket packet = Macrocosm.Instance.GetPacket();
-
             packet.Write((byte)MessageType.SyncRocketCustomizationData);
+
+            packet.Write((short)NetHelper.GetServerIndex());
             packet.Write((byte)WhoAmI);
 
             packet.Write(GetCustomizationDataToJSON()); // Cringe
+
+            packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
             packet.Send(toClient, ignoreClient);
         }
 
-        public static void SyncRocketCustomizationData(BinaryReader reader, int clientWhoAmI)
+        public static void ReceiveSyncRocketCustomizationData(BinaryReader reader, int clientWhoAmI)
         {
-            // the rocket WhoAmI
+            int senderSubserver = reader.ReadInt16();
             int rocketIndex = reader.ReadByte();
 
             Rocket rocket = RocketManager.Rockets[rocketIndex];
@@ -87,10 +87,7 @@ namespace Macrocosm.Content.Rockets
             rocket.ApplyRocketCustomizationFromJSON(reader.ReadString());
 
             if (Main.netMode == NetmodeID.Server)
-            {
-                // Bounce to all other clients, minus the sender
-                rocket.SendCustomizationData(ignoreClient: clientWhoAmI);
-            }
+                rocket.SyncCustomizationData(ignoreClient: clientWhoAmI, ignoreSubserver: senderSubserver);
         }
     }
 }

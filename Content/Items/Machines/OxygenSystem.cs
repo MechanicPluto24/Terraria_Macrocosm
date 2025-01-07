@@ -1,9 +1,10 @@
 using Macrocosm.Content.Items.Refined;
+using Macrocosm.Content.Items.Tech;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Tech
+namespace Macrocosm.Content.Items.Machines
 {
     public class OxygenSystem : ModItem
     {
@@ -14,7 +15,7 @@ namespace Macrocosm.Content.Items.Tech
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Tech.OxygenSystem>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.OxygenSystem>());
             Item.width = 26;
             Item.height = 24;
             Item.value = 100;

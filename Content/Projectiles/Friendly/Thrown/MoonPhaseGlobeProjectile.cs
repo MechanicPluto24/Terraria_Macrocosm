@@ -1,5 +1,8 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Subworlds;
+using Terraria;
 using Terraria.Audio;
+using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -23,19 +26,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Thrown
             SoundEngine.PlaySound(SoundID.Item107, Projectile.position);
 
             for (int i = 0; i < 15; i++)
-            {
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Glass, 0f, -2f, 0, default, 1.5f);
-            }
 
             if (Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                if (Main.moonPhase <= 0)
-                    Main.moonPhase = 7;
-                else
-                    Main.moonPhase--;
-
-                NetMessage.SendData(MessageID.WorldData);
-            }
+                Utility.ProgressMoonPhase();
         }
     }
 }
