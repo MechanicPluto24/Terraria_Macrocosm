@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Tiles.Trees
         // This is the primary texture for the trunk. Branches and foliage use different settings.
         public override Asset<Texture2D> GetTexture() => base.GetTexture();
         public override Asset<Texture2D> GetTopsTexture(int variant) => base.GetTopsTexture(variant);
-        public override Asset<Texture2D> GetBranchTexture(int variant) => null;
+        public override Asset<Texture2D> GetBranchTexture(int variant) => base.GetBranchTexture(variant);
 
         public override bool AllowBranches => false;
 
@@ -57,7 +57,8 @@ namespace Macrocosm.Content.Tiles.Trees
 
         protected override void GetTopTextureFrame(int i, int j, ref int treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight)
         {
-            topTextureFrameWidth = topTextureFrameHeight = 80;
+            topTextureFrameWidth = 104;
+            topTextureFrameHeight = 92;
         }
     }
 }
