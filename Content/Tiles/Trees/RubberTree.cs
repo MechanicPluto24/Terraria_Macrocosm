@@ -1,4 +1,5 @@
-using Macrocosm.Common.Utils;
+using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Content.Items.Ores;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -9,16 +10,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Trees
 {
-    public class RubberTree : ModTree
+    public class RubberTree : CustomTree
     {
-        private string TexturePath => this.GetNamespacePath();
-        private Asset<Texture2D> texture;
-        private Asset<Texture2D> branchesTexture;
-        private Asset<Texture2D> topsTexture;
-
-        // This is a blind copy-paste from Vanilla's PurityPalmTree settings.
-        // TODO: This needs some explanations
-        public override TreePaintingSettings TreeShaderSettings => new TreePaintingSettings
+        public override TreePaintingSettings TreePaintingSettings => new()
         {
             UseSpecialGroups = true,
             SpecialGroupMinimalHueValue = 11f / 72f,
@@ -27,47 +21,43 @@ namespace Macrocosm.Content.Tiles.Trees
             SpecialGroupMaximumSaturationValue = 1f
         };
 
+
+        public override int[] GrowsOnTileId { get; set; } = [TileID.JungleGrass];
+        public override int TreeHeightMin => 13;
+        public override int TreeHeightMax => 22;
+        public override int TreeTopPaddingNeeded => 40;
+
+        public override int WoodType => ItemID.RichMahogany;
+
         public override void SetStaticDefaults()
         {
-            GrowsOnTileId = [TileID.JungleGrass];
-
-            texture = ModContent.Request<Texture2D>(TexturePath);
-            branchesTexture = ModContent.Request<Texture2D>(TexturePath + "_Branches");
-            topsTexture = ModContent.Request<Texture2D>(TexturePath + "_Tops");
+            base.SetStaticDefaults();
         }
 
+        // This is the primary texture for the trunk. Branches and foliage use different settings.
+        public override Asset<Texture2D> GetTexture() => base.GetTexture();
+        public override Asset<Texture2D> GetTopsTexture(int variant) => base.GetTopsTexture(variant);
+        public override Asset<Texture2D> GetBranchTexture(int variant) => null;
 
-        public override Asset<Texture2D> GetTexture() => texture;
-        public override Asset<Texture2D> GetBranchTextures() => branchesTexture;
-        public override Asset<Texture2D> GetTopTextures() => topsTexture;
+        public override bool AllowBranches => false;
 
         public override int SaplingGrowthType(ref int style)
         {
             style = 0;
-            return 20;
+            return ModContent.TileType<RubberTreeSapling>();
         }
-
-        public override void SetTreeFoliageSettings(Tile tile, ref int xoffset, ref int treeFrame, ref int floorY, ref int topTextureFrameWidth, ref int topTextureFrameHeight)
-        {
-            // This is where fancy code could go, but let's save that for an advanced example
-        }
-
-
-        //public override int DropWood() => ModContent.ItemType<RubberWood>();
-        public override int DropWood() => ItemID.Wood;
 
         public override bool Shake(int x, int y, ref bool createLeaves)
         {
-            Item.NewItem(WorldGen.GetItemSource_FromTreeShake(x, y), new Vector2(x, y) * 16, ItemID.Wood);
-            //Item.NewItem(WorldGen.GetItemSource_FromTreeShake(x, y), new Vector2(x, y) * 16, ModContent.ItemType<Items.Rubber>());
-            //Item.NewItem(WorldGen.GetItemSource_FromTreeShake(x, y), new Vector2(x, y) * 16, ModContent.ItemType<Items.RubberWood>());
+            Item.NewItem(WorldGen.GetItemSource_FromTreeShake(x, y), new Vector2(x, y) * 16, ModContent.ItemType<Coal>()); //testing lol
             return false;
         }
 
-        public override int TreeLeaf()
+        public override int TreeLeaf() => ModContent.GoreType<RubberTreeLeaf>();
+
+        protected override void GetTopTextureFrame(int i, int j, ref int treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight)
         {
-            return -1;
-            //return ModContent.GoreType<RubberTreeLeaf>();
+            topTextureFrameWidth = topTextureFrameHeight = 80;
         }
     }
 }

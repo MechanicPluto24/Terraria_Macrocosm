@@ -2757,3 +2757,7 @@ TrailScepter: {
 	DisplayName: Trail Scepter
 }
 
+RubberTreeSapling: {
+	DisplayName: Rubber Tree Sapling
+	Tooltip: ""
+}
