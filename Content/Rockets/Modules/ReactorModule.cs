@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public override int Width => 84;
         public override int Height => 80;
 
-        public override Rectangle Hitbox => base.Hitbox with { Y = base.Hitbox.Y + 4 };
+        public override Vector2 Offset => new(96, 190);
 
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {

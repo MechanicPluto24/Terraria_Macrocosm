@@ -23,7 +23,20 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 {
     public class UIAssemblyTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
     {
-        public Rocket Rocket { get; set; } = new();
+        private Rocket rocket = new();
+        public Rocket Rocket
+        {
+            get => rocket;
+            set
+            {
+                bool changed = rocket != value;
+                rocket = value;
+
+                if (changed)
+                    OnRocketChanged();
+            }
+        }
+
         public LaunchPad LaunchPad { get; set; } = new();
         private Inventory Inventory => LaunchPad.Inventory;
 
@@ -36,6 +49,16 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         private UIInfoElement compass;
         private UIInputTextBox nameTextBox;
         private UIPanelIconButton nameAcceptResetButton;
+
+        private UIPanel configurationSelector;
+        private UIText configurationText;
+
+        private int currentConfigurationIndex = 0;
+        private readonly Dictionary<string, List<string>> Configurations = new()
+        {
+            { "Manned", ["CommandPod", "ServiceModule", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight"]},
+            { "Unmanned", ["PayloadPod", "UnmannedTug", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight"]}
+        };
 
         public UIAssemblyTab()
         {
@@ -58,9 +81,13 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             nameTextBox = CreateNameTextBox();
             compass = CreateCompassCoordinatesInfo();
+
+            configurationSelector = CreateConfigurationSelector();
+
             assembleButton = CreateAssembleButton();
             Append(assembleButton);
             dissasembleButton = CreateDissasembleButton();
+
             assemblyElements = CreateAssemblyElements();
 
             UpdateBlueprint();
@@ -75,32 +102,42 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
         }
 
+        private Dictionary<string, List<string>> SwappableCategories = new()
+        {
+        };
+
         private bool CheckAssembleRecipes(bool consume)
         {
             bool met = true;
-
-            foreach (var kvp in Rocket.Modules)
+            foreach (var module in Rocket.AvailableModules)
             {
-                RocketModule module = kvp.Value;
+                if (!module.Active)
+                    continue;
 
                 if (module.Recipe.Linked)
                     met &= assemblyElements[module.Recipe.LinkedResult.Name].Check(consume);
                 else
                     met &= assemblyElements[module.Name].Check(consume);
             }
-
             return met;
         }
-
 
         private void AssembleRocket()
         {
             CheckAssembleRecipes(consume: true);
-            Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 18));
 
-            foreach (var kvp in Rocket.Modules)
+            List<string> activeModules = Rocket.AvailableModules
+                .Where(module => module.Active)
+                .Select(module => module.Name)
+                .ToList();
+
+            Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 16), activeModules);
+            OnRocketChanged();
+
+            foreach (var module in Rocket.AvailableModules)
             {
-                RocketModule module = kvp.Value;
+                if (!module.Active)
+                    continue;
 
                 if (module.Recipe.Linked)
                     continue;
@@ -125,23 +162,21 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                             Particle.Create<ItemTransferParticle>((p) =>
                             {
                                 p.StartPosition = LaunchPad.CenterWorld;
-                                p.EndPosition = module.Center + Main.rand.NextVector2Circular(64, 64);
+                                p.EndPosition = module.Position + new Vector2(module.Width / 2f, module.Height / 2f) + Main.rand.NextVector2Circular(64, 64);
                                 p.ItemType = item.type;
                                 p.TimeToLive = Main.rand.Next(40, 60);
                             });
                     }
-
                 }
             }
         }
 
+
         private void DisassembleRocket()
         {
             int slot = 0;
-            foreach (var kvp in LaunchPad.Rocket.Modules)
+            foreach (var module in LaunchPad.Rocket.AvailableModules)
             {
-                RocketModule module = kvp.Value;
-
                 if (module.Recipe.Linked)
                     continue;
 
@@ -174,7 +209,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                             if (Main.rand.NextBool(6))
                                 Particle.Create<ItemTransferParticle>((p) =>
                                 {
-                                    p.StartPosition = module.Center + Main.rand.NextVector2Circular(64, 64);
+                                    p.StartPosition = module.Position + new Vector2(module.Width / 2f, module.Height / 2f) + Main.rand.NextVector2Circular(64, 64);
                                     p.EndPosition = LaunchPad.CenterWorld;
                                     p.ItemType = particleItem.type;
                                     p.TimeToLive = Main.rand.Next(50, 70);
@@ -188,6 +223,32 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             LaunchPad.Rocket.Despawn();
             Rocket = new();
+        }
+
+        public void OnRocketChanged()
+        {
+            RefreshAssemblyElements();
+        }
+
+        private void SwitchConfiguration(int direction)
+        {
+            currentConfigurationIndex = (currentConfigurationIndex + direction + Configurations.Count) % Configurations.Count;
+            string currentConfiguration = Configurations.Keys.ToArray()[currentConfigurationIndex];
+
+            ApplyConfiguration(currentConfiguration);
+            configurationText.SetText(currentConfiguration);
+            RefreshAssemblyElements();
+            UpdateBlueprint();
+        }
+
+        private void ApplyConfiguration(string configurationName)
+        {
+            List<string> activeModules = Configurations[configurationName];
+
+            foreach (var module in Rocket.AvailableModules)
+                module.Active = activeModules.Contains(module.Name);
+
+            Rocket.SyncCommonData();
         }
 
         private bool CheckAssembleInteractible() => CheckAssembleRecipes(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
@@ -232,9 +293,10 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
             uIRocketBlueprint.Rocket = Rocket;
 
-            foreach (var kvp in Rocket.Modules)
+            foreach (var module in Rocket.AvailableModules)
             {
-                RocketModule module = kvp.Value;
+                if (!module.Active)
+                    continue;
 
                 if (Rocket.Active)
                 {
@@ -336,6 +398,55 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             return compass;
         }
 
+        private UIPanel CreateConfigurationSelector()
+        {
+            configurationSelector = new()
+            {
+                Width = new(160, 0),
+                Height = new(40, 0),
+                Top = new(0, 0.121f),
+                Left = new(0, 0.13f),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
+            };
+
+            configurationText = new UIText("Manned", 0.8f)
+            {
+                HAlign = 0.5f,
+                VAlign = 0.5f,
+                TextColor = Color.White
+            };
+            configurationSelector.Append(configurationText);
+
+            UIHoverImageButton leftArrow = new(
+                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
+                LocalizedText.Empty
+            )
+            {
+                Left = new(-8, 0f),
+                VAlign = 0.5f,
+                SpriteEffects = SpriteEffects.FlipHorizontally
+            };
+            leftArrow.OnLeftClick += (_, _) => SwitchConfiguration(-1);
+            configurationSelector.Append(leftArrow);
+
+            UIHoverImageButton rightArrow = new(
+                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
+                LocalizedText.Empty
+            )
+            {
+                Left = new(0, 0.8f),
+                VAlign = 0.5f
+            };
+            rightArrow.OnLeftClick += (_, _) => SwitchConfiguration(1);
+            configurationSelector.Append(rightArrow);
+
+            Append(configurationSelector);
+            return configurationSelector;
+        }
+
         private UIPanelIconButton CreateAssembleButton()
         {
             assembleButton = new
@@ -346,7 +457,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
             )
             {
-                Top = new(0, 0.895f),
+                Top = new(0, 0.91f),
                 Left = new(0, 0.14f),
                 CheckInteractible = CheckAssembleInteractible,
                 GrayscaleIconIfNotInteractible = true,
@@ -368,7 +479,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
             )
             {
-                Top = new(0, 0.895f),
+                Top = new(0, 0.91f),
                 Left = new(0, 0.14f),
                 CheckInteractible = CheckDissasembleInteractible,
                 GrayscaleIconIfNotInteractible = true,
@@ -386,10 +497,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             int slotCount = 0;
             int assemblyElementCount = 0;
-            foreach (var kvp in Rocket.Modules)
+            foreach (var module in Rocket.AvailableModules)
             {
-                RocketModule module = kvp.Value;
-
                 if (!module.Recipe.Linked)
                 {
                     List<UIInventorySlot> slots = new();
@@ -417,20 +526,22 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                         slots.Add(slot);
                     }
 
-                    UIModuleAssemblyElement assemblyElement = new(module, slots);
-                    assemblyElements[module.Name] = assemblyElement;
+                    if (module.Active)
+                    {
+                        UIModuleAssemblyElement assemblyElement = new(module, slots);
+                        assemblyElements[module.Name] = assemblyElement;
 
-                    assemblyElement.Top = new(0, 0.14f + 0.185f * assemblyElementCount++);
-                    assemblyElement.Left = new(0, 0.08f);
+                        assemblyElement.Top = new(0, 0.185f + 0.175f * assemblyElementCount++);
+                        assemblyElement.Left = new(0, 0.08f);
 
-                    Append(assemblyElement);
+                        Append(assemblyElement);
+                        assemblyElement.Activate();
+                    }
                 }
             }
 
-            foreach (var kvp in Rocket.Modules)
+            foreach (var module in Rocket.AvailableModules)
             {
-                RocketModule module = kvp.Value;
-
                 if (module.Recipe.Linked)
                 {
                     assemblyElements[module.Recipe.LinkedResult.Name].LinkedModules.Add(module);
@@ -439,6 +550,13 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             return assemblyElements;
         }
+
+        private void RefreshAssemblyElements()
+        {
+            this.RemoveAllChildrenWhere(element => element is UIModuleAssemblyElement);
+            assemblyElements = CreateAssemblyElements();
+        }
+
         private Asset<Texture2D> GetBlueprintTexture(int itemType)
         {
             Item item = ContentSamples.ItemsByType[itemType];

@@ -14,11 +14,13 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-            CreativeItemSacrificesCatalog.Instance.SacrificeCountNeededByItemId[Type] = 1;
+            Item.ResearchUnlockCount = 1;
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
         }
         public override void SetDefaults()
         {
+            Item.width = 72;
+            Item.height = 72;
             Item.damage = 550;
             Item.DamageType = DamageClass.Melee;
             Item.knockBack = 5;
@@ -26,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.rare = ModContent.RarityType<MoonRarityT3>();
             Item.useTime = 30;
             Item.noUseGraphic = true;
-            Item.shoot = ModContent.ProjectileType<Procellarum_HalberdProjectile>();
+            Item.shoot = ModContent.ProjectileType<ProcellarumHalberdProjectile>();
             Item.autoReuse = true;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useAnimation = 30;
@@ -59,18 +61,18 @@ namespace Macrocosm.Content.Items.Weapons.Melee
                 Item.channel = true;
                 Item.useStyle = ItemUseStyleID.Shoot;
             }
-            return player.ownedProjectileCounts[ModContent.ProjectileType<Procellarum_HalberdProjectile>()] < 1;
+            return player.ownedProjectileCounts[ModContent.ProjectileType<ProcellarumHalberdProjectile>()] < 1;
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {
             if (Main.mouseRight)
             {
-                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<Procellarum_HalberdProjectile>(), damage, knockback, player.whoAmI, 2f);
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ProcellarumHalberdProjectile>(), damage, knockback, player.whoAmI, 2f);
             }
             else
             {
-                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<Procellarum_HalberdProjectile>(), damage, knockback, player.whoAmI, 1f);
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ProcellarumHalberdProjectile>(), damage, knockback, player.whoAmI, 1f);
             }
             return false;
         }

@@ -35,6 +35,7 @@ namespace Macrocosm.Content.Tiles.Blocks.Sands
 
             MineResist = 0.5f;
             DustType = ModContent.DustType<SilicaPearlsandDust>();
+
             AddMapEntry(new Color(202, 188, 198));
         }
 

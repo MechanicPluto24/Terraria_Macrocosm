@@ -8,22 +8,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon
 {
-    // TODO: reuse for another weapon
-    // spawn code:
-    /*
-         int count = Main.rand.Next(2, 4);
-        for (int i = 0; i < count; i++)
-        {
-            Vector2 position = target.Center + Main.rand.NextVector2CircularEdge(target.width, target.height);
-            Vector2 velocity = new Vector2(5).RotatedByRandom(MathHelper.TwoPi);
-
-            float rotation = (Main.rand.Next(2) * 2 - 1) * ((float)Math.PI / 5f + (float)Math.PI * 4f / 5f * Main.rand.NextFloat()) * 0.5f;
-            velocity = velocity.RotatedBy(MathHelper.PiOver4);
-
-            position += target.velocity * 5;
-            Projectile.NewProjectile(Projectile.GetSource_OnHit(target), position, velocity, ModContent.ProjectileType<TotalitySmallSlashProjectile>(), (int)((float)hit.Damage * 0.1f), 0f, player.whoAmI, rotation);
-        }
-    */
     public class TotalitySmallSlashProjectile : ModProjectile
     {
         public override void SetStaticDefaults()

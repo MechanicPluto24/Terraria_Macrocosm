@@ -22,6 +22,12 @@ Mods: {
 		}
 
 		GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
+
+		InfoDisplays: {
+			BarometerInfoDisplay.DisplayName: Barometer Info Display
+			GeigerMullerInfoDisplay.DisplayName: Geiger Muller Info Display
+			ThermometerInfoDisplay.DisplayName: Thermometer Info Display
+		}
 	}
 
 	SubworldLibrary.Return: Save & Exit

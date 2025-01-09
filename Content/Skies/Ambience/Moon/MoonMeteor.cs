@@ -18,11 +18,11 @@ namespace Macrocosm.Content.Skies.Ambience.Moon
 
             Effects = ((random.Next(2) != 0) ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
 
-            Frame = new(1, 20);
-            if (random.NextFloat() < 0.1f)
-                Frame.CurrentRow = (byte)random.Next(4, 20);
-            else
-                Frame.CurrentRow = (byte)random.Next(4);
+            Frame = new(7, 4)
+            {
+                CurrentRow = (byte)random.Next(4),
+                CurrentColumn = random.NextFloat() < 0.1f ? (byte)random.Next(3, 7) : (byte)random.Next(3)
+            };
 
             LifeTime = random.Next(4, 7) * 240;
             OpacityNormalizedTimeToFadeIn = 0.01f;

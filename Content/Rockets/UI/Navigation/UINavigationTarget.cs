@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
         /// <param name="width"> Interactible area width in pixels </param>
         /// <param name="height"> Interactible area height in pixels </param>
-        /// <param name="targetName"> The name of the target, handled in <see cref="Rocket.Travel"/> </param>
+        /// <param name="targetName"> The name of the target, handled in <see cref="Rocket.HandleTravel"/> </param>
         public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetName, ChecklistConditionCollection launchConditions = null, Asset<Texture2D> outline = null) : this(owner, position, width, height)
         {
             LaunchConditions = launchConditions;

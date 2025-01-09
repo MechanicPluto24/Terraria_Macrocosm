@@ -4,13 +4,9 @@ using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Common.Utils;
-using System;
 using Terraria.ID;
-using ReLogic.Content;
 using Terraria.GameContent;
 using Terraria.DataStructures;
-using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
@@ -21,7 +17,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 	// Values chosen mostly correspond to Iron Shortsword
 	public class SchroteriProjectile : ModProjectile
 	{
-		public const int FadeInDuration = 7;
+        public const int FadeInDuration = 7;
 		public const int FadeOutDuration = 4;
 
 		public const int TotalDuration = 30;

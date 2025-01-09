@@ -22,6 +22,8 @@ namespace Macrocosm.Content.Tiles.Crafting
             TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.addTile(Type);
 
+            AdjTiles = [TileID.Loom];
+
             HitSound = SoundID.Dig;
             DustType = -1;
 

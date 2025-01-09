@@ -25,9 +25,9 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         public override void OnInitialize()
         {
-            Width.Set(0, 0.331f);
+            Width.Set(0, 0.361f);
             //Height.Set(0, 0.18f + 0.06f * ((slots.Count - 1) / 4));
-            Height.Set(0, 0.18f);
+            Height.Set(0, 0.17f);
             SetPadding(12f);
             BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
             BorderColor = UITheme.Current.PanelStyle.BorderColor;

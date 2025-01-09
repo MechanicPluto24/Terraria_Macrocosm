@@ -67,7 +67,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             if (Projectile.timeLeft > 3)
             {
-                float gravity = 0.6f * (0.5f + 0.5f * MacrocosmSubworld.CurrentGravityMultiplier);
+                float gravity = 0.6f * (0.5f + 0.5f * MacrocosmSubworld.GetGravityMultiplier());
 
                 if (Projectile.velocity.Y == 0f && Projectile.velocity.X != 0f)
                 {

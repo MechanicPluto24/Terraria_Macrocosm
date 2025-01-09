@@ -13,10 +13,12 @@ namespace Macrocosm.Common.Hooks
         {
             On_FilterManager.EndCapture += FilterManager_EndCapture;
         }
+
         public void Unload()
         {
             On_FilterManager.EndCapture -= FilterManager_EndCapture;
         }
+
         void FilterManager_EndCapture(On_FilterManager.orig_EndCapture orig, FilterManager self, RenderTarget2D finalTexture, RenderTarget2D screenTarget1, RenderTarget2D renderTarget2, Color clearColor)
         {
             GraphicsDevice gd = Main.graphics.GraphicsDevice;

@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.Items.Food;
 using Microsoft.Xna.Framework;
@@ -31,6 +33,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
         }
@@ -49,7 +56,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
+            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? (RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f: .1f) : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
@@ -138,6 +145,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }
@@ -198,6 +210,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
+            NPC.ApplyImmunity
+            (
+                BuffID.Confused
+            );
+
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
         }

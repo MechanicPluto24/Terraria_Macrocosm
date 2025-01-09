@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Sets;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Drops;
@@ -36,6 +37,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[Type] = 1;
+
+            NPC.ApplyImmunity
+            (
+                BuffID.Bleeding,
+                BuffID.BloodButcherer,
+                BuffID.Poisoned,
+                BuffID.Venom
+            );
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
@@ -166,7 +175,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.05f : 0f;
+            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ?(RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f:0.05f) : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)

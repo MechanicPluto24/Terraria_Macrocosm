@@ -16,6 +16,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetDefaultsHeldProjectile()
         {
+            Item.width = 72;
+            Item.height = 72;
             Item.damage = 300;
             Item.DamageType = DamageClass.Melee;
             Item.knockBack = 16;

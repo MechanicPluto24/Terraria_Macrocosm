@@ -37,8 +37,12 @@ namespace Macrocosm.Content.Items.Dev
                 }
                 else
                 {
-                    var rocket = Rocket.Create(Main.MouseWorld - Rocket.Size / 2f);
-                    rocket.Fuel = rocket.FuelCapacity;
+                    var rocket = Rocket.Create(Main.MouseWorld, sync: true, action: (r) =>
+                    {
+                        r.Fuel = r.FuelCapacity;
+                    }
+                    );
+                    rocket.Position -= rocket.Size / 2f;
                 }
             }
 

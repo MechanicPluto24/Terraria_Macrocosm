@@ -4,6 +4,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -46,6 +47,29 @@ namespace Macrocosm.Common.Systems.Power
             Toggle(i, j, automatic: false, skipWire: true);
         }
 
-        public override void KillMultiTile(int i, int j, int frameX, int frameY) => MachineTE.Kill(i, j);
+        public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
+        {
+            if (Width == 1 && Height == 1 && !effectOnly)
+                MachineTE.Kill(i, j);
+        }
+
+        public override void KillMultiTile(int i, int j, int frameX, int frameY)
+        {
+            if (Width > 1 || Height > 1)
+                MachineTE.Kill(i, j);
+        }
+
+        // Runs for "block" tiles that function as machines, not multitiles
+        public override void PlaceInWorld(int i, int j, Item item)
+        {
+            if (TileObjectData.GetTileData(Main.tile[i, j]) is null && Width == 1 && Height == 1)
+            {
+                MachineTE.BlockPlacement(i, j);
+            }
+        }
+
+        // PlaceInWorld is NOT called on tile swap. 
+        // As a temporary fix, tile swap is disabled entirely for machines.
+        public override bool CanReplace(int i, int j, int tileTypeBeingPlaced) => false;
     }
 }

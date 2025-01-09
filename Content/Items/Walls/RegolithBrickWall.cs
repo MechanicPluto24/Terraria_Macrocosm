@@ -10,6 +10,7 @@ namespace Macrocosm.Content.Items.Walls
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 400;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<RegolithBrickWallUnsafe>();
         }
 
         public override void SetDefaults()
@@ -24,8 +25,6 @@ namespace Macrocosm.Content.Items.Walls
             CreateRecipe(4)
                 .AddIngredient<RegolithBrick>()
                 .AddTile(TileID.WorkBenches)
-                .DisableDecraft()
-                .AddCustomShimmerResult(ModContent.ItemType<RegolithBrickWallUnsafe>())
                 .Register();
         }
     }
@@ -38,6 +37,7 @@ namespace Macrocosm.Content.Items.Walls
         {
             base.SetStaticDefaults();
             ItemID.Sets.DrawUnsafeIndicator[Type] = true;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<RegolithBrickWall>();
         }
 
         public override void SetDefaults()

@@ -3,15 +3,19 @@ using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
+using Macrocosm.Content.Skies.Moon;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.Localization;
@@ -30,13 +34,14 @@ namespace Macrocosm.Content.Subworlds
         public static Moon Instance => ModContent.GetInstance<Moon>();
 
         // 8 times slower than on Earth (a Terrarian lunar month lasts for 8 in-game days)
-        public override double TimeRate => 0.125;
+        protected override double TimeRate => 0.125;
 
         // About 6 times lower than default (1, as on Earth)
-        public override float GravityMultiplier => 0.166f;
-        public override float AtmosphericDensity => 0.1f;
+        protected override float GravityMultiplier => 0.166f;
 
+        protected override float AtmosphericDensity(Vector2 position) => 0.1f;
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
+        public override string CustomSky => nameof(MoonSky);
 
         public float DemonSunIntensity { get; set; } = 0f;
         public float DemonSunVisualIntensity { get; set; } = 0f;
@@ -53,7 +58,7 @@ namespace Macrocosm.Content.Subworlds
         };
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
-        public override float GetAmbientTemperature() => Utility.ScaleNoonToMidnight(-183f, 106f);
+        public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-183f, 106f);
 
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
@@ -68,18 +73,15 @@ namespace Macrocosm.Content.Subworlds
 
         public override void OnEnterSubworld()
         {
-            SkyManager.Instance.Activate("Macrocosm:MoonSky");
-
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
 
             DemonSunIntensity = 0f;
-            EventSystem.DemonSun = false;
+            WorldFlags.DemonSun = false;
         }
 
         public override void OnExitSubworld()
         {
-            SkyManager.Instance.Deactivate("Macrocosm:MoonSky");
             DemonSunIntensity = 0f;
         }
 
@@ -90,15 +92,92 @@ namespace Macrocosm.Content.Subworlds
 
         public override void PreUpdateEntities()
         {
-            if (!Main.dedServ)
+        }
+
+        private int lastMoonPhase;
+        // Macrocosm Moon is set somewhere around Mare Tranquillitatis, which means:
+        // - The Moon's "Noon" translates to a Waxing Gibbous 
+        // - The Moon's "Midnight" translates to a Waning Crescent 
+        private void UpdateMoonPhase()
+        {
+            int moonPhase;
+            if (Main.dayTime)
             {
-                if (!SkyManager.Instance["Macrocosm:MoonSky"].IsActive())
-                    SkyManager.Instance.Activate("Macrocosm:MoonSky");
+                // Daytime: 5 phases (20% each of DayLength)
+                if (Main.time < DayLength * 0.2)
+                    moonPhase = (int)MoonPhase.QuarterAtRight; // After Dawn -> Waxing Crescent
+                else if (Main.time < DayLength * 0.4)
+                    moonPhase = (int)MoonPhase.HalfAtRight; // Approaching Noon -> First Quarter
+                else if (Main.time < DayLength * 0.6)
+                    moonPhase = (int)MoonPhase.ThreeQuartersAtRight; // Around Noon -> Waxing Gibbous
+                else if (Main.time < DayLength * 0.8)
+                    moonPhase = (int)MoonPhase.Full; // Approaching Dusk -> Full Moon
+                else
+                    moonPhase = (int)MoonPhase.ThreeQuartersAtLeft; // Before Dusk -> Waning Gibbous
             }
+            else
+            {
+                // Nighttime: 3 phases (33.33% each of NightLength)
+                if (Main.time < NightLength * (1.0 / 3.0))
+                    moonPhase = (int)MoonPhase.HalfAtLeft; // After Dusk -> Third Quarter
+                else if (Main.time < NightLength * (2.0 / 3.0))
+                    moonPhase = (int)MoonPhase.QuarterAtLeft; // Around Midnight -> Waning Crescent
+                else
+                    moonPhase = (int)MoonPhase.Empty; // Approaching Dawn -> New Moon
+            }
+
+            if (Main.moonPhase != moonPhase)
+            {
+                // If the current Moon phase does not match the last expected phase,
+                // assume it was set externally and stop forcing it
+                if (Main.moonPhase != lastMoonPhase)
+                {
+                    lastMoonPhase = Main.moonPhase;
+                    SetTimeFromMoonPhase();
+                }
+                // Otherwise, update the Moon phase to the expected value
+                else
+                {
+                    Main.moonPhase = moonPhase;
+                    lastMoonPhase = moonPhase;
+
+                    if (Main.netMode != NetmodeID.SinglePlayer)
+                        NetMessage.SendData(MessageID.WorldData); 
+                }
+            }
+        }
+
+        public void SetTimeFromMoonPhase()
+        { 
+            Main.dayTime = Main.GetMoonPhase() 
+                is not MoonPhase.HalfAtLeft 
+                and not MoonPhase.QuarterAtLeft 
+                and not MoonPhase.Empty; 
+
+            // Set time as the middle of the phases
+            Main.time = Main.GetMoonPhase() switch
+            {
+                MoonPhase.QuarterAtRight => DayLength * 0.1, 
+                MoonPhase.HalfAtRight => DayLength * 0.3, 
+                MoonPhase.ThreeQuartersAtRight => DayLength * 0.5, 
+                MoonPhase.Full => DayLength * 0.7, 
+                MoonPhase.ThreeQuartersAtLeft => DayLength * 0.9, 
+
+                MoonPhase.HalfAtLeft => NightLength * (1.0 / 6.0),
+                MoonPhase.QuarterAtLeft => NightLength * (3.0 / 6.0),
+                MoonPhase.Empty => NightLength * (5.0 / 6.0),
+
+                _ => 0,
+            };
+
+            if(Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendData(MessageID.WorldData);
         }
 
         public override void PreUpdateWorld()
         {
+            UpdateMoonPhase();
+
             UpdateDemonSun();
             UpdateMeteorStorm();
             UpdateSolarStorm();
@@ -124,23 +203,23 @@ namespace Macrocosm.Content.Subworlds
         {
             meteorStormCounter++;
 
-            if (meteorStormWaitTimeToStart <= meteorStormCounter && !EventSystem.MoonMeteorStorm)
+            if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldFlags.MoonMeteorStorm)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.Start"), Color.Gray);
-                EventSystem.MoonMeteorStorm = true;
+                WorldFlags.MoonMeteorStorm = true;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             }
 
-            if (EventSystem.MoonMeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
+            if (WorldFlags.MoonMeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.End"), Color.Gray);
-                EventSystem.MoonMeteorStorm = false;
+                WorldFlags.MoonMeteorStorm = false;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
             }
 
-            if (EventSystem.MoonMeteorStorm)
+            if (WorldFlags.MoonMeteorStorm)
                 MeteorBoost = 1000f;
             else
                 MeteorBoost = 1f;
@@ -187,6 +266,14 @@ namespace Macrocosm.Content.Subworlds
                         choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
                         choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 30.0);
                         choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
+
+                        choice.Add(ModContent.ProjectileType<IronMeteorSmall>(), 50.0);
+                        choice.Add(ModContent.ProjectileType<IronMeteorMedium>(), 30.0);
+                        choice.Add(ModContent.ProjectileType<IronMeteorLarge>(), 12.0);
+
+                        choice.Add(ModContent.ProjectileType<TitaniumMeteorSmall>(), 50.0);
+                        choice.Add(ModContent.ProjectileType<TitaniumMeteorMedium>(), 30.0);
+                        choice.Add(ModContent.ProjectileType<TitaniumMeteorLarge>(), 12.0);
 
                         choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);
                         choice.Add(ModContent.ProjectileType<NebulaMeteor>(), 2.0);
