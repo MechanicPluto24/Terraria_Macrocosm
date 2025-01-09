@@ -1,3 +1,4 @@
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -18,7 +19,11 @@ namespace Macrocosm.Content.Tiles.Blocks.Bricks
 
             MinPick = 225;
             MineResist = 3f;
+
             AddMapEntry(new Color(165, 165, 165));
+
+            DustType = ModContent.DustType<RegolithDust>();
+            HitSound = SoundID.Tink;
         }
 
         public override void ModifyFrameMerge(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)

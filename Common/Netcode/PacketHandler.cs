@@ -14,18 +14,24 @@ namespace Macrocosm.Common.Netcode
 {
     public enum MessageType : byte
     {
-        SyncParticle,
-        SyncRocketData,
+        TravelRequest,
+        LastSubworldCheck,
+
+        SyncRocketCommonData,
         SyncRocketCustomizationData,
         SyncLaunchPadData,
+
         SyncInventory,
+
+        SyncParticle,
+
         SyncRocketPlayer,
         SyncDashPlayer,
         SyncMacrocosmPlayer,
-        RequestLastSubworld,
-        LastSubworldCheck,
+
         SpawnNPCFromClient,
         SyncNPCFromClient,
+
         SyncTEFromClient,
         SyncPowerWire
     }
@@ -41,37 +47,46 @@ namespace Macrocosm.Common.Netcode
 
             switch (messageType)
             {
-                case MessageType.SyncParticle:
-                    Particle.ReceiveSyncParticle(reader, whoAmI);
+                case MessageType.TravelRequest:
+                    SubworldTravelPlayer.ReceiveTravelRequest(reader, whoAmI);
                     break;
 
-                case MessageType.SyncRocketData:
-                    Rocket.ReceiveSyncRocketData(reader, whoAmI);
+                case MessageType.LastSubworldCheck:
+                    SubworldTravelPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
                     break;
 
-                case MessageType.SyncInventory:
-                    Inventory.HandlePacket(reader, whoAmI);
+                case MessageType.SyncRocketCommonData:
+                    Rocket.ReceiveSyncRocketCommonData(reader, whoAmI);
+                    break;
+
+                case MessageType.SyncRocketCustomizationData:
+                    Rocket.ReceiveSyncRocketCustomizationData(reader, whoAmI);
                     break;
 
                 case MessageType.SyncLaunchPadData:
                     LaunchPad.ReceiveSyncLaunchPadData(reader, whoAmI);
                     break;
 
-                case MessageType.SyncRocketPlayer:
-                    RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
+                case MessageType.SyncInventory:
+                    Inventory.HandlePacket(reader, whoAmI);
                     break;
 
-                case MessageType.SyncDashPlayer:
-                    DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
+                case MessageType.SyncParticle:
+                    Particle.ReceiveSyncParticle(reader, whoAmI);
+                    break;
+
+                case MessageType.SyncRocketPlayer:
+                    RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
                     break;
 
                 case MessageType.SyncMacrocosmPlayer:
                     MacrocosmPlayer.ReceiveSyncPlayer(reader, whoAmI);
                     break;
 
-                case MessageType.LastSubworldCheck:
-                    SubworldTravelPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
+                case MessageType.SyncDashPlayer:
+                    DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
                     break;
+
 
                 case MessageType.SpawnNPCFromClient:
                     NetHelper.ReceiveSpawnNPCFromClient(reader, whoAmI);

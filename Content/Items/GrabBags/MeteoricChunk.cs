@@ -1,4 +1,5 @@
 ﻿
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Ores;
 using Microsoft.Xna.Framework;
@@ -6,7 +7,6 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -22,6 +22,7 @@ namespace Macrocosm.Content.Items.GrabBags
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 10;
+            ItemID.Sets.OpenableBag[Type] = true;
         }
 
         override public void SetDefaults()
@@ -39,22 +40,24 @@ namespace Macrocosm.Content.Items.GrabBags
             flip = Main.rand.NextBool();
         }
 
-        public override bool CanRightClick() => true;
-
         public override void RightClick(Player player)
         {
-
-            for (int i = 0; i < Main.rand.Next(1, 5); i++)
+            (int itemType, int minAmount, int maxAmount)[] ores =
             {
-                int itemType = Utils.SelectRandom(Main.rand,
-                    ModContent.ItemType<SeleniteOre>(),
-                    ModContent.ItemType<ChandriumOre>(),
-                    ModContent.ItemType<ArtemiteOre>(),
-                    ModContent.ItemType<DianiteOre>(),
-                    ModContent.ItemType<NickelOre>()
-                );
-                player.QuickSpawnItem(player.GetSource_OpenItem(Type), itemType, Main.rand.Next(25, 45));
-            }
+                (ModContent.ItemType<SeleniteOre>(), 25, 45),
+                (ModContent.ItemType<ArtemiteOre>(), 25, 45),
+                (ModContent.ItemType<DianiteOre>(), 25, 45),
+                (ModContent.ItemType<ChandriumOre>(), 25, 45),
+                (ModContent.ItemType<NickelOre>(), 45, 65)
+            };
+
+            var (itemType, minAmount, maxAmount) = Utils.SelectRandom(Main.rand, ores);
+
+            player.QuickSpawnItem(
+                player.GetSource_OpenItem(Type),
+                itemType,
+                Main.rand.Next(minAmount, maxAmount)
+            );
         }
 
         public override void Update(ref float gravity, ref float maxFallSpeed)
@@ -71,23 +74,14 @@ namespace Macrocosm.Content.Items.GrabBags
         /// <summary> Draw with a random frame and flipping in the world </summary>
         public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
         {
-            Draw(spriteBatch, frameY, flip, Item.Center - Main.screenPosition, lightColor, rotation, scale);
+            sheet ??= ModContent.Request<Texture2D>(Texture + "_Sheet");
+            SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Rectangle sourceRect = sheet.Frame(1, 4, frameY: frameY);
+            spriteBatch.Draw(sheet.Value, Item.Center - Main.screenPosition, sourceRect, Utility.Colorize(alphaColor, lightColor), rotation, sourceRect.Size() / 2f, scale, effects, 0f);
             return false;
         }
 
         /// <summary> Draw with the default appearance in the inventory </summary>
-        public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
-        {
-            Draw(spriteBatch, 0, false, position, drawColor, 0f, scale);
-            return false;
-        }
-
-        private void Draw(SpriteBatch spriteBatch, int frameY, bool flip, Vector2 position, Color color, float rotation, float scale)
-        {
-            sheet ??= ModContent.Request<Texture2D>(Texture + "_Sheet");
-            SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-            Rectangle sourceRect = sheet.Frame(1, 4, frameY: frameY);
-            spriteBatch.Draw(sheet.Value, position, sourceRect, color, rotation, sourceRect.Size() / 2f, scale, effects, 0f);
-        }
+        public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale) => true;
     }
 }

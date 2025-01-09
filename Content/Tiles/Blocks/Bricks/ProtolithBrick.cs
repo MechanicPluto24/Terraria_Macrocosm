@@ -17,8 +17,9 @@ namespace Macrocosm.Content.Tiles.Blocks.Bricks
             Main.tileBrick[Type] = true;
             Main.tileBlockLight[Type] = true;
 
-            MinPick = 0;
-            MineResist = 1f;
+            MinPick = 225;
+            MineResist = 3f;
+
             AddMapEntry(new Color(38, 38, 39));
 
             DustType = ModContent.DustType<ProtolithDust>();

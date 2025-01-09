@@ -40,7 +40,9 @@ Rocket: {
 
 	Modules: {
 		CommandPod.DisplayName: Command Pod
+		PayloadPod.DisplayName: Payload
 		ServiceModule.DisplayName: Service Module
+		UnmannedTug.DisplayName: Unmanned Tug
 		ReactorModule.DisplayName: Reactor Module
 		EngineModule.DisplayName: Engine Module
 		BoosterLeft.DisplayName: Left Booster

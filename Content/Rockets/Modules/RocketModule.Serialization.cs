@@ -17,6 +17,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
             tag["Type"] = FullName;
             tag["Name"] = Name;
+            tag["Active"] = Active;
             tag["IsBlueprint"] = IsBlueprint;
 
             if (Detail != default)
@@ -47,6 +48,9 @@ namespace Macrocosm.Content.Rockets.Modules
             RocketModule module = Activator.CreateInstance(Type.GetType(type)) as RocketModule;
             module.rocket = ownerRocket;
             module.DeserializeModuleSpecificData(tag, ownerRocket);
+
+            if (tag.ContainsKey("Active"))
+                module.Active = tag.GetBool("Active");
 
             if (tag.ContainsKey("IsBlueprint"))
                 module.IsBlueprint = tag.GetBool("IsBlueprint");

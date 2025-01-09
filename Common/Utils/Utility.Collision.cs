@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Common.Utils
 {
-    public partial class Utility
+    public static partial class Utility
     {
         public static Vector2 Cast(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
         {

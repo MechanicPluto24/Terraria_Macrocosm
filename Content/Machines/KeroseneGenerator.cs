@@ -124,7 +124,7 @@ namespace Macrocosm.Content.Machines
                     // Exhaust position - spawn smoke
                     if (tileOffsetX == 0 && tileOffsetY == 0)
                     {
-                        float atmoDensity = (0.3f + 0.7f * MacrocosmSubworld.CurrentAtmosphericDensity);
+                        float atmoDensity = (0.3f + 0.7f * MacrocosmSubworld.GetAtmosphericDensity(new Vector2(i, j) * 16f));
                         for (int k = 0; k < 4; k++)
                         {
                             if (Main.rand.NextBool())

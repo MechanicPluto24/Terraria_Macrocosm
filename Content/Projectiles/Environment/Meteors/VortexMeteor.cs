@@ -19,17 +19,17 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
             Projectile.width = 64;
             Projectile.height = 64;
 
-            ScreenshakeMaxDist = 140f * 16f;
-            ScreenshakeIntensity = 100f;
+            screenshakeMaxDist = 140f * 16f;
+            screenshakeIntensity = 100f;
 
-            RotationMultiplier = 0.01f;
-            BlastRadius = 224;
+            rotationMultiplier = 0.01f;
+            blastRadius = 224;
         }
 
         public override void MeteorAI()
         {
-            float DustScaleMin = 1f;
-            float DustScaleMax = 1.6f;
+            float dustScaleMin = 1f;
+            float dustScaleMax = 1.6f;
 
             if (Main.rand.NextBool(1))
             {
@@ -40,14 +40,14 @@ namespace Macrocosm.Content.Projectiles.Environment.Meteors
                     DustID.Vortex,
                     0f,
                     0f,
-                    Scale: Main.rand.NextFloat(DustScaleMin, DustScaleMax)
+                    Scale: Main.rand.NextFloat(dustScaleMin, dustScaleMax)
                 );
 
                 dust.noGravity = true;
             }
         }
 
-        public override void ImpactEffects()
+        public override void ImpactEffects(int collisionTileType)
         {
             int impactDustCount = Main.rand.Next(450, 480);
             for (int i = 0; i < impactDustCount; i++)

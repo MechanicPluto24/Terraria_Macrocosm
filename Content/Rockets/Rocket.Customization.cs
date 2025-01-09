@@ -4,6 +4,7 @@ using Macrocosm.Content.Rockets.Customization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 
@@ -13,7 +14,7 @@ namespace Macrocosm.Content.Rockets
     {
         public Rocket VisualClone()
         {
-            Rocket visualClone = new();
+            Rocket visualClone = new(ActiveModuleNames);
             visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
             return visualClone;
         }
@@ -39,10 +40,10 @@ namespace Macrocosm.Content.Rockets
             Nameplate.HAlign = source.Nameplate.HAlign;
             Nameplate.VAlign = source.Nameplate.VAlign;
 
-            foreach (var module in Modules.Values)
+            foreach (var module in AvailableModules)
             {
-                module.Detail = source.Modules[module.Name].Detail;
-                module.Pattern = source.Modules[module.Name].Pattern;
+                module.Detail = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Detail;
+                module.Pattern = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Pattern;
 
                 foreach (PatternColorData data in module.Pattern.ColorData)
                     if (data.Color.A > 0)
@@ -51,7 +52,7 @@ namespace Macrocosm.Content.Rockets
             }
 
             if (sync)
-                SendCustomizationData();
+                SyncCustomizationData();
 
             if (reset)
                 ResetRenderTarget();
@@ -61,13 +62,13 @@ namespace Macrocosm.Content.Rockets
         {
             Nameplate = new();
 
-            foreach (var moduleKvp in Modules)
+            foreach (var module in AvailableModules)
             {
-                moduleKvp.Value.Detail = default;
-                moduleKvp.Value.Pattern = CustomizationStorage.GetDefaultPattern(moduleKvp.Key);
+                module.Detail = default;
+                module.Pattern = CustomizationStorage.GetDefaultPattern(module.Name);
             }
 
-            SendCustomizationData();
+            SyncCustomizationData();
         }
 
         public string GetCustomizationDataToJSON()
@@ -78,9 +79,8 @@ namespace Macrocosm.Content.Rockets
             };
 
             var modulesArray = new JArray();
-            foreach (var moduleKvp in Modules)
+            foreach (var module in AvailableModules)
             {
-                var module = moduleKvp.Value;
                 modulesArray.Add(new JObject
                 {
                     ["moduleName"] = module.Name,
@@ -108,7 +108,8 @@ namespace Macrocosm.Content.Rockets
                 foreach (var moduleJObject in modulesArray.Children<JObject>())
                 {
                     string moduleName = moduleJObject["moduleName"].Value<string>();
-                    if (Modules.TryGetValue(moduleName, out var module))
+                    var module = AvailableModules.FirstOrDefault((m) => m.Name == moduleName);
+                    if (module != null)
                     {
                         try
                         {

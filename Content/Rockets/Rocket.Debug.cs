@@ -16,10 +16,13 @@ namespace Macrocosm.Content.Rockets
 
         public void DrawDebugModuleHitbox()
         {
-            foreach (RocketModule module in Modules.Values)
+            foreach (RocketModule module in AvailableModules)
             {
-                Rectangle rect = new((int)(module.Hitbox.X - Main.screenPosition.X), (int)(module.Hitbox.Y - Main.screenPosition.Y), module.Hitbox.Width, module.Hitbox.Height);
+                Rectangle rect = new((int)(module.Bounds.X - Main.screenPosition.X), (int)(module.Bounds.Y - Main.screenPosition.Y), module.Bounds.Width, module.Bounds.Height);
                 Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green * 0.5f);
+
+                rect = new((int)(module.Bounds.X - Main.screenPosition.X), (int)(module.Bounds.Y - Main.screenPosition.Y), module.Bounds.Width, module.Bounds.Height);
+                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Blue * 0.5f);
             }
         }
 

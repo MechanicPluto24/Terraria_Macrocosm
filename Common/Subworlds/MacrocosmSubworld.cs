@@ -1,19 +1,25 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
-using Macrocosm.Common.Players;
 using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using Stubble.Core.Classes;
 using SubworldLibrary;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Creative;
 using Terraria.GameContent.Events;
+using Terraria.Graphics.Effects;
+using Terraria.IO;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
@@ -22,41 +28,42 @@ namespace Macrocosm.Common.Subworlds
     {
         public string ID => Mod.Name + "/" + Name;
 
-        public override void SetStaticDefaults()
+        public sealed override void SetStaticDefaults()
         {
             Subworlds.Add(ID, this);
+            PostLoad();
         }
 
-        #region Sublib options
+        public virtual void PostLoad() { }
 
+        #region Sublib options
         public override bool NormalUpdates => false;
         public override bool ShouldSave => true;
         public override bool NoPlayerSaving => false;
-
+        public override int ReturnDestination => SubworldTravelPlayer.GetReturnDestination();
         #endregion
 
         #region Environment parameters
 
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
-        public virtual double TimeRate { get; } = Earth.TimeRate;
+        protected virtual double TimeRate { get; } = Earth.TimeRate;
 
         /// <summary> Day length of this subworld in ticks </summary>
-        public virtual double DayLength { get; } = Earth.DayLength;
+        protected virtual double DayLength { get; } = Earth.DayLength;
 
         /// <summary> Night length of this subworld in ticks </summary>
-        public virtual double NightLength { get; } = Earth.NightLength;
+        protected virtual double NightLength { get; } = Earth.NightLength;
+
+        /// <summary> Whether the subworld blocks enemy spawns or not </summary>
+        public virtual bool PeacefulWorld { get; } = false;
 
         /// <summary> The gravity multiplier, measured in G (Earth has 1G) </summary>
-        public virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
+        protected virtual float GravityMultiplier { get; } = Earth.GravityMultiplier;
 
-        /// <summary> 
-        /// The atmospheric density, in terms of Earth's atmospheric density.
-        /// 0f means vacuum, 1f means equal to Earth's, >1f means higher that Earth's.
-        /// </summary>
-        public virtual float AtmosphericDensity { get; } = Earth.AtmosphericDensity;
+        protected virtual float AtmosphericDensity(Vector2 position) => Earth.AtmosphericDensity;
 
         /// <summary> The ambient temperature, expressed in °C </summary>
-        public virtual float GetAmbientTemperature() => Earth.GetAmbientTemperature();
+        public virtual float AmbientTemperature(Vector2 position) => Earth.AmbientTemperature(position);
 
         /// <summary> Whether wiring should function in this subworld. Useful for solar storms :) </summary>
         public virtual bool ShouldUpdateWiring { get; set; } = true;
@@ -64,18 +71,19 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Collection of LiquidIDs that should evaporate in this subworld </summary>
         public virtual int[] EvaporatingLiquidTypes => [];
 
+        public virtual bool NoBackground => false;
+
         /// <summary> The map background color for each depth layer (Surface, Underground, Cavern, Underworld) </summary>
         public virtual Dictionary<MapColorType, Color> MapColors { get; } = null;
+
+        public virtual string CustomSky { get; } = null;
         #endregion
 
         #region Size
 
         /// <summary> Determine the size of this subworld </summary>
         /// <param name="earthWorldSize"> The Earth's world size </param>
-        public virtual WorldSize GetSubworldSize(WorldSize earthWorldSize)
-        {
-            return earthWorldSize;
-        }
+        public virtual WorldSize GetSubworldSize(WorldSize earthWorldSize) => earthWorldSize;
 
         /// <summary> The width is determined in ReadCopiedMainWorldData using <see cref="GetSubworldSize(WorldSize)"> </summary>
         public sealed override int Width => GetSubworldSize(Earth.WorldSize).Width;
@@ -90,24 +98,6 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Specifies the conditions for reaching this particular subworld </summary>
         public virtual ChecklistConditionCollection LaunchConditions { get; } = new();
 
-        /// <summary> 
-        /// Determines what <see cref="SubworldSystem.Exit"/> will do. 
-        /// <br> If travelling using conventional methods, where <see cref="MacrocosmPlayer.TriggeredSubworldTravel"/> is set, will return to the main world (Earth). </br>
-        /// <br> Otherwise, return to the main menu. This is used when clicking "Return" from the in-game settings menu, while in a subworld. </br>
-        /// </summary>
-        public override int ReturnDestination
-        {
-            get
-            {
-                // Return to the main world (Earth)
-                //if (Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().TriggeredSubworldTravel)
-                return base.ReturnDestination;
-                // Go to main menu
-                //else
-                //return int.MinValue;
-            }
-        }
-
         #endregion
 
         #region Travel hooks
@@ -121,13 +111,22 @@ namespace Macrocosm.Common.Subworlds
         public sealed override void OnEnter()
         {
             OnEnterSubworld();
+
             MapTileSystem.ApplyMapTileColors();
+
+            if (!string.IsNullOrEmpty(CustomSky))
+                SkyManager.Instance.Activate($"{Mod.Name}:{CustomSky}");
         }
 
         public sealed override void OnExit()
         {
             OnExitSubworld();
+
             MapTileSystem.RestoreMapTileColors();
+
+            if (!string.IsNullOrEmpty(CustomSky))
+                SkyManager.Instance.Deactivate($"{Mod.Name}:{CustomSky}");
+
             Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>().OnExitSubworld();
         }
 
@@ -142,7 +141,9 @@ namespace Macrocosm.Common.Subworlds
 
             UpdateTime();
 
+            UpdateBackground();
             UpdateWeather();
+
             UpdateInvasions();
 
             UpdateWiring();
@@ -265,6 +266,13 @@ namespace Macrocosm.Common.Subworlds
             // Rain, rain, go away, come again another day
             Main.StopRain();
         }
+
+        private void UpdateBackground()
+        {
+            if (!string.IsNullOrEmpty(CustomSky) && !SkyManager.Instance[$"{Mod.Name}:{CustomSky}"].IsActive())
+                SkyManager.Instance.Activate($"{Mod.Name}:{CustomSky}");
+        }
+
         #endregion
 
         public override void DrawMenu(GameTime gameTime)
@@ -278,7 +286,12 @@ namespace Macrocosm.Common.Subworlds
         public override float GetGravity(Entity entity)
         {
             if (entity is Player)
-                return Player.defaultGravity * CurrentGravityMultiplier;
+            {
+                float gravity = Player.defaultGravity * GetGravityMultiplier();
+                if (gravity == 0f)
+                    gravity = float.Epsilon;
+                return gravity;
+            }
 
             // This is instead modified using the new NPC.GravityMultiplier tML property in MacrocosmGlobalNPC 
             if (entity is NPC)
@@ -289,76 +302,86 @@ namespace Macrocosm.Common.Subworlds
 
         #region Saving and loading
 
-        private void SaveData(TagCompound tag)
-        {
-            WorldFlags.SaveData(tag);
-            RocketManager.SaveData(tag);
-            LaunchPadManager.SaveData(tag);
-            CustomizationStorage.SaveData(tag);
-            TownNPCSystem.SaveData(tag);
-        }
+        protected virtual void PostCopyData() { }
 
-        private void LoadData(TagCompound tag)
-        {
-            WorldFlags.LoadData(tag);
-            RocketManager.LoadData(tag);
-            LaunchPadManager.LoadData(tag);
-            CustomizationStorage.LoadData(tag);
-            TownNPCSystem.LoadData(tag);
-        }
+        protected virtual void PostReadCopiedData() { }
 
         public override void CopySubworldData()
         {
-            TagCompound subworldDataTag = new();
-            SaveData(subworldDataTag);
-            SubworldSystem.CopyWorldData("Macrocosm:subworldDataTag", subworldDataTag);
         }
 
         public override void ReadCopiedSubworldData()
         {
-            TagCompound subworldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:subworldDataTag");
-            LoadData(subworldDataTag);
         }
 
         public override void CopyMainWorldData()
         {
-            TagCompound mainWorldDataTag = new();
-            SaveData(mainWorldDataTag);
-            SaveEarthSpecificData(mainWorldDataTag);
-            SubworldSystem.CopyWorldData("Macrocosm:mainWorldDataTag", mainWorldDataTag);
+            CopyMacrocosmData();
+            CopyVanillaData();
+            PostCopyData();
         }
 
         public override void ReadCopiedMainWorldData()
         {
-            TagCompound mainWorldDataTag = SubworldSystem.ReadCopiedWorldData<TagCompound>("Macrocosm:mainWorldDataTag");
-            LoadData(mainWorldDataTag);
-            LoadEarthSpecificData(mainWorldDataTag);
+            ReadCopiedMacrocosmData();
+            ReadCopiedVanillaData();
+            PostReadCopiedData();
         }
 
-        private void SaveEarthSpecificData(TagCompound tag)
+        private static void CopyMacrocosmData()
         {
-            if (SubworldSystem.AnyActive() && !SubworldSystem.AnyActive<Macrocosm>())
-                return;
+            TagCompound data = new();
 
-            // Save Earth's world size for other subworlds to use 
-            tag[nameof(Earth) + nameof(Earth.WorldSize)] = Earth.WorldSize;
+            WorldFlags.SaveData(data);
+            RocketManager.SaveData(data);
+            LaunchPadManager.SaveData(data);
+            CustomizationStorage.SaveData(data);
+            TownNPCSystem.SaveData(data);
+
+            SubworldSystem.CopyWorldData($"{nameof(Macrocosm)}:{nameof(data)}", data);
         }
 
-        private void LoadEarthSpecificData(TagCompound tag)
+        private static void ReadCopiedMacrocosmData()
         {
-            if (SubworldSystem.AnyActive() && !SubworldSystem.AnyActive<Macrocosm>())
-                return;
+            TagCompound data = SubworldSystem.ReadCopiedWorldData<TagCompound>($"{nameof(Macrocosm)}:{nameof(data)}");
 
-            // Read world size and apply it here. 
-            // In SubLib maxTiles are assigned before the data is read.
-            // ReadCopiedMainWorldData is called before worldgen so it can be safely used there.
-            if (tag.ContainsKey(nameof(Earth) + nameof(Earth.WorldSize)))
+            WorldFlags.LoadData(data);
+            RocketManager.LoadData(data);
+            LaunchPadManager.LoadData(data);
+            CustomizationStorage.LoadData(data);
+            TownNPCSystem.LoadData(data);
+        }
+
+        private void CopyVanillaData()
+        {
+            SubworldSystem.CopyWorldData("!" + nameof(Earth.WorldSize), Earth.WorldSize);
+            SubworldSystem.CopyWorldData(nameof(Main.moonPhase), Main.moonPhase);
+        }
+
+        private void ReadCopiedVanillaData()
+        {
+            SetWorldSize(SubworldSystem.ReadCopiedWorldData<WorldSize>("!" + nameof(Earth.WorldSize)));
+            SetMoonPhase(SubworldSystem.ReadCopiedWorldData<int>(nameof(Main.moonPhase)));
+        }
+
+        // Read world size and apply it here. 
+        // In SubworldLibrary maxTiles values are assigned before the data is read.
+        // ReadCopiedMainWorldData is called before worldgen so it can be safely used.
+        private void SetWorldSize(WorldSize worldSize)
+        {
+            Earth.WorldSize = worldSize;    
+            if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                Earth.WorldSize = tag.Get<WorldSize>(nameof(Earth) + nameof(Earth.WorldSize));
-                WorldSize subworldSize = GetSubworldSize(Earth.WorldSize);
+                WorldSize subworldSize = GetSubworldSize(worldSize);
                 Main.maxTilesX = subworldSize.Width;
                 Main.maxTilesY = subworldSize.Height;
             }
+        }
+
+        private void SetMoonPhase(int moonPhase)
+        {
+            Main.moonPhase = moonPhase;
+            typeof(WorldFile).SetFieldValue("_tempMoonPhase", moonPhase);
         }
 
         #endregion

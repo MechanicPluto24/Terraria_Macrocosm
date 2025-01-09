@@ -37,9 +37,10 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             return moduleName switch
             {
-                "ServiceModule" => 0.9f,
+                "ServiceModule" or "UnmannedTug" => 0.9f,
                 "ReactorModule" => 1.15f,
                 "CommandPod" => 1.25f,
+                "PayloadPod" => 1f,
                 "EngineModule" or "BoosterLeft" or "BoosterRight" => 0.34f,
                 _ => 1f,
             };

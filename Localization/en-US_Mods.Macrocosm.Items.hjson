@@ -288,48 +288,38 @@ Silicon: {
 }
 
 MeteoricChunk: {
-	DisplayName: Meteoric Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Lunar Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 NebulaChunk: {
-	DisplayName: Nebula Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Nebula Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 SolarChunk: {
-	DisplayName: Solar Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Solar Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 StardustChunk: {
-	DisplayName: Stardust Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Stardust Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 VortexChunk: {
-	DisplayName: Vortex Chunk
-	Tooltip:
-		'''
-		Consumable
-		<right> to smash open!
-		'''
+	DisplayName: Vortex Meteoric Chunk
+	Tooltip: <right> to smash open!
+}
+
+IronChunk: {
+	DisplayName: Ferrous Meteoric Chunk
+	Tooltip: <right> to smash open!
+}
+
+TitaniumChunk: {
+	DisplayName: Ilmenite Meteoric Chunk
+	Tooltip: <right> to smash open!
 }
 
 SpaceShuttle: {
@@ -821,7 +811,7 @@ IndustrialHazardWall: {
 }
 
 IndustrialHazardWallUnsafe: {
-	DisplayName: Unsafe Industrial Hazard Wall
+	DisplayName: Perilous Industrial Hazard Wall
 	Tooltip: ""
 }
 
@@ -831,7 +821,7 @@ IndustrialPlatingWall: {
 }
 
 IndustrialPlatingWallUnsafe: {
-	DisplayName: Unsafe Industrial Plating Wall
+	DisplayName: Perilous Industrial Plating Wall
 	Tooltip: ""
 }
 
@@ -841,7 +831,7 @@ IndustrialSquarePaneledWall: {
 }
 
 IndustrialSquarePaneledWallUnsafe: {
-	DisplayName: Unsafe Industrial Square Paneled Wall
+	DisplayName: Perilous Industrial Square Paneled Wall
 	Tooltip: ""
 }
 
@@ -851,7 +841,7 @@ IndustrialTrimmingWall: {
 }
 
 IndustrialTrimmingWallUnsafe: {
-	DisplayName: Unsafe Industrial Trimming Wall
+	DisplayName: Perilous Industrial Trimming Wall
 	Tooltip: ""
 }
 
@@ -1909,27 +1899,27 @@ IrradiatedAltar: {
 }
 
 IrradiatedBrickWallUnsafe: {
-	DisplayName: Irradiated Brick Wall Unsafe
+	DisplayName: Perilous Irradiated Brick Wall
 	Tooltip: ""
 }
 
 IrradiatedRockWallUnsafe: {
-	DisplayName: Irradiated Rock Wall Unsafe
+	DisplayName: Perilous Irradiated Rock Wall
 	Tooltip: ""
 }
 
 ProtolithWallUnsafe: {
-	DisplayName: Protolith Wall Unsafe
+	DisplayName: Perilous Protolith Wall
 	Tooltip: ""
 }
 
 RegolithBrickWallUnsafe: {
-	DisplayName: Regolith Brick Wall Unsafe
+	DisplayName: Perilous Regolith Brick Wall
 	Tooltip: ""
 }
 
 RegolithWallUnsafe: {
-	DisplayName: Regolith Wall Unsafe
+	DisplayName: Perilous Regolith Wall
 	Tooltip: ""
 }
 
@@ -2233,7 +2223,7 @@ ProtolithBrickWall: {
 }
 
 ProtolithBrickWallUnsafe: {
-	DisplayName: Protolith Brick Wall Unsafe
+	DisplayName: Perilous Protolith Brick Wall
 	Tooltip: ""
 }
 
@@ -2741,3 +2731,29 @@ KeroseneGenerator: {
 	DisplayName: Kerosene Generator
 	Tooltip: ""
 }
+
+Flag: {
+	DisplayName: Flag
+	Tooltip: ""
+}
+
+Barometer: {
+	DisplayName: Barometer
+	Tooltip: ""
+}
+
+GeigerMuller: {
+	DisplayName: Geiger Muller
+	Tooltip: ""
+}
+
+SolarPanelTile: {
+	DisplayName: Solar Panel Tile
+	Tooltip: ""
+}
+
+TrailScepter: {
+	Tooltip: Fires a flurry of ruinous stars
+	DisplayName: Trail Scepter
+}
+

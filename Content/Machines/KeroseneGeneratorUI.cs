@@ -158,7 +158,7 @@ namespace Macrocosm.Content.Machines
 
             hullHeatProgressBar.Progress = KeroseneGenerator.HullHeatProgress;
 
-            float temperature = MacrocosmSubworld.GetCurrentAmbientTemperature() + KeroseneGenerator.HullHeat;
+            float temperature = MacrocosmSubworld.GetAmbientTemperature(KeroseneGenerator.Position.ToWorldCoordinates()) + KeroseneGenerator.HullHeat;
             if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Metric)
                 hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.KeroseneGenerator.HullHeatMetric").Format((int)temperature));
             else if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Imperial)

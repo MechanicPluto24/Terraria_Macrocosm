@@ -1,8 +1,5 @@
 GreatswordHeldProjectile.DisplayName: Greatsword Held Projectile
 GunHeldProjectile.DisplayName: Gun Held Projectile
-MoonMeteorLarge.DisplayName: Large Meteor
-MoonMeteorMedium.DisplayName: Medium Meteor
-MoonMeteorSmall.DisplayName: Small Meteor
 NebulaMeteor.DisplayName: Nebula Meteor
 SolarMeteor.DisplayName: Solar Meteor
 StardustMeteor.DisplayName: Stardust Meteor
@@ -139,19 +136,33 @@ WornLunarianDaggerHeld.DisplayName: Worn Lunarian Dagger
 DroneLaser.DisplayName: P.D.C.D. "Hummingbird"
 DroneMinion.DisplayName: P.D.C.D. "Hummingbird"
 ExsanguinatorProjectile.DisplayName: Exsanguinator Projectile
-IlmeniteHeld.DisplayName: Ilmenite Held
-IlmeniteRegularProj.DisplayName: Ilmenite Regular Proj
-IlmeniteAltProj.DisplayName: Ilmenite Alt Proj
-IlminiteExplosion.DisplayName: Ilminite Explosion
-IlmeniteExplosion.DisplayName: Ilmenite Explosion
+IlmeniteHeld.DisplayName: Ilmenite
+IlmeniteRegularProj.DisplayName: Ilmenite
+IlmeniteAltProj.DisplayName: Ilmenite
+IlmeniteExplosion.DisplayName: Ilmenite
 HummingbirdBullet.DisplayName: P.D.C.D. "Hummingbird"
 HummingbirdDrone.DisplayName: P.D.C.D. "Hummingbird"
-CalcicCaneBolt.DisplayName: Calcic Cane Bolt
-GreatstaffOfHorusMinion.DisplayName: Greatstaff Of Horus Minion
+CalcicCaneBolt.DisplayName: Calcic Cane
+GreatstaffOfHorusMinion.DisplayName: Greatstaff Of Horus
 HorusExplosion.DisplayName: Horus Explosion
 RyuguMinion.DisplayName: Ryugu Minion
 RyuguShell.DisplayName: Ryugu Shell
-CrescentScriptureSlash.DisplayName: Crescent Scripture Slash
-TotalitySlashProjectile.DisplayName: Totality Slash Projectile
-TotalitySmallSlashProjectile.DisplayName: Totality Small Slash Projectile
-SchroteriProjectile.DisplayName: Schroteri Projectile
+CrescentScriptureSlash.DisplayName: Crescent Scripture
+TotalitySlashProjectile.DisplayName: Totality
+TotalitySmallSlashProjectile.DisplayName: Totality
+SchroteriProjectile.DisplayName: Schroteri
+MoonMeteorLarge.DisplayName: Lunar Meteor
+MoonMeteorMedium.DisplayName: Lunar Meteor
+MoonMeteorSmall.DisplayName: Lunar Meteor
+IronMeteorLarge.DisplayName: Ferrous Meteor
+IronMeteorMedium.DisplayName: Ferrous Meteor
+IronMeteorSmall.DisplayName: Ferrous Meteor
+TitaniumMeteorLarge.DisplayName: Ilmenite Meteor
+TitaniumMeteorMedium.DisplayName: Ilmenite Meteor
+TitaniumMeteorSmall.DisplayName: Ilmenite Meteor
+TrailStar.DisplayName: Trail Star
+ProcellarumHalberdProjectile.DisplayName: Procellarum
+ProcellarumLightBolt.DisplayName: Procellarum
+ProcellarumExplosion.DisplayName: Procellarum
+LaserTurretProjectile.DisplayName: Laser Turret
+TurretTaserProjectile.DisplayName: Turret Taser

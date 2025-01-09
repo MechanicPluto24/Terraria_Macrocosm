@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
@@ -243,12 +244,24 @@ namespace Macrocosm.Common.Utils
             Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
         }
 
+        public static float GetMoonPhaseBrightness(MoonPhase moonPhase)
+        {
+            return moonPhase switch
+            {
+                MoonPhase.Empty => 0.75f,
+                MoonPhase.QuarterAtLeft or MoonPhase.QuarterAtRight => 0.85f,
+                MoonPhase.HalfAtLeft or MoonPhase.HalfAtRight => 1.0f,
+                MoonPhase.ThreeQuartersAtLeft or MoonPhase.ThreeQuartersAtRight => 1.1f,
+                MoonPhase.Full => 1.25f,
+                _ => 1.0f,
+            };
+        }
 
         /// <summary> Used for linear scaling along an entire day/night cycle </summary>
         public static float ScaleNoonToMidnight(float min, float max)
         {
-            float dayLength = (float)MacrocosmSubworld.CurrentDayLength;
-            float nightLength = (float)MacrocosmSubworld.CurrentNightLength;
+            float dayLength = (float)MacrocosmSubworld.GetDayLength();
+            float nightLength = (float)MacrocosmSubworld.GetNightLength();
             float totalCycleLength = dayLength + nightLength;
 
             double totalTime = Main.dayTime ? Main.time : dayLength + Main.time;

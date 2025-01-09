@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Items.Machines;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Terraria.Localization;
@@ -13,7 +14,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public override int Width => 80;
         public override int Height => 110;
 
-        public override Rectangle Hitbox => base.Hitbox with { Y = base.Hitbox.Y + 2 };
+        public override Vector2 Offset => new(98, 80);
 
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {

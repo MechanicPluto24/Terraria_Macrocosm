@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -10,7 +11,7 @@ namespace Macrocosm.Common.Loot
     /// Simple loot table that isn't bound to anything (neither NPCs nor Grab Bags). 
     /// Includes its own resolver.
     /// </summary>
-    public class SimpleLootTable : ILoot
+    public class SimpleLootTable : ILoot, IEnumerable<IItemDropRule>
     {
         public readonly List<IItemDropRule> Entries;
 
@@ -95,6 +96,16 @@ namespace Macrocosm.Common.Loot
                 if (itemDropRuleChainAttempt.CanChainIntoRule(parentResult))
                     ResolveRule(itemDropRuleChainAttempt.RuleToChain, info);
             }
+        }
+
+        public IEnumerator<IItemDropRule> GetEnumerator()
+        {
+            return ((IEnumerable<IItemDropRule>)Entries).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)Entries).GetEnumerator();
         }
     }
 }

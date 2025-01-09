@@ -13,8 +13,6 @@ namespace Macrocosm.Content.Tiles.Blocks
             Main.tileBlockLight[Type] = true;
             Main.tileBrick[Type] = true;
 
-            MinPick = 35;
-            MineResist = 1f;
             AddMapEntry(new Color(220, 216, 121), CreateMapEntryName());
 
             DustType = ModContent.DustType<CheeseDust>();

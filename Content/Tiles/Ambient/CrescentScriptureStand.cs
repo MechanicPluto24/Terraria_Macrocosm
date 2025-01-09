@@ -1,5 +1,5 @@
 using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Tiles.Ambient
                     }, shouldSync: true);
                 }
 
-                WorldFlags.SetFlag(ref WorldFlags.LuminiteShrineUnlocked, true);
+                WorldFlags.LuminiteShrineUnlocked = true;
                 NetMessage.SendData(MessageID.WorldData);
             }
         }

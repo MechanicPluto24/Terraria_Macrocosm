@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Debuffs;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Debuffs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -35,12 +36,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnRecalled()
         {
-            Projectile.NewProjectileDirect(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ManisolBladeSolExplosion>(), Projectile.damage, 12f, Main.myPlayer, 0f, 0f);
+            float strength = npcStick > 0 ? 1.5f : 1f;
+            Projectile.NewProjectileDirect(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<ManisolBladeSolExplosion>(), Projectile.damage, 12f, Main.myPlayer, ai0: strength);
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(ModContent.BuffType<Melting>(), 260, false);
+            target.AddBuff(ModContent.BuffType<Melting>(), 270, false);
         }
 
         public override bool PreDraw(ref Color lightColor)

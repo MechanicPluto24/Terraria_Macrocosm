@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using System;
+using Terraria;
 
 namespace Macrocosm.Common.DataStructures
 {
@@ -13,48 +16,36 @@ namespace Macrocosm.Common.DataStructures
         SolarFragmentHigh = 10
     }
 
-    public enum BurnContext
-    {
-        None,
-        GuideVoodooDoll,
-        Critter,
-        CritterBadLuck,
-        PrismaticLacewing
-    }
-
     /// <summary>
     /// Fuel data of an item
     /// </summary>
     /// <param name="potency"> The <see cref="FuelPotency"/> </param>
-    /// <param name="consumtionRate"> The consumtion rate, in ticks </param>
+    /// <param name="consumptionRate"> The consumption rate, in ticks </param>
     public readonly struct FuelData
     {
         private readonly FuelPotency potency;
-        private readonly int consumtionRate;
-        private readonly BurnContext burnContext;
+        private readonly int consumptionRate;
 
-        private readonly Func<FuelPotency> getPotency;
+        public FuelPotency Potency => potency;
+        public int ConsumptionRate => consumptionRate;
 
         public FuelData() { }
 
-        public FuelData(FuelPotency potency, int consumtionRate, BurnContext burnContext = BurnContext.None)
+        public FuelData(FuelPotency potency, int consumptionRate, bool critter = false)
         {
             this.potency = potency;
-            this.consumtionRate = consumtionRate;
-            this.burnContext = burnContext;
+            this.consumptionRate = consumptionRate;
+
+            if (critter)
+                CanBurn = (item, pos) => Utility.CanHurtCritterAroundPosition(pos, 800);
         }
 
-        public FuelData(Func<FuelPotency> getPotency, int consumtionRate, BurnContext burnContext = BurnContext.None) : this()
-        {
-            this.getPotency = getPotency;
-            this.consumtionRate = consumtionRate;
-            this.burnContext = burnContext;
-        }
+        public delegate bool CanBurnDelegate(Item item, Vector2 position);
+        public delegate void BurnDelegate(Item item, Vector2 position);
 
-        public FuelPotency Potency => getPotency is not null ? getPotency() : potency;
-        public int ConsumptionRate => consumtionRate;
-        public BurnContext BurnContext => burnContext;
+        public CanBurnDelegate CanBurn { get; init; } = (_, _) => true;
+        public BurnDelegate Burning { get; init; } = (_, _) => { };
+        public BurnDelegate OnConsumed { get; init; } = (_, _) => { };
 
-        public bool Valid => Potency > FuelPotency.None;
     }
 }
