@@ -9,6 +9,7 @@ using Terraria.ModLoader;
 using Terraria;
 using Terraria.GameContent;
 using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Sets;
 
 namespace Macrocosm.Common.Hooks
 {
@@ -26,8 +27,8 @@ namespace Macrocosm.Common.Hooks
 
         private TreePaintingSettings On_TreePaintSystemData_GetTileSettings(On_TreePaintSystemData.orig_GetTileSettings orig, int tileType, int tileStyle)
         {
-            if(TileLoader.GetTile(tileType) is ICustomPaintingSettingsTile customPaintTile)
-                return customPaintTile.PaintingSettings;
+            if (TileSets.PaintingSettings[tileType] is TreePaintingSettings settings)
+                return settings;
 
             return orig(tileType, tileStyle);
         }

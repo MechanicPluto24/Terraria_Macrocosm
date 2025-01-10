@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Terraria.GameContent;
 using Terraria.ID;
 
 namespace Macrocosm.Common.Sets
@@ -19,5 +20,7 @@ namespace Macrocosm.Common.Sets
         /// </summary>
         // TODO: add support for net serializaton (and proper unloading but this needs to be in tML directly) 
         public static Point[] CustomContainerSize { get; } = TileID.Sets.Factory.CreateCustomSet(defaultState: Point.Zero);
+
+        public static TreePaintingSettings[] PaintingSettings { get; } = TileID.Sets.Factory.CreateCustomSet<TreePaintingSettings>(defaultState: null);
     }
 }
