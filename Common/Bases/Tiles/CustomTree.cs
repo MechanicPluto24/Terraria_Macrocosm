@@ -1,4 +1,5 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,7 +23,7 @@ namespace Macrocosm.Common.Bases.Tiles
     /// <br/> It has its own tile type, compared to <see cref="ModTree"/> which is just a <see cref="TileID.Trees"/> biome variant.
     /// <br/> Based on lion8cake's implementation of CreamTree @ "Confection REBAKED" mod.
     /// </summary>
-    public abstract partial class CustomTree : ModTile, ITree, ICustomPaintingSettingsTile
+    public abstract partial class CustomTree : ModTile, ITree
     {
         public enum TreeType
         {
@@ -30,18 +31,6 @@ namespace Macrocosm.Common.Bases.Tiles
             Palm,
             Custom
         };
-
-        public override void Load()
-        {
-            On_WorldGen.TryGrowingTreeByType += On_WorldGen_TryGrowingTreeByType;
-            On_WorldGen.GetTreeType += On_WorldGen_GetTreeType; ;
-        }
-
-        public override void Unload()
-        {
-            On_WorldGen.TryGrowingTreeByType -= On_WorldGen_TryGrowingTreeByType;
-            On_WorldGen.GetTreeType -= On_WorldGen_GetTreeType; ;
-        }
 
         /// <summary> Array of valid tile types. </summary>
         public abstract int[] GrowsOnTileId { get; set; }
@@ -98,6 +87,7 @@ namespace Macrocosm.Common.Bases.Tiles
         public abstract void GetTopTextureFrame(int i, int j, ref int treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight);
 
         /// <summary> Check ground tile valid for this tree. Defaults to a <see cref="GrowsOnTileId"/> check </summary>
+        //public virtual bool GroundTest(int tileType) => GrowsOnTileId.Contains(tileType) || tileType == Type;
         public virtual bool GroundTest(int tileType) => GrowsOnTileId.Contains(tileType) || tileType == Type;
 
         /// <summary> Check wall behing valid for this tree. Defaults to vanilla logic </summary>
@@ -115,6 +105,7 @@ namespace Macrocosm.Common.Bases.Tiles
         /// <summary> Use for growing (<see cref="FramingType"/> == <see cref="TreeType.Custom"/>)</summary>
         public virtual bool CustomGrowTree(int x, int y) { return false; }
 
+        /// <summary> Use for custom drawing (<see cref="FramingType"/> == <see cref="TreeType.Custom"/>)</summary>
         public virtual void CustomPostDrawTree(int x, int y, Tile tile, SpriteBatch spriteBatch, double treeWindCounter, Vector2 unscaledPosition, Vector2 zero, float topsWindFactor, float branchWindFactor) { }
 
         public virtual Asset<Texture2D> GetTexture() => ModContent.RequestIfExists<Texture2D>(Texture, out var texture) ? texture : null;
@@ -140,6 +131,8 @@ namespace Macrocosm.Common.Bases.Tiles
             TileID.Sets.GetsCheckedForLeaves[Type] = true;
             TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
             TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type] = true;
+
+            TileSets.PaintingSettings[Type] = PaintingSettings;
         }
 
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
@@ -173,7 +166,7 @@ namespace Macrocosm.Common.Bases.Tiles
             return false;
         }
 
-        /// <summary> Adapted from WorldGen.GrowPalmTree </summary>
+        /// <summary> Adapted from WorldGen.GrowPalmTree, but without the sand checks </summary>
         protected void CheckPalmTree(int i, int j)
         {
             int typeAbove = -1;
@@ -189,7 +182,7 @@ namespace Macrocosm.Common.Bases.Tiles
             if (Main.tile[i, j + 1].HasTile)
                 typeBelow = Main.tile[i, j + 1].TileType;
 
-            if (!GroundTest(typeBelow))
+            if (!GroundTest(typeBelow) && typeBelow != type)
                 WorldGen.KillTile(i, j);
 
             if ((Main.tile[i, j].TileFrameX == 66 || Main.tile[i, j].TileFrameX == 220) && !GroundTest(typeBelow))
@@ -201,20 +194,7 @@ namespace Macrocosm.Common.Bases.Tiles
                 Main.tile[i, j].TileFrameX = 220;
 
             if (Main.tile[i, j].TileFrameX != frameX && Main.tile[i, j].TileFrameY != frameY && frameX >= 0 && frameY >= 0)
-            {
-                WorldGen.TileFrame(i - 1, j);
-                WorldGen.TileFrame(i + 1, j);
-                WorldGen.TileFrame(i, j - 1);
-                WorldGen.TileFrame(i, j + 1);
-            }
-        }
-
-        private bool On_WorldGen_TryGrowingTreeByType(On_WorldGen.orig_TryGrowingTreeByType orig, int treeTileType, int checkedX, int checkedY)
-        {
-            if (TileLoader.GetTile(treeTileType) is CustomTree customTree)
-                return customTree.GrowTree(checkedX, checkedY);
-
-            return orig(treeTileType, checkedX, checkedY);
+                WorldGen.DiamondTileFrame(i, j);
         }
 
         /// <summary>
@@ -249,22 +229,19 @@ namespace Macrocosm.Common.Bases.Tiles
         /// <summary> Adapted clone of the WorldGen.GrowPalmTree method  </summary>
         protected bool GrowPalmTree(int x, int y)
         {
-            int tileY = y;
             if (!WorldGen.InWorld(x, y))
                 return false;
 
-            while (Main.tile[x, tileY].TileType == Sapling.Type)
+            int groundY = y;
+            while (Main.tile[x, groundY].TileType == Sapling.Type)
             {
-                tileY++;
-                if (Main.tile[x, tileY] == null)
+                groundY++;
+                if (groundY > Main.maxTilesY - 1)
                     return false;
             }
 
-            Tile tile = Main.tile[x, tileY];
-            Tile tileAbove = Main.tile[x, tileY - 1];
-            byte color = 0;
-            if (Main.tenthAnniversaryWorld && !WorldGen.gen && TenthAniversaryRandomColor)
-                color = (byte)WorldGen.genRand.Next(1, 13);
+            Tile tile = Main.tile[x, groundY];
+            Tile tileAbove = Main.tile[x, groundY - 1];
 
             if (!tile.HasTile || tile.IsHalfBlock || tile.Slope != SlopeType.Solid)
                 return false;
@@ -275,11 +252,15 @@ namespace Macrocosm.Common.Bases.Tiles
             if (!GroundTest(tile.TileType))
                 return false;
 
-            if (!WorldGen.EmptyTileCheck(x, x, tileY - 2, tileY - 1, Sapling.Type))
+            if (!WorldGen.EmptyTileCheck(x, x, groundY - 2, groundY - 1, Sapling.Type))
                 return false;
 
-            if (!WorldGen.EmptyTileCheck(x - 1, x + 1, tileY - 30, tileY - 3, Sapling.Type))
+            if (!WorldGen.EmptyTileCheck(x - 1, x + 1, groundY - 30, groundY - 3, Sapling.Type))
                 return false;
+
+            byte color = 0;
+            if (Main.tenthAnniversaryWorld && !WorldGen.gen && TenthAniversaryRandomColor)
+                color = (byte)WorldGen.genRand.Next(1, 13);
 
             int height = WorldGen.genRand.Next(TreeHeightMin, TreeHeightMax + 1);
             int randomFrameY = WorldGen.genRand.Next(-8, 9) * 2;
@@ -287,7 +268,7 @@ namespace Macrocosm.Common.Bases.Tiles
 
             for (int j = 0; j < height; j++)
             {
-                tile = Main.tile[x, tileY - 1 - j];
+                tile = Main.tile[x, groundY - 1 - j];
                 if (j == 0)
                 {
                     tile.HasTile = true;
@@ -322,46 +303,54 @@ namespace Macrocosm.Common.Bases.Tiles
                 tile.TileColor = color;
             }
 
-            WorldGen.RangeFrame(x - 2, tileY - height - 1, x + 2, tileY + 1);
-            NetMessage.SendTileSquare(-1, x, tileY - height, 1, height);
+            WorldGen.RangeFrame(x - 2, groundY - height - 1, x + 2, groundY + 1);
+            NetMessage.SendTileSquare(-1, x, groundY - height, 1, height);
             return true;
         }
 
         /// <summary> Adapted clone of the WorldGen.GrowTree method </summary>
         protected bool GrowRegularTree(int x, int y)
         {
-            int tileY;
-            for (tileY = y; Main.tile[x, tileY].TileType == Sapling.Type; tileY++) { }
-
-            if (Main.tile[x - 1, tileY - 1].LiquidAmount != 0 || Main.tile[x, tileY - 1].LiquidAmount != 0 || Main.tile[x + 1, tileY - 1].LiquidAmount != 0)
+            if (!WorldGen.InWorld(x, y))
                 return false;
 
-            Tile groundTile = Main.tile[x, tileY];
+            int groundY = y;
+            while (Main.tile[x, groundY].TileType == Sapling.Type)
+            {
+                groundY++;
+                if (groundY > Main.maxTilesY - 1)
+                    return false;
+            }
+
+            if (Main.tile[x - 1, groundY - 1].LiquidAmount != 0 || Main.tile[x, groundY - 1].LiquidAmount != 0 || Main.tile[x + 1, groundY - 1].LiquidAmount != 0)
+                return false;
+
+            Tile groundTile = Main.tile[x, groundY];
             if (!groundTile.HasUnactuatedTile || groundTile.IsHalfBlock || groundTile.Slope != 0)
                 return false;
 
-            bool wall = WallTest(Main.tile[x, tileY - 1].WallType);
+            bool wall = WallTest(Main.tile[x, groundY - 1].WallType);
             if (!GroundTest(groundTile.TileType) || !wall)
                 return false;
 
-            if ((!Main.tile[x - 1, tileY].HasTile || !GroundTest(Main.tile[x - 1, tileY].TileType)) && (!Main.tile[x + 1, tileY].HasTile || !GroundTest(Main.tile[x + 1, tileY].TileType)))
+            if ((!Main.tile[x - 1, groundY].HasTile || !GroundTest(Main.tile[x - 1, groundY].TileType)) && (!Main.tile[x + 1, groundY].HasTile || !GroundTest(Main.tile[x + 1, groundY].TileType)))
                 return false;
-
-            TileColorCache cache = Main.tile[x, tileY].BlockColorAndCoating();
-            if (Main.tenthAnniversaryWorld && !WorldGen.gen && TenthAniversaryRandomColor)
-                cache.Color = (byte)WorldGen.genRand.Next(1, 13);
 
             int treeHeight = WorldGen.genRand.Next(TreeHeightMin, TreeHeightMax + 1);
             int paddedHeight = treeHeight + TreeTopPaddingNeeded;
-
-            if (!WorldGen.EmptyTileCheck(x - 2, x + 2, tileY - paddedHeight, tileY - 1, Sapling.Type))
+            if (!WorldGen.EmptyTileCheck(x - 2, x + 2, groundY - paddedHeight, groundY - 1, Sapling.Type))
                 return false;
 
-            bool branchRootFrameLeft = false;
-            bool branchRootFrameRight = false;
+            TileColorCache cache = Main.tile[x, groundY].BlockColorAndCoating();
+            if (Main.tenthAnniversaryWorld && !WorldGen.gen && TenthAniversaryRandomColor)
+                cache.Color = (byte)WorldGen.genRand.Next(1, 13);
+
+            bool branchFrameLeft = false;
+            bool branchFrameRight = false;
             int frameNumber;
-            for (int j = tileY - treeHeight; j < tileY; j++)
+            for (int j = groundY - treeHeight; j < groundY; j++)
             {
+                // Grow trunk
                 Tile treeTile = Main.tile[x, j];
                 treeTile.TileFrameNumber = (byte)WorldGen.genRand.Next(3);
                 treeTile.HasTile = true;
@@ -371,20 +360,20 @@ namespace Macrocosm.Common.Bases.Tiles
                 frameNumber = WorldGen.genRand.Next(3);
                 int frame = WorldGen.genRand.Next(10);
 
-                if (j == tileY - 1 || j == tileY - treeHeight)
+                if (j == groundY - 1 || j == groundY - treeHeight)
                     frame = 0;
 
-                while (((frame == 5 || frame == 7) && branchRootFrameLeft) || ((frame == 6 || frame == 7) && branchRootFrameRight))
+                while (((frame == 5 || frame == 7) && branchFrameLeft) || ((frame == 6 || frame == 7) && branchFrameRight))
                     frame = WorldGen.genRand.Next(10);
 
-                branchRootFrameLeft = false;
-                branchRootFrameRight = false;
+                branchFrameLeft = false;
+                branchFrameRight = false;
 
                 if (frame == 5 || frame == 7)
-                    branchRootFrameLeft = true;
+                    branchFrameLeft = true;
 
                 if (frame == 6 || frame == 7)
-                    branchRootFrameRight = true;
+                    branchFrameRight = true;
 
                 switch (frame)
                 {
@@ -526,6 +515,7 @@ namespace Macrocosm.Common.Bases.Tiles
                         break;
                 }
 
+                // Add large branches
                 if (frame == 5 || frame == 7)
                 {
                     treeTile = Main.tile[x - 1, j];
@@ -619,126 +609,127 @@ namespace Macrocosm.Common.Bases.Tiles
                 }
             }
 
-            bool hasBranchLeft = false;
-            bool hasBranchRight = false;
+            bool hasRootLeft = false;
+            bool hasRootRight = false;
 
-            if (Main.tile[x - 1, tileY].HasUnactuatedTile && !Main.tile[x - 1, tileY].IsHalfBlock && Main.tile[x - 1, tileY].Slope == 0 && WorldGen.IsTileTypeFitForTree(Main.tile[x - 1, tileY].TileType))
-                hasBranchLeft = true;
+            if (Main.tile[x - 1, groundY].HasUnactuatedTile && !Main.tile[x - 1, groundY].IsHalfBlock && Main.tile[x - 1, groundY].Slope == 0 && WorldGen.IsTileTypeFitForTree(Main.tile[x - 1, groundY].TileType))
+                hasRootLeft = true;
 
-            if (Main.tile[x + 1, tileY].HasUnactuatedTile && !Main.tile[x + 1, tileY].IsHalfBlock && Main.tile[x + 1, tileY].Slope == 0 && WorldGen.IsTileTypeFitForTree(Main.tile[x + 1, tileY].TileType))
-                hasBranchRight = true;
-
-            if (WorldGen.genRand.NextBool(3))
-                hasBranchLeft = false;
+            if (Main.tile[x + 1, groundY].HasUnactuatedTile && !Main.tile[x + 1, groundY].IsHalfBlock && Main.tile[x + 1, groundY].Slope == 0 && WorldGen.IsTileTypeFitForTree(Main.tile[x + 1, groundY].TileType))
+                hasRootRight = true;
 
             if (WorldGen.genRand.NextBool(3))
-                hasBranchRight = false;
+                hasRootLeft = false;
 
-            if (hasBranchRight)
+            if (WorldGen.genRand.NextBool(3))
+                hasRootRight = false;
+
+            if (hasRootRight)
             {
-                Tile branchTile = Main.tile[x + 1, tileY - 1];
-                branchTile.HasTile = true;
+                Tile rootTileRight = Main.tile[x + 1, groundY - 1];
+                rootTileRight.HasTile = true;
 
-                Main.tile[x + 1, tileY - 1].TileType = Type;
-                Main.tile[x + 1, tileY - 1].UseBlockColors(cache);
+                rootTileRight.TileType = Type;
+                rootTileRight.UseBlockColors(cache);
 
                 frameNumber = WorldGen.genRand.Next(3);
                 if (frameNumber == 0)
                 {
-                    Main.tile[x + 1, tileY - 1].TileFrameX = 22;
-                    Main.tile[x + 1, tileY - 1].TileFrameY = 132;
+                    rootTileRight.TileFrameX = 22;
+                    rootTileRight.TileFrameY = 132;
                 }
                 if (frameNumber == 1)
                 {
-                    Main.tile[x + 1, tileY - 1].TileFrameX = 22;
-                    Main.tile[x + 1, tileY - 1].TileFrameY = 154;
+                    rootTileRight.TileFrameX = 22;
+                    rootTileRight.TileFrameY = 154;
                 }
                 if (frameNumber == 2)
                 {
-                    Main.tile[x + 1, tileY - 1].TileFrameX = 22;
-                    Main.tile[x + 1, tileY - 1].TileFrameY = 176;
+                    rootTileRight.TileFrameX = 22;
+                    rootTileRight.TileFrameY = 176;
                 }
             }
 
-            if (hasBranchLeft)
+            if (hasRootLeft)
             {
-                Tile branchTile = Main.tile[x - 1, tileY - 1];
-                branchTile.HasTile = true;
+                Tile rootTileLeft = Main.tile[x - 1, groundY - 1];
+                rootTileLeft.HasTile = true;
 
-                Main.tile[x - 1, tileY - 1].TileType = Type;
-                Main.tile[x - 1, tileY - 1].UseBlockColors(cache);
+                rootTileLeft.TileType = Type;
+                rootTileLeft.UseBlockColors(cache);
 
                 frameNumber = WorldGen.genRand.Next(3);
                 if (frameNumber == 0)
                 {
-                    Main.tile[x - 1, tileY - 1].TileFrameX = 44;
-                    Main.tile[x - 1, tileY - 1].TileFrameY = 132;
+                    rootTileLeft.TileFrameX = 44;
+                    rootTileLeft.TileFrameY = 132;
                 }
                 if (frameNumber == 1)
                 {
-                    Main.tile[x - 1, tileY - 1].TileFrameX = 44;
-                    Main.tile[x - 1, tileY - 1].TileFrameY = 154;
+                    rootTileLeft.TileFrameX = 44;
+                    rootTileLeft.TileFrameY = 154;
                 }
                 if (frameNumber == 2)
                 {
-                    Main.tile[x - 1, tileY - 1].TileFrameX = 44;
-                    Main.tile[x - 1, tileY - 1].TileFrameY = 176;
+                    rootTileLeft.TileFrameX = 44;
+                    rootTileLeft.TileFrameY = 176;
                 }
             }
 
+            // Frame bottom tile based on left/right roots
             frameNumber = WorldGen.genRand.Next(3);
-            if (hasBranchLeft && hasBranchRight)
+            if (hasRootLeft && hasRootRight)
             {
                 if (frameNumber == 0)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 88;
-                    Main.tile[x, tileY - 1].TileFrameY = 132;
+                    Main.tile[x, groundY - 1].TileFrameX = 88;
+                    Main.tile[x, groundY - 1].TileFrameY = 132;
                 }
                 if (frameNumber == 1)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 88;
-                    Main.tile[x, tileY - 1].TileFrameY = 154;
+                    Main.tile[x, groundY - 1].TileFrameX = 88;
+                    Main.tile[x, groundY - 1].TileFrameY = 154;
                 }
                 if (frameNumber == 2)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 88;
-                    Main.tile[x, tileY - 1].TileFrameY = 176;
+                    Main.tile[x, groundY - 1].TileFrameX = 88;
+                    Main.tile[x, groundY - 1].TileFrameY = 176;
                 }
             }
-            else if (hasBranchLeft)
+            else if (hasRootLeft)
             {
                 if (frameNumber == 0)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 0;
-                    Main.tile[x, tileY - 1].TileFrameY = 132;
+                    Main.tile[x, groundY - 1].TileFrameX = 0;
+                    Main.tile[x, groundY - 1].TileFrameY = 132;
                 }
                 if (frameNumber == 1)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 0;
-                    Main.tile[x, tileY - 1].TileFrameY = 154;
+                    Main.tile[x, groundY - 1].TileFrameX = 0;
+                    Main.tile[x, groundY - 1].TileFrameY = 154;
                 }
                 if (frameNumber == 2)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 0;
-                    Main.tile[x, tileY - 1].TileFrameY = 176;
+                    Main.tile[x, groundY - 1].TileFrameX = 0;
+                    Main.tile[x, groundY - 1].TileFrameY = 176;
                 }
             }
-            else if (hasBranchRight)
+            else if (hasRootRight)
             {
                 if (frameNumber == 0)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 66;
-                    Main.tile[x, tileY - 1].TileFrameY = 132;
+                    Main.tile[x, groundY - 1].TileFrameX = 66;
+                    Main.tile[x, groundY - 1].TileFrameY = 132;
                 }
                 if (frameNumber == 1)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 66;
-                    Main.tile[x, tileY - 1].TileFrameY = 154;
+                    Main.tile[x, groundY - 1].TileFrameX = 66;
+                    Main.tile[x, groundY - 1].TileFrameY = 154;
                 }
                 if (frameNumber == 2)
                 {
-                    Main.tile[x, tileY - 1].TileFrameX = 66;
-                    Main.tile[x, tileY - 1].TileFrameY = 176;
+                    Main.tile[x, groundY - 1].TileFrameX = 66;
+                    Main.tile[x, groundY - 1].TileFrameY = 176;
                 }
             }
 
@@ -747,18 +738,18 @@ namespace Macrocosm.Common.Bases.Tiles
                 frameNumber = WorldGen.genRand.Next(3);
                 if (frameNumber == 0)
                 {
-                    Main.tile[x, tileY - treeHeight].TileFrameX = 22;
-                    Main.tile[x, tileY - treeHeight].TileFrameY = 198;
+                    Main.tile[x, groundY - treeHeight].TileFrameX = 22;
+                    Main.tile[x, groundY - treeHeight].TileFrameY = 198;
                 }
                 if (frameNumber == 1)
                 {
-                    Main.tile[x, tileY - treeHeight].TileFrameX = 22;
-                    Main.tile[x, tileY - treeHeight].TileFrameY = 220;
+                    Main.tile[x, groundY - treeHeight].TileFrameX = 22;
+                    Main.tile[x, groundY - treeHeight].TileFrameY = 220;
                 }
                 if (frameNumber == 2)
                 {
-                    Main.tile[x, tileY - treeHeight].TileFrameX = 22;
-                    Main.tile[x, tileY - treeHeight].TileFrameY = 242;
+                    Main.tile[x, groundY - treeHeight].TileFrameX = 22;
+                    Main.tile[x, groundY - treeHeight].TileFrameY = 242;
                 }
             }
             else
@@ -766,25 +757,25 @@ namespace Macrocosm.Common.Bases.Tiles
                 frameNumber = WorldGen.genRand.Next(3);
                 if (frameNumber == 0)
                 {
-                    Main.tile[x, tileY - treeHeight].TileFrameX = 0;
-                    Main.tile[x, tileY - treeHeight].TileFrameY = 198;
+                    Main.tile[x, groundY - treeHeight].TileFrameX = 0;
+                    Main.tile[x, groundY - treeHeight].TileFrameY = 198;
                 }
                 if (frameNumber == 1)
                 {
-                    Main.tile[x, tileY - treeHeight].TileFrameX = 0;
-                    Main.tile[x, tileY - treeHeight].TileFrameY = 220;
+                    Main.tile[x, groundY - treeHeight].TileFrameX = 0;
+                    Main.tile[x, groundY - treeHeight].TileFrameY = 220;
                 }
                 if (frameNumber == 2)
                 {
-                    Main.tile[x, tileY - treeHeight].TileFrameX = 0;
-                    Main.tile[x, tileY - treeHeight].TileFrameY = 242;
+                    Main.tile[x, groundY - treeHeight].TileFrameX = 0;
+                    Main.tile[x, groundY - treeHeight].TileFrameY = 242;
                 }
             }
 
-            WorldGen.RangeFrame(x - 2, tileY - treeHeight - 1, x + 2, tileY + 1);
+            WorldGen.RangeFrame(x - 2, groundY - treeHeight - 1, x + 2, groundY + 1);
 
             if (Main.netMode == NetmodeID.Server)
-                NetMessage.SendTileSquare(-1, x - 1, tileY - treeHeight, 3, treeHeight);
+                NetMessage.SendTileSquare(-1, x - 1, groundY - treeHeight, 3, treeHeight);
 
             return true;
         }
@@ -852,14 +843,6 @@ namespace Macrocosm.Common.Bases.Tiles
 
             yield return new Item(dropItem, dropItemStack);
             yield return new Item(secondaryItem);
-        }
-
-        private TreeTypes On_WorldGen_GetTreeType(On_WorldGen.orig_GetTreeType orig, int tileType)
-        {
-            if (TileLoader.GetTile(tileType) is CustomTree customTree)
-                return customTree.CountsAsTreeType;
-
-            return orig(tileType);
         }
 
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
@@ -1181,7 +1164,7 @@ namespace Macrocosm.Common.Bases.Tiles
             }
         }
 
-        private bool GetTreeFoliageData(int i, int j, int xOffset, ref int treeFrame, out int floorY, out int topTextureFrameWidth, out int topTextureFrameHeight)
+        protected bool GetTreeFoliageData(int i, int j, int xOffset, ref int treeFrame, out int floorY, out int topTextureFrameWidth, out int topTextureFrameHeight)
         {
             GetTopTextureFrame(i, j, ref treeFrame, out topTextureFrameWidth, out topTextureFrameHeight);
 
