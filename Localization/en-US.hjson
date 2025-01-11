@@ -28,6 +28,33 @@ Mods: {
 			GeigerMullerInfoDisplay.DisplayName: Geiger Muller Info Display
 			ThermometerInfoDisplay.DisplayName: Thermometer Info Display
 		}
+
+		Achievements: {
+			BuildRocket: {
+				Name: Rocket Science
+				Description: Build your first rocket.
+			}
+
+			CraftSpaceSuit: {
+				Name: Oxygen Not Included
+				Description: Fabricate your first spacesuit.
+			}
+
+			DefeatCraterDemon: {
+				Name: Deep Impact
+				Description: Defeat Crater Demon, an elusive spirit that haunts the Moon.
+			}
+
+			SurviveMoon: {
+				Name: You Lunatic
+				Description: Survive a complete day and night on the Moon, from sunrise to sunrise.
+			}
+
+			TravelToMoon: {
+				Name: One Giant Leap
+				Description: Reach the Moon, Earth's sole natural satellite. Hope you remembered to bring your spacesuit!
+			}
+		}
 	}
 
 	SubworldLibrary.Return: Save & Exit

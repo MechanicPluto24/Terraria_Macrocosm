@@ -1,10 +1,12 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
@@ -78,6 +80,8 @@ namespace Macrocosm.Content.Subworlds
 
             DemonSunIntensity = 0f;
             WorldFlags.DemonSun = false;
+
+            CustomAchievement.Unlock<TravelToMoon>();
         }
 
         public override void OnExitSubworld()
