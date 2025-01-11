@@ -14,6 +14,7 @@ namespace Macrocosm.Content.Achievements
     {
         public override float Order => 32f;
         public override AchievementCategory Category => AchievementCategory.Collector;
+        public override bool ShowProgressBar => false;
 
         protected override void SetupConditions()
         {
