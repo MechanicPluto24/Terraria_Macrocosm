@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Achievements
 {
     public class SurviveMoon : CustomAchievement
     {
-        public override float Order => 37;
+        public override float Order => 40f;
         public override AchievementCategory Category => AchievementCategory.Explorer;
         public override bool ShowProgressBar => false;
 

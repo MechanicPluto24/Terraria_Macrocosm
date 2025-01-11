@@ -58,6 +58,7 @@ namespace Macrocosm.Common.CrossMod
 
         protected virtual void SetupConditions() { }
 
+
         /// <summary> Add an item-collection condition </summary>
         protected void AddItemCollectCondition(int itemType) => conditions.Add($"Collect_{itemType}");
 
@@ -91,7 +92,7 @@ namespace Macrocosm.Common.CrossMod
         /// Example usage:
         /// <c>ModContent.GetInstance&lt;MyAchievement&gt;().TriggerEvent("MyEventName");</c>
         /// </summary>
-        // <c>ModContent.GetInstance<MyAchievement>().TriggerEvent("MyEventName");</c>
+            // <c>ModContent.GetInstance<MyAchievement>().TriggerEvent("MyEventName");</c>
 
         public void TriggerEvent(string eventName)
         {
@@ -127,6 +128,7 @@ namespace Macrocosm.Common.CrossMod
         /// <inheritdoc cref="IncreaseEventValue(string)"/>
         public static void IncreaseEventValue<T>(string eventName, float amount) where T : CustomAchievement => ModContent.GetInstance<T>().IncreaseEventValue(eventName, amount);
 
+        /// <summary> Unlock achievement directly by triggering all its events </summary>
         public void Unlock()
         {
             foreach (string eventName in eventNames)
