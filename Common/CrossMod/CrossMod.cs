@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Systems.Flags;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Items.Armor.Vanity.BossMasks;
 using Macrocosm.Content.Items.Consumables.BossSummons;
 using Macrocosm.Content.Items.MusicBoxes;
@@ -27,6 +28,9 @@ namespace Macrocosm.Common.Crossmod
             Call_MusicDisplay();
             Call_Wikithis();
             Call_TerrariaAmbience();
+
+            foreach (var achievement in Mod.GetContent<CustomAchievement>())
+                achievement.PostSetupContent();
         }
 
         private void Call_BossChecklist()
@@ -104,7 +108,6 @@ namespace Macrocosm.Common.Crossmod
                 AddMusic("IntoTheUnknown", "\"Into The Unknown\" - Macrocosm - Title Theme", "Lincoln Ennis");
             }
         }
-
 
         private void Call_TerrariaAmbience()
         {
