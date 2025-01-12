@@ -1,16 +1,17 @@
 using Macrocosm.Common.Sets;
+using Macrocosm.Content.Items.Ores;
+using Macrocosm.Content.Items.Plants;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Tech
+namespace Macrocosm.Content.Items.Refined
 {
-    public class ElasticFiber : ModItem
+    public class Rubber : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 5;
-            ItemSets.UnobtainableItem[Type] = true;
+            Item.ResearchUnlockCount = 25;
         }
 
         public override void SetDefaults()
@@ -20,11 +21,15 @@ namespace Macrocosm.Content.Items.Tech
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 100;
             Item.rare = ItemRarityID.Green;
-            Item.material = true;
         }
 
         public override void AddRecipes()
         {
+            CreateRecipe()
+                .AddIngredient<RubberTreeSap>(3)
+                .AddIngredient<Coal>()
+                .AddTile(TileID.AlchemyTable)
+                .Register();
         }
     }
 }

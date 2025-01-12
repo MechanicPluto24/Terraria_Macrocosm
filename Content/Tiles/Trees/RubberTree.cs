@@ -1,11 +1,13 @@
 using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Content.Items.Ores;
+using Macrocosm.Content.Items.Plants;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -28,21 +30,31 @@ namespace Macrocosm.Content.Tiles.Trees
         public override int TreeHeightMax => 22;
         public override int TreeTopPaddingNeeded => 40;
 
-        public override TreeType FramingType => TreeType.Custom;
-        public override TreeType DrawingType => TreeType.Custom;
+        public override TreeCategory FramingMode => TreeCategory.Custom;
+        public override TreeCategory DrawingMode => TreeCategory.Custom;
 
-        public override int WoodType => ItemID.RichMahogany;
+        public override int WoodType => ModContent.ItemType<RubberTreeWood>();
+        public override int AcornType => ModContent.ItemType<Items.Plants.RubberTreeSapling>();
         public override TileTypeStylePair Sapling => new(ModContent.TileType<RubberTreeSapling>(), 0);
 
-        public override void SetStaticDefaults()
+        public override TreeTypes CountsAsTreeType => TreeTypes.Jungle;
+        public override bool IsTileALeafyTreeTop(int i, int j) => Main.tile[i, j].TileFrameX == 110 && Main.tile[i, j].TileFrameY == 0;
+        public override bool Shake(int x, int y, IEntitySource source, ref bool createLeaves)
         {
-            base.SetStaticDefaults();
+            if (WorldGen.genRand.NextBool(8))
+            {
+                Item.NewItem(source, new Vector2(x, y) * 16, ModContent.ItemType<RubberTreeSap>());
+                return false;
+            }
+
+            return true;
         }
 
-        // This is the primary texture for the trunk. Branches and foliage use different settings.
-        public override Asset<Texture2D> GetTexture() => base.GetTexture();
-        public override Asset<Texture2D> GetTopsTexture(int variant) => base.GetTopsTexture(variant);
-        public override Asset<Texture2D> GetBranchTexture(int variant) => base.GetBranchTexture(variant);
+        public override IEnumerable<Item> GetExtraItemDrops(int i, int j)
+        {
+            if (WorldGen.genRand.NextBool(10))
+                yield return new Item(ModContent.ItemType<RubberTreeSap>());
+        }
 
         public override bool CustomGrowTree(int x, int y)
         {
@@ -61,6 +73,10 @@ namespace Macrocosm.Content.Tiles.Trees
                 return false;
 
             Tile groundTile = Main.tile[x, groundY];
+
+            if (!groundTile.HasUnactuatedTile || groundTile.IsHalfBlock || groundTile.Slope != 0)
+                return false;
+
             bool wall = WallTest(Main.tile[x, groundY - 1].WallType);
             if (!GroundTest(groundTile.TileType) || !wall)
                 return false;
@@ -74,8 +90,8 @@ namespace Macrocosm.Content.Tiles.Trees
                 return false;
 
             TileColorCache cache = Main.tile[x, groundY].BlockColorAndCoating();
-
             int height = WorldGen.genRand.Next(TreeHeightMin, TreeHeightMax + 1);
+
             for (int j = 0; j < height; j++)
             {
                 Tile treeTile = Main.tile[x, groundY - 1 - j];
@@ -113,7 +129,7 @@ namespace Macrocosm.Content.Tiles.Trees
                         rootTileRight.TileType = Type;
                         rootTileRight.UseBlockColors(cache);
 
-                        rootTileRight.TileFrameX = 44;
+                        rootTileRight.TileFrameX = 176;
                         rootTileRight.TileFrameY = 22;
                     }
 
@@ -124,18 +140,18 @@ namespace Macrocosm.Content.Tiles.Trees
                         rootTileLeft.TileType = Type;
                         rootTileLeft.UseBlockColors(cache);
 
-                        rootTileLeft.TileFrameX = 66;
+                        rootTileLeft.TileFrameX = 198;
                         rootTileLeft.TileFrameY = 22;
                     }
 
                     if (hasRootLeft && hasRootRight)
                     {
-                        treeTile.TileFrameX = 110;
+                        treeTile.TileFrameX = 44;
                         treeTile.TileFrameY = 22;
                     }
                     else if (hasRootLeft)
                     {
-                        treeTile.TileFrameX = 88;
+                        treeTile.TileFrameX = 66;
                         treeTile.TileFrameY = 22;
                     }
                     else if (hasRootRight)
@@ -217,14 +233,14 @@ namespace Macrocosm.Content.Tiles.Trees
                     WorldGen.KillTile(i, j);
                 }
                 // Root frame to the right
-                else if (tile.TileFrameX == 44)
+                else if (tile.TileFrameX == 176)
                 {
                     // Break if bottom of trunk is not on the left
                     if (tileLeft.TileType != type) 
                         WorldGen.KillTile(i, j);
                 }
                 // Root frame to the left
-                else if (tile.TileFrameX == 66)
+                else if (tile.TileFrameX == 198)
                 {
                     // Break if bottom of trunk is not on the right
                     if (tileRight.TileType != type)
@@ -233,17 +249,21 @@ namespace Macrocosm.Content.Tiles.Trees
                 // Regular bottom frame
                 else
                 {
-                    bool hasRootLeft = tileLeft.TileType == type && tileLeft.TileFrameX == 66 && tileLeft.TileFrameY == 22;
-                    bool hasRootRight = tileRight.TileType == type && tileRight.TileFrameX == 44 && tileRight.TileFrameY == 22;
+                    bool hasRootRight = tileRight.TileType == type && tileRight.TileFrameX == 176 && tileRight.TileFrameY == 22;
+                    bool hasRootLeft = tileLeft.TileType == type && tileLeft.TileFrameX == 198 && tileLeft.TileFrameY == 22;
 
                     if (hasRootLeft && hasRootRight)
-                        tile.TileFrameX = 110;
+                        tile.TileFrameX = 44;
                     else if (hasRootLeft)
-                        tile.TileFrameX = 88;
+                        tile.TileFrameX = 66;
                     else if (hasRootRight)
                         tile.TileFrameX = 22;
                     else
                         tile.TileFrameX = 0;
+
+                    // Switch to stump frame if not tile above
+                    if(typeAbove != type)
+                        tile.TileFrameX += 4 * 22;
                 }
             }
 
@@ -251,15 +271,7 @@ namespace Macrocosm.Content.Tiles.Trees
                 WorldGen.DiamondTileFrame(i, j);
         }
 
-        public override bool Shake(int x, int y, ref bool createLeaves)
-        {
-            if (WorldGen.genRand.NextBool(8))
-                Item.NewItem(WorldGen.GetItemSource_FromTreeShake(x, y), new Vector2(x, y) * 16, ModContent.ItemType<Coal>()); //testing lol
-
-            return false;
-        }
-
-        public override int TreeLeaf() => ModContent.GoreType<RubberTreeLeaf>();
+        public override int TreeLeaf => ModContent.GoreType<RubberTreeLeaf>();
 
         public override void CustomPostDrawTree(int x, int y, Tile tile, SpriteBatch spriteBatch, double treeWindCounter, Vector2 unscaledPosition, Vector2 zero, float topsWindFactor, float branchWindFactor)
         {

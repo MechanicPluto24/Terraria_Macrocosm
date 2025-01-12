@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -36,9 +37,9 @@ namespace Macrocosm.Content.Tiles.Trees
             TileObjectData.newTile.StyleMultiplier = 3;
             TileObjectData.addTile(Type);
 
-            // Do not run regular sapling logic for this sapling
-            TileID.Sets.TreeSapling[Type] = false;
-            TileID.Sets.CommonSapling[Type] = false;
+            TileID.Sets.TreeSapling[Type] = false; // Do not run regular tree sapling
+            TileID.Sets.CommonSapling[Type] = true;
+            TileSets.SaplingTreeGrowthType[Type] = ModContent.TileType<RubberTree>();
 
             TileID.Sets.SwaysInWindBasic[Type] = true;
 
@@ -53,7 +54,8 @@ namespace Macrocosm.Content.Tiles.Trees
 
         public override void RandomUpdate(int i, int j)
         {
-            WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), i, j);
+            if(WorldGen.genRand.NextBool(20))
+                WorldGen.AttemptToGrowTreeFromSapling(i, j, j > (int)Main.worldSurface - 1);
         }
 
         public override void SetSpriteEffects(int i, int j, ref SpriteEffects effects)

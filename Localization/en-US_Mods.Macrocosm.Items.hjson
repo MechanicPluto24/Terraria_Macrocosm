@@ -2047,9 +2047,9 @@ ManisolBlades: {
 	DisplayName: Manisol Blades
 	Tooltip:
 		'''
-		Throw blades at your enemies
-		Sol blades stick to enemies and explode when returning to you
-		Mani blades pierce through enemies when thrown and when returning
+		Throw blades that stick into enemies
+		Sol blades explode when returning
+		Mani blades pierce through enemies when returning
 		'''
 }
 
@@ -2759,5 +2759,25 @@ TrailScepter: {
 
 RubberTreeSapling: {
 	DisplayName: Rubber Tree Sapling
+	Tooltip: ""
+}
+
+RubberTreeSap: {
+	DisplayName: Rubber Tree Sap
+	Tooltip: ""
+}
+
+RubberTreeWood: {
+	DisplayName: Rubber Tree Wood
+	Tooltip: ""
+}
+
+Rubber: {
+	DisplayName: Rubber
+	Tooltip: ""
+}
+
+PhantasmalSkullTome: {
+	DisplayName: Phantasmal Skull Tome
 	Tooltip: ""
 }

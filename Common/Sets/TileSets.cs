@@ -15,6 +15,9 @@ namespace Macrocosm.Common.Sets
 
         public static int[] RandomStyles { get; } = TileID.Sets.Factory.CreateIntSet(defaultState: 1);
 
+        /// <summary> Used for custom growth of sapling tiles into trees </summary>
+        public static int[] SaplingTreeGrowthType { get; } = TileID.Sets.Factory.CreateIntSet(defaultState: -1);
+
         /// <summary>
         /// For custom sized containers (different from 2x2 chests and 3x2 dressers) 
         /// </summary>
