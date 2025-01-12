@@ -35,7 +35,10 @@ namespace Macrocosm.Content.Rockets.Modules
             entries.Add(new(itemType, requiredAmount));
         }
 
-        public void AddRange(params AssemblyRecipeEntry[] entries) => this.entries.AddRange(entries);
+        public void AddRange(params AssemblyRecipeEntry[] entries)
+        {
+            this.entries.AddRange(entries);
+        }
 
         // TODO: add check regardless of order
         public bool Check(bool consume, params Item[] items)

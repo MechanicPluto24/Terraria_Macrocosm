@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.DamageType = DamageClass.Magic;
             Projectile.ignoreWater = true;
             Projectile.alpha = 255;
-            trail = new(trailStartWidth: Projectile.width);
+            trail = new(trailStartWidth: Projectile.width / 2);
         }
 
         public ref float InitialTargetPositionY => ref Projectile.ai[0];
@@ -52,9 +52,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.velocity.Y += 0.2f;
 
             if (rotationClockwise)
-                Projectile.rotation += 0.1f;
+                Projectile.rotation += 0.015f;
             else
-                Projectile.rotation -= 0.1f;
+                Projectile.rotation -= 0.01f;
 
 
             if (Projectile.alpha > 0)
@@ -88,25 +88,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             for (int n = 2; n < count; n++)
             {
                 Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * trailOffset;
-                Main.EntitySpriteDraw(texture, trailPosition - Main.screenPosition, null, Color.OrangeRed * (1f - (float)n / count), 0f, texture.Size() / 2f, Projectile.scale * (0.5f + 0.5f * (1f - (float)n / count)), SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(texture, trailPosition - Main.screenPosition, null, new Color(248, 137, 0) * (1f - (float)n / count), 0f, texture.Size() / 2f, Projectile.scale * (0.5f + 0.5f * (1f - (float)n / count)), SpriteEffects.None, 0f);
             }
-
-            /*
-            Effect effect = ModContent.Request<Effect>(Macrocosm.EffectAssetsPath + "ColorGradientSquare", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
-            Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
-
-            effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));
-            effect.Parameters["uImageSize0"].SetValue(TextureAssets.Projectile[Type].Size());
-
-            effect.Parameters["uColorIntensity"].SetValue(new Vector4(0.4f, 0f, 0f, 1f));
-            effect.Parameters["uOffset"].SetValue(new Vector2(0,0.15f).RotatedBy(Projectile.velocity.ToRotation()));
-            effect.Parameters["uSize"].SetValue(0.2f);
-			*/
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.OrangeRed, 1f - Projectile.alpha / 255f)).WithOpacity(0.75f), Projectile.rotation, texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.White, 1f - Projectile.alpha / 255f)), Projectile.rotation, texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
 
             return false;
         }

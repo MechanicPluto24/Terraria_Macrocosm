@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.rare = ModContent.RarityType<MoonRarityT3>();
             Item.UseSound = SoundID.Item15;
             Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
-            Item.Glowmask().Texture = glow;
+            Item.CustomDrawData().Glowmask = glow;
         }
 
         public override void MeleeEffects(Player player, Rectangle hitbox)

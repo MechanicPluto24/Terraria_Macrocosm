@@ -444,9 +444,6 @@ namespace Macrocosm.Common.Subworlds
         /// <summary> Called before the subworld is updated. Not called on multiplayer clients </summary>
         public virtual void PreUpdateWorld() { }
 
-        /// <summary>  </summary>
-        public virtual void RandomTileUpdate(int i, int j, bool underground) { }
-
         /// <summary> Called after the subworld is updated. Not called on multiplayer clients </summary>
         public virtual void PostUpdateWorld() { }
 
