@@ -80,11 +80,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX < 18 && tile.TileFrameY < 18 * 2)
-            {
-                r = 1f;
-                g = 1f;
-                b = 1f;
-            }
+                tile.GetEmmitedLight(Color.White, applyPaint: true, out r, out g, out b);
         }
     }
 }

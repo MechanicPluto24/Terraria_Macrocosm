@@ -149,6 +149,24 @@ namespace Macrocosm.Common.Utils
             return colorLookup[mapTile.Type];
         }
 
+        public static void GetEmmitedLight(int x, int y, Color color, bool applyPaint, out float r, out float g, out float b) => Main.tile[x, y].GetEmmitedLight(color, applyPaint, out r, out g, out b);
+
+        public static void GetEmmitedLight(this Tile tile, Color baseColor, bool applyPaint, out float r, out float g, out float b)
+        {
+            if (applyPaint && tile.TileColor != PaintID.None)
+            {
+                Color paintColor = tile.GetPaintColor();
+                byte max = Math.Max(Math.Max(baseColor.R, baseColor.G), baseColor.B);
+                baseColor.R = (byte)(paintColor.R * (max / 255f));
+                baseColor.G = (byte)(paintColor.G * (max / 255f));
+                baseColor.B = (byte)(paintColor.B * (max / 255f));
+            }
+
+            r = baseColor.R / 255f;
+            g = baseColor.G / 255f;
+            b = baseColor.B / 255f;
+        }
+
         public static bool AnyConnectedSlope(int i, int j)
         {
             Tile tileTop = Main.tile[i, j - 1];

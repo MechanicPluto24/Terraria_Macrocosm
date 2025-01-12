@@ -155,110 +155,61 @@ namespace Macrocosm.Content.Tiles.Furniture
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            int style = tile.TileFrameX / (18 * 6);
+            int style = tile.TileFrameX / (18 * 6); // Determine the style based on frame
 
-            // Any ON frame
             if (style > 0)
             {
                 // Green LED
-                if (tile.TileFrameX / 18 % 4 == 3) // 4th row of tiles
+                if (tile.TileFrameX / 18 % 4 == 3)
                 {
-                    g += 0.1f;
+                    tile.GetEmmitedLight(Color.Green, applyPaint: true, out r, out g, out b);
                 }
                 else
                 {
                     if (!TileAnimation.GetTemporaryFrame(i, j, out _))
                     {
-                        // Earth screen frame
-                        if (style == 1)
+                        // Assign different colors based on style
+                        Color lightColor = style switch
                         {
-                            r += 0.08f;
-                            g += 0.32f;
-                            b += 0.43f;
-                        }
-                        // Moon screen frame
-                        else if (style == 2)
-                        {
-                            r += 0.25f;
-                            g += 0.25f;
-                            b += 0.25f;
-                        }
-                        // Earth -> Moon transfer screen frame
-                        else if (style == 3)
-                        {
-                            r += 0.1f;
-                            g += 0.45f;
-                            b += 0.25f;
-                        }
-                        // Earth Corruption frame
-                        else if (style == 4)
-                        {
-                            if (tile.TileFrameY / 18 % 4 > 2)
-                            {
-                                r += 0.3f;
-                                g += 0.0f;
-                                b += 0.3f;
-                            }
-                            else
-                            {
-                                r += 0.0f;
-                                g += 0.4f;
-                                b += 0.0f;
-                            }
-                        }
-                        // Earth Crimson frame
-                        else if (style == 5)
-                        {
-                            if (tile.TileFrameX / 18 % 6 > 3)
-                            {
-                                r += 0.0f;
-                                g += 0.4f;
-                                b += 0.0f;
-                            }
-                            else
-                            {
-                                r += 0.5f;
-                                g += 0.0f;
-                                b += 0.0f;
-                            }
-                        }
-                        // Test card frame
-                        else if (style == 6)
-                        {
-                            r += 0.4f;
-                            g += 0.4f;
-                            b += 0.4f;
-                        }
-                        // Static frame
-                        else if (style == 7)
-                        {
-                            r += 0.3f;
-                            g += 0.3f;
-                            b += 0.3f;
-                        }
+                            1 => new Color(20, 82, 110),   // Earth screen
+                            2 => new Color(64, 64, 64),    // Moon screen
+                            3 => new Color(25, 115, 64),   // Earth - Moon transfer
+                            4 => (tile.TileFrameY / 18 % 4 > 2)
+                                ? new Color(77, 0, 77)     // Earth Corruption (purple)
+                                : new Color(0, 102, 0),    // Earth Corruption (green)
+                            5 => (tile.TileFrameX / 18 % 6 > 3)
+                                ? new Color(0, 102, 0)     // Earth Crimson (green)
+                                : new Color(128, 0, 0),    // Earth Crimson (red)
+                            6 => new Color(102, 102, 102), // Test card
+                            7 => new Color(77, 77, 77),    // Static
+                            _ => Color.Black               // Default fallback
+                        };
+
+                        // Apply the light color
+                        tile.GetEmmitedLight(lightColor, applyPaint: true, out r, out g, out b);
                     }
-                    // Temporary animation static frame
                     else
                     {
-                        r += 0.3f;
-                        g += 0.3f;
-                        b += 0.3f;
+                        // Temporary animation static frame
+                        tile.GetEmmitedLight(new Color(77, 77, 77), applyPaint: true, out r, out g, out b);
                     }
-
                 }
             }
             else
             {
-                // Red LED
+                // Red LED for OFF state
                 if (tile.TileFrameX / 18 % 4 == 3)
-                    r += 0.1f;
+                {
+                    tile.GetEmmitedLight(Color.Red, applyPaint: true, out r, out g, out b);
+                }
             }
         }
+
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
+            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true);
         }
     }
 }
