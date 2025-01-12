@@ -11,43 +11,15 @@ using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Terraria.UI;
 using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static Vector2 ScreenCenter => new(Main.screenWidth / 2f, Main.screenHeight / 2f);
-
-        public static Vector2 ScreenCenterInWorld => Main.screenPosition + ScreenCenter;
-
-        public static Rectangle ScreenRectangle => new(0, 0, Main.screenWidth, Main.screenHeight);
-
-        public static void Draw(
-           this SpriteBatch spriteBatch,
-           Texture2D texture,
-           System.Drawing.RectangleF destinationRectangle,
-           Color color
-        )
-        {
-            Vector2 position = new(destinationRectangle.X, destinationRectangle.Y);
-            Vector2 scale = new(destinationRectangle.Width / texture.Width, destinationRectangle.Height / texture.Height);
-            Vector2 origin = Vector2.Zero;
-
-            spriteBatch.Draw(
-                texture,
-                position,
-                null,
-                color,
-                0.0f,
-                origin,
-                scale,
-                SpriteEffects.None,
-                0.0f
-            );
-        }
-
         /// <summary>
         /// Draw a MagicPixel trail behind a projectile, with length based on the trail cache length  
         /// </summary>
@@ -224,6 +196,142 @@ namespace Macrocosm.Common.Utils
             Main.EntitySpriteDraw(sparkleTexture, drawPos, null, smallColor, MathHelper.PiOver2 + rotation, origin, scaleLeftRight * 0.6f, dir);
             Main.EntitySpriteDraw(sparkleTexture, drawPos, null, smallColor, 0f + rotation, origin, scaleUpDown * 0.6f, dir);
         }
+
+        public static void DrawHeldItemLayer(ref PlayerDrawSet drawInfo, Item item, Texture2D texture, Color color, bool ignoreNoUseGraphic = false)
+        {
+            if (drawInfo.drawPlayer.JustDroppedAnItem)
+                return;
+
+            if (drawInfo.drawPlayer.heldProj >= 0 && drawInfo.shadow == 0f && !drawInfo.heldProjOverHand)
+                drawInfo.projectileDrawPosition = drawInfo.DrawDataCache.Count;
+
+            float scale = drawInfo.drawPlayer.GetAdjustedItemScale(item);
+            int type = item.type;
+            Vector2 position = new((int)(drawInfo.ItemLocation.X - Main.screenPosition.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y));
+            Rectangle itemDrawFrame = texture.Frame();
+
+            drawInfo.itemColor = Lighting.GetColor((int)(drawInfo.Position.X + drawInfo.drawPlayer.width * 0.5) / 16, (int)((drawInfo.Position.Y + drawInfo.drawPlayer.height * 0.5) / 16.0));
+            if (drawInfo.drawPlayer.shroomiteStealth && item.CountsAsClass(DamageClass.Ranged))
+            {
+                float stealth = drawInfo.drawPlayer.stealth;
+                if (stealth < 0.03)
+                    stealth = 0.03f;
+                float opacity = (1f + stealth * 10f) / 11f;
+                drawInfo.itemColor = new Color((byte)(drawInfo.itemColor.R * stealth), (byte)(drawInfo.itemColor.G * stealth), (byte)(drawInfo.itemColor.B * opacity), (byte)(drawInfo.itemColor.A * stealth));
+            }
+
+            if (drawInfo.drawPlayer.setVortex && item.CountsAsClass(DamageClass.Ranged))
+            {
+                float stealth = drawInfo.drawPlayer.stealth;
+                if (stealth < 0.03)
+                    stealth = 0.03f;
+                drawInfo.itemColor = drawInfo.itemColor.MultiplyRGBA(new Color(Vector4.Lerp(Vector4.One, new Vector4(0f, 0.12f, 0.16f, 0f), 1f - stealth)));
+            }
+
+            bool animationActive = drawInfo.drawPlayer.itemAnimation > 0 && item.useStyle != ItemUseStyleID.None;
+            bool holdingItem = item.holdStyle != 0 && !drawInfo.drawPlayer.pulley;
+
+            if (!drawInfo.drawPlayer.CanVisuallyHoldItem(item))
+                holdingItem = false;
+
+            if (drawInfo.shadow != 0f || drawInfo.drawPlayer.frozen || !(animationActive || holdingItem) || type <= 0 || drawInfo.drawPlayer.dead || (item.noUseGraphic && !ignoreNoUseGraphic) || drawInfo.drawPlayer.wet && item.noWet || drawInfo.drawPlayer.happyFunTorchTime && drawInfo.drawPlayer.inventory[drawInfo.drawPlayer.selectedItem].createTile == TileID.Torches && drawInfo.drawPlayer.itemAnimation == 0)
+                return;
+
+            Vector2 origin = new Vector2((float)itemDrawFrame.Width * 0.5f - (float)itemDrawFrame.Width * 0.5f * (float)drawInfo.drawPlayer.direction, itemDrawFrame.Height);
+            if (item.useStyle == ItemUseStyleID.DrinkLiquid && drawInfo.drawPlayer.itemAnimation > 0)
+            {
+                Vector2 vector2 = new Vector2(0.5f, 0.4f);
+                origin = itemDrawFrame.Size() * vector2;
+            }
+
+            if (drawInfo.drawPlayer.gravDir == -1f)
+                origin.Y = itemDrawFrame.Height - origin.Y;
+
+            float itemRotation = drawInfo.drawPlayer.itemRotation;
+            if (item.useStyle == ItemUseStyleID.GolfPlay)
+            {
+                itemRotation -= (float)Math.PI / 2f * drawInfo.drawPlayer.direction;
+                origin.Y = 2f;
+                origin.X += 2 * drawInfo.drawPlayer.direction;
+            }
+
+            ItemSlot.GetItemLight(ref drawInfo.itemColor, item);
+            DrawData drawData;
+            if (item.useStyle == ItemUseStyleID.Shoot)
+            {
+                if (Item.staff[type])
+                {
+                    float rotation = drawInfo.drawPlayer.itemRotation + 0.785f * drawInfo.drawPlayer.direction;
+                    origin = new(0f, itemDrawFrame.Height);
+                    float offsetX = 0f;
+                    float offsetY = 0f;
+                    if (drawInfo.drawPlayer.gravDir == -1f)
+                    {
+                        if (drawInfo.drawPlayer.direction == -1)
+                        {
+                            rotation += 1.57f;
+                            origin = new Vector2(itemDrawFrame.Width, 0f);
+                            offsetX -= itemDrawFrame.Width;
+                        }
+                        else
+                        {
+                            rotation -= 1.57f;
+                            origin = Vector2.Zero;
+                        }
+                    }
+                    else if (drawInfo.drawPlayer.direction == -1)
+                    {
+                        origin = new Vector2(itemDrawFrame.Width, itemDrawFrame.Height);
+                        offsetX -= itemDrawFrame.Width;
+                    }
+                    drawData = new DrawData(texture, new Vector2((int)(drawInfo.ItemLocation.X - Main.screenPosition.X + origin.X + offsetX), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y + offsetY)), itemDrawFrame, new Color(250, 250, 250, item.alpha), rotation, origin, scale, drawInfo.itemEffect, 0);
+                    drawInfo.DrawDataCache.Add(drawData);
+                    return;
+                }
+
+                Vector2 offset = new(0, itemDrawFrame.Height / 2);
+                Vector2 itemPos = Main.DrawPlayerItemPos(drawInfo.drawPlayer.gravDir, type);
+                int itemPosX = (int)itemPos.X;
+                offset.Y = itemPos.Y;
+                origin = new(itemPosX, itemDrawFrame.Height / 2);
+
+                if (drawInfo.drawPlayer.direction == -1)
+                    origin = new Vector2(itemDrawFrame.Width + itemPosX, itemDrawFrame.Height / 2);
+
+                drawData = new DrawData(texture, new Vector2((int)(drawInfo.ItemLocation.X - Main.screenPosition.X + offset.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y + offset.Y)), itemDrawFrame, color, drawInfo.drawPlayer.itemRotation, origin, scale, drawInfo.itemEffect, 0);
+                drawInfo.DrawDataCache.Add(drawData);
+
+                if (item.color != default)
+                {
+                    drawData = new DrawData(texture, new Vector2((int)(drawInfo.ItemLocation.X - Main.screenPosition.X + offset.X), (int)(drawInfo.ItemLocation.Y - Main.screenPosition.Y + offset.Y)), itemDrawFrame, color, drawInfo.drawPlayer.itemRotation, origin, scale, drawInfo.itemEffect, 0);
+                    drawInfo.DrawDataCache.Add(drawData);
+                }
+
+                return;
+            }
+
+            if (drawInfo.drawPlayer.gravDir == -1f)
+            {
+                drawData = new DrawData(texture, position, itemDrawFrame, color, itemRotation, origin, scale, drawInfo.itemEffect, 0);
+                drawInfo.DrawDataCache.Add(drawData);
+                if (item.color != default)
+                {
+                    drawData = new DrawData(texture, position, itemDrawFrame, color, itemRotation, origin, scale, drawInfo.itemEffect, 0);
+                    drawInfo.DrawDataCache.Add(drawData);
+                }
+                return;
+            }
+
+            drawData = new DrawData(texture, position, itemDrawFrame, color, itemRotation, origin, scale, drawInfo.itemEffect, 0);
+            drawInfo.DrawDataCache.Add(drawData);
+
+            if (item.color != default)
+            {
+                drawData = new DrawData(texture, position, itemDrawFrame, color, itemRotation, origin, scale, drawInfo.itemEffect, 0);
+                drawInfo.DrawDataCache.Add(drawData);
+            }
+        }
+
 
         /// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
         public static Color GetLightColor(Vector2 position)

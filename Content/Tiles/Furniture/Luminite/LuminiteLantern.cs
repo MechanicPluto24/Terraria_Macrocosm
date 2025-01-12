@@ -107,7 +107,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
                 offsetY -= 8;
 
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, new Vector2(0, offsetY));
+            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
         }
     }
 }

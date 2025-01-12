@@ -27,6 +27,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void OnRecalled()
         {
             recallPierceLimit = npcStick > -1 ? 4 : 1;
+            returnSpeed *= 2f;
             hitList.Clear(); 
         }
 
@@ -38,7 +39,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 if (target is not null)
                 {
                     Vector2 direction = Projectile.DirectionTo(target.Center).SafeNormalize(Vector2.Zero);
-                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed * 2f, 0.1f);
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed, 0.5f);
                 }
                 else
                 {

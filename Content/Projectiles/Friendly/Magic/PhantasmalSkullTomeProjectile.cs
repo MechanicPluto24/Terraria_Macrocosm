@@ -15,7 +15,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class ImbriumJewelPhantasmalSkull : ModProjectile
+    public class PhantasmalSkullTomeProjectile : ModProjectile
     {
         public override void SetStaticDefaults()
         {
@@ -27,8 +27,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private static int spawnTimeLeft = 3 * 60;
         public override void SetDefaults()
         {
-            Projectile.width = 66;
-            Projectile.height = 74;
+            Projectile.width = 26;
+            Projectile.height = 30;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.timeLeft = spawnTimeLeft;

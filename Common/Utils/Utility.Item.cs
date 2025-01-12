@@ -11,9 +11,9 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static GlowmaskGlobalItem Glowmask(this Item item)
+        public static CustomDrawGlobalItem CustomDrawData(this Item item)
         {
-            return item.GetGlobalItem<GlowmaskGlobalItem>();
+            return item.GetGlobalItem<CustomDrawGlobalItem>();
         }
 
         /// <summary>

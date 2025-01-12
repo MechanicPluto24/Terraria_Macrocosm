@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Items.Machines
             Item.height = 24;
             Item.value = 100;
             Item.rare = ItemRarityID.Green;
-            Item.material = true;
+            
         }
 
         public override void AddRecipes()
