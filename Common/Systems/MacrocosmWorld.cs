@@ -47,7 +47,6 @@ namespace Macrocosm.Common.Systems
             if (worldUpdateRate == 0)
                 return;
 
-
             double overgroundUpdateRate = 3E-05f * (float)worldUpdateRate;
             double overgroundTileUpdateNumber = Main.maxTilesX * Main.maxTilesY * overgroundUpdateRate;
             //int plantUpdateChance = (int)Terraria.Utils.Lerp(151, 151 * 2.8, Terraria.Utils.Clamp(Main.maxTilesX / 4200.0 - 1.0, 0.0, 1.0));
@@ -60,9 +59,7 @@ namespace Macrocosm.Common.Systems
                 int i = WorldGen.genRand.Next(10, Main.maxTilesX - 10);
                 int j = WorldGen.genRand.Next(10, (int)Main.worldSurface - 1);
 
-                UpdateWorld_OvergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
-                current.RandomTileUpdate(i, j, underground: false);
-
+                WorldGen_UpdateWorld_OvergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
                 TownNPCSystem.TrySpawningTownNPC(i, j);
             }
 
@@ -73,9 +70,7 @@ namespace Macrocosm.Common.Systems
                 int i = WorldGen.genRand.Next(10, Main.maxTilesX - 10);
                 int j = WorldGen.genRand.Next((int)Main.worldSurface - 1, Main.maxTilesY - 20);
 
-                UpdateWorld_UndergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
-                current.RandomTileUpdate(i, j, underground: true);
-
+                WorldGen_UpdateWorld_UndergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
                 TownNPCSystem.TrySpawningTownNPC(i, j);
             }
 
@@ -92,19 +87,18 @@ namespace Macrocosm.Common.Systems
             }
         }
 
-        private static MethodInfo WorldGen_UpdateWorld_OvergroundTile;
-        private static MethodInfo WorldGen_UpdateWorld_UndergroundTile;
+        private static MethodInfo worldGen_UpdateWorld_OvergroundTile;
+        private static MethodInfo worldGen_UpdateWorld_UndergroundTile;
 
         /// <summary> Selective implementation of the vanilla method. Vanilla updates only run in pressurized environments. Modded updates run anywhere. </summary>
-        public static void UpdateWorld_OvergroundTile(int i, int j, bool checkNPCSpawns, int wallDist)
+        public static void WorldGen_UpdateWorld_OvergroundTile(int i, int j, bool checkNPCSpawns, int wallDist)
         {
-            WorldGen_UpdateWorld_OvergroundTile ??= typeof(WorldGen).GetMethod("UpdateWorld_OvergroundTile", BindingFlags.NonPublic | BindingFlags.Static);
-
+            worldGen_UpdateWorld_OvergroundTile ??= typeof(WorldGen).GetMethod("UpdateWorld_OvergroundTile", BindingFlags.NonPublic | BindingFlags.Static);
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
                 if (RoomOxygenSystem.IsRoomPressurized(i, j))
                 {
-                    WorldGen_UpdateWorld_OvergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+                    worldGen_UpdateWorld_OvergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
                 }
                 else
                 {
@@ -114,20 +108,19 @@ namespace Macrocosm.Common.Systems
             }
             else
             {
-                WorldGen_UpdateWorld_OvergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+                worldGen_UpdateWorld_OvergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
             }
         }
 
         /// <summary> Selective implementation of the vanilla method. Vanilla updates only run in pressurized environments. Modded updates run anywhere. </summary>
-        public static void UpdateWorld_UndergroundTile(int i, int j, bool checkNPCSpawns, int wallDist)
+        public static void WorldGen_UpdateWorld_UndergroundTile(int i, int j, bool checkNPCSpawns, int wallDist)
         {
-            WorldGen_UpdateWorld_UndergroundTile ??= typeof(WorldGen).GetMethod("UpdateWorld_UndergroundTile", BindingFlags.NonPublic | BindingFlags.Static);
-
+            worldGen_UpdateWorld_UndergroundTile ??= typeof(WorldGen).GetMethod("UpdateWorld_UndergroundTile", BindingFlags.NonPublic | BindingFlags.Static);
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
                 if (RoomOxygenSystem.IsRoomPressurized(i, j))
                 {
-                    WorldGen_UpdateWorld_UndergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+                    worldGen_UpdateWorld_UndergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
                 }
                 else
                 {
@@ -137,7 +130,7 @@ namespace Macrocosm.Common.Systems
             }
             else
             {
-                WorldGen_UpdateWorld_UndergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+                worldGen_UpdateWorld_UndergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
             }
         }
         #endregion

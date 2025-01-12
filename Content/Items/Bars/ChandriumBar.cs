@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Bars
             Item.createTile = TileType<Tiles.Bars.ChandriumBar>();
             Item.placeStyle = 0;
             Item.rare = RarityType<MoonRarityT1>();
-            Item.material = true;
+            
 
 
             // Set other Item.X values here

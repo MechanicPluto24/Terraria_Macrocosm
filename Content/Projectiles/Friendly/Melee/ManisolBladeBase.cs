@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public abstract class ManisolBladeBase : ModProjectile
     {
-        protected const float returnSpeed = 15f;
+        protected float returnSpeed = 20f;
         protected int npcStick = -1;
         protected bool tileStick = false;
         protected Vector2 stickPosition = Vector2.Zero;

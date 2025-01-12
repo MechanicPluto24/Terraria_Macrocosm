@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Items.Dev
             //bool value = WorldFlags.SubworldUnlocked.GetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID);
             //WorldFlags.SubworldUnlocked.SetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID, !value);
 
-            WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), Player.tileTargetX, Player.tileTargetY);
+            //WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), Player.tileTargetX, Player.tileTargetY);
 
             return true;
         }

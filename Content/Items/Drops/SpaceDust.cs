@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Drops
             Item.maxStack = 9999;
             Item.value = 100;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.material = true;
+            
         }
 
         public override void Update(ref float gravity, ref float maxFallSpeed)

@@ -23,9 +23,9 @@ namespace Macrocosm.Common.Bases.Tiles
     /// <br/> It has its own tile type, compared to <see cref="ModTree"/> which is just a <see cref="TileID.Trees"/> biome variant.
     /// <br/> Based on lion8cake's implementation of CreamTree @ "Confection REBAKED" mod.
     /// </summary>
-    public abstract partial class CustomTree : ModTile, ITree
+    public abstract partial class CustomTree : ModTile
     {
-        public enum TreeType
+        public enum TreeCategory
         {
             Tree,
             Palm,
@@ -44,16 +44,17 @@ namespace Macrocosm.Common.Bases.Tiles
         /// <summary> Padding for the tree top </summary>
         public abstract int TreeTopPaddingNeeded { get; }
 
-        public virtual TreeType FramingType => TreeType.Tree;
-        public virtual TreeType DrawingType => TreeType.Tree;
+        public virtual TreeCategory FramingMode => TreeCategory.Tree;
+        public virtual TreeCategory DrawingMode => TreeCategory.Tree;
 
         public virtual int WoodType => ItemID.Wood;
         public virtual int AcornType => ItemID.Acorn;
 
         /// <summary> For tree shake purposes </summary>
-        public TreeTypes CountsAsTreeType => TreeTypes.None;
-        public int VanillaCount => 0;
-        public virtual int PlantTileId => Type;
+        public virtual TreeTypes CountsAsTreeType => TreeTypes.None;
+
+        /// <summary> Tree leaf gore type </summary>
+        public virtual int TreeLeaf => -1;
 
         /// <summary> Random paint on the CelebrationMK10 seed </summary>
         public virtual bool TenthAniversaryRandomColor => false;
@@ -93,19 +94,16 @@ namespace Macrocosm.Common.Bases.Tiles
         /// <summary> Check wall behing valid for this tree. Defaults to vanilla logic </summary>
         public virtual bool WallTest(int wallType) => WorldGen.DefaultTreeWallTest(wallType);
 
-        /// <summary> Tree leaf gore type </summary>
-        public virtual int TreeLeaf() => -1;
-
         /// <summary> Shake logic. Return true to also allow vanilla shake logic to run, based on <see cref="CountsAsTreeType"/> </summary>
-        public virtual bool Shake(int x, int y, ref bool createLeaves) => true;
+        public virtual bool Shake(int x, int y, IEntitySource source, ref bool createLeaves) => true;
 
-        /// <summary> Use for custom tile frame (<see cref="FramingType"/> == <see cref="TreeType.Custom"/>)</summary>
+        /// <summary> Use for custom tile frame (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
         public virtual void CustomTileFrame(int i, int j, ref bool resetFrame, ref bool noBreak) { }
 
-        /// <summary> Use for growing (<see cref="FramingType"/> == <see cref="TreeType.Custom"/>)</summary>
+        /// <summary> Use for growing (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
         public virtual bool CustomGrowTree(int x, int y) { return false; }
 
-        /// <summary> Use for custom drawing (<see cref="FramingType"/> == <see cref="TreeType.Custom"/>)</summary>
+        /// <summary> Use for custom drawing (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
         public virtual void CustomPostDrawTree(int x, int y, Tile tile, SpriteBatch spriteBatch, double treeWindCounter, Vector2 unscaledPosition, Vector2 zero, float topsWindFactor, float branchWindFactor) { }
 
         public virtual Asset<Texture2D> GetTexture() => ModContent.RequestIfExists<Texture2D>(Texture, out var texture) ? texture : null;
@@ -139,9 +137,6 @@ namespace Macrocosm.Common.Bases.Tiles
         {
             width = 20;
             height = 20;
-
-            if (tileFrameX >= 176)
-                tileFrameX = (short)(tileFrameX - 176);
         }
 
         public sealed override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
@@ -149,12 +144,12 @@ namespace Macrocosm.Common.Bases.Tiles
             Tile tile = Main.tile[i, j];
             if (i > 5 && j > 5 && i < Main.maxTilesX - 5 && j < Main.maxTilesY - 5 && tile.HasTile && Main.tileFrameImportant[Type])
             {
-                switch (FramingType)
+                switch (FramingMode)
                 {
-                    case TreeType.Tree:
+                    case TreeCategory.Tree:
                         WorldGen.CheckTreeWithSettings(i, j, new WorldGen.CheckTreeSettings() { IsGroundValid = GroundTest });
                         break;
-                    case TreeType.Palm:
+                    case TreeCategory.Palm:
                         CheckPalmTree(i, j);
                         break;
                     default:
@@ -199,31 +194,31 @@ namespace Macrocosm.Common.Bases.Tiles
 
         /// <summary>
         /// Grow a tree of this type. 
-        /// <br/> You can also use <see cref="WorldGen.TryGrowingTreeByType(int, int, int)"/>
+        /// <br/> You can also use <see cref="WorldGen.TryGrowingTreeByType(int, int, int)"/> and <see cref="WorldGen.AttemptToGrowTreeFromSapling(int, int, bool)"/>
         /// </summary>
         public bool GrowTree(int x, int y)
         {
-            var result = FramingType switch
+            var result = FramingMode switch
             {
-                TreeType.Tree => GrowRegularTree(x, y),
-                TreeType.Palm => GrowPalmTree(x, y),
+                TreeCategory.Tree => GrowRegularTree(x, y),
+                TreeCategory.Palm => GrowPalmTree(x, y),
                 _ => CustomGrowTree(x, y),
             };
 
-            if (result)
-                GrowEffects(x, y);
+            if (result && WorldGen.PlayerLOS(x, y))
+                LeafEffects(x, y);
 
             return result;
         }
 
-        public virtual void GrowEffects(int x, int y)
+        public virtual void LeafEffects(int x, int y, bool hitOnly = false)
         {
-            int leaf = TreeLeaf();
+            int leaf = TreeLeaf;
             if (Main.netMode == NetmodeID.Server)
-                NetMessage.SendData(MessageID.SpecialFX, -1, -1, null, 1, x, y, 1f, leaf);
+                NetMessage.SendData(MessageID.SpecialFX, -1, -1, null, 1, x, y, 1f, TreeLeaf);
 
             if (Main.netMode == NetmodeID.SinglePlayer)
-                WorldGen.TreeGrowFX(x, y, 1, leaf, hitTree: true);
+                WorldGen.TreeGrowFX(x, y, 1, TreeLeaf, hitOnly);
         }
 
         /// <summary> Adapted clone of the WorldGen.GrowPalmTree method  </summary>
@@ -781,7 +776,13 @@ namespace Macrocosm.Common.Bases.Tiles
         }
 
         #region Loot & Shaking
-        public override IEnumerable<Item> GetItemDrops(int i, int j)
+
+        public virtual IEnumerable<Item> GetExtraItemDrops(int i, int j) 
+        { 
+            yield break;
+        }
+
+        public sealed override IEnumerable<Item> GetItemDrops(int i, int j)
         {
             int dropItem = ItemID.None;
             int secondaryItem = ItemID.None;
@@ -790,11 +791,11 @@ namespace Macrocosm.Common.Bases.Tiles
 
             Tile tile = Main.tile[i, j];
 
-            if (FramingType == TreeType.Palm)
+            if (FramingMode == TreeCategory.Palm)
             {
                 dropItem = WoodType;
-                //if (Main.tenthAnniversaryWorld)
-                //    dropItemStack += WorldGen.genRand.Next(2, 5);
+                if (Main.tenthAnniversaryWorld)
+                    dropItemStack += WorldGen.genRand.Next(2, 5);
 
                 if (tile.TileFrameX <= 132 && tile.TileFrameX >= 88)
                     secondaryItem = AcornType;
@@ -843,8 +844,12 @@ namespace Macrocosm.Common.Bases.Tiles
 
             yield return new Item(dropItem, dropItemStack);
             yield return new Item(secondaryItem);
+
+            foreach (var item in GetExtraItemDrops(i, j))
+                yield return item;
         }
 
+        public virtual bool IsTileALeafyTreeTop(int i, int j) => WorldGen.IsTileALeafyTreeTop(i, j);
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
             Tile tile = Main.tile[i, j];
@@ -871,25 +876,16 @@ namespace Macrocosm.Common.Bases.Tiles
 
                 y++;
 
-                if (!WorldGen.IsTileALeafyTreeTop(x, y) || Collision.SolidTiles(x - 2, x + 2, y - 2, y + 2))
+                if (!IsTileALeafyTreeTop(x, y) || Collision.SolidTiles(x - 2, x + 2, y - 2, y + 2))
                     return;
 
                 bool createLeaves = true;
-                bool result = Shake(x, y, ref createLeaves);
+                bool result = Shake(x, y, WorldGen.GetItemSource_FromTreeShake(x, y), ref createLeaves);
                 if (createLeaves)
-                {
-                    int leaf = TreeLeaf();
-                    if (Main.netMode == NetmodeID.Server)
-                        NetMessage.SendData(MessageID.SpecialFX, -1, -1, null, 1, x, y, 1f, leaf);
-
-                    if (Main.netMode == NetmodeID.SinglePlayer)
-                        WorldGen.TreeGrowFX(x, y, 1, leaf, hitTree: true);
-                }
+                    LeafEffects(x, y, hitOnly: true);
 
                 if (result && CountsAsTreeType > 0)
-                {
-
-                }
+                    Utility.WorldGen_ShakeTree(i, j);
             }
         }
 
@@ -994,12 +990,12 @@ namespace Macrocosm.Common.Bases.Tiles
             if (!tile.HasTile)
                 return;
 
-            switch (DrawingType)
+            switch (DrawingMode)
             {
-                case TreeType.Palm:
+                case TreeCategory.Palm:
                     PostDrawPalmTree(i, j, spriteBatch, tile, treeWindCounter, unscaledPosition, zero, topsWindFactor);
                     break;
-                case TreeType.Tree:
+                case TreeCategory.Tree:
                     PostDrawRegularTree(i, j, spriteBatch, tile, treeWindCounter, unscaledPosition, zero, topsWindFactor, branchWindFactor);
                     break;
                 default:
@@ -1175,7 +1171,7 @@ namespace Macrocosm.Common.Bases.Tiles
 
         public virtual void EmitLeaves(int tilePosX, int tilePosY, int grassPosX, int grassPosY)
         {
-            int leaf = TreeLeaf();
+            int leaf = TreeLeaf;
             if (leaf < 0)
                 return;
 

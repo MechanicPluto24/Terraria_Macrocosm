@@ -80,15 +80,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             AITimer++;
 
+            Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
+            int direction = Math.Sign(target.X);
+
+            if ((Main.MouseWorld - Projectile.Center).LengthSquared() < 10 * 10)
+            {
+                direction = Math.Sign(Projectile.position.X - player.position.X);
+                target = new Vector2(direction, 0).RotatedByRandom(MathHelper.PiOver4);
+            }
+
+            player.direction = direction;
+
             if (AITimer > 24 && AITimer % 7 == 0)
             {
                 manaCheck = player.CheckMana(3, true);
 
                 if (Projectile.owner == Main.myPlayer)
                 {
-                    Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
-                    int direction = Math.Sign(target.X);
-
                     float shootAngle = -MathHelper.Pi / 12 * direction * MathF.Abs(MathF.Cos(target.ToRotation()));
                     float shootSpeed = Main.rand.NextFloat(16f, 20f);
 

@@ -1,7 +1,10 @@
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -11,9 +14,15 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 {
     public class DianiteTome : ModItem
     {
+        private static Asset<Texture2D> heldTexture;
+
+        public override void Load()
+        {
+            heldTexture = ModContent.Request<Texture2D>(Texture + "_Held");
+        }
+
         public override void SetStaticDefaults()
         {
-
         }
 
         public override void SetDefaults()
@@ -21,8 +30,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.damage = 155;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 25;
-            Item.width = 80;
-            Item.height = 80;
+            Item.width = 28;
+            Item.height = 30;
             Item.useTime = 12;
             Item.useAnimation = 10;
             Item.useStyle = ItemUseStyleID.Shoot;
@@ -33,6 +42,9 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.rare = ModContent.RarityType<MoonRarityT1>();
             Item.UseSound = SoundID.Item78;
             Item.shoot = ModContent.ProjectileType<DianitePortal>();
+
+            Item.noUseGraphic = true;
+            Item.CustomDrawData().CustomHeldTexture = heldTexture;
         }
 
         public override void AddRecipes()
@@ -45,10 +57,9 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void HoldItem(Player player)
         {
-            Item.scale = 0.75f;
         }
 
-        public override Vector2? HoldoutOffset() => new Vector2(10, 8);
+        public override Vector2? HoldoutOffset() => new Vector2(0, 1);
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
         {
