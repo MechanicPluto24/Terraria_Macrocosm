@@ -65,11 +65,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX == 0)
-            {
-                r = 0.34f;
-                g = 0.9f;
-                b = 0.62f;
-            }
+                tile.GetEmmitedLight(new Color(87, 230, 158), applyPaint: false, out r, out g, out b);
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
@@ -82,7 +78,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy), drawColor: new Color(100, 100, 100, 0));
+                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, applyPaint: false, drawOffset: new Vector2(xx, yy), drawColor: new Color(100, 100, 100, 0));
             }
         }
     }

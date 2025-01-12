@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -79,10 +80,14 @@ namespace Macrocosm.Content.Machines
             blades ??= ModContent.Request<Texture2D>(Texture + "_Blades");
             turbine ??= ModContent.Request<Texture2D>(Texture + "_Turbine");
 
+            Tile tile = Main.tile[i, j];
+            Texture2D bladesTexture = tile.GetOrPreparePaintedExtraTexture(blades);
+            Texture2D turbineTexture = tile.GetOrPreparePaintedExtraTexture(turbine);
+
             Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
             Vector2 tileDrawPosition = new Vector2(i, j) * 16f + zero - Main.screenPosition;
-            Color drawColor = Lighting.GetColor(i, j);
 
+            Color drawColor = Lighting.GetColor(i, j);
             float turbineScale = 1f;
             Vector2 turbineOffset = new(8, 11);
             Matrix turbineMatrix = GetTurbineMatrix(tileDrawPosition + turbineOffset, state.Matrix);
@@ -96,12 +101,12 @@ namespace Macrocosm.Content.Machines
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, state.DepthStencilState, state.RasterizerState, null, turbineMatrix);
 
-            spriteBatch.Draw(turbine.Value, tileDrawPosition + turbineOffset, null, drawColor, 0f, turbine.Size() / 2f, turbineScale, turbineEffects, 0f);
+            spriteBatch.Draw(turbineTexture, tileDrawPosition + turbineOffset, null, drawColor, 0f, turbineTexture.Size() / 2f, turbineScale, turbineEffects, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, null, bladeMatrix);
 
-            spriteBatch.Draw(blades.Value, tileDrawPosition + bladeOffset, null, drawColor, bladeRotation, blades.Size() / 2f + new Vector2(-0.11f, 0f), 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(bladesTexture, tileDrawPosition + bladeOffset, null, drawColor, bladeRotation, bladesTexture.Size() / 2f + new Vector2(-0.11f, 0f), 1f, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);

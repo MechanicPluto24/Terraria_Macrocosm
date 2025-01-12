@@ -201,10 +201,7 @@ namespace Macrocosm.Content.Machines
             if (tileOffsetX is 0 or 1 && tileOffsetY is 2)
             {
                 if (IsPoweredOnFrame(i, j))
-                {
-                    r = 0.75f;
-                    g = 0.5f;
-                }
+                    tile.GetEmmitedLight(new Color(191, 128, 0), applyPaint: true, out r, out g, out b);
             }
         }
     }

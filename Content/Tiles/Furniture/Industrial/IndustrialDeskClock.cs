@@ -93,17 +93,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameY >= 18)
-            {
-                r = 0f;
-                g = 0.1f;
-                b = 0f;
-            }
+                tile.GetEmmitedLight(Color.Green * 0.2f, applyPaint: true, out r, out g, out b);
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
+            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true);
         }
     }
 }

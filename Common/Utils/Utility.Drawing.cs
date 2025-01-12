@@ -332,26 +332,6 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-
-        /// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
-        public static Color GetLightColor(Vector2 position)
-        {
-            return Lighting.GetColor((int)(position.X / 16f), (int)(position.Y / 16f));
-        }
-
-        /// <summary> Convenience method for adding lighting using an npc or projectile position, using a Color instance for color. </summary>
-        public static void AddLight(Vector2 position, Color color, float brightnessDivider = 1F)
-        {
-            AddLight(position, color.R / 255F, color.G / 255F, color.B / 255F, brightnessDivider);
-        }
-
-
-        /// <summary> Convenience method for adding lighting using an npc or projectile position with 0f - 1f color values. </summary>
-        public static void AddLight(Vector2 position, float colorR, float colorG, float colorB, float brightnessDivider = 1f)
-        {
-            Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
-        }
-
         public static float GetMoonPhaseBrightness(MoonPhase moonPhase)
         {
             return moonPhase switch

@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
@@ -24,7 +23,6 @@ namespace Macrocosm.Content.Machines
         public override MachineTE MachineTE => ModContent.GetInstance<KeroseneGeneratorTE>();
 
         private static Asset<Texture2D> extra;
-        private float vibrationY;
 
         public override void SetStaticDefaults()
         {
@@ -109,9 +107,6 @@ namespace Macrocosm.Content.Machines
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
         {
             Tile tile = Main.tile[i, j];
-            if (IsPoweredOnFrame(i,j) && tile.TileFrameX % (18 * Width) == 0 && tile.TileFrameY % (18 * Height) == 0)
-                Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
-
             if (Main.gamePaused)
                 return;
 
@@ -149,12 +144,14 @@ namespace Macrocosm.Content.Machines
             }
         }
 
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            extra ??= ModContent.Request<Texture2D>(Texture + "_Extra");
-            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
-            Vector2 position = new Vector2(i, j) * 16f - Main.screenPosition + zero + new Vector2(6, 6 + Main.tileFrame[Type]);
-            spriteBatch.Draw(extra.Value, position, null, Lighting.GetColor(i, j));
+            if (IsPoweredOnFrame(i, j))
+            {
+                extra ??= ModContent.Request<Texture2D>(Texture + "_Extra");
+                Vector2 offset = new(0, Main.tileFrame[Type]);
+                Utility.DrawTileExtraTexture(i, j, spriteBatch, extra, applyPaint: true, drawOffset: offset, Lighting.GetColor(i, j));
+            }
         }
 
         public override bool RightClick(int i, int j)
