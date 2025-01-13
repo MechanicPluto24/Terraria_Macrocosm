@@ -1,4 +1,5 @@
 using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Plants;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -6,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class AluminumBow : ModItem
+    public class RubberWoodBow : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -14,19 +15,20 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            Item.DefaultToBow(28, 6.6f, hasAutoReuse: false);
-            Item.damage = 8;
+            Item.DefaultToBow(27, 6.6f, hasAutoReuse: false);
+            Item.damage = 6;
+            Item.knockBack = 0;
             Item.width = 16;
-            Item.height = 32;
-            Item.value = Item.sellPrice(silver: 2, copper: 60);
+            Item.height = 38;
+            Item.value = Item.sellPrice(copper: 30);
             Item.rare = ItemRarityID.White;
         }
 
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<AluminumBar>(7)
-            .AddTile(TileID.Anvils)
+            .AddIngredient<RubberTreeWood>(10)
+            .AddTile(TileID.WorkBenches)
             .Register();
         }
     }
