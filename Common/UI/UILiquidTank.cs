@@ -15,6 +15,12 @@ namespace Macrocosm.Common.UI
         private UILiquid uiLiquid;
         private UILiquid uiPreviewLiquid;
 
+        protected bool Bubbles
+        {
+            get => uiLiquid.Bubbles;
+            set => uiLiquid.Bubbles = value;
+        }
+
         public UILiquidTank(LiquidType liquidType) : base
         (
             customBackground: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBackground"),
