@@ -1,14 +1,6 @@
-﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Tools;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Tools.Wiring;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems.Power

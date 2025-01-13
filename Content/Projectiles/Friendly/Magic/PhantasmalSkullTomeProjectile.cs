@@ -5,6 +5,8 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using Terraria;
@@ -19,12 +21,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailCacheLength[Type] = 5;
             ProjectileID.Sets.TrailingMode[Type] = 3;
             ProjectileID.Sets.CultistIsResistantTo[Type] = true;
         }
 
-        private static int spawnTimeLeft = 3 * 60;
+        private static int spawnTimeLeft = 2 * 60;
         public override void SetDefaults()
         {
             Projectile.width = 26;
@@ -42,71 +44,31 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
             => false;
 
-        //bool spawned = false;
-        public enum ActionState { Move, Home }
+        public enum ActionState
+        {
+            Move,
+            Home
+        }
+
         public ActionState AI_State
         {
             get => (ActionState)Projectile.ai[0];
             set => Projectile.ai[0] = (float)value;
         }
 
-        public ref float OrbitAngle => ref Projectile.ai[1];
-
         public int AI_Timer
         {
-            get => (int)Projectile.ai[2];
-            set => Projectile.ai[2] = value;
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
         }
 
-        // The free float duration, randomized and netsynced
-        private int floatDuration;
-
-        // The turn speed of the homing, randomized and netsynced
-        private float turnSpeed;
-
-        public override void SendExtraAI(BinaryWriter writer)
+        public Vector2 AI_Target
         {
-            writer.Write(turnSpeed);
-            writer.Write((byte)floatDuration);
+            get => new (Projectile.ai[1], Projectile.ai[2]);
+            set { Projectile.ai[1] = value.X; Projectile.ai[2] = value.Y; }
         }
 
-        public override void ReceiveExtraAI(BinaryReader reader)
-        {
-            turnSpeed = reader.ReadSingle();
-            floatDuration = reader.ReadByte();
-        }
-
-        private void AdjustMagnitude(ref Vector2 vector)
-        {
-            float magnitude = (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
-            if (magnitude > 12f)
-            {
-                vector *= 12f / magnitude;
-            }
-        }
-
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            Particle.Create<PhantasmalSkullHitEffect>((p) =>
-                {
-                    p.Position = Projectile.Center + Projectile.oldVelocity * 2;
-                    p.Velocity = Vector2.Zero;
-                    p.Scale = new(Main.rand.NextFloat(0.1f, 0.25f));
-                }, shouldSync: true
-                );
-        }
-
-        public override void OnKill(int timeLeft)
-        {
-            for (int i = 0; i < 40; i++)
-            {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<GreenBrightDust>());
-                dust.velocity.X = Main.rand.Next(-70, 71) * 0.08f;
-                dust.velocity.Y = Main.rand.Next(-70, 70) * 0.08f;
-                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.02f;
-                dust.noGravity = true;
-            }
-        }
+        private float originalSpeed;
 
         public override void AI()
         {
@@ -122,100 +84,78 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 shouldSync: true
                 );
 
+                originalSpeed = Projectile.velocity.Length();
+
+                if (Projectile.owner == Main.myPlayer)
+                {
+                    AI_Target = Main.MouseWorld + Main.rand.NextVector2Circular(50f, 150f);
+                    Projectile.netUpdate = true;
+                }
+
+                Projectile.alpha = 255;
                 spawned = true;
             }
 
-            Projectile.alpha -= 15;
-            if (Projectile.alpha < 0)
-                Projectile.alpha = 0;
+            Lighting.AddLight(Projectile.Center, new Color(30, 255, 105).ToVector3() * Projectile.Opacity);
 
-            Lighting.AddLight(Projectile.Center, new Color(30, 255, 105).WithOpacity(1f).ToVector3());
-            float homingDistance = 500f;
-            float closestDistance = homingDistance;
+            AI_Timer++;
 
-            if (Projectile.localAI[0] == 0f)
+            if (AI_Timer < 25)
             {
-                AdjustMagnitude(ref Projectile.velocity);
-                Projectile.localAI[0] = 1f;
+                Projectile.Opacity += 0.1f;
             }
-            Vector2 move = Vector2.Zero;
-            float distance = 600f;
-            bool target = false;
-            Projectile.ai[1]++;
-            if (Projectile.ai[1] <= 30)
+            else
             {
-                for (int k = 0; k < 200; k++)
+                Vector2 target = Vector2.Zero;
+                float dist = Vector2.DistanceSquared(Projectile.Center, AI_Target);
+                if (dist > 30 * 30)
+                    target = AI_Target;
+
+                if (target != Vector2.Zero)
                 {
-                    if (Main.npc[k].active && Main.npc[k].CanBeChasedBy(Projectile))
-                    {
-                        Vector2 newMove = Main.npc[k].Center - Projectile.Center;
-                        float distanceTo = (float)Math.Sqrt(newMove.X * newMove.X + newMove.Y * newMove.Y);
-                        if (distanceTo < distance && Collision.CanHitLine(Projectile.Center, 0, 0, Main.npc[k].Center, 0, 0))
-                        {
-                            move = newMove;
-                            distance = distanceTo;
-                            target = true;
-                        }
-                    }
+                    Vector2 aim = (target - Projectile.Center).SafeNormalize(default);
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity.SafeNormalize(default), aim, 0.1f) * originalSpeed;
                 }
-                if (target)
-                {
-                    AdjustMagnitude(ref move);
-                    Projectile.velocity = (10 * Projectile.velocity + move) / 11f;
-                    AdjustMagnitude(ref Projectile.velocity);
-                }
+
+                Projectile.Opacity = Utility.CubicEaseOut((float)Projectile.timeLeft / spawnTimeLeft);
+
+                Projectile.direction = Math.Sign(Projectile.velocity.X);
+                Projectile.spriteDirection = Projectile.direction;
+                Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
             }
-
-            Projectile.direction = Math.Sign(Projectile.velocity.X);
-            Projectile.spriteDirection = Projectile.direction;
-            Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
-
-            if (Projectile.timeLeft < (int)(0.33f * spawnTimeLeft) && Projectile.alpha < 255)
-                Projectile.alpha += 6;
-
-            if (Projectile.alpha >= 255)
-                Projectile.active = false;
         }
 
-
-        public override Color? GetAlpha(Color lightColor) => new Color(30, 255, 105).WithOpacity(1f);
-
-        private SpriteBatchState state;
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            Particle.Create<PhantasmalSkullHitEffect>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 2;
+                p.Velocity = Vector2.Zero;
+                p.Scale = new(Main.rand.NextFloat(0.1f, 0.25f));
+            }, shouldSync: true
+                );
+        }
 
         public override bool PreDraw(ref Color lightColor)
         {
+            ProjectileID.Sets.TrailCacheLength[Type] = 25;
+
             int length = Projectile.oldPos.Length;
-
-            state.SaveState(Main.spriteBatch);
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
-
             for (int i = 1; i < length; i++)
             {
-                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;
+                float progress = i / (float)length;
+                float wave = MathF.Sin((i + AI_Timer / 2)) * (6f + 10f * progress);
+                Vector2 waveOffset = Math.Abs(Projectile.velocity.X) > Math.Abs(Projectile.velocity.Y) ? new Vector2(0, wave) : new Vector2(wave, 0);
+                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f + waveOffset;
 
-                Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
-                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i], Projectile.Size / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+                Color trailColor = Color.White.WithOpacity(1f - progress) * Projectile.Opacity * Utility.QuintEaseIn(1f - progress) * 0.65f;
+                float rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i];
+                float scale = Projectile.scale * 0.9f * (1f - progress);
+                SpriteEffects effects = Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor , rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
             }
 
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.NonPremultiplied, state);
-
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.7f * (1f - Projectile.alpha / 255f)), Projectile.rotation, Projectile.Size / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(state);
-
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
-
-            // Strange
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(state);
-
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.7f) * Projectile.Opacity, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             return false;
         }
     }
