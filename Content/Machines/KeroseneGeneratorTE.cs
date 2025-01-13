@@ -18,23 +18,22 @@ namespace Macrocosm.Content.Machines
     {
         public override MachineTile MachineTile => ModContent.GetInstance<KeroseneGenerator>();
 
-        /// <summary> The hull heat progress, 0 to 1, increases when burning and decreases otherwise. </summary>
-        public float HullHeatProgress
+        public float RPMProgress
         {
-            get => hullHeatProgress;
-            set => hullHeatProgress = MathHelper.Clamp(value, 0f, 1f);
+            get => rpmProgress;
+            set => rpmProgress = MathHelper.Clamp(value, 0f, 1f);
         }
-        protected float hullHeatProgress;
+        protected float rpmProgress;
 
         /// <summary> The hull heat, in degrees Celsius </summary>
-        public float HullHeat => 2400f * HullHeatProgress;
+        public float RPM => 6000f * RPMProgress;
 
         /// <summary> The burning progress of the <see cref="ConsumedItem"/> </summary>
         public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)burnTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
         protected int burnTimer;
 
-        /// <summary> The rate at which <see cref="HullHeatProgress"/> changes. </summary>
-        public float HullHeatRate => 0.0001f;
+        /// <summary> The rate at which <see cref="RPMProgress"/> changes. </summary>
+        public float RPMRate => 0.0001f;
 
         /// <summary> The item currently being burned. </summary>
         public Item ConsumedItem { get; set; } = new(ItemID.None);
@@ -49,8 +48,8 @@ namespace Macrocosm.Content.Machines
             Inventory ??= new(InventorySize, this);
             Inventory.SetReserved(
                  (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>(),
-                 Language.GetText("Mods.Macrocosm.Machines.Common.BurnFuel"),
-                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/BurnFuel")
+                 Language.GetText("Kerosene Canister"),
+                 ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
             );
 
             // Assign inventory owner if the inventory was found on load
@@ -98,7 +97,7 @@ namespace Macrocosm.Content.Machines
                         if (fuelData.Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>())
                         {
                             ConsumedItem = new Item(item.type, 1);
-                            HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+                            RPMProgress += RPMRate * (float)fuelData.Potency;
                             item.stack--;
 
                             if (item.stack <= 0)
@@ -110,7 +109,7 @@ namespace Macrocosm.Content.Machines
 
                     if (ConsumedItem.type == ItemID.None)
                     {
-                        HullHeatProgress -= HullHeatRate;
+                        RPMProgress -= RPMRate * 10;
                     }
                 }
             }
@@ -119,7 +118,7 @@ namespace Macrocosm.Content.Machines
                 var fuelData = ItemSets.FuelData[ConsumedItem.type];
                 if (fuelData.Potency > 0 && ConsumedItem.type == ModContent.ItemType<RocketFuelCanister>())
                 {
-                    HullHeatProgress += HullHeatRate * (float)fuelData.Potency;
+                    RPMProgress += RPMRate * (float)fuelData.Potency;
 
                     if (++burnTimer >= fuelData.ConsumptionRate)
                     {
@@ -130,7 +129,7 @@ namespace Macrocosm.Content.Machines
             }
 
             MaxGeneratedPower = 15f;
-            GeneratedPower = HullHeatProgress * MaxGeneratedPower;
+            GeneratedPower = RPMProgress * MaxGeneratedPower;
         }
 
         public override void NetSend(BinaryWriter writer)
@@ -142,7 +141,7 @@ namespace Macrocosm.Content.Machines
 
             ItemIO.Send(ConsumedItem, writer);
 
-            writer.Write(hullHeatProgress);
+            writer.Write(rpmProgress);
         }
 
         public override void NetReceive(BinaryReader reader)
@@ -154,7 +153,7 @@ namespace Macrocosm.Content.Machines
 
             ConsumedItem = ItemIO.Receive(reader);
 
-            hullHeatProgress = reader.ReadSingle();
+            rpmProgress = reader.ReadSingle();
         }
 
         public override void SaveData(TagCompound tag)
@@ -165,8 +164,8 @@ namespace Macrocosm.Content.Machines
 
             tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
 
-            if (hullHeatProgress > 0f)
-                tag[nameof(hullHeatProgress)] = hullHeatProgress;
+            if (rpmProgress > 0f)
+                tag[nameof(rpmProgress)] = rpmProgress;
         }
 
         public override void LoadData(TagCompound tag)
@@ -179,8 +178,8 @@ namespace Macrocosm.Content.Machines
             if (tag.ContainsKey(nameof(ConsumedItem)))
                 ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));
 
-            if (tag.ContainsKey(nameof(hullHeatProgress)))
-                hullHeatProgress = tag.GetFloat(nameof(hullHeatProgress));
+            if (tag.ContainsKey(nameof(rpmProgress)))
+                rpmProgress = tag.GetFloat(nameof(rpmProgress));
         }
     }
 }

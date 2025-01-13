@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 5;
+            ProjectileID.Sets.TrailCacheLength[Type] = 25;
             ProjectileID.Sets.TrailingMode[Type] = 3;
             ProjectileID.Sets.CultistIsResistantTo[Type] = true;
         }
@@ -77,11 +77,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 SoundEngine.PlaySound(SoundID.NPCDeath6 with { PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
 
                 Particle.Create<PhantasmalSkullSpawnEffect>((p) =>
-                {
-                    p.Position = Projectile.Center + Projectile.velocity * 3;
-                    p.Velocity = Vector2.Zero;
-                },
-                shouldSync: true
+                    {
+                        p.Position = Projectile.Center + Projectile.velocity * 3;
+                        p.Velocity = Vector2.Zero;
+                    },
+                    shouldSync: true
                 );
 
                 originalSpeed = Projectile.velocity.Length();
@@ -118,11 +118,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 }
 
                 Projectile.Opacity = Utility.CubicEaseOut((float)Projectile.timeLeft / spawnTimeLeft);
-
-                Projectile.direction = Math.Sign(Projectile.velocity.X);
-                Projectile.spriteDirection = Projectile.direction;
-                Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
             }
+
+            Projectile.direction = Math.Sign(Projectile.velocity.X);
+            Projectile.spriteDirection = Projectile.direction;
+            Projectile.rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.velocity.ToRotation() : Projectile.velocity.ToRotation();
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -136,26 +136,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 );
         }
 
+        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 25;
-
+            SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             int length = Projectile.oldPos.Length;
             for (int i = 1; i < length; i++)
             {
                 float progress = i / (float)length;
-                float wave = MathF.Sin((i + AI_Timer / 2)) * (6f + 10f * progress);
-                Vector2 waveOffset = Math.Abs(Projectile.velocity.X) > Math.Abs(Projectile.velocity.Y) ? new Vector2(0, wave) : new Vector2(wave, 0);
-                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f + waveOffset;
 
-                Color trailColor = Color.White.WithOpacity(1f - progress) * Projectile.Opacity * Utility.QuintEaseIn(1f - progress) * 0.65f;
+                float wave = MathF.Sin(((length - i) + AI_Timer)) * (2f + 12f * progress);
+                Vector2 waveOffset = Math.Abs(Projectile.velocity.X) > Math.Abs(Projectile.velocity.Y) ? new Vector2(0, wave) : new Vector2(wave, 0);
+                Vector2 drawPos = Projectile.oldPos[i];
+                if (i > 0) drawPos = Vector2.Lerp(Projectile.oldPos[i], Projectile.position, 0.3f);
+                drawPos += Projectile.Size / 2f + waveOffset - Main.screenPosition;
+
+                Color trailColor = new Color(127, 127, 127, 0) * Projectile.Opacity * Utility.QuadraticEaseIn(1f - progress) * 0.75f;
                 float rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i];
-                float scale = Projectile.scale * 0.9f * (1f - progress);
-                SpriteEffects effects = Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                float scale = Projectile.scale * 0.8f * (1f - progress);
+
                 Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor , rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
             }
 
-            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.7f) * Projectile.Opacity, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.8f) * Projectile.Opacity, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, effects, 0f);
             return false;
         }
     }

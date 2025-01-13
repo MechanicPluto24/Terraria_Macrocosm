@@ -1,6 +1,7 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
@@ -60,10 +61,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Projectile.alpha > 0)
                 Projectile.alpha -= 15;
 
-            Vector2 velocity = -Projectile.velocity.RotatedByRandom(MathHelper.Pi / 2f) * 0.1f;
-            Dust dust = Dust.NewDustDirect(Projectile.position, (int)(Projectile.width), (int)(Projectile.height), DustID.Flare, velocity.X, velocity.Y, Scale: 1f);
-            dust.noGravity = true;
-
+            for(int i = 0; i < 3; i++)
+            {
+                Vector2 velocity = -Projectile.velocity.RotatedByRandom(MathHelper.Pi / 16f) * 0.2f;
+                Dust dust = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 0.5f, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: 0.55f);
+                dust.noGravity = true;
+            }
         }
 
         public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
@@ -101,10 +104,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void OnKill(int timeLeft)
         {
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 45; i++)
             {
-                Vector2 velocity = Main.rand.NextVector2Circular(25f, 25f);
-                Dust dust = Dust.NewDustDirect(Projectile.position + Projectile.oldVelocity, (int)(Projectile.width), Projectile.height, DustID.Flare, velocity.X, velocity.Y, Scale: 2.4f);
+                Vector2 velocity = Main.rand.NextVector2Circular(5f, 5f);
+                Dust dust = Dust.NewDustDirect(Projectile.position + Projectile.oldVelocity, (int)(Projectile.width), Projectile.height, ModContent.DustType<DianiteBrightDust>(), velocity.X, velocity.Y, Scale: 1.6f);
                 dust.noGravity = true;
             }
 
