@@ -4,6 +4,7 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -34,7 +35,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.useAnimation = 13;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
-            Item.channel = true;
             Item.knockBack = 8;
             Item.value = Item.sellPrice(0, 20, 0, 0);
             Item.rare = ModContent.RarityType<MoonRarityT2>();
@@ -42,7 +42,6 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<PhantasmalSkullTomeProjectile>();
             Item.shootSpeed = 16f;
-
             Item.noUseGraphic = true;
             Item.CustomDrawData().CustomHeldTexture = heldTexture;
         }
@@ -51,7 +50,14 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position += new Vector2(Main.rand.Next(-100, 201), Main.rand.Next(-100, 101));
+            // Random position in from of player
+            position += new Vector2(Main.rand.Next(0, 11) * player.direction, Main.rand.Next(-50, 51));
+
+            // Preserve shootSpeed
+            velocity.X = Math.Max(Math.Abs(velocity.X), Math.Abs(velocity.Y)) * Math.Sign(velocity.X);
+
+            // Shoot only sideways (not aiming up)
+            velocity.Y = 0;
         }
     }
 }

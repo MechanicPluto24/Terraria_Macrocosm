@@ -8,7 +8,7 @@ using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Tools
+namespace Macrocosm.Content.Items.Tools.Wiring
 {
     [LegacyName("WiringKit")]
     public class CircuitProbe : ModItem

@@ -2781,3 +2781,18 @@ PhantasmalSkullTome: {
 	DisplayName: Phantasmal Skull Tome
 	Tooltip: ""
 }
+
+RubberWoodHammer: {
+	DisplayName: Rubber Wood Hammer
+	Tooltip: ""
+}
+
+RubberWoodSword: {
+	DisplayName: Rubber Wood Sword
+	Tooltip: ""
+}
+
+RubberWoodBow: {
+	DisplayName: Rubber Wood Bow
+	Tooltip: ""
+}
