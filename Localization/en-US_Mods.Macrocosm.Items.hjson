@@ -13,8 +13,8 @@ CelestialBulwark: {
 		'''
 }
 
-AluminumBoots: {
-	DisplayName: Aluminum Boots
+AluminumGreaves: {
+	DisplayName: Aluminum Greaves
 	Tooltip: ""
 }
 

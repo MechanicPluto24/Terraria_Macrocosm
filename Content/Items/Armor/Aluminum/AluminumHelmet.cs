@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Armor.Aluminum
 
         public override bool IsArmorSet(Item head, Item body, Item legs)
         {
-            return head.type == ModContent.ItemType<AluminumHelmet>() && body.type == ModContent.ItemType<AluminumBreastplate>() && legs.type == ModContent.ItemType<AluminumBoots>();
+            return head.type == ModContent.ItemType<AluminumHelmet>() && body.type == ModContent.ItemType<AluminumBreastplate>() && legs.type == ModContent.ItemType<AluminumGreaves>();
         }
 
         public override void UpdateArmorSet(Player player)

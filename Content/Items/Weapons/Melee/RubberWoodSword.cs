@@ -1,11 +1,12 @@
 using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Plants;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    public class AluminumBroadsword : ModItem
+    public class RubberWoodSword : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -14,15 +15,15 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetDefaults()
         {
-            Item.damage = 11;
+            Item.damage = 8;
             Item.DamageType = DamageClass.Melee;
-            Item.width = 36;
-            Item.height = 36;
-            Item.useTime = 20;
-            Item.useAnimation = 20;
+            Item.width = 34;
+            Item.height = 34;
+            Item.useTime = 17;
+            Item.useAnimation = 17;
             Item.useStyle = ItemUseStyleID.Swing;
-            Item.knockBack = 5.5f;
-            Item.value = Item.sellPrice(silver: 3, copper: 10);
+            Item.knockBack = 6f;
+            Item.value = Item.sellPrice(copper: 30);
             Item.rare = ItemRarityID.White;
             Item.UseSound = SoundID.Item1;
         }
@@ -30,8 +31,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override void AddRecipes()
         {
             CreateRecipe()
-            .AddIngredient<AluminumBar>(8)
-            .AddTile(TileID.Anvils)
+            .AddIngredient<RubberTreeWood>(7)
+            .AddTile(TileID.WorkBenches)
             .Register();
         }
     }

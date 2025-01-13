@@ -21,22 +21,15 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             Item.DefaultToBow(30, 30, true);
-
             Item.damage = 450;
             Item.knockBack = 4;
-
             Item.width = 32;
             Item.height = 74;
-
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarityT1>();
-
             Item.channel = true;
             Item.UseSound = null;
-
             Item.noUseGraphic = true;
-            Item.useAmmo = AmmoID.Arrow;
-            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
         }
 
         public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 1;
