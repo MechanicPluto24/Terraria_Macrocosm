@@ -11,7 +11,9 @@ using System;
 using System.IO;
 using Terraria;
 using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -141,10 +143,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             int length = Projectile.oldPos.Length;
+
             for (int i = 1; i < length; i++)
             {
                 float progress = i / (float)length;
-
                 float wave = MathF.Sin(((length - i) + AI_Timer)) * (2f + 12f * progress);
                 Vector2 waveOffset = Math.Abs(Projectile.velocity.X) > Math.Abs(Projectile.velocity.Y) ? new Vector2(0, wave) : new Vector2(wave, 0);
                 Vector2 drawPos = Projectile.oldPos[i];
@@ -155,7 +157,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 float rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i];
                 float scale = Projectile.scale * 0.8f * (1f - progress);
 
-                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor , rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor , rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
             }
 
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.8f) * Projectile.Opacity, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, effects, 0f);

@@ -154,7 +154,7 @@ namespace Macrocosm.Content.Machines
             if (rpmProgress > 0)
             {
                 // how do I animate this shit
-                int interval = Math.Max(1, (int)(60 * (1f - rpmProgress))); 
+                int interval = (int)MathHelper.Lerp(120, 30, rpmProgress); 
                 for (int i = 0; i < pistons.Count; i++)
                 {
                     UILiquidTankPiston piston = pistons[i];

@@ -166,7 +166,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 float rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i];
                 float scale = Projectile.scale * 1f * (1f - progress);
 
-                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
             }
 
             Main.spriteBatch.End();
@@ -187,7 +187,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 float scale = Projectile.scale * progress * (SpawnedFromPortal ? 1.1f : 0.8f);
                 Vector2 position = SpawnedFromPortal ? spawnPosition : Projectile.position + Projectile.Size / 2f;
                 float opacity = SpawnedFromPortal ? 0.4f : 1f;
-                Main.spriteBatch.Draw(flare, position - Main.screenPosition, null, new Color(92, 206, 130).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(flare, position - Main.screenPosition, null, new Color(92, 206, 130).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
 
             // Strange

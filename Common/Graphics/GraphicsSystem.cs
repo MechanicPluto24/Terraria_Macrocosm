@@ -7,11 +7,13 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Graphics
 {
-    public class PrimitivesSystem : ModSystem
+
+    public class GraphicsSystem : ModSystem
     {
         public static GraphicsDevice GraphicsDevice => Main.graphics.GraphicsDevice;
 
         public static Matrix WorldViewProjection { get; private set; }
+        public static Matrix BackgroundViewProjection { get; private set; }
 
         public static BasicEffect WorldEffect { get; private set; }
         public static BasicEffect InterfaceEffect { get; private set; }
@@ -71,6 +73,14 @@ namespace Macrocosm.Common.Graphics
             Matrix projection = Matrix.CreateOrthographic(width, height, 0, 1000);
 
             WorldViewProjection = view * projection;
+
+            zoom = Main.BackgroundViewMatrix.Zoom;
+            view = Matrix.CreateLookAt(Vector3.Zero, Vector3.UnitZ, Vector3.Up) *
+                Matrix.CreateTranslation(width / 2, height / -2, 0) *
+                Matrix.CreateRotationZ(MathHelper.Pi) *
+                Matrix.CreateScale(zoom.X, zoom.Y, 1f);
+
+            BackgroundViewProjection = view * projection;
 
             WorldEffect.Projection = WorldViewProjection;
             InterfaceEffect.Projection = Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1);

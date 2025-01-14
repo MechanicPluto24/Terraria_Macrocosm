@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
@@ -13,8 +15,10 @@ using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
+using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
+using static Terraria.Main;
 
 namespace Macrocosm.Content.Skies.Moon
 {
@@ -219,9 +223,29 @@ namespace Macrocosm.Content.Skies.Moon
                 //    DrawDemonSunFrontEffects(spriteBatch, sun);
 
                 earth.Draw(spriteBatch);
+
+                /*
+                rift ??= new Rift(
+                        Main.graphics.GraphicsDevice,  
+                        new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), 
+                        400f, 
+                        200f,  
+                        Color.Purple,  
+                        Color.Red,  
+                        128
+                    );
+
+                state1.SaveState(spriteBatch);
+                spriteBatch.End();
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, RasterizerState.CullNone, null, Matrix.Identity * Matrix.CreateScale(Main.BackgroundViewMatrix.Zoom.X));
+                rift.Draw(Main.Assets.Request<Texture2D>("Images/Misc/noise").Value, GraphicsSystem.BackgroundViewProjection);
+                spriteBatch.End();
+                spriteBatch.Begin(state1);
+                */
             }
         }
 
+        //Rift rift;
         private void UpdateNebulaStars()
         {
             if(lastMoonType != Main.moonType)

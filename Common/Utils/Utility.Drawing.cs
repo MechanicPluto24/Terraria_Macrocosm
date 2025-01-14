@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Microsoft.Xna.Framework;
@@ -380,7 +381,7 @@ namespace Macrocosm.Common.Utils
             return ChatManager.DrawColorCodedString(spriteBatch, font, snippets, position, Color.White.WithAlpha(baseColor.A), rotation, origin, baseScale, out _, maxWidth);
         }
 
-
+ 
         #region BaseMod BaseDrawing
 
         //public static ShaderContext shaderContext = new ShaderContext();
