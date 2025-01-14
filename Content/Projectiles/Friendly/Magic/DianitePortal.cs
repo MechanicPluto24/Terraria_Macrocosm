@@ -1,5 +1,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -8,6 +9,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -77,7 +79,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             player.SetDummyItemTime(2);
 
             Projectile.rotation -= MathHelper.ToRadians(7.4f);
-
             AITimer++;
 
             Vector2 target = (Main.MouseWorld - Projectile.Center).SafeNormalize(default);
@@ -181,7 +182,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
             float scale = Projectile.scale * Main.rand.NextFloat(0.85f, 1.15f);
-            Main.spriteBatch.Draw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(255, 170, 33).WithOpacity(0.35f * Projectile.Opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(flare, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(255, 170, 33).WithOpacity(0.35f * Projectile.Opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
 
             // Strange
             Main.spriteBatch.End();

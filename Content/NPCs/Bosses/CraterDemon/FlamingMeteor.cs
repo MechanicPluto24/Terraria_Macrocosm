@@ -169,7 +169,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 float progress = flashTimer / maxFlashTimer;
                 float scale = NPC.scale * progress * 0.85f;
                 Vector2 position = spawnPosition + NPC.Size / 2f;
-                Main.spriteBatch.Draw(flare, position - screenPos, null, new Color(242, 142, 35), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(flare, position - screenPos, null, new Color(242, 142, 35), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
 
             trail?.Draw(NPC, NPC.Size / 2f);

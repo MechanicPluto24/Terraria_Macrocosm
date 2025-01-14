@@ -206,7 +206,7 @@ namespace Macrocosm.Common.Bases.Projectiles
             Color? drawColor = null;
             if (SwingStyle.PreDrawSword(this, lightColor, ref drawColor))
             {
-                Main.spriteBatch.Draw(
+                Main.EntitySpriteDraw(
                     GreatswordTexture,
                     Projectile.Center - Main.screenPosition,
                     null,

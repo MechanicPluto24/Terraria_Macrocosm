@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(255, 200, 100) * (1f - progress), 0f, texture.Size() / 2f, 1f - progress, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, new Color(255, 200, 100) * (1f - progress), 0f, texture.Size() / 2f, 1f - progress, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
