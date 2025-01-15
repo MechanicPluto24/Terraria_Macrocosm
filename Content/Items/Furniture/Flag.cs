@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Furniture
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Flag>(), 0);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Flags.Flag>(), 0);
             Item.width = 16;
             Item.height = 32;
             Item.value = 500;

@@ -19,6 +19,10 @@ namespace Macrocosm.Common.Utils
         private static FieldInfo tilePaintSystemV2_requests_fieldInfo;
 
         private static FieldInfo tileDrawing_treeWindCounter_fieldInfo;
+        private static FieldInfo tileDrawing_grassWindCounter_fieldInfo;
+        private static FieldInfo tileDrawing_sunflowerWindCounter_fieldInfo;
+        private static FieldInfo tileDrawing_vineWindCounter_fieldInfo;
+
         private static FieldInfo tileDrawing_leafFrequency_fieldInfo;
         private static FieldInfo tileDrawing_rand_fieldInfo;
 
@@ -30,10 +34,38 @@ namespace Macrocosm.Common.Utils
         {
             get
             {
-                tileDrawing_treeWindCounter_fieldInfo ??= typeof(TileDrawing).GetField("_treeWindCounter", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance);
+                tileDrawing_treeWindCounter_fieldInfo ??= typeof(TileDrawing).GetField("_treeWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
                 return (double)tileDrawing_treeWindCounter_fieldInfo.GetValue(Main.instance.TilesRenderer);
             }
         }
+
+        public static double GrassWindCounter
+        {
+            get
+            {
+                tileDrawing_grassWindCounter_fieldInfo ??= typeof(TileDrawing).GetField("_grassWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
+                return (double)tileDrawing_grassWindCounter_fieldInfo.GetValue(Main.instance.TilesRenderer);
+            }
+        }
+
+        public static double SunflowerWindCounter
+        {
+            get
+            {
+                tileDrawing_sunflowerWindCounter_fieldInfo ??= typeof(TileDrawing).GetField("_sunflowerWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
+                return (double)tileDrawing_sunflowerWindCounter_fieldInfo.GetValue(Main.instance.TilesRenderer);
+            }
+        }
+
+        public static double VineWindCounter
+        {
+            get
+            {
+                tileDrawing_vineWindCounter_fieldInfo ??= typeof(TileDrawing).GetField("_vineWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
+                return (double)tileDrawing_vineWindCounter_fieldInfo.GetValue(Main.instance.TilesRenderer);
+            }
+        }
+
 
         public static int TreeLeafFrequency
         {
@@ -55,7 +87,7 @@ namespace Macrocosm.Common.Utils
 
         public static void TilePaintSystemV2_AddRequest(TilePaintSystemV2.ARenderTargetHolder renderTargetHolder)
         {
-            tilePaintSystemV2_requests_fieldInfo ??= typeof(TilePaintSystemV2).GetField("_requests", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance);
+            tilePaintSystemV2_requests_fieldInfo ??= typeof(TilePaintSystemV2).GetField("_requests", BindingFlags.NonPublic | BindingFlags.Instance);
             var requests = (List<TilePaintSystemV2.ARenderTargetHolder>)tilePaintSystemV2_requests_fieldInfo.GetValue(Main.instance.TilePaintSystem);
             requests.Add(renderTargetHolder);
         }

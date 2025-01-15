@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -23,6 +24,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Main.tileNoAttach[Type] = true;
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
+
+            TileID.Sets.MultiTileSway[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Chandeliers, 0));
             TileObjectData.addTile(Type);
@@ -66,6 +69,16 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX == 0)
                 tile.GetEmmitedLight(new Color(87, 230, 158), applyPaint: false, out r, out g, out b);
+        }
+
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            Tile tile = Main.tile[i, j];
+
+            if (TileObjectData.IsTopLeft(tile))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
+
+            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)

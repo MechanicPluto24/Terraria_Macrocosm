@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -16,7 +17,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
     public class LuminiteChandelier : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
-
         public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
@@ -24,6 +24,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Main.tileNoAttach[Type] = true;
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
+
+            TileID.Sets.MultiTileSway[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Chandeliers, 0));
             TileObjectData.newTile.Height = 2;
@@ -81,10 +83,21 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
                 tile.GetEmmitedLight(color, applyPaint: true, out r, out g, out b);
         }
 
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            Tile tile = Main.tile[i, j];
+
+            if (TileObjectData.IsTopLeft(tile))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
+
+            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+        }
+
+        // Disabled as it's incompatible with wind sway
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true);
+            //glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            //Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true);
         }
     }
 }
