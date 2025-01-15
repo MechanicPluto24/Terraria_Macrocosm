@@ -7,6 +7,7 @@ using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -16,7 +17,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 {
     public class CheeseLantern : ModTile, IToggleableTile
     {
-
         private static Asset<Texture2D> flameTexture;
 
         public override void SetStaticDefaults()
@@ -26,6 +26,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Main.tileNoAttach[Type] = true;
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
+
+            TileID.Sets.MultiTileSway[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.HangingLanterns, 0));
             TileObjectData.newTile.StyleWrapLimit = 2;
@@ -79,6 +81,16 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
             if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
                 offsetY -= 8;
+        }
+
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            Tile tile = Main.tile[i, j];
+
+            if (TileObjectData.IsTopLeft(tile))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
+
+            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)

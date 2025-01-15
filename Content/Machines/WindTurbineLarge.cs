@@ -54,6 +54,7 @@ namespace Macrocosm.Content.Machines
             TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(134, 137, 139), CreateMapEntryName());
+            DustType = -1;
         }
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
