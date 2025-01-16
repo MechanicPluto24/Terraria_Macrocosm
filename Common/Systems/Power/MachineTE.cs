@@ -25,6 +25,8 @@ namespace Macrocosm.Common.Systems.Power
         public virtual bool PoweredOn => MachineTile.IsPoweredOnFrame(Position.X, Position.Y);
         public bool ManuallyTurnedOff { get; set; }
 
+        public virtual bool CanToggleWithWire => true;
+
         public virtual Color DisplayColor { get; } = Color.White;
 
         /// <summary> Things to happen before the first update tick. </summary>
@@ -45,9 +47,6 @@ namespace Macrocosm.Common.Systems.Power
         public void PrintPowerInfo()
         {
             string powerInfo = GetPowerInfo();
-            if (CanCluster && Cluster != null && !IsClusterOrigin && ByPosition.TryGetValue(ClusterOrigin, out var clusterOrigin) && clusterOrigin is MachineTE machine)
-                powerInfo = machine.GetPowerInfo();
-
             Main.NewText($"{Lang.GetMapObjectName(MapHelper.TileToLookup(MachineTile.Type, 0))} - {powerInfo}", DisplayColor);
         }
 
@@ -56,7 +55,6 @@ namespace Macrocosm.Common.Systems.Power
         /// <summary> Draw the power info text above the machine </summary>
         /// <param name="basePosition"> The top left in world coordinates </param>
         public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) { }
-        public virtual void DrawClusterPowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) => DrawMachinePowerInfo(spriteBatch, basePosition, lightColor);
 
         /// <summary>
         /// Used to toggle this machine.
@@ -113,11 +111,8 @@ namespace Macrocosm.Common.Systems.Power
                 //    NetMessage.SendData(MessageID.TileEntitySharing, number: ID, number2: Position.X, number3: Position.Y);
             }
 
-            if (!InactiveInCluster)
-            {
-                MachineUpdate();
-                UpdatePowerState();
-            }
+            MachineUpdate();
+            UpdatePowerState();
         }
 
         public override void PostGlobalUpdate()
@@ -129,7 +124,7 @@ namespace Macrocosm.Common.Systems.Power
         {
             if (this is IInventoryOwner inventoryOwner)
             {
-                inventoryOwner.Inventory.DropAllItems(inventoryOwner.InventoryItemDropLocation);
+                inventoryOwner.Inventory.DropAllItems(inventoryOwner.InventoryPosition);
             }
         }
 

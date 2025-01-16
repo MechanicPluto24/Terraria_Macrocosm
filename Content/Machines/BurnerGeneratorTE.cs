@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Machines
 
         public Inventory Inventory { get; set; }
         protected virtual int InventorySize => 6;
-        public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+        public Vector2 InventoryPosition => base.Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
         public override void OnFirstUpdate()
         {
@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Machines
                         continue;
 
                     var fuelData = ItemSets.FuelData[item.type];
-                    bool canBurn = fuelData.Potency > 0 && fuelData.CanBurn(item, Position.ToWorldCoordinates());
+                    bool canBurn = fuelData.Potency > 0 && fuelData.CanBurn(item, base.Position.ToWorldCoordinates());
                     if (canBurn)
                     {
                         fuelFound = true;
@@ -99,7 +99,7 @@ namespace Macrocosm.Content.Machines
                             continue;
 
                         var fuelData = ItemSets.FuelData[item.type];
-                        bool canBurn = fuelData.Potency > 0 && fuelData.CanBurn(item, Position.ToWorldCoordinates());
+                        bool canBurn = fuelData.Potency > 0 && fuelData.CanBurn(item, base.Position.ToWorldCoordinates());
                         if (canBurn)
                         {
                             fuelFound = true;
@@ -133,12 +133,12 @@ namespace Macrocosm.Content.Machines
                     if (++burnTimer >= fuelData.ConsumptionRate)
                     {
                         burnTimer = 0;
-                        fuelData.OnConsumed(ConsumedItem.Clone(), Position.ToWorldCoordinates());
+                        fuelData.OnConsumed(ConsumedItem.Clone(), base.Position.ToWorldCoordinates());
                         ConsumedItem = new(0);
                     }
                     else
                     {
-                        fuelData.Burning(ConsumedItem, Position.ToWorldCoordinates());
+                        fuelData.Burning(ConsumedItem, base.Position.ToWorldCoordinates());
                     }
                 }
             }

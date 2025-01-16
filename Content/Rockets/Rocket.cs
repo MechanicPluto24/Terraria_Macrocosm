@@ -202,7 +202,7 @@ namespace Macrocosm.Content.Rockets
 
         public const int DefaultTotalInventorySize = DefaultGeneralInventorySize + SpecialInventorySlot_Count;
 
-        public Vector2 InventoryItemDropLocation => Center;
+        public Vector2 InventoryPosition => Center;
         public int InventorySerializationIndex => WhoAmI;
 
         /// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>

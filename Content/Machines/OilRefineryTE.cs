@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Machines
 
         public Inventory Inventory { get; set; }
         protected virtual int InventorySize => 1 + 1 + 5;
-        public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+        public Vector2 InventoryPosition => base.Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
         private bool refining;
 

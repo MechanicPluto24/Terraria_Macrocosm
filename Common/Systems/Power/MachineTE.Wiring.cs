@@ -191,36 +191,7 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        protected class ConveyorCircuit : Circuit<MachineTE>
-        {
-            public override void Merge(Circuit<MachineTE> other)
-            {
-                if (other is ConveyorCircuit conveyorOther)
-                {
-                    foreach (var node in conveyorOther.nodes)
-                    {
-                        Add(node);
-                        if (node is MachineTE machine)
-                        {
-                            machine.conveyorCircuit = this;
-                        }
-                    }
-                    other.Clear();
-                }
-            }
 
-            public override void Solve(int updateRate)
-            {
-                foreach (var node in nodes)
-                {
-                    if (node is MachineTE machine)
-                    {
-                        // Implement your item transfer logic here
-                        // machine.TransferItems();
-                    }
-                }
-            }
-        }
 
         protected WireCircuit wireCircuit = null;
         protected ConveyorCircuit conveyorCircuit = null;
@@ -257,14 +228,14 @@ namespace Macrocosm.Common.Systems.Power
             {
                 foreach (var te in ByID.Values)
                 {
-                    if (te is MachineTE machine && !machine.InactiveInCluster)
+                    if (te is MachineTE machine)
                     {
                         if (machine.wireCircuit != null)
                             continue;
 
                         ConnectionSearch<MachineTE> connectionSearch = new(
                             connectionCheck: position => Main.tile[position].HasWire(wireType),
-                            retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) && !m.InactiveInCluster ? m : null
+                            retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) ? m : null
                         );
 
                         HashSet<MachineTE> connectedNodes = connectionSearch.FindConnectedNodes(machine.GetConnectionPositions());
@@ -318,7 +289,7 @@ namespace Macrocosm.Common.Systems.Power
         {
             foreach (var te in ByID.Values)
             {
-                if (te is MachineTE machine && !machine.InactiveInCluster)
+                if (te is MachineTE machine)
                 {
                     if (machine.conveyorCircuit != null)
                     {
@@ -326,8 +297,8 @@ namespace Macrocosm.Common.Systems.Power
                     }
 
                     ConnectionSearch<MachineTE> connectionSearch = new(
-                        connectionCheck: position => ConnectorSystem.Map[position].Conveyor,
-                        retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) && !m.InactiveInCluster ? m : null
+                        connectionCheck: position => ConnectorSystem.Map[position].AnyConveyor,
+                        retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) ? m : null
                     );
 
                     HashSet<MachineTE> connectedNodes = connectionSearch.FindConnectedNodes(machine.GetConnectionPositions());

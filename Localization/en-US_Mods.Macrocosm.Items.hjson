@@ -2796,3 +2796,13 @@ RubberWoodBow: {
 	DisplayName: Rubber Wood Bow
 	Tooltip: ""
 }
+
+ConveyorInlet: {
+	DisplayName: Conveyor Inlet
+	Tooltip: ""
+}
+
+ConveyorOutlet: {
+	DisplayName: Conveyor Outlet
+	Tooltip: ""
+}
