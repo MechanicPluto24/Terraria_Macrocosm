@@ -21,19 +21,11 @@ namespace Macrocosm.Common.Systems.Power
         {
             orig(self);
 
-            if (Main.LocalPlayer.CurrentItem().type != ModContent.ItemType<CircuitProbe>())
-               return;
-
-            foreach (var kvp in ByID)
+            if (Main.LocalPlayer.CurrentItem().mech)
             {
-                if (kvp.Value is MachineTE machine)
+                foreach (var kvp in ByID)
                 {
-                    if (machine.CanCluster)
-                    {
-                        if (machine.Cluster != null && machine.IsClusterOrigin)
-                            machine.DrawClusterPowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
-                    }
-                    else
+                    if (kvp.Value is MachineTE machine)
                     {
                         machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
                     }

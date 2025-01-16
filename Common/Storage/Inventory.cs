@@ -160,7 +160,7 @@ namespace Macrocosm.Common.Storage
         {
             if (oldSize > newSize)
             {
-                Vector2 dropLocation = Owner is not null ? Owner.InventoryItemDropLocation : Main.LocalPlayer.Center;
+                Vector2 dropLocation = Owner is not null ? Owner.InventoryPosition : Main.LocalPlayer.Center;
                 for (int i = oldSize - 1; i >= newSize; i--)
                     DropItem(i, dropLocation);
             }

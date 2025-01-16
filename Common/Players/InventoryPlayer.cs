@@ -89,7 +89,7 @@ namespace Macrocosm.Common.Players
                          Main.LocalPlayer.IsInTileInteractionRange(tileCoordinates.X, tileCoordinates.Y, settings)
                     )
                     {
-                        ContainerTransferContext transferContext = new(inventoryOwner.InventoryItemDropLocation);
+                        ContainerTransferContext transferContext = new(inventoryOwner.InventoryPosition);
                         inventoryOwner.Inventory.QuickStack(transferContext);
                     }
                 }

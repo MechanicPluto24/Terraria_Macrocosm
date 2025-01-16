@@ -14,6 +14,8 @@ namespace Macrocosm.Common.DataStructures
         private readonly Func<Point16, bool> connectionCheck;
         private readonly Func<Point16, T> retrieveNode;
 
+        public HashSet<Point16> Visited => visited;
+
         public ConnectionSearch(Func<Point16, bool> connectionCheck, Func<Point16, T> retrieveNode)
         {
             this.connectionCheck = connectionCheck;
@@ -34,6 +36,7 @@ namespace Macrocosm.Common.DataStructures
                 }
             }
 
+            // BFS
             while (toProcess.Count > 0)
             {
                 Point16 current = toProcess.Dequeue();
@@ -43,9 +46,6 @@ namespace Macrocosm.Common.DataStructures
                 {
                     connectedNodes.Add(node);
                 }
-
-                //if (Main.rand.NextBool(15))
-                //    Dust.NewDustPerfect(current.ToWorldCoordinates(), DustID.Electric, Velocity: Main.rand.NextVector2Circular(2, 2), Scale: 0.35f);
 
                 ProcessNeighbor(current.X, current.Y - 1); // Up
                 ProcessNeighbor(current.X, current.Y + 1); // Down

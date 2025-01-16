@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Connectors
 {
-    public class Conveyor : ModItem
+    public class ConveyorOutlet : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Items.Connectors
 
                 if (!data.AnyConveyor)
                 {
-                    ConnectorSystem.PlaceConnector(targetCoords, ConnectorType.Conveyor);
+                    ConnectorSystem.PlaceConnector(targetCoords, ConnectorType.ConveyorOutlet);
                     return true;
                 }
 

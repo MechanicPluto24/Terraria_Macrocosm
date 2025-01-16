@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Machines
 
         public Inventory Inventory { get; set; }
         protected virtual int InventorySize => 50;
-        public Vector2 InventoryItemDropLocation => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+        public Vector2 InventoryPosition => base.Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
         protected int checkTimer;
 
@@ -72,7 +72,7 @@ namespace Macrocosm.Content.Machines
             {
                 checkTimer = 0;
                 ApplyBlacklist();
-                Loot?.Drop(Utility.GetClosestPlayer(Position, MachineTile.Width * 16, MachineTile.Height * 16));
+                Loot?.Drop(Utility.GetClosestPlayer(base.Position, MachineTile.Width * 16, MachineTile.Height * 16));
             }
 
             if (sceneCheckTimer >= 5 * 60 * 60)
@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Machines
 
         protected virtual void PopulateItemLoot()
         {
-            scene = new(Position);
+            scene = new(base.Position);
 
             switch (MacrocosmSubworld.SanitizeID(MacrocosmSubworld.CurrentID))
             {
@@ -177,16 +177,16 @@ namespace Macrocosm.Content.Machines
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.HallowSandstone, 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsDesert(scene), new SceneDataConditions.IsHallow(scene))));
 
                     // Pure Ocean biome loot
-                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaSand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(Position.ToPoint()), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaSand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(base.Position.ToPoint()), new SceneDataConditions.IsSpreadableBiome(scene).Not())));
 
                     // Corrupt Ocean biome loot
-                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaEbonsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(Position.ToPoint()), new SceneDataConditions.IsCorruption(scene))));
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaEbonsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(base.Position.ToPoint()), new SceneDataConditions.IsCorruption(scene))));
 
                     // Crimson Ocean biome loot
-                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaCrimsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(Position.ToPoint()), new SceneDataConditions.IsCrimson(scene))));
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaCrimsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(base.Position.ToPoint()), new SceneDataConditions.IsCrimson(scene))));
 
                     // Hallow Ocean biome loot
-                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaPearlsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(Position.ToPoint()), new SceneDataConditions.IsHallow(scene))));
+                    Loot.Add(new TEDropWithConditionRule(this, ModContent.ItemType<SilicaPearlsand>(), 22, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new TilePositionConditions.IsBeach(base.Position.ToPoint()), new SceneDataConditions.IsHallow(scene))));
 
                     // Pure snow biome loot
                     Loot.Add(new TEDropWithConditionRule(this, ItemID.IceBlock, 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100, condition: new ConditionsChain.All(new SceneDataConditions.IsSnow(scene), new SceneDataConditions.IsSpreadableBiome(scene).Not())));

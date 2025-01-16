@@ -182,12 +182,10 @@ namespace Macrocosm.Common.Global.Tiles
         public static void RegisterDisabledTile(int tileType, params int[] styles)
         {
             if (!lightDisabledTiles.TryGetValue(tileType, out var value) || value is null)
-            {
                 lightDisabledTiles[tileType] = new();
-            }
 
             foreach (var style in styles)
-                value.Add(style);
+                lightDisabledTiles[tileType].Add(style);
         }
 
         /// <summary>
