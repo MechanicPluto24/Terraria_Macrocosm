@@ -43,9 +43,7 @@ namespace Macrocosm.Common.DataStructures
 
                 var node = retrieveNode(current);
                 if (node != null)
-                {
                     connectedNodes.Add(node);
-                }
 
                 ProcessNeighbor(current.X, current.Y - 1); // Up
                 ProcessNeighbor(current.X, current.Y + 1); // Down

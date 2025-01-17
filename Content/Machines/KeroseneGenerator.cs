@@ -136,7 +136,7 @@ namespace Macrocosm.Content.Machines
                                 p.FadeIn = true;
                                 p.Opacity = 0.4f;
                                 p.ScaleVelocity = new(0.0075f);
-                                p.WindFactor = 0.01f;
+                                p.WindFactor = Main.windSpeedCurrent > 0 ? 0.035f : 0.01f;
                             });
                         }
                     }

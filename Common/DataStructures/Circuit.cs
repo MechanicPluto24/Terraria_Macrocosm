@@ -13,22 +13,22 @@ namespace Macrocosm.Common.DataStructures
         protected readonly HashSet<T> nodes = new();
         public int NodeCount => nodes.Count;
 
-        public void Add(T node)
+        public virtual void Add(T node)
         {
             nodes.Add(node);
         }
 
-        public void Remove(T node)
+        public virtual void Remove(T node)
         {
             nodes.Remove(node);
         }
 
-        public void Clear()
+        public virtual void Clear()
         {
             nodes.Clear();
         }
 
-        public bool Contains(T node)
+        public virtual bool Contains(T node)
         {
             return nodes.Contains(node);
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Macrocosm.Common.Utils;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -35,22 +36,12 @@ namespace Macrocosm.Content.Rockets.Modules
             if (ItemCheck(inputItem) && inputItem.stack >= RequiredAmount)
             {
                 if (consume)
-                    Consume(inputItem);
+                    inputItem.DecreaseStack(RequiredAmount);
 
                 return true;
             }
 
             return false;
-        }
-
-        private void Consume(Item inputItem)
-        {
-            inputItem.stack -= RequiredAmount;
-
-            if (inputItem.type == ItemID.None || inputItem.stack < 1)
-            {
-                inputItem.TurnToAir(fullReset: true);
-            }
         }
     }
 }
