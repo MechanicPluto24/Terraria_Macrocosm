@@ -6,8 +6,10 @@ using Macrocosm.Content.Items.Connectors;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -16,14 +18,31 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
-    public class ConnectorSystem : ModSystem
+    public partial class ConnectorSystem : ModSystem, IEnumerable<KeyValuePair<Point16, ConnectorData>>
     {
         public static ConnectorSystem Instance => ModContent.GetInstance<ConnectorSystem>();
         public static ConnectorSystem Map => Instance;
 
         private Dictionary<Point16, ConnectorData> wireMap = new();
-        private Asset<Texture2D> texture;
+        public ConnectorData this[Point16 point]
+        {
+            get => wireMap.TryGetValue(point, out var data) ? data : new();
+            private set => wireMap[point] = value;
+        }
 
+        public ConnectorData this[int x, int y]
+        {
+            get => this[new Point16(x, y)];
+            private set => this[new Point16(x, y)] = value;
+        }
+
+        public ConnectorData this[Point point]
+        {
+            get => this[new Point16(point)];
+            private set => this[new Point16(point)] = value;
+        }
+
+        private static Asset<Texture2D> texture;
         public override void Load()
         {
             texture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Connectors");
@@ -38,33 +57,6 @@ namespace Macrocosm.Common.Systems.Connectors
             wireMap = new();
         }
 
-        public ConnectorData this[Point16 point]
-        {
-            get
-            {
-                if (!wireMap.TryGetValue(point, out var data))
-                    data = new();
-
-                return data;
-            }
-
-            private set
-            {
-                wireMap[point] = value;
-            }
-        }
-
-        public ConnectorData this[int x, int y]
-        {
-            get => this[new Point16(x, y)];
-            private set => this[new Point16(x, y)] = value;
-        }
-
-        public ConnectorData this[Point point]
-        {
-            get => this[new Point16(point)];
-            private set => this[new Point16(point)] = value;
-        }
 
         public bool ShouldDraw => Main.LocalPlayer.CurrentItem().mech;
 
@@ -109,84 +101,9 @@ namespace Macrocosm.Common.Systems.Connectors
                 SyncConnector(x, y, ConnectorType.None);
         }
 
-        private static readonly List<ConveyorCircuit> conveyorCircuits = new();
-        private static int buildTimer = 0;
-        private static int solveTimer = 0;
         public override void PostUpdateWorld()
         {
-            base.PostUpdateWorld();
-
-            if (++buildTimer >= 120)
-            {
-                BuildConveyorCircuits();
-                buildTimer = 0;
-            }
-
-            if (++solveTimer >= 60)
-            {
-                SolveConveyorCircuits();
-                solveTimer = 0;
-            }
-        }
-
-        private static void BuildConveyorCircuits()
-        {
-            conveyorCircuits.Clear();
-
-            var search = new ConnectionSearch<ConveyorNode>(
-                connectionCheck: point => Map[point].AnyConveyor,
-                retrieveNode: CreateConveyorNode
-            );
-
-            foreach (var kvp in Map.wireMap)
-            {
-                var position = kvp.Key;
-                if (!search.Visited.Contains(position))
-                {
-                    var connectedNodes = search.FindConnectedNodes([position]);
-                    if (connectedNodes.Count > 0)
-                    {
-                        ConveyorCircuit circuit = [..connectedNodes];
-                        conveyorCircuits.Add(circuit);
-                    }
-                }
-            }
-        }
-
-        private static ConveyorNode CreateConveyorNode(Point16 position)
-        {
-            var data = Map[position];
-            var storage = TryGetStorageObject(position.X, position.Y);
-
-            if (storage is null)
-                return null;
-
-            return new ConveyorNode
-            {
-                Position = position,
-                Data = data,
-                Storage = storage
-            };
-        }
-
-        private static object TryGetStorageObject(int x, int y)
-        {
-            int chestIndex = Chest.FindChestByGuessing(x, y);
-            if (chestIndex >= 0 && Main.chest[chestIndex] is Chest chest)
-                return chest;
-
-            if (Utility.TryGetTileEntityAs(new Point16(x, y), out TileEntity te) && te is IInventoryOwner inventoryOwner)
-                return inventoryOwner;
-
-            return null;
-        }
-
-        private static void SolveConveyorCircuits()
-        {
-            foreach (var circuit in conveyorCircuits)
-            {
-                circuit.Solve(1);
-            }
+            UpdateConveyors();
         }
 
         public override void PostDrawTiles()
@@ -342,6 +259,16 @@ namespace Macrocosm.Common.Systems.Connectors
                     }
                 }
             }
+        }
+
+        public IEnumerator<KeyValuePair<Point16, ConnectorData>> GetEnumerator()
+        {
+            return ((IEnumerable<KeyValuePair<Point16, ConnectorData>>)wireMap).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)wireMap).GetEnumerator();
         }
     }
 }

@@ -229,7 +229,7 @@ namespace Macrocosm.Common.Storage
             return index >= 0 && index < reservedTextures.Length ? reservedTextures[index] : null;
         }
 
-        public bool TryPlacingItem(Item item, bool justCheck = false, bool sound = true, bool serverSync = true, int startFromIndex = 0)
+        public bool TryPlacingItem(ref Item item, bool justCheck = false, bool sound = true, bool serverSync = true, int startFromIndex = 0)
         {
             if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
                 return false;

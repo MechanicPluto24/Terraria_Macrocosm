@@ -244,14 +244,12 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 float addedFuel = canistersUsed * fuelPerCanister;
                 Rocket.Fuel += addedFuel;
 
-                liquidContainerItemSlot.Item.stack -= canistersUsed;
-                if (liquidContainerItemSlot.Item.stack <= 0)
-                    liquidContainerItemSlot.Item.TurnToAir();
+                liquidContainerItemSlot.Item.DecreaseStack(canistersUsed);
 
                 int emptyType = LiquidContainerData.GetEmptyType(ItemSets.LiquidContainerData, liquidContainerItemSlot.Item.type);
                 Item emptyCanisters = new(emptyType, canistersUsed);
 
-                bool addedToInventory = Rocket.Inventory.TryPlacingItem(emptyCanisters);
+                bool addedToInventory = Rocket.Inventory.TryPlacingItem(ref emptyCanisters);
                 if (!addedToInventory)
                     Main.LocalPlayer.QuickSpawnItem(new EntitySource_OverfullInventory(Main.LocalPlayer), emptyType, canistersUsed);
 

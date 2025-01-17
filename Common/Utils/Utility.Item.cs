@@ -69,8 +69,82 @@ namespace Macrocosm.Common.Utils
             }
 
             return type;
-
         }
+
+        public static void DecreaseStack(this Item item, int amount = 1)
+        {
+            item.stack -= amount;
+            if(item.stack < 1 || item.type == 0)
+                item.TurnToAir(fullReset: true);
+        }
+
+        public static bool TryPlaceItemInChest(ref Item item, Chest targetChest, bool justCheck, bool serverSync = true)
+        {
+            if (item.IsAir || item.stack <= 0)
+                return false;
+
+            bool placed = false;
+            bool shouldSync = Main.netMode == NetmodeID.MultiplayerClient || (serverSync && Main.netMode == NetmodeID.Server);
+
+            for (int i = 0; i < targetChest.item.Length; i++)
+            {
+                Item chestItem = targetChest.item[i];
+
+                if (chestItem.stack > 0 && chestItem.type == item.type)
+                {
+                    int transferableAmount = Math.Min(item.stack, chestItem.maxStack - chestItem.stack);
+
+                    if (transferableAmount > 0)
+                    {
+                        if (justCheck)
+                            return true;
+
+                        chestItem.stack += transferableAmount;
+                        item.stack -= transferableAmount;
+                        placed = true;
+
+                        if (shouldSync)
+                        {
+                            int chestIndex = Chest.FindChest(targetChest.x, targetChest.y);
+                            NetMessage.SendData(MessageID.SyncChestItem, -1, -1, null, chestIndex, i);
+                        }
+
+                        if (item.stack <= 0)
+                        {
+                            item.TurnToAir();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (item.stack > 0)
+            {
+                for (int i = 0; i < targetChest.item.Length; i++)
+                {
+                    if (targetChest.item[i].IsAir)
+                    {
+                        if (justCheck)
+                            return true;
+
+                        targetChest.item[i] = item.Clone();
+                        item.TurnToAir();
+                        placed = true;
+
+                        if (shouldSync)
+                        {
+                            int chestIndex = Chest.FindChest(targetChest.x, targetChest.y);
+                            NetMessage.SendData(MessageID.SyncChestItem, -1, -1, null, chestIndex, i);
+                        }
+
+                        break;
+                    }
+                }
+            }
+
+            return placed;
+        }
+
 
         public static void AddVariationToRubblemakers(int itemType, int tileType, int tileStyle)
         {
