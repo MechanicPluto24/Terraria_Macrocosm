@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Rockets.Customization;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Content.Rockets.Customization;
 using System;
 using Terraria.ModLoader.IO;
 

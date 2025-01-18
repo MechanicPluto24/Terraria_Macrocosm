@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.UI;
-using Macrocosm.Content.Rockets.Customization;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.UI;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Localization;

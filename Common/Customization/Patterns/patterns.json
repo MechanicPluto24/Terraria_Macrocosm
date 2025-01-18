@@ -1,7 +1,7 @@
 [
   {
     "patternName": "Basic",
-    "moduleName": "CommandPod",
+    "context": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -10,7 +10,7 @@
   },
   {
     "patternName": "Astra",
-    "moduleName": "CommandPod",
+    "context": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -24,7 +24,7 @@
   },
   {
     "patternName": "Binary",
-    "moduleName": "CommandPod",
+    "context": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -34,7 +34,7 @@
   },
   {
     "patternName": "Delta",
-    "moduleName": "CommandPod",
+    "context": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -44,7 +44,7 @@
   },
   {
     "patternName": "Hazard",
-    "moduleName": "CommandPod",
+    "context": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -54,7 +54,7 @@
   },
   {
     "patternName": "Helix",
-    "moduleName": "CommandPod",
+    "context": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -78,7 +78,7 @@
   },
   {
     "patternName": "Redstone",
-    "moduleName": "CommandPod",
+    "context": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -88,7 +88,7 @@
   },
   {
     "patternName": "Saturn",
-    "moduleName": "CommandPod",
+    "context": "CommandPod",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -98,7 +98,7 @@
   },
   {
     "patternName": "Basic",
-    "moduleName": "PayloadPod",
+    "context": "PayloadPod",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -107,7 +107,7 @@
   },
   {
     "patternName": "Basic",
-    "moduleName": "ServiceModule",
+    "context": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -116,7 +116,7 @@
   },
   {
     "patternName": "Astra",
-    "moduleName": "ServiceModule",
+    "context": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -130,7 +130,7 @@
   },
   {
     "patternName": "Binary",
-    "moduleName": "ServiceModule",
+    "context": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -140,7 +140,7 @@
   },
   {
     "patternName": "Delta",
-    "moduleName": "ServiceModule",
+    "context": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -150,7 +150,7 @@
   },
   {
     "patternName": "Hazard",
-    "moduleName": "ServiceModule",
+    "context": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -160,7 +160,7 @@
   },
   {
     "patternName": "Helix",
-    "moduleName": "ServiceModule",
+    "context": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -178,7 +178,7 @@
   },
   {
     "patternName": "Redstone",
-    "moduleName": "ServiceModule",
+    "context": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -188,7 +188,7 @@
   },
   {
     "patternName": "Saturn",
-    "moduleName": "ServiceModule",
+    "context": "ServiceModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -198,7 +198,7 @@
   },
   {
     "patternName": "Basic",
-    "moduleName": "UnmannedTug",
+    "context": "UnmannedTug",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -207,7 +207,7 @@
   },
   {
     "patternName": "Basic",
-    "moduleName": "ReactorModule",
+    "context": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -216,7 +216,7 @@
   },
   {
     "patternName": "Astra",
-    "moduleName": "ReactorModule",
+    "context": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -230,7 +230,7 @@
   },
   {
     "patternName": "Binary",
-    "moduleName": "ReactorModule",
+    "context": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -240,7 +240,7 @@
   },
   {
     "patternName": "Delta",
-    "moduleName": "ReactorModule",
+    "context": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -254,7 +254,7 @@
   },
   {
     "patternName": "Hazard",
-    "moduleName": "ReactorModule",
+    "context": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -264,7 +264,7 @@
   },
   {
     "patternName": "Helix",
-    "moduleName": "ReactorModule",
+    "context": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -282,7 +282,7 @@
   },
   {
     "patternName": "Redstone",
-    "moduleName": "ReactorModule",
+    "context": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -292,7 +292,7 @@
   },
   {
     "patternName": "Saturn",
-    "moduleName": "ReactorModule",
+    "context": "ReactorModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -302,7 +302,7 @@
   },
   {
     "patternName": "Basic",
-    "moduleName": "EngineModule",
+    "context": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -311,7 +311,7 @@
   },
   {
     "patternName": "Astra",
-    "moduleName": "EngineModule",
+    "context": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -325,7 +325,7 @@
   },
   {
     "patternName": "Binary",
-    "moduleName": "EngineModule",
+    "context": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -335,7 +335,7 @@
   },
   {
     "patternName": "Delta",
-    "moduleName": "EngineModule",
+    "context": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -345,7 +345,7 @@
   },
   {
     "patternName": "Hazard",
-    "moduleName": "EngineModule",
+    "context": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -355,7 +355,7 @@
   },
   {
     "patternName": "Helix",
-    "moduleName": "EngineModule",
+    "context": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -370,7 +370,7 @@
   },
   {
     "patternName": "Redstone",
-    "moduleName": "EngineModule",
+    "context": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -380,7 +380,7 @@
   },
   {
     "patternName": "Saturn",
-    "moduleName": "EngineModule",
+    "context": "EngineModule",
     "unlockedByDefault": true,
     "colorData": [
       {},
@@ -390,7 +390,7 @@
   },
   {
     "patternName": "Basic",
-    "moduleName": "BoosterLeft",
+    "context": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -399,7 +399,7 @@
   },
   {
     "patternName": "Astra",
-    "moduleName": "BoosterLeft",
+    "context": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -413,7 +413,7 @@
   },
   {
     "patternName": "Binary",
-    "moduleName": "BoosterLeft",
+    "context": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -423,7 +423,7 @@
   },
   {
     "patternName": "Delta",
-    "moduleName": "BoosterLeft",
+    "context": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -433,7 +433,7 @@
   },
   {
     "patternName": "Hazard",
-    "moduleName": "BoosterLeft",
+    "context": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -443,7 +443,7 @@
   },
   {
     "patternName": "Helix",
-    "moduleName": "BoosterLeft",
+    "context": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -458,7 +458,7 @@
   },
   {
     "patternName": "Redstone",
-    "moduleName": "BoosterLeft",
+    "context": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -468,7 +468,7 @@
   },
   {
     "patternName": "Saturn",
-    "moduleName": "BoosterLeft",
+    "context": "BoosterLeft",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -478,7 +478,7 @@
   },
   {
     "patternName": "Basic",
-    "moduleName": "BoosterRight",
+    "context": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -487,7 +487,7 @@
   },
   {
     "patternName": "Astra",
-    "moduleName": "BoosterRight",
+    "context": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -501,7 +501,7 @@
   },
   {
     "patternName": "Binary",
-    "moduleName": "BoosterRight",
+    "context": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -511,7 +511,7 @@
   },
   {
     "patternName": "Delta",
-    "moduleName": "BoosterRight",
+    "context": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -521,7 +521,7 @@
   },
   {
     "patternName": "Hazard",
-    "moduleName": "BoosterRight",
+    "context": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -531,7 +531,7 @@
   },
   {
     "patternName": "Helix",
-    "moduleName": "BoosterRight",
+    "context": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -546,7 +546,7 @@
   },
   {
     "patternName": "Redstone",
-    "moduleName": "BoosterRight",
+    "context": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },
@@ -556,7 +556,7 @@
   },
   {
     "patternName": "Saturn",
-    "moduleName": "BoosterRight",
+    "context": "BoosterRight",
     "unlockedByDefault": true,
     "colorData": [
       { "color": "#F27777" },

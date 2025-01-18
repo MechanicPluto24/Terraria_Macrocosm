@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Macrocosm.Content.Rockets.Customization
+namespace Macrocosm.Common.Customization
 {
     public class ColorFunction
     {

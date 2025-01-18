@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Enums;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -565,7 +566,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             }
             else
             {
-                if (CustomizationStorage.TryGetDetail(icon.Detail.ModuleName, icon.Detail.Name, out Detail detail))
+                if (CustomizationStorage.TryGetDetail(icon.Detail.Context, icon.Detail.Name, out Detail detail))
                     CurrentModule.Detail = detail;
             }
         }

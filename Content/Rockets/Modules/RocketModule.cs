@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Customization;
@@ -7,13 +8,14 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public abstract partial class RocketModule : ModType, ILocalizedModType
+    public abstract partial class RocketModule : ModType, ILocalizedModType, IPatternable
     {
         public string LocalizationCategory => "UI.Rocket.Modules";
         //public LocalizedText DisplayName => this.GetLocalization("DisplayName", PrettyPrintName);
@@ -35,7 +37,10 @@ namespace Macrocosm.Content.Rockets.Modules
         public abstract AssemblyRecipe Recipe { get; }
 
         public Detail Detail { get; set; }
+
         public Pattern Pattern { get; set; }
+        public string PatternContext => Name;
+        public IEnumerable<Pattern> AvailablePatterns => CustomizationStorage.GetUnlockedPatterns(PatternContext);
 
         public bool HasPattern => Pattern != default;
         public bool HasDetail => Detail != default;
@@ -68,8 +73,8 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public RocketModule()
         {
-            Detail = CustomizationStorage.GetDefaultDetail(Name);
-            Pattern = CustomizationStorage.GetDefaultPattern(Name);
+            Detail = default;
+            Pattern = CustomizationStorage.TryGetPattern(Name, "Basic", out var pattern) ? pattern : default;
         }
 
         public void SetRocket(Rocket value) => rocket = value;
@@ -107,11 +112,11 @@ namespace Macrocosm.Content.Rockets.Modules
 
                     //Pass the color mask keys as Vector3s and configured colors as Vector4s
                     List<Vector4> colors = new();
-                    for (int i = 0; i < Pattern.MaxColorCount; i++)
-                        colors.Add(Pattern.GetColor(i).ToVector4());
+                    for (int i = 0; i < Customization.Pattern.MaxColorCount; i++)
+                        colors.Add((Vector4)this.Pattern.GetColor(i).ToVector4());
 
-                    effect.Parameters["uColorCount"].SetValue(Pattern.MaxColorCount);
-                    effect.Parameters["uColorKey"].SetValue(Pattern.ColorKeys);
+                    effect.Parameters["uColorCount"].SetValue(Customization.Pattern.MaxColorCount);
+                    effect.Parameters["uColorKey"].SetValue(Customization.Pattern.ColorKeys);
                     effect.Parameters["uColor"].SetValue(colors.ToArray());
                     effect.Parameters["uSampleBrightness"].SetValue(true);
                 }

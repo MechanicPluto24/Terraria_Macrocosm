@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -19,7 +20,7 @@ namespace Macrocosm.Content.Rockets.Customization
             JObject jObject = new()
             {
                 ["patternName"] = Name,
-                ["moduleName"] = ModuleName
+                ["context"] = Context
             };
 
             JArray colorDataArray = new();
@@ -124,7 +125,7 @@ namespace Macrocosm.Content.Rockets.Customization
             TagCompound tag = new()
             {
                 [nameof(Name)] = Name,
-                [nameof(ModuleName)] = ModuleName,
+                [nameof(Context)] = Context,
                 [nameof(ColorData)] = ColorData.ToList()
             };
 
@@ -142,8 +143,8 @@ namespace Macrocosm.Content.Rockets.Customization
                 if (tag.ContainsKey(nameof(Name)))
                     name = tag.GetString(nameof(Name));
 
-                if (tag.ContainsKey(nameof(ModuleName)))
-                    moduleName = tag.GetString(nameof(ModuleName));
+                if (tag.ContainsKey(nameof(Context)))
+                    moduleName = tag.GetString(nameof(Context));
 
                 pattern = CustomizationStorage.GetPattern(moduleName, name);
 

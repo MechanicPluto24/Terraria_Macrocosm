@@ -3,14 +3,14 @@ using ReLogic.Content;
 using System;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Customization
+namespace Macrocosm.Common.Customization
 {
     public readonly struct Detail
     {
         public string Name { get; }
-        public string ModuleName { get; }
+        public string Context { get; }
 
-        public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Details/" + ModuleName + "/" + Name;
+        public string TexturePath => GetType().Namespace.Replace('.', '/') + "/Details/" + Context + "/" + Name;
         public string IconTexturePath => GetType().Namespace.Replace('.', '/') + "/Details/Icons/" + Name;
 
         private readonly Asset<Texture2D> texture;
@@ -20,10 +20,10 @@ namespace Macrocosm.Content.Rockets.Customization
         public Asset<Texture2D> IconTexture => iconTexture;
 
 
-        public Detail(string moduleName, string patternName)
+        public Detail(string context, string patternName)
         {
             Name = patternName;
-            ModuleName = moduleName;
+            Context = context;
 
             if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> detailTexture))
                 texture = detailTexture;
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Name, ModuleName);
+            return HashCode.Combine(Name, Context);
         }
     }
 }
