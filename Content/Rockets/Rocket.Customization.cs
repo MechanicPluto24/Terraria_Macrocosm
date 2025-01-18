@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Consumables.Unlockables;
 using Macrocosm.Content.Rockets.Customization;
 using Newtonsoft.Json;
@@ -65,7 +66,7 @@ namespace Macrocosm.Content.Rockets
             foreach (var module in AvailableModules)
             {
                 module.Detail = default;
-                module.Pattern = CustomizationStorage.GetDefaultPattern(module.Name);
+                module.Pattern = default;
             }
 
             SyncCustomizationData();

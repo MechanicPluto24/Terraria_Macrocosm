@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Customization;
+using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 using Terraria.ModLoader.IO;

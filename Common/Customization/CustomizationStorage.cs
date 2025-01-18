@@ -1,4 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets;
+using Macrocosm.Content.Rockets.Customization;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -7,18 +9,18 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Rockets.Customization
+namespace Macrocosm.Common.Customization
 {
     public class CustomizationStorage : ModSystem
     {
         public static bool Initialized { get; private set; }
         private static bool shouldLogLoadedItems = true;
 
-        private static Dictionary<(string moduleName, string patternName), Pattern> patterns;
-        private static Dictionary<(string moduleName, string detailName), Detail> details;
+        private static Dictionary<(string context, string patternName), Pattern> patterns;
+        private static Dictionary<(string context, string detailName), Detail> details;
 
-        private static Dictionary<(string moduleName, string patternName), bool> patternUnlockStatus;
-        private static Dictionary<(string moduleName, string detailName), bool> detailUnlockStatus;
+        private static Dictionary<(string context, string patternName), bool> patternUnlockStatus;
+        private static Dictionary<(string context, string detailName), bool> detailUnlockStatus;
 
         public override void Load()
         {
@@ -62,43 +64,40 @@ namespace Macrocosm.Content.Rockets.Customization
         /// <summary>
         /// Gets a pattern from the pattern storage.
         /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
+        /// <param name="context"> The context this pattern belongs to </param>
         /// <param name="patternName"> The pattern name </param>
-        public static Pattern GetPattern(string moduleName, string patternName)
-            => patterns[(moduleName, patternName)];
+        public static Pattern GetPattern(string context, string patternName)
+            => patterns[(context, patternName)];
 
-        public static Pattern GetDefaultPattern(string moduleName)
-            => TryGetPattern(moduleName, "Basic", out var pattern) ? pattern : default;
-
-        public static List<Pattern> GetUnlockedPatterns(string moduleName)
+        public static List<Pattern> GetUnlockedPatterns(string context)
         {
-            return GetPatternsWhere(moduleName, pattern =>
+            return GetPatternsWhere(context, pattern =>
             {
-                var key = (moduleName, pattern.Name);
+                var key = (context, pattern.Name);
                 return patternUnlockStatus.ContainsKey(key) && patternUnlockStatus[key];
             });
         }
 
-        public static List<Pattern> GetPatternsWhere(string moduleName, Func<Pattern, bool> match)
+        public static List<Pattern> GetPatternsWhere(string context, Func<Pattern, bool> match)
         {
-            var patternsForModule = patterns
+            var patternsForContext = patterns
                 .Select(kvp => kvp.Value)
-                .Where(pattern => pattern.ModuleName == moduleName && match(pattern))
+                .Where(pattern => pattern.Context == context && match(pattern))
                 .ToList();
 
-            return patternsForModule;
+            return patternsForContext;
         }
 
         /// <summary>
         /// Attempts to get a pattern from the pattern storage.
         /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
+        /// <param name="context"> The context this pattern belongs to </param>
         /// <param name="patternName"> The pattern name </param>
         /// <param name="pattern"> The pattern null if not found </param>
         /// <returns> Whether the specified pattern has been found </returns>
-        public static bool TryGetPattern(string moduleName, string patternName, out Pattern pattern)
+        public static bool TryGetPattern(string context, string patternName, out Pattern pattern)
         {
-            if (patterns.TryGetValue((moduleName, patternName), out Pattern defaultPattern))
+            if (patterns.TryGetValue((context, patternName), out Pattern defaultPattern))
             {
                 pattern = defaultPattern;
                 return true;
@@ -113,54 +112,51 @@ namespace Macrocosm.Content.Rockets.Customization
         /// <summary>
         /// Sets the unlocked status on a pattern. This affects all players, in all subworlds.
         /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
+        /// <param name="context"> The context this pattern belongs to </param>
         /// <param name="patternName"> The pattern name </param>
         /// <param name="unlockedState"> The unlocked state to set </param>
-        public static void SetPatternUnlockedStatus(string moduleName, string patternName, bool unlockedState)
-             => patternUnlockStatus[(moduleName, patternName)] = unlockedState;
+        public static void SetPatternUnlockedStatus(string context, string patternName, bool unlockedState)
+             => patternUnlockStatus[(context, patternName)] = unlockedState;
 
-        public static bool GetPatternUnlockedStatus(string moduleName, string patternName)
-             => patternUnlockStatus[(moduleName, patternName)];
+        public static bool GetPatternUnlockedStatus(string context, string patternName)
+             => patternUnlockStatus[(context, patternName)];
 
         /// <summary>
         /// Gets the detail reference from the detail storage.
         /// </summary>
-        /// <param name="moduleName"> The rocket module this detail belongs to </param>
+        /// <param name="context"> The  context this detail belongs to </param>
         /// <param name="detailName"> The detail name </param>
-        public static Detail GetDetail(string moduleName, string detailName)
-            => details[(moduleName, detailName)];
+        public static Detail GetDetail(string context, string detailName)
+            => details[(context, detailName)];
 
-        public static Detail GetDefaultDetail(string moduleName)
-            => details[(moduleName, "None")];
-
-        public static List<Detail> GetUnlockedDetails(string moduleName)
+        public static List<Detail> GetUnlockedDetails(string context)
         {
-            return GetDetailsWhere(moduleName, detail =>
+            return GetDetailsWhere(context, detail =>
             {
-                var key = (moduleName, detail.Name);
+                var key = (context, detail.Name);
                 return detailUnlockStatus.ContainsKey(key) && detailUnlockStatus[key];
             });
         }
 
-        public static List<Detail> GetDetailsWhere(string moduleName, Func<Detail, bool> match)
+        public static List<Detail> GetDetailsWhere(string context, Func<Detail, bool> match)
         {
-            var detailsForModule = details
+            var detailsForContext = details
                 .Select(kvp => kvp.Value)
-                .Where(detail => detail.ModuleName == moduleName && match(detail))
+                .Where(detail => detail.Context == context && match(detail))
                 .ToList();
 
-            return detailsForModule;
+            return detailsForContext;
         }
 
         /// <summary>
         /// Attempts to get a detail reference from the detail storage.
         /// </summary>
-        /// <param name="moduleName"> The rocket module this detail belongs to </param>
+        /// <param name="context"> The context this detail belongs to </param>
         /// <param name="detailName"> The detail name </param>
         /// <param name="detail"> The detail, null if not found </param>
         /// <returns> Whether the specified detail has been found </returns>
-		public static bool TryGetDetail(string moduleName, string detailName, out Detail detail)
-            => details.TryGetValue((moduleName, detailName), out detail);
+		public static bool TryGetDetail(string context, string detailName, out Detail detail)
+            => details.TryGetValue((context, detailName), out detail);
 
         public override void ClearWorld() => Reset();
 
@@ -192,36 +188,36 @@ namespace Macrocosm.Content.Rockets.Customization
         }
 
         /// <summary>
-        /// Adds a rocket module pattern to the pattern storage
+        /// Adds a context pattern to the pattern storage
         /// </summary>
-        /// <param name="moduleName"> The rocket module this pattern belongs to </param>
+        /// <param name="context"> The context this pattern belongs to </param>
         /// <param name="patternName"> The pattern name </param>
         /// <param name="unlockedByDefault"> Whether this pattern is unlocked by default
         /// <param name="colorData"> The color data (default colors, whether they are user changeable, dynamic color function) </param>
-        private static void AddPattern(string moduleName, string patternName, bool unlockedByDefault = false, params PatternColorData[] colorData)
+        private static void AddPattern(string context, string patternName, bool unlockedByDefault = false, params PatternColorData[] colorData)
         {
-            Pattern pattern = new(moduleName, patternName, colorData);
-            patterns.Add((moduleName, patternName), pattern);
-            patternUnlockStatus.Add((moduleName, patternName), unlockedByDefault);
+            Pattern pattern = new(context, patternName, colorData);
+            patterns.Add((context, patternName), pattern);
+            patternUnlockStatus.Add((context, patternName), unlockedByDefault);
         }
 
         private static void AddPattern(Pattern pattern, bool unlockedByDefault = false)
         {
-            patterns.Add((pattern.ModuleName, pattern.Name), pattern);
-            patternUnlockStatus.Add((pattern.ModuleName, pattern.Name), unlockedByDefault);
+            patterns.Add((pattern.Context, pattern.Name), pattern);
+            patternUnlockStatus.Add((pattern.Context, pattern.Name), unlockedByDefault);
         }
 
         /// <summary>
         /// Adds a detail to the detail storage
         /// </summary>
-        /// <param name="moduleName"> The rocket module this detail belongs to </param>
+        /// <param name="context"> The context this detail belongs to </param>
         /// <param name="detailName"> The detail name </param>
         /// <param name="unlockedByDefault"> Whether this detail is unlocked by default </param>
-        private static void AddDetail(string moduleName, string detailName, bool unlockedByDefault = false)
+        private static void AddDetail(string context, string detailName, bool unlockedByDefault = false)
         {
-            Detail detail = new(moduleName, detailName);
-            details.Add((moduleName, detailName), detail);
-            detailUnlockStatus.Add((moduleName, detailName), unlockedByDefault);
+            Detail detail = new(context, detailName);
+            details.Add((context, detailName), detail);
+            detailUnlockStatus.Add((context, detailName), unlockedByDefault);
         }
 
         private static void LoadPatterns()
@@ -229,7 +225,6 @@ namespace Macrocosm.Content.Rockets.Customization
             try
             {
                 JArray patternsArray = Utility.ParseJSONFromFile("Content/Rockets/Customization/Patterns/patterns.json");
-
                 foreach (JObject patternObject in patternsArray.Cast<JObject>())
                 {
                     bool unlockedByDefault = false;
@@ -247,13 +242,13 @@ namespace Macrocosm.Content.Rockets.Customization
 
             string logstring = "Loaded " + patterns.Count.ToString() + " pattern" + (patterns.Count == 1 ? "" : "s") + ":\n";
 
-            foreach (string moduleName in Rocket.ModuleNames)
+            foreach (string context in Rocket.ModuleNames)
             {
-                logstring += $" - Module: {moduleName}\n\t";
+                logstring += $" - Context: {context}\n\t";
                 foreach (var kvp in patterns)
                 {
-                    (string patternModuleName, string patternName) = kvp.Key;
-                    if (patternModuleName == moduleName)
+                    (string patterncontext, string patternName) = kvp.Key;
+                    if (patterncontext == context)
                         logstring += $"{patternName} ";
                 }
                 logstring += "\n\n";
@@ -265,8 +260,8 @@ namespace Macrocosm.Content.Rockets.Customization
 
         private static void LoadDetails()
         {
-            foreach (string moduleName in Rocket.ModuleNames)
-                AddDetail(moduleName, "None", true);
+            foreach (string context in Rocket.ModuleNames)
+                AddDetail(context, "None", true);
 
             if (Main.dedServ)
                 return;
@@ -277,28 +272,28 @@ namespace Macrocosm.Content.Rockets.Customization
             var detailPaths = detailPathsWithIcons.Where(x => !x.Contains("/Icons")).ToList();
 
             // Log the detail list
-            foreach (var detailWithModule in detailPaths)
+            foreach (var detailWithContext in detailPaths)
             {
-                string[] split = detailWithModule.Replace(lookupString, "").Split('/');
+                string[] split = detailWithContext.Replace(lookupString, "").Split('/');
 
                 if (split.Length == 2)
                 {
-                    string module = split[0];
+                    string context = split[0];
                     string detail = split[1].Replace(".rawimg", "");
 
                     if (!IsDetailExcludedByRegion(detail))
-                        AddDetail(module, detail, true);
+                        AddDetail(context, detail, true);
                 }
             }
 
             string logstring = "Loaded " + details.Count.ToString() + " detail" + (detailPaths.Count == 1 ? "" : "s") + ":\n";
-            foreach (string moduleName in Rocket.ModuleNames)
+            foreach (string context in Rocket.ModuleNames)
             {
-                logstring += $" - Module: {moduleName}\n\t";
+                logstring += $" - Context: {context}\n\t";
                 foreach (var kvp in details)
                 {
-                    (string DetailModuleName, string detailName) = kvp.Key;
-                    if (DetailModuleName == moduleName && !IsDetailExcludedByRegion(detailName))
+                    (string Detailcontext, string detailName) = kvp.Key;
+                    if (Detailcontext == context && !IsDetailExcludedByRegion(detailName))
                         logstring += $"{detailName} ";
                 }
                 logstring += "\n\n";

@@ -1,11 +1,11 @@
 ﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Customization;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
