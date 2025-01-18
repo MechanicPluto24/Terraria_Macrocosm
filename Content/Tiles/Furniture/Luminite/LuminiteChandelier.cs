@@ -25,8 +25,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileID.Sets.MultiTileSway[Type] = true;
-
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Chandeliers, 0));
             TileObjectData.newTile.Height = 2;
             TileObjectData.newTile.CoordinateHeights = [16, 16];
@@ -88,16 +86,17 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Tile tile = Main.tile[i, j];
 
             if (TileObjectData.IsTopLeft(tile))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
+                Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
 
             return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
         }
 
-        // Disabled as it's incompatible with wind sway
-        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            //glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            //Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true);
+            Utility.DrawMultiTileInWind_VineStyle(i, j);
+
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            Utility.DrawMultiTileInWind_VineStyle(i, j, glowmask, Color.White, applyPaint: true);
         }
     }
 }

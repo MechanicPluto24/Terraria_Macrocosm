@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsAContainer[Type] = true;
 
-            TileSets.CustomContainerSize[Type] = new(1, 3);
+            TileSets.CustomContainer[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
             TileObjectData.newTile.Height = 3;
