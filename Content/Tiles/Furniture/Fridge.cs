@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsAContainer[Type] = true;
 
-            TileSets.CustomContainerSize[Type] = new(2, 3);
+            TileSets.CustomContainer[Type] = true;
 
             DustType = 84;
             AdjTiles = [TileID.Containers];

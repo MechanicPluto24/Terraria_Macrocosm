@@ -29,7 +29,7 @@ namespace Macrocosm.Common.Systems.Power
                     var neighborPosition = new Point16(position.X + neighbor.X, position.Y + neighbor.Y);
                     Tile tile = Main.tile[neighborPosition];
                     if (tile.HasTile && tile.TileType == MachineTile.Type && !ByPosition.ContainsKey(neighborPosition))
-                        Place(neighborPosition.X, neighborPosition.Y);
+                        BlockPlacement(neighborPosition.X, neighborPosition.Y);
                 }
             }
         }

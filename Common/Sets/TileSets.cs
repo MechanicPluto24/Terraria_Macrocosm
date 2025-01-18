@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Sets
         /// For custom sized containers (different from 2x2 chests and 3x2 dressers) 
         /// </summary>
         // TODO: add support for net serializaton (and proper unloading but this needs to be in tML directly) 
-        public static Point[] CustomContainerSize { get; } = TileID.Sets.Factory.CreateCustomSet(defaultState: Point.Zero);
+        public static bool[] CustomContainer { get; } = TileID.Sets.Factory.CreateBoolSet();
 
         public static TreePaintingSettings[] PaintingSettings { get; } = TileID.Sets.Factory.CreateCustomSet<TreePaintingSettings>(defaultState: null);
     }

@@ -8,6 +8,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -19,6 +20,8 @@ namespace Macrocosm.Content.Machines
 {
     public class BurnerGenerator : MachineTile
     {
+        private static Asset<Texture2D> glowmask;
+
         public override short Width => 4;
         public override short Height => 3;
         public override MachineTE MachineTE => ModContent.GetInstance<BurnerGeneratorTE>();
@@ -151,6 +154,12 @@ namespace Macrocosm.Content.Machines
                 if (++frame >= frameCount)
                     frame = 0;
             }
+        }
+
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false);
         }
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)

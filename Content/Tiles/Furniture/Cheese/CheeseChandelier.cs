@@ -76,22 +76,23 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Tile tile = Main.tile[i, j];
 
             if (TileObjectData.IsTopLeft(tile))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
+                Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
 
             return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
         }
 
-        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
+            Utility.DrawMultiTileInWind_VineStyle(i, j);
+
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
-
             for (int k = 0; k < 7; k++)
             {
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, applyPaint: false, drawOffset: new Vector2(xx, yy), drawColor: new Color(100, 100, 100, 0));
+                Utility.DrawMultiTileInWind_VineStyle(i, j, flameTexture, drawColor: new Color(100, 100, 100, 0), drawOffset: new Vector2(xx, yy), applyPaint: false);
             }
         }
     }
