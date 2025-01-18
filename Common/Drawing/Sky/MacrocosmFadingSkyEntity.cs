@@ -72,9 +72,9 @@ namespace Macrocosm.Common.Drawing.Sky
         public void StartFadingOut(int currentFrameCount)
         {
             int num = (int)(LifeTime * OpacityNormalizedTimeToFadeOut);
-            int num2 = currentFrameCount - num;
-            if (num2 < TimeEntitySpawnedIn)
-                TimeEntitySpawnedIn = num2;
+            int windRotationFactor = currentFrameCount - num;
+            if (windRotationFactor < TimeEntitySpawnedIn)
+                TimeEntitySpawnedIn = windRotationFactor;
         }
 
         public override Vector2 GetDrawPosition() => Position;

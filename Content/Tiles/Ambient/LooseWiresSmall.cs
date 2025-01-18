@@ -1,3 +1,4 @@
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Blocks.Terrain;
@@ -60,9 +61,14 @@ namespace Macrocosm.Content.Tiles.Ambient
             Tile tile = Main.tile[i, j];
 
             if (TileObjectData.IsTopLeft(tile))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
+                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
 
             return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+        }
+
+        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            TileRendering.DrawMultiTileInWindTopAnchor(i, j);
         }
     }
 

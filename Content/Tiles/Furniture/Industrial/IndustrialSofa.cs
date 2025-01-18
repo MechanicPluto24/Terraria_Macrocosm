@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Sets;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -69,7 +69,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                 TileObjectData data = TileObjectData.GetTileData(Type, 0);
                 Vector2 position = new Vector2((i + 1) * 16f, j * 16f) - Main.screenPosition + zero;
                 Color color = Lighting.GetColor(i + 1, j);
-                Texture2D extraTexture = tile.GetOrPreparePaintedExtraTexture(extra);
+                Texture2D extraTexture = TileRendering.GetOrPreparePaintedExtraTexture(tile, extra);
                 if (tile.TileFrameY / 18 % 2 is 0)
                     spriteBatch.Draw(extraTexture, position, new Rectangle(0, 0, 2, data.CoordinateHeights[0]), color);
                 else if (tile.TileFrameY / 18 % 2 is 1)

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
@@ -94,7 +95,7 @@ namespace Macrocosm.Content.Machines
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            if (frameCounter++ >= 2)
+            if (frameCounter++ >= 6)
             {
                 frameCounter = 0;
                 if (frame++ >= 1)
@@ -149,8 +150,8 @@ namespace Macrocosm.Content.Machines
             if (IsPoweredOnFrame(i, j))
             {
                 extra ??= ModContent.Request<Texture2D>(Texture + "_Extra");
-                Vector2 offset = new(0, Main.tileFrame[Type]);
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, extra, applyPaint: true, drawOffset: offset, Lighting.GetColor(i, j));
+                Vector2 offset = new(0, Main.tileFrame[Type] * 2);
+                TileRendering.DrawTileExtraTexture(i, j, spriteBatch, extra, applyPaint: true, drawOffset: offset);
             }
         }
 

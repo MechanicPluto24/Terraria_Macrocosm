@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -21,8 +22,8 @@ namespace Macrocosm.Content.Machines
 
         public override MachineTE MachineTE => ModContent.GetInstance<WindTurbineLargeTE>();
 
-        private static Asset<Texture2D> blades;
-        private static Asset<Texture2D> turbine;
+        private static Asset<Texture2D> bladesTexture;
+        private static Asset<Texture2D> turbineTexture;
 
         private static float rotationCounter;
 
@@ -57,15 +58,6 @@ namespace Macrocosm.Content.Machines
             DustType = -1;
         }
 
-        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
-        {
-            Tile tile = Main.tile[i, j];
-            if (tile.TileFrameX / 18 == 1 && tile.TileFrameY / 18 == 0)
-            {
-                Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
-            }
-        }
-
         // Called once an update, can use for the rotation animation
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
@@ -75,65 +67,86 @@ namespace Macrocosm.Content.Machines
             rotationCounter = MathHelper.WrapAngle(rotationCounter);
         }
 
-        private SpriteBatchState state;
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            blades ??= ModContent.Request<Texture2D>(Texture + "_Blades");
-            turbine ??= ModContent.Request<Texture2D>(Texture + "_Turbine");
-
             Tile tile = Main.tile[i, j];
-            Texture2D bladesTexture = tile.GetOrPreparePaintedExtraTexture(blades);
-            Texture2D turbineTexture = tile.GetOrPreparePaintedExtraTexture(turbine);
 
-            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+            if (TileObjectData.IsTopLeft(tile))
+                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
+
+            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+        }
+
+        private SpriteBatchState state;
+
+        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, windSensitivity: 0.02f, rowsToIgnore: 2);
+
+            turbineTexture ??= ModContent.Request<Texture2D>(Texture + "_Turbine");
+            bladesTexture ??= ModContent.Request<Texture2D>(Texture + "_Blades");
+
+            Texture2D blades = TileRendering.GetOrPreparePaintedExtraTexture(Main.tile[i, j], bladesTexture);
+            Texture2D turbine = TileRendering.GetOrPreparePaintedExtraTexture(Main.tile[i, j], turbineTexture);
+
+            Vector2 zero = Vector2.Zero;
             Vector2 tileDrawPosition = new Vector2(i, j) * 16f + zero - Main.screenPosition;
 
             Color drawColor = Lighting.GetColor(i, j);
+
+            float windCycle = TileRendering.TileRenderer.GetWindCycle(i, j, TileRendering.SunflowerWindCounter); // Assuming SunflowerWindCounter is a global timer
+            float windSwayX = windCycle * 3.3f;
+
             float turbineScale = 1f;
-            Vector2 turbineOffset = new(8, 11);
+            Vector2 turbineOffset = new(16 + 8 + windSwayX, 11);
             Matrix turbineMatrix = GetTurbineMatrix(tileDrawPosition + turbineOffset, state.Matrix);
             SpriteEffects turbineEffects = Utility.WindSpeedScaled > 0f ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Vector2 bladeOffset = new(Utility.WindSpeedScaled < 0f ? (6 + 9.6f * -Utility.WindSpeedScaled) : (1 + 6f * (1f - Utility.WindSpeedScaled)), y: 11);
+            Vector2 bladeOffset = new(16 + windSwayX + (Utility.WindSpeedScaled < 0f ? (6 + 9.6f * -Utility.WindSpeedScaled) : (6f * (1f - Utility.WindSpeedScaled))), y: 11);
             Matrix bladeMatrix = GetBladesMatrix(tileDrawPosition + bladeOffset, state.Matrix);
             float bladeRotation = rotationCounter - (MathHelper.Pi / 32 * (i / 4));
 
-            state.SaveState(spriteBatch, continuous: true);
+            state.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearClamp, state.DepthStencilState, state.RasterizerState, null, turbineMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, turbineMatrix);
 
-            spriteBatch.Draw(turbineTexture, tileDrawPosition + turbineOffset, null, drawColor, 0f, turbineTexture.Size() / 2f, turbineScale, turbineEffects, 0f);
+            spriteBatch.Draw(turbine, tileDrawPosition + turbineOffset, null, drawColor, 0f, turbineTexture.Size() / 2f, turbineScale, turbineEffects, 0f);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, state.DepthStencilState, state.RasterizerState, null, bladeMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, bladeMatrix);
 
-            spriteBatch.Draw(bladesTexture, tileDrawPosition + bladeOffset, null, drawColor, bladeRotation, bladesTexture.Size() / 2f + new Vector2(-0.11f, 0f), 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(blades, tileDrawPosition + bladeOffset, null, drawColor, bladeRotation, bladesTexture.Size() / 2f + new Vector2(-0.11f, 0f), 1f, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
         }
 
+
         private static Matrix GetTurbineMatrix(Vector2 drawPosition, Matrix baseMatrix)
         {
             float radians = MathHelper.Clamp(MathHelper.PiOver2 * (1f - Math.Abs(Utility.WindSpeedScaled)), 0f, 1f);
+
+            // Apply the transformations relative to the world position
             Matrix transformationMatrix =
-                Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to screen origin
+                Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to origin
                 Matrix.CreateRotationY(radians) *                                // Apply Y skew
-                Matrix.CreateTranslation(drawPosition.X, drawPosition.Y, 0f) *   // Translate back to original position
-                Matrix.CreateScale(baseMatrix.M11, baseMatrix.M22, 0f);          // Apply scale
-            return transformationMatrix;
+                Matrix.CreateTranslation(drawPosition.X, drawPosition.Y, 0f) *   // Translate back
+                Matrix.CreateScale(1f, 1f, 0f);                                  // Keep scale consistent
+            return transformationMatrix * baseMatrix;
         }
 
         private static Matrix GetBladesMatrix(Vector2 drawPosition, Matrix baseMatrix)
         {
-
             float radians = MathHelper.PiOver2 * Utility.WindSpeedScaled * 0.66f;
+
+            // Apply the transformations relative to the world position
             Matrix transformationMatrix =
-                Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to screen origin
+                Matrix.CreateTranslation(-drawPosition.X, -drawPosition.Y, 0f) * // Translate to origin
                 Matrix.CreateRotationY(radians) *                                // Apply Y skew
-                Matrix.CreateTranslation(drawPosition.X, drawPosition.Y, 0f) *   // Translate back to original position
-                Matrix.CreateScale(baseMatrix.M11, baseMatrix.M22, 0f);          // Apply scale
-            return transformationMatrix;
+                Matrix.CreateTranslation(drawPosition.X, drawPosition.Y, 0f) *   // Translate back
+                Matrix.CreateScale(1f, 1f, 0f);                                  // Keep scale consistent
+            return transformationMatrix * baseMatrix;
         }
+
     }
 }

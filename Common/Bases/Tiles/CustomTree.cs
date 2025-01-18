@@ -1,4 +1,5 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -944,7 +945,7 @@ namespace Macrocosm.Common.Bases.Tiles
             treeTopRenders.TryAdd(key, value);
 
             if (!value.IsReady)
-                Utility.TilePaintSystemV2_AddRequest(value);
+                TileRendering.AddTilePaintRequest(value);
 
             return GetTopsTexture(variant).Value;
         }
@@ -966,7 +967,7 @@ namespace Macrocosm.Common.Bases.Tiles
             treeBranchRenders.TryAdd(key, value);
 
             if (!value.IsReady)
-                Utility.TilePaintSystemV2_AddRequest(value);
+                TileRendering.AddTilePaintRequest(value);
 
             return GetBranchTexture(variant).Value;
         }
@@ -976,7 +977,7 @@ namespace Macrocosm.Common.Bases.Tiles
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.Identity);
 
-            double treeWindCounter = Utility.TreeWindCounter;
+            double treeWindCounter = TileRendering.TreeWindCounter;
             Vector2 unscaledPosition = Main.Camera.UnscaledPosition;
             Vector2 zero = new(Main.offScreenRange, Main.offScreenRange);
 
@@ -1175,9 +1176,9 @@ namespace Macrocosm.Common.Bases.Tiles
             if (leaf < 0)
                 return;
 
-            int leafFrequency = Utility.TreeLeafFrequency;
+            int leafFrequency = TileRendering.TreeLeafFrequency;
             bool isActiveAndNotPaused = !Main.gamePaused && Main.instance.IsActive;
-            UnifiedRandom rand = Utility.TileRendererRandom;
+            UnifiedRandom rand = TileRendering.TileRendererRandom;
 
             if (!isActiveAndNotPaused)
                 return;
@@ -1201,18 +1202,18 @@ namespace Macrocosm.Common.Bases.Tiles
             {
                 int offset = tilePosX - grassPosX;
                 position.X += offset * 12;
-                int num5 = 0;
+                int windOffsetFactorY = 0;
                 if (tile.TileFrameY == 220)
                 {
-                    num5 = 1;
+                    windOffsetFactorY = 1;
                 }
                 else if (tile.TileFrameY == 242)
                 {
-                    num5 = 2;
+                    windOffsetFactorY = 2;
                 }
                 if (tile.TileFrameX == 66)
                 {
-                    switch (num5)
+                    switch (windOffsetFactorY)
                     {
                         case 0:
                             position += new Vector2(0f, -6f);
@@ -1227,7 +1228,7 @@ namespace Macrocosm.Common.Bases.Tiles
                 }
                 else
                 {
-                    switch (num5)
+                    switch (windOffsetFactorY)
                     {
                         case 0:
                             position += new Vector2(0f, 4f);

@@ -1,5 +1,4 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Utilities;
 
 namespace Macrocosm.Common.Drawing.Sky
 {

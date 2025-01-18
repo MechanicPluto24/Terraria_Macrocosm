@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -86,17 +87,17 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Tile tile = Main.tile[i, j];
 
             if (TileObjectData.IsTopLeft(tile))
-                Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
+                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
 
             return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
         }
 
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Utility.DrawMultiTileInWind_VineStyle(i, j);
+            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
 
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawMultiTileInWind_VineStyle(i, j, glowmask, Color.White, applyPaint: true);
+            TileRendering.DrawMultiTileInWindTopAnchor(i, j, glowmask, Color.White, applyPaint: true, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
         }
     }
 }

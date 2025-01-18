@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -90,7 +91,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, applyPaint: false, drawOffset: new Vector2(xx, yy), drawColor: new Color(50, 50, 50, 0));
+                TileRendering.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, applyPaint: false, drawColor: new Color(50, 50, 50, 0), drawOffset: new Vector2(xx, yy));
             }
         }
     }

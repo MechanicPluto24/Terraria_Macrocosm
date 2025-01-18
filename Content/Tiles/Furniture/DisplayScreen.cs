@@ -1,3 +1,4 @@
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.TileFrame;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -209,7 +210,7 @@ namespace Macrocosm.Content.Tiles.Furniture
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true);
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true, Color.White);
         }
     }
 }
