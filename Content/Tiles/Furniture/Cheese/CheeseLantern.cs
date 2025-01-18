@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -86,14 +87,14 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Tile tile = Main.tile[i, j];
 
             if (TileObjectData.IsTopLeft(tile))
-                Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
+                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
 
             return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
         }
 
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Utility.DrawMultiTileInWind_VineStyle(i, j);
+            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
 
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
@@ -102,7 +103,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawMultiTileInWind_VineStyle(i, j, flameTexture, drawColor: new Color(100, 100, 100, 0), drawOffset: new Vector2(xx, yy), applyPaint: false);
+                TileRendering.DrawMultiTileInWindTopAnchor(i, j, flameTexture, drawColor: new Color(100, 100, 100, 0), drawOffset: new Vector2(xx, yy), applyPaint: false, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
             }
         }
     }

@@ -1,24 +1,17 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
-using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json.Linq;
 using ReLogic.Content;
 using SubworldLibrary;
 using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
-using Terraria.ID;
-using Terraria.Map;
 using Terraria.ModLoader;
-using static Terraria.Main;
 
 namespace Macrocosm.Content.Skies.Moon
 {

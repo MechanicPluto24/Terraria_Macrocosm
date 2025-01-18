@@ -162,13 +162,16 @@ namespace Macrocosm.Common.Utils
 
         public static void GetEmmitedLight(this Tile tile, Color baseColor, bool applyPaint, out float r, out float g, out float b)
         {
-            if (applyPaint && tile.TileColor != PaintID.None)
+            byte paintID = tile.TileColor;
+            if (applyPaint && paintID > PaintID.None)
             {
                 Color paintColor = tile.GetPaintColor();
                 byte max = Math.Max(Math.Max(baseColor.R, baseColor.G), baseColor.B);
-                baseColor.R = (byte)(paintColor.R * (max / 255f));
-                baseColor.G = (byte)(paintColor.G * (max / 255f));
-                baseColor.B = (byte)(paintColor.B * (max / 255f));
+
+                if (paintID >= PaintID.RedPaint && paintID <= PaintID.PinkPaint)
+                    baseColor = Color.Lerp(baseColor, paintColor, 0.5f); // Regular paints
+                else 
+                    baseColor = paintColor * (max / 255f); // Deep paints & other
             }
 
             r = baseColor.R / 255f;

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
@@ -68,7 +69,7 @@ namespace Macrocosm.Content.Machines
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false);
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
         }
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)

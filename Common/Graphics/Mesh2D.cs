@@ -63,8 +63,8 @@ namespace Macrocosm.Common.Graphics
                     float v = j / (float)(verticalResolution - 1);
 
                     Vector2 vertexPosition = new(
-                        origin.X + (u * width),
-                        origin.Y + (v * height)
+                        origin.X + u * width,
+                        origin.Y + v * height
                     );
 
                     Color vertexColor = colorFunction?.Invoke(vertexPosition) ?? Color.White;

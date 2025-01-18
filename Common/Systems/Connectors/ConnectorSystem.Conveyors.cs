@@ -80,21 +80,18 @@ namespace Macrocosm.Common.Systems.Connectors
             private void TransferFromChest(Chest sourceChest, List<ConveyorNode> inlets)
             {
                 Vector2 sourcePosition = new Vector2(sourceChest.x, sourceChest.y) * 16f + new Vector2(8, 8);
-
                 foreach (var inletNode in inlets)
                 {
                     int transferAmount = 1;
-                    bool itemTransferred = false;
-
                     for (int slot = 0; slot < sourceChest.item.Length; slot++)
                     {
                         Item sourceItem = sourceChest.item[slot];
                         if (sourceItem == null || sourceItem.IsAir)
                             continue;
 
-                        Item visualClone = sourceItem.Clone();
                         Item sourceClone = sourceItem.Clone();
                         sourceClone.stack = transferAmount; 
+                        Item visualClone = sourceClone.Clone();
 
                         if (inletNode.Storage is Chest inletChest)
                         {
@@ -102,7 +99,6 @@ namespace Macrocosm.Common.Systems.Connectors
                             {
                                 Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
                                 ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, inletChest);
-                                itemTransferred = true;
                                 sourceItem.DecreaseStack(transferAmount);
                                 break;
                             }
@@ -113,15 +109,11 @@ namespace Macrocosm.Common.Systems.Connectors
                             {
                                 Vector2 inletPosition = inletOwner.InventoryPosition;
                                 ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, null);
-                                itemTransferred = true;
                                 sourceItem.DecreaseStack(transferAmount);
                                 break;
                             }
                         }
                     }
-
-                    if (itemTransferred)
-                        break; 
                 }
             }
 
@@ -129,21 +121,18 @@ namespace Macrocosm.Common.Systems.Connectors
             private void TransferFromTE(IInventoryOwner sourceOwner, List<ConveyorNode> inlets)
             {
                 Vector2 sourcePosition = sourceOwner.InventoryPosition;
-
                 foreach (var inletNode in inlets)
                 {
                     int transferAmount = 1;
-                    bool itemTransferred = false;
-
                     for (int slot = 0; slot < sourceOwner.Inventory.Size; slot++)
                     {
                         Item sourceItem = sourceOwner.Inventory[slot];
                         if (sourceItem == null || sourceItem.IsAir)
                             continue;
 
-                        Item visualClone = sourceItem.Clone();
                         Item sourceClone = sourceItem.Clone();
                         sourceClone.stack = transferAmount;
+                        Item visualClone = sourceClone.Clone();
 
                         if (inletNode.Storage is Chest inletChest)
                         {
@@ -151,7 +140,6 @@ namespace Macrocosm.Common.Systems.Connectors
                             {
                                 Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
                                 ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, inletChest);
-                                itemTransferred = true;
                                 sourceItem.DecreaseStack(transferAmount);
                                 break;
                             }
@@ -162,7 +150,6 @@ namespace Macrocosm.Common.Systems.Connectors
                             {
                                 Vector2 inletPosition = inletOwner.InventoryPosition;
                                 ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, null);
-                                itemTransferred = true;
                                 sourceItem.DecreaseStack(transferAmount);
                                 break;
                             }
