@@ -5,153 +5,107 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Serialization;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public readonly partial struct Pattern : TagSerializable
+    public partial class Pattern : TagSerializable
     {
-        public string ToJSON(bool includeColorFunctions = false, bool includeNonModifiableColors = false) => ToJObject(includeColorFunctions, includeNonModifiableColors).ToString(Formatting.Indented);
-
-        public JObject ToJObject(bool includeColorFunctions = true, bool includeNonModifiableColors = false)
+        public string ToJSON() => ToJObject().ToString(Formatting.Indented);
+        public JObject ToJObject()
         {
-            JObject jObject = new()
+            return new JObject
             {
-                ["patternName"] = Name,
+                ["name"] = Name,
                 ["context"] = Context,
-                ["texturePath"] = texture.Name,
-                ["iconPath"] = iconTexture.Name
+                ["profile"] = Profile,
+                ["texturePath"] = texturePath,
+                ["iconPath"] = iconPath,
+                ["colorData"] = new JArray(ColorData.Select(kvp =>
+                {
+                    return new JObject
+                    {
+                        ["key"] = kvp.Key.GetHex(),
+                        ["value"] = kvp.Value.ToJObject()
+                    };
+                }))
             };
-
-            JArray colorDataArray = new();
-            foreach (var colorData in ColorData)
-            {
-                JObject colorDataObject = new();
-
-                if (colorData.HasColorFunction)
-                {
-                    if (includeColorFunctions)
-                    {
-                        colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
-                        colorDataObject["parameters"] = new JArray(colorData.ColorFunction.Parameters);
-                    }
-                }
-                else
-                {
-                    if (includeNonModifiableColors || colorData.IsUserModifiable)
-                    {
-                        colorDataObject["color"] = colorData.Color.GetHex();
-
-                        if (!colorData.IsUserModifiable)
-                            colorDataObject["userModifiable"] = false;
-                    }
-                }
-
-                colorDataArray.Add(colorDataObject);
-            }
-
-            if (colorDataArray.Any(c => c.HasValues))
-                jObject["colorData"] = colorDataArray;
-
-            return jObject;
         }
-
 
         public static Pattern FromJSON(string json) => FromJObject(JObject.Parse(json));
-
         public static Pattern FromJObject(JObject jObject)
         {
-            string context = jObject.Value<string>("context");
-            string name = jObject.Value<string>("patternName");
-            string texturePath = jObject.Value<string>("texturePath");
-            string iconPath = jObject.Value<string>("iconPath");
-
-            if (string.IsNullOrEmpty(context) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(texturePath))
-                throw new SerializationException("Pattern JSON is missing required fields: 'context', 'name', or 'texturePath'.");
-
-            if (!PatternManager.TryGet(context, name, out Pattern pattern))
-                throw new SerializationException($"Pattern '{name}' in context '{context}' is not recognized.");
-
-            JArray colorDataArray = jObject.Value<JArray>("colorData");
-            if (colorDataArray != null)
+            try
             {
-                var colorDatas = colorDataArray.Select(ParseColorData).ToArray();
-                return new Pattern(context, name, texturePath, iconPath, colorDatas);
-            }
+                string name = jObject["name"]?.Value<string>() ?? throw new ArgumentException("Missing 'name' field.");
+                string context = jObject["context"]?.Value<string>() ?? throw new ArgumentException("Missing 'context' field.");
+                string profile = jObject["profile"]?.Value<string>() ?? throw new ArgumentException("Missing 'profile' field.");
+                string texturePath = jObject["texturePath"]?.Value<string>();
+                string iconPath = jObject["iconPath"]?.Value<string>();
 
-            return new Pattern(context, name, texturePath, iconPath);
+                var colorData = jObject["colorData"]?.OfType<JObject>().Select(entry =>
+                {
+                    string keyHex = entry["key"]?.Value<string>() ?? throw new ArgumentException("Missing 'key' in colorData.");
+                    if (!Utility.TryGetColorFromHex(keyHex, out Color key))
+                        throw new ArgumentException($"Invalid color key: {keyHex}");
+
+                    var value = PatternColorData.FromJObject(entry["value"] as JObject);
+                    return new KeyValuePair<Color, PatternColorData>(key, value);
+
+                }).ToDictionary() ?? new Dictionary<Color, PatternColorData>();
+
+                return new Pattern(name, context, profile, texturePath, iconPath, colorData);
+            }
+            catch (Exception ex)
+            {
+                throw new SerializationException("Error deserializing Pattern from JObject.", ex);
+            }
         }
-
-        private static PatternColorData ParseColorData(JToken colorDataToken)
-        {
-            if (colorDataToken is not JObject colorDataObject)
-                return new PatternColorData(); 
-
-            string colorHex = colorDataObject.Value<string>("color");
-            if (!string.IsNullOrEmpty(colorHex) && Utility.TryGetColorFromHex(colorHex, out Color color))
-            {
-                bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
-                return new PatternColorData(color, userModifiable);
-            }
-
-            string colorFunctionName = colorDataObject.Value<string>("colorFunction");
-            if (!string.IsNullOrEmpty(colorFunctionName))
-            {
-                var parametersArray = colorDataObject["parameters"] as JArray;
-                var parameters = parametersArray?.ToObjectRecursive<object>() ?? Array.Empty<object>();
-
-                return new PatternColorData(ColorFunction.CreateByName(colorFunctionName, parameters));
-            }
-
-            return new PatternColorData();
-        }
-
 
         public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
         public TagCompound SerializeData()
         {
-            TagCompound tag = new()
+            return new TagCompound
             {
-                [nameof(Name)] = Name,
-                [nameof(Context)] = Context,
-                [nameof(ColorData)] = ColorData.ToList()
+                ["Name"] = Name,
+                ["Context"] = Context,
+                ["Profile"] = Profile,
+                ["TexturePath"] = texturePath,
+                ["IconPath"] = iconPath,
+                ["ColorData"] = ColorData.Select(kvp => new TagCompound
+                {
+                    ["Key"] = kvp.Key.PackedValue,
+                    ["Value"] = kvp.Value
+                }).ToList()
             };
-
-            return tag;
         }
 
         public static Pattern DeserializeData(TagCompound tag)
         {
-            string name = "";
-            string moduleName = "";
-            Pattern pattern;
-
             try
             {
-                if (tag.ContainsKey(nameof(Name)))
-                    name = tag.GetString(nameof(Name));
+                string name = tag.GetString("Name");
+                string context = tag.GetString("Context");
+                string profile = tag.GetString("Profile");
+                string texturePath = tag.GetString("TexturePath");
+                string iconPath = tag.GetString("IconPath");
 
-                if (tag.ContainsKey(nameof(Context)))
-                    moduleName = tag.GetString(nameof(Context));
+                var colorData = tag.GetList<TagCompound>("ColorData")
+                    .ToDictionary(
+                        entry => new Color { PackedValue = entry.Get<uint>("Key") },
+                        entry => entry.Get<PatternColorData>("Value")
+                    );
 
-                pattern = PatternManager.Get(moduleName, name);
-
-                if (tag.ContainsKey(nameof(ColorData)))
-                    pattern = pattern.WithColorData(tag.GetList<PatternColorData>(nameof(ColorData)).ToArray());
-
-                return pattern;
+                return new Pattern(name, context, profile, texturePath, iconPath, colorData);
             }
-            catch
+            catch (Exception ex)
             {
-                string message = "Failed to deserialize pattern:\n";
-                message += "\tName: " + (string.IsNullOrEmpty(name) ? "Unknown" : name) + ", ";
-                message += "\tModule: " + (string.IsNullOrEmpty(moduleName) ? "Unknown" : moduleName);
-                throw new SerializationException(message);
+                throw new SerializationException("Error deserializing Pattern from TagCompound.", ex);
             }
         }
-
     }
 }

@@ -2,6 +2,7 @@ using Macrocosm.Common.Enums;
 using Microsoft.Xna.Framework;
 using System;
 using System.Globalization;
+using System.Runtime.InteropServices;
 using Terraria;
 
 namespace Macrocosm.Common.Utils
@@ -130,6 +131,12 @@ namespace Macrocosm.Common.Utils
         }
 
         #endregion
+
+        public static float ColorDistance(Color color1, Color color2)
+        {
+            Vector3 dist = color1.ToVector3() - color2.ToVector3();
+            return dist.Length();
+        }
 
         public static void ManipulateColor(ref Color color, byte amount)
         {

@@ -24,11 +24,8 @@ namespace Macrocosm.Content.Rockets
         {
             if (item.ModItem is PatternDesign patternDesign)
             {
-                foreach (var (moduleName, patternName) in patternDesign.Patterns)
-                {
-                    if (PatternManager.IsUnlocked(moduleName, patternName))
-                        return true;
-                }
+                if (PatternManager.IsUnlocked(patternDesign.PatternName))
+                    return true;
             }
 
             return false;
@@ -46,11 +43,19 @@ namespace Macrocosm.Content.Rockets
                 module.Detail = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Detail;
                 module.Pattern = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Pattern;
 
-                foreach (PatternColorData data in module.Pattern.ColorData)
+                foreach (var data in module.Pattern.ColorData.Values)
+                {
                     if (data.Color.A > 0)
+                    {
                         for (int i = 0; i < 20; i++)
-                            Dust.NewDustDirect(module.Position, module.Width, module.Height, DustID.TintablePaint, newColor: data.Color.WithAlpha(220), Scale: Main.rand.NextFloat(0.2f, 1f));
-            }
+                        {
+                            Dust.NewDustDirect(module.Position, module.Width, module.Height, DustID.TintablePaint,
+                                newColor: data.Color.WithAlpha(220),
+                                Scale: Main.rand.NextFloat(0.2f, 1f));
+                        }
+                    }
+                }
+        }
 
             if (sync)
                 SyncCustomizationData();
@@ -66,7 +71,7 @@ namespace Macrocosm.Content.Rockets
             foreach (var module in AvailableModules)
             {
                 module.Detail = default;
-                module.Pattern = default;
+                module.Pattern = PatternManager.Get(module.Name, "Basic");
             }
 
             SyncCustomizationData();

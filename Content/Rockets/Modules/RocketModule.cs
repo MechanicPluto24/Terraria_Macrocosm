@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public RocketModule()
         {
             Detail = default;
-            Pattern = PatternManager.TryGet(Name, "Basic", out var pattern) ? pattern : default;
+            Pattern = PatternManager.Get(Name, "Basic");
         }
 
         public void SetRocket(Rocket value) => rocket = value;
@@ -109,14 +109,9 @@ namespace Macrocosm.Content.Rockets.Modules
                     // Change sampler state for proper alignment at all zoom levels 
                     Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
-                    //Pass the color mask keys as Vector3s and configured colors as Vector4s
-                    List<Vector4> colors = new();
-                    for (int i = 0; i < Customization.Pattern.MaxColorCount; i++)
-                        colors.Add((Vector4)this.Pattern.GetColor(i).ToVector4());
-
-                    effect.Parameters["uColorCount"].SetValue(Customization.Pattern.MaxColorCount);
-                    effect.Parameters["uColorKey"].SetValue(Customization.Pattern.ColorKeys);
-                    effect.Parameters["uColor"].SetValue(colors.ToArray());
+                    effect.Parameters["uColorCount"].SetValue(Pattern.ColorCount);
+                    effect.Parameters["uColorKey"].SetValue(Pattern.Keys);
+                    effect.Parameters["uColor"].SetValue(Pattern.Colors);
                     effect.Parameters["uSampleBrightness"].SetValue(true);
                 }
 
@@ -125,7 +120,6 @@ namespace Macrocosm.Content.Rockets.Modules
                     // Pass the detail to the shader via the S2 register
                     Main.graphics.GraphicsDevice.Textures[2] = Detail.Texture.Value;
                     Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointClamp;
-
                 }
 
                 spriteBatch.End();
