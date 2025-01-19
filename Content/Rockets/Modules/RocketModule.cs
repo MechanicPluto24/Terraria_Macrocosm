@@ -40,7 +40,6 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public Pattern Pattern { get; set; }
         public string PatternContext => Name;
-        public IEnumerable<Pattern> AvailablePatterns => CustomizationStorage.GetUnlockedPatterns(PatternContext);
 
         public bool HasPattern => Pattern != default;
         public bool HasDetail => Detail != default;
@@ -74,7 +73,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public RocketModule()
         {
             Detail = default;
-            Pattern = CustomizationStorage.TryGetPattern(Name, "Basic", out var pattern) ? pattern : default;
+            Pattern = PatternManager.TryGet(Name, "Basic", out var pattern) ? pattern : default;
         }
 
         public void SetRocket(Rocket value) => rocket = value;

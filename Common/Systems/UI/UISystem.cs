@@ -230,7 +230,6 @@ namespace Macrocosm.Common.Systems.UI
             {
                 //if(DebugModeActive) {
                 UITheme.Reload();
-                CustomizationStorage.Reset();
                 // }
 
                 ResetUI();

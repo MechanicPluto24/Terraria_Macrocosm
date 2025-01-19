@@ -11,7 +11,6 @@ namespace Macrocosm.Common.Customization
     {
         public string PatternContext { get; }
         public Pattern Pattern { get; set; }
-        public IEnumerable<Pattern> AvailablePatterns { get; }
     }
 
 }

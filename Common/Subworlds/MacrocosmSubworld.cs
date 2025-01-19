@@ -335,7 +335,8 @@ namespace Macrocosm.Common.Subworlds
             WorldFlags.SaveData(data);
             RocketManager.SaveData(data);
             LaunchPadManager.SaveData(data);
-            CustomizationStorage.SaveData(data);
+            PatternManager.SaveData(data);
+            //CustomizationSystem.SaveData(data);
             TownNPCSystem.SaveData(data);
 
             SubworldSystem.CopyWorldData($"{nameof(Macrocosm)}:{nameof(data)}", data);
@@ -348,7 +349,8 @@ namespace Macrocosm.Common.Subworlds
             WorldFlags.LoadData(data);
             RocketManager.LoadData(data);
             LaunchPadManager.LoadData(data);
-            CustomizationStorage.LoadData(data);
+            PatternManager.LoadData(data);
+            //CustomizationSystem.LoadData(data);
             TownNPCSystem.LoadData(data);
         }
 

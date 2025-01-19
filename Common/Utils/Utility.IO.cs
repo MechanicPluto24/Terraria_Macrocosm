@@ -1,6 +1,8 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
@@ -17,7 +19,7 @@ namespace Macrocosm.Common.Utils
 
         public static void PrettyPrintJSON(ref string text)
         {
-            string[] array = text.Split(new string[1] { "\r\n" }, StringSplitOptions.None);
+            string[] array = text.Split(["\r\n"], StringSplitOptions.None);
             foreach (string text2 in array)
             {
                 if (text2.Contains(": {"))
@@ -50,6 +52,24 @@ namespace Macrocosm.Common.Utils
             }
 
             return result.ToArray();
+        }
+
+        /// <summary>
+        /// Parses a JSON file stream into a JObject or JArray based on its root structure.
+        /// </summary>
+        public static JToken ParseJSONFromStream(Stream stream)
+        {
+            using var reader = new StreamReader(stream);
+            string jsonText = reader.ReadToEnd();
+            return JToken.Parse(jsonText);
+        }
+
+        /// <summary>
+        /// Parses a JSON file directly into an object.
+        /// </summary>
+        public static T ParseJSONToObject<T>(Stream stream)
+        {
+            return ParseJSONFromStream(stream).ToObject<T>();
         }
     }
 }

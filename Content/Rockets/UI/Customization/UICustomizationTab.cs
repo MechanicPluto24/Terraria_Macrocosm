@@ -494,7 +494,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             {
                 SoundEngine.PlaySound(SoundID.MenuTick);
                 foreach (var (moduleName, patternName) in patternDesign.Patterns)
-                    CustomizationStorage.SetPatternUnlockedStatus(moduleName, patternName, unlockedState: true);
+                    PatternManager.SetUnlocked(moduleName, patternName, true);
                 ItemInUnlockableSlot.TurnToAir();
                 RefreshPatternConfigPanel();
             }
@@ -580,7 +580,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             {
                 foreach (var module in CustomizationDummy.AvailableModules)
                 {
-                    if (CustomizationStorage.TryGetPattern(module.Name, icon.Pattern.Name, out Pattern defaultPattern))
+                    if (PatternManager.TryGet(module.Name, icon.Pattern.Name, out Pattern defaultPattern))
                     {
                         var colorData = defaultPattern.ColorData[0].WithUserColor(module.Pattern.ColorData[0].Color);
                         var newPattern = defaultPattern.WithColorData(colorData);
@@ -590,7 +590,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             }
             else
             {
-                if (CustomizationStorage.TryGetPattern(CurrentModule.Name, icon.Pattern.Name, out Pattern defaultPattern))
+                if (PatternManager.TryGet(CurrentModule.Name, icon.Pattern.Name, out Pattern defaultPattern))
                 {
                     var colorData = defaultPattern.ColorData[0].WithUserColor(CurrentModule.Pattern.ColorData[0].Color);
                     var newPattern = defaultPattern.WithColorData(colorData);
@@ -684,7 +684,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
                     if (currentModulePattern.Name == currentPatternIcon.Pattern.Name)
                     {
-                        var defaultPattern = CustomizationStorage.GetPattern(module.Name, currentModulePattern.Name);
+                        var defaultPattern = PatternManager.Get(module.Name, currentModulePattern.Name);
                         module.Pattern = defaultPattern;
                         currentPatternIcon.Pattern = defaultPattern;
                     }
@@ -692,7 +692,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             }
             else
             {
-                var defaultPattern = CustomizationStorage.GetPattern(CurrentModule.Name, CurrentModule.Pattern.Name);
+                var defaultPattern = PatternManager.Get(CurrentModule.Name, CurrentModule.Pattern.Name);
                 CurrentModule.Pattern = defaultPattern;
                 currentPatternIcon.Pattern = defaultPattern;
             }
@@ -1286,7 +1286,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             };
             listPanel.SetPadding(0f);
 
-            var patterns = CustomizationStorage.GetUnlockedPatterns(moduleName);
+            var patterns = PatternManager.GetAllUnlocked(moduleName);
             int count = patterns.Count;
 
             int iconsPerRow = 9;
