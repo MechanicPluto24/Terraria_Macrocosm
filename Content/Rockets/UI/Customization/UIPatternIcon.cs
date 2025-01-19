@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -52,20 +53,16 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             Effect effect = colorMaskShading.Value;
 
             // Pass the pattern icon to the shader via the S1 register
-            Main.graphics.GraphicsDevice.Textures[1] = Pattern.IconTexture.Value;
+            Main.graphics.GraphicsDevice.Textures[1] = Pattern.Icon.Value;
 
             // Change sampler state for proper alignment at all UI scales 
             SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[1];
             Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
-            //Pass the color mask keys as Vector3s and configured colors as Vector4s
-            List<Vector4> colors = new();
-            for (int i = 0; i < Pattern.MaxColorCount; i++)
-                colors.Add(Pattern.GetColor(i).ToVector4());
 
-            effect.Parameters["uColorCount"].SetValue(Pattern.MaxColorCount);
-            effect.Parameters["uColorKey"].SetValue(Pattern.ColorKeys);
-            effect.Parameters["uColor"].SetValue(colors.ToArray());
+            effect.Parameters["uColorCount"].SetValue(Pattern.ColorCount);
+            effect.Parameters["uColorKey"].SetValue(Pattern.Keys);
+            effect.Parameters["uColor"].SetValue(Pattern.Colors);
             effect.Parameters["uSampleBrightness"].SetValue(false);
 
             state.SaveState(spriteBatch);

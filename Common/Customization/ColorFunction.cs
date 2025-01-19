@@ -2,109 +2,111 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace Macrocosm.Common.Customization
 {
     public class ColorFunction
     {
-        public string Name { get; } = "";
+        public string Name { get; }
+        public object[] Parameters { get; }
 
-        public bool HasParameters => Parameters is not null && Parameters.Length > 0;
-        public object[] Parameters { get; private set; }
+        private readonly Func<Dictionary<Color, Color>, object[], Color> function;
 
-        private readonly Func<Color[], Color> function;
-
-        /// <summary> Creates a new pattern dynamic color. Use this for unnamed color functions, not unlockable. </summary>
-        /// <param name="function"> The function </param>
-        public ColorFunction(Func<Color[], Color> function)
+        private ColorFunction(string name, Func<Dictionary<Color, Color>, object[], Color> function, object[] parameters)
         {
-            this.function = function;
-        }
-
-        /// <summary>
-        /// Creates a new pattern dynamic color. Use this for unlockable dynamic colors.
-        /// </summary>
-        /// <param name="function"> The function </param>
-        /// <param name="name"> The dynamic color name </param>
-        public ColorFunction(Func<Color[], Color> function, string name)
-        {
-            this.function = function;
             Name = name;
+            this.function = function ?? throw new ArgumentNullException(nameof(function));
+            Parameters = parameters ?? Array.Empty<object>();
         }
 
-        /// <summary> Invokes the color function on an input array. </summary>
-        public Color Invoke(Color[] inputColors) => function(inputColors);
-
-        public static ColorFunction CreateByName(string name) => CreateByName(name, Array.Empty<object>());
-        public static ColorFunction CreateByName(string name, object[] parameters)
+        public Color Invoke(Dictionary<Color, Color> availableColors)
         {
             try
             {
-                return name switch
-                {
-                    "Lerp" or "lerp" => CreateLerpFunction(Convert.ToInt32(parameters[0]), Convert.ToInt32(parameters[1]), Convert.ToSingle(parameters[2])),
-                    "Map" or "map" => CreateMapFunction(Convert.ToInt32(parameters[0])),
-                    _ => throw new ArgumentException($"Unknown function name: {name}")
-                };
+                return function(availableColors, Parameters);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                LogImportError(ex.Message);
-                return CreateMapFunction(0);
-            }
-            catch (Exception ex) when (ex is NullReferenceException)
-            {
-                LogImportError($"Error creating function '{name}', expected parameters not provided.");
-                return CreateMapFunction(0);
-            }
-            catch (Exception ex) when (ex is IndexOutOfRangeException or InvalidCastException)
-            {
-                string parameterString = string.Join(", ", parameters.Select(p => p.ToString()));
-                LogImportError($"Error creating function '{name}' with parameters: {parameterString}");
-                return CreateMapFunction(0);
+                LogError($"Error invoking ColorFunction '{Name}': {ex.Message}");
+                return default;
             }
         }
-        public static ColorFunction CreateByName(string name, string[] parameters)
+
+        public static ColorFunction CreateByName(string name) => CreateByName(name, Array.Empty<object>());
+
+        public static ColorFunction CreateByName(string name, object[] parameters)
         {
-            List<object> objects = new();
-            foreach (var parameter in parameters)
+            Macrocosm.Instance.Logger.Info($"Creating ColorFunction: {name} with parameters: {string.Join(", ", parameters)}");
+            switch (name.ToLower())
             {
-                if (int.TryParse(parameter, out int intValue))
-                    objects.Add(intValue);
-                else if (float.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out float floatValue))
-                    objects.Add(floatValue);
-                else if (double.TryParse(parameter, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out double doubleValue))
-                    objects.Add(doubleValue);
-            }
+                case "lerp":
+                    return CreateLerpFunction(parameters);
 
-            return CreateByName(name, objects.ToArray());
+                default:
+                    LogError($"Unknown ColorFunction name: {name}");
+                    return new ColorFunction(name, (_, _) => Color.Transparent, Array.Empty<object>());
+            }
         }
 
-        private static void LogImportError(string message)
+        private static ColorFunction CreateLerpFunction(object[] parameters)
+        {
+            if (parameters.Length != 3)
+            {
+                LogError("Lerp function requires exactly 3 parameters: [key1, key2, amount].");
+                return new ColorFunction("lerp", (_, _) => Color.Transparent, parameters);
+            }
+
+            var parsedParams = ParseParameters(parameters.Select(p => p.ToString()).ToArray());
+            if (parsedParams.Length != 3 || parsedParams[0] is not Color key1 || parsedParams[1] is not Color key2 || parsedParams[2] is not float amount || amount < 0f || amount > 1f)
+            {
+                LogError("Lerp function requires valid parameters: [Color key1, Color key2, float amount (0-1)].");
+                return new ColorFunction("lerp", (_, _) => Color.Transparent, parameters);
+            }
+
+            return new ColorFunction("lerp", (colors, args) =>
+            {
+                if (!colors.TryGetValue((Color)args[0], out var color1))
+                {
+                    LogError($"Lerp: Color key not found: {args[0]}");
+                    return Color.Transparent;
+                }
+
+                if (!colors.TryGetValue((Color)args[1], out var color2))
+                {
+                    LogError($"Lerp: Color key not found: {args[1]}");
+                    return Color.Transparent;
+                }
+
+                return Color.Lerp(color1, color2, (float)args[2]);
+            }, parameters);
+        }
+
+        private static object[] ParseParameters(string[] parameters)
+        {
+            return parameters.Select<string, object>(param =>
+            {
+                if (int.TryParse(param, out int intValue))
+                    return intValue;
+
+                if (double.TryParse(param, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleValue))
+                    return doubleValue;
+
+                if (float.TryParse(param, NumberStyles.Any, CultureInfo.InvariantCulture, out float floatValue))
+                    return floatValue;
+
+                if (Utility.TryGetColorFromHex(param, out Color colorValue))
+                    return colorValue;
+
+                return param;
+            }).ToArray();
+        }
+
+        private static void LogError(string message)
         {
             Utility.Chat(message, Color.Orange);
             Macrocosm.Instance.Logger.Error(message);
-        }
-
-        private static ColorFunction CreateMapFunction(int index)
-        {
-            if (index < 0 || index >= 8) throw new ArgumentException($"Index out of bounds: {index}");
-            return new((colors) => colors[index], "Map")
-            {
-                Parameters = [index]
-            };
-        }
-
-        private static ColorFunction CreateLerpFunction(int index1, int index2, float amount)
-        {
-            if (index1 < 0 || index1 >= 8) throw new ArgumentException($"Index out of bounds: {index1}");
-            if (index2 < 0 || index2 >= 8) throw new ArgumentException($"Index out of bounds: {index2}");
-            var colorFunc = new ColorFunction((colors) => Color.Lerp(colors[index1], colors[index2], amount), "Lerp")
-            {
-                Parameters = [index1, index2, amount]
-            };
-            return colorFunc;
         }
     }
 }

@@ -21,6 +21,10 @@ namespace Macrocosm.Common.DataStructures
 
         public int Length => Data.Length;
 
+        /// <summary>
+        /// Example: Macrocosm.Instance.GetFileStream(path/to/file)
+        /// <br/> The path should exclude the mod name, and have a .rawimg extension
+        /// </summary>
         public static RawTexture FromStream(Stream stream)
         {
             byte[] colorBytes = ImageIO.ReadRaw(stream, out int width, out int height);

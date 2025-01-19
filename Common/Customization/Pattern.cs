@@ -10,144 +10,102 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
-    public readonly partial struct Pattern
+    public partial class Pattern
     {
-        public readonly string Name { get; }
-        public readonly string Context { get; }
-        public readonly ImmutableArray<PatternColorData> ColorData { get; init; }
-        public readonly List<int> UserModifiableIndexes { get; init; } = new();
+        public string Name { get; set; }
+        public string Context { get; set; }
+        public string Profile { get; set; }
+        public Dictionary<Color, PatternColorData> ColorData { get; set; } = new();
 
-        public int UserModifiableColorCount => UserModifiableIndexes.Count;
-        public const int MaxColorCount = 8;
+        public Asset<Texture2D> Texture { get; set; }
+        private readonly string texturePath;
+        public Asset<Texture2D> Icon { get; set; }
+        private readonly string iconPath;
 
-        private readonly Asset<Texture2D> texture;
-        private readonly Asset<Texture2D> iconTexture;
-        public Asset<Texture2D> Texture => texture;
-        public Asset<Texture2D> IconTexture => iconTexture;
+        public Vector3[] Keys => ColorData.Keys.Select(c => c.ToVector3()).ToArray();
+        public Vector4[] Colors => ColorData.Select(kvp => GetColor(kvp.Key).ToVector4()).ToArray();
+        public int ColorCount => Math.Min(ColorData.Count, 64);
 
-        public Pattern(string context, string name, string texturePath, string iconPath, params PatternColorData[] defaultColorData)
+        public Pattern()
         {
-            Context = context;
-            Name = name;
-
-            var colorData = new PatternColorData[MaxColorCount];
-            Array.Fill(colorData, new PatternColorData());
-
-            for (int i = 0; i < defaultColorData.Length; i++)
-            {
-                if (defaultColorData[i].HasColorFunction)
-                {
-                    colorData[i] = new PatternColorData(defaultColorData[i].ColorFunction);
-                }
-                else
-                {
-                    colorData[i] = new PatternColorData(defaultColorData[i].Color, defaultColorData[i].IsUserModifiable);
-
-                    if (defaultColorData[i].IsUserModifiable)
-                    {
-                        UserModifiableIndexes.Add(i);
-                    }
-                }
-            }
-
-            ColorData = ImmutableArray.Create(colorData);
-
-            texture = ModContent.RequestIfExists<Texture2D>(texturePath, out var t) ? t : Macrocosm.EmptyTex;
-            iconTexture = ModContent.RequestIfExists<Texture2D>(iconPath, out var it) ? it : Macrocosm.EmptyTex;
+            Name = "";
+            Context = "";
+            Profile = "";
+            ColorData = new();
+            texturePath = Macrocosm.EmptyTexPath;
+            Texture = Macrocosm.EmptyTex;
+            iconPath = Macrocosm.EmptyTexPath;
+            Icon = Macrocosm.EmptyTex;
         }
 
-        public Color GetColor(int index)
+        public Pattern(string name, string context, string profile, string texturePath, string iconPath, Dictionary<Color, PatternColorData> defaultColorData)
         {
-            if (index >= 0 && index < MaxColorCount)
+            Name = name;
+            Context = context;
+            Profile = profile;
+
+            ColorData = defaultColorData.OrderBy(kv => kv.Key.PackedValue).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+            this.texturePath = texturePath;
+            Texture = ModContent.RequestIfExists<Texture2D>(texturePath, out var t) ? t : Macrocosm.EmptyTex;
+
+            this.iconPath = iconPath;
+            Icon = ModContent.RequestIfExists<Texture2D>(iconPath, out var it) ? it : Macrocosm.EmptyTex;
+        }
+
+        public Pattern Clone() => new(Name, Context, Profile, texturePath, iconPath, new Dictionary<Color, PatternColorData>(ColorData));
+
+        public Color GetColor(Color key)
+        {
+            if (ColorData.TryGetValue(key, out var data))
             {
-                if (ColorData[index].HasColorFunction)
+                if (data.HasColorFunction)
                 {
-                    var copy = this;
-                    Color[] otherColors = ColorData.Select((c, i) => (i == index || c.HasColorFunction) ? Color.Transparent : copy.GetColor(i)).ToArray();
-                    return ColorData[index].ColorFunction.Invoke(otherColors);
+                    var resolvedColors = ColorData
+                        .Where(kvp => kvp.Key != key && !kvp.Value.HasColorFunction)
+                        .ToDictionary(kvp => kvp.Key, kvp => GetColor(kvp.Key));
+                    return data.ColorFunction.Invoke(resolvedColors);
                 }
-                else
-                {
-                    return ColorData[index].Color;
-                }
+                return data.Color;
             }
+
             return Color.Transparent;
         }
 
-        public Pattern WithColor(int index, Color color, bool evenIfNotUserModifiable = false)
-        {
-            if (index < 0 || index >= MaxColorCount || (!evenIfNotUserModifiable && !ColorData[index].IsUserModifiable))
-                return this;
 
-            var updatedColorData = ColorData.ToArray();
-            updatedColorData[index] = updatedColorData[index].WithUserColor(color);
-            return this with { ColorData = ImmutableArray.Create(updatedColorData) };
+        public void SetColor(Color key, Color color, bool evenIfNotUserModifiable = false)
+        {
+            if (ColorData.TryGetValue(key, out var data) && (evenIfNotUserModifiable || data.IsUserModifiable))
+                ColorData[key] = data.WithUserColor(color);
         }
 
-        public Pattern WithColorFunction(int index, ColorFunction colorFunction)
+        public void SetColorFunction(Color key, ColorFunction colorFunction)
         {
-            if (index < 0 || index >= MaxColorCount || !ColorData[index].IsUserModifiable)
-                return this;
-
-            var updatedColorData = ColorData.ToArray();
-            updatedColorData[index] = updatedColorData[index].WithColorFunction(colorFunction);
-            return this with { ColorData = ImmutableArray.Create(updatedColorData) };
-        }
-
-        public Pattern WithColorData(ImmutableArray<PatternColorData> colorData)
-        {
-            return this with { ColorData = colorData };
-        }
-
-        public Pattern WithColorData(params PatternColorData[] colorData)
-        {
-            var updatedColorData = ColorData.ToArray();
-
-            for (int i = 0; i < colorData.Length; i++)
+            if (ColorData.TryGetValue(key, out PatternColorData value))
             {
-                if (colorData[i].HasColorFunction)
-                    updatedColorData[i] = ColorData[i].WithColorFunction(colorData[i].ColorFunction);
-                else
-                    updatedColorData[i] = ColorData[i].WithUserColor(colorData[i].Color);
+                var data = value;
+                if (data.IsUserModifiable)
+                {
+                    var updatedData = new Dictionary<Color, PatternColorData>(ColorData)
+                    {
+                        [key] = data.WithColorFunction(colorFunction)
+                    };
+                    ColorData = updatedData;
+                }
             }
-
-            return this with { ColorData = ImmutableArray.Create(updatedColorData) };
         }
 
         public override bool Equals(object obj)
         {
-            return obj is Pattern pattern &&
-                   Name == pattern.Name &&
-                   Context == pattern.Context &&
-                   ColorData.SequenceEqual(pattern.ColorData);
+            if (obj is not Pattern pattern)
+                return false;
+
+            if (Name != pattern.Name || Context != pattern.Context || Profile != pattern.Profile)
+                return false;
+
+            return ColorData.SequenceEqual(pattern.ColorData);
         }
 
-        public static bool operator ==(Pattern left, Pattern right)
-        {
-            return left.Equals(right);
-        }
-
-        public static bool operator !=(Pattern left, Pattern right)
-        {
-            return !(left == right);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Name, Context, ColorData);
-        }
-
-        /// <summary> Color mask keys </summary>
-        public static Vector3[] ColorKeys { get; } =
-        [
-            new Vector3(0f, 1f, 1f),     // Cyan
-			new Vector3(1f, 0f, 1f),     // Magenta
-			new Vector3(1f, 1f, 0f),     // Yellow  
-			new Vector3(0f, 1f, 0f),     // Green   
-			new Vector3(1f, 0f, 0f),     // Red
-			new Vector3(0f, 0f, 1f),     // Blue   
-			new Vector3(1f,.5f, 0f),     // Orange
-			new Vector3(0f,.5f, 1f)      // Azure
-		];
+        public override int GetHashCode() => HashCode.Combine(Name, Context, Profile, ColorData);
     }
 }
