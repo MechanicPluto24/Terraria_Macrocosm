@@ -583,7 +583,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                     if (PatternManager.TryGet(module.Name, icon.Pattern.Name, out Pattern defaultPattern))
                     {
                         var colorData = defaultPattern.ColorData[0].WithUserColor(module.Pattern.ColorData[0].Color);
-                        var newPattern = defaultPattern.WithColorData(colorData);
                         module.Pattern = newPattern;
                     }
                 }
