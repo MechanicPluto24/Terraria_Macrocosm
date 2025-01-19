@@ -12,62 +12,51 @@ namespace Macrocosm.Content.Rockets.Customization
 {
     public readonly partial struct Pattern
     {
-            public readonly string Name { get; }
-            public readonly string Context { get; } // Generalized context (replaces ModuleName)
+        public readonly string Name { get; }
+        public readonly string Context { get; }
+        public readonly ImmutableArray<PatternColorData> ColorData { get; init; }
+        public readonly List<int> UserModifiableIndexes { get; init; } = new();
 
-            public readonly ImmutableArray<PatternColorData> ColorData { get; init; }
-            public readonly List<int> UserModifiableIndexes { get; init; } = new();
+        public int UserModifiableColorCount => UserModifiableIndexes.Count;
+        public const int MaxColorCount = 8;
 
-            public int UserModifiableColorCount => UserModifiableIndexes.Count;
-            public const int MaxColorCount = 8;
+        private readonly Asset<Texture2D> texture;
+        private readonly Asset<Texture2D> iconTexture;
+        public Asset<Texture2D> Texture => texture;
+        public Asset<Texture2D> IconTexture => iconTexture;
 
-            public string TexturePath => $"Textures/Patterns/{Context}/{Name}";
-            public string IconTexturePath => $"Textures/Patterns/Icons/{Name}";
+        public Pattern(string context, string name, string texturePath, string iconPath, params PatternColorData[] defaultColorData)
+        {
+            Context = context;
+            Name = name;
 
-            private readonly Asset<Texture2D> texture;
-            private readonly Asset<Texture2D> iconTexture;
+            var colorData = new PatternColorData[MaxColorCount];
+            Array.Fill(colorData, new PatternColorData());
 
-            public Asset<Texture2D> Texture => texture;
-            public Asset<Texture2D> IconTexture => iconTexture;
-
-            public Pattern(string context, string name, params PatternColorData[] defaultColorData)
+            for (int i = 0; i < defaultColorData.Length; i++)
             {
-                Context = context; // Generalized context
-                Name = name;
-
-                var colorData = new PatternColorData[MaxColorCount];
-                Array.Fill(colorData, new PatternColorData());
-
-                for (int i = 0; i < defaultColorData.Length; i++)
+                if (defaultColorData[i].HasColorFunction)
                 {
-                    if (defaultColorData[i].HasColorFunction)
-                    {
-                        colorData[i] = new PatternColorData(defaultColorData[i].ColorFunction);
-                    }
-                    else
-                    {
-                        colorData[i] = new PatternColorData(defaultColorData[i].Color, defaultColorData[i].IsUserModifiable);
+                    colorData[i] = new PatternColorData(defaultColorData[i].ColorFunction);
+                }
+                else
+                {
+                    colorData[i] = new PatternColorData(defaultColorData[i].Color, defaultColorData[i].IsUserModifiable);
 
-                        if (defaultColorData[i].IsUserModifiable)
-                        {
-                            UserModifiableIndexes.Add(i);
-                        }
+                    if (defaultColorData[i].IsUserModifiable)
+                    {
+                        UserModifiableIndexes.Add(i);
                     }
                 }
-
-                ColorData = ImmutableArray.Create(colorData);
-
-                if (ModContent.RequestIfExists(TexturePath, out Asset<Texture2D> patternTexture))
-                    texture = patternTexture;
-                else
-                    texture = Macrocosm.EmptyTex;
-
-                if (ModContent.RequestIfExists(IconTexturePath, out Asset<Texture2D> patternIconTexture))
-                    iconTexture = patternIconTexture;
-                else
-                    iconTexture = Macrocosm.EmptyTex;
             }
-            public Color GetColor(int index)
+
+            ColorData = ImmutableArray.Create(colorData);
+
+            texture = ModContent.RequestIfExists<Texture2D>(texturePath, out var t) ? t : Macrocosm.EmptyTex;
+            iconTexture = ModContent.RequestIfExists<Texture2D>(iconPath, out var it) ? it : Macrocosm.EmptyTex;
+        }
+
+        public Color GetColor(int index)
         {
             if (index >= 0 && index < MaxColorCount)
             {
@@ -151,8 +140,8 @@ namespace Macrocosm.Content.Rockets.Customization
         /// <summary> Color mask keys </summary>
         public static Vector3[] ColorKeys { get; } =
         [
-            new Vector3(0f, 1f, 1f),     // Cyan (Rocket tip, booster tips, etc.)
-			new Vector3(1f, 0f, 1f),     // Magenta (The "background" of the pattern)
+            new Vector3(0f, 1f, 1f),     // Cyan
+			new Vector3(1f, 0f, 1f),     // Magenta
 			new Vector3(1f, 1f, 0f),     // Yellow  
 			new Vector3(0f, 1f, 0f),     // Green   
 			new Vector3(1f, 0f, 0f),     // Red

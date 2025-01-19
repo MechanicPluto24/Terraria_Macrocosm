@@ -20,7 +20,9 @@ namespace Macrocosm.Content.Rockets.Customization
             JObject jObject = new()
             {
                 ["patternName"] = Name,
-                ["context"] = Context
+                ["context"] = Context,
+                ["texturePath"] = texture.Name,
+                ["iconPath"] = iconTexture.Name
             };
 
             JArray colorDataArray = new();
@@ -35,10 +37,6 @@ namespace Macrocosm.Content.Rockets.Customization
                         colorDataObject["colorFunction"] = colorData.ColorFunction.Name;
                         colorDataObject["parameters"] = new JArray(colorData.ColorFunction.Parameters);
                     }
-                    else
-                    {
-                        colorDataObject = new JObject();
-                    }
                 }
                 else
                 {
@@ -49,72 +47,65 @@ namespace Macrocosm.Content.Rockets.Customization
                         if (!colorData.IsUserModifiable)
                             colorDataObject["userModifiable"] = false;
                     }
-                    else
-                    {
-                        colorDataObject = new JObject();
-                    }
                 }
 
                 colorDataArray.Add(colorDataObject);
             }
 
-            // Remove trailing empty JObjects
-            for (int i = colorDataArray.Count - 1; i >= 0; i--)
-            {
-                if (colorDataArray[i].Type == JTokenType.Object && !colorDataArray[i].HasValues)
-                    colorDataArray.RemoveAt(i);
-                else
-                    break;
-            }
-
-            jObject["colorData"] = colorDataArray;
+            if (colorDataArray.Any(c => c.HasValues))
+                jObject["colorData"] = colorDataArray;
 
             return jObject;
         }
+
 
         public static Pattern FromJSON(string json) => FromJObject(JObject.Parse(json));
 
         public static Pattern FromJObject(JObject jObject)
         {
-            string moduleName = jObject.Value<string>("moduleName");
+            string context = jObject.Value<string>("context");
+            string name = jObject.Value<string>("patternName");
+            string texturePath = jObject.Value<string>("texturePath");
+            string iconPath = jObject.Value<string>("iconPath");
 
-            if (!Rocket.ModuleNames.Contains(moduleName))
-                throw new SerializationException("Error: Invalid module name.");
+            if (string.IsNullOrEmpty(context) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(texturePath))
+                throw new SerializationException("Pattern JSON is missing required fields: 'context', 'name', or 'texturePath'.");
 
-            string patternName = jObject.Value<string>("patternName");
-
-            if (CustomizationStorage.Initialized && !CustomizationStorage.TryGetPattern(moduleName, patternName, out _))
-                throw new SerializationException("Error: Invalid pattern name.");
+            if (!PatternManager.TryGet(context, name, out Pattern pattern))
+                throw new SerializationException($"Pattern '{name}' in context '{context}' is not recognized.");
 
             JArray colorDataArray = jObject.Value<JArray>("colorData");
-            List<PatternColorData> colorDatas = new();
-
-            foreach (JObject colorDataObject in colorDataArray.Cast<JObject>())
+            if (colorDataArray != null)
             {
-                string colorHex = colorDataObject.Value<string>("color");
-                string colorFunction = colorDataObject.Value<string>("colorFunction");
-
-                if (!string.IsNullOrEmpty(colorFunction))
-                {
-                    JArray parameters = colorDataObject.Value<JArray>("parameters");
-                    colorDatas.Add(new PatternColorData(ColorFunction.CreateByName(colorFunction, parameters?.ToObjectRecursive<object>())));
-                }
-                else if (!string.IsNullOrEmpty(colorHex))
-                {
-                    bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
-
-                    if (Utility.TryGetColorFromHex(colorHex, out Color color))
-                        colorDatas.Add(new(color, userModifiable));
-                    else
-                        throw new SerializationException($"Error: Invalid color code: {colorHex}.");
-                }
-                else
-                {
-                    colorDatas.Add(new());
-                }
+                var colorDatas = colorDataArray.Select(ParseColorData).ToArray();
+                return new Pattern(context, name, texturePath, iconPath, colorDatas);
             }
 
-            return new Pattern(moduleName, patternName, colorDatas.ToArray());
+            return new Pattern(context, name, texturePath, iconPath);
+        }
+
+        private static PatternColorData ParseColorData(JToken colorDataToken)
+        {
+            if (colorDataToken is not JObject colorDataObject)
+                return new PatternColorData(); 
+
+            string colorHex = colorDataObject.Value<string>("color");
+            if (!string.IsNullOrEmpty(colorHex) && Utility.TryGetColorFromHex(colorHex, out Color color))
+            {
+                bool userModifiable = colorDataObject.Value<bool?>("userModifiable") ?? true;
+                return new PatternColorData(color, userModifiable);
+            }
+
+            string colorFunctionName = colorDataObject.Value<string>("colorFunction");
+            if (!string.IsNullOrEmpty(colorFunctionName))
+            {
+                var parametersArray = colorDataObject["parameters"] as JArray;
+                var parameters = parametersArray?.ToObjectRecursive<object>() ?? Array.Empty<object>();
+
+                return new PatternColorData(ColorFunction.CreateByName(colorFunctionName, parameters));
+            }
+
+            return new PatternColorData();
         }
 
 
@@ -146,7 +137,7 @@ namespace Macrocosm.Content.Rockets.Customization
                 if (tag.ContainsKey(nameof(Context)))
                     moduleName = tag.GetString(nameof(Context));
 
-                pattern = CustomizationStorage.GetPattern(moduleName, name);
+                pattern = PatternManager.Get(moduleName, name);
 
                 if (tag.ContainsKey(nameof(ColorData)))
                     pattern = pattern.WithColorData(tag.GetList<PatternColorData>(nameof(ColorData)).ToArray());

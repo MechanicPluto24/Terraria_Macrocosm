@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Rockets
             {
                 foreach (var (moduleName, patternName) in patternDesign.Patterns)
                 {
-                    if (CustomizationStorage.GetPatternUnlockedStatus(moduleName, patternName))
+                    if (PatternManager.IsUnlocked(moduleName, patternName))
                         return true;
                 }
             }
