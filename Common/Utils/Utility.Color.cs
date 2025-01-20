@@ -29,6 +29,7 @@ namespace Macrocosm.Common.Utils
             return "#" + color.Hex3().ToUpper();
         }
 
+        public static Color GetColorFromHex(string hexString) => TryGetColorFromHex(hexString, out Color color) ? color : default;
         public static bool TryGetColorFromHex(string hexString, out Color color)
         {
             if (hexString.StartsWith("#"))

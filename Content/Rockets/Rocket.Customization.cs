@@ -71,7 +71,7 @@ namespace Macrocosm.Content.Rockets
             foreach (var module in AvailableModules)
             {
                 module.Detail = default;
-                module.Pattern = PatternManager.Get(module.Name, "Basic");
+                module.Pattern = PatternManager.Get("Basic", module.Name);
             }
 
             SyncCustomizationData();

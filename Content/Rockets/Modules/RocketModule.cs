@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public RocketModule()
         {
             Detail = default;
-            Pattern = PatternManager.Get(Name, "Basic");
+            Pattern = PatternManager.Get("Basic", Name);
         }
 
         public void SetRocket(Rocket value) => rocket = value;
@@ -92,27 +92,16 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             // Load current pattern and apply shader 
             state.SaveState(spriteBatch);
-            SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1];
+            SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[12];
             SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2];
             if (SpecialDraw)
             {
-                // Load the coloring shader
-                colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
-                Effect effect = colorMaskShading.Value;
-
+                Effect effect = null;
                 if (HasPattern)
                 {
-                    // Pass the pattern to the shader via the S1 register
+                    effect = Pattern.GetEffect();
                     Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture.Value;
-                    Main.graphics.GraphicsDevice.Textures[2] = null;
-
-                    // Change sampler state for proper alignment at all zoom levels 
                     Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-                    effect.Parameters["uColorCount"].SetValue(Pattern.ColorCount);
-                    effect.Parameters["uColorKey"].SetValue(Pattern.Keys);
-                    effect.Parameters["uColor"].SetValue(Pattern.Colors);
-                    effect.Parameters["uSampleBrightness"].SetValue(true);
                 }
 
                 if (HasDetail)
@@ -133,7 +122,7 @@ namespace Macrocosm.Content.Rockets.Modules
                 spriteBatch.End();
                 spriteBatch.Begin(state);
 
-                // Clear the tex registers  
+                // Clear the tex register  
                 Main.graphics.GraphicsDevice.Textures[1] = null;
                 Main.graphics.GraphicsDevice.Textures[2] = null;
 

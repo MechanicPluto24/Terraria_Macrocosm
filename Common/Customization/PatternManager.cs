@@ -16,7 +16,8 @@ namespace Macrocosm.Common.Customization
 {
     public class PatternManager : ModSystem
     {
-        private static readonly Dictionary<string, Dictionary<string, Pattern>> patterns = new();
+        // Patterns by 
+        private static readonly Dictionary<(string name, string context, string profile), Pattern> patterns = new();
         private static readonly HashSet<string> unlockedPatterns = new();
 
         public override void Load()
@@ -33,57 +34,43 @@ namespace Macrocosm.Common.Customization
             unlockedPatterns.Clear();
         }
 
-        /// <summary> Gets a pattern by context and name. Profile is optional. Returns a dummy object if no match is found.  </summary>
-        public static Pattern Get(string context, string name, string profile = null)
+        /// <summary> Gets a pattern by name, context and profile. Returns a dummy object if no match is found. </summary>
+        public static Pattern Get(string name, string context, string profile = null)
         {
-            if (patterns.TryGetValue(context, out var profiles))
+            if (profile != null)
             {
-                // Try to get a specific profile
-                if (profile != null && profiles.TryGetValue(profile, out var specificPattern) && specificPattern.Name == name)
+                if (patterns.TryGetValue((name, context, profile), out var specificPattern))
                     return specificPattern.Clone();
-
-                // Fallback to the first profile matching the name
-                var firstMatchingPattern = profiles.Values.FirstOrDefault(p => p.Name == name);
-                return firstMatchingPattern?.Clone() ?? new();
             }
 
-            return new();
+            // Match first profile
+            var matchingPattern = patterns.Where(kvp => kvp.Key.name == name && kvp.Key.context == context).Select(kvp => kvp.Value).FirstOrDefault();
+            return matchingPattern?.Clone() ?? new Pattern();
         }
 
-        /// <summary> Tries to get a pattern by context and name. Profile is optional. </summary>
-        public static bool TryGet(string context, string name, out Pattern pattern, string profile = null)
+        /// <summary> Tries to get a pattern by name, context, and profile. </summary>
+        public static bool TryGet(string name, string context, out Pattern pattern, string profile = "default")
         {
-            if (patterns.TryGetValue(context, out var profiles))
-            {
-                if (profile != null && profiles.TryGetValue(profile, out var specificPattern) && specificPattern.Name == name)
-                {
-                    pattern = specificPattern.Clone();
-                    return true;
-                }
-
-                var firstMatchingPattern = profiles.Values.FirstOrDefault(p => p.Name == name);
-                if (firstMatchingPattern != null)
-                {
-                    pattern = firstMatchingPattern.Clone();
-                    return true;
-                }
-            }
-
-            pattern = new();
-            return false;
+            pattern = Get(name, context, profile);
+            return !string.IsNullOrEmpty(pattern.Name);
         }
 
-        /// <summary> Gets all patterns with the specified name across all contexts. </summary>
-        public static IEnumerable<Pattern> GetAllByName(string name) => patterns.Values
-                .SelectMany(profiles => profiles.Values)
-                .Where(pattern => pattern.Name == name)
-                .Select(pattern => pattern.Clone());
+        /// <summary> Gets all patterns with the specified name across all contexts and profiles. </summary>
+        public static IEnumerable<Pattern> GetAllByName(string name)
+        {
+            return patterns
+                .Where(kvp => kvp.Key.name == name)
+                .Select(kvp => kvp.Value.Clone());
+        }
 
-        /// <summary> Gets all unlocked patterns in the specified context.  </summary>
-        public static IEnumerable<Pattern> GetAllUnlocked(string context) => unlockedPatterns
-                .SelectMany(GetAllByName)
-                .Where(pattern => pattern.Context == context)
-                .Select(pattern => pattern.Clone());
+        /// <summary> Gets all unlocked patterns in the specified context. </summary>
+        public static IEnumerable<Pattern> GetAllUnlocked(string context)
+        {
+            return unlockedPatterns
+                .SelectMany(name => patterns
+                    .Where(kvp => kvp.Key.context == context && kvp.Key.name == name)
+                    .Select(kvp => kvp.Value.Clone()));
+        }
 
         public static bool IsUnlocked(string name) => unlockedPatterns.Contains(name);
 
@@ -110,7 +97,11 @@ namespace Macrocosm.Common.Customization
                     string folderPath = mpatternFile[..mpatternFile.LastIndexOf('/')];
 
                     var json = JObject.Parse(Utility.GetTextFromFile(mpatternFile));
+
+                    // "name" is the only data which is strictly required in the .mpattern files
                     string name = json["name"]?.Value<string>() ?? throw new Exception("Missing 'name' field.");
+
+                    // "iconPath" can either be specified, or defaults to an image named "icon.*" (not case sensitive) in the same folder as the .mpattern
                     string iconAssetFile = json["iconPath"]?.Value<string>();
                     if (string.IsNullOrEmpty(iconAssetFile))
                     {
@@ -123,44 +114,37 @@ namespace Macrocosm.Common.Customization
                             Macrocosm.Instance.Logger.Warn($"No icon found for pattern '{name}' in '{mpatternFile}'. Defaulting to empty texture.");
                     }
 
+                    // "unlockedByDefault" determines whether the pattern is readily available, or must be unlocked by in-game means
                     bool unlockedByDefault = json["unlockedByDefault"]?.Value<bool>() ?? true;
                     if (unlockedByDefault)
                         SetUnlocked(name, true);
 
-                    // Load a "default" profile if colorData is specified next to the other data, or is missing
-                    JObject profilesJson = json["profiles"] as JObject ?? new JObject
+                    // Look for other image next to the .mpattern
+                    var imageFiles = Mod.GetFileNames().Where(file => file.StartsWith(folderPath) && file.EndsWith(".rawimg") && file != iconAssetFile).ToList();
+                    foreach (var imageFile in imageFiles)
                     {
-                        ["default"] = new JObject { ["colorData"] = json["colorData"] ?? new JArray() }
-                    };
+                        string textureAssetPath = $"{Mod.Name}/{imageFile}".Replace(".rawimg", "");
+                        var rawTexture = RawTexture.FromStream(Macrocosm.Instance.GetFileStream(imageFile));
 
-                    var textureFiles = Mod.GetFileNames()
-                        .Where(file => file.StartsWith(folderPath) && file.EndsWith(".rawimg") && file != iconAssetFile)
-                        .ToList();
+                        // The "context" is determined by the image file name
+                        string context = Path.GetFileNameWithoutExtension(imageFile);
 
-                    foreach (var textureFile in textureFiles)
-                    {
-                        string context = Path.GetFileNameWithoutExtension(textureFile);
-                        var rawTexture = RawTexture.FromStream(Macrocosm.Instance.GetFileStream(textureFile));
-
-                        if (!patterns.ContainsKey(context))
-                            patterns[context] = new Dictionary<string, Pattern>();
-
-                        foreach (var profileEntry in profilesJson.Properties())
+                        // Assume a "profile" named "default" if colorData is specified outside of a profile, or is missing
+                        JObject profiles = json["profiles"] as JObject ?? new JObject { ["default"] = new JObject { ["colorData"] = json["colorData"] ?? new JArray() }};
+                        foreach (var profile in profiles.Properties())
                         {
-                            string profileName = profileEntry.Name;
-                            var colorDataJson = profileEntry.Value["colorData"] as JArray;
-                            var patternJson = new JObject
-                            {
-                                ["name"] = name,
-                                ["context"] = context,
-                                ["profile"] = profileName,
-                                ["texturePath"] = $"{Mod.Name}/{textureFile}".Replace(".rawimg", ""),
-                                ["iconPath"] = iconAssetFile,
-                                ["colorData"] = colorDataJson
-                            };
+                            // Load any user defined default color overrides
+                            JObject colorDataJson = profile.Value["colorData"] as JObject ?? new JObject();
+                            var colorData = colorDataJson.Properties()
+                                .Where(entry => Utility.TryGetColorFromHex(entry.Name, out var key))
+                                .Select(entry => new KeyValuePair<Color, PatternColorData>(Utility.GetColorFromHex(entry.Name), PatternColorData.FromJObject(entry.Value as JObject)))
+                                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-                            var pattern = Pattern.FromJObject(patternJson);
-                            patterns[context][profileName] = pattern;
+                            // Keys and default from the first MaxColors unique fully opaque colors 
+                            foreach (var color in rawTexture.GetUniqueColors(Pattern.MaxColors, maxDistance: 0.1f, c => c.A == 255))
+                                colorData.TryAdd(color, new PatternColorData(color));
+
+                            patterns[(name, context, profile.Name)] = new Pattern(name, context, profile.Name, textureAssetPath, iconAssetFile, colorData);
                         }
                     }
 
@@ -172,38 +156,6 @@ namespace Macrocosm.Common.Customization
             }
 
             LogLoadedPatterns();
-        }
-
-        private Pattern CreatePattern(string name, string context, string profile, string texturePath, string iconPath, RawTexture rawTexture, JArray colorDataJson)
-        {
-            var defaultColorData = GenerateDefaultColorData(rawTexture);
-            if (colorDataJson != null)
-            {
-                foreach (var entry in colorDataJson.OfType<JObject>())
-                {
-                    string colorHex = entry["key"]?.Value<string>();
-                    if (Utility.TryGetColorFromHex(colorHex, out var color) && defaultColorData.ContainsKey(color))
-                    {
-                        var patternColorData = PatternColorData.FromJObject(entry);
-                        defaultColorData[color] = patternColorData;
-                    }
-                }
-            }
-
-            return new Pattern(name, context, profile, texturePath, iconPath, defaultColorData);
-        }
-
-
-        private static Dictionary<Color, PatternColorData> GenerateDefaultColorData(RawTexture rawTexture)
-        {
-            var data = new Dictionary<Color, PatternColorData>();
-            foreach (var pixel in rawTexture.Data)
-            {
-                if (pixel.A == 255 && !data.Keys.Any(k => Utility.ColorDistance(k, pixel) < 0.1f))
-                    data[pixel] = new PatternColorData(pixel);
-            }
-
-            return data;
         }
 
         public override void SaveWorldData(TagCompound tag) => SaveData(tag);
@@ -228,16 +180,11 @@ namespace Macrocosm.Common.Customization
         private static void LogLoadedPatterns()
         {
             string logString = "Loaded Patterns:\n";
-            foreach (var (context, profiles) in patterns)
+            foreach (var ((name, context, profile), pattern) in patterns)
             {
-                logString += $"- Context: {context}\n";
-                foreach (var (profile, pattern) in profiles)
-                {
-                    bool unlocked = unlockedPatterns.Contains(pattern.Name);
-                    logString += $"\tProfile: {profile}, Name: {pattern.Name}, Unlocked: {unlocked}\n";
-                }
+                bool unlocked = unlockedPatterns.Contains(pattern.Name);
+                logString += $"- Name: {name}, Context: {context}, Profile: {profile}, Unlocked: {unlocked}\n";
             }
-
             Macrocosm.Instance.Logger.Info(logString);
         }
     }

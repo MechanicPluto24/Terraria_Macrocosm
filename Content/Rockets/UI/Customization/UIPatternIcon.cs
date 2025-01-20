@@ -17,8 +17,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
     public class UIPatternIcon : UIPanelIconButton, IFocusable
     {
         public Pattern Pattern { get; set; }
-
-
         private Asset<Texture2D> panel;
         public UIPatternIcon(Pattern pattern)
         : base
@@ -48,22 +46,11 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             var dimensions = GetOuterDimensions();
 
-            // Load the coloring shader
-            colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
-            Effect effect = colorMaskShading.Value;
-
-            // Pass the pattern icon to the shader via the S1 register
-            Main.graphics.GraphicsDevice.Textures[1] = Pattern.Icon.Value;
-
-            // Change sampler state for proper alignment at all UI scales 
+            Effect effect = Pattern.GetEffect();
             SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[1];
+
+            Main.graphics.GraphicsDevice.Textures[1] = Pattern.Icon.Value;
             Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-
-            effect.Parameters["uColorCount"].SetValue(Pattern.ColorCount);
-            effect.Parameters["uColorKey"].SetValue(Pattern.Keys);
-            effect.Parameters["uColor"].SetValue(Pattern.Colors);
-            effect.Parameters["uSampleBrightness"].SetValue(false);
 
             state.SaveState(spriteBatch);
             spriteBatch.End();
@@ -73,11 +60,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             spriteBatch.End();
             spriteBatch.Begin(state);
-
-            // Clear the tex registers  
             Main.graphics.GraphicsDevice.Textures[1] = null;
-
-            // Restore the sampler states
             Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
         }
     }

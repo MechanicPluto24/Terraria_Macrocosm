@@ -68,16 +68,10 @@ namespace Macrocosm.Common.Customization
             return new ColorFunction("lerp", (colors, args) =>
             {
                 if (!colors.TryGetValue((Color)args[0], out var color1))
-                {
-                    LogError($"Lerp: Color key not found: {args[0]}");
                     return Color.Transparent;
-                }
 
                 if (!colors.TryGetValue((Color)args[1], out var color2))
-                {
-                    LogError($"Lerp: Color key not found: {args[1]}");
                     return Color.Transparent;
-                }
 
                 return Color.Lerp(color1, color2, (float)args[2]);
             }, parameters);
