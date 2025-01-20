@@ -1,11 +1,11 @@
-﻿using Macrocosm.Common.Customization;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Terraria.ModLoader.IO;
@@ -24,14 +24,7 @@ namespace Macrocosm.Content.Rockets.Customization
                 ["profile"] = Profile,
                 ["texturePath"] = texturePath,
                 ["iconPath"] = iconPath,
-                ["colorData"] = new JArray(ColorData.Select(kvp =>
-                {
-                    return new JObject
-                    {
-                        ["key"] = kvp.Key.GetHex(),
-                        ["value"] = kvp.Value.ToJObject()
-                    };
-                }))
+                ["colorData"] = new JObject(ColorData.Select(kvp => new JProperty(kvp.Key.GetHex(), kvp.Value.ToJObject())))
             };
         }
 
@@ -46,16 +39,12 @@ namespace Macrocosm.Content.Rockets.Customization
                 string texturePath = jObject["texturePath"]?.Value<string>();
                 string iconPath = jObject["iconPath"]?.Value<string>();
 
-                var colorData = jObject["colorData"]?.OfType<JObject>().Select(entry =>
-                {
-                    string keyHex = entry["key"]?.Value<string>() ?? throw new ArgumentException("Missing 'key' in colorData.");
-                    if (!Utility.TryGetColorFromHex(keyHex, out Color key))
-                        throw new ArgumentException($"Invalid color key: {keyHex}");
-
-                    var value = PatternColorData.FromJObject(entry["value"] as JObject);
-                    return new KeyValuePair<Color, PatternColorData>(key, value);
-
-                }).ToDictionary() ?? new Dictionary<Color, PatternColorData>();
+                // Parse colorData as JObject
+                var colorDataJson = jObject["colorData"] as JObject ?? new JObject();
+                var colorData = colorDataJson.Properties()
+                    .Where(entry => Utility.TryGetColorFromHex(entry.Name, out var key))
+                    .Select(entry => new KeyValuePair<Color, PatternColorData>(Utility.GetColorFromHex(entry.Name), PatternColorData.FromJObject(entry.Value as JObject)))
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
                 return new Pattern(name, context, profile, texturePath, iconPath, colorData);
             }
@@ -65,47 +54,23 @@ namespace Macrocosm.Content.Rockets.Customization
             }
         }
 
+
         public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
 
         public TagCompound SerializeData()
         {
             return new TagCompound
             {
-                ["Name"] = Name,
-                ["Context"] = Context,
-                ["Profile"] = Profile,
-                ["TexturePath"] = texturePath,
-                ["IconPath"] = iconPath,
-                ["ColorData"] = ColorData.Select(kvp => new TagCompound
-                {
-                    ["Key"] = kvp.Key.PackedValue,
-                    ["Value"] = kvp.Value
-                }).ToList()
+                ["JSON"] = ToJSON()
             };
         }
 
         public static Pattern DeserializeData(TagCompound tag)
         {
-            try
-            {
-                string name = tag.GetString("Name");
-                string context = tag.GetString("Context");
-                string profile = tag.GetString("Profile");
-                string texturePath = tag.GetString("TexturePath");
-                string iconPath = tag.GetString("IconPath");
+            if (tag.ContainsKey("JSON"))
+                return FromJSON(tag.GetString("JSON"));
 
-                var colorData = tag.GetList<TagCompound>("ColorData")
-                    .ToDictionary(
-                        entry => new Color { PackedValue = entry.Get<uint>("Key") },
-                        entry => entry.Get<PatternColorData>("Value")
-                    );
-
-                return new Pattern(name, context, profile, texturePath, iconPath, colorData);
-            }
-            catch (Exception ex)
-            {
-                throw new SerializationException("Error deserializing Pattern from TagCompound.", ex);
-            }
+            return new();
         }
     }
 }

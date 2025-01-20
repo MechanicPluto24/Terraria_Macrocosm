@@ -1,12 +1,15 @@
 ﻿using Macrocosm.Common.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Terraria;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 namespace Macrocosm.Content.Rockets.Customization
 {
@@ -22,9 +25,11 @@ namespace Macrocosm.Content.Rockets.Customization
         public Asset<Texture2D> Icon { get; set; }
         private readonly string iconPath;
 
-        public Vector3[] Keys => ColorData.Keys.Select(c => c.ToVector3()).ToArray();
-        public Vector4[] Colors => ColorData.Select(kvp => GetColor(kvp.Key).ToVector4()).ToArray();
-        public int ColorCount => Math.Min(ColorData.Count, 64);
+        public const int MaxColors = 64;
+        public int ColorCount => Math.Min(ColorData.Count, MaxColors);
+
+        private readonly Dictionary<Color, Color> staticColors;
+        private static Asset<Effect> shader;
 
         public Pattern()
         {
@@ -45,6 +50,7 @@ namespace Macrocosm.Content.Rockets.Customization
             Profile = profile;
 
             ColorData = defaultColorData.OrderBy(kv => kv.Key.PackedValue).ToDictionary(kv => kv.Key, kv => kv.Value);
+            staticColors = ColorData.Where(kvp => !kvp.Value.HasColorFunction).ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Color);
 
             this.texturePath = texturePath;
             Texture = ModContent.RequestIfExists<Texture2D>(texturePath, out var t) ? t : Macrocosm.EmptyTex;
@@ -60,12 +66,8 @@ namespace Macrocosm.Content.Rockets.Customization
             if (ColorData.TryGetValue(key, out var data))
             {
                 if (data.HasColorFunction)
-                {
-                    var resolvedColors = ColorData
-                        .Where(kvp => kvp.Key != key && !kvp.Value.HasColorFunction)
-                        .ToDictionary(kvp => kvp.Key, kvp => GetColor(kvp.Key));
-                    return data.ColorFunction.Invoke(resolvedColors);
-                }
+                    return data.ColorFunction.Invoke(staticColors);
+
                 return data.Color;
             }
 
@@ -94,6 +96,19 @@ namespace Macrocosm.Content.Rockets.Customization
                 }
             }
         }
+
+        public Effect GetEffect()
+        {
+            shader ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
+
+            var effect = shader.Value;
+            effect.Parameters["uColorCount"].SetValue(ColorCount);
+            effect.Parameters["uColorKey"].SetValue(ColorData.Keys.Select(c => c.ToVector3()).ToArray());
+            effect.Parameters["uColor"].SetValue(ColorData.Select(kvp => GetColor(kvp.Key).ToVector4()).ToArray());
+            effect.Parameters["uSampleBrightness"].SetValue(true);
+            return effect;
+        }
+
 
         public override bool Equals(object obj)
         {

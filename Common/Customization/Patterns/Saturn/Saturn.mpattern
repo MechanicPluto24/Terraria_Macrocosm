@@ -2,15 +2,12 @@
   "name": "Saturn",
   "profiles": {
     "default": {
-      "colorData": [
-        {
-          "key": "#00FF00",
-          "value": {
-            "colorFunction": "Lerp",
-            "parameters": ["#FFFFFF", "#282828", 0.5]
-          }
+      "colorData": {
+        "#00FF00": {
+          "colorFunction": "Lerp",
+          "parameters": [ "#FFFFFF", "#282828", 0.5 ]
         }
-      ]
+      }
     }
   }
 }

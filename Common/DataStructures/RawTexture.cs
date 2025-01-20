@@ -2,7 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.DataStructures
@@ -47,6 +50,23 @@ namespace Macrocosm.Common.DataStructures
             Color[] data = new Color[texture.Width * texture.Height];
             Utility.InvokeOnMainThread(() => texture.GetData(0, texture.Bounds, data, 0, texture.Width * texture.Height));
             return new(data, texture.Width, texture.Height);
+        }
+
+        public IEnumerable<Color> GetUniqueColors(int maxColors, float maxDistance = 0.1f, Func<Color, bool> valid = null)
+        {
+            var uniqueColors = new HashSet<Color>();
+            foreach (var pixel in Data)
+            {
+                if ((valid?.Invoke(pixel) ?? true) && !uniqueColors.Any(k => Utility.ColorDistance(k, pixel) < maxDistance))
+                {
+                    uniqueColors.Add(pixel);
+
+                    if (uniqueColors.Count >= maxColors)
+                        break;
+                }
+            }
+
+            return uniqueColors;
         }
     }
 }
