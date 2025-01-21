@@ -1,6 +1,6 @@
 sampler uTexture : register(s0); // The colored texture, typically passed by the SpriteBatch
 sampler uColorMask : register(s1); // The color mask, must be provided by the user 
-sampler uDetailTexture : register(s2);
+sampler uDecalTexture : register(s2);
 
 // The max accepted color distance between the 
 // provided color mask and the provided known color keys
@@ -14,11 +14,11 @@ float3 uColorKey[64];
 // The user defined color values, per each existing key
 float4 uColor[64];
 
-// Whether this detail displays on non-customizable areas of the rocket
+// Whether this decal displays on non-customizable areas of the rocket
 bool uSampleBrightness = true;
 
-// Whether this detail displays on non-customizable areas of the rocket
-bool uDetailUseMask = false;
+// Whether this decal displays on non-customizable areas of the rocket
+bool uDecalUseMask = false;
 
 // Returns the grayscale of a RGB color, using the NTSC formula
 float3 RGBToLuminance(float3 color)
@@ -38,17 +38,17 @@ float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
     // Sample the input texture and the color mask (pattern)
     float4 color = tex2D(uTexture, texCoord);  
     float4 mask = tex2D(uColorMask, texCoord);  
-    float4 detail = tex2D(uDetailTexture, texCoord);  
+    float4 decal = tex2D(uDecalTexture, texCoord);
     
     // Get the brightness of the local pixel
     float3 texelBrightness = uSampleBrightness ? RGBToLuminance(color.rgb) : float3(1,1,1);
     
     float4 newColor = color;
     
-    if (detail.a > 0.0f)
+    if (decal.a > 0.0f)
     { 
-        float tranparency = uDetailUseMask ? mask.a : detail.a;
-        newColor = float4(detail.rgb * texelBrightness.rgb, 1.0f);
+        float tranparency = uDecalUseMask ? mask.a : decal.a;
+        newColor = float4(decal.rgb * texelBrightness.rgb, 1.0f);
         return float4(newColor.rgb, tranparency);
     }
     

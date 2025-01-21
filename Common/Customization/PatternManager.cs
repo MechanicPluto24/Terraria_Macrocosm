@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json.Linq;
@@ -16,7 +15,6 @@ namespace Macrocosm.Common.Customization
 {
     public class PatternManager : ModSystem
     {
-        // Patterns by 
         private static readonly Dictionary<(string name, string context, string profile), Pattern> patterns = new();
         private static readonly HashSet<string> unlockedPatterns = new();
 
@@ -55,21 +53,39 @@ namespace Macrocosm.Common.Customization
             return !string.IsNullOrEmpty(pattern.Name);
         }
 
-        /// <summary> Gets all patterns with the specified name across all contexts and profiles. </summary>
-        public static IEnumerable<Pattern> GetAllByName(string name)
+        /// <summary>
+        /// Gets all patterns based on the specified filters. Any filter set to null or default is ignored.
+        /// </summary>
+        /// <param name="name">The name of the pattern to filter by. Null to ignore.</param>
+        /// <param name="context">The context of the pattern to filter by. Null to ignore.</param>
+        /// <param name="profile">The profile of the pattern to filter by. Null to ignore.</param>
+        /// <param name="unlocked">
+        /// If true, only unlocked patterns will be returned. 
+        /// If false, only locked patterns will be returned. 
+        /// If null, unlocked status is ignored.
+        /// </param>
+        /// <returns>An enumerable of filtered patterns.</returns>
+        public static IEnumerable<Pattern> GetAll(string name = null, string context = null, string profile = null, bool? unlocked = null)
         {
-            return patterns
-                .Where(kvp => kvp.Key.name == name)
-                .Select(kvp => kvp.Value.Clone());
-        }
+            var query = patterns.AsEnumerable();
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(kvp => kvp.Key.name == name);
 
-        /// <summary> Gets all unlocked patterns in the specified context. </summary>
-        public static IEnumerable<Pattern> GetAllUnlocked(string context)
-        {
-            return unlockedPatterns
-                .SelectMany(name => patterns
-                    .Where(kvp => kvp.Key.context == context && kvp.Key.name == name)
-                    .Select(kvp => kvp.Value.Clone()));
+            if (!string.IsNullOrEmpty(context))
+                query = query.Where(kvp => kvp.Key.context == context);
+
+            if (!string.IsNullOrEmpty(profile))
+                query = query.Where(kvp => kvp.Key.profile == profile);
+
+            if (unlocked.HasValue)
+            {
+                if (unlocked.Value)
+                    query = query.Where(kvp => unlockedPatterns.Contains(kvp.Key.name));
+                else
+                    query = query.Where(kvp => !unlockedPatterns.Contains(kvp.Key.name));
+            }
+
+            return query.Select(kvp => kvp.Value.Clone());
         }
 
         public static bool IsUnlocked(string name) => unlockedPatterns.Contains(name);
@@ -81,8 +97,6 @@ namespace Macrocosm.Common.Customization
             else
                 unlockedPatterns.Remove(name);
         }
-
-        private static string NormalizePath(string path) => Path.GetFullPath(path).Replace("\\", "/");
 
         private void LoadPatterns()
         {
@@ -133,16 +147,21 @@ namespace Macrocosm.Common.Customization
                         JObject profiles = json["profiles"] as JObject ?? new JObject { ["default"] = new JObject { ["colorData"] = json["colorData"] ?? new JArray() }};
                         foreach (var profile in profiles.Properties())
                         {
-                            // Load any user defined default color overrides
-                            JObject colorDataJson = profile.Value["colorData"] as JObject ?? new JObject();
-                            var colorData = colorDataJson.Properties()
-                                .Where(entry => Utility.TryGetColorFromHex(entry.Name, out var key))
-                                .Select(entry => new KeyValuePair<Color, PatternColorData>(Utility.GetColorFromHex(entry.Name), PatternColorData.FromJObject(entry.Value as JObject)))
-                                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                            Dictionary<Color, PatternColorData> colorData = new();
+
+                            if (profile.Value["colorData"] is JObject colorDataJson)
+                                foreach (var entry in colorDataJson.Properties())
+                                    if (Utility.TryGetColorFromHex(entry.Name, out Color key) && entry.Value is JObject value && value != null)
+                                        colorData[key] = PatternColorData.FromJObject(value);
 
                             // Keys and default from the first MaxColors unique fully opaque colors 
                             foreach (var color in rawTexture.GetUniqueColors(Pattern.MaxColors, maxDistance: 0.1f, c => c.A == 255))
                                 colorData.TryAdd(color, new PatternColorData(color));
+
+                            // Share missing colors across contexts for the same name and profile
+                            var misingData = GetAll(name, profile: profile.Name).Select(kvp => kvp.ColorData);
+                            foreach (var kvp in misingData.SelectMany(existingColorData => existingColorData.Where(kvp => !colorData.ContainsKey(kvp.Key))))
+                                colorData[kvp.Key] = kvp.Value;
 
                             patterns[(name, context, profile.Name)] = new Pattern(name, context, profile.Name, textureAssetPath, iconAssetFile, colorData);
                         }
