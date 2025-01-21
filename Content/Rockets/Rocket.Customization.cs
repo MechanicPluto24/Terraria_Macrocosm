@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Customization;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Consumables.Unlockables;
-using Macrocosm.Content.Rockets.Customization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -40,7 +39,7 @@ namespace Macrocosm.Content.Rockets
 
             foreach (var module in AvailableModules)
             {
-                module.Detail = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Detail;
+                module.Decal = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Decal;
                 module.Pattern = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Pattern;
 
                 foreach (var data in module.Pattern.ColorData.Values)
@@ -70,7 +69,7 @@ namespace Macrocosm.Content.Rockets
 
             foreach (var module in AvailableModules)
             {
-                module.Detail = default;
+                module.Decal = default;
                 module.Pattern = PatternManager.Get("Basic", module.Name);
             }
 
@@ -90,7 +89,7 @@ namespace Macrocosm.Content.Rockets
                 modulesArray.Add(new JObject
                 {
                     ["moduleName"] = module.Name,
-                    ["detail"] = module.Detail.Name,
+                    ["decal"] = module.Decal.Name,
                     ["pattern"] = module.Pattern.ToJObject()
                 });
             }
@@ -119,7 +118,7 @@ namespace Macrocosm.Content.Rockets
                     {
                         try
                         {
-                            module.Detail = CustomizationStorage.TryGetDetail(moduleName, moduleJObject["detail"].Value<string>(), out Detail detail) ? detail : new Detail();
+                            module.Decal = DecalManager.TryGetDecal(moduleName, moduleJObject["decal"].Value<string>(), out Decal decal) ? decal : new Decal();
                             module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
                         }
                         catch (Exception ex)

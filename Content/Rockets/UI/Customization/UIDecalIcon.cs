@@ -8,27 +8,27 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.UI.Customization
 {
-    public class UIDetailIcon : UIPanelIconButton, IFocusable
+    public class UIDecalIcon : UIPanelIconButton, IFocusable
     {
-        public Detail Detail { get; set; }
+        public Decal Decal { get; set; }
 
-        public UIDetailIcon(Detail detail)
+        public UIDecalIcon(Decal decal)
         : base
         (
-            ModContent.RequestIfExists(detail.IconTexturePath, out Asset<Texture2D> icon) ? icon : Macrocosm.EmptyTex,
+            decal.Icon,
             ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad),
             ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelBorder", AssetRequestMode.ImmediateLoad),
             ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
         )
         {
-            Detail = detail;
+            Decal = decal;
         }
 
         public override void OnInitialize()
         {
-            FocusContext = "DetailSelection";
+            FocusContext = "DecalSelection";
             OnLeftClick += (_, _) => { HasFocus = true; };
-            HoverText = Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Customization.Details." + Detail.Name, () => Detail.Name);
+            HoverText = Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Customization.Decals." + Decal.Name, () => Decal.Name);
         }
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             /*
 			var dimensions = GetOuterDimensions();
-			Texture2D texture = ModContent.Request<Texture2D>(Detail.TexturePath + "_Icon").Value;
+			Texture2D texture = ModContent.Request<Texture2D>(Decal.TexturePath + "_Icon").Value;
 			spriteBatch.Draw(texture, dimensions.Position(), null, Color.White, 0f, Vector2.Zero, 0.995f, SpriteEffects.None, 0f);
 			*/
         }

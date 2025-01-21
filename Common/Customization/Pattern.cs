@@ -1,19 +1,23 @@
-﻿using Macrocosm.Common.Customization;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.Serialization;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 
-namespace Macrocosm.Content.Rockets.Customization
+namespace Macrocosm.Common.Customization
 {
-    public partial class Pattern
+    public class Pattern : TagSerializable
     {
         public string Name { get; set; }
         public string Context { get; set; }
@@ -28,7 +32,6 @@ namespace Macrocosm.Content.Rockets.Customization
         public const int MaxColors = 64;
         public int ColorCount => Math.Min(ColorData.Count, MaxColors);
 
-        private readonly Dictionary<Color, Color> staticColors;
         private static Asset<Effect> shader;
 
         public Pattern()
@@ -49,8 +52,7 @@ namespace Macrocosm.Content.Rockets.Customization
             Context = context;
             Profile = profile;
 
-            ColorData = defaultColorData.OrderBy(kv => kv.Key.PackedValue).ToDictionary(kv => kv.Key, kv => kv.Value);
-            staticColors = ColorData.Where(kvp => !kvp.Value.HasColorFunction).ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Color);
+            ColorData = defaultColorData.OrderBy(kvp => kvp.Key.PackedValue).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             this.texturePath = texturePath;
             Texture = ModContent.RequestIfExists<Texture2D>(texturePath, out var t) ? t : Macrocosm.EmptyTex;
@@ -60,13 +62,12 @@ namespace Macrocosm.Content.Rockets.Customization
         }
 
         public Pattern Clone() => new(Name, Context, Profile, texturePath, iconPath, new Dictionary<Color, PatternColorData>(ColorData));
-
         public Color GetColor(Color key)
         {
             if (ColorData.TryGetValue(key, out var data))
             {
                 if (data.HasColorFunction)
-                    return data.ColorFunction.Invoke(staticColors);
+                    return data.ColorFunction.Invoke(ColorData.Where(kvp => !kvp.Value.HasColorFunction).ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Color));
 
                 return data.Color;
             }
@@ -97,10 +98,9 @@ namespace Macrocosm.Content.Rockets.Customization
             }
         }
 
-        public Effect GetEffect()
+        public Effect PrepareEffect()
         {
             shader ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
-
             var effect = shader.Value;
             effect.Parameters["uColorCount"].SetValue(ColorCount);
             effect.Parameters["uColorKey"].SetValue(ColorData.Keys.Select(c => c.ToVector3()).ToArray());
@@ -109,6 +109,15 @@ namespace Macrocosm.Content.Rockets.Customization
             return effect;
         }
 
+        /// <summary> Set the <see cref="SpriteBatch"/> to <see cref="SpriteSortMode.Immediate"/> and <see cref="SamplerState.PointClamp"/> before applying </summary>
+        public void Apply()
+        {
+            Effect effect = PrepareEffect();
+            Main.graphics.GraphicsDevice.Textures[1] = Texture.Value;
+            Main.graphics.GraphicsDevice.SamplerStates[1] = Main.graphics.GraphicsDevice.SamplerStates[0];
+            foreach (var pass in effect.CurrentTechnique.Passes)
+                pass.Apply();
+        }
 
         public override bool Equals(object obj)
         {
@@ -122,5 +131,63 @@ namespace Macrocosm.Content.Rockets.Customization
         }
 
         public override int GetHashCode() => HashCode.Combine(Name, Context, Profile, ColorData);
+
+        public string ToJSON() => ToJObject().ToString(Formatting.Indented);
+        public JObject ToJObject()
+        {
+            return new JObject
+            {
+                ["name"] = Name,
+                ["context"] = Context,
+                ["profile"] = Profile,
+                ["texturePath"] = texturePath,
+                ["iconPath"] = iconPath,
+                ["colorData"] = new JObject(ColorData.Select(kvp => new JProperty(kvp.Key.GetHex(), kvp.Value.ToJObject())))
+            };
+        }
+
+        public static Pattern FromJSON(string json) => FromJObject(JObject.Parse(json));
+        public static Pattern FromJObject(JObject jObject)
+        {
+            try
+            {
+                string name = jObject["name"]?.Value<string>() ?? throw new ArgumentException("Missing 'name' field.");
+                string context = jObject["context"]?.Value<string>() ?? throw new ArgumentException("Missing 'context' field.");
+                string profile = jObject["profile"]?.Value<string>() ?? throw new ArgumentException("Missing 'profile' field.");
+                string texturePath = jObject["texturePath"]?.Value<string>();
+                string iconPath = jObject["iconPath"]?.Value<string>();
+
+                Dictionary<Color, PatternColorData> colorData = new();
+                if (jObject["colorData"] is JObject colorDataJson)
+                    foreach (var entry in colorDataJson.Properties())
+                        if (Utility.TryGetColorFromHex(entry.Name, out Color key) && entry.Value is JObject value && value != null)
+                            colorData[key] = PatternColorData.FromJObject(value);
+
+                return new Pattern(name, context, profile, texturePath, iconPath, colorData);
+            }
+            catch (Exception ex)
+            {
+                throw new SerializationException("Error deserializing Pattern from JObject.", ex);
+            }
+        }
+
+
+        public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
+
+        public TagCompound SerializeData()
+        {
+            return new TagCompound
+            {
+                ["JSON"] = ToJSON()
+            };
+        }
+
+        public static Pattern DeserializeData(TagCompound tag)
+        {
+            if (tag.ContainsKey("JSON"))
+                return FromJSON(tag.GetString("JSON"));
+
+            return new();
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -12,20 +14,20 @@ namespace Macrocosm.Common.Customization
         public string Name { get; }
         public object[] Parameters { get; }
 
-        private readonly Func<Dictionary<Color, Color>, object[], Color> function;
+        private readonly Func<Dictionary<Color, Color>, Color> function;
 
-        private ColorFunction(string name, Func<Dictionary<Color, Color>, object[], Color> function, object[] parameters)
+        private ColorFunction(string name, Func<Dictionary<Color, Color>, Color> function, object[] parameters)
         {
             Name = name;
-            this.function = function ?? throw new ArgumentNullException(nameof(function));
             Parameters = parameters ?? Array.Empty<object>();
+            this.function = function ?? throw new ArgumentNullException(nameof(function));
         }
 
         public Color Invoke(Dictionary<Color, Color> availableColors)
         {
             try
             {
-                return function(availableColors, Parameters);
+                return function(availableColors);
             }
             catch (Exception ex)
             {
@@ -38,46 +40,41 @@ namespace Macrocosm.Common.Customization
 
         public static ColorFunction CreateByName(string name, object[] parameters)
         {
-            Macrocosm.Instance.Logger.Info($"Creating ColorFunction: {name} with parameters: {string.Join(", ", parameters)}");
-            switch (name.ToLower())
+            return name.ToLower() switch
             {
-                case "lerp":
-                    return CreateLerpFunction(parameters);
-
-                default:
-                    LogError($"Unknown ColorFunction name: {name}");
-                    return new ColorFunction(name, (_, _) => Color.Transparent, Array.Empty<object>());
-            }
+                "lerp" => CreateLerpFunction(parameters),
+                _ => null,
+            };
         }
 
-        private static ColorFunction CreateLerpFunction(object[] parameters)
+        private static ColorFunction CreateLerpFunction(object[] inputParameters)
         {
-            if (parameters.Length != 3)
+            if (inputParameters.Length != 3)
             {
                 LogError("Lerp function requires exactly 3 parameters: [key1, key2, amount].");
-                return new ColorFunction("lerp", (_, _) => Color.Transparent, parameters);
+                return new ColorFunction("default", _ => Color.Transparent, inputParameters);
             }
 
-            var parsedParams = ParseParameters(parameters.Select(p => p.ToString()).ToArray());
-            if (parsedParams.Length != 3 || parsedParams[0] is not Color key1 || parsedParams[1] is not Color key2 || parsedParams[2] is not float amount || amount < 0f || amount > 1f)
+            var parsedParameters = ParseParameters(inputParameters.Select(p => p.ToString()).ToArray());
+            if (parsedParameters.Length != 3 || parsedParameters[0] is not Color || parsedParameters[1] is not Color || parsedParameters[2] is not float)
             {
-                LogError("Lerp function requires valid parameters: [Color key1, Color key2, float amount (0-1)].");
-                return new ColorFunction("lerp", (_, _) => Color.Transparent, parameters);
+                LogError("Lerp function requires valid parameters: [Color key1, Color key2, float amount].");
+                return new ColorFunction("default", _ => Color.Transparent, inputParameters);
             }
 
-            return new ColorFunction("lerp", (colors, args) =>
+            return new ColorFunction("lerp", colors =>
             {
-                if (!colors.TryGetValue((Color)args[0], out var color1))
+                if (!colors.TryGetValue((Color)parsedParameters[0], out var color1))
                     return Color.Transparent;
 
-                if (!colors.TryGetValue((Color)args[1], out var color2))
+                if (!colors.TryGetValue((Color)parsedParameters[1], out var color2))
                     return Color.Transparent;
 
-                return Color.Lerp(color1, color2, (float)args[2]);
-            }, parameters);
+                return Color.Lerp(color1, color2, (float)parsedParameters[2]);
+            }, parsedParameters);
         }
 
-        private static object[] ParseParameters(string[] parameters)
+        public static object[] ParseParameters(string[] parameters)
         {
             return parameters.Select<string, object>(param =>
             {
@@ -85,7 +82,7 @@ namespace Macrocosm.Common.Customization
                     return intValue;
 
                 if (double.TryParse(param, NumberStyles.Any, CultureInfo.InvariantCulture, out double doubleValue))
-                    return doubleValue;
+                    return (float)doubleValue;
 
                 if (float.TryParse(param, NumberStyles.Any, CultureInfo.InvariantCulture, out float floatValue))
                     return floatValue;
@@ -95,6 +92,25 @@ namespace Macrocosm.Common.Customization
 
                 return param;
             }).ToArray();
+        }
+
+        public static IEnumerable<object> UnparseParameters(object[] parameters)
+        {
+            foreach (var param in parameters)
+            {
+                switch (param)
+                {
+                    case Color color:
+                        yield return color.GetHex();
+                        break;
+                    case float or int or string:
+                        yield return param;
+                        break;
+                    default:
+                        yield return param?.ToString();
+                        break;
+                }
+            }
         }
 
         private static void LogError(string message)

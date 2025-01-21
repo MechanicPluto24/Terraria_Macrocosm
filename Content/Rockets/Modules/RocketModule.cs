@@ -2,7 +2,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -15,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public abstract partial class RocketModule : ModType, ILocalizedModType, IPatternable
+    public abstract partial class RocketModule : ModType, ILocalizedModType
     {
         public string LocalizationCategory => "UI.Rocket.Modules";
         //public LocalizedText DisplayName => this.GetLocalization("DisplayName", PrettyPrintName);
@@ -36,14 +35,12 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public abstract AssemblyRecipe Recipe { get; }
 
-        public Detail Detail { get; set; }
-
         public Pattern Pattern { get; set; }
-        public string PatternContext => Name;
+        public Decal Decal { get; set; }
 
         public bool HasPattern => Pattern != default;
-        public bool HasDetail => Detail != default;
-        private bool SpecialDraw => HasPattern || HasDetail;
+        public bool HasDecal => Decal != default;
+        private bool SpecialDraw => HasPattern || HasDecal;
 
         /// <summary> This module's draw priority </summary>
         public abstract int DrawPriority { get; }
@@ -72,7 +69,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public RocketModule()
         {
-            Detail = default;
+            Decal = default;
             Pattern = PatternManager.Get("Basic", Name);
         }
 
@@ -92,29 +89,21 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             // Load current pattern and apply shader 
             state.SaveState(spriteBatch);
-            SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[12];
             SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2];
             if (SpecialDraw)
             {
-                Effect effect = null;
-                if (HasPattern)
+                if (HasDecal)
                 {
-                    effect = Pattern.GetEffect();
-                    Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture.Value;
-                    Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-                }
-
-                if (HasDetail)
-                {
-                    // Pass the detail to the shader via the S2 register
-                    Main.graphics.GraphicsDevice.Textures[2] = Detail.Texture.Value;
+                    // Pass the decal to the shader via the S2 register
+                    Main.graphics.GraphicsDevice.Textures[2] = Decal.Texture.Value;
                     Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointClamp;
                 }
 
                 spriteBatch.End();
-                spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+                spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
             }
 
+            Pattern?.Apply();
             spriteBatch.Draw(Texture, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             if (SpecialDraw)
@@ -123,11 +112,9 @@ namespace Macrocosm.Content.Rockets.Modules
                 spriteBatch.Begin(state);
 
                 // Clear the tex register  
-                Main.graphics.GraphicsDevice.Textures[1] = null;
                 Main.graphics.GraphicsDevice.Textures[2] = null;
 
                 // Restore the sampler states
-                Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState1;
                 Main.graphics.GraphicsDevice.SamplerStates[2] = samplerState2;
             }
         }

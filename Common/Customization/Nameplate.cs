@@ -2,13 +2,16 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Rockets.Customization
+namespace Macrocosm.Common.Customization
 {
-    public partial class Nameplate
+    public class Nameplate : TagSerializable
     {
         // the text
         private string text = "";
@@ -79,7 +82,7 @@ namespace Macrocosm.Content.Rockets.Customization
                     offsetY = 61;
                     break;
                 case TextVerticalAlign.Center:
-                    offsetY = 126 - (totalTextHeight / 2);
+                    offsetY = 126 - totalTextHeight / 2;
                     break;
                 case TextVerticalAlign.Bottom:
                     offsetY = 191 - totalTextHeight;
@@ -88,7 +91,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
             for (int i = 0; i < numChars; i++)
             {
-                spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + (i * characterHeight)), GetCharacterRectangle(text[i]), TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + i * characterHeight), GetCharacterRectangle(text[i]), TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }
 
@@ -124,6 +127,72 @@ namespace Macrocosm.Content.Rockets.Customization
             int y = row * characterHeight + 1;
 
             return new Rectangle(x, y, characterWidth, characterHeight);
+        }
+
+        public string ToJSON() => ToJObject().ToString(Formatting.Indented);
+
+        public JObject ToJObject()
+        {
+            return new JObject()
+            {
+                ["text"] = text,
+                ["textColor"] = TextColor.GetHex(),
+                ["horizontalAlignment"] = HAlign.ToString(),
+                ["verticalAlignment"] = VAlign.ToString()
+            };
+        }
+
+        public static Nameplate FromJSON(string json) => FromJObject(JObject.Parse(json));
+
+        public static Nameplate FromJObject(JObject jObject)
+        {
+            Nameplate nameplate = new();
+
+            if (jObject.ContainsKey("text"))
+                nameplate.Text = jObject.Value<string>("text");
+
+            if (jObject.ContainsKey("textColor") && Utility.TryGetColorFromHex(jObject.Value<string>("textColor"), out Color textColor))
+                nameplate.TextColor = textColor;
+
+            if (jObject.ContainsKey("horizontalAlignment") && Enum.TryParse(jObject.Value<string>("horizontalAlignment"), ignoreCase: true, out TextHorizontalAlign hAlign))
+                nameplate.HAlign = hAlign;
+
+            if (jObject.ContainsKey("verticalAlignment") && Enum.TryParse(jObject.Value<string>("verticalAlignment"), ignoreCase: true, out TextVerticalAlign vAlign))
+                nameplate.VAlign = vAlign;
+
+            return nameplate;
+        }
+
+        public static readonly Func<TagCompound, Nameplate> DESERIALIZER = DeserializeData;
+
+        public TagCompound SerializeData()
+        {
+            return new()
+            {
+                [nameof(text)] = text,
+                [nameof(TextColor)] = TextColor,
+                [nameof(HAlign)] = (int)HAlign,
+                [nameof(VAlign)] = (int)VAlign,
+            };
+        }
+
+        public static Nameplate DeserializeData(TagCompound tag)
+        {
+            Nameplate nameplate = new();
+
+            if (tag.ContainsKey(nameof(text)))
+                nameplate.text = tag.GetString(nameof(text));
+
+            if (tag.ContainsKey(nameof(TextColor)))
+                nameplate.TextColor = tag.Get<Color>(nameof(TextColor));
+
+            if (tag.ContainsKey(nameof(HAlign)))
+                nameplate.HAlign = (TextHorizontalAlign)tag.GetInt(nameof(HAlign));
+
+            if (tag.ContainsKey(nameof(VAlign)))
+                nameplate.VAlign = (TextVerticalAlign)tag.GetInt(nameof(VAlign));
+
+            return nameplate;
         }
     }
 }

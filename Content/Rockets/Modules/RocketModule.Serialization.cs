@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Customization;
-using Macrocosm.Content.Rockets.Customization;
 using System;
 using Terraria.ModLoader.IO;
 
@@ -21,8 +20,8 @@ namespace Macrocosm.Content.Rockets.Modules
             tag["Active"] = Active;
             tag["IsBlueprint"] = IsBlueprint;
 
-            if (Detail != default)
-                tag["DetailName"] = Detail.Name;
+            if (Decal != default)
+                tag["Decal"] = Decal.Name;
 
             if (Pattern != default)
                 tag["Pattern"] = Pattern;
@@ -56,8 +55,8 @@ namespace Macrocosm.Content.Rockets.Modules
             if (tag.ContainsKey("IsBlueprint"))
                 module.IsBlueprint = tag.GetBool("IsBlueprint");
 
-            if (tag.ContainsKey("DetailName"))
-                module.Detail = CustomizationStorage.GetDetail(name, tag.GetString("DetailName"));
+            if (tag.ContainsKey("Decal"))
+                module.Decal = DecalManager.GetDecal(name, tag.GetString("Decal"));
 
             if (tag.ContainsKey("Pattern"))
                 module.Pattern = tag.Get<Pattern>("Pattern");

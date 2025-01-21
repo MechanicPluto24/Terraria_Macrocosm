@@ -1,7 +1,7 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -46,9 +46,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             var dimensions = GetOuterDimensions();
 
-            Effect effect = Pattern.GetEffect();
+            Effect effect = Pattern.PrepareEffect();
             SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[1];
-
             Main.graphics.GraphicsDevice.Textures[1] = Pattern.Icon.Value;
             Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 

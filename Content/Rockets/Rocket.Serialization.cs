@@ -1,5 +1,5 @@
-﻿using Macrocosm.Common.Storage;
-using Macrocosm.Content.Rockets.Customization;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.Storage;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using System;

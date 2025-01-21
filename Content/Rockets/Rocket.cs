@@ -1,3 +1,4 @@
+using Macrocosm.Common.Customization;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
@@ -11,7 +12,6 @@ using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Tech;
 using Macrocosm.Content.Particles;
-using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Sounds;

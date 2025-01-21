@@ -1,12 +1,10 @@
 {
   "name": "Saturn",
-  "profiles": {
-    "default": {
-      "colorData": {
-        "#00FF00": {
-          "colorFunction": "Lerp",
-          "parameters": [ "#FFFFFF", "#282828", 0.5 ]
-        }
+  "colorData": {
+    "#00FF00": {
+      "colorFunction": {
+        "name": "Lerp",
+        "parameters": [ "#FFFFFF", "#282828", 0.5 ]
       }
     }
   }
