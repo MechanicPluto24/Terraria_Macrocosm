@@ -5,6 +5,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Blocks;
 using Macrocosm.Content.Tiles.Walls;
+using Macrocosm.Content.Tiles.Ambient;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -53,6 +54,38 @@ namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
 
             // Make walls unsafe
             Utility.ConvertWallSafetyInArea(origin.X, origin.Y, Size.X, Size.Y, WallSafetyType.Natural);
+
+            float smallWireSpawnChance = 0.11f;
+            float mediumWireSpawnChance = 0.1f;
+            float largeWireSpawnChance = 0.05f;
+            ushort industrialPlatingType = (ushort)ModContent.TileType<IndustrialPlating>();
+
+            for (int i = origin.X; i < origin.X + Size.X; i++)
+            {
+                for (int j = origin.Y; j < origin.Y + Size.Y-2; j++)
+                {
+                    Tile tile = Main.tile[i, j];
+
+                    if (WorldGen.genRand.NextFloat() < largeWireSpawnChance)
+                    {
+                        if (tile.TileType == industrialPlatingType)
+                            Utility.TryPlaceObject(i, j + 1, ModContent.TileType<LooseWiresLargeNatural>(), style: WorldGen.genRand.Next(3));
+                    }
+                    if (WorldGen.genRand.NextFloat() < mediumWireSpawnChance)
+                    {
+                        if (tile.TileType == industrialPlatingType)
+                            Utility.TryPlaceObject(i, j + 1, ModContent.TileType<LooseWiresMediumNatural>(), style: WorldGen.genRand.Next(2));
+                    }
+                    if (WorldGen.genRand.NextFloat() < smallWireSpawnChance)
+                    {
+                        if (tile.TileType == industrialPlatingType)
+                            Utility.TryPlaceObject(i, j + 1, ModContent.TileType<LooseWiresSmallNatural>(), style: WorldGen.genRand.Next(2));
+                    }
+                    
+                }
+            }
+
+            
 
             PostAgeRoom(origin);
         }
