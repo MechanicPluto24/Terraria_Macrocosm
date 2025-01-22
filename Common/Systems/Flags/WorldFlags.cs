@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Systems.Flags
 
         public static GlobalFlag DemonSun { get; set; } = false;
 
-        public static LocalFlag SubworldUnlocked {  get; set; } = true;
+        public static LocalFlag SubworldUnlocked { get; set; } = true;
 
         public static LocalFlag SolarStorm { get; set; } = false;
         public static LocalFlag MoonMeteorStorm { get; set; } = false;
@@ -35,6 +35,7 @@ namespace Macrocosm.Common.Systems.Flags
         public static DownedFlag StarRoyaleShrineUnlocked { get; set; } = false;
         public static DownedFlag CryocoreShrineUnlocked { get; set; } = false;
         public static DownedFlag CosmicEmberShrineUnlocked { get; set; } = false;
+        public static bool AnyShimmerShrine => new List<bool>() { HeavenforgeShrineUnlocked, LunarRustShrineUnlocked, AstraShrineUnlocked, DarkCelestialShrineUnlocked, MercuryShrineUnlocked, StarRoyaleShrineUnlocked, CryocoreShrineUnlocked, CosmicEmberShrineUnlocked }.Any(b => b);
 
         public static DownedFlag FoundVulcan { get; set; } = false;
         public static DownedFlag DeimosReturn { get; set; } = false;
@@ -120,7 +121,7 @@ namespace Macrocosm.Common.Systems.Flags
 
             foreach (var field in typeof(WorldFlags).GetFields())
             {
-                if (field.FieldType == typeof(GlobalFlag)) 
+                if (field.FieldType == typeof(GlobalFlag))
                 {
                     field.SetValue(null, new GlobalFlag(globalIndex++));
                 }
@@ -162,7 +163,7 @@ namespace Macrocosm.Common.Systems.Flags
 
         private static bool GetFlag(List<BitsByte> flags, int index)
         {
-            AllocateBits(index + 1, ref flags);  
+            AllocateBits(index + 1, ref flags);
             int arrayIndex = index / 8;
             int bitIndex = index % 8;
             return flags[arrayIndex][bitIndex];
@@ -170,12 +171,12 @@ namespace Macrocosm.Common.Systems.Flags
 
         private static void SetFlag(List<BitsByte> flags, int index, bool value)
         {
-            AllocateBits(index + 1, ref flags);  
+            AllocateBits(index + 1, ref flags);
             int arrayIndex = index / 8;
             int bitIndex = index % 8;
             var bb = flags[arrayIndex];
             bb[bitIndex] = value;
-            flags[arrayIndex] = bb;  
+            flags[arrayIndex] = bb;
         }
 
         public static bool GetGlobalFlag(int index) => GetFlag(globalFlags, index);
@@ -190,7 +191,7 @@ namespace Macrocosm.Common.Systems.Flags
                 localFlags[subworld] = flags;
             }
 
-            AllocateBits(index + 1, ref flags); 
+            AllocateBits(index + 1, ref flags);
             return GetFlag(flags, index);
         }
 
@@ -202,7 +203,7 @@ namespace Macrocosm.Common.Systems.Flags
                 localFlags[subworld] = flags;
             }
 
-            AllocateBits(index + 1, ref flags); 
+            AllocateBits(index + 1, ref flags);
             SetFlag(flags, index, value);
         }
 
