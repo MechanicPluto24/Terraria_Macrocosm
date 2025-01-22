@@ -8,7 +8,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture
 {
-    public class XFLR6 : ModTile
+    public class ApolloLander : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -16,22 +16,26 @@ namespace Macrocosm.Content.Tiles.Furniture
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.Width = 3;
-            TileObjectData.newTile.Height = 5;
-            TileObjectData.newTile.Origin = new Point16(1, 3);
+            TileObjectData.newTile.Width = 16;
+            TileObjectData.newTile.Height = 7;
+            TileObjectData.newTile.Origin = new Point16(0, TileObjectData.newTile.Height - 1);
 
             TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.newTile.UsesCustomCanPlace = true;
+
             TileObjectData.addTile(Type);
 
             HitSound = SoundID.Dig;
             DustType = -1;
 
-            AddMapEntry(new Color(211, 0, 0), CreateMapEntryName());
+            MinPick = 245;
+            MineResist = 10f;
+
+            AddMapEntry(new Color(210, 167, 72), CreateMapEntryName());
         }
     }
 }

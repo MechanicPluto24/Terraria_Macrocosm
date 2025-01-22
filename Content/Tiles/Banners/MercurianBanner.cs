@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Tiles.Banners
             TileObjectData.newTile.StyleHorizontal = true;
 
             TileObjectData.newTile.Origin = new Point16(1, 0);
-            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 3, 0);
+            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, 3, 0);
 
             TileObjectData.addTile(Type);
 

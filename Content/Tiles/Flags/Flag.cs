@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -24,20 +26,31 @@ namespace Macrocosm.Content.Tiles.Flags
             TileID.Sets.MultiTileSway[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
             TileObjectData.newTile.Width = 3;
             TileObjectData.newTile.Height = 5;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, 1, 0);
-            TileObjectData.newTile.Origin = new(0, TileObjectData.newTile.Height - 1);
+
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.StyleMultiplier = 2;
+
+            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.LavaDeath = true;
+
+            TileObjectData.newTile.Origin = new(0, TileObjectData.newTile.Height - 1);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
+
+            TileObjectData.newTile.UsesCustomCanPlace = true;
+
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, 1, 2);
+            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 1, TileObjectData.newTile.Width - 1);
             TileObjectData.addAlternate(1);
+
             TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
@@ -75,7 +88,6 @@ namespace Macrocosm.Content.Tiles.Flags
                 frameYOffset = 18 * 5 * (direction ? frame : 5 - frame);
             }
         }
-
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
             float speed = Math.Abs(Utility.WindSpeedScaled);
@@ -115,9 +127,20 @@ namespace Macrocosm.Content.Tiles.Flags
             return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
         }
 
+        private SpriteBatchState state;
         public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
+            state.SaveState(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
+
+            if (PatternManager.TryGet("TricolorVertical", "Flag", out Pattern pattern, "France"))
+                pattern.Apply();
+
             TileRendering.DrawMultiTileInWindBottomAnchor(i, j, windSensitivity: 0.07f);
+
+            spriteBatch.End();
+            spriteBatch.Begin(state);
         }
     }
 }

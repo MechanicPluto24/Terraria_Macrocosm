@@ -122,13 +122,13 @@ namespace Macrocosm.Common.Customization
         private static void LoadDecals()
         {
             foreach (string context in Rocket.ModuleNames)
-                AddDecal(context, "None", Macrocosm.EmptyTexPath, "Common/Customization/Decals/Icons/None", true);
+                AddDecal(context, "None", Macrocosm.EmptyTexPath, "Assets/Decals/Icons/None", true);
 
             if (Main.dedServ)
                 return;
 
             // Find all existing decals
-            string lookupString = "Common/Customization/Decals/";
+            string lookupString = "Assets/Decals/";
             var decalPathsWithIcons = Macrocosm.Instance.RootContentSource.GetAllAssetsStartingWith(lookupString, true).ToList();
             var decalPaths = decalPathsWithIcons.Where(x => !x.Contains("/Icons")).ToList();
 

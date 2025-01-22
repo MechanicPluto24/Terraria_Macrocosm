@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newTile.StyleHorizontal = true;
 
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.Table, 2, 0);
 
             // To ensure the right-facing style is properly registered, not the left-facing style "turned off" frame
             TileObjectData.newTile.StyleMultiplier = 2;

@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Tiles.Tech
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.Table, 2, 0);
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);

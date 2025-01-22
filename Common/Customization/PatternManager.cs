@@ -150,18 +150,39 @@ namespace Macrocosm.Common.Customization
                             Dictionary<Color, PatternColorData> colorData = new();
 
                             if (profile.Value["colorData"] is JObject colorDataJson)
+                            {
                                 foreach (var entry in colorDataJson.Properties())
-                                    if (Utility.TryGetColorFromHex(entry.Name, out Color key) && entry.Value is JObject value && value != null)
-                                        colorData[key] = PatternColorData.FromJObject(value);
+                                {
+                                    if (Utility.TryGetColorFromHex(entry.Name, out Color key))
+                                    {
+                                        if (entry.Value.Type == JTokenType.String) // Default to user color when it's a shorthand ("#XXXXXX" : "#YYYYYY")
+                                        {
+                                            string colorHex = entry.Value.Value<string>();
+                                            if (Utility.TryGetColorFromHex(colorHex, out Color color))
+                                                colorData[key] = new PatternColorData(color, isUserModifiable: true);
+                                            else
+                                                throw new ArgumentException($"Invalid color shorthand: {colorHex}");
+                                        }
+                                        else if (entry.Value is JObject value && value != null) // Full object ({"color": "#YYYYYY"})
+                                        {
+                                            colorData[key] = PatternColorData.FromJObject(value);
+                                        }
+                                    }
+                                }
+                            }
 
                             // Keys and default from the first MaxColors unique fully opaque colors 
                             foreach (var color in rawTexture.GetUniqueColors(Pattern.MaxColors, maxDistance: 0.1f, c => c.A == 255))
+                            {
                                 colorData.TryAdd(color, new PatternColorData(color));
+                            }
 
                             // Share missing colors across contexts for the same name and profile
                             var misingData = GetAll(name, profile: profile.Name).Select(kvp => kvp.ColorData);
                             foreach (var kvp in misingData.SelectMany(existingColorData => existingColorData.Where(kvp => !colorData.ContainsKey(kvp.Key))))
+                            {
                                 colorData[kvp.Key] = kvp.Value;
+                            }
 
                             patterns[(name, context, profile.Name)] = new Pattern(name, context, profile.Name, textureAssetPath, iconAssetFile, colorData);
                         }
