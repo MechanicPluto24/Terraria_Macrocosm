@@ -2861,6 +2861,7 @@ HaemonovaWorkbench: {
 	DisplayName: Haemonova Workbench
 	Tooltip: ""
 }
+
 RubberTreeSapling: {
 	DisplayName: Rubber Tree Sapling
 	Tooltip: ""
