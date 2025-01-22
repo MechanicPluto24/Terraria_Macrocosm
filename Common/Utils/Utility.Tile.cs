@@ -22,8 +22,21 @@ namespace Macrocosm.Common.Utils
 
         public static Vector2 ToWorldCoordinates(this Point point) => new(point.X * 16f, point.Y * 16f);
         public static Vector2 ToWorldCoordinates(this Point16 point) => new(point.X * 16f, point.Y * 16f);
+
         public static bool IsSloped(this Tile tile) => (int)tile.BlockType > 1;
-        public static bool AnyWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
+        public static bool IsPlatform(int type) => Main.tileSolid[type] && Main.tileSolidTop[type];
+        public static bool HasWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
+        public static bool HasWire(this Tile tile, WireType wireType)
+        {
+            return wireType switch
+            {
+                WireType.Red => tile.RedWire,
+                WireType.Blue => tile.BlueWire,
+                WireType.Green => tile.GreenWire,
+                WireType.Yellow => tile.YellowWire,
+                _ => false
+            };
+        }
 
         public static ulong GetTileFrameSeed(int i, int j) => Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i); // Don't remove any casts.
 
@@ -138,9 +151,7 @@ namespace Macrocosm.Common.Utils
         public static Color GetPaintColor(Point coords) => WorldGen.paintColor(Main.tile[coords].TileColor);
         public static Color GetPaintColor(int i, int j) => WorldGen.paintColor(Main.tile[i, j].TileColor);
         public static Color GetPaintColor(this Tile tile) => WorldGen.paintColor(tile.TileColor);
-
         public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
-
         public static Color GetTileColor(int i, int j)
         {
             if (CoordinatesOutOfBounds(i, j))
@@ -328,26 +339,6 @@ namespace Macrocosm.Common.Utils
                 }
             }
             return liquidAmt;
-        }
-
-        ///<summary>
-        /// Returns true if the tile type acts similarly to a platform.
-        /// By GroxTheGreat @ BaseMod
-        ///</summary>
-        public static bool IsPlatform(int type) => Main.tileSolid[type] && Main.tileSolidTop[type];
-
-        public static bool HasWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
-
-        public static bool HasWire(this Tile tile, WireType wireType)
-        {
-            return wireType switch
-            {
-                WireType.Red => tile.RedWire,
-                WireType.Blue => tile.BlueWire,
-                WireType.Green => tile.GreenWire,
-                WireType.Yellow => tile.YellowWire,
-                _ => false
-            };
         }
 
         public static IEnumerable<Point16> GetWireNeighbors(int x, int y, WireType? wireType = null)

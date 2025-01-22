@@ -26,18 +26,20 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileID.Sets.CanBeSatOnForPlayers[Type] = true;
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
-
-            DustType = DustID.LunarOre;
             AdjTiles = [TileID.Chairs];
 
+            DustType = DustID.LunarOre;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
             TileObjectData.newTile.CoordinateHeights = [16, 16];
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
+
             TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleMultiplier = 2;
+
             TileObjectData.newTile.DrawYOffset = 2;
+
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.addAlternate(1);

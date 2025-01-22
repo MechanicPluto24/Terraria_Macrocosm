@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.newTile.Origin = new Point16(0, Height - 1);
             TileObjectData.newTile.AnchorTop = new AnchorData();
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, Width, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
 
             TileObjectData.newTile.AnchorInvalidTiles =
             [

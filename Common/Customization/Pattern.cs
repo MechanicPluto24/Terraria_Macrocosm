@@ -80,6 +80,8 @@ namespace Macrocosm.Common.Customization
         {
             if (ColorData.TryGetValue(key, out var data) && (evenIfNotUserModifiable || data.IsUserModifiable))
                 ColorData[key] = data.WithUserColor(color);
+
+            Profile = "user";
         }
 
         public void SetColorFunction(Color key, ColorFunction colorFunction)

@@ -85,13 +85,11 @@ namespace Macrocosm.Common.Customization
 
             // Whether the color data is modifiable or not, defaults to false
             bool isUserModifiable = jObject["isUserModifiable"]?.Value<bool>() ?? false;
+            string colorHexValue = jObject["color"]?.Value<string>() ?? throw new ArgumentException("Missing color field.");
+            if (!Utility.TryGetColorFromHex(colorHexValue, out Color colorValue))
+                throw new ArgumentException($"Invalid color: {colorHexValue}");
 
-            // Parse color value
-            string colorHex = jObject["color"]?.Value<string>() ?? throw new ArgumentException("Missing color field.");
-            if (!Utility.TryGetColorFromHex(colorHex, out Color color))
-                throw new ArgumentException($"Invalid color: {colorHex}");
-
-            return new PatternColorData(color, isUserModifiable);
+            return new PatternColorData(colorValue, isUserModifiable);
         }
 
         public TagCompound SerializeData()

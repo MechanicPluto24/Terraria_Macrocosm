@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
             TileObjectData.newTile.StyleHorizontal = false;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.Table, 2, 0);
             TileObjectData.addTile(Type);
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();
