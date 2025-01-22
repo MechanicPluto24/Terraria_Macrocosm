@@ -161,7 +161,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             float fullBladeOpacity = (float)hitStacks / ChampionsBlade.MaxStacks;
 
-            Main.spriteBatch.Draw(
+            Main.EntitySpriteDraw(
                 TextureAssets.Projectile[Type].Value,
                 Projectile.Center + Projectile.rotation.ToRotationVector2() * 16f - Main.screenPosition,
                 null,
@@ -173,7 +173,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 0
             );
 
-            Main.spriteBatch.Draw(
+            Main.EntitySpriteDraw(
                 itemTexture.Value,
                 Projectile.Center + Projectile.rotation.ToRotationVector2() * 16f - Main.screenPosition,
                 null,

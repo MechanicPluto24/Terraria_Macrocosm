@@ -9,8 +9,6 @@ namespace Macrocosm.Content.Items.Connectors
 {
     public class Conveyor : ModItem
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
@@ -38,7 +36,7 @@ namespace Macrocosm.Content.Items.Connectors
                 Point targetCoords = player.TargetCoords();
                 ConnectorData data = ConnectorSystem.Map[player.TargetCoords()];
 
-                if (!data.Conveyor)
+                if (!data.AnyConveyor)
                 {
                     ConnectorSystem.PlaceConnector(targetCoords, ConnectorType.Conveyor);
                     return true;

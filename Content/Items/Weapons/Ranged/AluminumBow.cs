@@ -10,31 +10,16 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-
         }
+
         public override void SetDefaults()
         {
+            Item.DefaultToBow(28, 6.6f, hasAutoReuse: false);
             Item.damage = 8;
-            Item.DamageType = DamageClass.Ranged;
             Item.width = 16;
             Item.height = 32;
-            Item.useTime = 28;
-            Item.useAnimation = 28;
-            Item.useStyle = ItemUseStyleID.Shoot;
-            Item.noMelee = true;
-            Item.knockBack = 0;
             Item.value = Item.sellPrice(silver: 2, copper: 60);
             Item.rare = ItemRarityID.White;
-            Item.UseSound = SoundID.Item5;
-            Item.autoReuse = true;
-            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
-            Item.shootSpeed = 6.6f;
-            Item.useAmmo = AmmoID.Arrow;
-        }
-
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-        {
-            position += new Vector2(0, -3);
         }
 
         public override void AddRecipes()

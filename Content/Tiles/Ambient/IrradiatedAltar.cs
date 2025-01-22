@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Players;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -35,9 +36,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
-            r = 0.5f;
-            g = 1f;
-            b = 0.5f;
+            Utility.GetEmmitedLight(i, j, new Color(128, 255, 128), applyPaint: true, out r, out g, out b);
         }
 
         public override void NumDust(int x, int y, bool fail, ref int num)

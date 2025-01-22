@@ -84,7 +84,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             for (int n = 1; n < trailCount; n++)
             {
                 Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * distanceMult;
-                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.55f - (float)n / trailCount), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.55f - (float)n / trailCount), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
             }
 
             Main.spriteBatch.End();

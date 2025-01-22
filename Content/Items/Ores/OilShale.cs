@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.createTile = TileType<Tiles.Ores.OilShale>();
             Item.placeStyle = 0;
             Item.rare = ItemRarityID.Blue;
-            Item.material = true;
+            
 
             // Set other Item.X values here
         }

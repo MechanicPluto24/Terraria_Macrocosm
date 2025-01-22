@@ -1,10 +1,12 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -23,6 +25,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Main.tileNoAttach[Type] = true;
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
+
+            TileID.Sets.MultiTileSway[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Chandeliers, 0));
             TileObjectData.addTile(Type);
@@ -65,24 +69,31 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX == 0)
-            {
-                r = 0.34f;
-                g = 0.9f;
-                b = 0.62f;
-            }
+                tile.GetEmmitedLight(new Color(87, 230, 158), applyPaint: false, out r, out g, out b);
         }
 
-        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
+            Tile tile = Main.tile[i, j];
+
+            if (TileObjectData.IsTopLeft(tile))
+                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
+
+            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+        }
+
+        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
+
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
-
             for (int k = 0; k < 7; k++)
             {
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                Utility.DrawTileExtraTexture(i, j, spriteBatch, flameTexture, drawOffset: new Vector2(xx, yy), drawColor: new Color(100, 100, 100, 0));
+                TileRendering.DrawMultiTileInWindTopAnchor(i, j, flameTexture, drawColor: new Color(100, 100, 100, 0), drawOffset: new Vector2(xx, yy), applyPaint: false, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
             }
         }
     }

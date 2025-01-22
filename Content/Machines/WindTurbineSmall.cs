@@ -44,6 +44,7 @@ namespace Macrocosm.Content.Machines
 
             TileObjectData.addTile(Type);
 
+            DustType = -1;
             AddMapEntry(new Color(134, 137, 139), CreateMapEntryName());
         }
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)

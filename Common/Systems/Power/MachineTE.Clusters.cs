@@ -5,6 +5,7 @@ using Terraria;
 using Macrocosm.Common.Config;
 using System.Linq;
 using System.Reflection.PortableExecutable;
+using Terraria.ID;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -13,49 +14,60 @@ namespace Macrocosm.Common.Systems.Power
         public virtual bool CanCluster => false;
 
         public List<Point16> Cluster { get; private set; } = null;
-        public Point16 ClusterOrigin { get; private set; }
-
-        public int ClusterSize => Cluster != null ? Cluster.Count : 1;    
-        public bool IsClusterOrigin => Position == ClusterOrigin;
-        public bool InactiveInCluster => Cluster != null && !IsClusterOrigin;
-
+        public int ClusterSize => Cluster != null ? Cluster.Count : 1;   
+        
+        /// <summary> 
+        /// Used for checking for new clusters when a tile is broken
+        /// <br/> Run on the template instance
+        /// </summary>
+        public void KillTile_ClusterCheck(Point16 position)
+        {
+            if (CanCluster)
+            {
+                foreach (var neighbor in GetNeighborOffsets())
+                {
+                    var neighborPosition = new Point16(position.X + neighbor.X, position.Y + neighbor.Y);
+                    Tile tile = Main.tile[neighborPosition];
+                    if (tile.HasTile && tile.TileType == MachineTile.Type && !ByPosition.ContainsKey(neighborPosition))
+                        BlockPlacement(neighborPosition.X, neighborPosition.Y);
+                }
+            }
+        }
 
         private static int clusterTimer = 0;
         private static void BuildClusters()
         {
             if (clusterTimer++ >= (int)ServerConfig.Instance.ClusterFindUpdateRate)
             {
-                RefreshClusters();
-                BuildClusters_Internal();
-            }
+                IEnumerable<MachineTE> clusterable = ByID.Values.Where(te => te is MachineTE m && m.CanCluster).Cast<MachineTE>();
 
-        }
-
-        private static void RefreshClusters()
-        {
-            foreach (var te in ByID.Values)
-            {
-                if (te is MachineTE machine)
-                {
+                foreach (MachineTE machine in clusterable)
                     machine.Cluster = null;
-                }
-            }
-        }
 
-        private static void BuildClusters_Internal()
-        {
-            foreach (var tileEntity in ByID.Values)
-            {
-                if (tileEntity is MachineTE machine && machine.CanCluster && machine.Cluster == null)
+                foreach (MachineTE machine in clusterable)
                 {
+                    // Get all tile coordinates where there is a connected tile of the same type as this machine's
                     List<Point16> cluster = FindCluster(machine.Position.X, machine.Position.Y, machine.MachineTile.Type);
-                    Point16 clusterOrigin = cluster.MinBy(tile => (tile.Y, tile.X));
-                    foreach (var position in cluster)
+                    if(cluster.Count > 0)
                     {
-                        if (ByPosition.TryGetValue(position, out var other) && other is MachineTE otherMachine && machine.Type == otherMachine.Type)
+                        machine.Cluster = cluster;
+                        Point16 clusterOrigin = cluster.MinBy(tile => (tile.Y, tile.X));
+
+                        // Note: Tile type checks would be redundant here
+                        foreach (var position in cluster)
                         {
-                            otherMachine.Cluster = cluster;
-                            otherMachine.ClusterOrigin = clusterOrigin;
+                            if (position == clusterOrigin)
+                            {
+                                // On the origin 
+                                if (!Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out _))
+                                    machine.Place(position.X, position.Y);
+                            }
+                            else
+                            {
+                                // Kill other TEs of the same type that are part of this cluster 
+                                if (Utility.TryGetTileEntityAs(position, out MachineTE other) && machine.Type == other.Type)
+                                    other.Kill(position.X, position.Y);
+                            }
                         }
                     }
                 }
@@ -85,7 +97,8 @@ namespace Macrocosm.Common.Systems.Power
                     if (visited.Contains(neighborPos))
                         continue;
 
-                    if (Main.tile[neighborPos.X, neighborPos.Y].TileType == tileType)
+                    Tile tile = Main.tile[neighborPos.X, neighborPos.Y];
+                    if (tile.HasTile && tile.TileType == tileType)
                     {
                         toVisit.Enqueue(neighborPos);
                     }

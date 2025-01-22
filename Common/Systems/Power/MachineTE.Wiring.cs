@@ -191,40 +191,7 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        protected class ConveyorCircuit : Circuit<MachineTE>
-        {
-            public override void Merge(Circuit<MachineTE> other)
-            {
-                if (other is ConveyorCircuit conveyorOther)
-                {
-                    foreach (var node in conveyorOther.nodes)
-                    {
-                        Add(node);
-                        if (node is MachineTE machine)
-                        {
-                            machine.conveyorCircuit = this;
-                        }
-                    }
-                    other.Clear();
-                }
-            }
-
-            public override void Solve(int updateRate)
-            {
-                foreach (var node in nodes)
-                {
-                    if (node is MachineTE machine)
-                    {
-                        // Implement your item transfer logic here
-                        // machine.TransferItems();
-                    }
-                }
-            }
-        }
-
         protected WireCircuit wireCircuit = null;
-        protected ConveyorCircuit conveyorCircuit = null;
-
         protected static List<WireType> WireTypes => Enum.GetValues<WireType>().ToList();
 
         private static int buildTimer = 0;
@@ -232,147 +199,70 @@ namespace Macrocosm.Common.Systems.Power
         {
             if (buildTimer++ >= (int)ServerConfig.Instance.CircuitSearchUpdateRate)
             {
-                RefreshCircuits();
-                BuildWireCircuits();
-                BuildConveyorCircuits();
-                buildTimer = 0;
-            }
-        }
-
-        private static void RefreshCircuits()
-        {
-            foreach (var te in ByID.Values)
-            {
-                if (te is MachineTE machine)
-                {
-                    machine.wireCircuit = null;
-                    machine.conveyorCircuit = null;
-                }
-            }
-        }
-
-        private static void BuildWireCircuits()
-        {
-            foreach (WireType wireType in WireTypes)
-            {
                 foreach (var te in ByID.Values)
+                    if (te is MachineTE machine)
+                        machine.wireCircuit = null;
+
+                foreach (WireType wireType in WireTypes)
                 {
-                    if (te is MachineTE machine && !machine.InactiveInCluster)
+                    foreach (var te in ByID.Values)
                     {
-                        if (machine.wireCircuit != null)
-                            continue;
-
-                        ConnectionSearch<MachineTE> connectionSearch = new(
-                            connectionCheck: position => Main.tile[position].HasWire(wireType),
-                            retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) && !m.InactiveInCluster ? m : null
-                        );
-
-                        HashSet<MachineTE> connectedNodes = connectionSearch.FindConnectedNodes(machine.GetConnectionPositions());
-
-                        if (connectedNodes.Count == 0)
-                            continue;
-
-                        HashSet<WireCircuit> existingCircuits = new();
-                        foreach (var node in connectedNodes)
+                        if (te is MachineTE machine)
                         {
-                            if (node is MachineTE m && m.wireCircuit != null)
+                            if (machine.wireCircuit != null)
+                                continue;
+
+                            ConnectionSearch<MachineTE> connectionSearch = new(
+                                connectionCheck: position => Main.tile[position].HasWire(wireType),
+                                retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) ? m : null
+                            );
+
+                            HashSet<MachineTE> connectedNodes = connectionSearch.FindConnectedNodes(machine.GetConnectionPositions());
+                            if (connectedNodes.Count == 0)
+                                continue;
+
+                            HashSet<WireCircuit> existingCircuits = new();
+                            foreach (var node in connectedNodes)
                             {
-                                existingCircuits.Add(m.wireCircuit);
+                                if (node is MachineTE m && m.wireCircuit != null)
+                                {
+                                    existingCircuits.Add(m.wireCircuit);
+                                }
                             }
-                        }
 
-                        WireCircuit newCircuit;
-                        if (existingCircuits.Count > 0)
-                        {
-                            newCircuit = existingCircuits.First();
-                            foreach (var otherCircuit in existingCircuits.Skip(1))
+                            WireCircuit newCircuit;
+                            if (existingCircuits.Count > 0)
                             {
-                                newCircuit.Merge(otherCircuit);
+                                newCircuit = existingCircuits.First();
+                                foreach (var otherCircuit in existingCircuits.Skip(1))
+                                {
+                                    newCircuit.Merge(otherCircuit);
+                                }
                             }
-                        }
-                        else
-                        {
-                            newCircuit = new WireCircuit(wireType);
-                        }
-
-                        foreach (var node in connectedNodes)
-                        {
-                            if (node is MachineTE m && m.wireCircuit == null)
+                            else
                             {
-                                newCircuit.Add(m);
-                                m.wireCircuit = newCircuit;
+                                newCircuit = new WireCircuit(wireType);
                             }
-                        }
 
-                        if (machine.wireCircuit == null)
-                        {
-                            newCircuit.Add(machine);
-                            machine.wireCircuit = newCircuit;
+                            foreach (var node in connectedNodes)
+                            {
+                                if (node is MachineTE m && m.wireCircuit == null)
+                                {
+                                    newCircuit.Add(m);
+                                    m.wireCircuit = newCircuit;
+                                }
+                            }
+
+                            if (machine.wireCircuit == null)
+                            {
+                                newCircuit.Add(machine);
+                                machine.wireCircuit = newCircuit;
+                            }
                         }
                     }
                 }
-            }
-        }
 
-        private static void BuildConveyorCircuits()
-        {
-            foreach (var te in ByID.Values)
-            {
-                if (te is MachineTE machine && !machine.InactiveInCluster)
-                {
-                    if (machine.conveyorCircuit != null)
-                    {
-                        continue;
-                    }
-
-                    ConnectionSearch<MachineTE> connectionSearch = new(
-                        connectionCheck: position => ConnectorSystem.Map[position].Conveyor,
-                        retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) && !m.InactiveInCluster ? m : null
-                    );
-
-                    HashSet<MachineTE> connectedNodes = connectionSearch.FindConnectedNodes(machine.GetConnectionPositions());
-
-                    if (connectedNodes.Count == 0)
-                        continue;
-
-                    HashSet<ConveyorCircuit> existingCircuits = new();
-                    foreach (var node in connectedNodes)
-                    {
-                        if (node is MachineTE m && m.conveyorCircuit != null)
-                        {
-                            existingCircuits.Add(m.conveyorCircuit);
-                        }
-                    }
-
-                    ConveyorCircuit newCircuit;
-                    if (existingCircuits.Count > 0)
-                    {
-                        newCircuit = existingCircuits.First();
-                        foreach (var otherCircuit in existingCircuits.Skip(1))
-                        {
-                            newCircuit.Merge(otherCircuit);
-                        }
-                    }
-                    else
-                    {
-                        newCircuit = new ConveyorCircuit();
-                    }
-
-                    foreach (var node in connectedNodes)
-                    {
-                        if (node is MachineTE m && m.conveyorCircuit == null)
-                        {
-                            newCircuit.Add(m);
-                            m.conveyorCircuit = newCircuit;
-                        }
-                    }
-
-                    if (machine.conveyorCircuit == null)
-                    {
-                        newCircuit.Add(machine);
-                        machine.conveyorCircuit = newCircuit;
-                    }
-                }
+                buildTimer = 0;
             }
         }
 
@@ -406,20 +296,6 @@ namespace Macrocosm.Common.Systems.Power
 
                 solveTimer = 0;
             }
-
-            HashSet<ConveyorCircuit> processedConveyorCircuits = new();
-            foreach (var te in ByID.Values)
-            {
-                if (te is MachineTE machine)
-                {
-                    var circuit = machine.conveyorCircuit;
-                    if (circuit != null && !processedConveyorCircuits.Contains(circuit))
-                    {
-                        circuit.Solve(updateRate: 1);
-                        processedConveyorCircuits.Add(circuit);
-                    }
-                }
-            }
         }
 
         protected virtual IEnumerable<Point16> GetConnectionPositions()
@@ -439,10 +315,6 @@ namespace Macrocosm.Common.Systems.Power
                     }
                 }
             }
-        }
-
-        public void TransferItems()
-        {
         }
     }
 }

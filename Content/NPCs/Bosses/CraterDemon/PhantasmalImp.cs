@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Threading;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -29,7 +30,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailCacheLength[Type] = 20;
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
@@ -148,14 +149,24 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             state.SaveState(Main.spriteBatch);
 
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
+            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
+            SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             for (int i = 1; i < length; i++)
             {
-                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;
+                float progress = i / (float)length;
 
-                Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
-                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i], Projectile.Size / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+                float wave = MathF.Sin(((length - i) + flashTimer / 2)) * (4f + 12f * progress);
+                Vector2 waveOffset = Math.Abs(Projectile.velocity.X) > Math.Abs(Projectile.velocity.Y) ? new Vector2(0, wave) : new Vector2(wave, 0);
+                Vector2 drawPos = Projectile.oldPos[i];
+                if (i > 0) drawPos = Vector2.Lerp(Projectile.oldPos[i], Projectile.position, 0.2f);
+                drawPos += Projectile.Size / 2f + waveOffset - Main.screenPosition;
+
+                Color trailColor = new Color(127, 127, 127, 0) * Projectile.Opacity * Utility.QuadraticEaseIn(1f - progress) * 0.35f;
+                float rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i];
+                float scale = Projectile.scale * 1f * (1f - progress);
+
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
             }
 
             Main.spriteBatch.End();
@@ -176,7 +187,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 float scale = Projectile.scale * progress * (SpawnedFromPortal ? 1.1f : 0.8f);
                 Vector2 position = SpawnedFromPortal ? spawnPosition : Projectile.position + Projectile.Size / 2f;
                 float opacity = SpawnedFromPortal ? 0.4f : 1f;
-                Main.spriteBatch.Draw(flare, position - Main.screenPosition, null, new Color(92, 206, 130).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+                Main.EntitySpriteDraw(flare, position - Main.screenPosition, null, new Color(92, 206, 130).WithOpacity(opacity), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
 
             // Strange

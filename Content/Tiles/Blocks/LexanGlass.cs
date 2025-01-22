@@ -18,10 +18,5 @@ namespace Macrocosm.Content.Tiles.Blocks
 
             AddMapEntry(new Color(50, 50, 50), CreateMapEntryName());
         }
-
-        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
-        {
-
-        }
     }
 }

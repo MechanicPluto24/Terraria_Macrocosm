@@ -62,7 +62,7 @@ namespace Macrocosm.Common.Hooks
         private static int RemoveTorchDust(On_WorldGen.orig_KillTile_MakeTileDust orig, int i, int j, Tile tileCache)
         {
             if (SubworldSystem.AnyActive<Macrocosm>()
-                && LightSourceGlobalTile.IsTileWithFlame(i, j, tileCache.TileType)
+                && LightSourceGlobalTile.IsTileLightSourceDisabled(i, j, tileCache.TileType)
                 && !RoomOxygenSystem.IsRoomPressurized(i, j))
                 return -1;
 

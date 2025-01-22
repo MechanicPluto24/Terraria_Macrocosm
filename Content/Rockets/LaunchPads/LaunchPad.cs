@@ -43,7 +43,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public Point CenterTile => new((StartTile.X + (EndTile.X - StartTile.X) / 2), StartTile.Y);
         public Vector2 CenterWorld => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y * 16f);
 
-        public Vector2 InventoryItemDropLocation => CenterWorld;
+        public Vector2 InventoryPosition => CenterWorld;
         public int InventorySerializationIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
         public Inventory Inventory
         {

@@ -160,7 +160,7 @@ namespace Macrocosm.Common.Storage
         {
             if (oldSize > newSize)
             {
-                Vector2 dropLocation = Owner is not null ? Owner.InventoryItemDropLocation : Main.LocalPlayer.Center;
+                Vector2 dropLocation = Owner is not null ? Owner.InventoryPosition : Main.LocalPlayer.Center;
                 for (int i = oldSize - 1; i >= newSize; i--)
                     DropItem(i, dropLocation);
             }
@@ -229,7 +229,7 @@ namespace Macrocosm.Common.Storage
             return index >= 0 && index < reservedTextures.Length ? reservedTextures[index] : null;
         }
 
-        public bool TryPlacingItem(Item item, bool justCheck = false, bool sound = true, bool serverSync = true, int startFromIndex = 0)
+        public bool TryPlacingItem(ref Item item, bool justCheck = false, bool sound = true, bool serverSync = true, int startFromIndex = 0)
         {
             if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
                 return false;

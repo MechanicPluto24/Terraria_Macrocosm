@@ -18,6 +18,12 @@ namespace Macrocosm.Common.DataStructures
 
         private bool initialized;
 
+        private static FieldInfo spriteBatch_sortMode_fieldInfo;
+        private static FieldInfo spriteBatch_blendState_fieldInfo;
+        private static FieldInfo spriteBatch_samplerState_fieldInfo;
+        private static FieldInfo spriteBatch_customEffect_fieldInfo;
+        private static FieldInfo spriteBatch_transformMatrix_fieldInfo;
+
         public SpriteBatchState()
         {
             BeginCalled = false;
@@ -54,16 +60,21 @@ namespace Macrocosm.Common.DataStructures
 
             if (!initialized || continuous)
             {
-                SpriteSortMode = (SpriteSortMode)type.GetField("sortMode", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-                BlendState = (BlendState)type.GetField("blendState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-                SamplerState = (SamplerState)type.GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
-                DepthStencilState = default;
-                Effect = (Effect)type.GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+                spriteBatch_sortMode_fieldInfo ??= type.GetField("sortMode", BindingFlags.Instance | BindingFlags.NonPublic);
+                spriteBatch_blendState_fieldInfo ??= type.GetField("blendState", BindingFlags.Instance | BindingFlags.NonPublic);
+                spriteBatch_samplerState_fieldInfo ??= type.GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic);
+                spriteBatch_customEffect_fieldInfo ??= type.GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic);
+                spriteBatch_transformMatrix_fieldInfo ??= type.GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic);
+
+                SpriteSortMode = (SpriteSortMode)spriteBatch_sortMode_fieldInfo.GetValue(spriteBatch);
+                BlendState = (BlendState)spriteBatch_blendState_fieldInfo.GetValue(spriteBatch);
+                SamplerState = (SamplerState)spriteBatch_samplerState_fieldInfo.GetValue(spriteBatch);
+                Effect = (Effect)spriteBatch_customEffect_fieldInfo.GetValue(spriteBatch);
                 initialized = true;
             }
 
             RasterizerState = spriteBatch.GraphicsDevice.RasterizerState;
-            Matrix = (Matrix)type.GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+            Matrix = (Matrix)spriteBatch_transformMatrix_fieldInfo.GetValue(spriteBatch);
         }
     }
 }

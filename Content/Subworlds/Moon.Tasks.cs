@@ -13,7 +13,7 @@ using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Ores;
 using Macrocosm.Content.Items.Refined;
-using Macrocosm.Content.Items.Tools;
+using Macrocosm.Content.Items.Tools.Hammers;
 using Macrocosm.Content.Items.Torches;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;

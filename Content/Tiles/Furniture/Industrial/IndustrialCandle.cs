@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -72,11 +73,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX < 18 && tile.TileFrameY < 18)
-            {
-                r = 1f;
-                g = 1f;
-                b = 1f;
-            }
+                tile.GetEmmitedLight(Color.White, applyPaint: true, out r, out g, out b);
+
         }
     }
 }

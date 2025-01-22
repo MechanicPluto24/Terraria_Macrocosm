@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Refined
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 100;
             Item.rare = ItemRarityID.Green;
-            Item.material = true;
+            
 
         }
 

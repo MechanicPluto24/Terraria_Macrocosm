@@ -213,7 +213,7 @@ namespace Macrocosm.Common.Utils
         //------------------------------------------------------//
 
         //NOTE: DO NOT CALL IN ANY ConsumeAmmo HOOK!!! Will cause an infinite loop!
-        public static bool ConsumeAmmo(Player player, Item item, Item ammo)
+        public static bool ConsumeAmmo(this Player player, Item item, Item ammo)
         {
             bool consume = true;
             if (player.magicQuiver && ammo.ammo == AmmoID.Arrow && Main.rand.NextBool(5))
@@ -254,15 +254,9 @@ namespace Macrocosm.Common.Utils
             return consume;
         }
 
-        public static void ReduceSlot(Player player, int slot, int amount)
-        {
-            player.inventory[slot].stack -= amount;
-            if (player.inventory[slot].stack <= 0)
-            {
-                player.inventory[slot] = new Item();
-            }
-        }
-        public static bool HasEmptySlots(Player player, int slotCount, bool includeInventory = true, bool includeCoins = false, bool includeAmmo = false)
+        public static void ReduceSlot(this Player player, int slot, int amount) => player.inventory[slot].DecreaseStack(amount);
+
+        public static bool HasEmptySlots(this Player player, int slotCount, bool includeInventory = true, bool includeCoins = false, bool includeAmmo = false)
         {
             int count = 0;
             for (int m = includeInventory ? 0 : includeCoins ? 50 : 54; m < (includeAmmo ? 58 : includeCoins ? 54 : 50); m++)
@@ -272,7 +266,7 @@ namespace Macrocosm.Common.Utils
             return false;
         }
 
-        public static int GetEmptySlot(Player player, bool includeInventory = true, bool includeCoins = false, bool includeAmmo = false)
+        public static int GetEmptySlot(this Player player, bool includeInventory = true, bool includeCoins = false, bool includeAmmo = false)
         {
             for (int m = includeInventory ? 0 : includeCoins ? 50 : 54; m < (includeAmmo ? 58 : includeCoins ? 54 : 50); m++)
             {
@@ -281,7 +275,7 @@ namespace Macrocosm.Common.Utils
             return -1;
         }
 
-        public static bool DowngradeMoney(Player player, int moneySlot, ref int splitSlot)
+        public static bool DowngradeMoney(this Player player, int moneySlot, ref int splitSlot)
         {
             Item item = player.inventory[moneySlot];
             if (item is not { type: > ItemID.CopperCoin and < ItemID.FallenStar }) { return false; } //can't downgrade copper coins or non-coin items
@@ -298,7 +292,7 @@ namespace Macrocosm.Common.Utils
          * Returns true if it successfully reduces mana. If there is not enough mana to reduce it by the amount given it returns false.
          * autoRefill : If true, checks if the player has a mana flower and automatically boosts mana if it's needed.
          */
-        public static bool ReduceMana(Player player, int amount, bool autoRefill = true)
+        public static bool ReduceMana(this Player player, int amount, bool autoRefill = true)
         {
             if (autoRefill && player.manaFlower && player.statMana < (int)(amount * player.manaCost))
             {
@@ -314,16 +308,16 @@ namespace Macrocosm.Common.Utils
             return false;
         }
 
-        public static bool HasHelmet(Player player, int itemType, bool vanity = true) { return HasArmor(player, itemType, 0, vanity); }
-        public static bool HasChestplate(Player player, int itemType, bool vanity = true) { return HasArmor(player, itemType, 1, vanity); }
-        public static bool HasLeggings(Player player, int itemType, bool vanity = true) { return HasArmor(player, itemType, 2, vanity); }
+        public static bool HasHelmet(this Player player, int itemType, bool vanity = true) { return HasArmor(player, itemType, 0, vanity); }
+        public static bool HasChestplate(this Player player, int itemType, bool vanity = true) { return HasArmor(player, itemType, 1, vanity); }
+        public static bool HasLeggings(this Player player, int itemType, bool vanity = true) { return HasArmor(player, itemType, 2, vanity); }
 
         /*
          * Returns true if the player is wearing the given armor
          * armorType : 0 == helmet, 1 == chestplate, 2 == leggings.
          * vanity : If true, include vanity slots.
          */
-        public static bool HasArmor(Player player, int itemType, int armorType, bool vanity = true)
+        public static bool HasArmor(this Player player, int itemType, int armorType, bool vanity = true)
         {
             if (vanity)
             {
@@ -367,7 +361,7 @@ namespace Macrocosm.Common.Utils
          * Returns the total monetary value (in copper coins) the player has.
          * includeInventory : True to include inventory slots, false to only include coin slots.
          */
-        public static int GetMoneySum(Player player, bool includeInventory = false)
+        public static int GetMoneySum(this Player player, bool includeInventory = false)
         {
             int totalSum = 0;
             for (int m = includeInventory ? 0 : 50; m < 54; m++)
@@ -388,7 +382,7 @@ namespace Macrocosm.Common.Utils
         }
 
 
-        public static int GetItemstackSum(Player player, int type, bool typeIsAmmo = false, bool includeAmmo = false, bool includeCoins = false)
+        public static int GetItemstackSum(this Player player, int type, bool typeIsAmmo = false, bool includeAmmo = false, bool includeCoins = false)
         {
             return GetItemstackSum(player, [type], typeIsAmmo, includeAmmo, includeCoins);
         }
@@ -398,7 +392,7 @@ namespace Macrocosm.Common.Utils
          * 
          * typeIsAmmo : If true, types are considered ammo types. Else, types are considered item types.
          */
-        public static int GetItemstackSum(Player player, int[] types, bool typeIsAmmo = false, bool includeAmmo = false, bool includeCoins = false)
+        public static int GetItemstackSum(this Player player, int[] types, bool typeIsAmmo = false, bool includeAmmo = false, bool includeCoins = false)
         {
             int stackCount = 0;
             if (includeCoins)
@@ -406,7 +400,7 @@ namespace Macrocosm.Common.Utils
                 for (int m = 50; m < 54; m++)
                 {
                     Item item = player.inventory[m];
-                    if (item != null && (typeIsAmmo ? Utility.InArray(types, item.ammo) : Utility.InArray(types, item.type))) { stackCount += item.stack; }
+                    if (item != null && (typeIsAmmo ? InArray(types, item.ammo) : InArray(types, item.type))) { stackCount += item.stack; }
                 }
             }
             if (includeAmmo)
@@ -414,18 +408,18 @@ namespace Macrocosm.Common.Utils
                 for (int m = 54; m < 58; m++)
                 {
                     Item item = player.inventory[m];
-                    if (item != null && (typeIsAmmo ? Utility.InArray(types, item.ammo) : Utility.InArray(types, item.type))) { stackCount += item.stack; }
+                    if (item != null && (typeIsAmmo ? InArray(types, item.ammo) : InArray(types, item.type))) { stackCount += item.stack; }
                 }
             }
             for (int m = 0; m < 50; m++)
             {
                 Item item = player.inventory[m];
-                if (item != null && (typeIsAmmo ? Utility.InArray(types, item.ammo) : Utility.InArray(types, item.type))) { stackCount += item.stack; }
+                if (item != null && (typeIsAmmo ? InArray(types, item.ammo) : InArray(types, item.type))) { stackCount += item.stack; }
             }
             return stackCount;
         }
 
-        public static bool HasItem(Player player, int[] types, int[] counts = default, bool includeAmmo = false, bool includeCoins = false)
+        public static bool HasItem(this Player player, int[] types, int[] counts = default, bool includeAmmo = false, bool includeCoins = false)
         {
             int dummyIndex = 0;
             bool hasItem = HasItem(player, types, ref dummyIndex, counts, includeAmmo, includeCoins);
@@ -439,21 +433,21 @@ namespace Macrocosm.Common.Utils
          * includeAmmo : true if you wish to include the ammo slots.
          * includeCoins : true if you wish to include the coin slots.
          */
-        public static bool HasItem(Player player, int[] types, ref int index, int[] counts = default, bool includeAmmo = false, bool includeCoins = false)
+        public static bool HasItem(this Player player, int[] types, ref int index, int[] counts = default, bool includeAmmo = false, bool includeCoins = false)
         {
             if (types == null || types.Length == 0)
             {
                 return false; //no types to check!			
             }
 
-            if (counts == null || counts.Length == 0) { counts = Utility.FillArray(new int[types.Length], 1); }
+            if (counts == null || counts.Length == 0) { counts = FillArray(new int[types.Length], 1); }
             int countIndex = -1;
             if (includeCoins)
             {
                 for (int m = 50; m < 54; m++)
                 {
                     Item item = player.inventory[m];
-                    if (item != null && Utility.InArray(types, item.type, ref countIndex) && item.stack >= counts[countIndex]) { index = m; return true; }
+                    if (item != null && InArray(types, item.type, ref countIndex) && item.stack >= counts[countIndex]) { index = m; return true; }
                 }
             }
             if (includeAmmo)
@@ -461,25 +455,25 @@ namespace Macrocosm.Common.Utils
                 for (int m = 54; m < 58; m++)
                 {
                     Item item = player.inventory[m];
-                    if (item != null && Utility.InArray(types, item.type, ref countIndex) && item.stack >= counts[countIndex]) { index = m; return true; }
+                    if (item != null && InArray(types, item.type, ref countIndex) && item.stack >= counts[countIndex]) { index = m; return true; }
                 }
             }
             for (int m = 0; m < 50; m++)
             {
                 Item item = player.inventory[m];
-                if (item != null && Utility.InArray(types, item.type, ref countIndex) && item.stack >= counts[countIndex]) { index = m; return true; }
+                if (item != null && InArray(types, item.type, ref countIndex) && item.stack >= counts[countIndex]) { index = m; return true; }
             }
             return false;
         }
 
-        public static bool HasAllItems(Player player, int[] types, ref int[] indicies, int[] counts = default, bool includeAmmo = false, bool includeCoins = false)
+        public static bool HasAllItems(this Player player, int[] types, ref int[] indicies, int[] counts = default, bool includeAmmo = false, bool includeCoins = false)
         {
             if (types == null || types.Length == 0)
             {
                 return false; //no types to check!
             }
 
-            if (counts == null || counts.Length == 0) { counts = Utility.FillArray(new int[types.Length], 1); }
+            if (counts == null || counts.Length == 0) { counts = FillArray(new int[types.Length], 1); }
             int[] indexArray = new int[types.Length];
             bool[] foundItem = new bool[types.Length];
             if (includeCoins)
@@ -538,7 +532,7 @@ namespace Macrocosm.Common.Utils
             return true;
         }
 
-        public static bool HasItem(Player player, int type, int count = 1, bool includeAmmo = false, bool includeCoins = false)
+        public static bool HasItem(this Player player, int type, int count = 1, bool includeAmmo = false, bool includeCoins = false)
         {
             int dummyIndex = 0;
             bool hasItem = HasItem(player, type, ref dummyIndex, count, includeAmmo, includeCoins);
@@ -553,7 +547,7 @@ namespace Macrocosm.Common.Utils
          * includeAmmo : true if you wish to include the ammo slots.
          * includeCoins : true if you wish to include the coin slots.
          */
-        public static bool HasItem(Player player, int type, ref int index, int count = 1, bool includeAmmo = false, bool includeCoins = false)
+        public static bool HasItem(this Player player, int type, ref int index, int count = 1, bool includeAmmo = false, bool includeCoins = false)
         {
             if (includeCoins)
             {
@@ -590,7 +584,7 @@ namespace Macrocosm.Common.Utils
          * includeCoins : true if you wish to include the coin slots.
 		 * ingoreConsumable : true if you wish to ignore consumable checks (this is used for infinite ammo items like musket pouch)
          */
-        public static bool HasAmmo(Player player, int ammoType, ref int index, int count = 1, bool includeAmmo = false, bool includeCoins = false, bool ignoreConsumable = false)
+        public static bool HasAmmo(this Player player, int ammoType, ref int index, int count = 1, bool includeAmmo = false, bool includeCoins = false, bool ignoreConsumable = false)
         {
             if (includeCoins)
             {
@@ -660,9 +654,9 @@ namespace Macrocosm.Common.Utils
          * armorName : First word in the armor's name (ie "Copper", "Iron", "Hallowed" etc.)
          * vanity : true if your checking vanity slots, else normal armor slots.
          */
-        public static bool HasArmorSet(Player player, string armorName, bool vanity = false)
+        public static bool HasArmorSet(this Player player, string armorName, bool vanity = false)
         {
-            return HasArmorSet(null, player, armorName, vanity);
+            return HasArmorSet(player, null, armorName, vanity);
         }
 
         /**
@@ -671,7 +665,7 @@ namespace Macrocosm.Common.Utils
          * armorName : First word in the armor's name (ie "Copper", "Iron", "Hallowed" etc.)
          * vanity : true if your checking vanity slots, else normal armor slots.
          */
-        public static bool HasArmorSet(Mod mod, Player player, string armorName, bool vanity = false)
+        public static bool HasArmorSet(this Player player, Mod mod, string armorName, bool vanity = false)
         {
             Item itemHelm = player.armor[vanity ? 10 : 0], itemBody = player.armor[vanity ? 11 : 1], itemLegs = player.armor[vanity ? 12 : 2];
             return IsInSet(mod, armorName, itemHelm, itemBody, itemLegs);
@@ -681,7 +675,7 @@ namespace Macrocosm.Common.Utils
         public static bool IsVanitySlot(int slot, bool acc = true) { return acc ? slot is >= 13 and <= 18 : slot is >= 10 and <= 12; }
 
 
-        public static bool HasAccessories(Player player, int[] types, bool normal, bool vanity, bool oneOf)
+        public static bool HasAccessories(this Player player, int[] types, bool normal, bool vanity, bool oneOf)
         {
             int dummy = 0; bool dummeh = false;
             return HasAccessories(player, types, normal, vanity, oneOf, ref dummeh, ref dummy);
@@ -691,7 +685,7 @@ namespace Macrocosm.Common.Utils
          * Returns true if the given player has the given accessories equipped.
          * oneOf : If true, checks if you have any of the types instead of all of them.
          */
-        public static bool HasAccessories(Player player, int[] types, bool normal, bool vanity, bool oneOf, ref bool social, ref int index)
+        public static bool HasAccessories(this Player player, int[] types, bool normal, bool vanity, bool oneOf, ref bool social, ref int index)
         {
             int trueCount = 0;
 
@@ -736,7 +730,7 @@ namespace Macrocosm.Common.Utils
             return trueCount >= types.Length;
         }
 
-        public static bool HasAccessory(Player player, int type, bool normal, bool vanity)
+        public static bool HasAccessory(this Player player, int type, bool normal, bool vanity)
         {
             int dummy = 0; bool dummeh = false;
             return HasAccessory(player, type, normal, vanity, ref dummeh, ref dummy);
@@ -745,7 +739,7 @@ namespace Macrocosm.Common.Utils
         /**
          * Returns true if the given player has the given accessory equipped.
          */
-        public static bool HasAccessory(Player player, int type, bool normal, bool vanity, ref bool social, ref int index)
+        public static bool HasAccessory(this Player player, int type, bool normal, bool vanity, ref bool social, ref int index)
         {
             if (vanity)
             {

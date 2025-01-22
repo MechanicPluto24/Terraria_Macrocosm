@@ -1,8 +1,11 @@
-﻿using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Debuffs.Environment;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.IO;
@@ -193,7 +196,14 @@ namespace Macrocosm.Common.Players
 
         public override void PostUpdate()
         {
+            HandleAchievements();
             HandleZeroGravity();
+        }
+
+        public void HandleAchievements()
+        {
+            if(SubworldSystem.IsActive<Moon>())
+                CustomAchievement.IncreaseEventValue<SurviveMoon>(nameof(SurviveMoon), 1f);
         }
 
         private void HandleZeroGravity()
