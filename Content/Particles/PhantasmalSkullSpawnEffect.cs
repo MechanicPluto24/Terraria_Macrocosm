@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Particles
 
             Lighting.AddLight(Position, Color.ToVector3() * (actualScale / defScale));
 
-            if (actualScale > 0.99f)
+            if (actualScale > 0.7f)
                 Kill();
         }
 

@@ -19,6 +19,7 @@ namespace Macrocosm.Content.Items.Machines
             Item.value = Item.sellPrice(gold: 1);
             Item.mech = true;
         }
+
         public override void AddRecipes()
         {
             CreateRecipe()
@@ -27,6 +28,7 @@ namespace Macrocosm.Content.Items.Machines
                 .AddIngredient(ItemID.TitaniumBar, 6)
                 .AddTile<Tiles.Crafting.Fabricator>()
                 .Register();
+
             CreateRecipe()
                 .AddIngredient<SteelBar>(18)
                 .AddIngredient(ItemID.Wire, 10)

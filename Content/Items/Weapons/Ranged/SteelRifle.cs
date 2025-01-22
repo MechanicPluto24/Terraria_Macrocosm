@@ -42,15 +42,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             RecoilDiminish = 0.9f
         };
 
-        public override bool? UseItem(Player player)
-        {
-            return true;
-        }
-
-        public override void UpdateInventory(Player player)
-        {
-        }
-
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
             position -= new Vector2(4 * player.direction, 2);

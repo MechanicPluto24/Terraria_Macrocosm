@@ -251,13 +251,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition;
                 Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
-                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, frame, trailColor, Projectile.oldRot[i], frame.Size() / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, drawPos, frame, trailColor, Projectile.oldRot[i], frame.Size() / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             }
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition, frame, GetAlpha(lightColor) ?? Color.White, Projectile.rotation, frame.Size() / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition, frame, GetAlpha(lightColor) ?? Color.White, Projectile.rotation, frame.Size() / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             return false;
         }
 

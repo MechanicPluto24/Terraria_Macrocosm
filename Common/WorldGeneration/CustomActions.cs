@@ -112,8 +112,8 @@ namespace Macrocosm.Common.WorldGeneration
                 Vector2 value = new((float)origin.X + _width / 2, origin.Y);
                 Vector2 value2 = new(x, y);
                 float num = Vector2.Distance(value2, value);
-                float num2 = Math.Max(0f, Math.Min(1f, (num - _innerRadius) / (_outerRadius - _innerRadius)));
-                if (_random.NextDouble() > num2)
+                float windRotationFactor = Math.Max(0f, Math.Min(1f, (num - _innerRadius) / (_outerRadius - _innerRadius)));
+                if (_random.NextDouble() > windRotationFactor)
                 {
                     return UnitApply(origin, x, y, args);
                 }

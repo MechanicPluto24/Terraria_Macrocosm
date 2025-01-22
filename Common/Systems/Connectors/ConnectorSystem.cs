@@ -1,10 +1,15 @@
-﻿using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Netcode;
+using Macrocosm.Common.Storage;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Connectors;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -13,43 +18,16 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
-    public class ConnectorSystem : ModSystem
+    public partial class ConnectorSystem : ModSystem, IEnumerable<KeyValuePair<Point16, ConnectorData>>
     {
         public static ConnectorSystem Instance => ModContent.GetInstance<ConnectorSystem>();
         public static ConnectorSystem Map => Instance;
 
-        private Dictionary<Point16, ConnectorData> map = new();
-
-        private Asset<Texture2D> texture;
-
-        public override void Load()
-        {
-            texture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Connectors");
-        }
-
-        public override void Unload()
-        {
-        }
-
-        public override void ClearWorld()
-        {
-            map = new();
-        }
-
+        private Dictionary<Point16, ConnectorData> wireMap = new();
         public ConnectorData this[Point16 point]
         {
-            get
-            {
-                if (!map.TryGetValue(point, out var data))
-                    data = new();
-
-                return data;
-            }
-
-            private set
-            {
-                map[point] = value;
-            }
+            get => wireMap.TryGetValue(point, out var data) ? data : new();
+            private set => wireMap[point] = value;
         }
 
         public ConnectorData this[int x, int y]
@@ -63,17 +41,24 @@ namespace Macrocosm.Common.Systems.Connectors
             get => this[new Point16(point)];
             private set => this[new Point16(point)] = value;
         }
-        public bool ShouldDrawWires
-        {
-            get
-            {
-                Item item = Main.LocalPlayer.HeldItem;
-                if (item.mech)
-                    return true;
 
-                return false;
-            }
+        private static Asset<Texture2D> texture;
+        public override void Load()
+        {
+            texture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Connectors");
         }
+
+        public override void Unload()
+        {
+        }
+
+        public override void ClearWorld()
+        {
+            wireMap = new();
+        }
+
+
+        public bool ShouldDraw => Main.LocalPlayer.CurrentItem().mech;
 
         public ConnectorVisibility ConveyorVisibility { get; set; } = ConnectorVisibility.Normal;
 
@@ -89,13 +74,19 @@ namespace Macrocosm.Common.Systems.Connectors
         public static void CutWire(Point coords, bool sync = true) => CutWire(coords.X, coords.Y, sync);
         public static void CutWire(int x, int y, bool sync = true)
         {
-            int itemDrop = -1;
-            int dustType = -1;
-            if (Map[x, y].Conveyor)
+            int itemDrop = Map[x, y].Type switch
             {
-                itemDrop = ModContent.ItemType<Conveyor>();
-                dustType = DustID.Copper;
-            }
+                ConnectorType.Conveyor => ModContent.ItemType<Conveyor>(),
+                ConnectorType.ConveyorInlet => ModContent.ItemType<ConveyorInlet>(),
+                ConnectorType.ConveyorOutlet => ModContent.ItemType<ConveyorOutlet>(),
+                _ => -1,
+            };
+
+            int dustType = Map[x, y].Type switch
+            {
+                _ when Map[x, y].AnyConveyor => DustID.Copper,
+                _ => -1,
+            };
 
             Map[x, y] = new();
 
@@ -110,9 +101,14 @@ namespace Macrocosm.Common.Systems.Connectors
                 SyncConnector(x, y, ConnectorType.None);
         }
 
+        public override void PostUpdateWorld()
+        {
+            UpdateConveyors();
+        }
+
         public override void PostDrawTiles()
         {
-            if (!ShouldDrawWires)
+            if (!ShouldDraw)
                 return;
 
             SpriteBatch spriteBatch = Main.spriteBatch;
@@ -126,6 +122,7 @@ namespace Macrocosm.Common.Systems.Connectors
             int endX = (int)((Main.screenPosition.X + Main.screenWidth + zero.X) / 16f) + 2;
             int startY = (int)((Main.screenPosition.Y - zero.Y) / 16f - 1f);
             int endY = (int)((Main.screenPosition.Y + Main.screenHeight + zero.Y) / 16f) + 5;
+
             if (startX < 0)
                 startX = 0;
 
@@ -144,30 +141,35 @@ namespace Macrocosm.Common.Systems.Connectors
                 {
                     ConnectorData data = this[i, j];
 
-                    if (data.AnyWire)
+                    if (data.Any)
                     {
-                        int frameY;
-                        if (data.Conveyor)
+                        if (data.AnyConveyor)
                         {
-                            frameY = 0;
+                            // Type frame
+                            int frameY = 0;
+                            if (data.ConveyorInlet)
+                                frameY = 18;
+                            else if (data.ConveyorOutlet)
+                                frameY = 36;
+
+                            // Connection frame
                             int frameX = 0;
-                            if (this[i, j - 1].Conveyor)
+                            if (this[i, j - 1].AnyConveyor)
                                 frameX += 18;
 
-                            if (this[i + 1, j].Conveyor)
+                            if (this[i + 1, j].AnyConveyor)
                                 frameX += 36;
 
-                            if (this[i, j + 1].Conveyor)
+                            if (this[i, j + 1].AnyConveyor)
                                 frameX += 72;
 
-                            if (this[i - 1, j].Conveyor)
+                            if (this[i - 1, j].AnyConveyor)
                                 frameX += 144;
 
                             frame.Y = frameY;
                             frame.X = frameX;
 
                             Color color = GetColor(i, j, ConveyorVisibility);
-
                             if (color != Color.Transparent)
                                 spriteBatch.Draw(texture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
                         }
@@ -227,34 +229,46 @@ namespace Macrocosm.Common.Systems.Connectors
         {
             List<TagCompound> wireTags = new();
 
-            foreach (var kvp in map)
+            foreach (var kvp in wireMap)
             {
-                TagCompound entry = new();
-                entry["coords"] = kvp.Key;
-                entry["data"] = kvp.Value;
+                TagCompound entry = new()
+                {
+                    ["coords"] = kvp.Key,
+                    ["data"] = kvp.Value
+                };
                 wireTags.Add(entry);
             }
 
-            tag[nameof(map)] = wireTags;
+            tag[nameof(wireMap)] = wireTags;
         }
 
         public override void LoadWorldData(TagCompound tag)
         {
-            map = new Dictionary<Point16, ConnectorData>();
+            wireMap = new Dictionary<Point16, ConnectorData>();
 
-            if (tag.ContainsKey(nameof(map)))
+            if (tag.ContainsKey(nameof(wireMap)))
             {
-                var wireTags = tag.GetList<TagCompound>(nameof(map));
+                var wireTags = tag.GetList<TagCompound>(nameof(wireMap));
                 foreach (var entry in wireTags)
                 {
                     if (entry.ContainsKey("coords") && entry.ContainsKey("data"))
                     {
                         Point16 coords = entry.Get<Point16>("coords");
                         ConnectorData data = entry.Get<ConnectorData>("data");
-                        map[coords] = data;
+                        wireMap[coords] = data;
                     }
                 }
             }
+        }
+
+        public IEnumerator<KeyValuePair<Point16, ConnectorData>> GetEnumerator()
+        {
+            return ((IEnumerable<KeyValuePair<Point16, ConnectorData>>)wireMap).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)wireMap).GetEnumerator();
         }
     }
 }

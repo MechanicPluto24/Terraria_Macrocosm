@@ -161,7 +161,7 @@ namespace Macrocosm.Content.Machines
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
         }
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
@@ -242,9 +242,9 @@ namespace Macrocosm.Content.Machines
             if (tileOffsetX is 2 && tileOffsetY is 6)
             {
                 if (IsPoweredOnFrame(i, j))
-                    g = 0.2f;
+                    tile.GetEmmitedLight(new Color(0, 50, 0), applyPaint: true, out r, out g, out b);
                 else
-                    r = 0.2f;
+                    tile.GetEmmitedLight(new Color(50, 0, 0), applyPaint: true, out r, out g, out b);
             }
         }
     }

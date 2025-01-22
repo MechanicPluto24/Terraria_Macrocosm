@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -104,17 +105,13 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX < 18 * 2 * 2 && tile.TileFrameY < 18 * 2)
-            {
-                r = 0f;
-                g = 0.25f;
-                b = 0f;
-            }
+                tile.GetEmmitedLight(Color.Green * 0.5f, applyPaint: true, out r, out g, out b);
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true, Color.White);
         }
     }
 }

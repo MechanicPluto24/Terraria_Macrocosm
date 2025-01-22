@@ -9,8 +9,7 @@ BurnerGenerator: {
 
 KeroseneGenerator: {
 	DisplayName: Kerosene Generator
-	HullHeatMetric: Hull Heat: {0}°C
-	HullHeatImperial: Hull Heat: {0}°F
+	RPM: "{0} RPM"
 }
 
 Common: {

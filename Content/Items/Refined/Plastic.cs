@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Refined
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 100;
             Item.rare = ItemRarityID.LightRed;
-            Item.material = true;
+            
         }
 
         public override void AddRecipes()

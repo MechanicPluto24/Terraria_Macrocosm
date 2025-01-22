@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -85,7 +86,7 @@ namespace Macrocosm.Content.Machines
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true, Color.White);
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
@@ -115,10 +116,7 @@ namespace Macrocosm.Content.Machines
             if (tile.TileFrameX >= 72)
             {
                 float mult = 0.37f + 0.03f * (Main.tileFrame[Type] + 1);
-
-                r = 0.63f * mult;
-                g = 0.4f * mult;
-                b = 0.29f * mult;
+                tile.GetEmmitedLight(new Color(160, 100, 75) * mult, applyPaint: true, out r, out g, out b);
             }
         }
     }

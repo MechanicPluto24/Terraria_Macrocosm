@@ -3,7 +3,7 @@ using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.Consumables.Throwable;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Items.Ores;
-using Macrocosm.Content.Items.Tools;
+using Macrocosm.Content.Items.Tools.Hammers;
 using Macrocosm.Content.Items.Torches;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;

@@ -25,7 +25,6 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.value = Item.sellPrice(silver: 3, copper: 10);
             Item.rare = ItemRarityID.White;
             Item.UseSound = SoundID.Item1;
-            Item.autoReuse = true;
         }
 
         public override void AddRecipes()

@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Drops
             Item.value = Item.sellPrice(gold: 5);
             Item.rare = ItemRarityID.Expert;
             Item.expert = true;
-            Item.material = true;
+            
 
         }
     }

@@ -30,13 +30,13 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.rare = ModContent.RarityType<MoonRarityT2>();
             Item.UseSound = SoundID.Item8;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<ImbriumJewelPhantasmalSkull>();
-            Item.shootSpeed = 16f;
+            Item.shoot = ModContent.ProjectileType<ImbriumJewelMeteor>();
+            Item.shootSpeed = 22f;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position += new Vector2(Main.rand.Next(-200, 201), Main.rand.Next(-200, 201));
+            position += new Vector2(Main.rand.Next(-10, 11), Main.rand.Next(-10, 11));
         }
     }
 }

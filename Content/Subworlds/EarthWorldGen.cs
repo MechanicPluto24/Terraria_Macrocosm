@@ -10,6 +10,7 @@ using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using static Terraria.ModLoader.ModContent;
+using Macrocosm.Content.Tiles.Trees;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -24,6 +25,9 @@ namespace Macrocosm.Content.Subworlds
             int oceanIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Sand Patches"));
             if (oceanIndex != -1)
                 tasks.Insert(oceanIndex + 1, new PassLegacy("Macrocosm: Silica", GenerateSilicaSand_Ocean));
+            int flowerIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Sunflowers"));
+            if (oceanIndex != -1)
+                tasks.Insert(flowerIndex + 1, new PassLegacy("Macrocosm: Rubber", GenerateRubberTrees));
         }
 
         private void GenerateOres(GenerationProgress progress, GameConfiguration configuration)
@@ -115,6 +119,21 @@ namespace Macrocosm.Content.Subworlds
                         TileID.Sets.Dirt[Main.tile[i, j].TileType] ||
                         TileID.Sets.Stone[Main.tile[i, j].TileType])
                 );
+            }
+        }
+        private void GenerateRubberTrees(GenerationProgress progress, GameConfiguration configuration)
+        {
+            for (int X = 10; X <= Main.maxTilesX - 10; X++)
+            {
+                for (int Y = 0; Y < (int)Main.worldSurface; Y++)
+                {
+                    if (Main.tile[X, Y].TileType == (ushort)TileID.JungleGrass)
+                    {
+                        if (WorldGen.genRand.NextBool(20))
+                            WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), X, Y);
+                    }
+                }
+
             }
         }
     }

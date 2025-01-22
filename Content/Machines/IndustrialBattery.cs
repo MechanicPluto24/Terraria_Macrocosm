@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
@@ -68,7 +69,7 @@ namespace Macrocosm.Content.Machines
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask);
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
         }
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
@@ -90,7 +91,9 @@ namespace Macrocosm.Content.Machines
                 Vector2 offset = new(4, 18 + (22 - barHeight));
                 Vector2 tileDrawPosition = new Vector2(i, j) * 16f + zero + offset - Main.screenPosition;
 
-                spriteBatch.Draw(TextureAssets.MagicPixel.Value, tileDrawPosition, new Rectangle(0, 0, 1, 1), new Color(96, 13, 13) * 2.2f, 0f, Vector2.Zero, new Vector2(barWidth, barHeight), SpriteEffects.None, 0f);
+                Tile tile = Main.tile[i, j];
+                Color color = tile.TileColor != PaintID.None ? tile.GetPaintColor() : new Color(96, 13, 13) * 2.2f;
+                spriteBatch.Draw(TextureAssets.MagicPixel.Value, tileDrawPosition, new Rectangle(0, 0, 1, 1), color, 0f, Vector2.Zero, new Vector2(barWidth, barHeight), SpriteEffects.None, 0f);
             }
         }
     }

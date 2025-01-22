@@ -145,7 +145,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5");
 
             Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(100, 170, 200).WithOpacity(1f), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.305f, SpriteEffects.None, 0f);
-            Main.spriteBatch.Draw(glow.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(glow.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);
 
             effect = skew.Value;
             effect.Parameters["uScale"].SetValue(0.6f);
