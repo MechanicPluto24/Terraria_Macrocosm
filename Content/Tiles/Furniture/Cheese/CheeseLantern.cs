@@ -103,7 +103,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
 
-                TileRendering.DrawMultiTileInWindTopAnchor(i, j, flameTexture, drawColor: new Color(100, 100, 100, 0), drawOffset: new Vector2(xx, yy), applyPaint: false, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
+                TileRendering.DrawMultiTileInWindTopAnchor(i, j, flameTexture, color: new Color(100, 100, 100, 0), offset: new Vector2(xx, yy), applyPaint: false, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
             }
         }
     }

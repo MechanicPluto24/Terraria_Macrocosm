@@ -180,7 +180,7 @@ namespace Macrocosm.Common.Drawing
             spriteBatch.Draw(texture, position, frame, tileLight, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
 
-        public static void DrawMultiTileInWindBottomAnchor(int topLeftX, int topLeftY, Asset<Texture2D> textureOverride = null, Color? drawColor = null, Vector2 drawOffset = default, bool applyPaint = false, float windSensitivity = 0.15f, int rowsToIgnore = 0)
+        public static void DrawMultiTileInWindBottomAnchor(int topLeftX, int topLeftY, Asset<Texture2D> textureOverride = null, Color? colorOverride = null, bool perTileLighting = true, Vector2 drawOffset = default, bool applyPaint = false, float windSensitivity = 0.15f, int rowsToIgnore = 0)
         {
             Tile sourceTile = Main.tile[topLeftX, topLeftY];
             TileObjectData data = TileObjectData.GetTileData(sourceTile);
@@ -195,7 +195,7 @@ namespace Macrocosm.Common.Drawing
             float windCycle = TileRenderer.GetWindCycle(topLeftX, topLeftY, SunflowerWindCounter);
 
             Vector2 position = new Vector2(topLeftX * 16 - (int)screenPosition.X + sizeX * 16f * 0.5f, topLeftY * 16 - (int)screenPosition.Y + 16 * sizeY) + zero;
-            bool wind = WorldGen.InAPlaceWithWind(topLeftX, topLeftY, sizeX, sizeY);
+            bool wind = WorldGen.InAPlaceWithWind(topLeftX, topLeftY, sizeX, sizeY - rowsToIgnore);
 
             for (int i = topLeftX; i < topLeftX + sizeX; i++)
             {
@@ -222,7 +222,7 @@ namespace Macrocosm.Common.Drawing
                     TileRenderer.GetTileDrawData(i, j, tile, type, ref tileFrameX, ref tileFrameY, out var tileWidth, out var tileHeight, out var tileTop, out var halfBrickHeight, out var addFrX, out var addFrY, out var tileSpriteEffect, out _, out _, out _);
                     
                     bool canDoDust = TileRendererRandom.NextBool(4);
-                    Color tileLight = drawColor ?? Lighting.GetColor(i, j);
+                    Color tileLight = colorOverride ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
                     AdjustForVisionChangers(i, j, tile, type, tileFrameX, tileFrameY, ref tileLight, canDoDust);
                     tileLight = GetLightOverride(j, i, tile, type, tileFrameX, tileFrameY, tileLight);
 
@@ -316,7 +316,7 @@ namespace Macrocosm.Common.Drawing
 
         */
 
-        public static void DrawMultiTileInWindTopAnchor(int topLeftX, int topLeftY, Asset<Texture2D> textureOverride = null, Color? drawColor = null, Vector2 drawOffset = default, bool applyPaint = false, float windSensitivity = 0.15f, float windOffsetFactorY = -4f, int rowsToIgnore = 0,  float? windHeightSensitivityOverride = null)
+        public static void DrawMultiTileInWindTopAnchor(int topLeftX, int topLeftY, Asset<Texture2D> texture = null, Color? color = null, bool perTileLighting = true, Vector2 offset = default, bool applyPaint = false, float windSensitivity = 0.15f, float windOffsetFactorY = -4f, int rowsToIgnore = 0,  float? windHeightSensitivityOverride = null)
         {
             Tile sourceTile = Main.tile[topLeftX, topLeftY];
             TileObjectData data = TileObjectData.GetTileData(sourceTile);
@@ -328,13 +328,9 @@ namespace Macrocosm.Common.Drawing
 
             Vector2 screenPosition = Main.Camera.UnscaledPosition;
             Vector2 zero = Vector2.Zero;
-            float windCycle = TileRenderer.GetWindCycle(topLeftX, topLeftY, SunflowerWindCounter);
-
-            float windCycleCache = windCycle;
-            int totalPushTime = 60;
-            float pushForcePerFrame = 1.26f;
-            float highestWindGridPushComplex = GetHighestWindGridPushComplex(topLeftX, topLeftY, sizeX, sizeY, totalPushTime, pushForcePerFrame, 3, swapLoopDir: true);
-            windCycle += highestWindGridPushComplex;
+            float windCycle = WorldGen.InAPlaceWithWind(topLeftX, topLeftY, sizeX, sizeY) ? TileRenderer.GetWindCycle(topLeftX, topLeftY, SunflowerWindCounter) : 0;
+            float highestWindGridPush = GetHighestWindGridPushComplex(topLeftX, topLeftY, sizeX, sizeY, totalPushTime: 60, pushForcePerFrame: 1.26f, loops: 3, swapLoopDir: true);
+            windCycle += highestWindGridPush;
 
             Vector2 position = new Vector2((float)(topLeftX * 16 - (int)screenPosition.X) + (float)sizeX * 16f * 0.5f, topLeftY * 16 - (int)screenPosition.Y) + zero;
             Vector2 verticalDrawOffset = new(0f, -2f);
@@ -360,8 +356,7 @@ namespace Macrocosm.Common.Drawing
                 position += new Vector2(0f, rowsToIgnore * 16f);
 
             windSensitivity *= -1f;
-            if (!WorldGen.InAPlaceWithWind(topLeftX, topLeftY, sizeX, sizeY))
-                windCycle -= windCycleCache;
+
 
             for (int i = topLeftX; i < topLeftX + sizeX; i++)
             {
@@ -388,20 +383,20 @@ namespace Macrocosm.Common.Drawing
                     TileRenderer.GetTileDrawData(i, j, tile, type, ref tileFrameX, ref tileFrameY, out var tileWidth, out var tileHeight, out var tileTop, out var halfBrickHeight, out var addFrX, out var addFrY, out var tileSpriteEffect, out var _, out var _, out var _);
                     
                     bool canDoDust = TileRendererRandom.NextBool(4);
-                    Color tileLight = drawColor ?? Lighting.GetColor(i, j);
+                    Color tileLight = color ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
                     AdjustForVisionChangers(i, j, tile, type, tileFrameX, tileFrameY, ref tileLight, canDoDust);
                     tileLight = GetLightOverride(j, i, tile, type, tileFrameX, tileFrameY, tileLight);
 
                     Vector2 tilePos = new Vector2(i * 16 - (int)screenPosition.X, j * 16 - (int)screenPosition.Y + tileTop) + zero;
                     tilePos += verticalDrawOffset;
                     Vector2 origin = position - tilePos;
-                    Vector2 drawPos = position + new Vector2(0f, Math.Abs(windCycle) * windOffsetFactorY * windHeightSensitivity) + drawOffset;
+                    Vector2 drawPos = position + new Vector2(0f, Math.Abs(windCycle) * windOffsetFactorY * windHeightSensitivity) + offset;
                     Rectangle frame = new(tileFrameX + addFrX, tileFrameY + addFrY, tileWidth, tileHeight - halfBrickHeight);
                     float rotation = windCycle * windSensitivity * windHeightSensitivity;
 
                     Texture2D tileDrawTexture;
-                    if (textureOverride != null)
-                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, textureOverride) : textureOverride.Value;
+                    if (texture != null)
+                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, texture) : texture.Value;
                     else
                         tileDrawTexture = TileRenderer.GetTileDrawTexture(tile, i, j);
 

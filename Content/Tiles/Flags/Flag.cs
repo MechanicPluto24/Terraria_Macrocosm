@@ -5,6 +5,7 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -82,12 +83,14 @@ namespace Macrocosm.Content.Tiles.Flags
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             int frame = Main.tileFrame[type];
-            if (frame > 0)
+            var topLeft = Utility.GetMultitileTopLeft(i, j);
+            if (frame > 0 && WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, 3, 2))
             {
                 bool direction = Main.tile[i, j].TileFrameX / (18 * 3) > 0;
                 frameYOffset = 18 * 5 * (direction ? frame : 5 - frame);
             }
         }
+
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
             float speed = Math.Abs(Utility.WindSpeedScaled);
@@ -134,10 +137,14 @@ namespace Macrocosm.Content.Tiles.Flags
             spriteBatch.End();
             spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
 
-            if (PatternManager.TryGet("TricolorVertical", "Flag", out Pattern pattern, "France"))
+            Pattern[] patterns = PatternManager.GetAll(context: "FlagTile").ToArray();
+            if (patterns.Length > 0)
+            {
+                var pattern = patterns[i % patterns.Length];
                 pattern.Apply();
+            }
 
-            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, windSensitivity: 0.07f);
+            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, perTileLighting: false, windSensitivity: 0.07f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
