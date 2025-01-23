@@ -1,6 +1,10 @@
-﻿using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -48,9 +52,12 @@ namespace Macrocosm.Content.Machines
             DustType = -1;
             AddMapEntry(new Color(134, 137, 139), CreateMapEntryName());
         }
+
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            frameYOffset = 18 * Height * Main.tileFrame[type];
+            var topLeft = Utility.GetMultitileTopLeft(i, j);
+            if(WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, Width, Height))
+                frameYOffset = 18 * Height * Main.tileFrame[type];
         }
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
@@ -77,6 +84,22 @@ namespace Macrocosm.Content.Machines
                         frame = frameCount - 1;
                 }
             }
+        }
+
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            Tile tile = Main.tile[i, j];
+
+            if (TileObjectData.IsTopLeft(tile))
+                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
+
+            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+        }
+
+        private SpriteBatchState state;
+        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, perTileLighting: false, windSensitivity: 0.04f, rowsToIgnore: 1);
         }
     }
 }

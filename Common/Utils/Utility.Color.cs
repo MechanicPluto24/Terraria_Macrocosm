@@ -2,7 +2,6 @@ using Macrocosm.Common.Enums;
 using Microsoft.Xna.Framework;
 using System;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using Terraria;
 
 namespace Macrocosm.Common.Utils
@@ -24,18 +23,13 @@ namespace Macrocosm.Common.Utils
         #endregion
 
         #region Hex format conversion
-        public static string GetHex(this Color color)
-        {
-            return "#" + color.Hex3().ToUpper();
-        }
+        public static string GetHex(this Color color) => "#" + color.Hex3().ToUpper();
 
         public static Color GetColorFromHex(string hexString) => TryGetColorFromHex(hexString, out Color color) ? color : default;
         public static bool TryGetColorFromHex(string hexString, out Color color)
         {
-            if (hexString.StartsWith("#"))
-            {
+            if (hexString.StartsWith('#'))
                 hexString = hexString[1..];
-            }
 
             if (hexString.Length <= 6 && uint.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out uint result))
             {
@@ -46,9 +40,10 @@ namespace Macrocosm.Common.Utils
                 return true;
             }
 
-            color = Color.White;
+            color = Color.Transparent;
             return false;
         }
+
         public static bool TryGetColorFromHex(string hexString, out Vector3 hsl, float luminanceFactor = 1f)
         {
             if (TryGetColorFromHex(hexString, out Color rgb))

@@ -21,7 +21,6 @@ namespace Macrocosm.Common.Customization
     {
         public string Name { get; set; }
         public string Context { get; set; }
-        public string Profile { get; set; }
         public Dictionary<Color, PatternColorData> ColorData { get; set; } = new();
 
         public Asset<Texture2D> Texture { get; set; }
@@ -30,6 +29,7 @@ namespace Macrocosm.Common.Customization
         private readonly string iconPath;
 
         public const int MaxColors = 64;
+        public const float ColorDistance = 0.1f;
         public int ColorCount => Math.Min(ColorData.Count, MaxColors);
 
         private static Asset<Effect> shader;
@@ -38,7 +38,6 @@ namespace Macrocosm.Common.Customization
         {
             Name = "";
             Context = "";
-            Profile = "";
             ColorData = new();
             texturePath = Macrocosm.EmptyTexPath;
             Texture = Macrocosm.EmptyTex;
@@ -46,11 +45,10 @@ namespace Macrocosm.Common.Customization
             Icon = Macrocosm.EmptyTex;
         }
 
-        public Pattern(string name, string context, string profile, string texturePath, string iconPath, Dictionary<Color, PatternColorData> defaultColorData)
+        public Pattern(string name, string context, string texturePath, string iconPath, Dictionary<Color, PatternColorData> defaultColorData)
         {
             Name = name;
             Context = context;
-            Profile = profile;
 
             ColorData = defaultColorData.OrderBy(kvp => kvp.Key.PackedValue).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
@@ -61,7 +59,7 @@ namespace Macrocosm.Common.Customization
             Icon = ModContent.RequestIfExists<Texture2D>(iconPath, out var it) ? it : Macrocosm.EmptyTex;
         }
 
-        public Pattern Clone() => new(Name, Context, Profile, texturePath, iconPath, new Dictionary<Color, PatternColorData>(ColorData));
+        public Pattern Clone() => new(Name, Context, texturePath, iconPath, new Dictionary<Color, PatternColorData>(ColorData));
         public Color GetColor(Color key)
         {
             if (ColorData.TryGetValue(key, out var data))
@@ -80,8 +78,6 @@ namespace Macrocosm.Common.Customization
         {
             if (ColorData.TryGetValue(key, out var data) && (evenIfNotUserModifiable || data.IsUserModifiable))
                 ColorData[key] = data.WithUserColor(color);
-
-            Profile = "user";
         }
 
         public void SetColorFunction(Color key, ColorFunction colorFunction)
@@ -107,16 +103,17 @@ namespace Macrocosm.Common.Customization
             effect.Parameters["uColorCount"].SetValue(ColorCount);
             effect.Parameters["uColorKey"].SetValue(ColorData.Keys.Select(c => c.ToVector3()).ToArray());
             effect.Parameters["uColor"].SetValue(ColorData.Select(kvp => GetColor(kvp.Key).ToVector4()).ToArray());
-            effect.Parameters["uSampleBrightness"].SetValue(true);
+            effect.Parameters["uColorDistance"].SetValue(ColorDistance);
             return effect;
         }
 
         /// <summary> Set the <see cref="SpriteBatch"/> to <see cref="SpriteSortMode.Immediate"/> and <see cref="SamplerState.PointClamp"/> before applying </summary>
-        public void Apply()
+        public void Apply(int index = 1)
         {
+            Main.graphics.GraphicsDevice.Textures[index] = Texture.Value;
+            Main.graphics.GraphicsDevice.SamplerStates[index] = Main.graphics.GraphicsDevice.SamplerStates[0];
+
             Effect effect = PrepareEffect();
-            Main.graphics.GraphicsDevice.Textures[1] = Texture.Value;
-            Main.graphics.GraphicsDevice.SamplerStates[1] = Main.graphics.GraphicsDevice.SamplerStates[0];
             foreach (var pass in effect.CurrentTechnique.Passes)
                 pass.Apply();
         }
@@ -126,13 +123,13 @@ namespace Macrocosm.Common.Customization
             if (obj is not Pattern pattern)
                 return false;
 
-            if (Name != pattern.Name || Context != pattern.Context || Profile != pattern.Profile)
+            if (Name != pattern.Name || Context != pattern.Context)
                 return false;
 
             return ColorData.SequenceEqual(pattern.ColorData);
         }
 
-        public override int GetHashCode() => HashCode.Combine(Name, Context, Profile, ColorData);
+        public override int GetHashCode() => HashCode.Combine(Name, Context, ColorData);
 
         public string ToJSON() => ToJObject().ToString(Formatting.Indented);
         public JObject ToJObject()
@@ -141,7 +138,6 @@ namespace Macrocosm.Common.Customization
             {
                 ["name"] = Name,
                 ["context"] = Context,
-                ["profile"] = Profile,
                 ["texturePath"] = texturePath,
                 ["iconPath"] = iconPath,
                 ["colorData"] = new JObject(ColorData.Select(kvp => new JProperty(kvp.Key.GetHex(), kvp.Value.ToJObject())))
@@ -155,7 +151,6 @@ namespace Macrocosm.Common.Customization
             {
                 string name = jObject["name"]?.Value<string>() ?? throw new ArgumentException("Missing 'name' field.");
                 string context = jObject["context"]?.Value<string>() ?? throw new ArgumentException("Missing 'context' field.");
-                string profile = jObject["profile"]?.Value<string>() ?? throw new ArgumentException("Missing 'profile' field.");
                 string texturePath = jObject["texturePath"]?.Value<string>();
                 string iconPath = jObject["iconPath"]?.Value<string>();
 
@@ -165,7 +160,7 @@ namespace Macrocosm.Common.Customization
                         if (Utility.TryGetColorFromHex(entry.Name, out Color key) && entry.Value is JObject value && value != null)
                             colorData[key] = PatternColorData.FromJObject(value);
 
-                return new Pattern(name, context, profile, texturePath, iconPath, colorData);
+                return new Pattern(name, context, texturePath, iconPath, colorData);
             }
             catch (Exception ex)
             {

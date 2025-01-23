@@ -87,35 +87,21 @@ namespace Macrocosm.Content.Rockets.Modules
         private SpriteBatchState state;
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
-            // Load current pattern and apply shader 
             state.SaveState(spriteBatch);
-            SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2];
             if (SpecialDraw)
             {
-                if (HasDecal)
-                {
-                    // Pass the decal to the shader via the S2 register
-                    Main.graphics.GraphicsDevice.Textures[2] = Decal.Texture.Value;
-                    Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointClamp;
-                }
-
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
+                Pattern?.Apply();
+                //TODO: Decal?.Pattern.Apply();
             }
 
-            Pattern?.Apply();
             spriteBatch.Draw(Texture, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             if (SpecialDraw)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(state);
-
-                // Clear the tex register  
-                Main.graphics.GraphicsDevice.Textures[2] = null;
-
-                // Restore the sampler states
-                Main.graphics.GraphicsDevice.SamplerStates[2] = samplerState2;
             }
         }
 
@@ -137,7 +123,6 @@ namespace Macrocosm.Content.Rockets.Modules
                 BlueprintHighlighted ? UITheme.Current.ButtonHighlightStyle.BorderColor : UITheme.Current.PanelStyle.BorderColor,
                 UITheme.Current.PanelStyle.BackgroundColor
             }).ToVector4Array());
-            effect.Parameters["uSampleBrightness"].SetValue(false);
 
             spriteBatch.End();
             spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);

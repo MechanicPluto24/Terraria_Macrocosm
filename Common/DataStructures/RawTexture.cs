@@ -52,12 +52,16 @@ namespace Macrocosm.Common.DataStructures
             return new(data, texture.Width, texture.Height);
         }
 
-        public IEnumerable<Color> GetUniqueColors(int maxColors, float maxDistance = 0.1f, Func<Color, bool> valid = null)
+        public IEnumerable<Color> GetUniqueColors(int maxColors, float maxDistance = 0.1f, bool alphaSensitive = true, Func<Color, bool> validColor = null)
         {
             var uniqueColors = new HashSet<Color>();
-            foreach (var pixel in Data)
+            for (int i = 0; i < Data.Length; i++)
             {
-                if ((valid?.Invoke(pixel) ?? true) && !uniqueColors.Any(k => Utility.ColorDistance(k, pixel) < maxDistance))
+                Color pixel = Data[i];
+                if (!alphaSensitive)
+                    pixel.A = 255;
+
+                if ((validColor?.Invoke(pixel) ?? true) && !uniqueColors.Any(k => Utility.ColorDistance(k, pixel) < maxDistance))
                 {
                     uniqueColors.Add(pixel);
 
