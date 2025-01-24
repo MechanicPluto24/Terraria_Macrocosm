@@ -25,72 +25,72 @@ namespace Macrocosm.Common.Loot.DropConditions
 
         public class IsCorruption(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForCorruption;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneCorrupt;
         }
 
         public class IsCrimson(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForCrimson;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneCrimson;
         }
 
         public class IsHallow(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForHallow;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneHallow;
         }
 
         public class IsDesert(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForDesert;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneDesert;
         }
 
         public class IsGlowingMushroom(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForGlowingMushroom;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneGlowshroom;
         }
 
         public class IsJungle(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForJungle;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneJungle;
         }
 
         public class IsSnow(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForSnow;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneSnow;
         }
 
         public class IsUnderworld(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.TilePosition.Y > Main.UnderworldLayer;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneUnderworldHeight;
         }
 
         public class IsShimmerScene(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForShimmer;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneShimmer;
         }
 
         public class IsMeteor(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForMeteor;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneMeteor;
         }
 
         public class IsWaterCandle(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.WaterCandleCount > 0;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneWaterCandle;
         }
 
         public class IsPeaceCandle(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.PeaceCandleCount > 0;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZonePeaceCandle;
         }
 
         public class IsShadowCandle(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.ShadowCandleCount > 0;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneShadowCandle;
         }
 
         public class IsGraveyard(SceneData scene) : BaseCondition
         {
-            public override bool CanDrop(DropAttemptInfo info) => scene.Terraria.EnoughTilesForGraveyard;
+            public override bool CanDrop(DropAttemptInfo info) => scene.ZoneGraveyard;
         }
     }
 }

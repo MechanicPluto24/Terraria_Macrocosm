@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
+using Macrocosm.Common.Global.Tiles;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
@@ -149,6 +150,9 @@ namespace Macrocosm.Common.Subworlds
             UpdateWiring();
             UpdateTileEntities();
             UpdateLiquids();
+
+            TownNPCSystem.UpdateTownNPCSpawns();
+            RandomUpdateGlobalTile.RandomTileUpdate();
 
             CreditsRollEvent.UpdateTime();
         }
