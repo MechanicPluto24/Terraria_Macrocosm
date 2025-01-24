@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
@@ -71,6 +72,8 @@ namespace Macrocosm.Content.Machines
             DustType = -1;
 
             AddMapEntry(new Color(206, 117, 44), CreateMapEntryName());
+
+            SceneData.Hooks[Type] = NearbyEffects;
         }
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18) * 1;
@@ -146,8 +149,14 @@ namespace Macrocosm.Content.Machines
             if (closer)
                 return;
 
-            if (IsPoweredOnFrame(i, j))
-                TileCounts.Instance.PollutionLevel += 1.5f;
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                TileCounts.Instance.PollutionLevel += 4f;
+        }
+
+        public void NearbyEffects(int i, int j, SceneData sceneData)
+        {
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                sceneData.Macrocosm.PollutionLevel += 4f;
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)

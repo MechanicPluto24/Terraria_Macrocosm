@@ -1,60 +1,10 @@
 Mods: {
 	Macrocosm: {
 		Common: {
-			Rocket: Rocket
-			LaunchPad: Launchpad
-			MapNames.Poster: Poster
 
-			Tooltips: {
-				DeveloperItem: Developer
-				UnobtainableItem: Unobtainable
-				Unusable: This item can not be used on {0}
-				BurnFuel: This flammable item can be used as fuel
-				LiquidContainer: This item can store liquids
-				WeaponNerf: Cosmic radiation has degraded this weapon
-				WeaponBuff: Cosmic radiation has made this weapon more powerful
-			}
-		}
-
-		Liquids: {
-			Oil: Oil
-			RocketFuel: Rocket Fuel
 		}
 
 		GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
-
-		InfoDisplays: {
-			BarometerInfoDisplay.DisplayName: Barometer Info Display
-			GeigerMullerInfoDisplay.DisplayName: Geiger Muller Info Display
-			ThermometerInfoDisplay.DisplayName: Thermometer Info Display
-		}
-
-		Achievements: {
-			BuildRocket: {
-				Name: Rocket Science
-				Description: Build your first rocket.
-			}
-
-			CraftSpaceSuit: {
-				Name: Oxygen Not Included
-				Description: Fabricate your first spacesuit.
-			}
-
-			DefeatCraterDemon: {
-				Name: Deep Impact
-				Description: Defeat Crater Demon, an elusive spirit that haunts the Moon.
-			}
-
-			SurviveMoon: {
-				Name: You Lunatic
-				Description: Survive a complete day and night on the Moon, from sunrise to sunrise.
-			}
-
-			TravelToMoon: {
-				Name: One Giant Leap
-				Description: Reach the Moon, Earth's sole natural satellite. Hope you remembered to bring your spacesuit!
-			}
-		}
 	}
 
 	SubworldLibrary.Return: Save & Exit
