@@ -1,11 +1,7 @@
 ﻿using Macrocosm.Common.Systems;
 using Macrocosm.Content.Liquids.WaterStyles;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SubworldLibrary;
 using Terraria;
 using Terraria.Graphics.Capture;
 using Terraria.Graphics.Effects;
@@ -16,21 +12,21 @@ namespace Macrocosm.Content.Biomes
     public class PollutionBiome : ModBiome
     {
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeMedium;
-        public override float GetWeight(Player player) => TileCounts.Instance.PollutionLevel / TileCounts.Instance.MaxPollutionLevel;
+        public override float GetWeight(Player player) => TileCounts.Instance.PollutionLevel / TileCounts.Instance.PollutionLevelMax;
 
-        public override string BestiaryIcon => Macrocosm.TexturesPath +"Icons/Pollution";
-        public override string BackgroundPath => Macrocosm.TexturesPath +"MapBackgrounds/Pollution";
+        public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/Pollution";
+        public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Pollution";
         public override string MapBackground => BackgroundPath;
 
         public override ModWaterStyle WaterStyle => ModContent.GetInstance<PollutionWaterStyle>();
         public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Normal;
 
-        public override bool IsBiomeActive(Player player) => TileCounts.Instance.ZonePollution;
+        public override bool IsBiomeActive(Player player) => !SubworldSystem.AnyActive<Macrocosm>() && player.ZoneOverworldHeight && TileCounts.Instance.EnoughPollution;
 
         private float visualIntensity = 0f;
         public override void SpecialVisuals(Player player, bool isActive)
         {
-            float level = MathHelper.Clamp(TileCounts.Instance.PollutionLevel / TileCounts.Instance.MaxPollutionLevel, 0, 1);
+            float level = MathHelper.Clamp(TileCounts.Instance.PollutionLevel / TileCounts.Instance.PollutionLevelMax, 0, 1);
             if (visualIntensity < level)
             {
                 visualIntensity += 0.02f;

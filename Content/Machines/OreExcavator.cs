@@ -36,6 +36,8 @@ namespace Macrocosm.Content.Machines
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
+            SceneData.Hooks[Type] = NearbyEffects;
+
             TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
             TileObjectData.newTile.Width = Width;
             TileObjectData.newTile.Height = Height;
@@ -72,8 +74,6 @@ namespace Macrocosm.Content.Machines
             DustType = -1;
 
             AddMapEntry(new Color(206, 117, 44), CreateMapEntryName());
-
-            SceneData.Hooks[Type] = NearbyEffects;
         }
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18) * 1;

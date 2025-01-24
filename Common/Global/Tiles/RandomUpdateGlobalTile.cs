@@ -15,6 +15,8 @@ namespace Macrocosm.Common.Global.Tiles
     {
         public override void Load()
         {
+            On_WorldGen.UpdateWorld_OvergroundTile += On_WorldGen_UpdateWorld_OvergroundTile;
+            On_WorldGen.UpdateWorld_UndergroundTile += On_WorldGen_UpdateWorld_UndergroundTile;
             On_WorldGen.PlaceAlch += On_WorldGen_PlaceAlch;
         }
 
@@ -47,7 +49,7 @@ namespace Macrocosm.Common.Global.Tiles
             else
             {
                 SceneData sceneData = new(new Point(x, y));
-                if (sceneData.Macrocosm.ZonePollution)
+                if (y < Main.worldSurface && sceneData.Macrocosm.EnoughPollution)
                     return false;
             }
 
@@ -88,7 +90,7 @@ namespace Macrocosm.Common.Global.Tiles
                 int j = WorldGen.genRand.Next(10, (int)Main.worldSurface - 1);
 
                 WorldGen_UpdateWorld_OvergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
-                TownNPCSystem.TrySpawningTownNPC(i, j); // TODO: maybe just let the vanilla method above take care of it
+                TownNPCSystem.TrySpawningTownNPC(i, j);
             }
 
             double undergroundUpdateRate = 1.5E-05f * (float)worldUpdateRate;
@@ -99,7 +101,7 @@ namespace Macrocosm.Common.Global.Tiles
                 int j = WorldGen.genRand.Next((int)Main.worldSurface - 1, Main.maxTilesY - 20);
 
                 WorldGen_UpdateWorld_UndergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
-                TownNPCSystem.TrySpawningTownNPC(i, j); // TODO: maybe just let the vanilla method above take care of it
+                TownNPCSystem.TrySpawningTownNPC(i, j); 
             }
 
             double liquidRandomUpdateRate = 10E-03f * (float)worldUpdateRate;
@@ -109,11 +111,26 @@ namespace Macrocosm.Common.Global.Tiles
             {
                 int i = WorldGen.genRand.Next(10, Main.maxTilesX - 10);
                 int j = WorldGen.genRand.Next(10, Main.maxTilesY - 20);
+
+                // Trigger liquid random updates for evaporation
                 if (Main.tile[i, j].LiquidAmount > 0)
                     if (!RoomOxygenSystem.IsRoomPressurized(i, j))
                         WorldGen.PlaceLiquid(i, j, (byte)Main.tile[i, j].LiquidType, 0);
             }
         }
+
+        private void On_WorldGen_UpdateWorld_UndergroundTile(On_WorldGen.orig_UpdateWorld_UndergroundTile orig, int i, int j, bool checkNPCSpawns, int wallDist)
+        {
+            if (CanPlantGrow(i, j))  // Needs a more selective implementation of what is a plant - random updates are totally skipped with this
+                orig(i, j, checkNPCSpawns, wallDist);
+        }
+
+        private void On_WorldGen_UpdateWorld_OvergroundTile(On_WorldGen.orig_UpdateWorld_OvergroundTile orig, int i, int j, bool checkNPCSpawns, int wallDist)
+        {
+            if (CanPlantGrow(i, j))
+                orig(i, j, checkNPCSpawns, wallDist);
+        }
+
 
         public static void WorldGen_UpdateWorld_OvergroundTile(int i, int j, bool checkNPCSpawns, int wallDist)
         {

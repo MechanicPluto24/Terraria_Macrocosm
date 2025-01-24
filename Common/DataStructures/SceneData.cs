@@ -11,10 +11,14 @@ using Terraria.WorldBuilding;
 namespace Macrocosm.Common.DataStructures
 {
     /// <summary>
-    /// Data structure that lets you analyze Vanilla and Macrocosm SceneMetrics at any position, even on the server. 
+    /// Data structure that lets you analyze Vanilla and Macrocosm SceneMetrics at any position, even on the server
+    /// <br/> <b>Includes</b> Vanilla and Macrocosm biome-related (Tile counts) and proximity buff (Banners, Campfire, etc.) info 
+    /// <br/> <b>Excludes</b> modded tile NearbyEffects, use <see cref="Hooks"/> if your tile has custom logic that can modify this <see cref="SceneData"/> instance
+    /// <br/> <b>Excludes</b> visual data such as Monoliths or Music Boxes
     /// </summary>
     public class SceneData
     {
+        /// <summary> Allows this tile to modify some of the properties of the SceneData instance </summary>
         public static Action<int, int, SceneData>[] Hooks { get; set; } = TileID.Sets.Factory.CreateCustomSet<Action<int, int, SceneData>>(null);
 
         private Vector2 scanCenterWorldCoordinates;
@@ -104,19 +108,21 @@ namespace Macrocosm.Common.DataStructures
         public SceneData(Vector2 scanCenterWorldCoordinates)
         {
             this.scanCenterWorldCoordinates = scanCenterWorldCoordinates;
+            macrocosmTileCounts = new();
             Scan();
         }
         public SceneData(Point TilePosition) : this(TilePosition.ToWorldCoordinates()) { }
         public SceneData(Point16 TilePosition) : this(TilePosition.ToPoint()) { }
+
+
+        public int GetTileCount(ushort tileId) => tileCounts[tileId];
+        public int GetLiquidCount(short liquidType) => liquidCounts[liquidType];
 
         public void Scan(Vector2 scanCenterWorldCoordinates)
         {
             this.scanCenterWorldCoordinates = scanCenterWorldCoordinates;
             Scan();
         }
-
-        public int GetTileCount(ushort tileId) => tileCounts[tileId];
-        public int GetLiquidCount(short liquidType) => liquidCounts[liquidType];
         public void Scan()
         {
             Reset();
@@ -271,6 +277,7 @@ namespace Macrocosm.Common.DataStructures
                 BloodTileCount = 0;
 
             macrocosmTileCounts.TileCountsAvailable(tileCounts);
+
             GraveyardTileCount = macrocosmTileCounts.GetModifiedGraveyardTileCount(GraveyardTileCount);
         }
 
@@ -289,6 +296,11 @@ namespace Macrocosm.Common.DataStructures
             MeteorTileCount = 0;
             JungleTileCount = 0;
             DungeonTileCount = 0;
+
+            WaterCandleCount = 0;
+            PeaceCandleCount = 0;
+            ShadowCandleCount = 0;
+
             HasCampfire = false;
             HasSunflower = false;
             HasGardenGnome = false;
@@ -296,10 +308,6 @@ namespace Macrocosm.Common.DataStructures
             HasHeartLantern = false;
             HasClock = false;
             HasCatBast = false;
-
-            WaterCandleCount = 0;
-            PeaceCandleCount = 0;
-            ShadowCandleCount = 0;
 
             Array.Clear(NPCBannerBuff, 0, NPCBannerBuff.Length);
             HasBanner = false;

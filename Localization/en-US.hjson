@@ -1,12 +1,8 @@
 Mods: {
-	Macrocosm: {
-		Common: {
-
-		}
-
-		GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
+	Common: {
 	}
 
+	Macrocosm.GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
 	SubworldLibrary.Return: Save & Exit
 }
 

@@ -31,6 +31,8 @@ namespace Macrocosm.Content.Machines
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
+            SceneData.Hooks[Type] = NearbyEffects;
+
             TileObjectData.newTile.CopyFrom(TileObjectData.Style5x4);
             TileObjectData.newTile.Width = 4;
             TileObjectData.newTile.Height = 4;
