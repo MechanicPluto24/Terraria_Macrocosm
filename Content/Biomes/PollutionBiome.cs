@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.Graphics.Capture;
+using SubworldLibrary;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
@@ -25,7 +26,7 @@ namespace Macrocosm.Content.Biomes
         public override ModWaterStyle WaterStyle => ModContent.GetInstance<PollutionWaterStyle>();
         public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Normal;
 
-        public override bool IsBiomeActive(Player player) => TileCounts.Instance.EnoughLevelForPollution;
+        public override bool IsBiomeActive(Player player) => TileCounts.Instance.EnoughLevelForPollution&&!SubworldSystem.AnyActive<Macrocosm>();
 
         private float visualIntensity = 0f;
         public override void SpecialVisuals(Player player, bool isActive)
