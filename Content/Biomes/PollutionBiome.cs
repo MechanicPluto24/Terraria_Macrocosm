@@ -18,9 +18,9 @@ namespace Macrocosm.Content.Biomes
         public override SceneEffectPriority Priority => SceneEffectPriority.BiomeMedium;
         public override float GetWeight(Player player) => TileCounts.Instance.PollutionLevel / TileCounts.Instance.MaxPollutionLevel;
 
-        public override string BestiaryIcon => null;
-        public override string BackgroundPath => null;
-        public override string MapBackground => null;
+        public override string BestiaryIcon => Macrocosm.TexturesPath +"Icons/Pollution";
+        public override string BackgroundPath => Macrocosm.TexturesPath +"MapBackgrounds/Pollution";
+        public override string MapBackground => BackgroundPath;
 
         public override ModWaterStyle WaterStyle => ModContent.GetInstance<PollutionWaterStyle>();
         public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Normal;
