@@ -236,3 +236,8 @@ TarBlob: {
 	BestiaryFlavorText: The pint-sized offspring of the Tar Slime. Get swarmed by these nuisances and you’ll be in for a sticky situation!
 	DisplayName: Tar Blob
 }
+
+SmogWisp: {
+	DisplayName: Smog Wisp
+	BestiaryFlavorText: Ethereal predators that drift silently through densely polluted areas, blending seamlessly with the toxic haze until they close in on their prey. They’re thought to exclusively target humans and small critters.
+}
