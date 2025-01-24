@@ -35,10 +35,5 @@ namespace Macrocosm.Content.Tiles.Tombstones
             RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonTombstone>(), 0, 1);
             RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonHeadstone>(), 2, 3);
         }
-
-        public override void NearbyEffects(int i, int j, bool closer)
-        {
-            base.NearbyEffects(i, j, closer);
-        }
     }
 }

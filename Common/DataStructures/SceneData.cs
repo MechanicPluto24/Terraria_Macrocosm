@@ -5,25 +5,28 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Common.DataStructures
 {
+    /// <summary>
+    /// Data structure that lets you analyze SOME vanilla and modded scene metrics at any position, even on the server. 
+    /// <br/> It includes NearbyEffects of modded tiles, only when !closer (gameplay effects)
+    /// <br/> This includes most biome-related info, but <b>excludes</b> visual related things such as monoliths 
+    /// </summary>
     public class SceneData
     {
         private readonly SceneMetrics sceneMetrics;
         private Vector2 scanCenterWorldCoordinates;
 
-        public SceneMetrics Terraria => sceneMetrics;
         public TileCounts Macrocosm => TileCounts.Instance;
-
 
         public Vector2 Position => scanCenterWorldCoordinates;
         public Point TilePosition => scanCenterWorldCoordinates.ToTileCoordinates();
 
         public bool ZoneUnderworldHeight => TilePosition.Y > Main.UnderworldLayer;
-        public bool ZoneRockLayerHeight => TilePosition.Y <= Main.UnderworldLayer && (double)TilePosition.Y > Main.rockLayer;
-        public bool ZoneDirtLayerHeight => (double)TilePosition.Y <= Main.rockLayer && (double)TilePosition.Y > Main.worldSurface;
-        public bool ZoneOverworldHeight => (double)TilePosition.Y <= Main.worldSurface && (double)TilePosition.Y > Main.worldSurface * 0.3499999940395355;
-        public bool ZoneSkyHeight => (double)TilePosition.Y <= Main.worldSurface * 0.3499999940395355;
+        public bool ZoneRockLayerHeight => TilePosition.Y <= Main.UnderworldLayer && TilePosition.Y > Main.rockLayer;
+        public bool ZoneDirtLayerHeight => TilePosition.Y <= Main.rockLayer && TilePosition.Y > Main.worldSurface;
+        public bool ZoneOverworldHeight => TilePosition.Y <= Main.worldSurface && TilePosition.Y > Main.worldSurface * 0.3499999940395355;
+        public bool ZoneSkyHeight => TilePosition.Y <= Main.worldSurface * 0.3499999940395355;
         public bool ZoneBeach => WorldGen.oceanDepths(TilePosition.X, TilePosition.Y);
-        public bool ZoneRain => Main.raining && (double)TilePosition.Y <= Main.worldSurface;
+        public bool ZoneRain => Main.raining && TilePosition.Y <= Main.worldSurface;
 
         public bool ZoneShimmer => sceneMetrics.EnoughTilesForShimmer;
 		public bool ZoneCorrupt => sceneMetrics.EnoughTilesForCorruption;
@@ -57,9 +60,16 @@ namespace Macrocosm.Common.DataStructures
             Scan();
         }
 
+        // TODO: reimplement this logic, this calling NearbyEffects could be problematic
         public void Scan()
         {
-            SceneMetricsScanSettings settings = new() { BiomeScanCenterPositionInWorld = scanCenterWorldCoordinates };
+            SceneMetricsScanSettings settings = new() 
+            {
+                VisualScanArea = null, // Exclude visuals (e.g. monoliths)
+                BiomeScanCenterPositionInWorld = scanCenterWorldCoordinates, 
+                ScanOreFinderData = false // No ore finder info
+            };
+
             sceneMetrics.ScanAndExportToMain(settings);
         }
     }

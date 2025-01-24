@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
@@ -81,6 +82,15 @@ namespace Macrocosm.Content.Machines
             }
 
             return true;
+        }
+
+        public override void NearbyEffects(int i, int j, bool closer)
+        {
+            if (closer)
+                return;
+
+            if (IsPoweredOnFrame(i, j))
+                TileCounts.Instance.PollutionLevel += 1f;
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)

@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
@@ -91,6 +92,15 @@ namespace Macrocosm.Content.Machines
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+        }
+
+        public override void NearbyEffects(int i, int j, bool closer)
+        {
+            if (closer)
+                return;
+
+            if (IsPoweredOnFrame(i, j))
+                TileCounts.Instance.PollutionLevel += 0.2f;
         }
 
         public override void AnimateTile(ref int frame, ref int frameCounter)

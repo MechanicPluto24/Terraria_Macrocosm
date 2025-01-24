@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Players
         }
 
         /// <summary>
-        /// The player's irradiation level.
+        /// The player's current irradiation level.
         /// Not synced.
         /// </summary>
         public float IrradiationLevel { get; set; } = 0f;
@@ -88,6 +88,7 @@ namespace Macrocosm.Common.Players
 
             if (IrradiationLevel >= 0.55)
                 Player.AddBuff(ModContent.BuffType<Irradiated>(), 2);
+
             if (IrradiationLevel <= 0.45)
                 Player.ClearBuff(ModContent.BuffType<Irradiated>());
         }
