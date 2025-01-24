@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
@@ -99,8 +100,14 @@ namespace Macrocosm.Content.Machines
             if (closer)
                 return;
 
-            if (IsPoweredOnFrame(i, j))
-                TileCounts.Instance.PollutionLevel += 0.2f;
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                TileCounts.Instance.PollutionLevel += 4f;
+        }
+
+        public void NearbyEffects(int i, int j, SceneData sceneData)
+        {
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                sceneData.Macrocosm.PollutionLevel += 4f;
         }
 
         public override void AnimateTile(ref int frame, ref int frameCounter)

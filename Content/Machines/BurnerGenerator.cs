@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
@@ -144,8 +145,14 @@ namespace Macrocosm.Content.Machines
             if (closer)
                 return;
 
-            if (IsPoweredOnFrame(i, j))
-                TileCounts.Instance.PollutionLevel += 1.25f;
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                TileCounts.Instance.PollutionLevel += 3f;
+        }
+
+        public void NearbyEffects(int i, int j, SceneData sceneData)
+        {
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                sceneData.Macrocosm.PollutionLevel += 3f;
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)

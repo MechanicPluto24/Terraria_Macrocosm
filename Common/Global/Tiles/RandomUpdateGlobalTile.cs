@@ -47,7 +47,7 @@ namespace Macrocosm.Common.Global.Tiles
             else
             {
                 SceneData sceneData = new(new Point(x, y));
-                if (sceneData.Macrocosm.EnoughLevelForPollution)
+                if (sceneData.Macrocosm.ZonePollution)
                     return false;
             }
 

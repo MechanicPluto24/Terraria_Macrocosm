@@ -28,13 +28,12 @@ namespace Macrocosm.Common.Systems
         public int GraveyardTileCount { get; private set; } = 0;
         public int MonolithCount { get; private set; } = 0;
 
-        public bool EnoughTilesForIrradiation => IrradiatedRockCount > 400;
-        public bool EnoughTilesForMonolith => IrradiatedRockCount > 0;
-
+        public bool ZoneIrradiation => IrradiatedRockCount > 400;
+        public bool ZoneMonolith => IrradiatedRockCount > 0;
+        public bool ZonePollution => PollutionLevel > 2f;
 
         public float PollutionLevel { get; set; } = 0f;
         public float MaxPollutionLevel => 30f;
-        public bool EnoughLevelForPollution => PollutionLevel > 2f;
 
 
         private HashSet<int> graveyardTypes;
@@ -68,14 +67,18 @@ namespace Macrocosm.Common.Systems
                 GraveyardTileCount += tileCounts[type];
         }
 
+        public int GetModifiedGraveyardTileCount(int graveyardTileCount)
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>())
+                return 0;
+
+            return graveyardTileCount + GraveyardTileCount;
+        }
+
         private void On_SceneMetrics_ExportTileCountsToMain(On_SceneMetrics.orig_ExportTileCountsToMain orig, SceneMetrics self)
         {
             orig(self);
-
-            if(SubworldSystem.AnyActive<Macrocosm>())
-                self.GraveyardTileCount = 0;
-            else
-                self.GraveyardTileCount += GraveyardTileCount;
+            self.GraveyardTileCount = GetModifiedGraveyardTileCount(self.GraveyardTileCount);
         }
     }
 }

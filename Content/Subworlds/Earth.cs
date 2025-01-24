@@ -28,8 +28,6 @@ namespace Macrocosm.Content.Subworlds
         public static float AmbientTemperature(Vector2 position)
         {
             SceneData scene = new(position);
-            scene.Scan(position);
-
             float temperature;
 
             if (scene.ZoneUnderworldHeight)
