@@ -1,10 +1,14 @@
 ﻿using Macrocosm.Common.Sets;
+using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
+using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
@@ -23,33 +27,26 @@ namespace Macrocosm.Common.Systems
             On_SceneMetrics.ExportTileCountsToMain -= On_SceneMetrics_ExportTileCountsToMain;
         }
 
-        public int RegolithCount { get; private set; } = 0;
         public int IrradiatedRockCount { get; private set; } = 0;
         public int GraveyardTileCount { get; private set; } = 0;
         public int MonolithCount { get; private set; } = 0;
 
-        public bool ZoneIrradiation => IrradiatedRockCount > 400;
-        public bool ZoneMonolith => IrradiatedRockCount > 0;
-        public bool ZonePollution => PollutionLevel > 2f;
+        public bool EnoughTilesForIrradiation => IrradiatedRockCount > 400;
 
-        public float PollutionLevel { get; set; } = 0f;
-        public float MaxPollutionLevel => 30f;
+        public bool HasMonolith => MonolithCount > 0;
+        public bool EnoughPollution => PollutionLevel > PollutionLevelThreshold;
 
-
-        private HashSet<int> graveyardTypes;
-        public override void PostSetupContent()
-        {
-            graveyardTypes = new HashSet<int>();
-            for (int type = 0; type < TileLoader.TileCount; type++)
-            {
-                if (TileSets.GraveyardTile[type])
-                    graveyardTypes.Add(type);
-            }
+        public float PollutionLevel 
+        { 
+            get => pollutionLevel;
+            set => pollutionLevel = MathHelper.Clamp(value, 0f, PollutionLevelMax); 
         }
+        private float pollutionLevel = 0f;
+        public float PollutionLevelThreshold => 6f;
+        public float PollutionLevelMax => 30f;
 
         public override void ResetNearbyTileEffects()
         {
-            RegolithCount = 0;
             IrradiatedRockCount = 0;
             MonolithCount = 0;
             GraveyardTileCount = 0;
@@ -59,12 +56,14 @@ namespace Macrocosm.Common.Systems
 
         public override void TileCountsAvailable(ReadOnlySpan<int> tileCounts)
         {
-            RegolithCount = tileCounts[ModContent.TileType<Regolith>()];
             IrradiatedRockCount = tileCounts[ModContent.TileType<IrradiatedRock>()];
             MonolithCount = tileCounts[ModContent.TileType<Monolith>()];
 
-            foreach (int type in graveyardTypes)
-                GraveyardTileCount += tileCounts[type];
+            for (int type = 0; type < TileLoader.TileCount; type++)
+            {
+                if (TileSets.GraveyardTile[type])
+                    GraveyardTileCount += tileCounts[type];
+            }
         }
 
         public int GetModifiedGraveyardTileCount(int graveyardTileCount)
