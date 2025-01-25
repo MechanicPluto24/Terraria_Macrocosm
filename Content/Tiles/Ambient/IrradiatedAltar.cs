@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Tiles.Ambient
 
         public override void NearbyEffects(int i, int j, bool closer)
         {
-            if (Main.gamePaused || closer)
+            if (Main.gamePaused)
                 return;
 
             if (TileObjectData.IsTopLeft(i, j))
