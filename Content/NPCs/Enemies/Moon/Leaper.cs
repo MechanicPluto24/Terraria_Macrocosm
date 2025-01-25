@@ -205,11 +205,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         // Manages the leaper's rage
         private float GetRage(float lightlevel)
         {
-         
 
-            
-            
-            if (Vector2.Distance(Main.player[NPC.target].Center, NPC.Center) < 700f)
+            if (Vector2.Distance(Main.player[NPC.target].Center, NPC.Center) > 700f)
                 return -0.01f; // Calms down when in darkness
             if (lightlevel < lightValueFlee)
                 return -0.03f; // Calms down when in darkness
