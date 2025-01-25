@@ -9,11 +9,6 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
     {
         public override bool PrePlace(Point16 origin)
         {
-            return true;
-        }
-
-        public override void PostPlace(Point16 origin)
-        {
             int max = WorldGen.genRand.Next(15, 26);
             for (int vein = 0; vein < max; vein++)
             {
@@ -25,6 +20,11 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
                     type: TileID.LunarOre
                 );
             }
+            return true;
+        }
+
+        public override void PostPlace(Point16 origin)
+        {
         }
     }
 }
