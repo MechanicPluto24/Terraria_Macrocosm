@@ -112,10 +112,10 @@ namespace Macrocosm.Content.Subworlds
             int maxY = (int)((Main.maxTilesY) * 0.65f);
 
             int x = WorldGen.genRand.Next(minX, maxX);
-            x = Math.Clamp(x, 20, Main.maxTilesX - shrine.Size.X - 20);
+            x = Math.Clamp(x, 50, Main.maxTilesX - shrine.Size.X - 50);
 
             int y = WorldGen.genRand.Next(minY, maxY);
-            y = Math.Clamp(y, 20, Main.maxTilesY - shrine.Size.Y - 20);
+            y = Math.Clamp(y, 50, Main.maxTilesY - shrine.Size.Y - 50);
 
             return new(x, y);
         }
@@ -718,7 +718,12 @@ namespace Macrocosm.Content.Subworlds
 
             }
         }
-
+        [Task(weight: 12.0)]
+        private void SmoothTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothTask");
+            SmoothWorld(progress);
+        }
         [Task(weight: 0.1)]
         private void PlaceLuminiteShrine(GenerationProgress progress)
         {
@@ -735,16 +740,16 @@ namespace Macrocosm.Content.Subworlds
                 x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3.5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 3.5 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.45f), (int)(Main.maxTilesY * 0.55f));
 
+                WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
+                WorldUtils.Gen(new Point(x+ shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
+                
                 bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-                Point16 origin = new(solidGround.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.8f));
+                Point16 origin = new(solidGround.X - shrine.Size.X / 2, y+6);
 
                 validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
 
-                if (validPositionFound && shrine.Place(origin, StructureMap))
-                {
-                    WorldUtils.Gen(new Point(origin.X + shrine.Size.X / 2, origin.Y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
-                    WorldUtils.Gen(new Point(origin.X + shrine.Size.X / 2, origin.Y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
-                }
+                shrine.Place(origin, StructureMap);
+                
 
                 attempts++;
             }
@@ -1032,9 +1037,9 @@ namespace Macrocosm.Content.Subworlds
                 bool solidDown = WorldUtils.Find(new Point(tileX, tileY), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
                 if (solidDown)
                 {
-                    Point16 origin = new(tileX - outpost.Size.X / 2, solidGround.Y - outpost.Size.Y);
+                    Point16 origin = new((tileX - outpost.Size.X / 2), (solidGround.Y - outpost.Size.Y));
 
-                    if (StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, outpost.Size.X, outpost.Size.Y)))
+                    if (StructureMap.CanPlace(new Rectangle(origin.X-30, origin.Y-30, outpost.Size.X+30, outpost.Size.Y+30)))
                     {
                         if (outpost.Place(origin, StructureMap))
                         {
@@ -1047,12 +1052,6 @@ namespace Macrocosm.Content.Subworlds
         }
 
 
-        [Task(weight: 12.0)]
-        private void SmoothTask(GenerationProgress progress)
-        {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothTask");
-            SmoothWorld(progress);
-        }
 
         // [Task]
         private void CheeseHouse(GenerationProgress progress)
