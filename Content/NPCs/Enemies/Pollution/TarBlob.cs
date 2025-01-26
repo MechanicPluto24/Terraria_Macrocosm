@@ -34,9 +34,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
             NPC.width = 22;
             NPC.height = 18;
-            NPC.damage = 10;
-            NPC.defense = 2;
-            NPC.lifeMax = 100;
+            NPC.damage = 5;
+            NPC.defense = 1;
+            NPC.lifeMax = 10;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
             NPC.value = 60f;
