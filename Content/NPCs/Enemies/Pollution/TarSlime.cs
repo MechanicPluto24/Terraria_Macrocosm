@@ -34,9 +34,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
             NPC.width = 44;
             NPC.height = 30;
-            NPC.damage = 20;
-            NPC.defense = 10;
-            NPC.lifeMax = 400;
+            NPC.damage = 10;
+            NPC.defense = 2;
+            NPC.lifeMax = 50;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath1;
             NPC.value = 60f;
@@ -57,13 +57,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return spawnInfo.Player.InModBiome<PollutionBiome>() ? 0.3f : 0f;
+            return spawnInfo.Player.InModBiome<PollutionBiome>() ? 1f : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
 
         }
+       
 
         public override void AI()
         { 
