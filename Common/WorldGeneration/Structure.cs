@@ -48,13 +48,13 @@ namespace Macrocosm.Common.WorldGeneration
         /// <param name="ignoreNull"> Whether to ignore null (negative space) tiles/walls </param>
         /// <param name="genFlags"> Extra flags for altering generation behaviour with paints, slopes and TEs </param>
         /// <returns> Whether the placement was successfu l</returns>
-        public bool Place(Point16 origin, StructureMap structures, int? variant = null, bool ignoreNull = false, GenFlags genFlags = GenFlags.None)
+        public bool Place(Point16 origin, StructureMap structures, int padding = 0, int? variant = null, bool ignoreNull = false, GenFlags genFlags = GenFlags.None)
         {
             if (!WorldGen.InWorld(origin.X, origin.Y))
                 return false;
 
             Rectangle area = new(origin.X, origin.Y, Size.X, Size.Y);
-            if (structures != null && !structures.CanPlace(area))
+            if (structures != null && !structures.CanPlace(area, padding))
                 return false;
 
             if (!WorldGen.InWorld(origin.X + Size.X, origin.Y + Size.Y))
@@ -78,7 +78,7 @@ namespace Macrocosm.Common.WorldGeneration
 
             if (success)
             {
-                structures?.AddProtectedStructure(area, padding: 50);
+                structures?.AddProtectedStructure(area, padding: padding);
                 PostPlace(origin);
             }
 

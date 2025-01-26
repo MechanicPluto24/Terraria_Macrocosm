@@ -38,6 +38,9 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.UseSound = SoundID.Item43;
         }
 
-
+        //public override Vector2? HoldoutOrigin()
+        //{
+        //    return base.HoldoutOrigin();
+        //}
     }
 }

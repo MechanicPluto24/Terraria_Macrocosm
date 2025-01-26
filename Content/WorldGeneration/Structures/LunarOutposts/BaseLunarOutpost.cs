@@ -3,11 +3,10 @@ using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
+using Macrocosm.Content.Tiles.Ambient;
 using Macrocosm.Content.Tiles.Blocks;
 using Macrocosm.Content.Tiles.Walls;
-using Macrocosm.Content.Tiles.Ambient;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -62,7 +61,7 @@ namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
 
             for (int i = origin.X; i < origin.X + Size.X; i++)
             {
-                for (int j = origin.Y; j < origin.Y + Size.Y-2; j++)
+                for (int j = origin.Y; j < origin.Y + Size.Y - 2; j++)
                 {
                     Tile tile = Main.tile[i, j];
 
@@ -81,11 +80,9 @@ namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
                         if (tile.TileType == industrialPlatingType)
                             Utility.TryPlaceObject(i, j + 1, ModContent.TileType<LooseWiresSmallNatural>(), style: WorldGen.genRand.Next(2));
                     }
-                    
+
                 }
             }
-
-            
 
             PostAgeRoom(origin);
         }

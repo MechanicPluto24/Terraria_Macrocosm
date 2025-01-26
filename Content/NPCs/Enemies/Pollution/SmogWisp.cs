@@ -1,18 +1,13 @@
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Players;
-using Macrocosm.Common.Sets;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Microsoft.Xna.Framework;
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System;
 
 namespace Macrocosm.Content.NPCs.Enemies.Pollution
 {
@@ -33,8 +28,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
         public override void SetDefaults()
         {
-            base.SetDefaults();
-
             NPC.width = 38;
             NPC.height = 20;
             NPC.damage = 12;
@@ -46,9 +39,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             NPC.knockBackResist = 0f;
             SpawnModBiomes = [ModContent.GetInstance<PollutionBiome>().Type];
             NPC.Opacity = 0f;
-            NPC.noTileCollide=true;
-            NPC.noGravity=true;
-
+            NPC.noTileCollide = true;
+            NPC.noGravity = true;
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
@@ -57,24 +49,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.Player.InModBiome<PollutionBiome>()&&((spawnInfo.SpawnTileY<spawnInfo.Player.Center.Y+40))) ? 1f : 0f;
+            return (spawnInfo.Player.InModBiome<PollutionBiome>() && ((spawnInfo.SpawnTileY < spawnInfo.Player.Center.Y + 40))) ? 1f : 0f;
         }
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
-
-        }
-        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            if(NPC.IsABestiaryIconDummy)
-                NPC.Opacity=0.7f;
-            return true;
         }
 
         public override void FindFrame(int frameHeight)
         {
-            int frameSpeed = 8;
-
+            int frameSpeed = 6;
             NPC.frameCounter++;
 
             if (NPC.frameCounter >= frameSpeed)
@@ -83,50 +67,52 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 NPC.frame.Y += frameHeight;
 
                 if (NPC.frame.Y >= Main.npcFrameCount[Type] * frameHeight)
-                {
                     NPC.frame.Y = 0;
-                }
             }
         }
-        int smogTimer=0;
+
+        int smogTimer = 0;
         public override void AI()
-        { 
-            if(++smogTimer%5==0)
+        {
+            if (++smogTimer % 5 == 0)
             {
                 Smoke smoke = Particle.Create<Smoke>((p) =>
-                            {
-                                p.Position = NPC.Center;
-                                p.Velocity = new Vector2(0f, 1f).RotatedByRandom(MathHelper.TwoPi);
-                                p.Acceleration = new Vector2(0f,0f);
-                                p.Scale = new(0.2f);
-                                p.Rotation = 0f;
-                                p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
-                                p.FadeIn = true;
-                                p.Opacity = NPC.Opacity;
-                                p.ScaleVelocity = new(0.0075f);
-                                p.WindFactor = Main.windSpeedCurrent > 0 ? 0.035f : 0.01f;
-                            });
+                {
+                    p.Position = NPC.Center + new Vector2(0, 12) * NPC.direction;
+                    p.Velocity = -NPC.velocity.RotatedByRandom(MathHelper.PiOver2) * 0.1f;
+                    p.Acceleration = new Vector2(0f, 0f);
+                    p.Scale = new(0.4f);
+                    p.Rotation = 0f;
+                    p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
+                    p.Opacity = NPC.Opacity;
+                    p.ScaleVelocity = new(-0.0085f);
+                });
             }
-            Utility.AIFlier(NPC, ref NPC.ai, true, 0.2f, 0.2f,2f, 2f, false);
-            if(NPC.Opacity<0.01f)
-                NPC.dontTakeDamage=true;
+
+            Utility.AIFlier(NPC, ref NPC.ai, sporadic: true, moveIntervalX: 0.2f, moveIntervalY: 0.2f, maxSpeedX: 2f, maxSpeedY: 2f, canBeBored: false);
+
+            if (NPC.Opacity < 0.01f)
+                NPC.dontTakeDamage = true;
             else
-                NPC.dontTakeDamage=false;
+                NPC.dontTakeDamage = false;
+
             Player player = Main.player[NPC.target];
-            if(player is not null)
+            if (player is not null)
             {
                 NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).RotatedBy(MathHelper.Pi).ToRotation();
-                if(Vector2.Distance(player.Center,NPC.Center)>1000f)
-                    NPC.Opacity-=0.01f;
-                else if(Vector2.Distance(player.Center,NPC.Center)>500f)
-                    NPC.Opacity+=0.001f;
+                if (Vector2.Distance(player.Center, NPC.Center) > 1000f)
+                    NPC.Opacity -= 0.01f;
+                else if (Vector2.Distance(player.Center, NPC.Center) > 500f)
+                    NPC.Opacity += 0.001f;
                 else
-                    NPC.Opacity+=0.01f;
+                    NPC.Opacity += 0.01f;
             }
-            if(NPC.Opacity>0.7f)
-                NPC.Opacity=0.7f;
-            if(NPC.Opacity<0f)
-                NPC.Opacity=0f;
+
+            if (NPC.Opacity > 0.7f)
+                NPC.Opacity = 0.7f;
+
+            if (NPC.Opacity < 0f)
+                NPC.Opacity = 0f;
         }
 
         public override void HitEffect(NPC.HitInfo hit)
@@ -141,6 +127,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             }
         }
 
+        public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            if (NPC.IsABestiaryIconDummy)
+                NPC.Opacity = 0.7f;
 
+            return true;
+        }
     }
 }
