@@ -63,8 +63,8 @@ namespace Macrocosm.Common.Subworlds
 
         protected virtual float AtmosphericDensity(Vector2 position) => Earth.AtmosphericDensity;
 
-        /// <summary> The ambient temperature, expressed in °C </summary>
-        public virtual float AmbientTemperature(Vector2 position) => Earth.AmbientTemperature(position);
+        /// <summary> The ambient temperature, expressed in °C. Pass position only when you need temperature at a position different than the local player's </summary>
+        public virtual float AmbientTemperature(Vector2? position = null) => Earth.AmbientTemperature(position);
 
         /// <summary> Whether wiring should function in this subworld. Useful for solar storms :) </summary>
         public virtual bool ShouldUpdateWiring { get; set; } = true;

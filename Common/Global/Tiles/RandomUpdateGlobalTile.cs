@@ -15,8 +15,6 @@ namespace Macrocosm.Common.Global.Tiles
     {
         public override void Load()
         {
-            On_WorldGen.UpdateWorld_OvergroundTile += On_WorldGen_UpdateWorld_OvergroundTile;
-            On_WorldGen.UpdateWorld_UndergroundTile += On_WorldGen_UpdateWorld_UndergroundTile;
             On_WorldGen.PlaceAlch += On_WorldGen_PlaceAlch;
         }
 
@@ -39,26 +37,9 @@ namespace Macrocosm.Common.Global.Tiles
             }
         }
 
-        private static bool CanPlantGrow(int x, int y)
-        {
-            if (SubworldSystem.AnyActive<Macrocosm>())
-            {
-                if (!RoomOxygenSystem.IsRoomPressurized(x, y))
-                    return false;
-            }
-            else
-            {
-                SceneData sceneData = new(new Point(x, y));
-                if (y < Main.worldSurface && sceneData.Macrocosm.EnoughPollution)
-                    return false;
-            }
-
-            return true;
-        }
-
         private bool On_WorldGen_PlaceAlch(On_WorldGen.orig_PlaceAlch orig, int x, int y, int style)
         {
-            if(!CanPlantGrow(x, y))
+            if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.IsRoomPressurized(x, y))
                 return false;
 
             return orig(x, y, style);
@@ -119,29 +100,48 @@ namespace Macrocosm.Common.Global.Tiles
             }
         }
 
-        private void On_WorldGen_UpdateWorld_UndergroundTile(On_WorldGen.orig_UpdateWorld_UndergroundTile orig, int i, int j, bool checkNPCSpawns, int wallDist)
-        {
-            if (CanPlantGrow(i, j))  // Needs a more selective implementation of what is a plant - random updates are totally skipped with this
-                orig(i, j, checkNPCSpawns, wallDist);
-        }
-
-        private void On_WorldGen_UpdateWorld_OvergroundTile(On_WorldGen.orig_UpdateWorld_OvergroundTile orig, int i, int j, bool checkNPCSpawns, int wallDist)
-        {
-            if (CanPlantGrow(i, j))
-                orig(i, j, checkNPCSpawns, wallDist);
-        }
-
-
+        /// <summary> Selective implementation of the vanilla method. Vanilla updates only run in pressurized environments. Modded updates run anywhere. </summary>
         public static void WorldGen_UpdateWorld_OvergroundTile(int i, int j, bool checkNPCSpawns, int wallDist)
         {
             worldGen_UpdateWorld_OvergroundTile ??= typeof(WorldGen).GetMethod("UpdateWorld_OvergroundTile", BindingFlags.NonPublic | BindingFlags.Static);
-            worldGen_UpdateWorld_OvergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+            if (SubworldSystem.AnyActive<Macrocosm>())
+            {
+                if (RoomOxygenSystem.IsRoomPressurized(i, j))
+                {
+                    worldGen_UpdateWorld_OvergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+                }
+                else
+                {
+                    TileLoader.RandomUpdate(i, j, Main.tile[i, j].TileType);
+                    WallLoader.RandomUpdate(i, j, Main.tile[i, j].TileType);
+                }
+            }
+            else
+            {
+                worldGen_UpdateWorld_OvergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+            }
         }
 
+        /// <summary> Selective implementation of the vanilla method. Vanilla updates only run in pressurized environments. Modded updates run anywhere. </summary>
         public static void WorldGen_UpdateWorld_UndergroundTile(int i, int j, bool checkNPCSpawns, int wallDist)
         {
             worldGen_UpdateWorld_UndergroundTile ??= typeof(WorldGen).GetMethod("UpdateWorld_UndergroundTile", BindingFlags.NonPublic | BindingFlags.Static);
-            worldGen_UpdateWorld_UndergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+            if (SubworldSystem.AnyActive<Macrocosm>())
+            {
+                if (RoomOxygenSystem.IsRoomPressurized(i, j))
+                {
+                    worldGen_UpdateWorld_UndergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+                }
+                else
+                {
+                    TileLoader.RandomUpdate(i, j, Main.tile[i, j].TileType);
+                    WallLoader.RandomUpdate(i, j, Main.tile[i, j].TileType);
+                }
+            }
+            else
+            {
+                worldGen_UpdateWorld_UndergroundTile.Invoke(null, [i, j, checkNPCSpawns, wallDist]);
+            }
         }
     }
 }

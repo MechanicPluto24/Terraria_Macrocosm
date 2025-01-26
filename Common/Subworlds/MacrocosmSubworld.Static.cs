@@ -85,7 +85,7 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        public static float GetAmbientTemperature(Vector2 position) => Current is not null ? Current.AmbientTemperature(position) : Earth.AmbientTemperature(position);
+        public static float GetAmbientTemperature(Vector2? position = null) => Current is not null ? Current.AmbientTemperature(position) : Earth.AmbientTemperature(position);
 
         /// <summary> The loading screen. </summary>
         public static LoadingScreen LoadingScreen { get; set; }
