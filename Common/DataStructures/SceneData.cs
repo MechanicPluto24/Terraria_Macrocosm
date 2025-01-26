@@ -123,6 +123,7 @@ namespace Macrocosm.Common.DataStructures
             this.scanCenterWorldCoordinates = scanCenterWorldCoordinates;
             Scan();
         }
+
         public void Scan()
         {
             Reset();
