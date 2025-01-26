@@ -4,8 +4,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-    [LegacyName("MoonBasePlatingDust")]
-    public class IndustrialPlatingDust : ModDust
+    // Haha black lung
+    public class TarDust : ModDust
     {
         public override void OnSpawn(Dust dust)
         {
@@ -16,7 +16,9 @@ namespace Macrocosm.Content.Dusts
         public override bool Update(Dust dust)
         {
             if (!dust.noGravity)
-                dust.velocity.Y += 0.025f;
+                dust.velocity.Y += 0.12f;
+
+            dust.velocity = Collision.TileCollision(dust.position, dust.velocity, 1, 1);
 
             dust.position += dust.velocity;
             dust.scale -= 0.02f;
@@ -24,7 +26,6 @@ namespace Macrocosm.Content.Dusts
 
             if (dust.scale < 0f)
                 dust.active = false;
-
             return false;
         }
 
@@ -32,7 +33,6 @@ namespace Macrocosm.Content.Dusts
         {
             return true;
         }
-
 
         public override Color? GetAlpha(Dust dust, Color lightColor)
         {

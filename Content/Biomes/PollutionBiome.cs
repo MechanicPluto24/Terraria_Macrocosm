@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using Terraria;
 using Terraria.Graphics.Capture;
-using SubworldLibrary;
 using Terraria.Graphics.Effects;
 using Terraria.ModLoader;
 
@@ -41,6 +40,8 @@ namespace Macrocosm.Content.Biomes
                     visualIntensity = level;
             }
 
+            Main.numClouds = (int)(visualIntensity * 100); // hm
+
             if (visualIntensity > 0f)
             {
                 if (!Filters.Scene["Macrocosm:Graveyard"].IsActive())
@@ -52,7 +53,7 @@ namespace Macrocosm.Content.Biomes
                     Filters.Scene["Macrocosm:Graveyard"].GetShader().UseTargetPosition(player.Center);
                     float progress = MathHelper.Lerp(0f, 0.75f, visualIntensity);
                     Filters.Scene["Macrocosm:Graveyard"].GetShader().UseProgress(progress);
-                    Filters.Scene["Macrocosm:Graveyard"].GetShader().UseIntensity(1.2f);
+                    Filters.Scene["Macrocosm:Graveyard"].GetShader().UseIntensity(1.8f - 1.2f * visualIntensity);
                 }
             }
             else if (Filters.Scene["Macrocosm:Graveyard"].IsActive())

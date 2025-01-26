@@ -150,13 +150,13 @@ namespace Macrocosm.Content.Machines
                 return;
 
             if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
-                TileCounts.Instance.PollutionLevel += 4f;
+                TileCounts.Instance.PollutionLevel += 5f;
         }
 
         public void NearbyEffects(int i, int j, SceneData sceneData)
         {
             if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
-                sceneData.Macrocosm.PollutionLevel += 4f;
+                sceneData.Macrocosm.PollutionLevel += 5f;
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
