@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override void SetDefaults()
         {
             Item.DefaultToBow(7, 30, true);
-            Item.damage = 450;
+            Item.damage = 170;
             Item.knockBack = 4;
             Item.width = 32;
             Item.height = 74;
