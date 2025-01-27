@@ -15,9 +15,9 @@ namespace Macrocosm.Common.Customization
         public Asset<Texture2D> Icon { get; }
         private readonly string iconPath;
 
-        public Decal(string patternName, string context, string texturePath, string iconPath)
+        public Decal(string name, string context, string texturePath, string iconPath)
         {
-            Name = patternName;
+            Name = name;
             Context = context;
 
             Texture = ModContent.RequestIfExists(texturePath, out Asset<Texture2D> decalTexture) ? decalTexture : Macrocosm.EmptyTex;
