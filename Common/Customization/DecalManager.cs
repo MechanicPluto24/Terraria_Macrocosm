@@ -13,9 +13,9 @@ namespace Macrocosm.Common.Customization
         public static bool Initialized { get; private set; }
         private static bool shouldLogLoadedItems = true;
 
-        private static Dictionary<(string context, string decalName), Decal> decals;
+        private static Dictionary<(string decalName, string context), Decal> decals;
 
-        private static Dictionary<(string context, string decalName), bool> decalUnlockStatus;
+        private static Dictionary<(string decalName, string context), bool> decalUnlockStatus;
 
         public override void Load()
         {
@@ -53,19 +53,13 @@ namespace Macrocosm.Common.Customization
         /// </summary>
         /// <param name="context"> The  context this decal belongs to </param>
         /// <param name="decalName"> The decal name </param>
-        public static Decal GetDecal(string context, string decalName)
-            => decals[(context, decalName)];
+        public static Decal GetDecal(string decalName, string context)
+            => decals[(decalName, context)];
 
-        public static List<Decal> GetUnlockedDecals(string context)
-        {
-            return GetdecalsWhere(context, decal =>
-            {
-                var key = (context, decal.Name);
-                return decalUnlockStatus.ContainsKey(key) && decalUnlockStatus[key];
-            });
-        }
+        public static List<Decal> GetUnlockedDecals(string context) 
+            => GetDecalsWhere(context, decal => decalUnlockStatus.TryGetValue((decal.Name, context), out bool value) && value);
 
-        public static List<Decal> GetdecalsWhere(string context, Func<Decal, bool> match)
+        public static List<Decal> GetDecalsWhere(string context, Func<Decal, bool> match)
         {
             var decalsForContext = decals
                 .Select(kvp => kvp.Value)
@@ -82,8 +76,8 @@ namespace Macrocosm.Common.Customization
         /// <param name="decalName"> The decal name </param>
         /// <param name="decal"> The decal, null if not found </param>
         /// <returns> Whether the specified decal has been found </returns>
-		public static bool TryGetDecal(string context, string decalName, out Decal decal)
-            => decals.TryGetValue((context, decalName), out decal);
+		public static bool TryGetDecal(string decalName, string context, out Decal decal)
+            => decals.TryGetValue((decalName, context), out decal);
 
         public override void ClearWorld() => Reset();
 
@@ -112,17 +106,17 @@ namespace Macrocosm.Common.Customization
         /// <param name="context"> The context this decal belongs to </param>
         /// <param name="decalName"> The decal name </param>
         /// <param name="unlockedByDefault"> Whether this decal is unlocked by default </param>
-        private static void AddDecal(string context, string decalName, string texturePath, string iconPath, bool unlockedByDefault = false)
+        private static void AddDecal(string decalName, string context, string texturePath, string iconPath, bool unlockedByDefault = false)
         {
-            Decal decal = new(context, decalName, texturePath, iconPath);
-            decals.Add((context, decalName), decal);
-            decalUnlockStatus.Add((context, decalName), unlockedByDefault);
+            Decal decal = new(decalName, context, texturePath, iconPath);
+            decals.Add((decalName, context), decal);
+            decalUnlockStatus.Add((decalName, context), unlockedByDefault);
         }
 
         private static void LoadDecals()
         {
             foreach (string context in Rocket.ModuleNames)
-                AddDecal(context, "None", Macrocosm.EmptyTexPath, "Assets/Decals/Icons/None", true);
+                AddDecal("None", context, Macrocosm.EmptyTexPath, "Macrocosm/Assets/Decals/Icons/None", true);
 
             if (Main.dedServ)
                 return;
@@ -138,10 +132,12 @@ namespace Macrocosm.Common.Customization
                 if (split.Length == 2)
                 {
                     string context = split[0];
-                    string decal = split[1].Replace(".rawimg", "");
+                    string name = split[1].Replace(".rawimg", "");
+                    string texture = nameof(Macrocosm) + "/" + path.Replace(".rawimg", "");
+                    string icon = texture.Replace(context, "Icons");
 
-                    if (!IsDecalExcludedByRegion(decal))
-                        AddDecal(context, decal, path, path.Replace(context, "Icons"), true);
+                    if (!IsDecalExcludedByRegion(name))
+                        AddDecal(name, context, texture, icon, true);
                 }
             }
 
@@ -152,7 +148,7 @@ namespace Macrocosm.Common.Customization
                 logstring += $" - Context: {context}\n\t";
                 foreach (var kvp in decals)
                 {
-                    (string decalcontext, string decalName) = kvp.Key;
+                    (string decalName, string decalcontext) = kvp.Key;
                     if (decalcontext == context && !IsDecalExcludedByRegion(decalName))
                         logstring += $"{decalName} ";
                 }

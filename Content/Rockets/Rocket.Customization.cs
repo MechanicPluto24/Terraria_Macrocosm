@@ -118,7 +118,7 @@ namespace Macrocosm.Content.Rockets
                     {
                         try
                         {
-                            module.Decal = DecalManager.TryGetDecal(moduleName, moduleJObject["decal"].Value<string>(), out Decal decal) ? decal : new Decal();
+                            module.Decal = DecalManager.TryGetDecal(moduleJObject["decal"].Value<string>(), moduleName, out Decal decal) ? decal : new Decal();
                             module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
                         }
                         catch (Exception ex)
