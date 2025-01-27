@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (closestNPC is not null)
             {
                 Vector2 vel = (closestNPC.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
-                Projectile.velocity += (vel * 0.4f);
+                Projectile.velocity += (vel * 0.5f);
                 Projectile.velocity = (Projectile.velocity).SafeNormalize(Vector2.UnitX);
                 Projectile.velocity *= 17f;
             }
