@@ -1,13 +1,16 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -19,6 +22,8 @@ namespace Macrocosm.Content.Machines
 {
     public class BurnerGenerator : MachineTile
     {
+        private static Asset<Texture2D> glowmask;
+
         public override short Width => 4;
         public override short Height => 3;
         public override MachineTE MachineTE => ModContent.GetInstance<BurnerGeneratorTE>();
@@ -30,6 +35,8 @@ namespace Macrocosm.Content.Machines
             Main.tileNoAttach[Type] = true;
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
+
+            SceneData.Hooks[Type] = NearbyEffects;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
             TileObjectData.newTile.Width = Width;
@@ -135,6 +142,21 @@ namespace Macrocosm.Content.Machines
             }
         }
 
+        public override void NearbyEffects(int i, int j, bool closer)
+        {
+            if (closer)
+                return;
+
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                TileCounts.Instance.PollutionLevel += 3f;
+        }
+
+        public void NearbyEffects(int i, int j, SceneData sceneData)
+        {
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                sceneData.Macrocosm.PollutionLevel += 3f;
+        }
+
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             if (IsPoweredOnFrame(i, j))
@@ -151,6 +173,12 @@ namespace Macrocosm.Content.Machines
                 if (++frame >= frameCount)
                     frame = 0;
             }
+        }
+
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
         }
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
@@ -201,10 +229,7 @@ namespace Macrocosm.Content.Machines
             if (tileOffsetX is 0 or 1 && tileOffsetY is 2)
             {
                 if (IsPoweredOnFrame(i, j))
-                {
-                    r = 0.75f;
-                    g = 0.5f;
-                }
+                    tile.GetEmmitedLight(new Color(191, 128, 0), applyPaint: true, out r, out g, out b);
             }
         }
     }

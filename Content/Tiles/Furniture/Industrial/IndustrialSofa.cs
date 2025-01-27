@@ -1,5 +1,6 @@
-﻿using Macrocosm.Common.Sets;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -56,7 +57,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         // If on rightmost frame and there's no neighbor sofa to the right, draw extra texture to the right
         // This is to ensure the sofa is symmetrical while also connecting neatly to other sofas 
-        // TODO: apply paints and include into tile preview
+        // TODO:  include into tile preview
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
             Tile tile = Main.tile[i, j];
@@ -67,12 +68,12 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             {
                 TileObjectData data = TileObjectData.GetTileData(Type, 0);
                 Vector2 position = new Vector2((i + 1) * 16f, j * 16f) - Main.screenPosition + zero;
-                Color color = Utility.Colorize(tile.GetPaintColor(), Lighting.GetColor(i + 1, j));
-
+                Color color = Lighting.GetColor(i + 1, j);
+                Texture2D extraTexture = TileRendering.GetOrPreparePaintedExtraTexture(tile, extra);
                 if (tile.TileFrameY / 18 % 2 is 0)
-                    spriteBatch.Draw(extra.Value, position, new Rectangle(0, 0, 2, data.CoordinateHeights[0]), color);
+                    spriteBatch.Draw(extraTexture, position, new Rectangle(0, 0, 2, data.CoordinateHeights[0]), color);
                 else if (tile.TileFrameY / 18 % 2 is 1)
-                    spriteBatch.Draw(extra.Value, position, new Rectangle(0, data.CoordinateHeights[0] + data.CoordinatePadding, 2, data.CoordinateHeights[1]), color);
+                    spriteBatch.Draw(extraTexture, position, new Rectangle(0, data.CoordinateHeights[0] + data.CoordinatePadding, 2, data.CoordinateHeights[1]), color);
 
                 // Also draw highlight extra if the actual tile is highlighted
                 if (Main.InSmartCursorHighlightArea(i, j, out bool actuallySelected))
@@ -80,7 +81,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                     int light = (color.R + color.G + color.B) / 3;
                     if (light > 10)
                     {
-
                         Color highlightColor = Colors.GetSelectionGlowColor(actuallySelected, light);
 
                         if (tile.TileFrameY / 18 % 2 == 0)

@@ -105,14 +105,6 @@ namespace Macrocosm.Common.UI
 
         public void ClearGlow() => glowTime = 0;
 
-        public void Consume(int amount)
-        {
-            Item.stack -= amount;
-
-            if (Item.stack <= 0)
-                Item.TurnToAir();
-        }
-
         protected virtual void HandleItemSlotLogic()
         {
             if (IsMouseHovering && (inventory.CanInteract || CanInteract))
@@ -466,36 +458,6 @@ namespace Macrocosm.Common.UI
                 spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * Main.inventoryScale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
             }
         }
-
-        /*
-        private SpriteBatchState state;
-        private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position, Color outlineColor, Color fillColor)
-        {
-            state.SaveState(spriteBatch);
-            SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1];
-
-            Effect effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad).Value;
-            Main.graphics.GraphicsDevice.Textures[1] = BlueprintTexture.Value;
-            Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-            effect.Parameters["uColorCount"].SetValue(2);
-            effect.Parameters["uColorKey"].SetValue(blueprintKeys);
-            effect.Parameters["uColor"].SetValue((new Color[] { fillColor, outlineColor }).ToVector4Array());
-            effect.Parameters["uSampleBrightness"].SetValue(false);
-            spriteBatch.End();
-            spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
-            spriteBatch.Draw(BlueprintTexture.Value, position + (slotTexture.Size() / 2f * Main.inventoryScale) , null, Color.White, 0f, BlueprintTexture.Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
-            spriteBatch.End();
-            spriteBatch.Begin(state);
-            Main.graphics.GraphicsDevice.Textures[1] = null;
-            Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
-        }
-
-        private readonly Vector3[] blueprintKeys = [
-            new Vector3(0.47f, 0.47f, 0.47f),
-            new Vector3(0.74f, 0.74f, 0.74f)
-        ];
-        */
     }
 }
 

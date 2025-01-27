@@ -1,14 +1,6 @@
-﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Tools;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Tools.Wiring;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems.Power
@@ -29,19 +21,11 @@ namespace Macrocosm.Common.Systems.Power
         {
             orig(self);
 
-            if (Main.LocalPlayer.CurrentItem().type != ModContent.ItemType<CircuitProbe>())
-               return;
-
-            foreach (var kvp in ByID)
+            if (Main.LocalPlayer.CurrentItem().mech)
             {
-                if (kvp.Value is MachineTE machine)
+                foreach (var kvp in ByID)
                 {
-                    if (machine.CanCluster)
-                    {
-                        if (machine.Cluster != null && machine.IsClusterOrigin)
-                            machine.DrawClusterPowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
-                    }
-                    else
+                    if (kvp.Value is MachineTE machine)
                     {
                         machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
                     }

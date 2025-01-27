@@ -43,9 +43,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Projectile.velocity != Vector2.Zero)
                 Projectile.rotation = Projectile.velocity.ToRotation() - MathHelper.PiOver2;
 
-            if (Main.rand.NextFloat() < 0.5f)
+            if (Main.rand.NextFloat() < 0.9f)
             {
-                var star = Particle.Create<ImbriumStar>(new Vector2(Projectile.position.X, Projectile.position.Y) + Main.rand.NextVector2FromRectangle(new Rectangle(0, 0, (int)Projectile.Size.X, (int)Projectile.Size.Y)), Vector2.Zero, scale: new(0.6f));
+                var star = Particle.Create<ImbriumStar>(Projectile.Center + Main.rand.NextVector2Circular(8, 8), Vector2.Zero, scale: new(0.34f));
                 star.Opacity = 0.8f;
             }
 

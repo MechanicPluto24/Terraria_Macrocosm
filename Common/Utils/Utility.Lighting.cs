@@ -12,6 +12,17 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        /// <summary> Convenience method for getting lighting color using an npc or projectile position.</summary>
+        public static Color GetLightColor(Vector2 position) => Lighting.GetColor((int)(position.X / 16f), (int)(position.Y / 16f));
+
+        /// <summary> Convenience method for adding lighting using an npc or projectile position, using a Color instance for color. </summary>
+        public static void AddLight(Vector2 position, Color color, float brightnessDivider = 1F) 
+            => AddLight(position, color.R / 255F, color.G / 255F, color.B / 255F, brightnessDivider);
+
+        /// <summary> Convenience method for adding lighting using an npc or projectile position with 0f - 1f color values. </summary>
+        public static void AddLight(Vector2 position, float colorR, float colorG, float colorB, float brightnessDivider = 1f) 
+            => Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
+
         public static void ApplySurfaceLight(Tile tile, int x, int y, ref Vector3 lightColor)
         {
             float R = 0f;

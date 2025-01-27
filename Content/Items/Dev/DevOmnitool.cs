@@ -3,6 +3,7 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Tiles.Trees;
 using SubworldLibrary;
 using Terraria;
 using Terraria.Graphics.Effects;
@@ -60,8 +61,10 @@ namespace Macrocosm.Content.Items.Dev
 
             //Main.drunkWorld = !Main.drunkWorld;
 
-            bool value = WorldFlags.SubworldUnlocked.GetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID);
-            WorldFlags.SubworldUnlocked.SetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID, !value);
+            //bool value = WorldFlags.SubworldUnlocked.GetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID);
+            //WorldFlags.SubworldUnlocked.SetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID, !value);
+
+            //WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), Player.tileTargetX, Player.tileTargetY);
 
             return true;
         }

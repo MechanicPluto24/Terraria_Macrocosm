@@ -6,6 +6,7 @@ namespace Macrocosm.Common.Graphics
     {
         private static BlendState _multiplicative;
         private static BlendState _subtractive;
+        private static BlendState _alphaSubtractive;
         private static BlendState _negative;
 
         public static BlendState Multiplicative => _multiplicative ??= new BlendState
@@ -26,6 +27,16 @@ namespace Macrocosm.Common.Graphics
             AlphaDestinationBlend = Blend.One,
             ColorBlendFunction = BlendFunction.ReverseSubtract,
             AlphaBlendFunction = BlendFunction.ReverseSubtract,
+        };
+
+        public static BlendState AlphaSubtractive => _subtractive ??= new BlendState
+        {
+            ColorSourceBlend = Blend.SourceAlpha,
+            AlphaSourceBlend = Blend.SourceAlpha,
+            ColorDestinationBlend = Blend.One,
+            AlphaDestinationBlend = Blend.One,
+            ColorBlendFunction = BlendFunction.ReverseSubtract,
+            AlphaBlendFunction = BlendFunction.ReverseSubtract
         };
 
         public static BlendState Negative => _negative ??= new BlendState

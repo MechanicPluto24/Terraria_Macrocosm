@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using System.Collections.Generic;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -18,6 +19,8 @@ namespace Macrocosm.Common.Systems.Power
 
         /// <summary> The Machine TileEntity template instance associated with this multitile </summary>
         public abstract MachineTE MachineTE { get; }
+
+        public bool IsSingleTile => Width == 1 && Height == 1;
 
         /// <summary> 
         /// Used to determine if the machine is powered on, by using the Tile frame.
@@ -34,38 +37,34 @@ namespace Macrocosm.Common.Systems.Power
         public void Toggle(int i, int j, bool automatic, bool skipWire = false)
         {
             if (Utility.TryGetTileEntityAs(i, j, out MachineTE machineTE))
-            {
                 machineTE.Toggle(automatic, skipWire);
-            }
         }
 
         public override void HitWire(int i, int j)
         {
-            if (Utility.TryGetTileEntityAs(i, j, out BatteryTE _))
-                return;
-
-            Toggle(i, j, automatic: false, skipWire: true);
+            if (Utility.TryGetTileEntityAs(i, j, out MachineTE machineTE) && machineTE.CanToggleWithWire)
+                machineTE.Toggle(automatic: false, skipWire: true);
         }
 
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
-            if (Width == 1 && Height == 1 && !effectOnly)
+            MachineTE.KillTile_ClusterCheck(new(i, j));
+
+            if (IsSingleTile && !effectOnly)
                 MachineTE.Kill(i, j);
         }
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {
-            if (Width > 1 || Height > 1)
+            if (!IsSingleTile)
                 MachineTE.Kill(i, j);
         }
 
         // Runs for "block" tiles that function as machines, not multitiles
         public override void PlaceInWorld(int i, int j, Item item)
         {
-            if (TileObjectData.GetTileData(Main.tile[i, j]) is null && Width == 1 && Height == 1)
-            {
+            if (IsSingleTile && TileObjectData.GetTileData(Main.tile[i, j]) is null)
                 MachineTE.BlockPlacement(i, j);
-            }
         }
 
         // PlaceInWorld is NOT called on tile swap. 

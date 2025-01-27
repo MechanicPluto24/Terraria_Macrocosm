@@ -1,8 +1,11 @@
-﻿using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Debuffs.Environment;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System.IO;
@@ -193,7 +196,14 @@ namespace Macrocosm.Common.Players
 
         public override void PostUpdate()
         {
+            HandleAchievements();
             HandleZeroGravity();
+        }
+
+        public void HandleAchievements()
+        {
+            if(SubworldSystem.IsActive<Moon>())
+                CustomAchievement.IncreaseEventValue<SurviveMoon>(nameof(SurviveMoon), 1f);
         }
 
         private void HandleZeroGravity()
@@ -225,22 +235,6 @@ namespace Macrocosm.Common.Players
             else
                 Player.velocity.X *= 0.99f;
         }
-
-        #region Biome & Visual Effects
-        public override void PostUpdateMiscEffects()
-        {
-            Update_Graveyard();
-        }
-
-        private static void Update_Graveyard()
-        {
-            if (SubworldSystem.AnyActive<Macrocosm>())
-                Main.SceneMetrics.GraveyardTileCount = 0;
-            else
-                Main.SceneMetrics.GraveyardTileCount += TileCounts.Instance.GraveyardTileCount;
-        }
-
-        #endregion
 
         #region Netcode
         public override void CopyClientState(ModPlayer clientClone)

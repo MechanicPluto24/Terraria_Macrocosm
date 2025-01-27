@@ -10,7 +10,7 @@ namespace Macrocosm.Common.Storage
     // This needs some attention, it's not that great as it was in my mind.
     // Owner references for Inventories are currently needed for:
     // - finding the correct owner on remote clients
-    // - the InventoryItemDropLocation, in case the inventory is resized or the container is destroyed.
+    // - the Position, in case the inventory is resized or the container is destroyed.
     // Maybe there's a better way to do this. 
     // -- Feldy
     public interface IInventoryOwner
@@ -26,7 +26,8 @@ namespace Macrocosm.Common.Storage
                 return GetType().Name;
             }
         }
-        public Vector2 InventoryItemDropLocation => Main.LocalPlayer.Center;
+
+        public Vector2 InventoryPosition => Main.LocalPlayer.Center;
         public int InventorySerializationIndex => 0;
 
         // TODO: Unhardcode this, make getting the instance part of the interface... somehow

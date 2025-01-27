@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Bars
             Item.createTile = TileType<Tiles.Bars.AluminumBar>();
             Item.placeStyle = 0;
             Item.rare = ItemRarityID.White;
-            Item.material = true;
+            
             // Set other Item.X values here
         }
 

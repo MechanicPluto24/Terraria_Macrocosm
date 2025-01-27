@@ -1,10 +1,12 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
@@ -58,7 +60,7 @@ namespace Macrocosm.Content.Subworlds
         };
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
-        public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-183f, 106f);
+        public override float AmbientTemperature(Vector2? position = null) => Utility.ScaleNoonToMidnight(-183f, 106f);
 
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
@@ -78,6 +80,8 @@ namespace Macrocosm.Content.Subworlds
 
             DemonSunIntensity = 0f;
             WorldFlags.DemonSun = false;
+
+            CustomAchievement.Unlock<TravelToMoon>();
         }
 
         public override void OnExitSubworld()
@@ -201,7 +205,7 @@ namespace Macrocosm.Content.Subworlds
         private void UpdateSolarStorm() { }
         private void UpdateMeteorStorm()
         {
-            meteorStormCounter++;
+            meteorStormCounter += Main.worldEventUpdates;
 
             if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldFlags.MoonMeteorStorm)
             {

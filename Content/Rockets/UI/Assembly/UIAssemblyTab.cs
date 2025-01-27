@@ -1,8 +1,10 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
@@ -169,6 +171,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     }
                 }
             }
+
+            CustomAchievement.Unlock<BuildRocket>();
         }
 
 

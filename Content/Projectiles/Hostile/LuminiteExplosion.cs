@@ -47,9 +47,9 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, LuminiteSlime.EffectColor, 0f, texture.Size() / 2f, progress, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, LuminiteSlime.EffectColor, 0f, texture.Size() / 2f, progress, SpriteEffects.None, 0f);
             texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star8").Value;
-            Main.spriteBatch.Draw(texture, Projectile.Center - Main.screenPosition, null, new Color(213, 155, 148, 80), 0f, texture.Size() / 2f, progress * 0.4f, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, new Color(213, 155, 148, 80), 0f, texture.Size() / 2f, progress * 0.4f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

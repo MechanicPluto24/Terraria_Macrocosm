@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.LiquidContainers
             Item.maxStack = 9999;
             Item.value = 100;
             Item.rare = ItemRarityID.LightRed;
-            Item.material = true;
+            
         }
 
         public override void OnStack(Item source, int numToTransfer)

@@ -178,7 +178,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Vector2 drawPos2 = position + (rotation2 + Utils.Remap(transparency, 0f, 1f, 0f, MathHelper.Pi / 2f) * SwingDirection).ToRotationVector2() * ((float)texture.Width * 0.5f - 4f) * scale;
             Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor, transparency, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(transparency, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
 
-            Main.spriteBatch.Draw(
+            Main.EntitySpriteDraw(
                TextureAssets.Projectile[Type].Value,
                Projectile.Center + Projectile.rotation.ToRotationVector2() * 16f - Main.screenPosition,
                null,
