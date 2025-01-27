@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
-            Projectile.timeLeft = 20;
+            Projectile.timeLeft = 120;
 
             Projectile.CritChance = 16;
 
