@@ -1,0 +1,34 @@
+OilRefinery.DisplayName: Oil Refinery
+OreExcavator.DisplayName: Ore Excavator
+
+BurnerGenerator: {
+	DisplayName: Burner Generator
+	HullHeatMetric: Hull Heat: {0}°C
+	HullHeatImperial: Hull Heat: {0}°F
+}
+
+KeroseneGenerator: {
+	DisplayName: Kerosene Generator
+	RPM: "{0} RPM"
+}
+
+Common: {
+	ConsumedPower: Consumed Power: {0}kW
+	GeneratedPower: Generated Power: {0}kW
+	StoredEnergy: Stored Energy: {0}kJ
+	LiquidExtract: Extractable
+	LiquidContainer: Liquid Container
+	BurnFuel: Flammable
+	TemperatureMetric: "{0}°C"
+	TemperatureImperial: "{0}°F"
+
+	PowerInfo: {
+		Simple: "{0}kW"
+		Energy: "{0}kJ"
+		Common: "{0}kW / {1}kW"
+		Consumer: Consumed: {0}kW / Required: {1}kW
+		Generator: Generated: {0}kW / Max: {1}kW
+		Battery: Stored: {0}kJ / Capacity: {1}kJ
+		Controller: ""
+	}
+}

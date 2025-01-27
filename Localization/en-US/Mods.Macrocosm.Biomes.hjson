@@ -1,0 +1,44 @@
+EarthBiome: {
+	DisplayName: Earth
+	TownNPCDialogueName: the Earth
+}
+
+MoonBiome: {
+	DisplayName: The Moon
+	TownNPCDialogueName: the Moon
+}
+
+BloodMoonBiome: {
+	DisplayName: Blood Moon
+	TownNPCDialogueName: Blood Moon
+}
+
+BasaltBiome: {
+	DisplayName: Basalt
+	TownNPCDialogueName: the Basalt
+}
+
+IrradiationBiome: {
+	DisplayName: The Irradiation
+	TownNPCDialogueName: the Irradiation
+}
+
+DemonSunBiome: {
+	DisplayName: Demon Sun Biome
+	TownNPCDialogueName: the Demon Sun
+}
+
+MoonNightBiome: {
+	DisplayName: Moon Night
+	TownNPCDialogueName: the Moon Night
+}
+
+MoonUndergroundBiome: {
+	DisplayName: Moon Underground
+	TownNPCDialogueName: the Moon Underground
+}
+
+PollutionBiome: {
+	DisplayName: Pollution Biome
+	TownNPCDialogueName: the Pollution Biome
+}

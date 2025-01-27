@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
                 float progress = n / count;
                 Color color = Color.White * (0.7f - progress) * opacity;
                 Vector2 trailPosition = Projectile.Center - Projectile.velocity.SafeNormalize(default) * n * 6f;
-                Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1f * (1f - progress), SpriteEffects.None, 0);
+                Main.EntitySpriteDraw(texture, trailPosition - Main.screenPosition, null, color, Projectile.rotation, texture.Size() / 2f, Projectile.scale * 1f * (1f - progress), SpriteEffects.None, 0);
             }
 
             return true;

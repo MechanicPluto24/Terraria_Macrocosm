@@ -13,7 +13,9 @@ namespace Macrocosm.Content.Dusts
 
         public override bool Update(Dust dust)
         {
-            dust.velocity.Y += 0.01f;
+            if (!dust.noGravity)
+                dust.velocity.Y += 0.01f;
+
             dust.position += dust.velocity;
             dust.scale -= 0.05f;
             dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;

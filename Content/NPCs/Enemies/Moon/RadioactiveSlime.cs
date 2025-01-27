@@ -67,6 +67,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
 
         }
+
         public override bool PreAI()
         {
             Player player = Main.LocalPlayer;

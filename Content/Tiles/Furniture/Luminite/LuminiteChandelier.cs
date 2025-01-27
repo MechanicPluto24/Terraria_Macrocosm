@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -6,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -16,7 +18,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
     public class LuminiteChandelier : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
-
         public override void SetStaticDefaults()
         {
             Main.tileLighted[Type] = true;
@@ -76,19 +77,27 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            Vector3 color = Utility.GetLightColorFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 2))).ToVector3();
+            Color color = Utility.GetLightColorFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / (18 * 2)));
             if (tile.TileFrameX == 0)
-            {
-                r = color.X;
-                g = color.Y;
-                b = color.Z;
-            }
+                tile.GetEmmitedLight(color, applyPaint: true, out r, out g, out b);
         }
 
-        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
+            Tile tile = Main.tile[i, j];
+
+            if (TileObjectData.IsTopLeft(tile))
+                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
+
+            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+        }
+
+        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
+
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            Utility.DrawTileExtraTexture(i, j, spriteBatch, glowmask, new Vector2(0, 0));
+            TileRendering.DrawMultiTileInWindTopAnchor(i, j, glowmask, Color.White, applyPaint: true, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
         }
     }
 }

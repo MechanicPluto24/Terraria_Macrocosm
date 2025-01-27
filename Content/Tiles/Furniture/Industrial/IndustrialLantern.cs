@@ -1,11 +1,14 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -24,6 +27,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
+            TileID.Sets.MultiTileSway[Type] = true;
+            TileSets.RandomStyles[Type] = 2;
+
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
             TileObjectData.newTile.DrawYOffset = -2;
             TileObjectData.newTile.StyleWrapLimit = 2;
@@ -38,8 +44,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Lantern"));
-
-            TileSets.RandomStyles[Type] = 2;
 
             // All styles
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialLantern>());
@@ -80,11 +84,22 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         {
             Tile tile = Main.tile[i, j];
             if (tile.TileFrameX < 18 && tile.TileFrameY < 18 * 2)
-            {
-                r = 1f;
-                g = 1f;
-                b = 1f;
-            }
+                tile.GetEmmitedLight(Color.White, applyPaint: true, out r, out g, out b);
+        }
+
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            Tile tile = Main.tile[i, j];
+
+            if (TileObjectData.IsTopLeft(tile))
+                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
+
+            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+        }
+
+        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
         }
     }
 }

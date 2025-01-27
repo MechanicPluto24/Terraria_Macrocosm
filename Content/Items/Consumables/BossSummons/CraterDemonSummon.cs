@@ -15,12 +15,11 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
 {
     public class CraterDemonSummon : ModItem
     {
-        // Different sprite for drawing in world and in inventory, as opposed from the player-held variant
-        private static Asset<Texture2D> itemSprite;
+        private static Asset<Texture2D> heldTexture;
 
         public override void Load()
         {
-            itemSprite = ModContent.Request<Texture2D>(Texture + "_Item");
+            heldTexture = ModContent.Request<Texture2D>(Texture + "_Held");
         }
 
         public override void SetStaticDefaults()
@@ -40,6 +39,9 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
             Item.useTime = 45;
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.consumable = true;
+
+            Item.noUseGraphic = true;
+            Item.CustomDrawData().CustomHeldTexture = heldTexture;
         }
 
         public override bool CanUseItem(Player player)
@@ -60,17 +62,6 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
                 .AddIngredient(ItemID.LunarBar, 10)
                 .AddTile(ModContent.TileType<IrradiatedAltar>())
                 .Register();
-        }
-        public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
-        {
-            spriteBatch.Draw(itemSprite.Value, position, new Rectangle(0, 0, itemSprite.Width(), itemSprite.Height()), drawColor, 0f, itemSprite.Size() / 2f, scale, SpriteEffects.None, 0);
-            return false;
-        }
-
-        public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
-        {
-            spriteBatch.Draw(itemSprite.Value, Item.position - Main.screenPosition, null, alphaColor, rotation, itemSprite.Size() / 2f, scale, SpriteEffects.None, 0);
-            return false;
         }
     }
 }

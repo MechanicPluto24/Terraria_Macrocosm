@@ -4,6 +4,8 @@
     {
         None,
         Conveyor,
+        ConveyorInlet,
+        ConveyorOutlet,
         // ...
     }
 }

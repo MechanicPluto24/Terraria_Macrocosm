@@ -87,8 +87,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 int frameY = (Projectile.frame + n) % 5;
                 Rectangle frame = texture.Frame(verticalFrames: Main.projFrames[Type], frameY: frameY);
                 Vector2 trailPosition = Projectile.position - Projectile.velocity.SafeNormalize(default) * n * 6f;
-                Main.spriteBatch.Draw(texture, trailPosition - Main.screenPosition, frame, color, Projectile.rotation, frame.Size() / 2f, Projectile.scale * 1f * (1f - progress), SpriteEffects.None, 0);
-                Utility.DrawStar(trailPosition + new Vector2(0, -6).RotatedBy(Projectile.rotation) - Main.screenPosition, 1, new Color(31, 255, 106, 0) * opacity * 0.3f, 0.72f * (1f - progress), Projectile.rotation);
+                Main.EntitySpriteDraw(texture, trailPosition - Main.screenPosition, frame, color, Projectile.rotation, frame.Size() / 2f, Projectile.scale * 1f * (1f - progress), SpriteEffects.None, 0);
+                Utility.DrawStar(trailPosition + new Vector2(0, -6).RotatedBy(Projectile.rotation) - Main.screenPosition, 1, new Color(31, 255, 106, 0) * opacity * 0.3f, 0.72f * (1f - progress), Projectile.rotation, entity: true);
             }
             return false;
         }

@@ -5,45 +5,32 @@ namespace Macrocosm.Common.Systems.Connectors
 {
     public readonly struct ConnectorData : TagSerializable
     {
-        private readonly byte data;
+        public ConnectorType Type { get; }
 
-        public bool AnyWire => data != 0;
-        public bool Conveyor => (data & 0x01) != 0;
+        public bool Any => Type != ConnectorType.None;
+        public bool ConveyorBase => Type == ConnectorType.Conveyor;
+        public bool ConveyorInlet => Type == ConnectorType.ConveyorInlet;
+        public bool ConveyorOutlet => Type == ConnectorType.ConveyorOutlet;
+        public bool AnyConveyor => ConveyorBase || ConveyorInlet || ConveyorOutlet;
 
-        public static implicit operator ConnectorData(byte value) => new(value);
-        public static implicit operator byte(ConnectorData powerWireData) => powerWireData.data;
-
-        // Expand this if needed
-        private const int TypeMask = 0x01;
-
-        public ConnectorData() { }
         public ConnectorData(ConnectorType type)
         {
-            data = type switch
-            {
-                ConnectorType.None => new ConnectorData((byte)(data & ~TypeMask)),
-                ConnectorType.Conveyor => new ConnectorData((byte)(data & ~TypeMask | 0x01)),
-                _ => new(),
-            };
-        }
-
-        public ConnectorData(byte data)
-        {
-            this.data = data;
+            Type = type;
         }
 
         public TagCompound SerializeData()
         {
-            TagCompound tag = new();
-            tag[nameof(data)] = data;
-            return tag;
+            return new()
+            {
+                [nameof(Type)] = (byte)Type
+            };
         }
 
         public static readonly Func<TagCompound, ConnectorData> DESERIALIZER = DeserializeData;
         public static ConnectorData DeserializeData(TagCompound tag)
         {
-            if (tag.ContainsKey(nameof(data)))
-                return new(tag.GetByte(nameof(data)));
+            if (tag.ContainsKey(nameof(Type)))
+                return new((ConnectorType)tag.GetByte(nameof(Type)));
 
             return default;
         }

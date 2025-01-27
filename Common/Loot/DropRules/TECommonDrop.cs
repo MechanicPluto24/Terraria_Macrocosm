@@ -59,7 +59,7 @@ namespace Macrocosm.Common.Loot.DropRules
                 if (MachineTE is IInventoryOwner inventoryOwner && inventoryOwner.Inventory is not null)
                 {
                     Item item = new(itemId, stack);
-                    inventoryOwner.Inventory.TryPlacingItem(item, sound: false);
+                    inventoryOwner.Inventory.TryPlacingItem(ref item, sound: false);
 
                     Particle.Create<ItemTransferParticle>((p) =>
                     {

@@ -18,6 +18,8 @@ namespace Macrocosm.Common.Systems.Power
         /// <summary> Maximum storage energy </summary>
         public abstract float EnergyCapacity { get; }
 
+        public override bool CanToggleWithWire => false;
+
         public override void UpdatePowerState()
         {
             if (PoweredOn && StoredEnergy <= 0f)

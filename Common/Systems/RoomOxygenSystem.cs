@@ -39,7 +39,7 @@ namespace Macrocosm.Common.Systems
             if (!WorldGen.InWorld(x, y))
                 return false;
 
-            // Return cached result if this room was sampled in this update tick
+            // Return cached result if this room was sampled
             bool cacheInBounds = x >= roomX1 && x <= roomX2 && y >= roomY1 && y <= roomY2;
             if (cacheValid && cacheInBounds)
                 return resultCache;

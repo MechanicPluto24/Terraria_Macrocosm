@@ -83,6 +83,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            if (Projectile.owner == Main.myPlayer)
+            {
+                for (int i = 0; i < 2; i++)
+                {
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
+                }
+            }
+            CreateALotOfIce();
         }
 
         public override void AI()
@@ -194,11 +202,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.oldVelocity.SafeNormalize(Vector2.UnitX).RotatedByRandom(Math.PI / 4) * 17f, ModContent.ProjectileType<FrigorianIceShard>(), Projectile.damage / 4, 2, -1);
                 }
-
-                for (int i = 0; i < 2; i++)
-                {
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
-                }
             }
 
             SoundEngine.PlaySound(SoundID.Item107 with
@@ -251,13 +254,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             {
                 Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition;
                 Color trailColor = Color.White * (((float)Projectile.oldPos.Length - i) / Projectile.oldPos.Length) * 0.45f * (1f - Projectile.alpha / 255f);
-                Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, drawPos, frame, trailColor, Projectile.oldRot[i], frame.Size() / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, drawPos, frame, trailColor, Projectile.oldRot[i], frame.Size() / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             }
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Main.spriteBatch.Draw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition, frame, GetAlpha(lightColor) ?? Color.White, Projectile.rotation, frame.Size() / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+            Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition, frame, GetAlpha(lightColor) ?? Color.White, Projectile.rotation, frame.Size() / 2f, Projectile.scale, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             return false;
         }
 

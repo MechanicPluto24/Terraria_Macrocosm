@@ -91,6 +91,15 @@ namespace Macrocosm.Common.Utils
             return false;
         }
 
+
+        /// <inheritdoc cref="TryGetTileEntityAs{T}(int, int, out T)"/>
+        public static bool TryGetTileEntityAs<T>(Point position, out T entity) where T : TileEntity 
+            => TryGetTileEntityAs(position.X, position.Y, out entity);
+
+        /// <inheritdoc cref="TryGetTileEntityAs{T}(int, int, out T)"/>
+        public static bool TryGetTileEntityAs<T>(Point16 position, out T entity) where T : TileEntity
+            => TryGetTileEntityAs(position.X, position.Y, out entity);
+
         /// <summary>
         /// Sets the tile <paramref name="style"/> and <paramref name="alternate"/> placement at the specified <paramref name="x"/> and <paramref name="y"/> coordinates.
         /// Uses <see cref="WorldGen.PlaceObject"/> to set the tile, ensuring multi-tile structures are placed at their origin.
@@ -149,89 +158,25 @@ namespace Macrocosm.Common.Utils
             return colorLookup[mapTile.Type];
         }
 
-        public static SpriteEffects GetTileSpriteEffects(int i, int j)
+        public static void GetEmmitedLight(int x, int y, Color color, bool applyPaint, out float r, out float g, out float b) => Main.tile[x, y].GetEmmitedLight(color, applyPaint, out r, out g, out b);
+
+        public static void GetEmmitedLight(this Tile tile, Color baseColor, bool applyPaint, out float r, out float g, out float b)
         {
-            Tile tile = Main.tile[i, j];
-            short drawFrameX = tile.TileFrameX;
-            short drawFrameY = tile.TileFrameY;
-            Main.instance.TilesRenderer.GetTileDrawData(
-                i, j, tile, tile.TileType, ref drawFrameX, ref drawFrameY,
-                out _, out _, out _, out _,
-                out _, out _,
-                out SpriteEffects effect,
-                out _, out _, out _
-            );
+            byte paintID = tile.TileColor;
+            if (applyPaint && paintID > PaintID.None)
+            {
+                Color paintColor = tile.GetPaintColor();
+                byte max = Math.Max(Math.Max(baseColor.R, baseColor.G), baseColor.B);
 
-            return effect;
-        }
+                if (paintID >= PaintID.RedPaint && paintID <= PaintID.PinkPaint)
+                    baseColor = Color.Lerp(baseColor, paintColor, 0.5f); // Regular paints
+                else 
+                    baseColor = paintColor * (max / 255f); // Deep paints & other
+            }
 
-        public static void GetTileDrawPositions(int i, int j, out int tileWidth, out int offsetY, out int tileHeight, out short drawFrameX, out short drawFrameY)
-        {
-            Tile tile = Main.tile[i, j];
-            drawFrameX = tile.TileFrameX;
-            drawFrameY = tile.TileFrameY;
-            Main.instance.TilesRenderer.GetTileDrawData(
-                i, j, tile, tile.TileType, ref drawFrameX, ref drawFrameY,
-                out tileWidth, out tileHeight, out offsetY, out _,
-                out _, out _,
-                out _, out _, out _, out _
-            );
-        }
-
-        public static void GetTileFrameOffset(int i, int j, out int addFrameX, out int addFrameY)
-        {
-            Tile tile = Main.tile[i, j];
-            short drawFrameX = tile.TileFrameX;
-            short drawFrameY = tile.TileFrameY;
-            Main.instance.TilesRenderer.GetTileDrawData(
-                i, j, tile, tile.TileType, ref drawFrameX, ref drawFrameY,
-                out _, out _, out _, out _,
-                out addFrameX, out addFrameY,
-                out _, out _, out _, out _
-            );
-        }
-
-        public static void DrawTileExtraTexture(int i, int j, SpriteBatch spriteBatch, Asset<Texture2D> texture, Vector2 drawOffset = default, Color? drawColor = null)
-        {
-            Tile tile = Main.tile[i, j];
-
-            if (!TileDrawing.IsVisible(tile))
-                return;
-
-            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
-
-            GetTileFrameOffset(i, j, out int addFrameX, out int addFrameY);
-
-            var data = TileObjectData.GetTileData(tile);
-            int tileSize = 16 + data.CoordinatePadding;
-            int width = data.CoordinateWidth;
-
-            if (tile.TileFrameY < 0)
-                return;
-
-            int height = data.CoordinateHeights[tile.TileFrameY / tileSize % data.Height];
-
-            drawOffset += new Vector2(data.DrawXOffset, data.DrawYOffset);
-
-            drawColor ??= Color.White;
-
-            Vector2 position = new Vector2(i, j) * 16 + zero + drawOffset - Main.screenPosition;
-
-            spriteBatch.Draw(
-                texture.Value,
-                position,
-                new Rectangle(tile.TileFrameX + addFrameX, tile.TileFrameY + addFrameY, width, height),
-                drawColor.Value, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f
-            );
-        }
-
-        public static void TileRenderer_AddSpecialPoint(int x, int y, string tileCounterType)
-        {
-            Type tileCounterTypeEnum = typeof(TileDrawing).Assembly.GetType("Terraria.GameContent.Drawing.TileDrawing+TileCounterType")
-                ?? throw new InvalidOperationException("TileCounterType enum not found.");
-
-            object enumValue = Enum.Parse(tileCounterTypeEnum, tileCounterType);
-            Utility.InvokeMethod(Main.instance.TilesRenderer, "AddSpecialPoint", x, y, enumValue);
+            r = baseColor.R / 255f;
+            g = baseColor.G / 255f;
+            b = baseColor.B / 255f;
         }
 
         public static bool AnyConnectedSlope(int i, int j)

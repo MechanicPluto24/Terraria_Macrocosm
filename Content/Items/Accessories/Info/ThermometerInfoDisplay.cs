@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Accessories.Info
 
         public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
         {
-            temperature = MathHelper.Lerp(temperature, MacrocosmSubworld.GetAmbientTemperature(Main.LocalPlayer.Center), 0.1f);
+            temperature = MathHelper.Lerp(temperature, MacrocosmSubworld.GetAmbientTemperature(), 0.1f);
 
             string text = string.Empty;
             if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Metric)

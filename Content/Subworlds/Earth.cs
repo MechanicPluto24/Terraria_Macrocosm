@@ -25,40 +25,48 @@ namespace Macrocosm.Content.Subworlds
         public static WorldSize WorldSize { get; set; } = WorldSize.Medium;
         public static ChecklistConditionCollection LaunchConditions { get; } = [];
 
-        public static float AmbientTemperature(Vector2 position)
+        /// <summary> The ambient temperature, expressed in °C. Pass position only when you need temperature at a position different than the local player's </summary>
+        public static float AmbientTemperature(Vector2? position = null)
         {
-            SceneData scene = new(position);
-            scene.Scan(position);
-
             float temperature;
 
-            if (scene.ZoneUnderworldHeight)
+            bool underground;
+            bool underworld;
+            bool snow;
+            bool desert;
+            bool jungle;
+
+            if (position.HasValue)
             {
-                temperature = 70f;
-            }
-            else if (scene.ZoneSnow)
-            {
-                if (scene.ZoneRockLayerHeight || scene.ZoneDirtLayerHeight)
-                    temperature = -10f;
-                else
-                    temperature = Utility.ScaleNoonToMidnight(-10, -2);
-            }
-            else if (scene.ZoneRockLayerHeight || scene.ZoneDirtLayerHeight)
-            {
-                temperature = 20f;
-            }
-            else if (scene.ZoneDesert)
-            {
-                temperature = Utility.ScaleNoonToMidnight(25, 45);
-            }
-            else if (scene.ZoneJungle)
-            {
-                temperature = Utility.ScaleNoonToMidnight(30, 40);
+                SceneData scene = new(position.Value);
+                underground = scene.ZoneRockLayerHeight || scene.ZoneDirtLayerHeight;
+                underworld = scene.ZoneUnderworldHeight;
+                snow = scene.ZoneSnow;
+                desert = scene.ZoneDesert;
+                jungle = scene.ZoneJungle;
             }
             else
             {
-                temperature = 20 + Utility.ScaleNoonToMidnight(-5, 5);
+                Player player = Main.LocalPlayer;
+                underground = player.ZoneRockLayerHeight || player.ZoneDirtLayerHeight;
+                underworld = player.ZoneUnderworldHeight;
+                snow = player.ZoneSnow;
+                desert = player.ZoneDesert;
+                jungle = player.ZoneJungle;
             }
+
+            if (underworld)
+                temperature = 70f;
+            else if (snow)
+                temperature = underground ? -10f : Utility.ScaleNoonToMidnight(-10, -2);
+            else if (underground)
+                temperature = 20f;
+            else if (desert)
+                temperature = Utility.ScaleNoonToMidnight(25, 45);
+            else if (jungle)
+                temperature = Utility.ScaleNoonToMidnight(30, 40);
+            else
+                temperature = 20 + Utility.ScaleNoonToMidnight(-5, 5);
 
             return temperature;
         }

@@ -10,6 +10,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
@@ -38,14 +39,11 @@ namespace Macrocosm.Common.Global.Tiles
             if (j >= 1)
                 tileAbove = Main.tile[i, j - 1];
 
-            if (TileSets.CustomContainerSize[tileAbove.TileType].X > 0 && TileSets.CustomContainerSize[tileAbove.TileType].Y > 0)
+            if (TileSets.CustomContainer[tileAbove.TileType])
             {
                 if (tileAbove.HasTile && type != tileAbove.TileType)
                     return false;
-            }
 
-            if (TileSets.CustomContainerSize[type].X > 0 && TileSets.CustomContainerSize[type].Y > 0)
-            {
                 Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
                 if (!Chest.CanDestroyChest(topLeft.X, topLeft.Y))
                     return false;
@@ -125,7 +123,7 @@ namespace Macrocosm.Common.Global.Tiles
                 Tile tile = Main.tile[player.chestX, player.chestY];
 
                 // Only call if this is a custom container and the chest is unnamed
-                if (string.IsNullOrEmpty(chest.name) && TileSets.CustomContainerSize[tile.TileType].X > 0 && TileSets.CustomContainerSize[tile.TileType].Y > 0)
+                if (string.IsNullOrEmpty(chest.name) && TileSets.CustomContainer[tile.TileType])
                 {
                     string text = TileLoader.DefaultContainerName(tile.TileType, tile.TileFrameX, tile.TileFrameY);
                     Color color = Color.White * (1f - (255f - Main.mouseTextColor) / 255f * 0.5f);
@@ -148,12 +146,14 @@ namespace Macrocosm.Common.Global.Tiles
         private bool On_Player_IsInInteractionRangeToMultiTileHitbox(On_Player.orig_IsInInteractionRangeToMultiTileHitbox orig, Player player, int chestPointX, int chestPointY)
         {
             Tile tile = Main.tile[chestPointX, chestPointY];
-            Point size = TileSets.CustomContainerSize[tile.TileType];
-            if (size.X > 0 && size.Y > 0)
+            if (TileSets.CustomContainer[tile.TileType])
             {
+                var data = TileObjectData.GetTileData(tile);
+                int width = data != null ? data.Width : 1;
+                int height = data != null ? data.Height : 1;
                 int tileX = (int)((player.position.X + player.width * 0.5) / 16.0);
                 int tileY = (int)((player.position.Y + player.height * 0.5) / 16.0);
-                Rectangle rectangle = new(chestPointX * 16, chestPointY * 16, size.X * 16, size.Y * 16);
+                Rectangle rectangle = new(chestPointX * 16, chestPointY * 16, width * 16, height * 16);
                 rectangle.Inflate(-1, -1);
                 Point point = rectangle.ClosestPointInRect(player.Center).ToTileCoordinates();
                 chestPointX = point.X;
