@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Biomes
                     visualIntensity = level;
             }
 
-            Main.numClouds = (int)(visualIntensity * 100); // hm
+            Main.numClouds = (int)(200f * visualIntensity);
 
             if (visualIntensity > 0f)
             {

@@ -104,10 +104,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                         {
                             int extra = ContentSamples.ProjectilesByType[projToShoot].extraUpdates;
                             int pen = ContentSamples.ProjectilesByType[projToShoot].penetrate;
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed / 3, ModContent.ProjectileType<IlmeniteRegularProj>(), (int)(damage * Math.Pow(1.25f, currentAttack)), knockback, Projectile.owner, currentAttack, extra, pen);
+                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + Main.rand.NextVector2Circular(0, 40).RotatedBy(Projectile.rotation), Vector2.Normalize(Projectile.velocity) * speed / 3, ModContent.ProjectileType<IlmeniteRegularProj>(), (int)(damage * Math.Pow(1.25f, currentAttack)), knockback, Projectile.owner, currentAttack, extra, pen);
                             Player.GetModPlayer<MacrocosmPlayer>().HeldProjectileCooldown = 0;
-                            if (currentAttack > 1) currentAttack = 0;
-                            else currentAttack += 1;
+                            
+                            if (currentAttack > 1) 
+                                currentAttack = 0;
+                            else 
+                                currentAttack += 1;
+
                             SoundEngine.PlaySound(SoundID.Item5, Projectile.position);
                         }
                         else if (itemUseTimer <= 0)

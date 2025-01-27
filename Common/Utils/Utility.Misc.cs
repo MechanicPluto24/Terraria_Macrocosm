@@ -21,10 +21,9 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static string GetNamespacePath(this object obj)
-        {
-            return (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
-        }
+        public static string GetNamespacePath(this object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
+
+        public static string GetNamespacePath(this Type type) => (type.Namespace + "." + type.Name).Replace('.', '/');
 
         public static void InvokeOnMainThread(Action action)
         {
