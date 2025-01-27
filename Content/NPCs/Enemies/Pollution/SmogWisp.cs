@@ -5,7 +5,10 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Threading;
+using System;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -28,7 +31,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
         public override void SetDefaults()
         {
-            NPC.width = 38;
+            NPC.width = 20;
             NPC.height = 20;
             NPC.damage = 12;
             NPC.defense = 10;
@@ -74,18 +77,18 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         int smogTimer = 0;
         public override void AI()
         {
-            if (++smogTimer % 5 == 0)
+            if (++smogTimer % 3 == 0)
             {
                 Smoke smoke = Particle.Create<Smoke>((p) =>
                 {
-                    p.Position = NPC.Center + new Vector2(0, 12) * NPC.direction;
-                    p.Velocity = -NPC.velocity.RotatedByRandom(MathHelper.PiOver2) * 0.1f;
+                    p.Position = NPC.Center + Main.rand.NextVector2Circular(5, 5);
+                    p.Velocity = -NPC.velocity.RotatedByRandom(MathHelper.PiOver2) * 0.25f;
                     p.Acceleration = new Vector2(0f, 0f);
-                    p.Scale = new(0.4f);
+                    p.Scale = new(Main.rand.NextFloat(0.2f, 0.6f));
                     p.Rotation = 0f;
-                    p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
+                    p.Color = (new Color(32, 32, 32, 180) * Main.rand.NextFloat(0.75f, 1f));
                     p.Opacity = NPC.Opacity;
-                    p.ScaleVelocity = new(-0.0085f);
+                    p.ScaleVelocity = new(-0.015f);
                 });
             }
 
@@ -113,6 +116,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
             if (NPC.Opacity < 0f)
                 NPC.Opacity = 0f;
+
+            NPC.direction = Math.Sign(NPC.velocity.X);
+            NPC.spriteDirection = NPC.direction;
         }
 
         public override void HitEffect(NPC.HitInfo hit)
@@ -132,7 +138,30 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             if (NPC.IsABestiaryIconDummy)
                 NPC.Opacity = 0.7f;
 
-            return true;
+            NPCID.Sets.TrailCacheLength[Type] = 25;
+            NPCID.Sets.TrailingMode[Type] = 3;
+
+            SpriteEffects effects = SpriteEffects.None;
+            int length = NPC.oldPos.Length;
+            for (int i = 1; i < length; i++)
+            {
+                float progress = i / (float)length;
+                Vector2 drawPos = NPC.oldPos[i] + NPC.frame.Size() / 2f - Main.screenPosition;
+                Color trailColor = new Color(72, 72, 68, 180) * Utility.QuadraticEaseIn(1f - progress) * 1f;
+                float rotation = NPC.oldRot[i];
+                float scale = NPC.scale * (1f - progress);
+
+                int frameCount = Main.npcFrameCount[Type];
+                int frameHeight = TextureAssets.Npc[Type].Height() / frameCount;
+                int currentFrame = NPC.frame.Y / frameHeight;
+                int trailFrameCounter = (currentFrame + i) % frameCount;
+                Rectangle frame = TextureAssets.Npc[Type].Frame(verticalFrames: frameCount, frameY: trailFrameCounter);
+
+                Main.EntitySpriteDraw(TextureAssets.Npc[Type].Value, drawPos, frame, trailColor * NPC.Opacity, rotation, frame.Size() / 2f, (float)scale, effects, 0f);
+            }
+
+            Main.EntitySpriteDraw(TextureAssets.Npc[Type].Value, NPC.position + NPC.frame.Size() / 2f - Main.screenPosition, NPC.frame, Color.White * NPC.Opacity, NPC.rotation, NPC.frame.Size() / 2f, NPC.scale, effects, 0f);
+            return false;
         }
     }
 }

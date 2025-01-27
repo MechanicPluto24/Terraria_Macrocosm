@@ -27,13 +27,13 @@ namespace Macrocosm.Common.Utils
         public static Projectile FindClosestProjectileOfType(Vector2 Position, int Type)
         {
             Projectile bestProj = null;
-            float bestDistance = 99999999f;
+            float bestDistance = float.MaxValue;
             foreach (Projectile projectile in Main.ActiveProjectiles)
             {
-                if(projectile.type==Type&&Vector2.Distance(projectile.Center,Position)<bestDistance)
+                if (projectile.type == Type && Vector2.Distance(projectile.Center, Position) < bestDistance)
                 {
-                    bestDistance=Vector2.Distance(projectile.Center,Position);
-                    bestProj=projectile;
+                    bestDistance = Vector2.Distance(projectile.Center, Position);
+                    bestProj = projectile;
                 }
             }
             return bestProj;

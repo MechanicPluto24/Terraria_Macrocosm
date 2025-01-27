@@ -189,6 +189,23 @@ namespace Macrocosm.Common.Utils
             return new Color(r, g, b, color.A);
         }
 
+        /// <summary>
+        /// Clamps the color's R, G, B, and A components to the specified min and max range.
+        /// </summary>
+        /// <param name="color">The color to clamp.</param>
+        /// <param name="min">The minimum value for the components.</param>
+        /// <param name="max">The maximum value for the components.</param>
+        /// <returns>A new Color instance with clamped values.</returns>
+        public static Color Clamp(this Color color, byte min, byte max)
+        {
+            return new Color(
+                (byte)MathHelper.Clamp(color.R, min, max),
+                (byte)MathHelper.Clamp(color.G, min, max),
+                (byte)MathHelper.Clamp(color.B, min, max),
+                (byte)MathHelper.Clamp(color.A, min, max)
+            );
+        }
+
         ///<summary>
         /// Clamps the first color to be no lower then the values of the second color.
         ///</summary>
