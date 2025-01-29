@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Content.Items.Weapons.Magic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -11,9 +12,9 @@ namespace Macrocosm.Content.Rockets.Customization
 {
     public readonly partial struct Pattern
     {
-        public readonly string Name { get; }
+        public readonly string Name { get; } = "";
 
-        public readonly string ModuleName { get; }
+        public readonly string ModuleName { get; } = "";
 
         public readonly ImmutableArray<PatternColorData> ColorData { get; init; }
 

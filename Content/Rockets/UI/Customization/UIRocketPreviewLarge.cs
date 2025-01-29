@@ -22,8 +22,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         public int CurrentModuleIndex
         {
-            get => Rocket.ModuleNames.IndexOf(CurrentModuleName);
-            private set => CurrentModuleName = Rocket.ModuleNames[value];
+            get => Rocket.ModuleTemplateNames.IndexOf(CurrentModuleName);
+            private set => CurrentModuleName = Rocket.ModuleTemplateNames[value];
         }
 
         private bool animationActive = false;
@@ -117,20 +117,10 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             BorderColor = Color.Transparent;
         }
 
-        private List<int> GetActiveModuleIndices()
-        {
-            return Rocket.AvailableModules
-                         .Select((module, index) => module.Active ? index : -1)
-                         .Where(index => index != -1)
-                         .ToList();
-        }
-
         public void SetModule(string moduleName)
         {
-            var activeIndices = GetActiveModuleIndices();
-            var index = Rocket.AvailableModules.FindIndex(m => m.Name == moduleName && m.Active);
-
-            if (index != -1 && activeIndices.Contains(index))
+            var index = Rocket.Modules.ToList().FindIndex(m => m.Name == moduleName && m.Active);
+            if (index != -1)
             {
                 bool changed = CurrentModuleName != moduleName;
 
@@ -144,42 +134,31 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         public void SetModule(int moduleIndex)
         {
-            var activeIndices = GetActiveModuleIndices();
+            bool changed = CurrentModuleIndex != moduleIndex;
 
-            if (activeIndices.Contains(moduleIndex))
-            {
-                bool changed = CurrentModuleIndex != moduleIndex;
+            CurrentModuleIndex = moduleIndex;
+            AnimationActive = !ZoomedOut;
 
-                CurrentModuleIndex = moduleIndex;
-                AnimationActive = !ZoomedOut;
-
-                if (changed)
-                    OnModuleChange(CurrentModuleName, CurrentModuleIndex);
-            }
+            if (changed)
+                OnModuleChange(CurrentModuleName, CurrentModuleIndex);
         }
 
         public void NextModule()
         {
-            var activeIndices = GetActiveModuleIndices();
-            if (activeIndices.Count == 0) return;
-
-            int currentIndex = activeIndices.IndexOf(CurrentModuleIndex);
-            if (currentIndex == -1 || currentIndex == activeIndices.Count - 1)
-                SetModule(activeIndices[0]);
+            int currentIndex = CurrentModuleIndex;
+            if (currentIndex == -1 || currentIndex == Rocket.Modules.Length - 1)
+                SetModule(0);
             else
-                SetModule(activeIndices[currentIndex + 1]);
+                SetModule(currentIndex + 1);
         }
 
         public void PreviousModule()
         {
-            var activeIndices = GetActiveModuleIndices();
-            if (activeIndices.Count == 0) return;
-
-            int currentIndex = activeIndices.IndexOf(CurrentModuleIndex);
+            int currentIndex = CurrentModuleIndex;
             if (currentIndex == -1 || currentIndex == 0)
-                SetModule(activeIndices[^1]);
+                SetModule(Rocket.Modules.Length - 1);
             else
-                SetModule(activeIndices[currentIndex - 1]);
+                SetModule(currentIndex - 1);
         }
 
         // Use for animation

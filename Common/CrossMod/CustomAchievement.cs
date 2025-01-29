@@ -39,7 +39,10 @@ namespace Macrocosm.Common.CrossMod
         // Nothing really happens on regular loading, besides registering the ModType
         public sealed override void SetupContent() => SetStaticDefaults();
         public sealed override void SetStaticDefaults() { }
-        protected sealed override void Register() { }
+        protected sealed override void Register() 
+        { 
+            ModTypeLookup<CustomAchievement>.Register(this); 
+        }
 
         // After setting up content, the achievement is registered to TMLAchievements
         public void PostSetupContent()

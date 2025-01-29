@@ -95,6 +95,43 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             Projectile.timeLeft += 2;
 
+            for(int i = 0; i < (int)(Strength * 6); i++)
+            {
+                Vector2 targetCenter = new(-1000f);
+                float distanceFromTarget = 1200f;
+                bool foundTarget = false;
+                foreach (var npc in Main.ActiveNPCs)
+                {
+                    if (npc.CanBeChasedBy())
+                    {
+                        float between = Vector2.Distance(npc.Center, Projectile.Center);
+                        bool closest = Vector2.Distance(Projectile.Center, targetCenter) > between;
+                        bool inRange = between < distanceFromTarget;
+                        bool lineOfSight = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height);
+
+                        bool closeThroughWall = between < 100f;
+
+                        if (((closest && inRange) || !foundTarget) && (lineOfSight || closeThroughWall))
+                        {
+                            targetCenter = npc.Center;
+                            foundTarget = true;
+                            distanceFromTarget = between;
+                        }
+                    }
+                }
+
+                Projectile.NewProjectileDirect(
+                    Projectile.GetSource_FromAI(),
+                    Projectile.Center,
+                    ((Projectile.Center - targetCenter).SafeNormalize(default) * 100f).RotatedByRandom(MathHelper.Pi / 7),
+                    ModContent.ProjectileType<IlmeniteDeflectedProjectile>(),
+                    Projectile.damage / 3,
+                    knockback: 2f,
+                    owner: Main.myPlayer,
+                    ai0: i % 2
+                );
+            }
+           
             Particle.Create<TintableFlash>(p =>
             {
                 p.Position = Projectile.Center;

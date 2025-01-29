@@ -1,6 +1,8 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Systems;
 using Macrocosm.Content.Tiles.Trees;
+using SubworldLibrary;
 using System;
 using Terraria;
 using Terraria.Enums;
@@ -34,6 +36,9 @@ namespace Macrocosm.Common.Hooks
 
         private bool On_WorldGen_AttemptToGrowTreeFromSapling(On_WorldGen.orig_AttemptToGrowTreeFromSapling orig, int x, int y, bool underground)
         {
+            if(SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.IsRoomPressurized(x, y))
+                return false;
+
             int treeType = TileSets.SaplingTreeGrowthType[Main.tile[x, y].TileType];
             if (treeType > 0)
                 return WorldGen.TryGrowingTreeByType(treeType, x, y);
@@ -43,6 +48,9 @@ namespace Macrocosm.Common.Hooks
 
         private bool On_WorldGen_TryGrowingTreeByType(On_WorldGen.orig_TryGrowingTreeByType orig, int treeTileType, int checkedX, int checkedY)
         {
+            if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.IsRoomPressurized(checkedX, checkedY))
+                return false;
+
             if (TileLoader.GetTile(treeTileType) is CustomTree customTree)
                 return customTree.GrowTree(checkedX, checkedY);
 

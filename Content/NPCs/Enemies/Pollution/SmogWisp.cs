@@ -50,10 +50,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         {
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return (spawnInfo.Player.InModBiome<PollutionBiome>() && ((spawnInfo.SpawnTileY < spawnInfo.Player.Center.Y + 40))) ? 1f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<PollutionBiome>() && (spawnInfo.SpawnTileY < spawnInfo.Player.Center.Y + 40) ? 1f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {

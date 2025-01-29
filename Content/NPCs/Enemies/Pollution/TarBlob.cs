@@ -48,14 +48,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         {
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
-
         }
 
         private int timer;

@@ -14,71 +14,95 @@ namespace Macrocosm.Common.Netcode
     public static class NetExtensions
     {
         /// <summary>
-        /// Returns the <see cref="FieldInfo"/> of every field of <c>this</c> that has the <see cref="NetSyncAttribute"/>.
+        /// Returns the <see cref="MemberInfo"/> of every field or property of <c>this</c> that has the <see cref="NetSyncAttribute"/>.
         /// </summary>
-        public static FieldInfo[] GetNetSyncFields(this object obj) => obj.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                                    .Where(fieldInfo => fieldInfo.GetCustomAttribute<NetSyncAttribute>() is not null)
-                                    .OrderBy(fieldInfo => fieldInfo.Name).ToArray();
+        public static MemberInfo[] GetNetSyncMembers(this object obj)
+        {
+            Type type = obj.GetType();
+            var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                             .Where(f => f.GetCustomAttribute<NetSyncAttribute>() is not null);
+
+            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                                 .Where(p => p.GetCustomAttribute<NetSyncAttribute>() is not null && p.CanRead && p.CanWrite);
+
+            return fields.Concat<MemberInfo>(properties).OrderBy(m => m.Name).ToArray();
+        }
 
         /// <summary>
-        /// Writes all the fields of <c>this</c> that have the <see cref="NetSyncAttribute"/> to the <paramref name="binaryWriter"/>. 
+        /// Writes all the fields & properties of <c>this</c> that have the <see cref="NetSyncAttribute"/> to the <paramref name="binaryWriter"/>. 
         /// If the <paramref name="bitWriter"/> is not null, boolean fields are written to it instead.
         /// </summary>
         /// <returns><c>true</c> if all fields were written succesfully else <c>false</c>.</returns>
-        public static bool NetWriteFields(this object obj, BinaryWriter binaryWriter, BitWriter bitWriter = null)
+        public static bool NetWrite(this object obj, BinaryWriter binaryWriter, BitWriter bitWriter = null)
         {
-            FieldInfo[] netSyncFields = obj.GetNetSyncFields();
-            if (netSyncFields.Length == 0)
+            MemberInfo[] netSyncMembers = obj.GetNetSyncMembers();
+            if (netSyncMembers.Length == 0)
             {
                 return false;
             }
 
-            foreach (FieldInfo fieldInfo in netSyncFields)
+            foreach (var member in netSyncMembers)
             {
-                var fieldType = fieldInfo.FieldType;
-                if (fieldType.IsEnum)
-                    fieldType = Enum.GetUnderlyingType(fieldInfo.FieldType);
+                object value;
+                Type memberType;
 
-                if (fieldType == typeof(Vector2))
+                if (member is FieldInfo fieldInfo)
                 {
-                    binaryWriter.WriteVector2((Vector2)fieldInfo.GetValue(obj));
+                    value = fieldInfo.GetValue(obj);
+                    memberType = fieldInfo.FieldType;
                 }
-                else if (fieldType == typeof(Point))
+                else if (member is PropertyInfo propertyInfo)
                 {
-                    binaryWriter.WritePoint((Point)fieldInfo.GetValue(obj));
-                }
-                else if (fieldType == typeof(Point16))
-                {
-                    binaryWriter.WritePoint16((Point16)fieldInfo.GetValue(obj));
-                }
-                else if (fieldType == typeof(Rectangle))
-                {
-                    binaryWriter.WriteRectangle((Rectangle)fieldInfo.GetValue(obj));
-                }
-                else if (fieldType == typeof(Color))
-                {
-                    binaryWriter.WriteColor((Color)fieldInfo.GetValue(obj));
-                }
-                else if (fieldType == typeof(bool) && bitWriter is not null)
-                {
-                    bitWriter.WriteBit((bool)fieldInfo.GetValue(obj));
+                    value = propertyInfo.GetValue(obj);
+                    memberType = propertyInfo.PropertyType;
                 }
                 else
                 {
-                    MethodInfo methodInfo = typeof(BinaryWriter).GetMethod("Write", [fieldType]);
-                    if (methodInfo is not null)
+                    continue;
+                }
+
+                if (memberType.IsEnum)
+                    memberType = Enum.GetUnderlyingType(memberType);
+
+                if (memberType == typeof(Vector2))
+                {
+                    binaryWriter.WriteVector2((Vector2)value);
+                }
+                else if (memberType == typeof(Point))
+                {
+                    binaryWriter.WritePoint((Point)value);
+                }
+                else if (memberType == typeof(Point16))
+                {
+                    binaryWriter.WritePoint16((Point16)value);
+                }
+                else if (memberType == typeof(Rectangle))
+                {
+                    binaryWriter.WriteRectangle((Rectangle)value);
+                }
+                else if (memberType == typeof(Color))
+                {
+                    binaryWriter.WriteColor((Color)value);
+                }
+                else if (memberType == typeof(bool) && bitWriter is not null)
+                {
+                    bitWriter.WriteBit((bool)value);
+                }
+                else
+                {
+                    MethodInfo writeMethod = typeof(BinaryWriter).GetMethod("Write", new[] { memberType });
+                    if (writeMethod is not null)
                     {
-                        methodInfo.Invoke(binaryWriter, [fieldInfo.GetValue(obj)]);
+                        writeMethod.Invoke(binaryWriter, new object[] { value });
                     }
                     else
                     {
-                        Macrocosm.Instance.Logger.Warn(Terraria.Localization.NetworkText.FromLiteral($"{obj.GetType().FullName}: Couldn't write NetSync field \"{fieldInfo.Name}\" value with type <{fieldInfo.FieldType.Name}>."));
-                        ChatHelper.BroadcastChatMessage(Terraria.Localization.NetworkText.FromLiteral($"{obj.GetType().FullName}: Couldn't write NetSync field \"{fieldInfo.Name}\" value with type <{fieldInfo.FieldType.Name}>."), Color.Red);
+                        Macrocosm.Instance.Logger.Warn($"Couldn't write NetSync member \"{member.Name}\" value with type <{memberType.Name}>.");
+                        ChatHelper.BroadcastChatMessage(Terraria.Localization.NetworkText.FromLiteral($"Couldn't write NetSync member \"{member.Name}\" value with type <{memberType.Name}>."), Color.Red);
                         return false;
                     }
                 }
             }
-
             return true;
         }
 
@@ -89,39 +113,67 @@ namespace Macrocosm.Common.Netcode
         /// <param name="reader"></param>
         public static void NetReadFields(this object obj, BinaryReader binaryReader, BitReader bitReader = null)
         {
-            foreach (FieldInfo fieldInfo in obj.GetNetSyncFields())
+            foreach (var member in obj.GetNetSyncMembers())
             {
-                var fieldType = fieldInfo.FieldType;
-                if (fieldType.IsEnum)
-                    fieldType = Enum.GetUnderlyingType(fieldInfo.FieldType);
+                Type memberType;
+                object value = null;
 
-                if (fieldType == typeof(Vector2))
+                if (member is FieldInfo fieldInfo)
                 {
-                    fieldInfo.SetValue(obj, binaryReader.ReadVector2());
+                    memberType = fieldInfo.FieldType;
                 }
-                else if (fieldType == typeof(Point))
+                else if (member is PropertyInfo propertyInfo)
                 {
-                    fieldInfo.SetValue(obj, binaryReader.ReadPoint());
-                }
-                else if (fieldType == typeof(Point16))
-                {
-                    fieldInfo.SetValue(obj, binaryReader.ReadPoint16());
-                }
-                else if (fieldType == typeof(Rectangle))
-                {
-                    fieldInfo.SetValue(obj, binaryReader.ReadRectangle());
-                }
-                else if (fieldType == typeof(Color))
-                {
-                    fieldInfo.SetValue(obj, binaryReader.ReadColor());
-                }
-                else if (fieldType == typeof(bool) && bitReader is not null)
-                {
-                    fieldInfo.SetValue(obj, bitReader.ReadBit());
+                    memberType = propertyInfo.PropertyType;
                 }
                 else
-                {  
-                    fieldInfo.SetValue(obj, typeof(BinaryReader).GetMethod($"Read{fieldType.Name}").Invoke(binaryReader, null));
+                {
+                    continue;
+                }
+
+                if (memberType.IsEnum)
+                    memberType = Enum.GetUnderlyingType(memberType);
+
+                if (memberType == typeof(Vector2))
+                {
+                    value = binaryReader.ReadVector2();
+                }
+                else if (memberType == typeof(Point))
+                {
+                    value = binaryReader.ReadPoint();
+                }
+                else if (memberType == typeof(Point16))
+                {
+                    value = binaryReader.ReadPoint16();
+                }
+                else if (memberType == typeof(Rectangle))
+                {
+                    value = binaryReader.ReadRectangle();
+                }
+                else if (memberType == typeof(Color))
+                {
+                    value = binaryReader.ReadColor();
+                }
+                else if (memberType == typeof(bool) && bitReader is not null)
+                {
+                    value = bitReader.ReadBit();
+                }
+                else
+                {
+                    MethodInfo readMethod = typeof(BinaryReader).GetMethod($"Read{memberType.Name}");
+                    if (readMethod is not null)
+                    {
+                        value = readMethod.Invoke(binaryReader, null);
+                    }
+                }
+
+                if (member is FieldInfo field)
+                {
+                    field.SetValue(obj, value);
+                }
+                else if (member is PropertyInfo property && property.CanWrite)
+                {
+                    property.SetValue(obj, value);
                 }
             }
         }

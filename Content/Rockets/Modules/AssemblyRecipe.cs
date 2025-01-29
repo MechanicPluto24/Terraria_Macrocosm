@@ -58,7 +58,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public AssemblyRecipe LinkWith<T>() where T : RocketModule
         {
-            foreach (var template in ModContent.GetContent<RocketModule>())
+            foreach (var template in Rocket.ModuleTemplates)
             {
                 if (typeof(T) == template.GetType())
                 {

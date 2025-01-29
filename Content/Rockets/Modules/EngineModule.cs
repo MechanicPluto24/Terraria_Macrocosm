@@ -15,6 +15,10 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public class EngineModule : AnimatedRocketModule
     {
+        public override int Slot => 3;
+        public override int Tier => 2;
+        public override ConfigurationType Configuration => ConfigurationType.Any;
+
         public override int DrawPriority => 0;
         public bool RearLandingLegRaised { get; set; } = false;
 

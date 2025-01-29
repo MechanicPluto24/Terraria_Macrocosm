@@ -109,8 +109,9 @@ public class UIItemDropInfo : UIPanel
 
     private void DrawMouseOver()
     {
-        Main.HoverItem = Item;
+        Main.HoverItem = Item.Clone();
         Main.instance.MouseText("", 0, 0);
+        Main.hoverItemName = Item.Name;
         Main.mouseText = true;
     }
 

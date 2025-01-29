@@ -59,10 +59,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
         {
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? .002f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? 0.002f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {

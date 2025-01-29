@@ -8,6 +8,7 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
@@ -15,15 +16,34 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public abstract partial class RocketModule : ModType, ILocalizedModType
     {
+        public enum ConfigurationType
+        {
+            Any,
+            Manned,
+            Unmanned
+        }
+
         public string LocalizationCategory => "UI.Rocket.Modules";
         //public LocalizedText DisplayName => this.GetLocalization("DisplayName", PrettyPrintName);
         public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
 
-        protected sealed override void Register()
+        protected sealed override void Register() => ModTypeLookup<RocketModule>.Register(this);
+        public override void SetupContent() => SetStaticDefaults();
+        public override void SetStaticDefaults()
         {
+            foreach(AssemblyRecipeEntry entry in Recipe)
+            {
+                if (entry.ItemType.HasValue)
+                    ItemID.Sets.IsAMaterial[entry.ItemType.Value] = true;
+            }
         }
 
-        public bool Active { get; set; }
+        public abstract int Slot { get; }
+        public abstract int Tier { get; }
+        public abstract ConfigurationType Configuration { get; }
+        public abstract AssemblyRecipe Recipe { get; }
+
+        public bool Active => rocket != null && rocket.Modules[Slot].Name == Name;
 
         public Vector2 Position { get; set; }
         public virtual Vector2 Offset => Vector2.Zero;
@@ -32,7 +52,6 @@ namespace Macrocosm.Content.Rockets.Modules
         public abstract int Height { get; }
         public Rectangle Bounds => new((int)Position.X, (int)Position.Y, Width, Height);
 
-        public abstract AssemblyRecipe Recipe { get; }
 
         public Detail Detail { get; set; }
         public Pattern Pattern { get; set; }

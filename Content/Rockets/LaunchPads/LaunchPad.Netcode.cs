@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             packet.Write((byte)MessageType.SyncLaunchPadData);
             packet.Write(subworldId);
 
-            if (this.NetWriteFields(packet))
+            if (this.NetWrite(packet))
                 packet.Send(toClient, ignoreClient);
 
             packet.Dispose();
@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                 var packet = new BinaryWriter(new MemoryStream(256));
                 packet.Write((byte)MessageType.SyncLaunchPadData);
                 packet.Write(subworldId);
-                launchPad.NetWriteFields(packet);
+                launchPad.NetWrite(packet);
 
                 if (subworldId == MacrocosmSubworld.CurrentID)
                 {

@@ -2,6 +2,7 @@
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -38,6 +39,9 @@ namespace Macrocosm.Common.Systems
         {
             if (!WorldGen.InWorld(x, y))
                 return false;
+
+            if (!SubworldSystem.AnyActive<Macrocosm>())
+                return true;
 
             // Return cached result if this room was sampled
             bool cacheInBounds = x >= roomX1 && x <= roomX2 && y >= roomY1 && y <= roomY2;

@@ -22,8 +22,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public float MinCharge;
         public float AI_Charge;
         public int currentAttack;
-        public Color colour1 = new Color(188, 89, 134);
-        public Color colour2 = new Color(33, 188, 190);
+        public Color colour1 = new(188, 89, 134);
+        public Color colour2 = new(33, 188, 190);
 
         public override float CircularHoldoutOffset => 8f;
 
@@ -60,6 +60,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 float speed;
                 int usedAmmoItemId;
 
+                // Chargeup
                 if (Main.mouseRight)
                 {
                     Player.channel = true;
@@ -83,6 +84,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 }
                 else
                 {
+                    // Alt release
                     if (AI_Charge >= MinCharge)
                     {
                         if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
@@ -93,18 +95,33 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                             knockback *= 2f;
 
                             int extra = ContentSamples.ProjectilesByType[projToShoot].extraUpdates;
-                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<IlmeniteAltProj>(), damage, knockback, Projectile.owner, strength, extra);
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<IlmeniteAltProjectile>(), damage, knockback, Projectile.owner, strength, extra);
                             SoundEngine.PlaySound(SoundID.Item72 with { Pitch = -0.5f, Volume = 0.4f });
                             AI_Charge = 0;
                         }
                     }
+                    // Regular attack
                     else if (Main.mouseLeft && Player.GetModPlayer<MacrocosmPlayer>().HeldProjectileCooldown >= (currentItem.useTime / Player.GetAttackSpeed(DamageClass.Ranged)))
                     {
                         if (Player.PickAmmo(currentItem, out int projToShoot, out speed, out damage, out knockback, out usedAmmoItemId))
                         {
                             int extra = ContentSamples.ProjectilesByType[projToShoot].extraUpdates;
                             int pen = ContentSamples.ProjectilesByType[projToShoot].penetrate;
-                            Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center + Main.rand.NextVector2Circular(0, 40).RotatedBy(Projectile.rotation), Vector2.Normalize(Projectile.velocity) * speed / 3, ModContent.ProjectileType<IlmeniteRegularProj>(), (int)(damage * Math.Pow(1.25f, currentAttack)), knockback, Projectile.owner, currentAttack, extra, pen);
+
+                            Projectile.NewProjectile
+                            (
+                                Projectile.GetSource_FromAI(),
+                                Projectile.Center,
+                                Vector2.Normalize(Projectile.velocity) * speed / 3,
+                                ModContent.ProjectileType<IlmeniteRegularProjectile>(),
+                                (int)(damage * Math.Pow(1.25f, currentAttack)),
+                                knockback,
+                                Projectile.owner,
+                                ai0: currentAttack,
+                                ai1: extra,
+                                ai2: pen
+                            );
+                            
                             Player.GetModPlayer<MacrocosmPlayer>().HeldProjectileCooldown = 0;
                             
                             if (currentAttack > 1) 
@@ -122,7 +139,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 }
             }
         }
-
 
         public override bool PreDraw(ref Color lightColor)
         {

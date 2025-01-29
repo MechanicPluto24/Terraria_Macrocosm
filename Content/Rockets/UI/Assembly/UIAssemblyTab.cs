@@ -20,6 +20,7 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using static Macrocosm.Content.Rockets.Modules.RocketModule;
 
 namespace Macrocosm.Content.Rockets.UI.Assembly
 {
@@ -111,7 +112,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         private bool CheckAssembleRecipes(bool consume)
         {
             bool met = true;
-            foreach (var module in Rocket.AvailableModules)
+            foreach (var module in Rocket.Modules)
             {
                 if (!module.Active)
                     continue;
@@ -128,19 +129,11 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
             CheckAssembleRecipes(consume: true);
 
-            List<string> activeModules = Rocket.AvailableModules
-                .Where(module => module.Active)
-                .Select(module => module.Name)
-                .ToList();
-
-            Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 16), activeModules);
+            Rocket = Rocket.Create(LaunchPad.CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 16), Rocket.Modules);
             OnRocketChanged();
 
-            foreach (var module in Rocket.AvailableModules)
+            foreach (var module in Rocket.Modules)
             {
-                if (!module.Active)
-                    continue;
-
                 if (module.Recipe.Linked)
                     continue;
 
@@ -179,7 +172,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         private void DisassembleRocket()
         {
             int slot = 0;
-            foreach (var module in LaunchPad.Rocket.AvailableModules)
+            foreach (var module in Rocket.Modules)
             {
                 if (module.Recipe.Linked)
                     continue;
@@ -236,24 +229,38 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
         private void SwitchConfiguration(int direction)
         {
-            currentConfigurationIndex = (currentConfigurationIndex + direction + Configurations.Count) % Configurations.Count;
-            string currentConfiguration = Configurations.Keys.ToArray()[currentConfigurationIndex];
+            currentConfigurationIndex = 1 + (currentConfigurationIndex + direction) % 3;
+            ConfigurationType targetConfiguration = (ConfigurationType)currentConfigurationIndex;
 
-            ApplyConfiguration(currentConfiguration);
-            configurationText.SetText(currentConfiguration);
+            ApplyConfiguration(targetConfiguration);
+
+            configurationText.SetText(targetConfiguration.ToString());
             RefreshAssemblyElements();
             UpdateBlueprint();
         }
 
-        private void ApplyConfiguration(string configurationName)
-        {
-            List<string> activeModules = Configurations[configurationName];
 
-            foreach (var module in Rocket.AvailableModules)
-                module.Active = activeModules.Contains(module.Name);
+        private void ApplyConfiguration(ConfigurationType targetConfiguration)
+        {
+            foreach (var module in Rocket.Modules)
+            {
+                if (module.Configuration == ConfigurationType.Any || module.Configuration == targetConfiguration)
+                    continue;
+
+                RocketModule replacementModule = Rocket.ModuleTemplates.FirstOrDefault(m =>
+                    m.Slot == module.Slot &&
+                    m.Tier == module.Tier &&
+                    m.Configuration == targetConfiguration);
+
+                if (replacementModule != null)
+                {
+                    Rocket.Modules[module.Slot] = replacementModule;
+                }
+            }
 
             Rocket.SyncCommonData();
         }
+
 
         private bool CheckAssembleInteractible() => CheckAssembleRecipes(consume: false) && !LaunchPad.Rocket.Active && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
         private bool CheckDissasembleInteractible() => LaunchPad.HasRocket;
@@ -297,11 +304,8 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         {
             uIRocketBlueprint.Rocket = Rocket;
 
-            foreach (var module in Rocket.AvailableModules)
+            foreach (var module in Rocket.Modules)
             {
-                if (!module.Active)
-                    continue;
-
                 if (Rocket.Active)
                 {
                     module.IsBlueprint = false;
@@ -501,7 +505,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             int slotCount = 0;
             int assemblyElementCount = 0;
-            foreach (var module in Rocket.AvailableModules)
+            foreach (var module in Rocket.ModuleTemplates)
             {
                 if (!module.Recipe.Linked)
                 {
@@ -544,7 +548,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 }
             }
 
-            foreach (var module in Rocket.AvailableModules)
+            foreach (var module in Rocket.Modules)
             {
                 if (module.Recipe.Linked)
                 {
