@@ -167,3 +167,6 @@ ProcellarumExplosion.DisplayName: Procellarum
 LaserTurretProjectile.DisplayName: Laser Turret
 TurretTaserProjectile.DisplayName: Turret Taser
 PhantasmalSkullTomeProjectile.DisplayName: Phantasmal Skull Tome Projectile
+IlmeniteAltProjectile.DisplayName: Ilmenite Alt Projectile
+IlmeniteDeflectedProjectile.DisplayName: Ilmenite Deflected Projectile
+IlmeniteRegularProjectile.DisplayName: Ilmenite Regular Projectile

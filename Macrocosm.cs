@@ -4,8 +4,10 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.Shaders;
 using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
@@ -72,6 +74,12 @@ namespace Macrocosm
 
             Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(ModContent.Request<Effect>(ShadersPath + "RadiationNoise", mode), "RadiationNoise"));
             Filters.Scene["Macrocosm:RadiationNoise"].Load();
+
+            Filters.Scene["Macrocosm:FilterMoonLordShake"] = new Filter(new MoonLordScreenShaderData("FilterMoonLordShake", aimAtPlayer: false), EffectPriority.VeryHigh);
+            Filters.Scene["Macrocosm:FilterMoonLordShake"].Load();
+
+            Filters.Scene["Macrocosm:Graveyard"] = new Filter(new ScreenShaderData("FilterGraveyard"), EffectPriority.Medium);
+            Filters.Scene["Macrocosm:Graveyard"].Load();
         }
 
         private static void UnloadEffects()

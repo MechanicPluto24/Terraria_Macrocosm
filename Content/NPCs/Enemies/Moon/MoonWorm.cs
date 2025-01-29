@@ -120,10 +120,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			});
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY < Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() ? (RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f: .01f) : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) 
+            => !Main.dayTime && spawnInfo.SpawnTileY < Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.01f : 0f;
 
         public override void Init()
         {

@@ -98,7 +98,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         private string currentModuleName = "EngineModule";
         private string lastModuleName = "EngineModule";
-        private RocketModule CurrentModule => CustomizationDummy.AvailableModules.FirstOrDefault((module) => module.Name == currentModuleName);
+        private RocketModule CurrentModule => Rocket.ModuleTemplates.FirstOrDefault((module) => module.Name == currentModuleName);
 
         private UIPanel rocketCustomizationControlPanel;
         private UIPanelIconButton rocketApplyButton;
@@ -282,8 +282,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             {
                 if (picker.HasFocus && hslMenu.PendingChange)
                 {
-                    var modules = rocketPreview.ZoomedOut ? CustomizationDummy.AvailableModules : [CurrentModule];
-                    foreach (var module in CustomizationDummy.AvailableModules)
+                    var modules = rocketPreview.ZoomedOut ? CustomizationDummy.Modules : [CurrentModule];
+                    foreach (var module in modules)
                     {
                         var modulePattern = module.Pattern;
                         if (modulePattern.Name == currentPatternIcon.Pattern.Name)
@@ -591,7 +591,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             currentPatternIcon = icon;
 
-            var modules = rocketPreview.ZoomedOut ? CustomizationDummy.AvailableModules : [CurrentModule];
+            var modules = rocketPreview.ZoomedOut ? CustomizationDummy.Modules : [CurrentModule];
             foreach (var module in modules)
             {
                 if (PatternManager.TryGet(icon.Pattern.Name, module.Name, out Pattern defaultPattern))

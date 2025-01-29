@@ -61,10 +61,19 @@ namespace Macrocosm.Content.Items.Dev
 
             //Main.drunkWorld = !Main.drunkWorld;
 
-            //bool value = WorldFlags.SubworldUnlocked.GetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID);
-            //WorldFlags.SubworldUnlocked.SetValue(OrbitSubworld.GetOrbitSubworlds(Earth.ID)[0].ID, !value);
-
             //WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), Player.tileTargetX, Player.tileTargetY);
+
+            bool message = true;
+            foreach (var subworld in OrbitSubworld.GetOrbitSubworlds(Earth.ID))
+            {
+                bool value = WorldFlags.SubworldUnlocked.GetValue(subworld.ID);
+                WorldFlags.SubworldUnlocked.SetValue(subworld.ID, !value);
+                if (message)
+                {
+                    Main.NewText(value ? "Orbit locked" : "Orbit unlocked");
+                    message = false;
+                }
+            }
 
             return true;
         }

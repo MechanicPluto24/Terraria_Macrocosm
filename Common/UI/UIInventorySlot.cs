@@ -375,8 +375,18 @@ namespace Macrocosm.Common.UI
             spriteBatch.Draw(slotTexture.Value, position, null, slotColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
             spriteBatch.Draw(slotBorderTexture.Value, position, null, slotBorderColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
-            if (IsMouseHovering && inventory.GetReservedTooltip(itemIndex) is not null)
-                Main.instance.MouseTextNoOverride(inventory.GetReservedTooltip(itemIndex).Value);
+            if (IsMouseHovering)
+            {
+                if (inventory.TryGetReservedItemClone(itemIndex, out Item itemClone))
+                {
+                    Main.HoverItem = itemClone;
+                    Main.hoverItemName = itemClone.Name;
+                }
+                else if(inventory.GetReservedTooltip(itemIndex) is not null)
+                {
+                    Main.instance.MouseTextNoOverride(inventory.GetReservedTooltip(itemIndex).Value);
+                }
+            }
 
             if (inventory.GetReservedTexture(itemIndex) is not null && item.type == ItemID.None)
                 spriteBatch.Draw(inventory.GetReservedTexture(itemIndex).Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, slotBorderColor, 0f, inventory.GetReservedTexture(itemIndex).Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);

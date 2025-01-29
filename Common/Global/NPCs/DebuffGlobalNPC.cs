@@ -11,7 +11,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Global.NPCs
 {
-
     public class DebuffGlobalNPC : GlobalNPC
     {
         public override void Load()

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Sets;
-using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Drops;
@@ -89,15 +88,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (NPC.HasPlayerTarget && clearLineOfSight && AI_State == ActionState.Idle)
                 AI_State = ActionState.Attack;
-            if (Main.netMode != NetmodeID.Server){
-            if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() >= 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
-                AI_Rage += 0.01f;
+            if (Main.netMode != NetmodeID.Server)
+            {
+                if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() >= 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
+                    AI_Rage += 0.01f;
             }
             if (AI_Rage > 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
                 AI_State = ActionState.Flee;
             else
                 AI_State = ActionState.Attack;
-            
+
 
             if (AI_Rage > 3f || NPC.life < (NPC.lifeMax / 2))
                 AI_State = ActionState.Enrage;
@@ -169,14 +169,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if (AI_Speed > 8f)
                 AI_Speed = 8f;
-            if (Vector2.Distance(player.Center,NPC.Center)>200f)
-            NPC.velocity = ((NPC.velocity + (direction *3f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
+            if (Vector2.Distance(player.Center, NPC.Center) > 50f)
+                NPC.velocity = ((NPC.velocity + (direction * 4f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ?(RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f:0.05f) : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) 
+            => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.05f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
@@ -209,7 +207,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             {
                 Vector2 drawPos = NPC.oldPos[i] + NPC.Size / 2f - Main.screenPosition;
                 Color color = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, null, color * 0.3f,  NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0f);
+                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, drawPos, null, color * 0.3f, NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi, texture.Size() / 2f, NPC.scale, effects, 0f);
             }
             /*
             // Debug collision hitbox

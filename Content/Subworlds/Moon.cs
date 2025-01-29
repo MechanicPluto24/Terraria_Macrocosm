@@ -60,7 +60,7 @@ namespace Macrocosm.Content.Subworlds
         };
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
-        public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-183f, 106f);
+        public override float AmbientTemperature(Vector2? position = null) => Utility.ScaleNoonToMidnight(-183f, 106f);
 
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
@@ -205,7 +205,7 @@ namespace Macrocosm.Content.Subworlds
         private void UpdateSolarStorm() { }
         private void UpdateMeteorStorm()
         {
-            meteorStormCounter++;
+            meteorStormCounter += Main.worldEventUpdates;
 
             if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldFlags.MoonMeteorStorm)
             {

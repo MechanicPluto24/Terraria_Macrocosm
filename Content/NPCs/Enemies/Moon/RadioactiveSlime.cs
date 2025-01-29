@@ -4,6 +4,7 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -58,15 +59,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             //player.AddBuff(ModContent.BuffType<Irradiated>(), 600, true);
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Blocks.Terrain.IrradiatedRock>() ? 0.1f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileType == ModContent.TileType<IrradiatedRock>() ? 0.1f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
 
         }
+
         public override bool PreAI()
         {
             Player player = Main.LocalPlayer;

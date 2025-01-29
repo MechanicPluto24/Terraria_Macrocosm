@@ -7,6 +7,10 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public class PayloadPod : RocketModule
     {
+        public override int Slot => 0;
+        public override int Tier => 1;
+        public override ConfigurationType Configuration => ConfigurationType.Unmanned;
+
         public override int DrawPriority => 4;
 
         public override int Width => 88;
