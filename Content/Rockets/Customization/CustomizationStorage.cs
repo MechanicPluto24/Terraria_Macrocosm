@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Rockets.Customization
             => patterns[(moduleName, patternName)];
 
         public static Pattern GetDefaultPattern(string moduleName)
-            => TryGetPattern(moduleName, "Basic", out var pattern) ? pattern : default;
+            => TryGetPattern(moduleName, "Basic", out var pattern) ? pattern : new();
 
         public static List<Pattern> GetUnlockedPatterns(string moduleName)
         {
@@ -128,10 +128,10 @@ namespace Macrocosm.Content.Rockets.Customization
         /// <param name="moduleName"> The rocket module this detail belongs to </param>
         /// <param name="detailName"> The detail name </param>
         public static Detail GetDetail(string moduleName, string detailName)
-            => details[(moduleName, detailName)];
+            => details.TryGetValue((moduleName, detailName), out var value) ? value : new();
 
         public static Detail GetDefaultDetail(string moduleName)
-            => details[(moduleName, "None")];
+            => details.TryGetValue((moduleName, "None"), out var value) ? value : new();
 
         public static List<Detail> GetUnlockedDetails(string moduleName)
         {
@@ -247,7 +247,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
             string logstring = "Loaded " + patterns.Count.ToString() + " pattern" + (patterns.Count == 1 ? "" : "s") + ":\n";
 
-            foreach (string moduleName in Rocket.ModuleNames)
+            foreach (string moduleName in Rocket.ModuleTemplateNames)
             {
                 logstring += $" - Module: {moduleName}\n\t";
                 foreach (var kvp in patterns)
@@ -265,7 +265,7 @@ namespace Macrocosm.Content.Rockets.Customization
 
         private static void LoadDetails()
         {
-            foreach (string moduleName in Rocket.ModuleNames)
+            foreach (string moduleName in Rocket.ModuleTemplateNames)
                 AddDetail(moduleName, "None", true);
 
             if (Main.dedServ)
@@ -292,7 +292,7 @@ namespace Macrocosm.Content.Rockets.Customization
             }
 
             string logstring = "Loaded " + details.Count.ToString() + " detail" + (detailPaths.Count == 1 ? "" : "s") + ":\n";
-            foreach (string moduleName in Rocket.ModuleNames)
+            foreach (string moduleName in Rocket.ModuleTemplateNames)
             {
                 logstring += $" - Module: {moduleName}\n\t";
                 foreach (var kvp in details)

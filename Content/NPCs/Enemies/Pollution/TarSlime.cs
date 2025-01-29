@@ -49,10 +49,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         {
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<PollutionBiome>() ? 1f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<PollutionBiome>() ? 1f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {

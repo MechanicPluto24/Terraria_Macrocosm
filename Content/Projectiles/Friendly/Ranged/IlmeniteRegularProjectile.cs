@@ -14,14 +14,16 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class IlmeniteRegularProj : ModProjectile
+    public class IlmeniteRegularProjectile : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
-        float trailMultiplier = 0f;
-        int colourLerpProg = 0;
-        public Color colour1 = new Color(188, 89, 134);
-        public Color colour2 = new Color(33, 188, 190);
+        public bool HitExplosion;
+
+        private float trailMultiplier = 0f;
+        private int colourLerpProg = 0;
+        private Color colour1 = new(188, 89, 134);
+        private Color colour2 = new(33, 188, 190);
 
         public override void SetStaticDefaults()
         {
@@ -49,7 +51,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.extraUpdates += (int)Projectile.ai[1];
             Projectile.penetrate = (int)Projectile.ai[2];
         }
-        public bool hitExplosion;
         public override void AI()
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
@@ -71,56 +72,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 colourLerpProg++;
             }
 
-            if (!hitExplosion)
+            if (!HitExplosion)
             {
-                Projectile explosion = Utility.FindClosestProjectileOfType(Projectile.Center, ModContent.ProjectileType<IlmeniteExplosion>());
-                if (explosion is not null)
+                Projectile proj = Utility.FindClosestProjectileOfType(Projectile.Center, ModContent.ProjectileType<IlmeniteExplosion>());
+                if (proj is not null && proj.ModProjectile is IlmeniteExplosion explosion)
                 {
-                    if (Vector2.Distance(Projectile.Center, explosion.Center) < 50f)
+                    if (Vector2.Distance(Projectile.Center, proj.Center) < 50f)
                     {
-                        Vector2 targetCenter = new Vector2(-1000000, -1000000);
-                        float distanceFromTarget = 1200f;
-                        bool foundTarget = false;
-                        for (int i = 0; i < Main.maxNPCs; i++)
-                        {
-                            NPC npc = Main.npc[i];
-
-                            if (npc.CanBeChasedBy())
-                            {
-                                float between = Vector2.Distance(npc.Center, Projectile.Center);
-                                bool closest = Vector2.Distance(Projectile.Center, targetCenter) > between;
-                                bool inRange = between < distanceFromTarget;
-                                bool lineOfSight = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height);
-
-                                bool closeThroughWall = between < 100f;
-
-                                if (((closest && inRange) || !foundTarget) && (lineOfSight || closeThroughWall))
-                                {
-                                    targetCenter = npc.Center;
-                                    foundTarget = true;
-                                    distanceFromTarget = between;
-                                }
-                            }
-                        }
-
-                        IlmeniteRegularProj regular = (Projectile.NewProjectileDirect(
-                            Projectile.GetSource_FromAI(),
-                            Projectile.Center,
-                            ((targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX) * Projectile.velocity.Length()).RotatedByRandom(MathHelper.Pi / 7),
-                            ModContent.ProjectileType<IlmeniteRegularProj>(),
-                            Projectile.damage / 2,
-                            2,
-                            -1,
-                            Projectile.ai[0],
-                            Projectile.ai[1],
-                            Projectile.ai[2]
-                        ).ModProjectile as IlmeniteRegularProj);
-                        regular.Projectile.scale *= 0.7f;
-                        regular.hitExplosion = true;
-                        hitExplosion = true;
-                        (explosion.ModProjectile as IlmeniteExplosion).OnHit();
+                        HitExplosion = true;
+                        explosion.OnHit();
                     }
-
                 }
             }
         }
@@ -129,7 +90,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             SoundEngine.PlaySound(SoundID.Item10);
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 65; i++)
             {
                 Particle.Create<TintableSpark>((p) =>
                 {
@@ -167,19 +128,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             spriteBatch.Begin(BlendState.Additive, state);
 
             float count = Projectile.velocity.LengthSquared() * trailMultiplier;
-            Color color;
-            if (Projectile.ai[0] == 0)
+
+            var color = Projectile.ai[0] switch
             {
-                color = colour1;
-            }
-            else if (Projectile.ai[0] == 1)
-            {
-                color = colour2;
-            }
-            else
-            {
-                color = Color.Lerp(colour1, colour2, MathF.Pow(MathF.Cos(colourLerpProg / 10f), 3)) * 1.5f;
-            }
+                0 => colour1,
+                1 => colour2,
+                _ => Color.Lerp(colour1, colour2, MathF.Pow(MathF.Cos(colourLerpProg / 10f), 3)) * 1.5f,
+            };
 
             for (int n = 1; n < count; n++)
             {

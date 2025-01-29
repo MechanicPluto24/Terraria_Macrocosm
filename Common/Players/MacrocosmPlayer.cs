@@ -81,7 +81,7 @@ namespace Macrocosm.Common.Players
         public int[] ItemAltUseCooldown { get; private set; }
 
         /// <summary> Cooldown on held projectile attacks. </summary>
-        public int HeldProjectileCooldown = 0;
+        public int HeldProjectileCooldown { get; set; } = 0;
 
         #endregion
 

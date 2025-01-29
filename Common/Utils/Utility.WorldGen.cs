@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static bool CoordinatesOutOfBounds(int i, int j) => i >= Main.maxTilesX || j >= Main.maxTilesY || i < 0 || j < 0;
+        public static bool CoordinatesOutOfBounds(int i, int j) => !InWorld(i, j);
 
         public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action, int addI = 1, int addJ = 1, bool boundsCheck = true)
         {

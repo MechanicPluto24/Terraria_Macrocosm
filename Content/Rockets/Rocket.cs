@@ -125,15 +125,18 @@ namespace Macrocosm.Content.Rockets
         public string DisplayName
             => Nameplate.IsValid() ? Nameplate.Text : Language.GetTextValue("Mods.Macrocosm.Common.Rocket");
 
-        /// <summary> List of all the modules a rocket can have </summary>
-        public List<RocketModule> AvailableModules { get; } = new();
-
         /// <summary> List of all the modules currently active on this rocket </summary>
-        public List<RocketModule> ActiveModules => AvailableModules.Where(module => module.Active).ToList();
+        public RocketModule[] Modules { get; set; }
 
         /// <summary> The rocket's active modules ordered by their <see cref="RocketModule.DrawPriority"/> </summary>
-        public List<RocketModule> ActiveModulesByDrawPriority => ActiveModules.OrderBy(module => module.DrawPriority).ToList();
-        public List<string> ActiveModuleNames => ActiveModules.Select((m) => m.Name).ToList();
+        public List<RocketModule> ModulesByDrawPriority => Modules.OrderBy(module => module.DrawPriority).ToList();
+        public List<string> ModuleNames => Modules.Select((m) => m.Name).ToList();
+
+        public RocketModule[] DefaultModules => [new CommandPod(), new ServiceModule(), new ReactorModule(), new EngineModule(), new BoosterLeft(), new BoosterRight()];
+
+        /// <summary> List of all the modules a rocket can have </summary>
+        public static List<RocketModule> ModuleTemplates => ModContent.GetContent<RocketModule>().ToList();
+        public static List<string> ModuleTemplateNames => ModuleTemplates.Select(module => module.Name).ToList();
 
         public int PreLaunchDuration = 160;
 
@@ -206,37 +209,13 @@ namespace Macrocosm.Content.Rockets
         public int InventorySerializationIndex => WhoAmI;
 
         /// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
-        public Rocket(List<string> activeModules = null)
+        public Rocket(RocketModule[] modules = null)
         {
-            foreach (string moduleName in ModuleNames)
-            {
-                var module = CreateModule(moduleName);
-                module.Active = (activeModules ?? DefaultModuleNames).Contains(moduleName);
+            Modules = modules ?? DefaultModules;
+            foreach (var module in Modules)
                 module.SetRocket(this);
-                AvailableModules.Add(module);
-            }
 
             Inventory = new Inventory(DefaultTotalInventorySize, this);
-        }
-
-        public static readonly List<string> DefaultModuleNames = ["CommandPod", "ServiceModule", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight"];
-
-        public static readonly List<string> ModuleNames = ["CommandPod", "PayloadPod", "ServiceModule", "UnmannedTug", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight"];
-
-        private RocketModule CreateModule(string moduleName)
-        {
-            return moduleName switch
-            {
-                "CommandPod" => new CommandPod(),
-                "PayloadPod" => new PayloadPod(),
-                "ServiceModule" => new ServiceModule(),
-                "UnmannedTug" => new UnmannedTug(),
-                "ReactorModule" => new ReactorModule(),
-                "EngineModule" => new EngineModule(),
-                "BoosterLeft" => new BoosterLeft(),
-                "BoosterRight" => new BoosterRight(),
-                _ => throw new ArgumentException($"Unknown module name: {moduleName}")
-            };
         }
 
         private void OnFirstUpdate()
@@ -668,18 +647,18 @@ namespace Macrocosm.Content.Rockets
 
         private void UpdateModules()
         {
-            foreach (RocketModule module in ActiveModules)
+            foreach (RocketModule module in Modules)
                 module.Position = GetModuleRelativePosition(module, Position);
         }
 
         private Vector2 CalculateSize()
         {
-            if (ActiveModules == null || ActiveModules.Count == 0)
+            if (Modules == null || Modules.Length == 0)
                 return new(0, 0);
 
             float maxX = float.MinValue;
             float maxY = float.MinValue;
-            foreach (var module in ActiveModules)
+            foreach (var module in Modules)
             {
                 Vector2 modulePosition = GetModuleRelativePosition(module, Vector2.Zero);
                 Vector2 moduleSize = new Vector2(module.Width, module.Height);
@@ -697,7 +676,7 @@ namespace Macrocosm.Content.Rockets
 
         public bool CheckTileCollision()
         {
-            foreach (RocketModule module in ActiveModules)
+            foreach (RocketModule module in Modules)
                 if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Width, module.Height).Y) > 0.1f)
                     return true;
 
@@ -747,7 +726,7 @@ namespace Macrocosm.Content.Rockets
         {
             canAnimate = true;
 
-            foreach (RocketModule module in ActiveModules)
+            foreach (RocketModule module in Modules)
             {
                 if (module is AnimatedRocketModule animatedModule)
                 {
@@ -781,7 +760,7 @@ namespace Macrocosm.Content.Rockets
             if (LaunchPadManager.GetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, Main.MouseWorld.ToTileCoordinates16()) != null)
                 return false;
 
-            foreach (RocketModule module in ActiveModules.Where((module) => module.Interactible))
+            foreach (RocketModule module in Modules.Where((module) => module.Interactible))
                 if (module.Bounds.Contains(Main.MouseWorld.ToPoint()))
                     return true;
 
@@ -804,7 +783,7 @@ namespace Macrocosm.Content.Rockets
         private void UpdateModuleAnimation()
         {
             bool animationActive = false;
-            foreach (RocketModule module in AvailableModules)
+            foreach (var module in Modules)
             {
                 if (module is AnimatedRocketModule animatedModule)
                 {
@@ -821,7 +800,7 @@ namespace Macrocosm.Content.Rockets
         {
             if (canAnimate)
             {
-                foreach (RocketModule module in AvailableModules)
+                foreach (var module in Modules)
                 {
                     if (module is AnimatedRocketModule animatedModule)
                     {
@@ -997,8 +976,9 @@ namespace Macrocosm.Content.Rockets
 
             int smallSmokeCount = (int)(countPerTick * 2f);
 
-            var boosterLeft = AvailableModules.FirstOrDefault((m) => m is BoosterLeft) as Booster;
-            var boosterRight = AvailableModules.FirstOrDefault((m) => m is BoosterRight) as Booster;
+            // TODO: some kind of better logic lol
+            var boosterLeft = Modules.FirstOrDefault((m) => m is BoosterLeft) as Booster;
+            var boosterRight = Modules.FirstOrDefault((m) => m is BoosterRight) as Booster;
 
             for (int i = 0; i < smallSmokeCount; i++)
             {

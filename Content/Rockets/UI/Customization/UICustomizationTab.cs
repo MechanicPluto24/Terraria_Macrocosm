@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         private string currentModuleName = "EngineModule";
         private string lastModuleName = "EngineModule";
-        private RocketModule CurrentModule => CustomizationDummy.AvailableModules.FirstOrDefault((module) => module.Name == currentModuleName);
+        private RocketModule CurrentModule => Rocket.ModuleTemplates.FirstOrDefault((module) => module.Name == currentModuleName);
 
         private UIPanel rocketCustomizationControlPanel;
         private UIPanelIconButton rocketApplyButton;
@@ -250,7 +250,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 {
                     if (rocketPreview.ZoomedOut)
                     {
-                        foreach (var module in CustomizationDummy.AvailableModules)
+                        foreach (var module in CustomizationDummy.Modules)
                         {
                             var modulePattern = module.Pattern;
 
@@ -470,7 +470,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             UpdateDetailConfig();
             UpdatePatternConfig();
-            currentPatternIcon.Pattern = CustomizationDummy.AvailableModules.FirstOrDefault((m) => m.Name == CurrentModule.Name).Pattern;
+            currentPatternIcon.Pattern = Rocket.ModuleTemplates.FirstOrDefault((m) => m.Name == CurrentModule.Name).Pattern;
 
             RefreshPatternColorPickers();
         }
@@ -532,7 +532,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
                     if (rocketPreview.ZoomedOut)
                     {
-                        foreach (var module in CustomizationDummy.AvailableModules)
+                        foreach (var module in CustomizationDummy.Modules)
                         {
                             var modulePattern = module.Pattern;
 
@@ -577,7 +577,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             if (rocketPreview.ZoomedOut)
             {
-                foreach (var module in CustomizationDummy.AvailableModules)
+                foreach (var module in CustomizationDummy.Modules)
                 {
                     if (CustomizationStorage.TryGetPattern(module.Name, icon.Pattern.Name, out Pattern defaultPattern))
                     {
@@ -677,7 +677,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             if (rocketPreview.ZoomedOut)
             {
-                foreach (var module in CustomizationDummy.AvailableModules)
+                foreach (var module in CustomizationDummy.Modules)
                 {
                     var currentModulePattern = module.Pattern;
 

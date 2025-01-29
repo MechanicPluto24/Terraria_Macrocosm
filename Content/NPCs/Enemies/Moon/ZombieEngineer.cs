@@ -81,7 +81,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.02f : 0f;
+            if (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>())
+            {
+                return 0.02f;
+            }
+            else
+            {
+                return 0f;
+            }
         }
         public override void OnKill()
         {

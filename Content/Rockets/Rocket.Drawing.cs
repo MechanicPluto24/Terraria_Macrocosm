@@ -195,7 +195,7 @@ namespace Macrocosm.Content.Rockets
         // Draw types
         private void DrawWorld(SpriteBatch spriteBatch, Vector2 position)
         {
-            foreach (RocketModule module in ActiveModulesByDrawPriority)
+            foreach (RocketModule module in ModulesByDrawPriority)
             {
                 if (module.Active)
                     module.Draw(spriteBatch, GetModuleRelativePosition(module, position));
@@ -218,7 +218,7 @@ namespace Macrocosm.Content.Rockets
 
         public void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld = true)
         {
-            foreach (RocketModule module in ActiveModulesByDrawPriority)
+            foreach (RocketModule module in ModulesByDrawPriority)
             {
                 if(module.Active)
                     module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
@@ -227,7 +227,7 @@ namespace Macrocosm.Content.Rockets
 
         public void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld = true)
         {
-            foreach (RocketModule module in ActiveModulesByDrawPriority)
+            foreach (RocketModule module in ModulesByDrawPriority)
             {
                 if (module.Active)
                     module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
@@ -236,7 +236,7 @@ namespace Macrocosm.Content.Rockets
 
         private void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
         {
-            foreach (RocketModule module in ActiveModulesByDrawPriority.OrderBy(module => module.BlueprintHighlighted))
+            foreach (RocketModule module in ModulesByDrawPriority.OrderBy(module => module.BlueprintHighlighted))
             {
                 Vector2 drawPosition = GetModuleRelativePosition(module, position);
 

@@ -6,8 +6,8 @@
         public int CurrentFrame { get; set; } = 9;
 
         /// <summary> The total number of frames </summary>
-        public virtual int NumberOfFrames { get; set; } = 10;
-        public int FrameSpeed { get; set; } = 4;
+        public virtual int NumberOfFrames => 10;
+        public int FrameSpeed => 4;
         public bool IsAnimationActive => isAnimating;
 
         private int frameCounter;

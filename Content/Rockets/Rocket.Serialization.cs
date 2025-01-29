@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Rockets
 
                 tag[nameof(Nameplate)] = Nameplate;
 
-                foreach (var module in AvailableModules)
+                foreach (var module in Modules)
                 {
                     tag[module.Name] = module;
                     tag[module.Name + "_Type"] = module.FullName;
@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Rockets
                 if (tag.ContainsKey(nameof(Nameplate)))
                     rocket.Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
 
-                foreach (string moduleName in ModuleNames)
+                foreach (string moduleName in ModuleTemplateNames)
                 {
                     // This mess is just so each module can save their own data
                     if (tag.ContainsKey(moduleName + "_Type"))
@@ -94,7 +94,7 @@ namespace Macrocosm.Content.Rockets
                         if (moduleType != null && moduleType.IsSubclassOf(typeof(RocketModule)))
                         {
                             var module = RocketModule.DeserializeData(tag.GetCompound(moduleName), rocket);
-                            rocket.AvailableModules.Add(module);
+                            rocket.Modules[module.Slot] = module;
                         }
                     }
                 }

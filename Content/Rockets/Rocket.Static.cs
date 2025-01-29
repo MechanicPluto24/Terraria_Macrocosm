@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket
     {
-        public static Rocket Create(Vector2 position, List<string> activeModules = null, bool sync = true, Action < Rocket> action = null)
+        public static Rocket Create(Vector2 position, RocketModule[] modules = null, bool sync = true, Action < Rocket> action = null)
         {
             // Rocket will not be managed.. we have to avoid ever reaching this  
             if (RocketManager.ActiveRocketCount > RocketManager.MaxRockets)
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Rockets
                 throw new System.Exception("Max rockets reached. Should not ever reach this point during normal gameplay.");
             }
 
-            Rocket rocket = new(activeModules)
+            Rocket rocket = new(modules)
             {
                 Position = position,
                 Active = true,

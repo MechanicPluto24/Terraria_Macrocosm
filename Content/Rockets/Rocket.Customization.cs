@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets
     {
         public Rocket VisualClone()
         {
-            Rocket visualClone = new(ActiveModuleNames);
+            Rocket visualClone = new(Modules);
             visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
             return visualClone;
         }
@@ -40,10 +40,10 @@ namespace Macrocosm.Content.Rockets
             Nameplate.HAlign = source.Nameplate.HAlign;
             Nameplate.VAlign = source.Nameplate.VAlign;
 
-            foreach (var module in AvailableModules)
+            foreach (var module in Modules)
             {
-                module.Detail = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Detail;
-                module.Pattern = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Pattern;
+                module.Detail = Modules.FirstOrDefault((m) => m.Name == module.Name).Detail;
+                module.Pattern = Modules.FirstOrDefault((m) => m.Name == module.Name).Pattern;
 
                 foreach (PatternColorData data in module.Pattern.ColorData)
                     if (data.Color.A > 0)
@@ -62,7 +62,7 @@ namespace Macrocosm.Content.Rockets
         {
             Nameplate = new();
 
-            foreach (var module in AvailableModules)
+            foreach (var module in Modules)
             {
                 module.Detail = default;
                 module.Pattern = CustomizationStorage.GetDefaultPattern(module.Name);
@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Rockets
             };
 
             var modulesArray = new JArray();
-            foreach (var module in AvailableModules)
+            foreach (var module in Modules)
             {
                 modulesArray.Add(new JObject
                 {
@@ -108,7 +108,7 @@ namespace Macrocosm.Content.Rockets
                 foreach (var moduleJObject in modulesArray.Children<JObject>())
                 {
                     string moduleName = moduleJObject["moduleName"].Value<string>();
-                    var module = AvailableModules.FirstOrDefault((m) => m.Name == moduleName);
+                    var module = ModuleTemplates.FirstOrDefault((m) => m.Name == moduleName);
                     if (module != null)
                     {
                         try

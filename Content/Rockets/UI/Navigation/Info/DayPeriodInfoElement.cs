@@ -11,16 +11,19 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 
         protected override LocalizedText GetLocalizedValueUnitText(ref float value)
         {
-            string units = value < 1f ? "Hours" : "Days";
-
+            string units;
             if (value < 1f)
+            {
                 value *= 24f;
+                units = "Hours";
+            }
+            else
+            {
+                units = "Days";
+            }
 
             value = MathF.Round(value, 2);
-
-            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation" +
-                ".DayPeriod.Unit" + units);
+            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.DayPeriod.Unit" + units);
         }
-
     }
 }
