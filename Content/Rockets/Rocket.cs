@@ -14,6 +14,7 @@ using Macrocosm.Content.Items.Tech;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
+using Macrocosm.Content.Rockets.Modules.Boosters;
 using Macrocosm.Content.Sounds;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Microsoft.Xna.Framework;
@@ -132,12 +133,6 @@ namespace Macrocosm.Content.Rockets
         public List<RocketModule> ModulesByDrawPriority => Modules.OrderBy(module => module.DrawPriority).ToList();
         public List<string> ModuleNames => Modules.Select((m) => m.Name).ToList();
 
-        public RocketModule[] DefaultModules => [new CommandPod(), new ServiceModule(), new ReactorModule(), new EngineModule(), new BoosterLeft(), new BoosterRight()];
-
-        /// <summary> List of all the modules a rocket can have </summary>
-        public static List<RocketModule> ModuleTemplates => ModContent.GetContent<RocketModule>().ToList();
-        public static List<string> ModuleTemplateNames => ModuleTemplates.Select(module => module.Name).ToList();
-
         public int PreLaunchDuration = 160;
 
         public int StaticFireDuration = 60;
@@ -209,11 +204,15 @@ namespace Macrocosm.Content.Rockets
         public int InventorySerializationIndex => WhoAmI;
 
         /// <summary> Instatiates a rocket. Use <see cref="Create(Vector2)"/> for spawning in world and proper syncing. </summary>
-        public Rocket(RocketModule[] modules = null)
+        public Rocket(RocketModule[] moduleTemplates = null)
         {
-            Modules = modules ?? DefaultModules;
-            foreach (var module in Modules)
-                module.SetRocket(this);
+            moduleTemplates ??= RocketModule.DefaultModules.ToArray();
+            foreach (var template in moduleTemplates)
+            {
+                Modules ??= new RocketModule[moduleTemplates.Length];
+                Modules[template.Slot] = template.Clone();
+                Modules[template.Slot].SetRocket(this);
+            }
 
             Inventory = new Inventory(DefaultTotalInventorySize, this);
         }
@@ -977,8 +976,8 @@ namespace Macrocosm.Content.Rockets
             int smallSmokeCount = (int)(countPerTick * 2f);
 
             // TODO: some kind of better logic lol
-            var boosterLeft = Modules.FirstOrDefault((m) => m is BoosterLeft) as Booster;
-            var boosterRight = Modules.FirstOrDefault((m) => m is BoosterRight) as Booster;
+            var boosterLeft = Modules.FirstOrDefault((m) => m is BoosterLeft) as BaseBooster;
+            var boosterRight = Modules.FirstOrDefault((m) => m is BoosterRight) as BaseBooster;
 
             for (int i = 0; i < smallSmokeCount; i++)
             {

@@ -25,8 +25,6 @@ namespace Macrocosm.Common.Customization
 
         public Asset<Texture2D> Texture { get; set; }
         private readonly string texturePath;
-        public Asset<Texture2D> Icon { get; set; }
-        private readonly string iconPath;
 
         public const int MaxColors = 64;
         public const float ColorDistance = 0.1f;
@@ -41,11 +39,9 @@ namespace Macrocosm.Common.Customization
             ColorData = new();
             texturePath = Macrocosm.EmptyTexPath;
             Texture = Macrocosm.EmptyTex;
-            iconPath = Macrocosm.EmptyTexPath;
-            Icon = Macrocosm.EmptyTex;
         }
 
-        public Pattern(string name, string context, string texturePath, string iconPath, Dictionary<Color, PatternColorData> defaultColorData)
+        public Pattern(string name, string context, string texturePath, Dictionary<Color, PatternColorData> defaultColorData)
         {
             Name = name;
             Context = context;
@@ -54,12 +50,9 @@ namespace Macrocosm.Common.Customization
 
             this.texturePath = texturePath;
             Texture = ModContent.RequestIfExists<Texture2D>(texturePath, out var t) ? t : Macrocosm.EmptyTex;
-
-            this.iconPath = iconPath;
-            Icon = ModContent.RequestIfExists<Texture2D>(iconPath, out var it) ? it : Macrocosm.EmptyTex;
         }
 
-        public Pattern Clone() => new(Name, Context, texturePath, iconPath, new Dictionary<Color, PatternColorData>(ColorData));
+        public Pattern Clone() => new(Name, Context, texturePath, new Dictionary<Color, PatternColorData>(ColorData));
         public Color GetColor(Color key)
         {
             if (ColorData.TryGetValue(key, out var data))
@@ -139,7 +132,6 @@ namespace Macrocosm.Common.Customization
                 ["name"] = Name,
                 ["context"] = Context,
                 ["texturePath"] = texturePath,
-                ["iconPath"] = iconPath,
                 ["colorData"] = new JObject(ColorData.Select(kvp => new JProperty(kvp.Key.GetHex(), kvp.Value.ToJObject())))
             };
         }
@@ -152,7 +144,6 @@ namespace Macrocosm.Common.Customization
                 string name = jObject["name"]?.Value<string>() ?? throw new ArgumentException("Missing 'name' field.");
                 string context = jObject["context"]?.Value<string>() ?? throw new ArgumentException("Missing 'context' field.");
                 string texturePath = jObject["texturePath"]?.Value<string>();
-                string iconPath = jObject["iconPath"]?.Value<string>();
 
                 Dictionary<Color, PatternColorData> colorData = new();
                 if (jObject["colorData"] is JObject colorDataJson)
@@ -160,7 +151,7 @@ namespace Macrocosm.Common.Customization
                         if (Utility.TryGetColorFromHex(entry.Name, out Color key) && entry.Value is JObject value && value != null)
                             colorData[key] = PatternColorData.FromJObject(value);
 
-                return new Pattern(name, context, texturePath, iconPath, colorData);
+                return new Pattern(name, context, texturePath, colorData);
             }
             catch (Exception ex)
             {

@@ -104,26 +104,13 @@ namespace Macrocosm.Common.Customization
                     // "name" is the only data which is strictly required in the .mpattern files
                     string name = json["name"]?.Value<string>() ?? throw new Exception("Missing 'name' field.");
 
-                    // "iconPath" can either be specified, or defaults to an image named "icon.*" (not case sensitive) in the same folder as the .mpattern
-                    string iconAssetFile = json["iconPath"]?.Value<string>();
-                    if (string.IsNullOrEmpty(iconAssetFile))
-                    {
-                        string inferredIconPath = Mod.GetFileNames()
-                            .FirstOrDefault(file => file.StartsWith(folderPath) && file.ToLowerInvariant().EndsWith("icon.rawimg"));
-
-                        if (!string.IsNullOrEmpty(inferredIconPath))
-                            iconAssetFile = $"{Mod.Name}/{inferredIconPath}".Replace(".rawimg", "");
-                        else
-                            Macrocosm.Instance.Logger.Warn($"No icon found for pattern '{name}' in '{mpatternFile}'. Defaulting to empty texture.");
-                    }
-
                     // "unlockedByDefault" determines whether the pattern is readily available, or must be unlocked by in-game means
                     bool unlockedByDefault = json["unlockedByDefault"]?.Value<bool>() ?? true;
                     if (unlockedByDefault)
                         SetUnlocked(name, true);
 
                     // Look for other image next to the .mpattern
-                    var imageFiles = Mod.GetFileNames().Where(file => file.StartsWith(folderPath) && file.EndsWith(".rawimg") && file != iconAssetFile).ToList();
+                    var imageFiles = Mod.GetFileNames().Where(file => file.StartsWith(folderPath) && file.EndsWith(".rawimg")).ToList();
                     foreach (var imageFile in imageFiles)
                     {
                         string textureAssetPath = $"{Mod.Name}/{imageFile}".Replace(".rawimg", "");
@@ -162,14 +149,7 @@ namespace Macrocosm.Common.Customization
                             colorData.TryAdd(color, new PatternColorData(color));
                         }
 
-                        // Share missing colors across contexts for the same name 
-                        var misingData = GetAll(name).Select(kvp => kvp.ColorData);
-                        foreach (var kvp in misingData.SelectMany(existingColorData => existingColorData.Where(kvp => !colorData.ContainsKey(kvp.Key))))
-                        {
-                            colorData[kvp.Key] = kvp.Value;
-                        }
-
-                        patterns[(name, context)] = new Pattern(name, context, textureAssetPath, iconAssetFile, colorData);
+                        patterns[(name, context)] = new Pattern(name, context, textureAssetPath, colorData);
                     }
                 }
                 catch (Exception ex)

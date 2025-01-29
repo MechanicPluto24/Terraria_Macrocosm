@@ -24,11 +24,32 @@ namespace Macrocosm.Content.Rockets.Modules
             Unmanned
         }
 
-        public string LocalizationCategory => "UI.Rocket.Modules";
-        //public LocalizedText DisplayName => this.GetLocalization("DisplayName", PrettyPrintName);
-        public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
+        /// <summary> List of all the existing rocket modules </summary>
+        public static List<RocketModule> Templates { get; } = new();
 
-        protected sealed override void Register() => ModTypeLookup<RocketModule>.Register(this);
+        public static List<RocketModule> DefaultModules => Templates
+                .Where(m => m.Configuration != ConfigurationType.Unmanned)
+                .GroupBy(m => m.Slot)
+                .Select(g => g.OrderBy(m => m.Tier).First().Clone()) 
+                .OrderBy(m => m.Slot)
+                .ToList();
+
+        // For backwards compatibility
+        public static List<RocketModule> DefaultLegacyModules => new List<RocketModule>()
+        {
+            Templates.FirstOrDefault(m => m.Name == "CommandPod"),
+            Templates.FirstOrDefault(m => m.Name == "ServiceModule"),
+            Templates.FirstOrDefault(m => m.Name == "ReactorModule"),
+            Templates.FirstOrDefault(m => m.Name == "EngineModuleMk2"),
+            Templates.FirstOrDefault(m => m.Name == "BoosterLeft"),
+            Templates.FirstOrDefault(m => m.Name == "BoosterRight")
+        }.Where(m => m != null).ToList();
+
+        protected sealed override void Register()
+        {
+            ModTypeLookup<RocketModule>.Register(this);
+            Templates.Add(this);
+        }
         public override void SetupContent() => SetStaticDefaults();
         public override void SetStaticDefaults()
         {
@@ -44,7 +65,8 @@ namespace Macrocosm.Content.Rockets.Modules
         public abstract ConfigurationType Configuration { get; }
         public abstract AssemblyRecipe Recipe { get; }
 
-        public bool Active => rocket != null && rocket.Modules[Slot].Name == Name;
+        public string LocalizationCategory => "UI.Rocket.Modules";
+        public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
 
         public Vector2 Position { get; set; }
         public virtual Vector2 Offset => Vector2.Zero;
@@ -72,13 +94,19 @@ namespace Macrocosm.Content.Rockets.Modules
         public virtual bool Interactible => true;
 
         public virtual string TexturePath => Utility.GetNamespacePath(this);
-        public Texture2D Texture => ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;
 
-        public virtual string IconPath => (GetType().Namespace + "/Icons/" + Name).Replace(".", "/");
-        public Texture2D Icon => ModContent.Request<Texture2D>(IconPath, AssetRequestMode.ImmediateLoad).Value;
+        private Asset<Texture2D> texture;
+        public Texture2D Texture => (texture ??= ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad)).Value;
 
-        public virtual string BlueprintPath => (GetType().Namespace + "/Blueprints/" + Name).Replace(".", "/");
-        public Texture2D Blueprint => ModContent.Request<Texture2D>(BlueprintPath, AssetRequestMode.ImmediateLoad).Value;
+        public virtual string IconPath => (GetType().Namespace + "_Icon").Replace(".", "/");
+        private Asset<Texture2D> icon;
+        public Texture2D Icon => (icon ??= ModContent.RequestIfExists<Texture2D>(IconPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
+
+        public virtual string BlueprintPath => (GetType().Namespace + "Blueprint").Replace(".", "/");
+        private Asset<Texture2D> blueprint;
+        public Texture2D Blueprint => (blueprint ??= ModContent.RequestIfExists<Texture2D>(BlueprintPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
+
+
         public bool BlueprintHighlighted { get; set; } = false;
 
         public Color BlueprintOutlineColor = UITheme.Current.PanelStyle.BorderColor;
@@ -92,6 +120,7 @@ namespace Macrocosm.Content.Rockets.Modules
             Pattern = PatternManager.Get("Basic", Name);
         }
 
+        public RocketModule Clone() => DeserializeData(SerializeData());
         public void SetRocket(Rocket value) => rocket = value;
 
         public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)

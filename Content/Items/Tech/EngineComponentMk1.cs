@@ -5,7 +5,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tech
 {
-    public class EngineComponent : ModItem
+    [LegacyName("EngineComponent")]
+    public class EngineComponentMk1 : ModItem
     {
         public override void SetStaticDefaults()
         {

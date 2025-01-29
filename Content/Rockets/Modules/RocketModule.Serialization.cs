@@ -1,61 +1,41 @@
 ﻿using Macrocosm.Common.Customization;
 using System;
+using System.Linq;
+using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
     public abstract partial class RocketModule : TagSerializable
     {
-        protected virtual TagCompound SerializeModuleSpecificData() { return new TagCompound(); }
-        protected virtual void DeserializeModuleSpecificData(TagCompound tag, Rocket ownerRocket) { }
 
         public static readonly Func<TagCompound, RocketModule> DESERIALIZER = DeserializeData;
 
         public TagCompound SerializeData()
         {
-            TagCompound tag = SerializeModuleSpecificData();
+            TagCompound tag = new()
+            {
+                [nameof(Name)] = Name,
+                [nameof(IsBlueprint)] = IsBlueprint
+            };
 
-            tag["Type"] = FullName;
-            tag["Name"] = Name;
-            tag["IsBlueprint"] = IsBlueprint;
-
-            if (Decal != default)
-                tag["Decal"] = Decal.Name;
-
-            if (Pattern != default)
-                tag["Pattern"] = Pattern;
-
+            if (Decal != default) tag[nameof(Decal)] = Decal.Name;
+            if (Pattern != null) tag[nameof(Pattern)] = Pattern;
             return tag;
         }
 
-        /// <summary>
-        /// UNUSED! 
-        /// Deserialization is customly done using the <see cref="DeserializeData(TagCompound, Rocket)"/> method instead.
-        /// Care should be taken since calling tag.Get<RocketModule>() will call this method.
-        /// </summary>
         public static RocketModule DeserializeData(TagCompound tag)
         {
-            // There must be a way to clean this all up... - Feldy
-            throw new NotSupportedException("You should deserialize the module data with DeserializeData(TagCompound, Rocket) instead, by calling it directly");
-        }
+            string name = tag.GetString(nameof(Name));
+            RocketModule template = Templates.FirstOrDefault(m => m.Name == name || LegacyNameAttribute.GetLegacyNamesOfType(m.GetType()).Contains(name)) ?? throw new Exception($"RocketModule template not found: {name}");
+            if (Activator.CreateInstance(template.GetType()) is not RocketModule module) throw new Exception($"Failed to create instance of RocketModule: {name}");
 
-        public static RocketModule DeserializeData(TagCompound tag, Rocket ownerRocket)
-        {
-            string type = tag.GetString("Type");
-            string name = tag.GetString("Name");
+            module.IsBlueprint = tag.ContainsKey(nameof(IsBlueprint));
+            if (tag.ContainsKey(nameof(Decal))) module.Decal = DecalManager.GetDecal(name, tag.GetString(nameof(Decal)));
 
-            RocketModule module = Activator.CreateInstance(Type.GetType(type)) as RocketModule;
-            module.rocket = ownerRocket;
-            module.DeserializeModuleSpecificData(tag, ownerRocket);
-
-            if (tag.ContainsKey("IsBlueprint"))
-                module.IsBlueprint = tag.GetBool("IsBlueprint");
-
-            if (tag.ContainsKey("Decal"))
-                module.Decal = DecalManager.GetDecal(name, tag.GetString("Decal"));
-
-            if (tag.ContainsKey("Pattern"))
-                module.Pattern = tag.Get<Pattern>("Pattern");
+            if (tag.ContainsKey(nameof(Pattern)))
+                module.Pattern = tag.Get<Pattern>(nameof(Pattern));
 
             return module;
         }

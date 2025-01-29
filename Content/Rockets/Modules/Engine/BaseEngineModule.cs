@@ -11,29 +11,14 @@ using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Modules
+namespace Macrocosm.Content.Rockets.Modules.Engine
 {
-    public class EngineModule : AnimatedRocketModule
+    public abstract class BaseEngineModule : AnimatedRocketModule
     {
-        public override int Slot => 3;
-        public override int Tier => 2;
-        public override ConfigurationType Configuration => ConfigurationType.Any;
+        protected virtual string LandingLegPath => TexturePath.Replace(Name, "LandingLeg");
+        protected virtual string BoosterRear => TexturePath.Replace(Name, "BoosterRear");
 
-        public override int DrawPriority => 0;
         public bool RearLandingLegRaised { get; set; } = false;
-
-        public override int Width => 120;
-        public override int Height => 302 + (RearLandingLegRaised ? 18 : 26);
-
-        public override Vector2 Offset => new Vector2(78, 268);
-
-        public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
-        {
-            new(ModContent.ItemType<RocketPlating>(), 45),
-            new(ModContent.ItemType<Canister>(), 15),
-            new(ModContent.ItemType<EngineComponent>(), 4),
-            new(ModContent.ItemType<LandingGear>(), 3)
-        };
 
         private SpriteBatchState state1, state2;
         public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
@@ -45,8 +30,8 @@ namespace Macrocosm.Content.Rockets.Modules
             Color lightColor = Color.White;
 
             // Draw the rear landing behind the rear booster 
-            Texture2D rearLandingLeg = ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad).Value;
-            Vector2 drawPos = position + new Vector2(Texture.Width / 2f - rearLandingLeg.Width / 2f, 314f);
+            Texture2D rearLandingLeg = ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad).Value;
+            Vector2 drawPos = position + new Vector2(Width / 2f - rearLandingLeg.Width / 2f, 314f);
 
             if (inWorld)
                 lightColor = Lighting.GetColor((drawPos + Main.screenPosition).ToTileCoordinates());
@@ -54,11 +39,11 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.Draw(rearLandingLeg, drawPos, rearLandingLeg.Frame(1, base.NumberOfFrames, frameY: CurrentFrame), lightColor * rocket.Transparency);
 
             // Draw the rear booster behind the engine module 
-            Texture2D boosterRear = ModContent.Request<Texture2D>(TexturePath + "_BoosterRear", AssetRequestMode.ImmediateLoad).Value;
-            spriteBatch.Draw(boosterRear, position + new Vector2(Texture.Width / 2f - boosterRear.Width / 2f, 294f), null, lightColor * rocket.Transparency, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            Texture2D boosterRear = ModContent.Request<Texture2D>(BoosterRear, AssetRequestMode.ImmediateLoad).Value;
+            spriteBatch.Draw(boosterRear, position + new Vector2(Width / 2f - boosterRear.Width / 2f, 294f), null, lightColor * rocket.Transparency, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
-            if (rocket.ForcedFlightAppearance || (rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch))
+            if (rocket.ForcedFlightAppearance || rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.Additive, state1);
@@ -106,7 +91,7 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             VertexStrip strip = new();
             int stripDataCount = (int)(58 * intensity);
-            if(stripDataCount < 0)
+            if (stripDataCount < 0)
                 stripDataCount = 0;
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
@@ -128,8 +113,8 @@ namespace Macrocosm.Content.Rockets.Modules
             strip.PrepareStrip(
                 positions,
                 rotations,
-                (float progress) => Color.Lerp(new Color(255, 217, 120, (byte)(127 * (1 - intensity))), new Color(255, 0, 0, 0), Utility.QuadraticEaseIn(progress)),
-                (float progress) => MathHelper.Lerp(40, 75, progress)
+                (progress) => Color.Lerp(new Color(255, 217, 120, (byte)(127 * (1 - intensity))), new Color(255, 0, 0, 0), Utility.QuadraticEaseIn(progress)),
+                (progress) => MathHelper.Lerp(40, 75, progress)
             );
 
             strip.DrawTrail();

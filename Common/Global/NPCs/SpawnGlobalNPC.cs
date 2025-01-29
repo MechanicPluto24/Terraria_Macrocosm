@@ -5,6 +5,7 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -15,20 +16,28 @@ namespace Macrocosm.Common.Global.NPCs
     {
         public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
         {
-            if (!SubworldSystem.AnyActive<Macrocosm>())
-                return;
-
-            bool peaceful = MacrocosmSubworld.Current.PeacefulWorld;
-            for (int type = 0; type < NPCLoader.NPCCount; type++)
+            if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                if (peaceful)
-                    pool.Remove(type);
-                else if (SubworldSystem.IsActive<Moon>() && !NPCSets.MoonNPC[type])
-                    pool.Remove(type);
-                //if (SubworldSystem.IsActive<Mars>() && !NPCSets.MarsNPCs[type])
-                //  pool.Remove(type);
+                bool peaceful = MacrocosmSubworld.Current.PeacefulWorld;
+                for (int type = 0; type < NPCLoader.NPCCount; type++)
+                {
+                    if (peaceful)
+                        pool.Remove(type);
+                    else if (SubworldSystem.IsActive<Moon>() && !NPCSets.MoonNPC[type])
+                        pool.Remove(type);
+                }
+            }
+            else
+            {
+                for (int type = 0; type < NPCLoader.NPCCount; type++)
+                {
+                    if (NPCSets.MoonNPC[type])
+                        pool.Remove(type);
+                }
+                return;
             }
         }
+
 
         public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
         {

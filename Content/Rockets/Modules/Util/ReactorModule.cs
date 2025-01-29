@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Modules
+namespace Macrocosm.Content.Rockets.Modules.Util
 {
     public class ReactorModule : RocketModule
     {

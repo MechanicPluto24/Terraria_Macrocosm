@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Customization;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Consumables.Unlockables;
+using Macrocosm.Content.Rockets.Modules;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -39,9 +40,8 @@ namespace Macrocosm.Content.Rockets
 
             foreach (var module in Modules)
             {
-                module.Decal = Modules.FirstOrDefault((m) => m.Name == module.Name).Decal;
-                module.Pattern = Modules.FirstOrDefault((m) => m.Name == module.Name).Pattern;
-
+                module.Decal = source.Modules.FirstOrDefault((m) => m.Name == module.Name).Decal;
+                module.Pattern = source.Modules.FirstOrDefault((m) => m.Name == module.Name).Pattern.Clone();
                 foreach (var data in module.Pattern.ColorData.Values)
                 {
                     if (data.Color.A > 0)
@@ -113,7 +113,7 @@ namespace Macrocosm.Content.Rockets
                 foreach (var moduleJObject in modulesArray.Children<JObject>())
                 {
                     string moduleName = moduleJObject["moduleName"].Value<string>();
-                    var module = ModuleTemplates.FirstOrDefault((m) => m.Name == moduleName);
+                    var module = Modules.FirstOrDefault((m) => m.Name == moduleName);
                     if (module != null)
                     {
                         try

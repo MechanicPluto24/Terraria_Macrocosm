@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Rockets
 
         public void DrawDebugModuleHitbox()
         {
-            foreach (RocketModule module in ModuleTemplates)
+            foreach (RocketModule module in Modules)
             {
                 Rectangle rect = new((int)(module.Bounds.X - Main.screenPosition.X), (int)(module.Bounds.Y - Main.screenPosition.Y), module.Bounds.Width, module.Bounds.Height);
                 Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green * 0.5f);

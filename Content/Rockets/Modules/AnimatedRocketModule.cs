@@ -14,10 +14,6 @@
         private bool isAnimating = false;
         private bool isAnimatingForward = true;
 
-        protected AnimatedRocketModule() : base()
-        {
-        }
-
         public void UpdateAnimation()
         {
             if (!isAnimating)

@@ -2806,3 +2806,13 @@ ConveyorOutlet: {
 	DisplayName: Conveyor Outlet
 	Tooltip: ""
 }
+
+EngineComponentMk1: {
+	DisplayName: Engine Component Mk1
+	Tooltip: ""
+}
+
+EngineComponentMk2: {
+	DisplayName: Engine Component Mk2
+	Tooltip: ""
+}
