@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class IlmeniteAltProj : ModProjectile
+    public class IlmeniteAltProjectile : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
         public float Strength

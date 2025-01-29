@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Rockets
             packet.Write((short)NetHelper.GetServerIndex()); 
             packet.Write((byte)WhoAmI);
 
-            if (this.NetWriteFields(packet))
+            if (this.NetWrite(packet))
             {
                 packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
                 packet.Send(toClient, ignoreClient);

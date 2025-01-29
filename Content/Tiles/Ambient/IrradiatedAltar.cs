@@ -46,15 +46,15 @@ namespace Macrocosm.Content.Tiles.Ambient
 
         public override void NearbyEffects(int i, int j, bool closer)
         {
-            if (Main.gamePaused)
+            if (Main.gamePaused || closer)
                 return;
 
-            if (Main.tile[i, j].TileFrameX == 0 && Main.tile[i, j].TileFrameY == 0)
+            if (TileObjectData.IsTopLeft(i, j))
             {
                 Player player = Main.LocalPlayer;
-                float distance = Vector2.Distance(player.Center / 16, new Vector2(i, j));
-                if (distance <= 20)
-                    player.GetModPlayer<IrradiationPlayer>().IrradiationLevel += 0.012f * (1f - distance / 20f);
+                float distance = Vector2.DistanceSquared(player.Center / 16, new Vector2(i, j));
+                if (distance <= 20 * 20)
+                    player.GetModPlayer<IrradiationPlayer>().IrradiationLevel += 0.024f * (1f - distance / (20f * 20f));
             }
         }
     }

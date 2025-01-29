@@ -55,10 +55,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.noTileCollide = false;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? .1f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? 0.1f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {

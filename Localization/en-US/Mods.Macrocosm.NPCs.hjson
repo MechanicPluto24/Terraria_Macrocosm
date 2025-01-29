@@ -226,3 +226,18 @@ TaserTurret: {
 	DisplayName: Taser Turret
 	BestiaryFlavorText: Mods.Macrocosm.NPCs.TaserTurret.BestiaryFlavorText
 }
+
+TarSlime: {
+	BestiaryFlavorText: A slime whose outer layer is covered in tar. To compensate for its sticky body, the Tar Slime has evolved powerful jumps and is able to leap further than the average slime.
+	DisplayName: Tar Slime
+}
+
+TarBlob: {
+	BestiaryFlavorText: The pint-sized offspring of the Tar Slime. Get swarmed by these nuisances and you’ll be in for a sticky situation!
+	DisplayName: Tar Blob
+}
+
+SmogWisp: {
+	DisplayName: Smog Wisp
+	BestiaryFlavorText: Ethereal predators that drift silently through densely polluted areas, blending seamlessly with the toxic haze until they close in on their prey. They’re thought to exclusively target humans and small critters.
+}

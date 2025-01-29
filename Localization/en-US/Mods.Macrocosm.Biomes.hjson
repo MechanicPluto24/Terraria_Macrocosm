@@ -37,3 +37,8 @@ MoonUndergroundBiome: {
 	DisplayName: Moon Underground
 	TownNPCDialogueName: the Moon Underground
 }
+
+PollutionBiome: {
+	DisplayName: Pollution Biome
+	TownNPCDialogueName: the Pollution Biome
+}

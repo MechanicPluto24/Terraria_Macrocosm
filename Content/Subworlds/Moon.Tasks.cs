@@ -47,6 +47,8 @@ namespace Macrocosm.Content.Subworlds
         public int RegolithLayerHeight => 200;
         public int CynthalithlithLayerHeight => 65;
 
+        private StructureMap gen_StructureMap = new();
+
         private float gen_SurfaceWidthFrequency;
         private float gen_SurfaceHeightFrequency;
         private float gen_TerrainPercentage;
@@ -55,8 +57,8 @@ namespace Macrocosm.Content.Subworlds
         private bool gen_IsIrradiationRight;
         private float gen_StartYOffset;
 
-        private int[] gen_shrinePositionIndexes;
-        private int gen_nextShrine = 0;
+        private int[] gen_ShrinePositionIndexes;
+        private int gen_NextShrine = 0;
 
         private int GroundY => (int)(Main.maxTilesY * (1f - gen_TerrainPercentage));
         private float SurfaceEquation(float x) => MathF.Sin(2f * x) + MathF.Sin(MathHelper.Pi * x) + 0.4f * MathF.Cos(10f * x);
@@ -104,26 +106,28 @@ namespace Macrocosm.Content.Subworlds
 
         private Point GetShrineCoordinates(Structure shrine)
         {
-            int index = gen_shrinePositionIndexes[gen_nextShrine++];
+            int index = gen_ShrinePositionIndexes[gen_NextShrine];
 
-            int minX = (int)((Main.maxTilesX) * (0.115f * index + 0.03f));
-            int maxX = (int)((Main.maxTilesX) * (0.145f * index + 0.03f));
+            int minX = (int)((Main.maxTilesX) * (0.115f * (index + 0.5f)));
+            int maxX = (int)((Main.maxTilesX) * (0.145f * (index + 0.5f)));
             int minY = (int)((Main.maxTilesY) * 0.55f);
             int maxY = (int)((Main.maxTilesY) * 0.65f);
 
             int x = WorldGen.genRand.Next(minX, maxX);
-            x = Math.Clamp(x, 20, Main.maxTilesX - shrine.Size.X - 20);
+            x = Math.Clamp(x, 60, Main.maxTilesX - shrine.Size.X - 60);
 
             int y = WorldGen.genRand.Next(minY, maxY);
-            y = Math.Clamp(y, 20, Main.maxTilesY - shrine.Size.Y - 20);
+            y = Math.Clamp(y, 60, Main.maxTilesY - shrine.Size.Y - 60);
 
-            return new(x, y);
+            return new Point(x, y);
         }
 
         [Task]
         private void PrepareTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.TerrainTask");
+
+            gen_StructureMap = new();
 
             gen_SurfaceWidthFrequency = 0.003f;
             gen_SurfaceHeightFrequency = 20f;
@@ -132,9 +136,9 @@ namespace Macrocosm.Content.Subworlds
 
             gen_IsIrradiationRight = WorldGen.genRand.NextBool();
 
-            gen_nextShrine = 0;
-            gen_shrinePositionIndexes = [0, 1, 2, 3, 4, 5, 6, 7];
-            gen_shrinePositionIndexes = gen_shrinePositionIndexes.OrderBy(x => WorldGen.genRand.Next()).ToArray(); //Shuffle
+            gen_NextShrine = 0;
+            gen_ShrinePositionIndexes = [0, 1, 2, 3, 4, 5, 6, 7];
+            gen_ShrinePositionIndexes = gen_ShrinePositionIndexes.OrderBy(x => WorldGen.genRand.Next()).ToArray(); //Shuffle
         }
 
         [Task(weight: 15.0)]
@@ -718,7 +722,12 @@ namespace Macrocosm.Content.Subworlds
 
             }
         }
-
+        [Task(weight: 12.0)]
+        private void SmoothTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothTask");
+            SmoothWorld(progress);
+        }
         [Task(weight: 0.1)]
         private void PlaceLuminiteShrine(GenerationProgress progress)
         {
@@ -732,19 +741,19 @@ namespace Macrocosm.Content.Subworlds
 
             while (!validPositionFound && attempts < maxAttempts)
             {
-                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3.5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 3.5 + 0.03f)));
+                x = WorldGen.genRand.Next((int)(Main.maxTilesX * (0.115f * 3.5 + 0.03f)), (int)(Main.maxTilesX * (0.145f * 4.5 + 0.03f)));
                 y = WorldGen.genRand.Next((int)(Main.maxTilesY * 0.45f), (int)(Main.maxTilesY * 0.55f));
 
+                WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
+                WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
+
                 bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-                Point16 origin = new(solidGround.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.8f));
+                Point16 origin = new(solidGround.X - shrine.Size.X / 2, y + 6);
 
-                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidDown && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
-                if (validPositionFound && shrine.Place(origin, StructureMap))
-                {
-                    WorldUtils.Gen(new Point(origin.X + shrine.Size.X / 2, origin.Y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
-                    WorldUtils.Gen(new Point(origin.X + shrine.Size.X / 2, origin.Y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
-                }
+                shrine.Place(origin, gen_StructureMap, padding: 50);
+
 
                 attempts++;
             }
@@ -773,17 +782,17 @@ namespace Macrocosm.Content.Subworlds
                 bool solidDown = WorldUtils.Find(coords, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
                 Point16 origin = new(solidGround.X - shrine.Size.X / 2, solidGround.Y);
 
-                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidDown && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
                 if (validPositionFound)
-                    shrine.Place(origin, StructureMap);
+                    shrine.Place(origin, gen_StructureMap, padding: 50);
 
                 attempts++;
             }
 
             if (!validPositionFound)
             {
-                    
+
             }
         }
 
@@ -796,6 +805,7 @@ namespace Macrocosm.Content.Subworlds
             bool validPositionFound = false;
             int maxAttempts = 1000;
             int attempts = 0;
+            gen_NextShrine++;
 
             while (!validPositionFound && attempts < maxAttempts)
             {
@@ -803,10 +813,10 @@ namespace Macrocosm.Content.Subworlds
                 bool solidUp = WorldUtils.Find(coords, Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
                 Point16 origin = new(solidGround.X + shrine.Size.X / 2 - 1, solidGround.Y - 10);
 
-                validPositionFound = solidUp && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidUp && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
                 if (validPositionFound)
-                    shrine.Place(origin, StructureMap);
+                    shrine.Place(origin, gen_StructureMap, padding: 50);
 
                 attempts++;
             }
@@ -826,6 +836,7 @@ namespace Macrocosm.Content.Subworlds
             bool validPositionFound = false;
             int maxAttempts = 1000;
             int attempts = 0;
+            gen_NextShrine++;
 
             while (!validPositionFound && attempts < maxAttempts)
             {
@@ -833,10 +844,10 @@ namespace Macrocosm.Content.Subworlds
                 bool solidUp = WorldUtils.Find(coords, Searches.Chain(new Searches.Up(150), new Conditions.IsSolid()), out Point solidGround);
                 Point16 origin = new(coords.X + shrine.Size.X / 4, solidGround.Y - 10);
 
-                validPositionFound = solidUp && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidUp && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
                 if (validPositionFound)
-                    shrine.Place(origin, StructureMap);
+                    shrine.Place(origin, gen_StructureMap, padding: 50);
 
                 attempts++;
             }
@@ -856,6 +867,7 @@ namespace Macrocosm.Content.Subworlds
             bool validPositionFound = false;
             int maxAttempts = 1000;
             int attempts = 0;
+            gen_NextShrine++;
 
             while (!validPositionFound && attempts < maxAttempts)
             {
@@ -863,10 +875,10 @@ namespace Macrocosm.Content.Subworlds
                 bool solidDown = WorldUtils.Find(coords, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
                 Point16 origin = new(coords.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 1.1f));
 
-                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidDown && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
                 if (validPositionFound)
-                    shrine.Place(origin, StructureMap);
+                    shrine.Place(origin, gen_StructureMap, padding: 50);
 
                 attempts++;
             }
@@ -886,6 +898,7 @@ namespace Macrocosm.Content.Subworlds
             bool validPositionFound = false;
             int maxAttempts = 1000;
             int attempts = 0;
+            gen_NextShrine++;
 
             while (!validPositionFound && attempts < maxAttempts)
             {
@@ -893,10 +906,10 @@ namespace Macrocosm.Content.Subworlds
                 bool solidDown = WorldUtils.Find(coords, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
                 Point16 origin = new(coords.X - shrine.Size.X / 2, solidGround.Y - shrine.Size.Y - (int)(shrine.Size.Y * 0.2f));
 
-                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidDown && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
                 if (validPositionFound)
-                    shrine.Place(origin, StructureMap);
+                    shrine.Place(origin, gen_StructureMap, padding: 50);
 
                 attempts++;
             }
@@ -916,6 +929,7 @@ namespace Macrocosm.Content.Subworlds
             bool validPositionFound = false;
             int maxAttempts = 1000;
             int attempts = 0;
+            gen_NextShrine++;
 
             while (!validPositionFound && attempts < maxAttempts)
             {
@@ -924,10 +938,10 @@ namespace Macrocosm.Content.Subworlds
                 bool solidDown = WorldUtils.Find(coords, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
                 Point16 origin = new(coords.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y));
 
-                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidDown && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
                 if (validPositionFound)
-                    shrine.Place(origin, StructureMap);
+                    shrine.Place(origin, gen_StructureMap, padding: 50);
 
                 attempts++;
             }
@@ -947,6 +961,7 @@ namespace Macrocosm.Content.Subworlds
             bool validPositionFound = false;
             int maxAttempts = 1000;
             int attempts = 0;
+            gen_NextShrine++;
 
             while (!validPositionFound && attempts < maxAttempts)
             {
@@ -954,10 +969,10 @@ namespace Macrocosm.Content.Subworlds
                 bool solidDown = WorldUtils.Find(coords, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
                 Point16 origin = new(coords.X - shrine.Size.X / 2, solidGround.Y - (int)(shrine.Size.Y * 0.9f));
 
-                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidDown && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
                 if (validPositionFound)
-                    shrine.Place(origin, StructureMap);
+                    shrine.Place(origin, gen_StructureMap, padding: 50);
 
                 attempts++;
             }
@@ -977,6 +992,7 @@ namespace Macrocosm.Content.Subworlds
             bool validPositionFound = false;
             int maxAttempts = 1000;
             int attempts = 0;
+            gen_NextShrine++;
 
             while (!validPositionFound && attempts < maxAttempts)
             {
@@ -984,10 +1000,10 @@ namespace Macrocosm.Content.Subworlds
                 bool solidDown = WorldUtils.Find(coords, Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
                 Point16 origin = new(coords.X - shrine.Size.X / 2, solidGround.Y - shrine.Size.Y);
 
-                validPositionFound = solidDown && StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y));
+                validPositionFound = solidDown && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
                 if (validPositionFound)
-                    shrine.Place(origin, StructureMap);
+                    shrine.Place(origin, gen_StructureMap, padding: 50);
 
                 attempts++;
             }
@@ -1032,11 +1048,11 @@ namespace Macrocosm.Content.Subworlds
                 bool solidDown = WorldUtils.Find(new Point(tileX, tileY), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
                 if (solidDown)
                 {
-                    Point16 origin = new(tileX - outpost.Size.X / 2, solidGround.Y - outpost.Size.Y);
+                    Point16 origin = new((tileX - outpost.Size.X / 2), (solidGround.Y - outpost.Size.Y));
 
-                    if (StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, outpost.Size.X, outpost.Size.Y)))
+                    if (gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, outpost.Size.X, outpost.Size.Y), padding: 50))
                     {
-                        if (outpost.Place(origin, StructureMap))
+                        if (outpost.Place(origin, gen_StructureMap, padding: 50))
                         {
                             placedOutposts++;
                             progress.Set((double)placedOutposts / count);
@@ -1046,20 +1062,12 @@ namespace Macrocosm.Content.Subworlds
             }
         }
 
-
-        [Task(weight: 12.0)]
-        private void SmoothTask(GenerationProgress progress)
-        {
-            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothTask");
-            SmoothWorld(progress);
-        }
-
         // [Task]
         private void CheeseHouse(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
             Structure cheeseHouse = new CheeseHouse();
-            cheeseHouse.Place(new Point16(420, 1000), StructureMap);
+            cheeseHouse.Place(new Point16(420, 1000), gen_StructureMap);
         }
 
         [Task(weight: 20.0)]
@@ -1290,8 +1298,6 @@ namespace Macrocosm.Content.Subworlds
                         break;
                 }
 
-
-
                 random = WorldGen.genRand.Next(1, 5);
                 switch (random)
                 {
@@ -1387,8 +1393,6 @@ namespace Macrocosm.Content.Subworlds
                     chest.item[slot++].stack = WorldGen.genRand.Next(10, 15);
                 }
             }
-
-
 
             if (WorldGen.genRand.NextBool())
             {
@@ -1579,7 +1583,7 @@ namespace Macrocosm.Content.Subworlds
         {
             int slot = 0;
             int random;
-            random = WorldGen.genRand.Next(0, 5); 
+            random = WorldGen.genRand.Next(0, 5);
             switch (random)
             {
                 case 0:

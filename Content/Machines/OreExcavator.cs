@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
@@ -33,6 +35,8 @@ namespace Macrocosm.Content.Machines
             Main.tileNoAttach[Type] = true;
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
+
+            SceneData.Hooks[Type] = NearbyEffects;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
             TileObjectData.newTile.Width = Width;
@@ -138,6 +142,21 @@ namespace Macrocosm.Content.Machines
                     CursorIcon.Current = CursorIcon.Drill;
                 }
             }
+        }
+
+        public override void NearbyEffects(int i, int j, bool closer)
+        {
+            if (closer)
+                return;
+
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                TileCounts.Instance.PollutionLevel += 5f;
+        }
+
+        public void NearbyEffects(int i, int j, SceneData sceneData)
+        {
+            if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
+                sceneData.Macrocosm.PollutionLevel += 5f;
         }
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)

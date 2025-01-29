@@ -63,10 +63,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             ToggleTile(i, j, true);
         }
 
-        public override void NearbyEffects(int i, int j, bool closer)
-        {
-        }
-
         public override bool RightClick(int x, int y)
         {
             if (Main.tile[x, y].TileFrameY >= 18)

@@ -71,10 +71,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             });
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && Main.bloodMoon ? .1f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.bloodMoon ? 0.1f : 0f;
 
         public override void AI()
         {

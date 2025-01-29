@@ -98,9 +98,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ?(RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f: .025f) : 0f;
-        }
+            => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.025f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {

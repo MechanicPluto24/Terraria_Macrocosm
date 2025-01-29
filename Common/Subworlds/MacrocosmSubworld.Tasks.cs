@@ -19,60 +19,45 @@ namespace Macrocosm.Common.Subworlds
             }
         }
 
-        /// <summary> The structure map of this subworld. Does not save, use only in <see cref="TaskAttribute"> Task</see>s </summary>
-        public StructureMap StructureMap { get; private set; } = new();
-
         /// <summary> The subworld generation tasks. To create a task, use the <see cref="TaskAttribute"/> </summary>
         public sealed override List<GenPass> Tasks
         {
             get
             {
                 List<GenPass> tasks = new();
-                foreach (MethodInfo methodInfo in GetType().GetRuntimeMethods())
+                foreach (MethodInfo task in GetType().GetRuntimeMethods())
                 {
-                    TaskAttribute taskAttribute = methodInfo.GetCustomAttribute<TaskAttribute>();
+                    TaskAttribute taskAttribute = task.GetCustomAttribute<TaskAttribute>();
                     if (taskAttribute is null)
                     {
                         continue;
                     }
 
                     tasks.Add(new PassLegacy(
-                        methodInfo.Name,
+                        task.Name,
                         (progress, configuration) =>
                         {
-                            ParameterInfo[] parameterInfos = methodInfo.GetParameters();
-                            switch (parameterInfos.Length)
+                            ParameterInfo[] parameters = task.GetParameters();
+                            switch (parameters.Length)
                             {
                                 case 0:
-                                    methodInfo.Invoke(this, null);
+                                    task.Invoke(this, null);
                                     break;
                                 case 1:
-                                    if (parameterInfos[0].ParameterType == progress?.GetType())
-                                    {
-                                        methodInfo.Invoke(this, new object[] { progress });
-                                    }
-                                    else if (parameterInfos[0].ParameterType == configuration?.GetType())
-                                    {
-                                        methodInfo.Invoke(this, new object[] { configuration });
-                                    }
+                                    if (parameters[0].ParameterType == progress?.GetType())
+                                        task.Invoke(this, [progress]);
+                                    else if (parameters[0].ParameterType == configuration?.GetType())
+                                        task.Invoke(this, [configuration]);
                                     else
-                                    {
                                         Macrocosm.Instance.Logger.Error("TaskAttribute method mismatched parameters.");
-                                    }
                                     break;
                                 case 2:
-                                    if (parameterInfos[0].ParameterType == progress?.GetType() && parameterInfos[1].ParameterType == configuration?.GetType())
-                                    {
-                                        methodInfo.Invoke(this, new object[] { progress, configuration });
-                                    }
-                                    else if (parameterInfos[0].ParameterType == configuration?.GetType() && parameterInfos[1].ParameterType == progress?.GetType())
-                                    {
-                                        methodInfo.Invoke(this, new object[] { configuration, progress });
-                                    }
+                                    if (parameters[0].ParameterType == progress?.GetType() && parameters[1].ParameterType == configuration?.GetType())
+                                        task.Invoke(this, [progress, configuration]);
+                                    else if (parameters[0].ParameterType == configuration?.GetType() && parameters[1].ParameterType == progress?.GetType())
+                                        task.Invoke(this, [configuration, progress]);
                                     else
-                                    {
                                         Macrocosm.Instance.Logger.Error("TaskAttribute method mismatched parameters.");
-                                    }
                                     break;
                                 default:
                                     Macrocosm.Instance.Logger.Error("TaskAttribute method too many parameters.");
@@ -83,8 +68,6 @@ namespace Macrocosm.Common.Subworlds
                      ));
                 }
 
-                // Reset structure map 
-                StructureMap = new();
                 return tasks;
             }
         }

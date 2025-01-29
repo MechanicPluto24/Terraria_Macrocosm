@@ -8,6 +8,10 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public class ReactorModule : RocketModule
     {
+        public override int Slot => 2;
+        public override int Tier => 2;
+        public override ConfigurationType Configuration => ConfigurationType.Any;
+
         private static Asset<Texture2D> glowmask;
         public override int DrawPriority => 2;
 

@@ -1,11 +1,13 @@
 using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SubworldLibrary;
 using System.IO;
 using System.Linq;
 using Terraria;
@@ -25,49 +27,13 @@ namespace Macrocosm.Common.Global.NPCs
         /// <summary> If this is only set on a local client, the logic accessing this needs to be synced </summary>
         public bool TargetedByHomingProjectile { get; set; }
 
-        public override void SetDefaults(NPC npc)
+        public override void AI(NPC npc)
         {
-            if (npc.ModNPC is ModNPC modNPC)
+            if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                if (NPCSets.MoonNPC[npc.type])
-                    modNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MoonBiome>().Type).ToArray();
-                //else if (NPCSets.MarsEnemies[npc.type])
-                //    modNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<MarsBiome>().Type).ToArray();
-                else
-                    modNPC.SpawnModBiomes = npc.ModNPC.SpawnModBiomes.Prepend(ModContent.GetInstance<EarthBiome>().Type).ToArray();
+                npc.GravityMultiplier *= MacrocosmSubworld.GetGravityMultiplier();
+                npc.GravityIgnoresSpace = true;
             }
-        }
-
-        public override void SetBestiary(NPC npc, BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-        {
-            if (npc.ModNPC is null)
-            {
-                EarthBiome earthBiome = ModContent.GetInstance<EarthBiome>();
-                bestiaryEntry.Info.Add(new ModBiomeBestiaryInfoElement(Mod, earthBiome.DisplayName.Key, earthBiome.BestiaryIcon, null, null));
-            }
-        }
-
-        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
-        {
-            // Make all DropsMoonstone NPCs drop Moonstone while on the Moon
-            if (NPCSets.DropsMoonstone[npc.type])
-                npcLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<Moonstone>(), 10, 1, 5, new SubworldDropCondition<Moon>(canShowInBestiary: true)));
-        }
-
-        public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter)
-        {
-            if (npc.ModNPC is null)
-                return;
-
-            npc.ModNPC.NetWriteFields(binaryWriter, bitWriter);
-        }
-
-        public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader)
-        {
-            if (npc.ModNPC is null)
-                return;
-
-            npc.ModNPC.NetReadFields(binaryReader, bitReader);
         }
 
         public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)

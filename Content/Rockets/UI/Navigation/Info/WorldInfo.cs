@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
         private static void LoadData()
         {
             Add("Sun",
-                new GravityInfoElement(28f),
+                new GravityInfoElement(28.02f),
                 new RadiusInfoElement(695700f),
                 new ThreatLevelInfoElement(ThreatLevel.Apollyon, Color.Red)
             );
@@ -67,16 +67,16 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
             );
 
             Add("Mercury",
-                new GravityInfoElement(0.38f),
+                new GravityInfoElement(0.377f),
                 new RadiusInfoElement(2439.7f),
                 new DayPeriodInfoElement(58f),
                 new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
             );
 
             Add("Venus",
-                new GravityInfoElement(0.9f),
+                new GravityInfoElement(0.905f),
                 new RadiusInfoElement(6051.8f),
-                new DayPeriodInfoElement(116f),
+                new DayPeriodInfoElement(-243f, "Retrograde"),
                 new ThreatLevelInfoElement(ThreatLevel.Cataclysmic, Color.Orange)
             );
 
@@ -88,7 +88,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
             );
 
             Add("Moon",
-                new GravityInfoElement(0.125f),
+                new GravityInfoElement(0.165f),
                 new RadiusInfoElement(1737.4f),
                 new DayPeriodInfoElement(8f, "TidallyLocked"),
                 new ThreatLevelInfoElement(ThreatLevel.Arduous, Color.White),
@@ -97,89 +97,110 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
             );
 
             Add("Mars",
-                new GravityInfoElement(0.38f),
+                new GravityInfoElement(0.379f),
                 new RadiusInfoElement(3389.5f),
-                new DayPeriodInfoElement(24.62f),
+                new DayPeriodInfoElement(1.026f),
                 new ThreatLevelInfoElement(ThreatLevel.Challenging, Color.Yellow)
             );
 
             Add("Phobos",
                 new GravityInfoElement("Unstable"),
+                new RadiusInfoElement(11.2f),
                 new ThreatLevelInfoElement(ThreatLevel.Challenging, Color.Yellow)
             );
 
             Add("Deimos",
+                new GravityInfoElement("Negligible"),
+                new RadiusInfoElement(6.3f),
                 new ThreatLevelInfoElement(ThreatLevel.Challenging, Color.Yellow)
             );
 
             Add("AsteroidBelt",
+                new GravityInfoElement("Negligible"),
                 new ThreatLevelInfoElement(ThreatLevel.Dangerous, Color.Yellow)
             );
 
             Add("Ceres",
+                new GravityInfoElement(0.029f),
+                new RadiusInfoElement(469.7f),
+                new DayPeriodInfoElement(0.37f),
                 new ThreatLevelInfoElement(ThreatLevel.Dangerous, Color.Yellow)
             );
 
             Add("Jupiter",
-                new GravityInfoElement(2.52f),
+                new GravityInfoElement(2.528f),
                 new RadiusInfoElement(69911f),
-                new DayPeriodInfoElement(0.3f),
+                new DayPeriodInfoElement(0.41f),
                 new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
             );
 
             Add("Io",
+                new GravityInfoElement(0.183f),
+                new RadiusInfoElement(1821.6f),
                 new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
             );
 
             Add("Europa",
+                new GravityInfoElement(0.134f),
+                new RadiusInfoElement(1560.8f),
                 new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
             );
 
             Add("Saturn",
                 new GravityInfoElement(1.065f),
                 new RadiusInfoElement(58232f),
-                new DayPeriodInfoElement(0.43f),
+                new DayPeriodInfoElement(0.42f),
                 new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
             );
 
             Add("Titan",
+                new GravityInfoElement(0.138f),
+                new RadiusInfoElement(2574f),
                 new ThreatLevelInfoElement(ThreatLevel.Treacherous, Color.Yellow)
             );
 
             Add("Ouranos",
-                new GravityInfoElement(0.89f),
+                new GravityInfoElement(0.886f),
                 new RadiusInfoElement(25362f),
-                new DayPeriodInfoElement(0.718f),
+                new DayPeriodInfoElement(-0.72f, "Retrograde"),
                 new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
             );
 
             Add("Miranda",
+                new GravityInfoElement(0.008f),
+                new RadiusInfoElement(235.8f),
                 new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
             );
 
             Add("Neptune",
-                new GravityInfoElement(1.14f),
+                new GravityInfoElement(1.137f),
                 new RadiusInfoElement(24622f),
                 new DayPeriodInfoElement(0.671f),
                 new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
             );
 
             Add("Triton",
+                new GravityInfoElement(0.079f),
+                new RadiusInfoElement(1353.4f),
                 new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
             );
 
             Add("Pluto",
-                new GravityInfoElement(0.064f),
+                new GravityInfoElement(0.063f),
                 new RadiusInfoElement(1188.3f),
-                new DayPeriodInfoElement(153.3f),
+                new DayPeriodInfoElement(-6.38f, "Retrograde"),
                 new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
             );
 
             Add("Charon",
+                new GravityInfoElement(0.029f),
+                new RadiusInfoElement(606f),
                 new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
             );
 
             Add("Eris",
+                new GravityInfoElement(0.084f),
+                new RadiusInfoElement(1163f),
                 new ThreatLevelInfoElement(ThreatLevel.Cataclysmic, Color.Orange)
             );
 

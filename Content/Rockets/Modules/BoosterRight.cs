@@ -4,6 +4,10 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public class BoosterRight : Booster
     {
+        public override int Slot => 5;
+        public override int Tier => 2;
+        public override ConfigurationType Configuration => ConfigurationType.Any;
+
         public override int Width => 124;
         public override int Height => 314;
 

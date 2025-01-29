@@ -24,6 +24,21 @@ namespace Macrocosm.Common.Utils
             projectile.netUpdate = true;
         }
 
+        public static Projectile FindClosestProjectileOfType(Vector2 Position, int Type)
+        {
+            Projectile bestProj = null;
+            float bestDistance = float.MaxValue;
+            foreach (Projectile projectile in Main.ActiveProjectiles)
+            {
+                if (projectile.type == Type && Vector2.Distance(projectile.Center, Position) < bestDistance)
+                {
+                    bestDistance = Vector2.Distance(projectile.Center, Position);
+                    bestProj = projectile;
+                }
+            }
+            return bestProj;
+        }
+
         /// <summary>
         /// Hostile projectiles deal:  
         /// <br> - 2x the <paramref name="damage"/> in Normal Mode </br>

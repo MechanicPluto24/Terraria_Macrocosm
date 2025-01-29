@@ -81,7 +81,7 @@ namespace Macrocosm.Common.Players
         public int[] ItemAltUseCooldown { get; private set; }
 
         /// <summary> Cooldown on held projectile attacks. </summary>
-        public int HeldProjectileCooldown = 0;
+        public int HeldProjectileCooldown { get; set; } = 0;
 
         #endregion
 
@@ -235,22 +235,6 @@ namespace Macrocosm.Common.Players
             else
                 Player.velocity.X *= 0.99f;
         }
-
-        #region Biome & Visual Effects
-        public override void PostUpdateMiscEffects()
-        {
-            Update_Graveyard();
-        }
-
-        private static void Update_Graveyard()
-        {
-            if (SubworldSystem.AnyActive<Macrocosm>())
-                Main.SceneMetrics.GraveyardTileCount = 0;
-            else
-                Main.SceneMetrics.GraveyardTileCount += TileCounts.Instance.GraveyardTileCount;
-        }
-
-        #endregion
 
         #region Netcode
         public override void CopyClientState(ModPlayer clientClone)

@@ -26,7 +26,7 @@ namespace Macrocosm.Common.Drawing.Particles
             packet.Write((ushort)WhoAmI);
             packet.Write((ushort)Type);
 
-            if (this.NetWriteFields(packet)) // Check if the writer was able to write all the fields.
+            if (this.NetWrite(packet)) // Check if the writer was able to write all the fields.
                 packet.Send(toClient, ignoreClient);
 
             packet.Dispose();

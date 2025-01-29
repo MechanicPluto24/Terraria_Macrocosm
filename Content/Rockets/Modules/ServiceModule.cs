@@ -9,6 +9,10 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public class ServiceModule : RocketModule
     {
+        public override int Slot => 1;
+        public override int Tier => 1;
+        public override ConfigurationType Configuration => ConfigurationType.Manned;
+
         public override int DrawPriority => 3;
 
         public override int Width => 80;

@@ -3,10 +3,12 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using StructureHelper.GUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -30,13 +32,13 @@ namespace Macrocosm.Common.Storage
         public static bool CustomInventoryActive => ActiveInventory is not null;
 
         private Item[] items;
-        private UIInventorySlot[] uiItemSlots;
+        private readonly UIInventorySlot[] uiItemSlots;
 
-        private bool[] reservedSlots;
-        private Func<Item, bool>[] reservedChecks;
-
-        private LocalizedText[] reservedTooltips;
-        private Asset<Texture2D>[] reservedTextures;
+        private readonly bool[] reservedSlots;
+        private readonly int[] reservedTypes;
+        private readonly Func<Item, bool>[] reservedChecks;
+        private readonly LocalizedText[] reservedTooltips;
+        private readonly Asset<Texture2D>[] reservedTextures;
 
         public Item this[int index]
         {
@@ -96,6 +98,7 @@ namespace Macrocosm.Common.Storage
             uiItemSlots = new UIInventorySlot[clampedSize];
 
             reservedSlots = new bool[clampedSize];
+            reservedTypes = new int[clampedSize];
             reservedChecks = new Func<Item, bool>[clampedSize];
             reservedTooltips = new LocalizedText[clampedSize];
             reservedTextures = new Asset<Texture2D>[clampedSize];
@@ -178,27 +181,47 @@ namespace Macrocosm.Common.Storage
                 return;
 
             reservedSlots[index] = true;
+            reservedTypes[index] = ItemID.None;
             reservedChecks[index] = checkReserved;
             reservedTooltips[index] = tooltip;
             reservedTextures[index] = texture;
         }
 
-        public void SetReserved(int index, int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
-            => SetReserved(index, (item) => item.type == itemType, reservedTooltip, reservedTexture);
+        public void SetReserved(int index, int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        {
+            if (index < 0 || index >= Size)
+                return;
+
+            reservedSlots[index] = true;
+            reservedTypes[index] = itemType;
+            reservedChecks[index] = (item) => item.type == itemType;
+            reservedTooltips[index] = tooltip;
+            reservedTextures[index] = texture;
+        }
 
         public void SetReserved(Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
         {
             for (int i = 0; i < Size; i++)
             {
                 reservedSlots[i] = true;
+                reservedTypes[i] = ItemID.None;
                 reservedChecks[i] = checkReserved;
                 reservedTooltips[i] = tooltip;
                 reservedTextures[i] = texture;
             }
         }
 
-        public void SetReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
-            => SetReserved((item) => item.type == itemType, reservedTooltip, reservedTexture);
+        public void SetReserved(int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                reservedSlots[i] = true;
+                reservedTypes[i] = itemType;
+                reservedChecks[i] = (item) => item.type == itemType;
+                reservedTooltips[i] = tooltip;
+                reservedTextures[i] = texture;
+            }
+        }
 
         public void ClearReserved(int index)
         {
@@ -206,6 +229,7 @@ namespace Macrocosm.Common.Storage
                 return;
 
             reservedSlots[index] = false;
+            reservedTypes[index] = ItemID.None;
             reservedChecks[index] = null;
             reservedTooltips[index] = null;
             reservedTextures[index] = null;
@@ -217,6 +241,18 @@ namespace Macrocosm.Common.Storage
                 return true;
 
             return reservedChecks[index]?.Invoke(item) ?? true;
+        }
+
+        public bool TryGetReservedItemClone(int index, out Item item)
+        {
+            if (index >= 0 && index < reservedTooltips.Length && reservedTypes[index] > 0)
+            {
+                item = new Item(reservedTypes[index]);
+                return true;
+            }
+
+            item = new(0);
+            return false;
         }
 
         public LocalizedText GetReservedTooltip(int index)
