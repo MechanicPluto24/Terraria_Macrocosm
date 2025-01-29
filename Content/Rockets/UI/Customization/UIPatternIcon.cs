@@ -16,8 +16,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 {
     public class UIPatternIcon : UIPanelIconButton, IFocusable
     {
-        public Pattern Pattern { get; set; }
-        private Asset<Texture2D> panel;
+        public Pattern Pattern { get; }
+        private readonly Asset<Texture2D> panel;
         public UIPatternIcon(Pattern pattern)
         : base
         (
@@ -27,7 +27,10 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
         )
         {
-            Pattern = pattern;
+            Pattern = PatternManager.Get(pattern.Name, "Icon");
+            foreach(var colorData in pattern.ColorData)
+                Pattern.ColorData[colorData.Key] = colorData.Value;
+
             panel = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad);
         }
 
@@ -48,7 +51,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             Effect effect = Pattern.PrepareEffect();
             SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[1];
-            Main.graphics.GraphicsDevice.Textures[1] = Pattern.Icon.Value;
+            Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture.Value;
             Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
 
             state.SaveState(spriteBatch);

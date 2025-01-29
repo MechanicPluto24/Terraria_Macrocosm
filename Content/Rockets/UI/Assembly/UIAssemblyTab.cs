@@ -20,7 +20,6 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using static Macrocosm.Content.Rockets.Modules.RocketModule;
 
 namespace Macrocosm.Content.Rockets.UI.Assembly
 {
@@ -114,9 +113,6 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             bool met = true;
             foreach (var module in Rocket.Modules)
             {
-                if (!module.Active)
-                    continue;
-
                 if (module.Recipe.Linked)
                     met &= assemblyElements[module.Recipe.LinkedResult.Name].Check(consume);
                 else
@@ -230,7 +226,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         private void SwitchConfiguration(int direction)
         {
             currentConfigurationIndex = 1 + (currentConfigurationIndex + direction) % 3;
-            ConfigurationType targetConfiguration = (ConfigurationType)currentConfigurationIndex;
+            RocketModule.ConfigurationType targetConfiguration = (RocketModule.ConfigurationType)currentConfigurationIndex;
 
             ApplyConfiguration(targetConfiguration);
 
@@ -240,22 +236,20 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         }
 
 
-        private void ApplyConfiguration(ConfigurationType targetConfiguration)
+        private void ApplyConfiguration(RocketModule.ConfigurationType targetConfiguration)
         {
             foreach (var module in Rocket.Modules)
             {
-                if (module.Configuration == ConfigurationType.Any || module.Configuration == targetConfiguration)
+                if (module.Configuration == RocketModule.ConfigurationType.Any || module.Configuration == targetConfiguration)
                     continue;
 
-                RocketModule replacementModule = Rocket.ModuleTemplates.FirstOrDefault(m =>
+                RocketModule replacementModule = RocketModule.Templates.FirstOrDefault(m =>
                     m.Slot == module.Slot &&
                     m.Tier == module.Tier &&
                     m.Configuration == targetConfiguration);
 
                 if (replacementModule != null)
-                {
-                    Rocket.Modules[module.Slot] = replacementModule;
-                }
+                    Rocket.Modules[module.Slot] = replacementModule.Clone();
             }
 
             Rocket.SyncCommonData();
@@ -505,8 +499,9 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             int slotCount = 0;
             int assemblyElementCount = 0;
-            foreach (var module in Rocket.ModuleTemplates)
+            for (int k = 0; k < RocketModule.Templates.Count; k++)
             {
+                RocketModule module = RocketModule.Templates[k].Clone();
                 if (!module.Recipe.Linked)
                 {
                     List<UIInventorySlot> slots = new();
@@ -534,26 +529,21 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                         slots.Add(slot);
                     }
 
-                    if (module.Active)
-                    {
-                        UIModuleAssemblyElement assemblyElement = new(module, slots);
-                        assemblyElements[module.Name] = assemblyElement;
+                    UIModuleAssemblyElement assemblyElement = new(module, slots);
+                    assemblyElements[module.Name] = assemblyElement;
 
-                        assemblyElement.Top = new(0, 0.185f + 0.175f * assemblyElementCount++);
-                        assemblyElement.Left = new(0, 0.08f);
+                    assemblyElement.Top = new(0, 0.185f + 0.175f * assemblyElementCount++);
+                    assemblyElement.Left = new(0, 0.08f);
 
-                        Append(assemblyElement);
-                        assemblyElement.Activate();
-                    }
+                    Append(assemblyElement);
+                    assemblyElement.Activate();
                 }
             }
 
-            foreach (var module in Rocket.Modules)
+            foreach (var module in RocketModule.Templates)
             {
                 if (module.Recipe.Linked)
-                {
                     assemblyElements[module.Recipe.LinkedResult.Name].LinkedModules.Add(module);
-                }
             }
 
             return assemblyElements;

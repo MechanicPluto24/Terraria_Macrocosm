@@ -86,6 +86,7 @@ namespace Macrocosm.Content.Tiles.Flags
             var topLeft = Utility.GetMultitileTopLeft(i, j);
             if (frame > 0 && WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, 3, 2))
             {
+                frame = 1 + (topLeft.X + frame) % 4;
                 bool direction = Main.tile[i, j].TileFrameX / (18 * 3) > 0;
                 frameYOffset = 18 * 5 * (direction ? frame : 5 - frame);
             }

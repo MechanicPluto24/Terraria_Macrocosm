@@ -3,6 +3,7 @@ using Macrocosm.Common.Graphics;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -18,13 +19,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         public Rocket Rocket { get; set; } = new();
         public Rocket RocketDummy { get; set; }
 
-        public string CurrentModuleName { get; private set; } = "CommandPod";
-
-        public int CurrentModuleIndex
-        {
-            get => Rocket.ModuleTemplateNames.IndexOf(CurrentModuleName);
-            private set => CurrentModuleName = Rocket.ModuleTemplateNames[value];
-        }
+        public string CurrentModuleName => Rocket.Modules[CurrentModuleIndex].Name;
+        public int CurrentModuleIndex { get; set; } = 0;
 
         private bool animationActive = false;
         public bool AnimationActive
@@ -59,7 +55,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             }
         }
 
-        public Action<string, int> OnModuleChange { get; set; } = (_, _) => { };
+        public Action<int> OnModuleChange { get; set; } = (_) => { };
         public Action OnZoomedIn { get; set; } = () => { };
         public Action OnZoomedOut { get; set; } = () => { };
 
@@ -119,16 +115,15 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         public void SetModule(string moduleName)
         {
-            var index = Rocket.Modules.ToList().FindIndex(m => m.Name == moduleName && m.Active);
+            var index = Rocket.Modules.ToList().FindIndex(m => m.Name == moduleName);
             if (index != -1)
             {
+                CurrentModuleIndex = index;
                 bool changed = CurrentModuleName != moduleName;
-
-                CurrentModuleName = moduleName;
                 AnimationActive = !ZoomedOut;
 
                 if (changed)
-                    OnModuleChange(CurrentModuleName, CurrentModuleIndex);
+                    OnModuleChange( CurrentModuleIndex);
             }
         }
 
@@ -140,7 +135,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             AnimationActive = !ZoomedOut;
 
             if (changed)
-                OnModuleChange(CurrentModuleName, CurrentModuleIndex);
+                OnModuleChange(CurrentModuleIndex);
         }
 
         public void NextModule()

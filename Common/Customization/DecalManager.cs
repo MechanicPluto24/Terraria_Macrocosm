@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Rockets;
+using Macrocosm.Content.Rockets.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,7 +116,7 @@ namespace Macrocosm.Common.Customization
 
         private static void LoadDecals()
         {
-            foreach (string context in Rocket.ModuleNames)
+            foreach (string context in RocketModule.Templates.Select(m => m.Name))
                 AddDecal("None", context, Macrocosm.EmptyTexPath, "Macrocosm/Assets/Decals/Icons/None", true);
 
             if (Main.dedServ)
@@ -143,7 +144,7 @@ namespace Macrocosm.Common.Customization
 
             // Log the decal list
             string logstring = "Loaded " + decals.Count.ToString() + " decal" + (decalPaths.Count == 1 ? "" : "s") + ":\n";
-            foreach (string context in Rocket.ModuleNames)
+            foreach (string context in RocketModule.Templates.Select(m => m.Name))
             {
                 logstring += $" - Context: {context}\n\t";
                 foreach (var kvp in decals)

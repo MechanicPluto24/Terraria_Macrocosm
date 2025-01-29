@@ -2,6 +2,7 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
+using Macrocosm.Content.Rockets.Modules.Boosters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -197,8 +198,7 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                if (module.Active)
-                    module.Draw(spriteBatch, GetModuleRelativePosition(module, position));
+                module.Draw(spriteBatch, GetModuleRelativePosition(module, position));
             }
         }
 
@@ -220,8 +220,7 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                if(module.Active)
-                    module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
+                 module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
@@ -229,8 +228,7 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                if (module.Active)
-                    module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
+                 module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
@@ -239,21 +237,17 @@ namespace Macrocosm.Content.Rockets
             foreach (RocketModule module in ModulesByDrawPriority.OrderBy(module => module.BlueprintHighlighted))
             {
                 Vector2 drawPosition = GetModuleRelativePosition(module, position);
-
-                if (module.Active)
+                if (module.IsBlueprint)
                 {
-                    if (module.IsBlueprint)
-                    {
-                        if (module is BoosterLeft)
-                            drawPosition.X -= 78;
+                    if (module is BoosterLeft)
+                        drawPosition.X -= 78;
 
-                        module.DrawBlueprint(spriteBatch, drawPosition);
-                    }
-                    else
-                    {
-                        module.PreDrawBeforeTiles(spriteBatch, drawPosition, inWorld: false);
-                        module.Draw(spriteBatch, drawPosition);
-                    }
+                    module.DrawBlueprint(spriteBatch, drawPosition);
+                }
+                else
+                {
+                    module.PreDrawBeforeTiles(spriteBatch, drawPosition, inWorld: false);
+                    module.Draw(spriteBatch, drawPosition);
                 }
             }
         }

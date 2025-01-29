@@ -3,7 +3,7 @@ using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Modules
+namespace Macrocosm.Content.Rockets.Modules.Top
 {
     public class CommandPod : RocketModule
     {

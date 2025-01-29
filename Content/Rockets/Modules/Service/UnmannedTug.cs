@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Modules
+namespace Macrocosm.Content.Rockets.Modules.Service
 {
     public class UnmannedTug : RocketModule
     {

@@ -9,18 +9,22 @@ using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Modules
+namespace Macrocosm.Content.Rockets.Modules.Boosters
 {
-    public abstract class Booster : AnimatedRocketModule
+    public abstract class BaseBooster : AnimatedRocketModule
     {
         public override int DrawPriority => 1;
         public override bool Interactible => false;
 
-        public abstract float ExhaustOffsetX { get; }
+        public abstract bool DrawExhaust { get; }
+        public virtual float ExhaustOffsetX { get; }
         protected abstract Vector2 LandingLegDrawOffset { get; }
 
         private SpriteBatchState state1, state2;
         private Asset<Texture2D> landingLegTexture;
+
+        protected abstract int Direction { get; }
+        protected virtual string LandingLegPath => TexturePath.Replace(Name, "LandingLeg" + (Direction > 0 ? "Right" : "Left"));
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
@@ -31,7 +35,7 @@ namespace Macrocosm.Content.Rockets.Modules
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state1);
 
-            landingLegTexture ??= ModContent.Request<Texture2D>(TexturePath + "_LandingLeg", AssetRequestMode.ImmediateLoad);
+            landingLegTexture ??= ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad);
             spriteBatch.Draw(landingLegTexture.Value, position + LandingLegDrawOffset, landingLegTexture.Frame(1, NumberOfFrames, frameY: CurrentFrame), Color.White);
 
             spriteBatch.End();
@@ -40,9 +44,12 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
+            if (!DrawExhaust)
+                return;
+
             state2.SaveState(spriteBatch, true);
 
-            if (rocket.ForcedFlightAppearance || (rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch))
+            if (rocket.ForcedFlightAppearance || rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state2);
@@ -53,7 +60,7 @@ namespace Macrocosm.Content.Rockets.Modules
                 if (rocket.State is Rocket.ActionState.Flight || rocket.ForcedFlightAppearance)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
 
-                if (rocket.State is  Rocket.ActionState.Landing)
+                if (rocket.State is Rocket.ActionState.Landing)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
 
                 if (rocket.State is Rocket.ActionState.Docking)
@@ -93,8 +100,8 @@ namespace Macrocosm.Content.Rockets.Modules
             strip.PrepareStrip(
                 positions,
                 rotations,
-                (float progress) => Color.Lerp(new Color(255, 217, 120, (byte)(127 * intensity / intensity)), new Color(255, 0, 0, 0), 0f),
-                (float progress) => MathHelper.Lerp(15, 45, progress)
+                (progress) => Color.Lerp(new Color(255, 217, 120, (byte)(127 * intensity / intensity)), new Color(255, 0, 0, 0), 0f),
+                (progress) => MathHelper.Lerp(15, 45, progress)
             );
 
             strip.DrawTrail();
