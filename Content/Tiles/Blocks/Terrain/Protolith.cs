@@ -31,6 +31,11 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             DustType = ModContent.DustType<ProtolithDust>();
         }
 
+        public override bool CanExplode(int i, int j)
+        {
+            return false;
+        }
+
         public override void ModifyFrameMerge(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
         {
             WorldGen.TileMergeAttempt(-2, ModContent.TileType<Regolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
