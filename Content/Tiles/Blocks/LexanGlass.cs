@@ -18,5 +18,10 @@ namespace Macrocosm.Content.Tiles.Blocks
 
             AddMapEntry(new Color(50, 50, 50), CreateMapEntryName());
         }
+
+        public override bool CanExplode(int i, int j)
+        {
+            return false;
+        }
     }
 }

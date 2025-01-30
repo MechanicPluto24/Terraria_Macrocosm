@@ -15,6 +15,14 @@ namespace Macrocosm.Common.Global.Tiles
             PickPowerHook.RegisterPickPowerModification(TileID.LunarOre, minPick: 210, mineResist: 5, onlyInMacrocosm: false);
         }
 
+        public override bool CanExplode(int i, int j, int type)
+        {
+            if(type==TileID.LunarOre)
+                return false;
+            else
+                return base.CanExplode(i,j,type);
+        }
+
         /*
         public override bool? IsTileSpelunkable(int i, int j, int type)
         {
