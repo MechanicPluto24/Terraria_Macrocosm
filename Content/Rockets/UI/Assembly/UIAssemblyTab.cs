@@ -249,7 +249,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     m.Configuration == targetConfiguration);
 
                 if (replacementModule != null)
-                    Rocket.Modules[module.Slot] = replacementModule.Clone();
+                    Rocket.Modules[(int)module.Slot] = replacementModule.Clone();
             }
 
             Rocket.SyncCommonData();

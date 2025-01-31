@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
+using Macrocosm.Content.Rockets.Modules;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -37,7 +38,7 @@ namespace Macrocosm.Content.Items.Dev
                 }
                 else
                 {
-                    var rocket = Rocket.Create(Main.MouseWorld, sync: true, action: (r) =>
+                    var rocket = Rocket.Create(Main.MouseWorld, RocketModule.DefaultLegacyModules.ToArray(), sync: true, action: (r) =>
                     {
                         r.Fuel = r.FuelCapacity;
                     }

@@ -11,8 +11,7 @@ namespace Macrocosm.Common.Graphics
     public class Mesh2D : IDisposable
     {
         private readonly GraphicsDevice graphicsDevice;
-        private readonly Effect effect;
-        private readonly EffectParameter transformParameter;
+        private readonly Asset<Effect> effect;
 
         private DynamicVertexBuffer vertexBuffer;
         private DynamicIndexBuffer indexBuffer;
@@ -23,9 +22,7 @@ namespace Macrocosm.Common.Graphics
         public Mesh2D(GraphicsDevice graphicsDevice)
         {
             this.graphicsDevice = graphicsDevice;
-
-            effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Mesh", AssetRequestMode.ImmediateLoad).Value;
-            transformParameter = effect.Parameters["TransformMatrix"];
+            effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Mesh", AssetRequestMode.ImmediateLoad);
         }
 
         public void Create(VertexPositionColorTexture[] vertices, short[] indices)
@@ -118,21 +115,28 @@ namespace Macrocosm.Common.Graphics
             indexBuffer.SetData(indices);
         }
 
-        public void Draw(Texture2D texture, Matrix transformMatrix, BlendState blendState = null, SamplerState samplerState = null)
+        public void Draw(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, BlendState blendState = null, SamplerState samplerState = null)
         {
+            Effect shader = effect.Value;
             var oldBlendState = graphicsDevice.BlendState;
             var oldSamplerState = graphicsDevice.SamplerStates[0];
 
             graphicsDevice.BlendState = blendState ?? BlendState.AlphaBlend;
             graphicsDevice.SamplerStates[0] = samplerState ?? SamplerState.LinearClamp;
+            graphicsDevice.RasterizerState = RasterizerState.CullNone;
 
             graphicsDevice.Textures[0] = texture;
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             graphicsDevice.Indices = indexBuffer;
 
-            transformParameter.SetValue(transformMatrix);
+            shader.Parameters["uTransformMatrix"].SetValue(transformMatrix);
 
-            foreach (var pass in effect.CurrentTechnique.Passes)
+            Vector4 sourceRectV4 = sourceRect is Rectangle source
+                ? new Vector4(source.X / (float)texture.Width, source.Y / (float)texture.Height, source.Width / (float)texture.Width, source.Height / (float)texture.Height)
+                : new Vector4(0, 0, 1, 1);
+            shader.Parameters["uSourceRect"].SetValue(sourceRectV4);
+
+            foreach (var pass in shader.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertices.Length, 0, indices.Length / 3);

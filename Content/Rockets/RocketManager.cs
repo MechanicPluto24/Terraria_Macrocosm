@@ -130,7 +130,7 @@ namespace Macrocosm.Content.Rockets
                 if (rocket.DrawLayer != layer)
                     continue;
 
-                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition, useRenderTarget: true);
+                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition, useRenderTarget: !DebugModeActive);
 
                 if (DebugModeActive)
                 {

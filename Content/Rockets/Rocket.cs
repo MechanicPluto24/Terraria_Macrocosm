@@ -210,8 +210,9 @@ namespace Macrocosm.Content.Rockets
             foreach (var template in moduleTemplates)
             {
                 Modules ??= new RocketModule[moduleTemplates.Length];
-                Modules[template.Slot] = template.Clone();
-                Modules[template.Slot].SetRocket(this);
+                int slot = (int)template.Slot;
+                Modules[slot] = template.Clone();
+                Modules[slot].SetRocket(this);
             }
 
             Inventory = new Inventory(DefaultTotalInventorySize, this);
@@ -642,8 +643,7 @@ namespace Macrocosm.Content.Rockets
 
 
         // Gets the position of a module with respect to the provided origin
-        private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin) => origin + module.Offset;
-
+        private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin) => origin.ToPoint().ToVector2() + module.GetOffset(Modules);
         private void UpdateModules()
         {
             foreach (RocketModule module in Modules)
@@ -782,7 +782,8 @@ namespace Macrocosm.Content.Rockets
         private void UpdateModuleAnimation()
         {
             bool animationActive = false;
-            foreach (var module in Modules)
+            List<AnimatedRocketModule> animatedModules = Modules.Where(m => m is AnimatedRocketModule).Cast<AnimatedRocketModule>().ToList();
+            foreach (var module in animatedModules)
             {
                 if (module is AnimatedRocketModule animatedModule)
                 {
@@ -791,7 +792,7 @@ namespace Macrocosm.Content.Rockets
                 }
             }
 
-            if (animationActive)
+            if (animationActive && animatedModules.Any(m => m.AnimationNeedsRenderReset))
                 ResetRenderTarget();
         }
 
@@ -975,37 +976,41 @@ namespace Macrocosm.Content.Rockets
 
             int smallSmokeCount = (int)(countPerTick * 2f);
 
-            // TODO: some kind of better logic lol
-            var boosterLeft = Modules.FirstOrDefault((m) => m is BoosterLeft) as BaseBooster;
-            var boosterRight = Modules.FirstOrDefault((m) => m is BoosterRight) as BaseBooster;
 
-            for (int i = 0; i < smallSmokeCount; i++)
+            if (Modules.FirstOrDefault((m) => m is BaseBooster && m.Slot == RocketModule.SlotType.LeftSide) is BaseBooster moduleLeft
+                && Modules.FirstOrDefault((m) => m is BaseBooster && m.Slot == RocketModule.SlotType.RightSide) is BaseBooster moduleRight
+                && moduleLeft.ExhaustOffsetX.HasValue
+                && moduleRight.ExhaustOffsetX.HasValue
+            )
             {
-                Vector2 position = i % 2 == 0 ?
-                                new Vector2(boosterLeft.Position.X + boosterLeft.ExhaustOffsetX, Position.Y + Height - 28) :
-                                new Vector2(boosterRight.Position.X + boosterRight.ExhaustOffsetX, Position.Y + Height - 28);
-
-
-                Vector2 velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4));
-                if (State is ActionState.Landing or ActionState.Undocking)
-                    velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 12));
-
-                var smoke = Particle.Create<RocketExhaustSmoke>(p =>
+                for (int i = 0; i < smallSmokeCount; i++)
                 {
-                    p.Position = position;
-                    p.Velocity = velocity * speed;
-                    p.Scale = new(Main.rand.NextFloat(0.6f, 0.9f));
-                    p.Rotation = 0f;
-                    p.FadeIn = true;
-                    p.FadeOut = true;
-                    p.FadeInSpeed = 2;
-                    p.FadeOutSpeed = 12;
-                    p.TargetAlpha = 128;
-                    p.ScaleDownSpeed = 0.0015f;
-                    p.Acceleration = new(0, -0.04f);
-                    p.Color = Color.White.WithAlpha(150);
-                    p.Collide = true;
-                }, shouldSync: false);
+                    Vector2 position = i % 2 == 0 ?
+                                    new Vector2(moduleLeft.Position.X + moduleLeft.ExhaustOffsetX ?? default, Position.Y + Height - 28) :
+                                    new Vector2(moduleRight.Position.X + moduleRight.ExhaustOffsetX ?? default, Position.Y + Height - 28);
+
+
+                    Vector2 velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4));
+                    if (State is ActionState.Landing or ActionState.Undocking)
+                        velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(8, 12));
+
+                    var smoke = Particle.Create<RocketExhaustSmoke>(p =>
+                    {
+                        p.Position = position;
+                        p.Velocity = velocity * speed;
+                        p.Scale = new(Main.rand.NextFloat(0.6f, 0.9f));
+                        p.Rotation = 0f;
+                        p.FadeIn = true;
+                        p.FadeOut = true;
+                        p.FadeInSpeed = 2;
+                        p.FadeOutSpeed = 12;
+                        p.TargetAlpha = 128;
+                        p.ScaleDownSpeed = 0.0015f;
+                        p.Acceleration = new(0, -0.04f);
+                        p.Color = Color.White.WithAlpha(150);
+                        p.Collide = true;
+                    }, shouldSync: false);
+                }
             }
         }
 

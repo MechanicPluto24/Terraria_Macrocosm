@@ -7,6 +7,8 @@
 
         /// <summary> The total number of frames </summary>
         public virtual int NumberOfFrames => 10;
+        public virtual bool AnimationNeedsRenderReset => false;
+
         public int FrameSpeed => 4;
         public bool IsAnimationActive => isAnimating;
 

@@ -71,33 +71,39 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         private Vector2 GetModuleOffset(string moduleName)
         {
-            return moduleName switch
-            {
-                "CommandPod" => new Vector2(-220f, 140f),
-                "PayloadPod" => new Vector2(-220f, 140f),
-                "ServiceModule" => new Vector2(-220f, -40f),
-                "UnmannedTug" => new Vector2(-220f, -40f),
-                "ReactorModule" => new Vector2(-220f, -320f),
-                "EngineModule" => new Vector2(-80f, -460f),
-                "BoosterLeft" => new Vector2(40f, -520f),
-                "BoosterRight" => new Vector2(-250f, -520f),
-                _ => new Vector2(0f, 0f)
-            };
+            return default;
         }
 
         private float GetModuleZoom(string moduleName)
         {
-            return moduleName switch
+            return 0;
+        }
+
+        private Vector2 GetModuleOffset(int slot)
+        {
+            return slot switch
             {
-                "CommandPod" => 0.35f,
-                "PayloadPod" => 0.35f,
-                "ServiceModule" => 0.35f,
-                "UnmannedTug" => 0.35f,
-                "ReactorModule" => 0.35f,
-                "EngineModule" => 0.55f,
-                "BoosterLeft" => 0.52f,
-                "BoosterRight" => 0.52f,
-                _ => 0.35f 
+                0 => new Vector2(-220f, 140f),
+                1 => new Vector2(-220f, -40f),
+                2 => new Vector2(-220f, -320f),
+                3 => new Vector2(-80f, -460f),
+                4 => new Vector2(40f, -520f),
+                5 => new Vector2(-250f, -520f),
+                _ => new Vector2(0f, 0f)
+            };
+        }
+
+        private float GetModuleZoom(int slot)
+        {
+            return slot switch
+            {
+                 0 => 0.35f,
+                 1 => 0.35f,
+                 2 => 0.35f,
+                 3 => 0.55f,
+                 4 => 0.52f,
+                 5 => 0.52f,
+                _ => 0f
             };
         }
 
@@ -168,8 +174,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
                 float animation = Utility.QuadraticEaseInOut(animationCounter);
 
-                Vector2 targetOffset = GetModuleOffset(CurrentModuleName);
-                float targetZoom = GetModuleZoom(CurrentModuleName);
+                Vector2 targetOffset = GetModuleOffset(CurrentModuleIndex);
+                float targetZoom = GetModuleZoom(CurrentModuleIndex);
                 if (ZoomedOut)
                 {
                     moduleOffsetX = MathHelper.Lerp(targetOffset.X, zoomedOutModuleOffsetX, animation);

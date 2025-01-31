@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Rockets.Modules.Top
 {
     public class PayloadPod : RocketModule
     {
-        public override int Slot => 0;
+        public override SlotType Slot => SlotType.Top;
         public override int Tier => 1;
         public override ConfigurationType Configuration => ConfigurationType.Unmanned;
 
@@ -16,7 +16,14 @@ namespace Macrocosm.Content.Rockets.Modules.Top
         public override int Width => 88;
         public override int Height => 78;
 
-        public override Vector2 Offset => new(94, 0);
+        public override Vector2 GetOffset(RocketModule[] modules)
+        {
+            return new
+            (
+                x: Width,
+                y: 2
+            );
+        }
 
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {

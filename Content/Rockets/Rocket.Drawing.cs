@@ -100,8 +100,7 @@ namespace Macrocosm.Content.Rockets
 
         private void DrawLightedMesh(Vector2 position)
         {
-            mesh = new(Main.graphics.GraphicsDevice);
-
+            mesh ??= new(Main.graphics.GraphicsDevice);
             mesh.CreateRectangle
             (
                 position,
@@ -112,7 +111,7 @@ namespace Macrocosm.Content.Rockets
                 (vertexPos) => new Color(Lighting.GetSubLight(vertexPos + Main.screenPosition))
             );
 
-            mesh.Draw(renderTarget, GraphicsSystem.WorldViewProjection, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
+            mesh.Draw(renderTarget, GraphicsSystem.WorldViewProjection, null, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
         }
 
         public RenderTarget2D GetRenderTarget(DrawMode drawMode)

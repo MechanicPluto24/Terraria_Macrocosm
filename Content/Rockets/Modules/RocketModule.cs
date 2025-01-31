@@ -17,6 +17,16 @@ namespace Macrocosm.Content.Rockets.Modules
 {
     public abstract partial class RocketModule : ModType, ILocalizedModType
     {
+        public enum SlotType
+        {
+            Top,
+            Service,
+            Utilitary,
+            Engine,
+            LeftSide,
+            RightSide
+        }
+
         public enum ConfigurationType
         {
             Any,
@@ -29,9 +39,9 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public static List<RocketModule> DefaultModules => Templates
                 .Where(m => m.Configuration != ConfigurationType.Unmanned)
-                .GroupBy(m => m.Slot)
+                .GroupBy(m => (int)m.Slot)
                 .Select(g => g.OrderBy(m => m.Tier).First().Clone()) 
-                .OrderBy(m => m.Slot)
+                .OrderBy(m => (int)m.Slot)
                 .ToList();
 
         // For backwards compatibility
@@ -60,7 +70,7 @@ namespace Macrocosm.Content.Rockets.Modules
             }
         }
 
-        public abstract int Slot { get; }
+        public abstract SlotType Slot { get; }
         public abstract int Tier { get; }
         public abstract ConfigurationType Configuration { get; }
         public abstract AssemblyRecipe Recipe { get; }
@@ -69,7 +79,8 @@ namespace Macrocosm.Content.Rockets.Modules
         public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
 
         public Vector2 Position { get; set; }
-        public virtual Vector2 Offset => Vector2.Zero;
+
+        public virtual Vector2 GetOffset(RocketModule[] modules) => Vector2.Zero;
 
         public abstract int Width { get; }
         public abstract int Height { get; }
