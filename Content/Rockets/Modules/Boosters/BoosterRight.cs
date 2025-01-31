@@ -5,18 +5,24 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
 {
     public class BoosterRight : BaseBooster
     {
-        public override int Slot => 5;
+        public override SlotType Slot => SlotType.RightSide;
         public override int Tier => 2;
         public override ConfigurationType Configuration => ConfigurationType.Any;
 
-        public override int Width => 124;
+        public override int Width => 46;
         public override int Height => 314;
 
-        public override Vector2 Offset => new(152, 284);
+        public override Vector2 GetOffset(RocketModule[] modules)
+        {
+            return new
+            (
+                x: 98,
+                y: 280
+            );
+        }
 
-        public override bool DrawExhaust => true;
-        public override float ExhaustOffsetX => 32f;
-        protected override Vector2 LandingLegDrawOffset => new(28, 208);
+        public override float? ExhaustOffsetX => 32f;
+        protected override Vector2? LandingLegDrawOffset => new(28, 208);
         protected override int Direction => 1;
 
 

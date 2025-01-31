@@ -28,7 +28,7 @@
     <None Remove="Content\Rockets\Modules\Boosters\LegModuleLeft.png" />
     <None Remove="Content\Rockets\Modules\Boosters\LegModuleRight.png" />
     <None Remove="Content\Rockets\Modules\Engine\EngineModuleMk1.png" />
-    <None Remove="Content\Rockets\Modules\Util\StructureModule.png" />
+    <None Remove="Content\Rockets\Modules\Utilitary\StructureModule.png" />
   </ItemGroup>
    <ItemGroup>
     <Reference Include="SubworldLibrary">

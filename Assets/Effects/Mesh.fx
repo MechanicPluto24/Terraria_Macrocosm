@@ -1,11 +1,11 @@
 // The purpose of this shader is to draw a simple texture onto a list of vertices
 
-// Matrix for the vertices. Usually we don't need this unless we're working with primitives
-// Shader.Parameters["TransformMatrix"].SetValue(...);
-matrix TransformMatrix;
-
 // The texture to apply
 sampler Texture : register(s0); 
+
+// Matrix for the vertices. Usually we don't need this unless we're working with primitives
+matrix uTransformMatrix;
+float4 uSourceRect; // (x, y, width, height)
 
 // Simple structs to make referencing data easier, as it's passed into our functions
 struct VertexShaderInput
@@ -29,9 +29,13 @@ VertexShaderOutput VertexShaderFunction(in VertexShaderInput input)
 	VertexShaderOutput output;
     
 	// ALWAYS have to assign every variable inside it, like a C# constructor that wants everything
+    output.Position = mul(input.Position, uTransformMatrix);
+	
+    float2 textureSize = float2(uSourceRect.z, uSourceRect.w);
+    float2 sourceStart = float2(uSourceRect.x, uSourceRect.y);
+    output.TexCoords = sourceStart + input.TexCoords * textureSize;
+	
 	output.Color = input.Color;
-	output.TexCoords = input.TexCoords;
-	output.Position = mul(input.Position, TransformMatrix);
 
 	// And output it
 	return output;

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,35 +17,17 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
         public override int DrawPriority => 1;
         public override bool Interactible => false;
 
-        public abstract bool DrawExhaust { get; }
-        public virtual float ExhaustOffsetX { get; }
-        protected abstract Vector2 LandingLegDrawOffset { get; }
+        public virtual float? ExhaustOffsetX => null;
+        protected virtual Vector2? LandingLegDrawOffset => null;
 
-        private SpriteBatchState state1, state2;
-        private Asset<Texture2D> landingLegTexture;
 
         protected abstract int Direction { get; }
         protected virtual string LandingLegPath => TexturePath.Replace(Name, "LandingLeg" + (Direction > 0 ? "Right" : "Left"));
 
-        public override void Draw(SpriteBatch spriteBatch, Vector2 position)
-        {
-            // Draw the booster module with the base drawcode
-            base.Draw(spriteBatch, position);
-
-            state1.SaveState(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(SamplerState.PointClamp, state1);
-
-            landingLegTexture ??= ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad);
-            spriteBatch.Draw(landingLegTexture.Value, position + LandingLegDrawOffset, landingLegTexture.Frame(1, NumberOfFrames, frameY: CurrentFrame), Color.White);
-
-            spriteBatch.End();
-            spriteBatch.Begin(state1);
-        }
-
+        private SpriteBatchState state1, state2;
         public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
-            if (!DrawExhaust)
+            if (!ExhaustOffsetX.HasValue)
                 return;
 
             state2.SaveState(spriteBatch, true);
@@ -74,6 +57,25 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
             }
         }
 
+        private Asset<Texture2D> landingLegTexture;
+        private Mesh2D landingLegMesh;
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
+        {
+            if (!LandingLegDrawOffset.HasValue)
+                return;
+
+            landingLegMesh ??= new(spriteBatch.GraphicsDevice);
+            landingLegTexture ??= ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad);
+
+            Rectangle frame = landingLegTexture.Frame(1, base.NumberOfFrames, frameY: CurrentFrame);
+            landingLegMesh.CreateRectangle(position + (LandingLegDrawOffset ?? default), frame.Width, frame.Height, 2, 2, (pos) => new(Lighting.GetSubLight(pos + Main.screenPosition)));
+
+            state1.SaveState(spriteBatch);
+            spriteBatch.End();
+            landingLegMesh.Draw(landingLegTexture.Value, GraphicsSystem.WorldViewProjection, sourceRect: frame, BlendState.AlphaBlend, SamplerState.PointClamp);
+            spriteBatch.Begin(state1);
+        }
+
         private void DrawTrail(Vector2 position, float intensity = 1f)
         {
             VertexStrip strip = new();
@@ -82,7 +84,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
                 stripDataCount = 0;
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
-            Array.Fill(positions, new Vector2(position.X + ExhaustOffsetX, position.Y + Height));
+            Array.Fill(positions, new Vector2(position.X + (ExhaustOffsetX ?? default), position.Y + Height));
             Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
 
             for (int i = 0; i < stripDataCount; i++)

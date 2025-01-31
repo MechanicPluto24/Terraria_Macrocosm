@@ -427,7 +427,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             AllLoseFocus();
         }
 
-        private void JumpToEngineModule() => JumpToModule(ModContent.GetInstance<EngineModuleMk2>().Slot);
+        private void JumpToEngineModule() => JumpToModule((int)ModContent.GetInstance<EngineModuleMk2>().Slot);
         private void JumpToModule(int slot)
         {
             rocketPreview.SetModule(slot);
@@ -438,9 +438,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         private void OnCurrentModuleChange(int moduleIndex)
         {
             currentModuleIndex = moduleIndex;   
-            string moduleName = CustomizationDummy.Modules[moduleIndex].Name;
             modulePickerTitle.SetText(CustomizationDummy.Modules[moduleIndex].DisplayName);
-            modulePickerIconPanel.SetModule(moduleName);
+            modulePickerIconPanel.SetModule(CustomizationDummy.Modules[moduleIndex]);
             RefreshPatternConfigPanel();
             RefreshDecalConfigPanel();
         }
@@ -463,7 +462,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             currentModuleIndex = lastModuleIndex;
             modulePickerTitle.SetText(CurrentModule.DisplayName);
-            modulePickerIconPanel.SetModule(CurrentModule.Name);
+            modulePickerIconPanel.SetModule(CurrentModule);
             RefreshPatternConfigPanel();
             RefreshDecalConfigPanel();
         }
@@ -480,7 +479,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             // This a hacky way to see all available color slots for the entire rocket. Still, it can lead to weird behavior
             //TODO: Add a way to fetch common patterns for all modules and never reference a specific module if zoomed out
-            currentModuleIndex = ModContent.GetInstance<BoosterLeft>().Slot;
+            currentModuleIndex = (int)ModContent.GetInstance<BoosterLeft>().Slot;
 
             modulePickerTitle.SetText("");
             modulePickerIconPanel.ClearModule();
