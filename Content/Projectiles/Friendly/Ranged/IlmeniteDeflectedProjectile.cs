@@ -18,6 +18,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
+        private Vector2 Target
+        {
+            get
+            {
+                return new(
+                    Projectile.ai[1],
+                    Projectile.ai[2]
+                );
+            }
+            set
+            {
+                Projectile.ai[1] = value.X;
+                Projectile.ai[2] = value.Y;
+            }
+        }
+
+        float speed;
         float trailMultiplier = 0f;
         int colourLerpProg = 0;
         public Color colour1 = new(188, 89, 134);
@@ -31,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void SetDefaults()
         {
             Projectile.ignoreWater = true;
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
             Projectile.width = 10;
             Projectile.height = 10;
             Projectile.aiStyle = -1;
@@ -39,8 +56,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.penetrate = 1;
             Projectile.timeLeft = 360;
             Projectile.extraUpdates = 1;
-
-            Projectile.scale = 0.7f;
 
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 20;
@@ -50,8 +65,25 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
         }
 
+        private bool spawned;
+        private bool reachedTarget;
         public override void AI()
         {
+            if (!spawned)
+            {
+                speed = Projectile.velocity.Length();
+                spawned = true;
+            }
+
+            if(!reachedTarget)
+            {
+                Vector2 direction = Projectile.DirectionTo(Target).SafeNormalize(Vector2.Zero);
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * speed , 0.02f);
+
+                if ((Projectile.Center - Target).LengthSquared() < 100 * 100)
+                    reachedTarget = true;
+            }
+
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
             if (trailMultiplier < 1f + (0.15f * Projectile.extraUpdates))

@@ -86,16 +86,35 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 GetClone();
 
             RenderTarget2D renderTarget = visualClone.GetRenderTarget(Rocket.DrawMode.Dummy);
+            Rectangle uiRect = GetDimensions().ToRectangle();
+            int horizontalPadding = 8;
+            int verticalPadding = 8;
+            Rectangle availableRect = new(
+                uiRect.X + horizontalPadding,
+                uiRect.Y + verticalPadding,
+                uiRect.Width - 2 * horizontalPadding,
+                uiRect.Height - 2 * verticalPadding
+            );
 
-            Rectangle rect = GetDimensions().ToRectangle();
-            rect.X += 10;
-            rect.Y += 26;
-            rect.Width -= 20;
-            rect.Height -= 36;
+            float rtAspect = (float)renderTarget.Width / renderTarget.Height;
+            float availableAspect = (float)availableRect.Width / availableRect.Height;
+            int finalWidth, finalHeight;
+            if (rtAspect > availableAspect)
+            {
+                finalWidth = availableRect.Width;
+                finalHeight = (int)(availableRect.Width / rtAspect);
+            }
+            else
+            {
+                finalHeight = availableRect.Height;
+                finalWidth = (int)(availableRect.Height * rtAspect);
+            }
+            int finalX = availableRect.X + (availableRect.Width - finalWidth) / 2;
+            int finalY = availableRect.Y + (availableRect.Height - finalHeight) / 2 + (int)uITitle.GetDimensions().Height;
+            Rectangle finalRect = new(finalX, finalY, finalWidth, finalHeight);
 
-            float aspectRatio = (float)renderTarget.Width / renderTarget.Height;
             int targetPixelsX = 48;
-            int targetPixelsY = (int)(targetPixelsX / aspectRatio);
+            int targetPixelsY = (int)(targetPixelsX / rtAspect);
 
             pixelate ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "Pixelate", AssetRequestMode.ImmediateLoad);
             Effect effect = pixelate.Value;
@@ -105,10 +124,11 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             spriteBatch.EndIfBeginCalled();
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, state.RasterizerState, effect, Main.UIScaleMatrix);
 
-            spriteBatch.Draw(renderTarget, rect, Color.White);
+            spriteBatch.Draw(renderTarget, finalRect, Color.White);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
         }
+
     }
 }

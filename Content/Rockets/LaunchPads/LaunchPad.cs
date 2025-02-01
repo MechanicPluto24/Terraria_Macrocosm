@@ -213,7 +213,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         private int CountRequiredAssemblyItemSlots(Rocket rocket)
         {
             int count = 0;
-            foreach (var module in rocket.Modules)
+            foreach (var module in RocketModule.Templates)
             {
                 if (!module.Recipe.Linked)
                     count += module.Recipe.Count();

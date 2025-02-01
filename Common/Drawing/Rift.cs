@@ -2,12 +2,12 @@
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System;
-using Terraria.GameContent;
 using Terraria;
 using Macrocosm.Common.Utils;
 using static Terraria.GameContent.TextureAssets;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Graphics;
+using Terraria.Graphics.Effects;
 
 namespace Macrocosm.Common.Drawing
 {
@@ -124,7 +124,10 @@ namespace Macrocosm.Common.Drawing
         public void Draw(Texture2D texture, Matrix transformMatrix)
         {
             Update();
-            mesh.Draw(texture, transformMatrix);
+
+            DrawRT();
+            mesh.Draw(renderTarget, transformMatrix);
+            renderTarget.Dispose();
             for (int i = 0; i < borderPoints.Count; i++)
             {
                 Vector2 start = borderPoints[i];
@@ -151,7 +154,6 @@ namespace Macrocosm.Common.Drawing
             foreach (var binding in originalRenderTargets)
                 typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
 
-            // Draw our modules
             state = spriteBatch.SaveState();
             spriteBatch.EndIfBeginCalled();
 
@@ -168,7 +170,7 @@ namespace Macrocosm.Common.Drawing
             );
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, state.RasterizerState, state.Effect, Matrix.CreateScale(1f));
+            spriteBatch.Begin(state);
 
             // Revert our RenderTargets back to the vanilla ones
             if (originalRenderTargets.Length > 0)

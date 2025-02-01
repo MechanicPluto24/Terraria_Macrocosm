@@ -123,13 +123,17 @@ namespace Macrocosm.Common.Graphics
 
             graphicsDevice.BlendState = blendState ?? BlendState.AlphaBlend;
             graphicsDevice.SamplerStates[0] = samplerState ?? SamplerState.LinearClamp;
-            graphicsDevice.RasterizerState = RasterizerState.CullNone;
+            graphicsDevice.RasterizerState = new RasterizerState
+            {
+                CullMode = CullMode.None,
+                ScissorTestEnable = true
+            };
 
             graphicsDevice.Textures[0] = texture;
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             graphicsDevice.Indices = indexBuffer;
 
-            shader.Parameters["uTransformMatrix"].SetValue(transformMatrix);
+            shader.Parameters["uTransformMatrix"].SetValue(transformMatrix * Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0, 0, 1));
 
             Vector4 sourceRectV4 = sourceRect is Rectangle source
                 ? new Vector4(source.X / (float)texture.Width, source.Y / (float)texture.Height, source.Width / (float)texture.Width, source.Height / (float)texture.Height)
@@ -144,6 +148,11 @@ namespace Macrocosm.Common.Graphics
 
             graphicsDevice.BlendState = oldBlendState;
             graphicsDevice.SamplerStates[0] = oldSamplerState;
+        }
+
+        private Matrix GetScreenProjectedMatrix(Matrix transformMatrix)
+        {
+            return default;
         }
 
         public void DebugDraw()

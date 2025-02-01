@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Particles
 
         public override void SetDefaults()
         {
-            ScaleVelocity = new(-0.055f);
+            ScaleVelocity = new(-0.045f);
             Opacity = 0.8f;
             Color = Main.rand.Next(2) switch
             {
@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Particles
         {
             Lighting.AddLight(Center, Color.ToVector3());
 
-            Opacity -= 0.05f;
+            Opacity -= 0.01f;
             Rotation += 0.05f * rotationDirection;
 
             if (Scale.X < 0.002f)
