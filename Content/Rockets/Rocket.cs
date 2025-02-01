@@ -660,7 +660,7 @@ namespace Macrocosm.Content.Rockets
             foreach (var module in Modules)
             {
                 Vector2 modulePosition = GetModuleRelativePosition(module, Vector2.Zero);
-                Vector2 moduleSize = new Vector2(module.Width, module.Height);
+                Vector2 moduleSize = new(module.Width, module.Height);
                 float moduleRight = modulePosition.X + moduleSize.X;
                 float moduleBottom = modulePosition.Y + moduleSize.Y;
                 maxX = Math.Max(maxX, moduleRight);

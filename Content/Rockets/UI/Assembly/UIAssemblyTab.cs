@@ -499,9 +499,9 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             int slotCount = 0;
             int assemblyElementCount = 0;
-            for (int k = 0; k < RocketModule.Templates.Count; k++)
+            foreach (RocketModule m in RocketModule.Templates.OrderBy(m => m.Slot))
             {
-                RocketModule module = RocketModule.Templates[k].Clone();
+                RocketModule module = m.Clone();
                 if (!module.Recipe.Linked)
                 {
                     List<UIInventorySlot> slots = new();
@@ -531,12 +531,14 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
                     UIModuleAssemblyElement assemblyElement = new(module, slots);
                     assemblyElements[module.Name] = assemblyElement;
+                    if(Rocket.Modules.Select(m => m.Name).Contains(module.Name))
+                    {
+                        assemblyElement.Top = new(0, 0.185f + 0.175f * assemblyElementCount++);
+                        assemblyElement.Left = new(0, 0.08f);
 
-                    assemblyElement.Top = new(0, 0.185f + 0.175f * assemblyElementCount++);
-                    assemblyElement.Left = new(0, 0.08f);
-
-                    Append(assemblyElement);
-                    assemblyElement.Activate();
+                        Append(assemblyElement);
+                        assemblyElement.Activate();
+                    }
                 }
             }
 

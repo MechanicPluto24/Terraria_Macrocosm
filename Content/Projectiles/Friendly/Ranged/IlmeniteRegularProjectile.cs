@@ -80,7 +80,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     if (Vector2.Distance(Projectile.Center, proj.Center) < 50f)
                     {
                         HitExplosion = true;
-                        explosion.OnHit();
+                        explosion.OnHit(Projectile.velocity);
                     }
                 }
             }

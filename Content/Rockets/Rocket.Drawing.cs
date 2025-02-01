@@ -23,6 +23,8 @@ namespace Macrocosm.Content.Rockets
         }
 
         private RenderTarget2D renderTarget;
+        private RenderTarget2D dummyRenderTarget;
+
         private Mesh2D mesh;
         private SpriteBatchState sbState;
         private bool firstDraw = true;
@@ -31,7 +33,10 @@ namespace Macrocosm.Content.Rockets
         public void ResetRenderTarget()
         {
             renderTarget?.Dispose();
+            dummyRenderTarget?.Dispose();
         }
+
+        public Color GetDrawColor(Vector2 vertexDrawPosition) => new Color(Lighting.GetSubLight(vertexDrawPosition + Main.screenPosition)) * Transparency;
 
         /// <summary> Draw the rocket </summary>
         /// <param name="drawMode"> 
@@ -101,34 +106,29 @@ namespace Macrocosm.Content.Rockets
         private void DrawLightedMesh(Vector2 position)
         {
             mesh ??= new(Main.graphics.GraphicsDevice);
-            mesh.CreateRectangle
-            (
-                position,
-                Width,
-                Height,
-                horizontalResolution: 6,
-                verticalResolution: 8,
-                (vertexPos) => new Color(Lighting.GetSubLight(vertexPos + Main.screenPosition))
-            );
-
-            mesh.Draw(renderTarget, GraphicsSystem.WorldViewProjection, null, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
+            mesh.CreateRectangle(position, Width, Height, horizontalResolution: 6, verticalResolution: 8, colorFunction: GetDrawColor);
+            mesh.Draw(renderTarget, Main.Transform, null, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
         }
 
         public RenderTarget2D GetRenderTarget(DrawMode drawMode)
         {
-            // We only need to prepare our RenderTarget if it's not ready to use
-            if (renderTarget is not null && !renderTarget.IsDisposed)
-                return renderTarget;
+            // If it already exists, return it.
+            RenderTarget2D target = (drawMode == DrawMode.Dummy) ? dummyRenderTarget : renderTarget;
+            if (target is not null && !target.IsDisposed)
+                return target;
+
+            var spriteBatch = Main.spriteBatch;
 
             // Initialize our RenderTarget
-            renderTarget = new(Main.spriteBatch.GraphicsDevice, Bounds.Width, Bounds.Height, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            PrepareRenderTarget(Main.spriteBatch, drawMode);
+            int targetWidth = (drawMode == DrawMode.Dummy) ? Bounds.Width + 140 : Bounds.Width;
+            int targetHeight = Bounds.Height;
 
-            return renderTarget;
-        }
+            target = new(spriteBatch.GraphicsDevice, targetWidth, targetHeight, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            if (drawMode == DrawMode.Dummy)
+                dummyRenderTarget = target;
+            else
+                renderTarget = target;
 
-        private void PrepareRenderTarget(SpriteBatch spriteBatch, DrawMode drawMode)
-        {
             // Store previous settings
             var scissorRectangle = spriteBatch.GraphicsDevice.ScissorRectangle;
             var rasterizerState = spriteBatch.GraphicsDevice.RasterizerState;
@@ -143,7 +143,7 @@ namespace Macrocosm.Content.Rockets
             sbState = spriteBatch.SaveState();
             spriteBatch.EndIfBeginCalled();
 
-            spriteBatch.GraphicsDevice.SetRenderTarget(renderTarget);
+            spriteBatch.GraphicsDevice.SetRenderTarget(target);
             spriteBatch.GraphicsDevice.Clear(Color.Transparent);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Matrix.CreateScale(1f));
@@ -155,36 +155,38 @@ namespace Macrocosm.Content.Rockets
                     break;
 
                 case DrawMode.Dummy:
-                    DrawDummy(spriteBatch, default);
+                    DrawDummy(spriteBatch, new Vector2(60, 0));
                     break;
 
                 case DrawMode.Blueprint:
                     DrawBlueprint(spriteBatch, default);
-                    break;
+                    break;  
             }
 
             spriteBatch.End();
 
             // Revert our RenderTargets back to the vanilla ones
             if (originalRenderTargets.Length > 0)
-            {
                 spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
-            }
             else
-            {
                 spriteBatch.GraphicsDevice.SetRenderTarget(null);
-            }
 
             // Reset our settings back to the previous ones
             spriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
             spriteBatch.GraphicsDevice.RasterizerState = rasterizerState;
+
+            return target;
+        }
+
+        private void PrepareRenderTarget(SpriteBatch spriteBatch, DrawMode drawMode)
+        {
         }
 
         private void DrawDummyWithRenderTarget(SpriteBatch spriteBatch, Vector2 position)
         {
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, sbState.Matrix);
             PreDrawBeforeTiles(spriteBatch, position, inWorld: false);
-            spriteBatch.Draw(renderTarget, position, Color.White);
+            spriteBatch.Draw(dummyRenderTarget, position, Color.White);
             PostDraw(spriteBatch, position, inWorld: false);
             spriteBatch.End();
             spriteBatch.Begin(sbState.SpriteSortMode, BlendState.Additive, sbState.SamplerState, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Main.UIScaleMatrix);

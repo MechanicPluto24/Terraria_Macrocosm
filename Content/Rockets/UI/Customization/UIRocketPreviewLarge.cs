@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         private float moduleOffsetY;
         private float zoom;
 
-        private float zoomedOutModuleOffsetX = 30f;
+        private float zoomedOutModuleOffsetX = 80f;
         private float zoomedOutModuleOffsetY = 15f;
         private float zoomedOutZoom = 1f;
 
@@ -83,12 +83,12 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             return slot switch
             {
-                0 => new Vector2(-220f, 140f),
-                1 => new Vector2(-220f, -40f),
-                2 => new Vector2(-220f, -320f),
-                3 => new Vector2(-80f, -460f),
-                4 => new Vector2(40f, -520f),
-                5 => new Vector2(-250f, -520f),
+                0 => new Vector2(-60, 140f),
+                1 => new Vector2(-60, -40f),
+                2 => new Vector2(-60, -320f),
+                3 => new Vector2(20, -460f),
+                4 => new Vector2(140, -520f),
+                5 => new Vector2(-134, -520f),
                 _ => new Vector2(0f, 0f)
             };
         }

@@ -19,6 +19,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             set => Projectile.ai[0] = MathHelper.Clamp(value, 0f, 1f);
         }
 
+        private bool exploded;
+
         float trailMultiplier = 0f;
         public Color colour1 = new Color(188, 89, 134);
         public Color colour2 = new Color(33, 188, 190);
@@ -101,12 +103,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            Projectile.NewProjectile(Projectile.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), damageDone, hit.Knockback * 5, Projectile.owner, Strength, target.Center.X, target.Center.Y);
+            if (!exploded)
+            {
+                Projectile.NewProjectile(Projectile.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), damageDone, hit.Knockback * 5, Projectile.owner, Strength, target.Center.X, target.Center.Y);
+                exploded = true;
+            }
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center + oldVelocity, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), Projectile.damage, Projectile.knockBack * 5, Projectile.owner, Strength, Projectile.Center.X, Projectile.Center.Y);
+            if (!exploded)
+            {
+                Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center + oldVelocity, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), Projectile.damage, Projectile.knockBack * 5, Projectile.owner, Strength, Projectile.Center.X, Projectile.Center.Y);
+                exploded = true;
+            }
             return true;
         }
     }

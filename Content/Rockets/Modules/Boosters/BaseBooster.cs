@@ -68,11 +68,12 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
             landingLegTexture ??= ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad);
 
             Rectangle frame = landingLegTexture.Frame(1, base.NumberOfFrames, frameY: CurrentFrame);
-            landingLegMesh.CreateRectangle(position + (LandingLegDrawOffset ?? default), frame.Width, frame.Height, 2, 2, (pos) => new(Lighting.GetSubLight(pos + Main.screenPosition)));
+            Func<Vector2, Color> getDrawColor = inWorld ? rocket.GetDrawColor : (_) => Color.White;
+            landingLegMesh.CreateRectangle(position + (LandingLegDrawOffset ?? default), frame.Width, frame.Height, horizontalResolution: 2, verticalResolution: 2, colorFunction: getDrawColor);
 
             state1.SaveState(spriteBatch);
             spriteBatch.End();
-            landingLegMesh.Draw(landingLegTexture.Value, GraphicsSystem.WorldViewProjection, sourceRect: frame, BlendState.AlphaBlend, SamplerState.PointClamp);
+            landingLegMesh.Draw(landingLegTexture.Value, state1.Matrix, sourceRect: frame, BlendState.AlphaBlend, SamplerState.PointClamp);
             spriteBatch.Begin(state1);
         }
 

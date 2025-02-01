@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnSpawn(IEntitySource source)
         {
-            Projectile.Size *= 1f + (0.5f * Projectile.ai[0]);
+            Projectile.Size *= 1f + (0.5f * Strength);
         }
 
         private bool spawned;
@@ -70,68 +70,46 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Lighting.AddLight(Projectile.Center, new Color(188, 89, 134).ToVector3());
             Lighting.AddLight(Projectile.Center, new Color(33, 188, 190).ToVector3());
 
-            for (int i = 0; i < 20 * Strength; i++)
+            for (int i = 0; i < 30 * Strength; i++)
             {
-                Vector2 position = Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height);
-                float distanceFromCenter = Vector2.Distance(position, Projectile.Center);
-                float maxDistance = Math.Max(Projectile.width, Projectile.height) / 2f;
-                float fallOffFactor = 1f - (distanceFromCenter / maxDistance);
-                fallOffFactor = MathF.Pow(fallOffFactor, 2f);
+                Vector2 edgeOffset = Main.rand.NextVector2CircularEdge(Projectile.width * 1.2f, Projectile.height * 1.2f);
+                float u = Main.rand.NextFloat();
+                float factor = 1f - (float)Math.Sqrt(1f - u);
+                Vector2 offset = edgeOffset * factor;
+                Vector2 position = Projectile.Center + offset;
 
-                if (Main.rand.NextFloat() <= fallOffFactor)
+                Particle.Create<LunarRustStar>((p) =>
                 {
-                    Particle.Create<LunarRustStar>((p) =>
-                    {
-                        p.Position = position;
-                        p.Velocity = Vector2.Zero;
-                        p.Rotation = Utility.RandomRotation();
-                        p.Scale = new Vector2(1f * (0.6f + Strength * 0.15f)) * Main.rand.NextFloat(0.5f, 1.2f);
-                    });
-                }
+                    p.Position = position;
+                    p.Velocity = Vector2.Zero;
+                    p.Rotation = Utility.RandomRotation();
+                    p.Scale = new Vector2(1f * (0.6f + Strength * 0.15f)) * Main.rand.NextFloat(0.5f, 1.2f);
+                });
             }
         }
 
-        public void OnHit()
+        public void OnHit(Vector2 hitVelocity)
         {
-            Projectile.timeLeft += 2;
+            Projectile.timeLeft += 15;
 
-            for(int i = 0; i < (int)(Strength * 6); i++)
+            for (int i = 0; i < (int)(Strength * 6); i++)
             {
-                Vector2 targetCenter = new(-1000f);
-                float distanceFromTarget = 1200f;
-                bool foundTarget = false;
-                foreach (var npc in Main.ActiveNPCs)
-                {
-                    if (npc.CanBeChasedBy())
-                    {
-                        float between = Vector2.Distance(npc.Center, Projectile.Center);
-                        bool closest = Vector2.Distance(Projectile.Center, targetCenter) > between;
-                        bool inRange = between < distanceFromTarget;
-                        bool lineOfSight = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height);
-
-                        bool closeThroughWall = between < 100f;
-
-                        if (((closest && inRange) || !foundTarget) && (lineOfSight || closeThroughWall))
-                        {
-                            targetCenter = npc.Center;
-                            foundTarget = true;
-                            distanceFromTarget = between;
-                        }
-                    }
-                }
+                Vector2 targetPos = Projectile.Center + (hitVelocity.RotatedByRandom(MathHelper.Pi / 4) * 100);
 
                 Projectile.NewProjectileDirect(
                     Projectile.GetSource_FromAI(),
                     Projectile.Center,
-                    ((Projectile.Center - targetCenter).SafeNormalize(default) * 100f).RotatedByRandom(MathHelper.Pi / 7),
+                    hitVelocity,
                     ModContent.ProjectileType<IlmeniteDeflectedProjectile>(),
                     Projectile.damage / 3,
                     knockback: 2f,
                     owner: Main.myPlayer,
-                    ai0: i % 2
+                    ai0: i % 2,
+                    ai1: targetPos.X,
+                    ai2: targetPos.Y
                 );
             }
-           
+
             Particle.Create<TintableFlash>(p =>
             {
                 p.Position = Projectile.Center;
@@ -152,6 +130,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     p.Opacity = Main.rand.NextFloat();
                 });
             }
+        }
+
+
+        public void OnHit()
+        {
         }
 
 

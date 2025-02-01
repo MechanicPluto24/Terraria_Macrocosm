@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
@@ -221,8 +222,8 @@ namespace Macrocosm.Content.Skies.Moon
                 rift ??= new Rift(
                         Main.graphics.GraphicsDevice,  
                         new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), 
-                        400f, 
-                        200f,  
+                        800f, 
+                        400f,  
                         Color.Purple,  
                         Color.Red,  
                         128
@@ -231,14 +232,14 @@ namespace Macrocosm.Content.Skies.Moon
                 state1.SaveState(spriteBatch);
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, RasterizerState.CullNone, null, Matrix.Identity * Matrix.CreateScale(Main.BackgroundViewMatrix.Zoom.X));
-                rift.Draw(Main.Assets.Request<Texture2D>("Images/Misc/noise").Value, GraphicsSystem.BackgroundViewProjection);
+                rift.Draw(Main.Assets.Request<Texture2D>("Images/Misc/noise").Value, state1.Matrix);
                 spriteBatch.End();
                 spriteBatch.Begin(state1);
                 */
             }
         }
 
-        //Rift rift;
+        Rift rift;
         private void UpdateNebulaStars()
         {
             if(lastMoonType != Main.moonType)
