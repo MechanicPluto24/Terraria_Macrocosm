@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Subworlds
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
         protected override float AtmosphericDensity(Vector2 position) => 0.1f;
-        public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-65f, 125f);
+        //public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-65f, 125f); why is this not working
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => new(1600, 1200);
 
         public override bool NoBackground => true;
