@@ -125,49 +125,8 @@ namespace Macrocosm.Common.Subworlds
 
         public class Hacks
         {
-            private static FieldInfo subworldSystem_current;
-            private static FieldInfo subworldSystem_cache;
-
-            private static MethodInfo subworldSystem_GetPacketHeader;
-            private static FieldInfo subworldSystem_links;
-            private static MethodInfo subserverLink_Send;
-
-            public static void Initialize()
-            {
-                if (subworldSystem_current == null)
-                {
-                    throw new Exception("Failed to find SubworldSystem.current field.");
-                }
-            }
-
-            public static Subworld SubworldSystem_GetCurrent()
-            {
-                subworldSystem_current ??= typeof(SubworldSystem).GetField("current", BindingFlags.Static | BindingFlags.NonPublic);
-                return (Subworld)subworldSystem_current.GetValue(null);
-            }
-            public static void SubworldSystem_NullCurrent()
-            {
-                subworldSystem_current ??= typeof(SubworldSystem).GetField("current", BindingFlags.Static | BindingFlags.NonPublic);
-                subworldSystem_current.SetValue(null, null);
-            }
-
-            public static void SubworldSystem_SetCurrent(Subworld value)
-            {
-                subworldSystem_current ??= typeof(SubworldSystem).GetField("current", BindingFlags.Static | BindingFlags.NonPublic);
-                subworldSystem_current.SetValue(null, value);
-            }
-
-            public static Subworld SubworldSystem_GetCache()
-            {
-                subworldSystem_cache ??= typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
-                return (Subworld)subworldSystem_cache.GetValue(null);
-            }
-
-            public static void SubworldSystem_NullCache()
-            {
-                subworldSystem_cache ??= typeof(SubworldSystem).GetField("cache", BindingFlags.Static | BindingFlags.NonPublic);
-                subworldSystem_cache.SetValue(null, null);
-            }
+            public static Subworld SubworldSystem_GetCache() => typeof(SubworldSystem).GetFieldValue<Subworld>("cache");
+            public static void SubworldSystem_NullCache() => typeof(SubworldSystem).SetFieldValue("cache", null);
 
             public static string SubworldSystem_CacheID() => SubworldSystem_GetCache().FullName;
             public static bool SubworldSystem_CacheIsNull() => SubworldSystem_GetCache() == null;
@@ -181,14 +140,11 @@ namespace Macrocosm.Common.Subworlds
             /// <param name="exceptSubserverIndex">The subserver ID to exclude.</param>
             public static void SubworldSystem_SendToAllSubserversExcept(Mod mod, byte[] data, int exceptSubserverIndex)
             {
-                subworldSystem_GetPacketHeader ??= typeof(SubworldSystem).GetMethod("GetPacketHeader", BindingFlags.Static | BindingFlags.NonPublic);
-                subworldSystem_links ??= typeof(SubworldSystem).GetField("links", BindingFlags.Static | BindingFlags.NonPublic);
-
-                if (subworldSystem_links.GetValue(null) is not IDictionary links)
+                if (typeof(SubworldSystem).GetFieldValue("links") is not IDictionary links)
                     throw new Exception("Failed to retrieve SubworldSystem.links.");
 
                 int headerLength = (ModNet.NetModCount < 256) ? 5 : 6;
-                byte[] packetHeader = (byte[])subworldSystem_GetPacketHeader.Invoke(null, [data.Length + headerLength, mod.NetID]);
+                byte[] packetHeader = typeof(SubworldSystem).InvokeMethod<byte[]>("GetPacketHeader", parameters: [data.Length + headerLength, mod.NetID]);
                 Buffer.BlockCopy(data, 0, packetHeader, headerLength, data.Length);
 
                 foreach (DictionaryEntry entry in links)
@@ -197,8 +153,7 @@ namespace Macrocosm.Common.Subworlds
                     if (subserverID != exceptSubserverIndex)
                     {
                         var subserverLink = entry.Value;
-                        subserverLink_Send ??= subserverLink.GetType().GetMethod("Send", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                        subserverLink_Send.Invoke(subserverLink, [packetHeader]);
+                        subserverLink.GetType().InvokeMethod("Send", subserverLink, parameters: [packetHeader]);
                     }
                 }
             }

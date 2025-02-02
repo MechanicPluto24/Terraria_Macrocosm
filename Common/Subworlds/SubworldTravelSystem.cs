@@ -32,7 +32,7 @@ namespace Macrocosm.Common.Subworlds
         {
             orig(self, data, orderInList, canBePlayed);
 
-            UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", obj: self);
+            UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", self);
 
             var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
             string subworld = "Earth";

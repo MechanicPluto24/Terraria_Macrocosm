@@ -85,7 +85,6 @@ namespace Macrocosm.Common.Systems
                 return orig(self, currentTime);
 
             object textKey = self.GetType().GetFieldValue("_textKey", self);
-
             LocalizedText[] messages = Language.FindAll(Lang.CreateDialogFilter(LoadingScreenTipsLocalizationPath + (SubworldSystem.AnyActive<Macrocosm>() ? MacrocosmSubworld.Current.Name : "Earth")));
             if (textKey is LocalizedText text && !text.Key.Contains(LoadingScreenTipsLocalizationPath) && messages.Length > 0)
             {

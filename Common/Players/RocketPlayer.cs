@@ -274,8 +274,8 @@ namespace Macrocosm.Common.Players
         {
             orig(self);
 
-            List<Player> playersThatDrawBehindNPCs = typeof(Main).GetFieldValue<List<Player>>("_playersThatDrawBehindNPCs", self, BindingFlags.NonPublic | BindingFlags.Instance);
-            List<Player> playersThatDrawAfterProjectiles = typeof(Main).GetFieldValue<List<Player>>("_playersThatDrawAfterProjectiles", self, BindingFlags.NonPublic | BindingFlags.Instance);
+            List<Player> playersThatDrawBehindNPCs = typeof(Main).GetFieldValue<List<Player>>("_playersThatDrawBehindNPCs", self);
+            List<Player> playersThatDrawAfterProjectiles = typeof(Main).GetFieldValue<List<Player>>("_playersThatDrawAfterProjectiles", self);
 
             Player player;
             RocketPlayer rocketPlayer;

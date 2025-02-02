@@ -212,7 +212,7 @@ namespace Macrocosm.Content.Rockets
                 Modules ??= new RocketModule[moduleTemplates.Length];
                 int slot = (int)template.Slot;
                 Modules[slot] = template.Clone();
-                Modules[slot].SetRocket(this);
+                Modules[slot].Rocket = this;
             }
 
             Inventory = new Inventory(DefaultTotalInventorySize, this);
