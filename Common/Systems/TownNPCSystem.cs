@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Subworlds;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -156,20 +157,10 @@ namespace Macrocosm.Common.Systems
 
         // Get the vanilla Update method to spawn NPCs in !NormalUpdates subworlds
         // Does not do anything on multiplayer clients
-        private static MethodInfo Main_UpdateTime_SpawnTownNPCs;
-        private static void UpdateTime_SpawnTownNPCs()
-        {
-            Main_UpdateTime_SpawnTownNPCs ??= typeof(Main).GetMethod("UpdateTime_SpawnTownNPCs", BindingFlags.NonPublic | BindingFlags.Static);
-            Main_UpdateTime_SpawnTownNPCs.Invoke(null, null);
-        }
+        private static void UpdateTime_SpawnTownNPCs() => typeof(Main).InvokeMethod("UpdateTime_SpawnTownNPCs");
 
         // Get the method that spawns NPCs
-        private static MethodInfo WorldGen_TrySpawningTownNPC;
-        public static void TrySpawningTownNPC(int i, int j)
-        {
-            WorldGen_TrySpawningTownNPC ??= typeof(WorldGen).GetMethod("TrySpawningTownNPC", BindingFlags.NonPublic | BindingFlags.Static);
-            WorldGen_TrySpawningTownNPC.Invoke(null, [i, j]);
-        }
+        public static void TrySpawningTownNPC(int i, int j) => typeof(WorldGen).InvokeMethod("TrySpawningTownNPC", parameters: [i, j]);
 
         // Prevents NPCs from spawning if not IsTownNPCAllowedToSpawnHere
         private void IL_Main_UpdateTime_SpawnTownNPCs(ILContext il)

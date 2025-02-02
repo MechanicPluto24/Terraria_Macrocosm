@@ -35,32 +35,32 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
             if (inWorld)
                 lightColor = Lighting.GetColor((drawPos + Main.screenPosition).ToTileCoordinates());
 
-            spriteBatch.Draw(rearLandingLeg, drawPos, rearLandingLegFrame, lightColor * rocket.Transparency);
+            spriteBatch.Draw(rearLandingLeg, drawPos, rearLandingLegFrame, lightColor * Rocket.Transparency);
 
             // Draw the rear booster behind the engine module 
             Texture2D boosterRear = ModContent.Request<Texture2D>(BoosterRear, AssetRequestMode.ImmediateLoad).Value;
-            spriteBatch.Draw(boosterRear, position + new Vector2(Width / 2f - boosterRear.Width / 2f, Height - boosterRear.Height / 4), null, lightColor * rocket.Transparency, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(boosterRear, position + new Vector2(Width / 2f - boosterRear.Width / 2f, Height - boosterRear.Height / 4), null, lightColor * Rocket.Transparency, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
-            if (rocket.ForcedFlightAppearance || rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch)
+            if (Rocket.ForcedFlightAppearance || Rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.Additive, state1);
 
-                if (rocket.State is Rocket.ActionState.StaticFire)
-                    DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(rocket.StaticFireProgress));
+                if (Rocket.State is Rocket.ActionState.StaticFire)
+                    DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(Rocket.StaticFireProgress));
 
-                if (rocket.State is Rocket.ActionState.Flight || rocket.ForcedFlightAppearance)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.FlightProgress, 0f, 0.1f) * 10f));
+                if (Rocket.State is Rocket.ActionState.Flight || Rocket.ForcedFlightAppearance)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.FlightProgress, 0f, 0.1f) * 10f));
 
-                if (rocket.State is Rocket.ActionState.Landing)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.LandingProgress, 0f, 0.1f) * 10f));
+                if (Rocket.State is Rocket.ActionState.Landing)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.LandingProgress, 0f, 0.1f) * 10f));
 
-                if (rocket.State is Rocket.ActionState.Docking)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.DockingProgress, 0f, 0.1f) * 10f));
+                if (Rocket.State is Rocket.ActionState.Docking)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.DockingProgress, 0f, 0.1f) * 10f));
 
-                if (rocket.State is Rocket.ActionState.Undocking)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(rocket.UndockingProgress, 0f, 0.1f) * 10f));
+                if (Rocket.State is Rocket.ActionState.Undocking)
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.UndockingProgress, 0f, 0.1f) * 10f));
             }
 
             spriteBatch.End();
@@ -80,7 +80,7 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
             spriteBatch.Begin(SamplerState.PointClamp, state2);
 
             // Draw the nameplate
-            rocket.Nameplate.Draw(spriteBatch, position + new Vector2(Width / 2, 0));
+            Rocket.Nameplate.Draw(spriteBatch, position + new Vector2(Width / 2, 0));
 
             spriteBatch.End();
             spriteBatch.Begin(state2);

@@ -90,10 +90,10 @@ namespace Macrocosm.Common.Netcode
                 }
                 else
                 {
-                    MethodInfo writeMethod = typeof(BinaryWriter).GetMethod("Write", new[] { memberType });
+                    MethodInfo writeMethod = typeof(BinaryWriter).GetMethod("Write", [memberType]);
                     if (writeMethod is not null)
                     {
-                        writeMethod.Invoke(binaryWriter, new object[] { value });
+                        writeMethod.Invoke(binaryWriter, [value]);
                     }
                     else
                     {

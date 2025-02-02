@@ -21,26 +21,8 @@ namespace Macrocosm.Common.Drawing
     {
         public void Load(Mod mod)
         {
-            On_TileDrawing.PreDrawTiles += On_TileDrawing_PreDrawTiles; ;
+            On_TileDrawing.PreDrawTiles += On_TileDrawing_PreDrawTiles;
             On_TileDrawing.PostDrawTiles += On_TileDrawing_PostDrawTiles;
-
-            tileDrawing_DrawAnimatedTile_AdjustForVisionChangers_methodInfo = typeof(TileDrawing).GetMethod("DrawAnimatedTile_AdjustForVisionChangers", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_DrawTiles_GetLightOverride_methodInfo = typeof(TileDrawing).GetMethod("DrawTiles_GetLightOverride", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_GetHighestWindGridPushComplex_methodInfo = typeof(TileDrawing).GetMethod("GetHighestWindGridPushComplex", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            tilePaintSystemV2_requests_fieldInfo = typeof(TilePaintSystemV2).GetField("_requests", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            tileDrawing_treeWindCounter_fieldInfo = typeof(TileDrawing).GetField("_treeWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_grassWindCounter_fieldInfo = typeof(TileDrawing).GetField("_grassWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_sunflowerWindCounter_fieldInfo = typeof(TileDrawing).GetField("_sunflowerWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_vineWindCounter_fieldInfo = typeof(TileDrawing).GetField("_vineWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            tileDrawing_leafFrequency_fieldInfo = typeof(TileDrawing).GetField("_leafFrequency", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_rand_fieldInfo = typeof(TileDrawing).GetField("_rand", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            tileDrawing_specialPositions_fieldInfo = typeof(TileDrawing).GetField("_specialPositions", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_specialTileX_fieldInfo = typeof(TileDrawing).GetField("_specialTileX", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_specialTileY_fieldInfo = typeof(TileDrawing).GetField("_specialTileY", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         public void Unload()
@@ -50,30 +32,12 @@ namespace Macrocosm.Common.Drawing
 
         public static TileDrawing TileRenderer => Main.instance.TilesRenderer;
 
-        public static double TreeWindCounter => (double)tileDrawing_treeWindCounter_fieldInfo.GetValue(TileRenderer);
-        public static double GrassWindCounter => (double)tileDrawing_grassWindCounter_fieldInfo.GetValue(TileRenderer);
-        public static double SunflowerWindCounter => (double)tileDrawing_sunflowerWindCounter_fieldInfo.GetValue(TileRenderer);
-        public static double VineWindCounter => (double)tileDrawing_vineWindCounter_fieldInfo.GetValue(TileRenderer);
-        public static int TreeLeafFrequency => (int)tileDrawing_leafFrequency_fieldInfo.GetValue(TileRenderer);
-        public static UnifiedRandom TileRendererRandom => (UnifiedRandom)tileDrawing_rand_fieldInfo.GetValue(TileRenderer);
-
-        private static MethodInfo tileDrawing_DrawAnimatedTile_AdjustForVisionChangers_methodInfo;
-        private static MethodInfo tileDrawing_DrawTiles_GetLightOverride_methodInfo;
-        private static MethodInfo tileDrawing_GetHighestWindGridPushComplex_methodInfo;
-
-        private static FieldInfo tilePaintSystemV2_requests_fieldInfo;
-
-        private static FieldInfo tileDrawing_treeWindCounter_fieldInfo;
-        private static FieldInfo tileDrawing_grassWindCounter_fieldInfo;
-        private static FieldInfo tileDrawing_sunflowerWindCounter_fieldInfo;
-        private static FieldInfo tileDrawing_vineWindCounter_fieldInfo;
-
-        private static FieldInfo tileDrawing_leafFrequency_fieldInfo;
-        private static FieldInfo tileDrawing_rand_fieldInfo;
-
-        private static FieldInfo tileDrawing_specialPositions_fieldInfo;
-        private static FieldInfo tileDrawing_specialTileX_fieldInfo;
-        private static FieldInfo tileDrawing_specialTileY_fieldInfo;
+        public static double TreeWindCounter => typeof(TileDrawing).GetFieldValue<double>("_treeWindCounter", TileRenderer);
+        public static double GrassWindCounter => typeof(TileDrawing).GetFieldValue<double>("_grassWindCounter", TileRenderer);
+        public static double SunflowerWindCounter => typeof(TileDrawing).GetFieldValue<double>("_sunflowerWindCounter", TileRenderer);
+        public static double VineWindCounter => typeof(TileDrawing).GetFieldValue<double>("_vineWindCounter", TileRenderer);
+        public static int TreeLeafFrequency => typeof(TileDrawing).GetFieldValue<int>("_leafFrequency", TileRenderer);
+        public static UnifiedRandom TileRendererRandom => typeof(TileDrawing).GetFieldValue<UnifiedRandom>("_rand", TileRenderer);
 
 
         private static readonly Dictionary<TilePaintSystemV2.TileVariationkey, TileExtraTextureRenderTargetHolder> tileExtraTextureRenders = new();
@@ -407,29 +371,21 @@ namespace Macrocosm.Common.Drawing
             }
         }
 
-        public static void AddTilePaintRequest(TilePaintSystemV2.ARenderTargetHolder renderTargetHolder)
-        {
-            ((List<TilePaintSystemV2.ARenderTargetHolder>)tilePaintSystemV2_requests_fieldInfo.GetValue(Main.instance.TilePaintSystem)).Add(renderTargetHolder);
-        }
+        public static void AddTilePaintRequest(TilePaintSystemV2.ARenderTargetHolder renderTargetHolder) 
+            => ((List<TilePaintSystemV2.ARenderTargetHolder>)typeof(TilePaintSystemV2).GetFieldValue("_requests", Main.instance.TilePaintSystem)).Add(renderTargetHolder);
 
         public static void AdjustForVisionChangers(int i, int j, Tile tileCache, ushort typeCache, short tileFrameX, short tileFrameY, ref Color tileLight, bool canDoDust)
-        {
-            tileDrawing_DrawAnimatedTile_AdjustForVisionChangers_methodInfo.Invoke(TileRenderer, [i, j, tileCache, typeCache, tileFrameX, tileFrameY, tileLight, canDoDust]);
-        }
+            => typeof(TileDrawing).InvokeMethod("DrawAnimatedTile_AdjustForVisionChangers", TileRenderer, parameters: [i, j, tileCache, typeCache, tileFrameX, tileFrameY, tileLight, canDoDust]);
 
         public static Color GetLightOverride(int j, int i, Tile tileCache, ushort typeCache, short tileFrameX, short tileFrameY, Color tileLight)
-        {
-            return (Color)tileDrawing_DrawTiles_GetLightOverride_methodInfo.Invoke(TileRenderer, [i, j, tileCache, typeCache, tileFrameX, tileFrameY, tileLight]);
-        }
+            => typeof(TileDrawing).InvokeMethod<Color>("DrawTiles_GetLightOverride", TileRenderer, parameters: [i, j, tileCache, typeCache, tileFrameX, tileFrameY, tileLight]);
 
         public static float GetHighestWindGridPushComplex(int topLeftX, int topLeftY, int sizeX, int sizeY, int totalPushTime, float pushForcePerFrame, int loops, bool swapLoopDir)
-        {
-            return (float)tileDrawing_GetHighestWindGridPushComplex_methodInfo.Invoke(TileRenderer, [topLeftX, topLeftY, sizeX, sizeY, totalPushTime, pushForcePerFrame, loops, swapLoopDir]);
-        }
+            => typeof(TileDrawing).InvokeMethod<float>("GetHighestWindGridPushComplex", TileRenderer, parameters: [topLeftX, topLeftY, sizeX, sizeY, totalPushTime, pushForcePerFrame, loops, swapLoopDir]);
 
         public static Point[] GetVanillaSpecialPoints(TileDrawing.TileCounterType type)
         {
-            Point[][] specialPositions = (Point[][])tileDrawing_specialPositions_fieldInfo.GetValue(TileRenderer);
+            Point[][] specialPositions = typeof(TileDrawing).GetFieldValue<Point[][]>("_specialPositions", TileRenderer);
 
             if (specialPositions == null || type >= TileDrawing.TileCounterType.Count)
                 return Array.Empty<Point>();
@@ -439,8 +395,8 @@ namespace Macrocosm.Common.Drawing
 
         public static Point[] GetVanillaSpecialLegacyPoints()
         {
-            int[] specialTileX = (int[])tileDrawing_specialTileX_fieldInfo.GetValue(TileRenderer);
-            int[] specialTileY = (int[])tileDrawing_specialTileY_fieldInfo.GetValue(TileRenderer);
+            int[] specialTileX = typeof(TileDrawing).GetFieldValue<int[]>("_specialTileX", TileRenderer);
+            int[] specialTileY = typeof(TileDrawing).GetFieldValue<int[]>("_specialTileY", TileRenderer);
 
             if (specialTileX == null || specialTileY == null)
                 return Array.Empty<Point>();
@@ -451,6 +407,7 @@ namespace Macrocosm.Common.Drawing
 
             return points;
         }
+
 
         /// <summary>
         /// Checks if the given (i, j) coordinate is a special point for a specific <see cref="TileCounterType"/>.

@@ -70,6 +70,8 @@ namespace Macrocosm.Content.Rockets.Modules
             }
         }
 
+        public Rocket Rocket { get; set; }
+
         public abstract SlotType Slot { get; }
         public abstract int Tier { get; }
         public abstract ConfigurationType Configuration { get; }
@@ -109,21 +111,18 @@ namespace Macrocosm.Content.Rockets.Modules
         private Asset<Texture2D> texture;
         public Texture2D Texture => (texture ??= ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad)).Value;
 
-        public virtual string IconPath => (GetType().Namespace + "_Icon").Replace(".", "/");
+        public virtual string IconPath => (this.GetNamespacePath() + "_Icon").Replace(".", "/");
         private Asset<Texture2D> icon;
         public Texture2D Icon => (icon ??= ModContent.RequestIfExists<Texture2D>(IconPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
 
-        public virtual string BlueprintPath => (GetType().Namespace + "Blueprint").Replace(".", "/");
+        public virtual string BlueprintPath => (this.GetNamespacePath() + "_Blueprint").Replace(".", "/");
         private Asset<Texture2D> blueprint;
         public Texture2D Blueprint => (blueprint ??= ModContent.RequestIfExists<Texture2D>(BlueprintPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
-
 
         public bool BlueprintHighlighted { get; set; } = false;
 
         public Color BlueprintOutlineColor = UITheme.Current.PanelStyle.BorderColor;
         public Color BlueprintFillColor = UITheme.Current.PanelStyle.BackgroundColor;
-
-        protected Rocket rocket;
 
         public RocketModule()
         {
@@ -132,7 +131,6 @@ namespace Macrocosm.Content.Rockets.Modules
         }
 
         public RocketModule Clone() => DeserializeData(SerializeData());
-        public void SetRocket(Rocket value) => rocket = value;
 
         public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
@@ -166,38 +164,21 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public virtual void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
         {
-            state.SaveState(spriteBatch);
-            SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1];
-
-            colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
-            Effect effect = colorMaskShading.Value;
-
-            Main.graphics.GraphicsDevice.Textures[1] = Blueprint;
-            Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-            effect.Parameters["uColorCount"].SetValue(2);
-            effect.Parameters["uColorKey"].SetValue(blueprintKeys);
-            effect.Parameters["uColor"].SetValue((new Color[]
+            Pattern blueprint = new("Blueprint", Name, BlueprintPath, new Dictionary<Color, PatternColorData>
             {
-                BlueprintHighlighted ? UITheme.Current.ButtonHighlightStyle.BorderColor : UITheme.Current.PanelStyle.BorderColor,
-                UITheme.Current.PanelStyle.BackgroundColor
-            }).ToVector4Array());
+                { new Color(188, 188, 188), new PatternColorData( BlueprintHighlighted ? UITheme.Current.ButtonHighlightStyle.BorderColor : UITheme.Current.PanelStyle.BorderColor) },
+                { new Color(119, 119, 119), new PatternColorData( UITheme.Current.PanelStyle.BackgroundColor ) }
+            });
 
+            state.SaveState(spriteBatch);
             spriteBatch.End();
-            spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+            spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
 
+            blueprint.Apply();
             spriteBatch.Draw(Blueprint, Position + position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
-
-            Main.graphics.GraphicsDevice.Textures[1] = null;
-            Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
         }
-
-        protected readonly Vector3[] blueprintKeys = [
-            new Vector3(0.47f, 0.47f, 0.47f),
-            new Vector3(0.74f, 0.74f, 0.74f)
-        ];
     }
 }

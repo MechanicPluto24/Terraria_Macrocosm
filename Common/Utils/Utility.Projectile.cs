@@ -55,12 +55,7 @@ namespace Macrocosm.Common.Utils
             return damage;
         }
 
-        public static Rectangle GetDamageHitbox(this Projectile proj)
-        {
-            MethodInfo dynMethod = proj.GetType().GetMethod("Damage_GetHitbox",
-                BindingFlags.NonPublic | BindingFlags.Instance);
-            return (Rectangle)dynMethod.Invoke(proj, null);
-        }
+        public static Rectangle GetDamageHitbox(this Projectile proj) => typeof(Projectile).InvokeMethod<Rectangle>("Damage_GetHitbox", proj);
 
         /// <summary>
         /// Draws an animated projectile, leave texture null to draw as entity with the loaded texture

@@ -55,12 +55,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         private UIPanel configurationSelector;
         private UIText configurationText;
 
-        private int currentConfigurationIndex = 0;
-        private readonly Dictionary<string, List<string>> Configurations = new()
-        {
-            { "Manned", ["CommandPod", "ServiceModule", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight"]},
-            { "Unmanned", ["PayloadPod", "UnmannedTug", "ReactorModule", "EngineModule", "BoosterLeft", "BoosterRight"]}
-        };
+        private int currentConfigurationIndex = 1;
 
         public UIAssemblyTab()
         {
@@ -103,10 +98,6 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
         public void OnTabClose()
         {
         }
-
-        private Dictionary<string, List<string>> SwappableCategories = new()
-        {
-        };
 
         private bool CheckAssembleRecipes(bool consume)
         {
@@ -163,7 +154,6 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
 
             CustomAchievement.Unlock<BuildRocket>();
         }
-
 
         private void DisassembleRocket()
         {
@@ -223,9 +213,28 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             RefreshAssemblyElements();
         }
 
+        private void SwitchModule(UIModuleAssemblyElement element, int direction)
+        {
+            List<RocketModule> availableModules = RocketModule.Templates.Where(m => m.Slot == element.Module.Slot && (m.Configuration == element.Module.Configuration || m.Configuration == 0 || element.Module.Configuration == 0)).OrderBy(m => m.Tier).ToList();
+            int currentIndex = availableModules.FindIndex(m => m.Name == element.Module.Name);
+            int newIndex = currentIndex + direction;
+            if (newIndex < 0 || newIndex >= availableModules.Count)
+                return;
+
+            RocketModule newModule = availableModules[newIndex].Clone();
+            Rocket.Modules[(int)newModule.Slot] = newModule;
+            Rocket.SyncCommonData();
+
+            RefreshAssemblyElements();
+            UpdateBlueprint();
+        }
+
         private void SwitchConfiguration(int direction)
         {
-            currentConfigurationIndex = 1 + (currentConfigurationIndex + direction) % 3;
+            int count = 2;
+            int current = currentConfigurationIndex - 1;
+            current = (current + direction + count) % count;
+            currentConfigurationIndex = current + 1;
             RocketModule.ConfigurationType targetConfiguration = (RocketModule.ConfigurationType)currentConfigurationIndex;
 
             ApplyConfiguration(targetConfiguration);
@@ -234,7 +243,6 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             RefreshAssemblyElements();
             UpdateBlueprint();
         }
-
 
         private void ApplyConfiguration(RocketModule.ConfigurationType targetConfiguration)
         {
@@ -498,13 +506,12 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             assemblyElements = new();
 
             int slotCount = 0;
-            int assemblyElementCount = 0;
             foreach (RocketModule m in RocketModule.Templates.OrderBy(m => m.Slot))
             {
                 RocketModule module = m.Clone();
                 if (!module.Recipe.Linked)
                 {
-                    List<UIInventorySlot> slots = new();
+                    List<UIInventorySlot> inventorySlots = new();
                     for (int i = 0; i < module.Recipe.Count(); i++)
                     {
                         AssemblyRecipeEntry recipeEntry = module.Recipe[i];
@@ -526,16 +533,19 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                         }
 
                         slot.SizeLimit += 8;
-                        slots.Add(slot);
+                        inventorySlots.Add(slot);
                     }
 
-                    UIModuleAssemblyElement assemblyElement = new(module, slots);
+                    UIModuleAssemblyElement assemblyElement = new(module, inventorySlots)
+                    {
+                        Top = new(0, 0.19f + 0.175f * (int)module.Slot),
+                        Left = new(0, 0.0485f),
+                        OnSwitchModule = SwitchModule
+                    };
                     assemblyElements[module.Name] = assemblyElement;
+
                     if(Rocket.Modules.Select(m => m.Name).Contains(module.Name))
                     {
-                        assemblyElement.Top = new(0, 0.185f + 0.175f * assemblyElementCount++);
-                        assemblyElement.Left = new(0, 0.08f);
-
                         Append(assemblyElement);
                         assemblyElement.Activate();
                     }
@@ -545,7 +555,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             foreach (var module in RocketModule.Templates)
             {
                 if (module.Recipe.Linked)
-                    assemblyElements[module.Recipe.LinkedResult.Name].LinkedModules.Add(module);
+                    assemblyElements[module.Recipe.LinkedResult.Name].AddLinked(module);
             }
 
             return assemblyElements;

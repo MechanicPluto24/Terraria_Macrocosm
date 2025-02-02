@@ -16,13 +16,6 @@ namespace Macrocosm.Common.Utils
 
         public static Rectangle ScreenRectangle => new(0, 0, Main.screenWidth, Main.screenHeight);
 
-        private static FieldInfo spriteBatch_sortMode_fieldInfo;
-        private static FieldInfo spriteBatch_blendState_fieldInfo;
-        private static FieldInfo spriteBatch_samplerState_fieldInfo;
-        private static FieldInfo spriteBatch_rasterizerState_fieldInfo;
-        private static FieldInfo spriteBatch_customEffect_fieldInfo;
-        private static FieldInfo spriteBatch_transformMatrix_fieldInfo;
-
         public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, System.Drawing.RectangleF destinationRectangle, Color color)
         {
             Vector2 position = new(destinationRectangle.X, destinationRectangle.Y);
@@ -31,46 +24,18 @@ namespace Macrocosm.Common.Utils
             spriteBatch.Draw(texture, position, null, color, 0.0f, origin, scale, SpriteEffects.None, 0.0f);
         }
 
-        public static bool BeginCalled(this SpriteBatch spriteBatch) => (bool)spriteBatch.GetType().GetField("beginCalled", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(spriteBatch);
+        public static bool BeginCalled(this SpriteBatch spriteBatch) => typeof(SpriteBatch).GetFieldValue<bool>("beginCalled", spriteBatch);
 
-        /// <summary> Saves the SpriteBatch parameters. Prefer to use <see cref="SpriteBatchState.SaveState(SpriteBatch)"/> instead</summary>
+        /// <summary> Saves the SpriteBatch parameters </summary>
         public static SpriteBatchState SaveState(this SpriteBatch spriteBatch)
         {
-            if (spriteBatch.BeginCalled())
-            {
-                var type = typeof(SpriteBatch);
-                spriteBatch_sortMode_fieldInfo ??= type.GetField("sortMode", BindingFlags.Instance | BindingFlags.NonPublic);
-                spriteBatch_blendState_fieldInfo ??= type.GetField("blendState", BindingFlags.Instance | BindingFlags.NonPublic);
-                spriteBatch_samplerState_fieldInfo ??= type.GetField("samplerState", BindingFlags.Instance | BindingFlags.NonPublic);
-                spriteBatch_rasterizerState_fieldInfo ??= type.GetField("rasterizerState", BindingFlags.Instance | BindingFlags.NonPublic);
-                spriteBatch_customEffect_fieldInfo ??= type.GetField("customEffect", BindingFlags.Instance | BindingFlags.NonPublic);
-                spriteBatch_transformMatrix_fieldInfo ??= type.GetField("transformMatrix", BindingFlags.Instance | BindingFlags.NonPublic);
+            if (!spriteBatch.BeginCalled())
+                return new();
 
-                return new SpriteBatchState(
-                   true,
-                   (SpriteSortMode)spriteBatch_sortMode_fieldInfo.GetValue(spriteBatch),
-                   (BlendState)spriteBatch_blendState_fieldInfo.GetValue(spriteBatch),
-                   (SamplerState)spriteBatch_samplerState_fieldInfo.GetValue(spriteBatch),
-                   default,
-                   (RasterizerState)spriteBatch_rasterizerState_fieldInfo.GetValue(spriteBatch),
-                   (Effect)spriteBatch_customEffect_fieldInfo.GetValue(spriteBatch),
-                   (Matrix)spriteBatch_transformMatrix_fieldInfo.GetValue(spriteBatch)
-               );
-            }
-
-            else
-                return new SpriteBatchState(
-                    false,
-                    SpriteSortMode.Deferred,
-                    BlendState.AlphaBlend,
-                    Main.DefaultSamplerState,
-                    DepthStencilState.Default,
-                    RasterizerState.CullNone,
-                    null,
-                    Main.GameViewMatrix.TransformationMatrix
-                );
+            SpriteBatchState state = new();
+            state.SaveState(spriteBatch);
+            return state;
         }
-
 
         /// <summary> End the SpriteBatch but save the SpriteBatchState </summary>
         public static void End(this SpriteBatch spriteBatch, out SpriteBatchState state)

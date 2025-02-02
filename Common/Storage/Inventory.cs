@@ -830,7 +830,7 @@ namespace Macrocosm.Common.Storage
         // However, this needed a detour on Inventory.Hooks.On_ItemSlot_SetGlow in order to set the inventory slot colors accordingly
         /// <summary> Sort items in an inventory using the vanilla logic </summary>
         public static void SortItems(Item[] items, params int[] ignoreSlots)
-            => Utility.InvokeMethod(typeof(ItemSorting), "Sort", items, ignoreSlots);
+            => Utility.InvokeMethod(typeof(ItemSorting), "Sort", items, parameters: [ignoreSlots]);
 
         // Adapted from Terraria.UI.ChestUI.MoveCoins, but to support dynamic inventory size,
         // and the option of moving coins even though there are no coins already in the container.

@@ -324,20 +324,11 @@ namespace Macrocosm.Common.UI
             }
         }
 
-        private static MethodInfo itemSlot_TryItemSwap;
-        private static MethodInfo itemSlot_TryOpenContainer;
-
         private static void TryItemSwap(Item item)
-        {
-            itemSlot_TryItemSwap ??= typeof(ItemSlot).GetMethod("TryItemSwap", BindingFlags.NonPublic | BindingFlags.Static);
-            itemSlot_TryItemSwap.Invoke(null, [item]);
-        }
+            => typeof(ItemSlot).InvokeMethod("TryItemSwap", parameters: [item]);
 
         private static void TryOpenContainer(Item item, Player player)
-        {
-            itemSlot_TryOpenContainer ??= typeof(ItemSlot).GetMethod("TryOpenContainer", BindingFlags.NonPublic | BindingFlags.Static);
-            itemSlot_TryOpenContainer.Invoke(null, [item, player]);
-        }
+            => typeof(ItemSlot).InvokeMethod("TryOpenContainer", parameters: [item, player]);
 
         protected sealed override void DrawSelf(SpriteBatch spriteBatch)
         {
