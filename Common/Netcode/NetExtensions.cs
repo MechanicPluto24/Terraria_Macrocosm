@@ -111,7 +111,7 @@ namespace Macrocosm.Common.Netcode
         /// If the <see cref="BitReader"/> is not null, boolean fields are read from it instead.
         /// </summary>
         /// <param name="reader"></param>
-        public static void NetReadFields(this object obj, BinaryReader binaryReader, BitReader bitReader = null)
+        public static void NetRead(this object obj, BinaryReader binaryReader, BitReader bitReader = null)
         {
             foreach (var member in obj.GetNetSyncMembers())
             {

@@ -9,10 +9,10 @@ namespace Macrocosm.Common.Systems.UI
 {
     public class MachineUIState : UIState
     {
-        public MachineUI MachineUI;
-
-        public MachineUIState()
+        public MachineUI MachineUI { get; }
+        public MachineUIState(MachineUI machineUI)
         {
+            MachineUI = machineUI;
         }
 
         public override void OnInitialize()

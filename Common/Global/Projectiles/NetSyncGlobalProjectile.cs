@@ -21,7 +21,7 @@ namespace Macrocosm.Common.Global.Projectiles
             if (projectile.ModProjectile is null)
                 return;
 
-            projectile.ModProjectile.NetReadFields(binaryReader, bitReader);
+            projectile.ModProjectile.NetRead(binaryReader, bitReader);
         }
     }
 }

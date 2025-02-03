@@ -169,9 +169,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         {
             if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
             {
-                if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
+                if (launchPadStorage.TryGetValue(MacrocosmSubworld.CurrentID, out List<LaunchPad> launchpads))
                 {
-                    foreach (var launchPad in launchPadStorage[MacrocosmSubworld.CurrentID])
+                    foreach (var launchPad in launchpads)
                     {
                         launchPad.NetSync(MacrocosmSubworld.CurrentID, toClient: remoteClient);
                     }

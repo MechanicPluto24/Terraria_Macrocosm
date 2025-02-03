@@ -191,7 +191,7 @@ namespace Macrocosm.Content.Tiles.Special
         {
             if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out LaunchPad launchPad))
             {
-                if (launchPad.HasRocket || !launchPad.Inventory.IsEmpty)
+                if (launchPad.HasActiveRocket || !launchPad.Inventory.IsEmpty)
                 {
                     fail = true;
                     return;

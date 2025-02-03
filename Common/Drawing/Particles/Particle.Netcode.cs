@@ -47,7 +47,7 @@ namespace Macrocosm.Common.Drawing.Particles
             else
                 particle = ParticleManager.Particles[particleIndex];
 
-            particle.NetReadFields(reader);
+            particle.NetRead(reader);
 
             if (Main.netMode == NetmodeID.Server)
                 particle.NetSync(ignoreClient: sender);

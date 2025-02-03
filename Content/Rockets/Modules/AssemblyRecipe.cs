@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Macrocosm.Common.Storage;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Terraria;
@@ -43,6 +44,9 @@ namespace Macrocosm.Content.Rockets.Modules
         // TODO: add check regardless of order
         public bool Check(bool consume, params Item[] items)
         {
+            if (Linked)
+                return LinkedResult.Recipe.Check(consume, items);
+
             int count = Math.Min(entries.Count, items.Length);
             bool met = true;
             for (int i = 0; i < count; i++)

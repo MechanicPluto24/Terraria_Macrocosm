@@ -103,7 +103,7 @@ namespace Macrocosm.Common.Systems.UI
                 if (UIRocketState.Rocket is not null)
                     rocket = UIRocketState.Rocket;
 
-                UIRocketState = new RocketUIState();
+                UIRocketState = new RocketUIState(rocket);
                 UIRocketState.Activate();
 
                 if (UserInterface?.CurrentState != null)
@@ -119,7 +119,7 @@ namespace Macrocosm.Common.Systems.UI
                 if (UIAssemblyState.LaunchPad is not null)
                     launchPad = UIAssemblyState.LaunchPad;
 
-                UIAssemblyState = new AssemblyUIState();
+                UIAssemblyState = new AssemblyUIState(launchPad);
                 UIAssemblyState.Activate();
 
                 if (UserInterface?.CurrentState != null)
@@ -146,8 +146,7 @@ namespace Macrocosm.Common.Systems.UI
 
             Main.playerInventory = true;
 
-            UIRocketState = new();
-            UIRocketState.Rocket = rocket;
+            UIRocketState = new(rocket);
             UIRocketState.Initialize();
             UIRocketState.OnShow();
             UIRocketState.Activate();
@@ -162,8 +161,7 @@ namespace Macrocosm.Common.Systems.UI
             if (UIAssemblyState is not null && UIAssemblyState.LaunchPad is not null && !(UIAssemblyState.LaunchPad.Inventory.InteractingPlayer == Main.myPlayer || UIAssemblyState.LaunchPad.Inventory.InteractingPlayer == 255))
                 return;
 
-            UIAssemblyState = new();
-            UIAssemblyState.LaunchPad = launchPad;
+            UIAssemblyState = new(launchPad);
             UIAssemblyState.LaunchPad.Inventory.InteractingPlayer = Main.myPlayer;
 
             UIAssemblyState.Initialize();
@@ -191,8 +189,7 @@ namespace Macrocosm.Common.Systems.UI
             }
 
             machineUI.MachineTE = machineTileEntity;
-            UIMachineState = new();
-            UIMachineState.MachineUI = machineUI;
+            UIMachineState = new(machineUI);
             if (UIMachineState.MachineUI.MachineTE is IInventoryOwner inventoryOwner1)
             {
                 Main.stackSplit = 600;

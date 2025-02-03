@@ -32,8 +32,9 @@ namespace Macrocosm.Common.Systems.UI
         private UIHoverImageButton tabRightButton;
 
 
-        public RocketUIState()
+        public RocketUIState(Rocket rocket)
         {
+            Rocket = rocket;
         }
 
         public override void OnInitialize()

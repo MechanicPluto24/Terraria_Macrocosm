@@ -2,6 +2,7 @@
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -10,9 +11,9 @@ using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Assembly
 {
-    public class UIRocketBlueprint : UIPanel, IRocketUIDataConsumer
+    public class UIRocketBlueprint : UIPanel
     {
-        public Rocket Rocket { get; set; } = new();
+        public Rocket Rocket { get; set; }
 
         public UIRocketBlueprint()
         {

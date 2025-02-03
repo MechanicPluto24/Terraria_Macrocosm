@@ -60,6 +60,7 @@ namespace Macrocosm.Content.Rockets.Modules
             ModTypeLookup<RocketModule>.Register(this);
             Templates.Add(this);
         }
+
         public override void SetupContent() => SetStaticDefaults();
         public override void SetStaticDefaults()
         {

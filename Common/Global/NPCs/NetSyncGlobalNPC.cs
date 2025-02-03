@@ -21,7 +21,7 @@ namespace Macrocosm.Common.Global.NPCs
             if (npc.ModNPC is null)
                 return;
 
-            npc.ModNPC.NetReadFields(binaryReader, bitReader);
+            npc.ModNPC.NetRead(binaryReader, bitReader);
         }
     }
 }
