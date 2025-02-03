@@ -321,7 +321,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             foreach (var launchPad in LaunchPadManager.GetLaunchPads(subworldId))
             {
                 bool isCurrent = Rocket is not null && launchPad.RocketID == Rocket.WhoAmI;
-                bool isOccupied = Rocket is not null && launchPad.HasRocket;
+                bool isOccupied = Rocket is not null && launchPad.HasActiveRocket;
 
                 UILaunchDestinationInfoElement infoElement = new(launchPad)
                 {

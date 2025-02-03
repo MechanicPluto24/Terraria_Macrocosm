@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Content.Items.Blocks;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
+using System.Linq;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules.Top
@@ -18,10 +19,11 @@ namespace Macrocosm.Content.Rockets.Modules.Top
 
         public override Vector2 GetOffset(RocketModule[] modules)
         {
+            int maxW = modules[0..4].Max(m => m.Width);
             return new
             (
-                x: Width,
-                y: 2
+                x: ((maxW - Width) / 2),
+                y: 0
             );
         }
 

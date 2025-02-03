@@ -13,17 +13,22 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         /// <summary>
         /// Syncs the launchpad fields with <see cref="NetSyncAttribute"/> across all clients and the server.
         /// </summary>
-        public void NetSync(string subworldId, int toClient = -1, int ignoreClient = -1)
+        public void NetSync(string subworldId, int toClient = -1, int ignoreClient = -1, int ignoreSubserver = -1)
         {
             if (Main.netMode == NetmodeID.SinglePlayer)
                 return;
 
             ModPacket packet = Macrocosm.Instance.GetPacket();
             packet.Write((byte)MessageType.SyncLaunchPadData);
+            packet.Write((short)NetHelper.GetServerIndex());
             packet.Write(subworldId);
+            internalRocket.NetWrite(packet);
 
             if (this.NetWrite(packet))
+            {
+                packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
                 packet.Send(toClient, ignoreClient);
+            }
 
             packet.Dispose();
         }
@@ -34,32 +39,19 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         /// <param name="reader"></param>
         public static void ReceiveSyncLaunchPadData(BinaryReader reader, int sender)
         {
+            int senderSubserver = reader.ReadInt16();
             string subworldId = reader.ReadString();
 
             LaunchPad launchPad = new();
-            launchPad.NetReadFields(reader);
+            launchPad.internalRocket.NetRead(reader);
+            launchPad.NetRead(reader);
 
             LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
             if (existingLaunchPad is null)
                 LaunchPadManager.Add(subworldId, launchPad, notify: true);
 
             if (Main.netMode == NetmodeID.Server)
-            {
-                launchPad.NetSync(subworldId, ignoreClient: sender);
-
-                var packet = new BinaryWriter(new MemoryStream(256));
-                packet.Write((byte)MessageType.SyncLaunchPadData);
-                packet.Write(subworldId);
-                launchPad.NetWrite(packet);
-
-                if (subworldId == MacrocosmSubworld.CurrentID)
-                {
-                    if (SubworldSystem.AnyActive())
-                        SubworldSystem.SendToMainServer(Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());
-                    else
-                        SubworldSystem.SendToAllSubservers(Macrocosm.Instance, (packet.BaseStream as MemoryStream).GetBuffer());
-                }
-            }
+                launchPad.NetSync(subworldId, ignoreClient: sender, ignoreSubserver: senderSubserver);
         }
     }
 }

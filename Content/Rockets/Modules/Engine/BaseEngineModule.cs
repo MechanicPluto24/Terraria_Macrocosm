@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
             // Draw the rear landing behind the rear booster 
             Texture2D rearLandingLeg = ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad).Value;
             Rectangle rearLandingLegFrame = rearLandingLeg.Frame(1, base.NumberOfFrames, frameY: CurrentFrame);
-            Vector2 drawPos = position + new Vector2(Width / 2f - rearLandingLeg.Width / 2f, Height + rearLandingLegFrame.Height / 2);
+            Vector2 drawPos = position + new Vector2(Width / 2f - rearLandingLeg.Width / 2f, Height - rearLandingLegFrame.Height / 2);
 
             if (inWorld)
                 lightColor = Lighting.GetColor((drawPos + Main.screenPosition).ToTileCoordinates());
@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
 
             // Draw the rear booster behind the engine module 
             Texture2D boosterRear = ModContent.Request<Texture2D>(BoosterRear, AssetRequestMode.ImmediateLoad).Value;
-            spriteBatch.Draw(boosterRear, position + new Vector2(Width / 2f - boosterRear.Width / 2f, Height - boosterRear.Height / 4), null, lightColor * Rocket.Transparency, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(boosterRear, position + new Vector2(Width / 2f - boosterRear.Width / 2f, Height - boosterRear.Height), null, lightColor * Rocket.Transparency, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             // Draw the exhaust trail 
             if (Rocket.ForcedFlightAppearance || Rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch)

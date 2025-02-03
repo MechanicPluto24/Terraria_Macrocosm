@@ -36,7 +36,7 @@ namespace Macrocosm.Common.Global.Tiles
                     for (int tileY = launchPad.StartTile.Y; tileY < launchPad.EndTile.Y; tileY++)
                         Wiring.SkipWire(tileX, tileY);
 
-                if (launchPad.HasRocket)
+                if (launchPad.HasActiveRocket)
                     RocketManager.Rockets[launchPad.RocketID].Launch(targetWorld: MacrocosmSubworld.CurrentID);
             }
         }

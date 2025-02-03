@@ -1,19 +1,30 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
+using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Achievements;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Tiles.Special;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.Net;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
@@ -27,21 +38,20 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         [NetSync] public Point16 EndTile;
         [NetSync] public int RocketID = -1;
         [NetSync] public string CustomName = "";
-        [NetSync] public string CompassCoordinates = "";
 
-        public string DisplayName
-            => !string.IsNullOrEmpty(CustomName) ? CustomName : Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad");
+        public string DisplayName => !string.IsNullOrEmpty(CustomName) ? CustomName : Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad");
 
-        public Rocket Rocket => HasRocket ? RocketManager.Rockets[RocketID] : unassembledRocket;
-        public bool HasRocket => RocketID >= 0;
+        public Rocket Rocket => HasActiveRocket ? RocketManager.Rockets[RocketID] : internalRocket;
+        public bool HasActiveRocket => RocketID >= 0;
 
-        private Rocket unassembledRocket;
+        private Rocket internalRocket;
         private Inventory assemblyInventory;
 
         public int Width => EndTile.X + 1 - StartTile.X;
         public Rectangle Hitbox => new((int)(StartTile.X * 16f), (int)(StartTile.Y * 16f), Width * 16, 16);
         public Point CenterTile => new((StartTile.X + (EndTile.X - StartTile.X) / 2), StartTile.Y);
         public Vector2 CenterWorld => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y * 16f);
+        public string CompassCoordinates => Utility.GetCompassCoordinates(CenterWorld);
 
         public Vector2 InventoryPosition => CenterWorld;
         public int InventorySerializationIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
@@ -54,16 +64,24 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         private bool isMouseOver = false;
         private bool spawned = false;
 
+
+        private Dictionary<string, Range> _moduleSlotRanges = new();
+
+        public RocketModule.ConfigurationType CurrentConfiguration { get; private set; } = RocketModule.ConfigurationType.Manned;
+        private List<RocketModule.ConfigurationType> Configurations 
+            => Enum.GetValues(typeof(RocketModule.ConfigurationType)).Cast<RocketModule.ConfigurationType>().Where(c => c != RocketModule.ConfigurationType.Any).ToList();
+
+
         public LaunchPad()
         {
             StartTile = new();
             EndTile = new();
 
-            unassembledRocket = new();
-            foreach (var module in Rocket.Modules)
-                module.IsBlueprint = true;
+            RocketID = -1;
+            internalRocket = new();
 
-            assemblyInventory = new(CountRequiredAssemblyItemSlots(unassembledRocket), this);
+            assemblyInventory = new(CountRequiredAssemblyItemSlots(out _moduleSlotRanges), this);
+            ReserveAssemblySlots();
         }
 
         public LaunchPad(int startTileX, int startTileY, int endTileX, int endTileY) : this()
@@ -78,8 +96,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public static LaunchPad Create(int startTileX, int startTileY, int endTileX, int endTileY, bool shouldSync = true)
         {
             LaunchPad launchPad = new(startTileX, startTileY, endTileX, endTileY);
-
-            launchPad.CompassCoordinates = Utility.GetCompassCoordinates(launchPad.CenterWorld);
             launchPad.Active = true;
 
             if (shouldSync)
@@ -89,14 +105,14 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             return launchPad;
         }
 
-        public static LaunchPad Create(int startTileX, int startTileY, bool shouldSync = true) => Create(startTileX, startTileY, startTileX, startTileY, shouldSync);
-        public static LaunchPad Create(Point16 startTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, shouldSync);
+        public static LaunchPad Create(Point startTile, Point endTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, endTile.X, endTile.Y, shouldSync);
         public static LaunchPad Create(Point16 startTile, Point16 endTile, bool shouldSync = true) => Create(startTile.X, startTile.Y, endTile.X, endTile.Y, shouldSync);
 
         public void Update()
         {
             CheckMarkers();
             CheckRocket();
+            CheckBlueprint();
 
             if (spawned)
                 Interact();
@@ -180,6 +196,22 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             }
         }
 
+        private void CheckBlueprint()
+        {
+            foreach (var module in Rocket.Modules)
+            {
+                if (HasActiveRocket)
+                {
+                    module.IsBlueprint = false;
+                }
+                else
+                {
+                    TryGetAssemblySlotRangeForModule(module, out Range range);
+                    module.IsBlueprint = !module.Recipe.Check(consume: false, Inventory.Items[range]);
+                }
+            }
+        }
+
         private void Interact()
         {
             isMouseOver = Hitbox.Contains(Main.MouseWorld.ToPoint()) && Hitbox.InPlayerInteractionRange(TileReachCheckSettings.Simple);
@@ -200,6 +232,236 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             }
         }
 
+        private void ReserveAssemblySlots()
+        {
+            foreach (var module in RocketModule.Templates)
+            {
+                if (!module.Recipe.Linked && TryGetAssemblySlotRangeForModule(module, out var range))
+                {
+                    int slotIndex = range.Start.Value;
+                    foreach (AssemblyRecipeEntry recipeEntry in module.Recipe)
+                    {
+                        if (recipeEntry.ItemType.HasValue)
+                            Inventory.SetReserved(slotIndex++, recipeEntry.ItemType.Value, recipeEntry.Description, GetBlueprintTexture(recipeEntry.ItemType.Value));
+                        else
+                            Inventory.SetReserved(slotIndex++, recipeEntry.ItemCheck, recipeEntry.Description, GetBlueprintTexture(recipeEntry.Description.Key));
+                    }
+                }
+            }
+        }
+
+        private Asset<Texture2D> GetBlueprintTexture(int itemType)
+            => ContentSamples.ItemsByType[itemType].ModItem is ModItem modItem ? (ModContent.RequestIfExists<Texture2D>(modItem.Texture + "_Blueprint", out var blueprint) ? blueprint : null) : null;
+
+        private Asset<Texture2D> GetBlueprintTexture(string key)
+            => ModContent.RequestIfExists<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/" + key[(key.LastIndexOf('.') + 1)..], out var blueprint) ? blueprint : null;
+
+        public bool CanAssemble() => CheckAssemble(consume: false) && !HasActiveRocket && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
+        public bool CanDisassemble() => HasActiveRocket;
+
+        public bool CheckAssemble(bool consume)
+        {
+            bool met = true;
+            foreach (var module in Rocket.Modules)
+            {
+                TryGetAssemblySlotRangeForModule(module, out var range);
+                met &= module.Recipe.Check(consume, Inventory.Items[range]);
+            }
+            return met;
+        }
+
+        public void Assemble()
+        {
+            if (!CanAssemble())
+                return;
+
+            Assemble_CreateParticles();
+            CheckAssemble(consume: true);
+
+            Rocket rocket = Rocket.Create(CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 16), Rocket.Modules);
+            RocketID = rocket.WhoAmI;
+            internalRocket = rocket.VisualClone();
+
+            NetSync(MacrocosmSubworld.CurrentID);
+            CustomAchievement.Unlock<BuildRocket>();
+        }
+
+        private void Assemble_CreateParticles()
+        {
+            foreach (var module in Rocket.Modules)
+            {
+                if (module.Recipe.Linked || !_moduleSlotRanges.TryGetValue(module.Name, out var range))
+                    continue;
+
+                foreach (var item in Inventory.Items[range])
+                {
+                    for (int i = 0; i < item.stack; i++)
+                    {
+                        if (Main.rand.NextBool(6))
+                        {
+                            Particle.Create<ItemTransferParticle>((p) =>
+                            {
+                                p.StartPosition = CenterWorld;
+                                p.EndPosition = module.Position + new Vector2(module.Width / 2f, module.Height / 2f) + Main.rand.NextVector2Circular(64, 64);
+                                p.ItemType = item.type;
+                                p.TimeToLive = Main.rand.Next(40, 60);
+                            });
+                        }
+                    }
+                }
+            }
+        }
+
+        public void Disassemble()
+        {
+            if (!CanDisassemble())
+                return;
+
+            Disassemble_TransferItems();
+
+            internalRocket = Rocket.VisualClone();
+            Rocket.Despawn();
+            RocketID = -1;
+            NetSync(MacrocosmSubworld.CurrentID);
+        }
+
+        private void Disassemble_TransferItems()
+        {
+            foreach (var module in Rocket.Modules)
+            {
+                if (module.Recipe.Linked)
+                    continue;
+
+                foreach (AssemblyRecipeEntry recipeEntry in module.Recipe)
+                {
+                    Item item = null;
+                    if (recipeEntry.ItemType.HasValue)
+                    {
+                        item = new(recipeEntry.ItemType.Value, recipeEntry.RequiredAmount);
+                    }
+                    else
+                    {
+                        int defaultType = ContentSamples.ItemsByType.Values.FirstOrDefault((item) => recipeEntry.ItemCheck(item))?.type ?? 0;
+                        item = new(defaultType, recipeEntry.RequiredAmount);
+                    }
+
+                    bool addedToInventory = Inventory.TryPlacingItem(ref item, sound: true);
+                    if (!addedToInventory)
+                        Main.LocalPlayer.QuickSpawnItem(item.GetSource_DropAsItem("Launchpad"), item.type, item.stack);
+
+                    if (addedToInventory)
+                    {
+                        for (int i = 0; i < item.stack; i++)
+                        {
+                            if (Main.rand.NextBool(6))
+                                Particle.Create<ItemTransferParticle>((p) =>
+                                {
+                                    p.StartPosition = module.Position + new Vector2(module.Width / 2f, module.Height / 2f) + Main.rand.NextVector2Circular(64, 64);
+                                    p.EndPosition = CenterWorld;
+                                    p.ItemType = item.type;
+                                    p.TimeToLive = Main.rand.Next(50, 70);
+                                });
+                        }
+                    }
+                }
+            }
+        }
+
+        public bool TryGetAssemblySlotRangeForModule(RocketModule module, out Range range)
+        {
+            if (_moduleSlotRanges.TryGetValue(module.Name, out range))
+                return true;
+
+            return false;
+        }
+
+        private int CountRequiredAssemblyItemSlots(out Dictionary<string, Range> moduleSlotRanges)
+        {
+            int currentSlot = 0;
+            moduleSlotRanges = new();
+
+            foreach (var module in RocketModule.Templates.Where(m => !m.Recipe.Linked))
+            {
+                int requiredSlots = module.Recipe.Count();
+                moduleSlotRanges[module.Name] = currentSlot..(currentSlot + requiredSlots);
+                currentSlot += requiredSlots;
+            }
+
+            foreach (var module in RocketModule.Templates.Where(m => m.Recipe.Linked))
+            {
+                moduleSlotRanges[module.Name] = moduleSlotRanges[module.Recipe.LinkedResult.Name];
+            }
+
+            return currentSlot;
+        }
+
+        public bool SwitchAssemblyModuleTier(RocketModule module, int direction, bool justCheck = false)
+        {
+            if (Rocket.Active)
+                return false;
+
+            var availableModules = RocketModule.Templates
+                .Where(m => m.Slot == module.Slot && (m.Configuration == module.Configuration || m.Configuration == RocketModule.ConfigurationType.Any))
+                .OrderBy(m => m.Tier).ToList();
+
+            int currentIndex = availableModules.FindIndex(m => m.Name == module.Name);
+            int newIndex = currentIndex + direction;
+            if (newIndex < 0 || newIndex >= availableModules.Count)
+                return false;
+
+            if (!justCheck)
+            {
+                RocketModule newModule = availableModules[newIndex].Clone();
+                Rocket.Modules[(int)newModule.Slot] = newModule;
+                Rocket.Modules[(int)newModule.Slot].Rocket = Rocket;
+
+                NetSync(MacrocosmSubworld.CurrentID);
+                return true;
+            }
+
+            return true;
+        }
+
+        public bool SwitchAssemblyModulesConfiguration(int direction, bool justCheck = false)
+        {
+            if (Rocket.Active)
+                return false;
+
+            int currentIndex = Configurations.IndexOf(CurrentConfiguration);
+            int newIndex = currentIndex + direction;
+
+            if (newIndex < 0 || newIndex >= Configurations.Count)
+                return false;
+
+            if (!justCheck)
+            {
+                var targetConfiguration = Configurations[newIndex];
+                CurrentConfiguration = targetConfiguration;
+
+                foreach (var module in Rocket.Modules)
+                {
+                    if (module.Configuration == RocketModule.ConfigurationType.Any || module.Configuration == targetConfiguration)
+                        continue;
+
+                    var replacementModule = RocketModule.Templates.FirstOrDefault(m =>
+                        m.Slot == module.Slot &&
+                        m.Tier == module.Tier &&
+                        m.Configuration == targetConfiguration);
+
+                    if (replacementModule != null)
+                    {
+                        Rocket.Modules[(int)module.Slot] = replacementModule.Clone();
+                        Rocket.Modules[(int)module.Slot].Rocket = Rocket;
+                    }
+                }
+
+                NetSync(MacrocosmSubworld.CurrentID);
+                return true;
+            }
+
+            return true;
+        }
+
         public void Draw(SpriteBatch spriteBatch, Vector2 screenPosition)
         {
             Rectangle rect = Hitbox;
@@ -208,18 +470,6 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
             if (isMouseOver)
                 spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Gold * 0.25f);
-        }
-
-        private int CountRequiredAssemblyItemSlots(Rocket rocket)
-        {
-            int count = 0;
-            foreach (var module in RocketModule.Templates)
-            {
-                if (!module.Recipe.Linked)
-                    count += module.Recipe.Count();
-            }
-
-            return count;
         }
     }
 }

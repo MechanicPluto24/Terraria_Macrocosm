@@ -17,8 +17,8 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
         {
             return new
             (
-                x: 25,
-                y: modules[0..4].Sum(m => m.Height) - 136 - 8
+                x: -12,
+                y: modules[0..4].Sum(m => m.Height) - 136 - 12
             );
         }
 

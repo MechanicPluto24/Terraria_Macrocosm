@@ -53,7 +53,7 @@ namespace Macrocosm.Content.Rockets
             Rocket rocket = RocketManager.Rockets[rocketIndex];
             rocket.WhoAmI = rocketIndex;
 
-            rocket.NetReadFields(reader);
+            rocket.NetRead(reader);
 
             if (Main.netMode == NetmodeID.Server)
                 rocket.SyncCommonData(ignoreClient: sender, ignoreSubserver: senderSubserver);

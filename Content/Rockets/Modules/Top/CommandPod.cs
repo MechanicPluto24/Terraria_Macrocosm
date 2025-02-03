@@ -19,10 +19,10 @@ namespace Macrocosm.Content.Rockets.Modules.Top
 
         public override Vector2 GetOffset(RocketModule[] modules)
         {
-            int avgW = modules[0..4].Sum(m => m.Width) / 4;
+            int maxW = modules[0..4].Max(m => m.Width);
             return new
             (
-                x: avgW - Width / 2,
+                x: ((maxW - Width) / 2),
                 y: 0
             );
         }

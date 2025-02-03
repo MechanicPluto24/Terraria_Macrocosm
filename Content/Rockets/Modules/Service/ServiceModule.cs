@@ -16,15 +16,15 @@ namespace Macrocosm.Content.Rockets.Modules.Service
 
         public override int DrawPriority => 3;
 
-        public override int Width => 88;
+        public override int Width => 80;
         public override int Height => 110;
 
         public override Vector2 GetOffset(RocketModule[] modules)
         {
-            int avgW = modules[0..4].Sum(m => m.Width) / 4;
+            int maxW = modules[0..4].Max(m => m.Width);
             return new
             (
-                x: (avgW - Width / 2) + 4,
+                x: ((maxW - Width) / 2),
                 y: modules[0].Height
             );
         }

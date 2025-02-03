@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Rockets.Modules.Engine;
 using Microsoft.Xna.Framework;
+using System.Linq;
 
 namespace Macrocosm.Content.Rockets.Modules.Boosters
 {
@@ -16,8 +17,8 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
         {
             return new
             (
-                x: 28,
-                y: 280
+                x: -18,
+                y: modules[0..4].Sum(m => m.Height) - Height + 8
             );
         }
 

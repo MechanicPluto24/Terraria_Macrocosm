@@ -19,41 +19,30 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                 [nameof(StartTile)] = StartTile,
                 [nameof(EndTile)] = EndTile,
                 [nameof(RocketID)] = RocketID,
-                [nameof(CompassCoordinates)] = CompassCoordinates,
+                [nameof(internalRocket)] = internalRocket,
                 [nameof(Inventory)] = Inventory
             };
-
-            if (!HasRocket)
-                tag[nameof(unassembledRocket)] = unassembledRocket;
 
             return tag;
         }
 
         public static LaunchPad DeserializeData(TagCompound tag)
         {
-            LaunchPad launchPad = new();
+            Point16 startTile = tag.TryGet(nameof(StartTile), out Point16 start) ? start : default;
+            Point16 endTile = tag.TryGet(nameof(EndTile), out Point16 end) ? end : default;
 
-            launchPad.Active = tag.ContainsKey(nameof(Active));
-
-            if (tag.ContainsKey(nameof(RocketID)))
-                launchPad.RocketID = tag.GetInt(nameof(RocketID));
-
-            if (tag.ContainsKey(nameof(StartTile)))
-                launchPad.StartTile = tag.Get<Point16>(nameof(StartTile));
-
-            if (tag.ContainsKey(nameof(EndTile)))
-                launchPad.EndTile = tag.Get<Point16>(nameof(EndTile));
-
-            if (tag.ContainsKey(nameof(CompassCoordinates)))
-                launchPad.CompassCoordinates = tag.GetString(nameof(CompassCoordinates));
-
-            if (!launchPad.HasRocket && tag.ContainsKey(nameof(unassembledRocket)))
-                launchPad.unassembledRocket = tag.Get<Rocket>(nameof(unassembledRocket));
+            LaunchPad launchPad = new(startTile, endTile)
+            {
+                Active = tag.ContainsKey(nameof(Active)),
+                RocketID = tag.TryGet(nameof(RocketID), out int rocketID) ? rocketID : -1,
+                internalRocket = tag.TryGet(nameof(internalRocket), out Rocket inRocket) ? inRocket : new()
+            };
 
             if (tag.ContainsKey(nameof(Inventory)))
             {
                 launchPad.Inventory = tag.Get<Inventory>(nameof(Inventory));
-                launchPad.Inventory.Size = launchPad.CountRequiredAssemblyItemSlots(launchPad.Rocket);
+                launchPad.Inventory.Size = launchPad.CountRequiredAssemblyItemSlots(out launchPad._moduleSlotRanges);
+                launchPad.ReserveAssemblySlots();
             }
 
             return launchPad;
