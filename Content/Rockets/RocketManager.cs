@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Rockets
             On_Main.DrawDust -= DrawRockets_OverlaysAfterDusts;
         }
 
-        public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active);
+        public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active && rocket.CurrentWorld != "");
         public static int InCurrentSubworldRocketCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
 
         public static void AddRocket(Rocket rocket)
