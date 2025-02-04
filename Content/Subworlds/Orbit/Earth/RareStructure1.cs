@@ -13,7 +13,7 @@ using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
-namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
+namespace Macrocosm.Content.Subworlds.Orbit.Earth
 {
     public class RareStructure1 : Structure
     {
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
             ];
 
             // Age room
-            WorldUtils.Gen(new Point(origin.X, origin.Y), new Shapes.Rectangle(Size.X, Size.Y), Actions.Chain(new Modifiers.Dither(0.85), new Modifiers.Blotches(), new Modifiers.OnlyWalls(clearableWalls), (new Actions.ClearWall(true))));
+            WorldUtils.Gen(new Point(origin.X, origin.Y), new Shapes.Rectangle(Size.X, Size.Y), Actions.Chain(new Modifiers.Dither(0.85), new Modifiers.Blotches(), new Modifiers.OnlyWalls(clearableWalls), new Actions.ClearWall(true)));
             WorldUtils.Gen(new Point(origin.X, origin.Y), new Shapes.Rectangle(Size.X, Size.Y), Actions.Chain(new Modifiers.Dither(0.95), new Modifiers.OnlyTiles(clearableTiles), new Actions.ClearTile(frameNeighbors: true)));
 
             for (int i = origin.X; i < origin.X + Size.X; i++)
@@ -58,7 +58,7 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
 
             for (int i = origin.X; i < origin.X + Size.X; i++)
             {
-                for (int j = origin.Y; j < origin.Y + Size.Y-2; j++)
+                for (int j = origin.Y; j < origin.Y + Size.Y - 2; j++)
                 {
                     Tile tile = Main.tile[i, j];
 
@@ -77,7 +77,7 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
                         if (tile.TileType == industrialPlatingType)
                             Utility.TryPlaceObject(i, j + 1, ModContent.TileType<LooseWiresSmallNatural>(), style: WorldGen.genRand.Next(2));
                     }
-                    
+
                 }
             }
         }

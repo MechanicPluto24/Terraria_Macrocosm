@@ -11,7 +11,8 @@ namespace Macrocosm.Common.WorldGeneration
     {
         public virtual string StructureFile => this.GetNamespacePath().Replace("Macrocosm/", "");
 
-        public bool IsMultistructure => Generator.IsMultistructure(StructureFile, Macrocosm.Instance) ?? false;
+        //public bool IsMultistructure => Generator.IsMultistructure(StructureFile, Macrocosm.Instance) ?? false;
+        public bool IsMultistructure => false;
 
         private Point16 size;
         /// <summary> Size of the structure's first variant </summary>
