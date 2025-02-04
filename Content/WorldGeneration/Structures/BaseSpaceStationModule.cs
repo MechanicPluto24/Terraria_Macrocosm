@@ -2,7 +2,7 @@
 
 namespace Macrocosm.Content.WorldGeneration.Structures
 {
-    public class BaseSpaceStationModual : Structure
+    public class BaseSpaceStationModule : Structure
     {
     }
 }

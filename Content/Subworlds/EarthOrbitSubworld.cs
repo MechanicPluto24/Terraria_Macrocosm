@@ -26,17 +26,23 @@ namespace Macrocosm.Content.Subworlds
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
         protected override float AtmosphericDensity(Vector2 position) => 0.1f;
-        public override float AmbientTemperature(Vector2? position = null) => Utility.ScaleNoonToMidnight(-65f, 125f);
+        //public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-65f, 125f); why is this not working
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => new(1600, 1200);
 
         public override bool NoBackground => true;
-
+        
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
         {
             Utility.ApplySurfaceLight(tile, x, y, ref color);
-            return true;
+            if(color.X==0f)
+                color.X = 0.004f;
+            if(color.Y==0f)
+                color.Y = 0.004f;
+            if(color.Z==0f)
+                color.Z = 0.004f;
+            return false;//THIS MUST RETURN FALSE -Clyder8
         }
-
+        
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
             {MapColorType.SkyUpper, Color.Black},

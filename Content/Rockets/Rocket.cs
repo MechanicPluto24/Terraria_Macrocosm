@@ -367,8 +367,8 @@ namespace Macrocosm.Content.Rockets
 
                     if (TargetTravelPosition == default && DockingProgress < float.Epsilon)
                     {
-                        Structure modual = new BaseSpaceStationModual();
-                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition) + new Vector2(0, Height + (int)(modual.Size.Y * 16f));
+                        Structure module = new BaseSpaceStationModule();
+                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition) + new Vector2(0, Height + (int)(module.Size.Y * 16f));
                     }
 
                     float dockingDistance = Math.Abs(UndockingExitPosition - TargetTravelPosition.Y);
