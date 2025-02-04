@@ -51,6 +51,11 @@ namespace Macrocosm.Content.Tiles.Blocks
             return false;
         }
 
+        public override bool CanExplode(int i, int j)
+        {
+            return false;
+        }
+
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
             Tile tile = Main.tile[i, j];

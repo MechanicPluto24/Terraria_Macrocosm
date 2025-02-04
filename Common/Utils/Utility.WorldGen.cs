@@ -277,7 +277,7 @@ namespace Macrocosm.Common.Utils
         /// <param name="blobSize"></param>
         /// <param name="density"></param>
         /// <param name="smoothing"></param>
-        public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null)
+        public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null,ushort wallType=0)
         {
             int sprayRandom = genRand.Next(repeatCount);
 
@@ -318,6 +318,9 @@ namespace Macrocosm.Common.Utils
                             else
                             {
                                 FastPlaceTile(i, j, (ushort)tileType);
+                            }
+                            if(wallType>0){
+                                FastPlaceWall(i, j, (ushort)wallType);
                             }
                         }
                     }
@@ -366,6 +369,51 @@ namespace Macrocosm.Common.Utils
                         }
                     );
                 }
+            }
+        }
+        //Why wasn't this a thing already
+        public static void BlobLiquidTileRunner(int i, int j,int liquidType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null)
+        {
+            int sprayRandom = genRand.Next(repeatCount);
+
+            Dictionary<(int, int), ushort> replacedTypes = new();
+
+            int posI = i;
+            int posJ = j;
+            for (int x = 0; x < sprayRandom; x++)
+            {
+                posI += genRand.NextDirection(sprayRadius);
+                posJ += genRand.NextDirection(sprayRadius);
+
+                int radius = genRand.Next(blobSize);
+                float densityClamped = Math.Clamp(density, 0f, 1f);
+                ForEachInCircle(
+                    posI,
+                    posJ,
+                    radius,
+                    radius,
+                    (i, j) =>
+                    {
+                        if (CoordinatesOutOfBounds(i, j) || genRand.NextFloat() > densityClamped)
+                        {
+                            return;
+                        }
+
+                        if (perTileCheck is null || perTileCheck(i, j))
+                        {
+                            if (Main.tile[i, j].HasTile && !replacedTypes.ContainsKey((i, j)))
+                            {
+                                replacedTypes.Add((i, j), Main.tile[i, j].TileType);
+                            }
+                            FastRemoveTile(i, j);
+                            Tile tile = Main.tile[i, j];
+                            tile.LiquidAmount=255;
+                            tile.LiquidType=liquidType;
+                           
+                        }
+                    }
+                );
+
             }
         }
 
