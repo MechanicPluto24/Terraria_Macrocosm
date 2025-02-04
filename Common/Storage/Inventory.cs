@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
 using ReLogic.Content;
 using StructureHelper.GUI;
 using System;
@@ -32,13 +33,13 @@ namespace Macrocosm.Common.Storage
         public static bool CustomInventoryActive => ActiveInventory is not null;
 
         private Item[] items;
-        private readonly UIInventorySlot[] uiItemSlots;
+        private UIInventorySlot[] uiItemSlots;
 
-        private readonly bool[] reservedSlots;
-        private readonly int[] reservedTypes;
-        private readonly Func<Item, bool>[] reservedChecks;
-        private readonly LocalizedText[] reservedTooltips;
-        private readonly Asset<Texture2D>[] reservedTextures;
+        private bool[] reservedSlots;
+        private int[] reservedTypes;
+        private Func<Item, bool>[] reservedChecks;
+        private LocalizedText[] reservedTooltips;
+        private Asset<Texture2D>[] reservedTextures;
 
         public Item this[int index]
         {
@@ -169,10 +170,24 @@ namespace Macrocosm.Common.Storage
             }
 
             if (oldSize != newSize)
+            {
                 Array.Resize(ref items, newSize);
 
+                Array.Resize(ref uiItemSlots, newSize);
+
+                Array.Resize(ref reservedSlots, newSize);
+                Array.Resize(ref reservedTypes, newSize);
+                Array.Resize(ref reservedChecks, newSize);
+                Array.Resize(ref reservedTooltips, newSize);
+                Array.Resize(ref reservedTextures, newSize);
+            }
+
             if (oldSize < newSize)
+            {
                 Array.Fill(items, new Item(), oldSize, newSize - oldSize);
+                for (int i = oldSize; i < newSize; i++)
+                    uiItemSlots[i] = new(this, i);
+            }
         }
 
         public void SetReserved(int index, Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null)

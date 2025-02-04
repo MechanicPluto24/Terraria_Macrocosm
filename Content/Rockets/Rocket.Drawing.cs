@@ -10,6 +10,7 @@ using System.Linq;
 using Terraria;
 using Terraria.Map;
 using Terraria.ModLoader;
+using static Terraria.GameContent.TextureAssets;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -22,18 +23,16 @@ namespace Macrocosm.Content.Rockets
             Blueprint
         }
 
-        private RenderTarget2D renderTarget;
-        private RenderTarget2D dummyRenderTarget;
+        private RenderTarget2D[] renderTargets = new RenderTarget2D[3];
 
         private Mesh2D mesh;
         private SpriteBatchState sbState;
         private bool firstDraw = true;
 
-        public bool HasRenderTarget => renderTarget is not null && !renderTarget.IsDisposed;
         public void ResetRenderTarget()
         {
-            renderTarget?.Dispose();
-            dummyRenderTarget?.Dispose();
+            foreach (var renderTarget in renderTargets)
+                renderTarget?.Dispose();
         }
 
         public Color GetDrawColor(Vector2 vertexDrawPosition) => new Color(Lighting.GetSubLight(vertexDrawPosition + Main.screenPosition)) * Transparency;
@@ -61,7 +60,7 @@ namespace Macrocosm.Content.Rockets
             if (useRenderTarget)
             {
                 // Prepare our RenderTarget
-                renderTarget = GetRenderTarget(drawMode);
+                renderTargets[(int)drawMode] = GetRenderTarget(drawMode);
 
                 // Save our SpriteBatch state
                 sbState.SaveState(spriteBatch);
@@ -107,37 +106,47 @@ namespace Macrocosm.Content.Rockets
         {
             mesh ??= new(Main.graphics.GraphicsDevice);
             mesh.CreateRectangle(position, Width, Height, horizontalResolution: 6, verticalResolution: 8, colorFunction: GetDrawColor);
-            mesh.Draw(renderTarget, Main.Transform, null, BlendState.AlphaBlend, SamplerState.AnisotropicClamp);
+            mesh.Draw(renderTargets[(int)DrawMode.World], Main.Transform, null, BlendState.AlphaBlend, SamplerState.PointClamp);
+        }
+
+        private void DrawDummyWithRenderTarget(SpriteBatch spriteBatch, Vector2 position)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, sbState.Matrix);
+            spriteBatch.Draw(renderTargets[(int)DrawMode.Dummy], position, Color.White);
+            spriteBatch.End();
+            spriteBatch.Begin(sbState.SpriteSortMode, BlendState.Additive, sbState.SamplerState, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Main.UIScaleMatrix);
+            DrawOverlay(spriteBatch, position);
+            spriteBatch.End();
         }
 
         public RenderTarget2D GetRenderTarget(DrawMode drawMode)
         {
             // If it already exists, return it.
-            RenderTarget2D target = (drawMode == DrawMode.Dummy) ? dummyRenderTarget : renderTarget;
+            RenderTarget2D target = renderTargets[(int)drawMode];
             if (target is not null && !target.IsDisposed)
                 return target;
 
             var spriteBatch = Main.spriteBatch;
 
-            // Initialize our RenderTarget
-            int targetWidth = (drawMode == DrawMode.Dummy) ? Bounds.Width + 140 : Bounds.Width;
-            int targetHeight = Bounds.Height;
+            Rectangle renderBounds = new(0, 0, Bounds.Width, Bounds.Height);
 
-            target = new(spriteBatch.GraphicsDevice, targetWidth, targetHeight, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
-            if (drawMode == DrawMode.Dummy)
-                dummyRenderTarget = target;
-            else
-                renderTarget = target;
+            foreach (var module in Modules)
+                renderBounds = module.ModifyRenderBounds(renderBounds, drawMode);
+
+            Vector2 drawOffset = new(renderBounds.X, renderBounds.Y);
+
+            target = new(spriteBatch.GraphicsDevice, renderBounds.Width, renderBounds.Height, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            renderTargets[(int)drawMode] = target;
 
             // Store previous settings
-            var scissorRectangle = spriteBatch.GraphicsDevice.ScissorRectangle;
-            var rasterizerState = spriteBatch.GraphicsDevice.RasterizerState;
+            //var scissorRectangle = spriteBatch.GraphicsDevice.ScissorRectangle;
+            //var rasterizerState = spriteBatch.GraphicsDevice.RasterizerState;
 
             // Capture original RenderTargets and preserve their contents
             spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-            RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
-            foreach (var binding in originalRenderTargets)
-                typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
+           //RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
+           //foreach (var binding in originalRenderTargets)
+           //    typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
 
             // Draw our modules
             sbState = spriteBatch.SaveState();
@@ -151,47 +160,31 @@ namespace Macrocosm.Content.Rockets
             switch (drawMode)
             {
                 case DrawMode.World:
-                    DrawWorld(spriteBatch, default);
+                    DrawWorld(spriteBatch, drawOffset);
                     break;
 
                 case DrawMode.Dummy:
-                    DrawDummy(spriteBatch, new Vector2(60, 0));
+                    DrawDummy(spriteBatch, drawOffset);
                     break;
 
                 case DrawMode.Blueprint:
-                    DrawBlueprint(spriteBatch, default);
+                    DrawBlueprint(spriteBatch, drawOffset);
                     break;  
             }
 
             spriteBatch.End();
 
             // Revert our RenderTargets back to the vanilla ones
-            if (originalRenderTargets.Length > 0)
-                spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
-            else
-                spriteBatch.GraphicsDevice.SetRenderTarget(null);
+            //if (originalRenderTargets.Length > 0)
+            //    spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
+            //else
+            spriteBatch.GraphicsDevice.SetRenderTarget(null);
 
             // Reset our settings back to the previous ones
-            spriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
-            spriteBatch.GraphicsDevice.RasterizerState = rasterizerState;
+            //spriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
+            //spriteBatch.GraphicsDevice.RasterizerState = rasterizerState;
 
             return target;
-        }
-
-        private void PrepareRenderTarget(SpriteBatch spriteBatch, DrawMode drawMode)
-        {
-        }
-
-        private void DrawDummyWithRenderTarget(SpriteBatch spriteBatch, Vector2 position)
-        {
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, sbState.Matrix);
-            PreDrawBeforeTiles(spriteBatch, position, inWorld: false);
-            spriteBatch.Draw(dummyRenderTarget, position, Color.White);
-            PostDraw(spriteBatch, position, inWorld: false);
-            spriteBatch.End();
-            spriteBatch.Begin(sbState.SpriteSortMode, BlendState.Additive, sbState.SamplerState, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Main.UIScaleMatrix);
-            DrawOverlay(spriteBatch, position);
-            spriteBatch.End();
         }
 
         // Draw types
@@ -240,9 +233,6 @@ namespace Macrocosm.Content.Rockets
                 Vector2 drawPosition = GetModuleRelativePosition(module, position);
                 if (module.IsBlueprint)
                 {
-                    if (module is BoosterLeft)
-                        drawPosition.X -= 78;
-
                     module.DrawBlueprint(spriteBatch, drawPosition);
                 }
                 else

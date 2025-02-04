@@ -71,6 +71,8 @@ namespace Macrocosm.Content.Rockets.Modules
             }
         }
 
+        public int Type => Templates.IndexOf(Templates.FirstOrDefault(m => m.Name == Name));
+
         public Rocket Rocket { get; set; }
 
         public abstract SlotType Slot { get; }
@@ -83,7 +85,9 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public Vector2 Position { get; set; }
 
-        public virtual Vector2 GetOffset(RocketModule[] modules) => Vector2.Zero;
+        public virtual Vector2 GlobalOffset => Vector2.Zero;
+        public virtual Vector2 GetDynamicOffset(int[] widths, int[] heights, Vector2 offsetAggregate) => Vector2.Zero;
+        public virtual Rectangle ModifyRenderBounds(Rectangle bounds, Rocket.DrawMode drawMode) => bounds;
 
         public abstract int Width { get; }
         public abstract int Height { get; }

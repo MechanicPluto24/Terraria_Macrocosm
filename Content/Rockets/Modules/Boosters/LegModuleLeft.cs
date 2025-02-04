@@ -13,16 +13,32 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
         public override int Width => 46;
         public override int Height => 136 + 20;
 
-        public override Vector2 GetOffset(RocketModule[] modules)
+        public override Vector2 GlobalOffset => new(12, 0);
+
+        public override Vector2 GetDynamicOffset(int[] widths, int[] heights, Vector2 globalOffsetAggregate)
         {
             return new
             (
-                x: -12,
-                y: modules[0..4].Sum(m => m.Height) - 136 - 12
+                x: 0,
+                y: heights[0..4].Sum() - 136 - 8
             );
         }
 
-        public override float? ExhaustOffsetX => 14f;
+        public override Rectangle ModifyRenderBounds(Rectangle bounds, Rocket.DrawMode drawMode)
+        {
+            if (drawMode == Rocket.DrawMode.Dummy)
+            {
+                int extra = LandingLegFrame.Width - (int)LandingLegDrawOffset.Value.X;
+                return bounds with
+                {
+                    Width = bounds.Width + extra,
+                    X = bounds.X + extra,
+                };
+            }
+
+            return bounds;
+        }
+
         protected override Vector2? LandingLegDrawOffset => new(-77.5f, 50);
         protected override int Direction => -1;
 

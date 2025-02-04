@@ -18,15 +18,17 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
         public override int DrawPriority => 0;
 
         public override int Width => 84;
-        public override int Height => 302 + 20;
+        public override int Height => 302;
 
-        public override Vector2 GetOffset(RocketModule[] modules)
+        protected override Vector2? LandingLegDrawOffset => new(0, 10);
+        protected override Vector2? BoosterRearDrawOffset => new(0, -6);
+
+        public override Vector2 GetDynamicOffset(int[] widths, int[] heights, Vector2 globalOffsetAggregate)
         {
-            int maxW = modules[0..4].Max(m => m.Width);
             return new
             (
-                x: ((maxW - Width) / 2),
-                y: modules[0..3].Sum(m => m.Height)
+                x: ((widths[0..4].Max() - Width) / 2) + globalOffsetAggregate.X,
+                y: heights[0..3].Sum()
             );
         }
 
