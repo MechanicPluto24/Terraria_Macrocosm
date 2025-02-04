@@ -116,7 +116,7 @@ namespace Macrocosm.Content.Rockets
         /// <summary> The layer this rocket is drawn in </summary>
         public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
-        /// <summary> The rocket transparency. Currently it only works when the rocket is drawn using a RenderTarget </summary>
+        /// <summary> The rocket transparency. </summary>
         public float Transparency { get; set; } = 1f;
 
         /// <summary> This rocket's nameplate </summary>
@@ -643,11 +643,24 @@ namespace Macrocosm.Content.Rockets
 
 
         // Gets the position of a module with respect to the provided origin
-        private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin) => origin.ToPoint().ToVector2() + module.GetOffset(Modules);
+        private Vector2 GetModuleRelativePosition(RocketModule module, Vector2 origin, bool pixelAlign = true)
+        {
+            Vector2 offset = module.GetDynamicOffset(
+                widths: Modules.Select(m => m.Width).ToArray(),
+                heights: Modules.Select(m => m.Height).ToArray(),
+                offsetAggregate: new Vector2(Modules.Sum(m => m.GlobalOffset.X), Modules.Sum(m => m.GlobalOffset.Y))
+            );
+
+            if (pixelAlign)
+                origin = new((int)origin.X, (int)origin.Y);
+
+            return origin + offset;
+        }
+
         private void UpdateModules()
         {
             foreach (RocketModule module in Modules)
-                module.Position = GetModuleRelativePosition(module, Position);
+                module.Position = GetModuleRelativePosition(module, Position, pixelAlign: false);
         }
 
         private Vector2 CalculateSize()
@@ -655,22 +668,28 @@ namespace Macrocosm.Content.Rockets
             if (Modules == null || Modules.Length == 0)
                 return new(0, 0);
 
-            float maxX = float.MinValue;
-            float maxY = float.MinValue;
+            float minX = float.MaxValue, minY = float.MaxValue;
+            float maxX = float.MinValue, maxY = float.MinValue;
             foreach (var module in Modules)
             {
-                Vector2 modulePosition = GetModuleRelativePosition(module, Vector2.Zero);
-                Vector2 moduleSize = new(module.Width, module.Height);
-                float moduleRight = modulePosition.X + moduleSize.X;
-                float moduleBottom = modulePosition.Y + moduleSize.Y;
-                maxX = Math.Max(maxX, moduleRight);
-                maxY = Math.Max(maxY, moduleBottom);
+                Vector2 offset = module.GetDynamicOffset(
+                    widths: Modules.Select(m => m.Width).ToArray(),
+                    heights: Modules.Select(m => m.Height).ToArray(),
+                    offsetAggregate: new Vector2(Modules.Sum(m => m.GlobalOffset.X), Modules.Sum(m => m.GlobalOffset.Y))
+                );
+                minX = Math.Min(minX, offset.X);
+                minY = Math.Min(minY, offset.Y);
+
+                float right = offset.X + module.Width;
+                float bottom = offset.Y + module.Height;
+                maxX = Math.Max(maxX, right);
+                maxY = Math.Max(maxY, bottom);
             }
 
-            float calculatedWidth = maxX;
-            float calculatedHeight = maxY;
+            float width = maxX - minX;
+            float height = maxY - minY;
 
-            return new(calculatedWidth, calculatedHeight);
+            return new(width, height);
         }
 
         public bool CheckTileCollision()
@@ -979,15 +998,15 @@ namespace Macrocosm.Content.Rockets
 
             if (Modules.FirstOrDefault((m) => m is BaseBooster && m.Slot == RocketModule.SlotType.LeftSide) is BaseBooster moduleLeft
                 && Modules.FirstOrDefault((m) => m is BaseBooster && m.Slot == RocketModule.SlotType.RightSide) is BaseBooster moduleRight
-                && moduleLeft.ExhaustOffsetX.HasValue
-                && moduleRight.ExhaustOffsetX.HasValue
+                && moduleLeft.ExhaustOffset.HasValue
+                && moduleRight.ExhaustOffset.HasValue
             )
             {
                 for (int i = 0; i < smallSmokeCount; i++)
                 {
                     Vector2 position = i % 2 == 0 ?
-                                    new Vector2(moduleLeft.Position.X + moduleLeft.ExhaustOffsetX ?? default, Position.Y + Height - 28) :
-                                    new Vector2(moduleRight.Position.X + moduleRight.ExhaustOffsetX ?? default, Position.Y + Height - 28);
+                                    new Vector2(moduleLeft.Position.X + moduleLeft.ExhaustOffset.Value.X, Position.Y + Height + moduleLeft.ExhaustOffset.Value.Y) :
+                                    new Vector2(moduleRight.Position.X + moduleRight.ExhaustOffset.Value.X, Position.Y + Height + moduleRight.ExhaustOffset.Value.Y);
 
 
                     Vector2 velocity = new(Main.rand.NextFloat(-0.4f, 0.4f), Main.rand.NextFloat(2, 4));

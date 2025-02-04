@@ -18,15 +18,15 @@ namespace Macrocosm.Content.Rockets.Modules.Utilitary
         public override int Width => 72;
         public override int Height => 78;
 
-        public override Vector2 GetOffset(RocketModule[] modules)
+        public override Vector2 GetDynamicOffset(int[] widths, int[] heights, Vector2 globalOffsetAggregate)
         {
-            int maxW = modules[0..4].Max(m => m.Width);
             return new
             (
-                x: ((maxW - Width) / 2),
-                y: modules[0..2].Sum(m => m.Height)
+                x: ((widths[0..4].Max() - Width) / 2) + globalOffsetAggregate.X,
+                y: heights[0..2].Sum()
             );
         }
+
 
         public override AssemblyRecipe Recipe { get; } = new AssemblyRecipe()
         {

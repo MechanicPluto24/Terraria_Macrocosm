@@ -17,17 +17,22 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
         public override int DrawPriority => 1;
         public override bool Interactible => false;
 
-        public virtual float? ExhaustOffsetX => null;
+        public virtual Vector2? ExhaustOffset => null;
         protected virtual Vector2? LandingLegDrawOffset => null;
 
 
         protected abstract int Direction { get; }
+
         protected virtual string LandingLegPath => TexturePath.Replace(Name, "LandingLeg" + (Direction > 0 ? "Right" : "Left"));
+
+        protected Rectangle LandingLegFrame => LandingLeg.Frame(1, base.NumberOfFrames, frameY: CurrentFrame);
+        protected Asset<Texture2D> LandingLeg => _landingLeg ??= ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad);
+        private Asset<Texture2D> _landingLeg;
 
         private SpriteBatchState state1, state2;
         public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
-            if (!ExhaustOffsetX.HasValue)
+            if (!ExhaustOffset.HasValue)
                 return;
 
             state2.SaveState(spriteBatch, true);
@@ -65,27 +70,28 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
                 return;
 
             landingLegMesh ??= new(spriteBatch.GraphicsDevice);
-            landingLegTexture ??= ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad);
 
-            Rectangle frame = landingLegTexture.Frame(1, base.NumberOfFrames, frameY: CurrentFrame);
             Func<Vector2, Color> getDrawColor = inWorld ? Rocket.GetDrawColor : (_) => Color.White;
-            landingLegMesh.CreateRectangle(position + (LandingLegDrawOffset ?? default), frame.Width, frame.Height, horizontalResolution: 2, verticalResolution: 2, colorFunction: getDrawColor);
+            landingLegMesh.CreateRectangle(position + (LandingLegDrawOffset ?? default), LandingLegFrame.Width, LandingLegFrame.Height, horizontalResolution: 2, verticalResolution: 2, colorFunction: getDrawColor);
 
             state1.SaveState(spriteBatch);
             spriteBatch.End();
-            landingLegMesh.Draw(landingLegTexture.Value, state1.Matrix, sourceRect: frame, BlendState.AlphaBlend, SamplerState.PointClamp);
+            landingLegMesh.Draw(LandingLeg.Value, state1.Matrix, sourceRect: LandingLegFrame, BlendState.AlphaBlend, SamplerState.PointClamp);
             spriteBatch.Begin(state1);
         }
 
         private void DrawTrail(Vector2 position, float intensity = 1f)
         {
+            if (!ExhaustOffset.HasValue)
+                return;
+
             VertexStrip strip = new();
             int stripDataCount = (int)(38 * intensity);
             if (stripDataCount < 0)
                 stripDataCount = 0;
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
-            Array.Fill(positions, new Vector2(position.X + (ExhaustOffsetX ?? default), position.Y + Height));
+            Array.Fill(positions, new Vector2(position.X + ExhaustOffset.Value.X, position.Y + Height));
             Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
 
             for (int i = 0; i < stripDataCount; i++)

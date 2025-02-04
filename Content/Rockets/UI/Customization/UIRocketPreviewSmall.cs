@@ -87,9 +87,9 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             RenderTarget2D renderTarget = visualClone.GetRenderTarget(Rocket.DrawMode.Dummy);
             Rectangle uiRect = GetDimensions().ToRectangle();
-            int horizontalPadding = 8;
-            int verticalPadding = 8;
-            Rectangle availableRect = new(
+            int horizontalPadding = 0;
+            int verticalPadding = 0;
+            Rectangle rect = new(
                 uiRect.X + horizontalPadding,
                 uiRect.Y + verticalPadding,
                 uiRect.Width - 2 * horizontalPadding,
@@ -97,20 +97,20 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             );
 
             float rtAspect = (float)renderTarget.Width / renderTarget.Height;
-            float availableAspect = (float)availableRect.Width / availableRect.Height;
+            float availableAspect = (float)rect.Width / rect.Height;
             int finalWidth, finalHeight;
             if (rtAspect > availableAspect)
             {
-                finalWidth = availableRect.Width;
-                finalHeight = (int)(availableRect.Width / rtAspect);
+                finalWidth = rect.Width;
+                finalHeight = (int)(rect.Width / rtAspect);
             }
             else
             {
-                finalHeight = availableRect.Height;
-                finalWidth = (int)(availableRect.Height * rtAspect);
+                finalHeight = rect.Height;
+                finalWidth = (int)(rect.Height * rtAspect);
             }
-            int finalX = availableRect.X + (availableRect.Width - finalWidth) / 2;
-            int finalY = availableRect.Y + (availableRect.Height - finalHeight) / 2 + (int)uITitle.GetDimensions().Height;
+            int finalX = rect.X + (rect.Width - finalWidth) / 2;
+            int finalY = rect.Y + (rect.Height - finalHeight) / 2 + (int)uITitle.GetDimensions().Height;
             Rectangle finalRect = new(finalX, finalY, finalWidth, finalHeight);
 
             int targetPixelsX = 48;

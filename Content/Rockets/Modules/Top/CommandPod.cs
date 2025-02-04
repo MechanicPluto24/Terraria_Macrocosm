@@ -17,12 +17,11 @@ namespace Macrocosm.Content.Rockets.Modules.Top
         public override int Width => 68;
         public override int Height => 80;
 
-        public override Vector2 GetOffset(RocketModule[] modules)
+        public override Vector2 GetDynamicOffset(int[] widths, int[] heights, Vector2 globalOffsetAggregate)
         {
-            int maxW = modules[0..4].Max(m => m.Width);
             return new
             (
-                x: ((maxW - Width) / 2),
+                x: ((widths[0..4].Max() - Width) / 2) + globalOffsetAggregate.X,
                 y: 0
             );
         }
