@@ -760,7 +760,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.LuminiteShrineUnlocked = true;
+                WorldData.LuminiteShrineUnlocked = true;
             }
         }
 
@@ -770,7 +770,6 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructureTask");
 
             Structure shrine = new HeavenforgeShrine();
-            int x, y;
             bool validPositionFound = false;
             int maxAttempts = 1000;
             int attempts = 0;
@@ -823,7 +822,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.MercuryShrineUnlocked = true;
+                WorldData.MercuryShrineUnlocked = true;
             }
         }
 
@@ -854,7 +853,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.LunarRustShrineUnlocked = true;
+                WorldData.LunarRustShrineUnlocked = true;
             }
         }
 
@@ -885,7 +884,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.StarRoyaleShrineUnlocked = true;
+                WorldData.StarRoyaleShrineUnlocked = true;
             }
         }
 
@@ -916,7 +915,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.StarRoyaleShrineUnlocked = true;
+                WorldData.StarRoyaleShrineUnlocked = true;
             }
         }
 
@@ -948,7 +947,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.AstraShrineUnlocked = true;
+                WorldData.AstraShrineUnlocked = true;
             }
         }
 
@@ -979,7 +978,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.DarkCelestialShrineUnlocked = true;
+                WorldData.DarkCelestialShrineUnlocked = true;
             }
         }
 
@@ -1010,7 +1009,7 @@ namespace Macrocosm.Content.Subworlds
 
             if (!validPositionFound)
             {
-                WorldFlags.CosmicEmberShrineUnlocked = true;
+                WorldData.CosmicEmberShrineUnlocked = true;
             }
         }
 

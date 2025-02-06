@@ -18,7 +18,6 @@ namespace Macrocosm.Content.Items.Accessories.Info
             Item.rare = ModContent.RarityType<MoonRarityT1>();
         }
 
-        int timer = 0;
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             player.GetModPlayer<InfoDisplayPlayer>().GeigerMuller = true;

@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
         {
             if (drawMode == Rocket.DrawMode.Dummy)
             {
-                int extra = LandingLegFrame.Width - (int)LandingLegDrawOffset.Value.X;
+                int extra = Width + LandingLegFrame.Width - (int)LandingLegDrawOffset.Value.X;
                 return bounds with
                 {
                     Width = bounds.Width + extra

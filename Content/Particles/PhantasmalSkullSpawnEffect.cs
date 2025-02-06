@@ -9,7 +9,6 @@ namespace Macrocosm.Content.Particles
     {
         public override string TexturePath => Macrocosm.TextureEffectsPath + "Circle3";
 
-        private bool fadeIn;
         private float defScale;
         private float actualScale;
         public float Opacity { get; set; }

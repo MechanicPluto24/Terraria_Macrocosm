@@ -20,14 +20,14 @@ namespace Macrocosm.Content.Items.Keys
     {
         public override void SetStaticDefaults()
         {
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseFull.Description, () => Main.moonPhase == 0 && WorldFlags.AnyShimmerShrine), ModContent.ItemType<Procellarum>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaningGibbous.Description, () => Main.moonPhase == 1 && WorldFlags.AnyShimmerShrine), ModContent.ItemType<Ilmenite>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseThirdQuarter.Description, () => Main.moonPhase == 2 && WorldFlags.AnyShimmerShrine), ModContent.ItemType<Micronova>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaningCrescent.Description, () => Main.moonPhase == 3 && WorldFlags.AnyShimmerShrine), ModContent.ItemType<Totality>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseNew.Description, () => Main.moonPhase == 4 && WorldFlags.AnyShimmerShrine), ModContent.ItemType<ManisolBlades>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaxingCrescent.Description, () => Main.moonPhase == 5 && WorldFlags.AnyShimmerShrine), ModContent.ItemType<StarDestroyer>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseFirstQuarter.Description, () => Main.moonPhase == 6 && WorldFlags.AnyShimmerShrine), ModContent.ItemType<FrigorianGaze>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaxingGibbous.Description, () => Main.moonPhase == 7 && WorldFlags.AnyShimmerShrine), ModContent.ItemType<GreatstaffOfHorus>());
+            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseFull.Description, () => Main.moonPhase == 0 && WorldData.AnyShimmerShrine), ModContent.ItemType<Procellarum>());
+            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaningGibbous.Description, () => Main.moonPhase == 1 && WorldData.AnyShimmerShrine), ModContent.ItemType<Ilmenite>());
+            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseThirdQuarter.Description, () => Main.moonPhase == 2 && WorldData.AnyShimmerShrine), ModContent.ItemType<Micronova>());
+            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaningCrescent.Description, () => Main.moonPhase == 3 && WorldData.AnyShimmerShrine), ModContent.ItemType<Totality>());
+            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseNew.Description, () => Main.moonPhase == 4 && WorldData.AnyShimmerShrine), ModContent.ItemType<ManisolBlades>());
+            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaxingCrescent.Description, () => Main.moonPhase == 5 && WorldData.AnyShimmerShrine), ModContent.ItemType<StarDestroyer>());
+            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseFirstQuarter.Description, () => Main.moonPhase == 6 && WorldData.AnyShimmerShrine), ModContent.ItemType<FrigorianGaze>());
+            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaxingGibbous.Description, () => Main.moonPhase == 7 && WorldData.AnyShimmerShrine), ModContent.ItemType<GreatstaffOfHorus>());
         }
 
         public override void SetDefaults()

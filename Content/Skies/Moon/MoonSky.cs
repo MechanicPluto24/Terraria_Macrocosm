@@ -161,7 +161,7 @@ namespace Macrocosm.Content.Skies.Moon
 
             if (Main.dayTime)
             {
-                if (WorldFlags.DemonSun)
+                if (WorldData.DemonSun)
                     return GetDemonSunDayColour();
 
                 if (Main.time < MacrocosmSubworld.GetDayLength() * 0.1)
@@ -174,7 +174,7 @@ namespace Macrocosm.Content.Skies.Moon
             }
             else
             {
-                if (WorldFlags.DemonSun)
+                if (WorldData.DemonSun)
                     return GetDemonSunNightColour();
 
                 if (Main.time < MacrocosmSubworld.GetNightLength() * 0.2)
@@ -187,6 +187,7 @@ namespace Macrocosm.Content.Skies.Moon
         }
 
         private SpriteBatchState state1, state2;
+        //private Rift rift;
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             if (SubworldSystem.IsActive<Subworlds.Moon>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)
@@ -208,7 +209,7 @@ namespace Macrocosm.Content.Skies.Moon
 
                 sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
 
-                if (WorldFlags.DemonSun && Main.dayTime)
+                if (WorldData.DemonSun && Main.dayTime)
                     DrawDemonSunEffects(spriteBatch, sun);
 
                 sun.Draw(spriteBatch);
@@ -239,7 +240,6 @@ namespace Macrocosm.Content.Skies.Moon
             }
         }
 
-        Rift rift;
         private void UpdateNebulaStars()
         {
             if(lastMoonType != Main.moonType)

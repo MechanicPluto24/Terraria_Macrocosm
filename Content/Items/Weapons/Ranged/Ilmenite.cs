@@ -11,8 +11,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 {
     public class Ilmenite : ModItem
     {
-        private int currentAttack = 0;
-        private bool stillInUse = false;
         public override void SetStaticDefaults()
         {
 

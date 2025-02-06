@@ -27,7 +27,7 @@ namespace Macrocosm.Common.Systems
 
         public override void PostSetupContent()
         {
-            RegisterOverride(ItemID.LunarBrick, new Condition(Condition.BloodMoon.Description, () => Main.bloodMoon || WorldFlags.DemonSun), ModContent.ItemType<HaemonovaBrick>());
+            RegisterOverride(ItemID.LunarBrick, new Condition(Condition.BloodMoon.Description, () => Main.bloodMoon || WorldData.DemonSun), ModContent.ItemType<HaemonovaBrick>());
         }
 
         public static void RegisterOverride(int itemType, Condition condition, int resultType)

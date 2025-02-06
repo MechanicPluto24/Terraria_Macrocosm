@@ -62,7 +62,6 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
             }
         }
 
-        private Asset<Texture2D> landingLegTexture;
         private Mesh2D landingLegMesh;
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
@@ -76,7 +75,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
 
             state1.SaveState(spriteBatch);
             spriteBatch.End();
-            landingLegMesh.Draw(LandingLeg.Value, state1.Matrix, sourceRect: LandingLegFrame, BlendState.AlphaBlend, SamplerState.PointClamp);
+            landingLegMesh.Draw(LandingLeg.Value, state1.Matrix, sourceRect: LandingLegFrame, samplerState: SamplerState.PointClamp);
             spriteBatch.Begin(state1);
         }
 

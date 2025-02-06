@@ -130,7 +130,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         public void UpdateMapVisibility()
         {
-            if (WorldFlags.FoundVulcan)
+            if (WorldData.FoundVulcan)
             {
                 solarSystemInner.AddTarget(new UINavigationTarget(this, new Vector2(226, 88), 12, 12, "Vulcan"));
                 solarSystemInner.Texture = ModContent.Request<Texture2D>(navigationMapsPath + "SolarSystemInnerVulcan", AssetRequestMode.ImmediateLoad);

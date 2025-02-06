@@ -1,25 +1,27 @@
-﻿using System;
+﻿using SubworldLibrary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Subworlds
 {
-    public abstract class OrbitSubworld : MacrocosmSubworld
+    public abstract class OrbitSubworld : MultiSubworld
     {
-        public static readonly Dictionary<string, List<OrbitSubworld>> OrbitSubworldsByParent = [];
+        public abstract string ParentSubworldID { get; }
 
-        public static List<OrbitSubworld> GetOrbitSubworlds(string parentSubworld)
+        public static IEnumerable<OrbitSubworld> GetOrbitSubworlds(string parentSubworldId)
         {
-            if(OrbitSubworldsByParent.TryGetValue(parentSubworld, out var orbitSubworlds))
-                return orbitSubworlds;
-
-            return [];
+            foreach(var subworld in MacrocosmSubworlds)
+                if (subworld is OrbitSubworld orbitSubworld && orbitSubworld.ParentSubworldID == parentSubworldId)
+                    yield return orbitSubworld;
         }
 
+        public static bool AnyActive() => IsOrbitSubworld(CurrentID);
+        public static bool IsActive(string subworldId) => SubworldSystem.IsActive(subworldId) && IsOrbitSubworld(subworldId);
         public static bool IsOrbitSubworld(string subworldId)
         {
-            if (Subworlds.TryGetValue(subworldId, out var macrocosmSubworld) && macrocosmSubworld is OrbitSubworld _)
+            if (MacrocosmSubworlds.FirstOrDefault(s => s.ID == subworldId) is OrbitSubworld _)
                 return true;
 
             return false;
@@ -27,45 +29,10 @@ namespace Macrocosm.Common.Subworlds
 
         public static string GetParentID(string subworldId)
         {
-            if (Subworlds.TryGetValue(subworldId, out var macrocosmSubworld) && macrocosmSubworld is OrbitSubworld orbitSubworld)
+            if (MacrocosmSubworlds.FirstOrDefault(s => s.ID == subworldId) is OrbitSubworld orbitSubworld)
                 return orbitSubworld.ParentSubworldID;
 
             return subworldId;
-        }
-
-
-        public override string Name => base.Name + Index; 
-        protected abstract int InstanceCount { get; }
-        public abstract string ParentSubworldID { get; }
-        public int Index { get; private set; }
-
-        public override void Load()
-        {
-            base.Load();
-
-            // Index 0 manages the loading of all the other instances
-            if (Index <= 0)
-            {
-                OrbitSubworld[] subworlds = new OrbitSubworld[InstanceCount];
-                subworlds[0] = this;
-
-                for (int i = 1; i < InstanceCount; i++)
-                {
-                    if (Activator.CreateInstance(GetType()) is OrbitSubworld instance)
-                    {
-                        instance.Index = i;
-                        Mod.AddContent(instance);
-                        subworlds[i] = instance;
-                    }
-                }
-
-                OrbitSubworldsByParent.Add(ParentSubworldID, subworlds.ToList());
-            }
-        }
-
-        public override void Unload()
-        {
-            base.Unload();
         }
     }
 }

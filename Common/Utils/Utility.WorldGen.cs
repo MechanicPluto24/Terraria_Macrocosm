@@ -1417,7 +1417,7 @@ namespace Macrocosm.Common.Utils
 
         #region Custom TileRunners
 
-        public static void TileRunnerButItDoesntIgnoreAir(int i, int j, double strength, int steps, int type, bool addTile = false, double speedX = 0.0, double speedY = 0.0, bool noYChange = false, bool overRide = true)//Get a better name for this lol
+        public static void TileRunnerButItDoesntIgnoreAir(int i, int j, double strength, int steps, int type, bool addTile = false, double speedX = 0.0, double speedY = 0.0, bool noYChange = false, bool overRide = true) // Get a better name for this lol
         {
             if (!GenVars.mudWall)
             {
@@ -1457,7 +1457,7 @@ namespace Macrocosm.Common.Utils
 
             while (num > 0.0 && num2 > 0.0)
             {
-                if (drunkWorldGen && genRand.Next(30) == 0)
+                if (drunkWorldGen && genRand.NextBool(30))
                 {
                     vector2D.X += (double)genRand.Next(-100, 101) * 0.05;
                     vector2D.Y += (double)genRand.Next(-100, 101) * 0.05;
@@ -1503,7 +1503,7 @@ namespace Macrocosm.Common.Utils
                 }
 
                 vector2D += vector2D2;
-                if ((!drunkWorldGen || genRand.Next(3) != 0) && num > 50.0)
+                if ((!drunkWorldGen || !genRand.NextBool(3)) && num > 50.0)
                 {
                     vector2D += vector2D2;
                     num2 -= 1.0;

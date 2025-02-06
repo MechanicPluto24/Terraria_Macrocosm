@@ -10,8 +10,6 @@ namespace Macrocosm.Content.Tiles.Walls
     {
         public override bool IsLoadingEnabled(Mod mod) => false;
 
-        private static int[][] wallFrameNumberLookup;
-
         public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = true;

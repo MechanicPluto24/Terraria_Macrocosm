@@ -524,10 +524,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void OnKill()
         {
-            if (!WorldFlags.DownedCraterDemon)
+            if (!WorldData.DownedCraterDemon)
                 NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
 
-            WorldFlags.DownedCraterDemon = true;
+            WorldData.DownedCraterDemon = true;
         }
 
         private void UpdateScale(float newScale)

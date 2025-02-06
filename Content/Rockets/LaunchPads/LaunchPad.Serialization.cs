@@ -13,15 +13,14 @@ namespace Macrocosm.Content.Rockets.LaunchPads
 
         public TagCompound SerializeData()
         {
-            TagCompound tag = new()
-            {
-                [nameof(Active)] = Active,
-                [nameof(StartTile)] = StartTile,
-                [nameof(EndTile)] = EndTile,
-                [nameof(RocketID)] = RocketID,
-                [nameof(internalRocket)] = internalRocket,
-                [nameof(Inventory)] = Inventory
-            };
+            TagCompound tag = new();
+
+            if (Active) tag[nameof(Active)] = true;
+            if (StartTile != default) tag[nameof(StartTile)] = StartTile;
+            if (EndTile != default) tag[nameof(EndTile)] = EndTile;
+            if (RocketID != -1) tag[nameof(RocketID)] = RocketID;
+            if (internalRocket != null) tag[nameof(internalRocket)] = internalRocket;
+            if (Inventory != null) tag[nameof(Inventory)] = Inventory;
 
             return tag;
         }

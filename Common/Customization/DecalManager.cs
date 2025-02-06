@@ -86,7 +86,6 @@ namespace Macrocosm.Common.Customization
 
         public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 
-
         public static void SaveData(TagCompound tag)
         {
             foreach (var kvp in decalUnlockStatus)

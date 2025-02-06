@@ -16,30 +16,29 @@ namespace Macrocosm.Content.Rockets
 
         public TagCompound SerializeData()
         {
-            TagCompound tag = new()
-            {
-                [nameof(Modules)] = Modules,
+            TagCompound tag = new();
 
-                [nameof(Active)] = Active,
-                [nameof(WhoAmI)] = WhoAmI,
-                [nameof(CurrentWorld)] = CurrentWorld,
+            if(Modules != null) tag[nameof(Modules)] = Modules;
 
-                [nameof(State)] = (int)State,
-                [nameof(Position)] = Position,
+            if(Active) tag[nameof(Active)] = true;
+            if(WhoAmI != -1) tag[nameof(WhoAmI)] = WhoAmI;
+            if(CurrentWorld != "") tag[nameof(CurrentWorld)] = CurrentWorld;
 
-                [nameof(OrbitTravel)] = OrbitTravel,
-                [nameof(TargetTravelPosition)] = TargetTravelPosition,
+            if(State != ActionState.Idle) tag[nameof(State)] = (int)State;
+            if(Position != default) tag[nameof(Position)] = Position;
 
-                [nameof(Fuel)] = Fuel,
-                [nameof(FuelCapacity)] = FuelCapacity,
+            if(OrbitTravel) tag[nameof(OrbitTravel)] = true;
+            if(TargetTravelPosition != default) tag[nameof(TargetTravelPosition)] = TargetTravelPosition;
 
-                [nameof(Nameplate)] = Nameplate,
+            if(Fuel != 0f) tag[nameof(Fuel)] = Fuel;
+            if(FuelCapacity != DefaultFuelCapacity) tag[nameof(FuelCapacity)] = FuelCapacity;
 
-                [nameof(Inventory)] = Inventory,
-            };
+            if(Nameplate != null) tag[nameof(Nameplate)] = Nameplate;
+            if(Inventory != null) tag[nameof(Inventory)] = Inventory;
 
             return tag;
         }
+
         public static Rocket DeserializeData(TagCompound tag)
         {
             RocketModule[] modules = tag.ContainsKey(nameof(Modules))
@@ -59,10 +58,11 @@ namespace Macrocosm.Content.Rockets
                 TargetTravelPosition = tag.TryGet(nameof(TargetTravelPosition), out Vector2 target) ? target : Vector2.Zero,
 
                 Fuel = tag.TryGet(nameof(Fuel), out float fuel) ? fuel : 0f,
-                FuelCapacity = tag.TryGet(nameof(FuelCapacity), out float fuelCapacity) ? fuelCapacity : 0f,
-
-                Nameplate = tag.TryGet(nameof(Nameplate), out Nameplate nameplate) ? nameplate : new()
+                FuelCapacity = tag.TryGet(nameof(FuelCapacity), out float fuelCapacity) ? fuelCapacity : DefaultFuelCapacity,
             };
+
+            if (tag.ContainsKey(nameof(Nameplate)))
+                rocket.Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
 
             if (tag.ContainsKey(nameof(Inventory))) 
                 rocket.Inventory = tag.Get<Inventory>(nameof(Inventory));

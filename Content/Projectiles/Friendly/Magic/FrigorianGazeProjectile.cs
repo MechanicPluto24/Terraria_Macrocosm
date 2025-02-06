@@ -59,7 +59,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public bool HitSomething => BounceCounter == 1;
 
-        private bool exploded;
 
         private int timeUntilMandatoryBreak = 500;
         private int numBounces = 3;
@@ -95,9 +94,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void AI()
         {
-            if (exploded)
-                return;
-
             if (!spawned)
             {
                 IceShardCounter = 9;

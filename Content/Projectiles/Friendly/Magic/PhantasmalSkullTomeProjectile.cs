@@ -138,7 +138,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 );
         }
 
-        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
             SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;

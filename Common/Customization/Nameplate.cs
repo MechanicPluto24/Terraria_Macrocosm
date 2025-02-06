@@ -130,7 +130,6 @@ namespace Macrocosm.Common.Customization
         }
 
         public string ToJSON() => ToJObject().ToString(Formatting.Indented);
-
         public JObject ToJObject()
         {
             return new JObject()
@@ -143,7 +142,6 @@ namespace Macrocosm.Common.Customization
         }
 
         public static Nameplate FromJSON(string json) => FromJObject(JObject.Parse(json));
-
         public static Nameplate FromJObject(JObject jObject)
         {
             Nameplate nameplate = new();
@@ -163,36 +161,21 @@ namespace Macrocosm.Common.Customization
             return nameplate;
         }
 
-        public static readonly Func<TagCompound, Nameplate> DESERIALIZER = DeserializeData;
-
         public TagCompound SerializeData()
         {
             return new()
             {
-                [nameof(text)] = text,
-                [nameof(TextColor)] = TextColor,
-                [nameof(HAlign)] = (int)HAlign,
-                [nameof(VAlign)] = (int)VAlign,
+                ["JSON"] = ToJSON()
             };
         }
 
+        public static readonly Func<TagCompound, Nameplate> DESERIALIZER = DeserializeData;
         public static Nameplate DeserializeData(TagCompound tag)
         {
-            Nameplate nameplate = new();
+            if (tag.ContainsKey("JSON"))
+                return FromJSON(tag.GetString("JSON"));
 
-            if (tag.ContainsKey(nameof(text)))
-                nameplate.text = tag.GetString(nameof(text));
-
-            if (tag.ContainsKey(nameof(TextColor)))
-                nameplate.TextColor = tag.Get<Color>(nameof(TextColor));
-
-            if (tag.ContainsKey(nameof(HAlign)))
-                nameplate.HAlign = (TextHorizontalAlign)tag.GetInt(nameof(HAlign));
-
-            if (tag.ContainsKey(nameof(VAlign)))
-                nameplate.VAlign = (TextVerticalAlign)tag.GetInt(nameof(VAlign));
-
-            return nameplate;
+            return new();
         }
     }
 }

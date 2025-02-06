@@ -96,7 +96,6 @@ namespace Macrocosm.Content.Machines
             return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
         }
 
-        private SpriteBatchState state;
         public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
             TileRendering.DrawMultiTileInWindBottomAnchor(i, j, perTileLighting: false, windSensitivity: 0.04f, rowsToIgnore: 1);

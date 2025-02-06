@@ -124,7 +124,7 @@ namespace Macrocosm.Common.Subworlds
         {
             if (!triggeredSubworldTravel && Main.netMode == NetmodeID.SinglePlayer)
             {
-                MacrocosmSubworld.SetupLoadingScreen(null, MacrocosmSubworld.Hacks.SubworldSystem_CacheID());
+                MacrocosmSubworld.SetupLoadingScreen(null, MacrocosmSubworld.CacheID);
                 exitedBySaveAndExit = true;
             }
         }

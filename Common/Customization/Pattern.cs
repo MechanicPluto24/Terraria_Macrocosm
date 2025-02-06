@@ -159,9 +159,6 @@ namespace Macrocosm.Common.Customization
             }
         }
 
-
-        public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
-
         public TagCompound SerializeData()
         {
             return new TagCompound
@@ -170,6 +167,7 @@ namespace Macrocosm.Common.Customization
             };
         }
 
+        public static readonly Func<TagCompound, Pattern> DESERIALIZER = DeserializeData;
         public static Pattern DeserializeData(TagCompound tag)
         {
             if (tag.ContainsKey("JSON"))

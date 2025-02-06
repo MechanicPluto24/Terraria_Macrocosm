@@ -69,7 +69,7 @@ namespace Macrocosm.Content.NPCs.TownNPCs
             SpawnModBiomes = [ModContent.GetInstance<MoonBiome>().Type];
         }
 
-        public override bool CanTownNPCSpawn(int numTownNPCs) => WorldFlags.DownedCraterDemon;
+        public override bool CanTownNPCSpawn(int numTownNPCs) => WorldData.DownedCraterDemon;
 
         public override List<string> SetNPCNameList()
         {
@@ -170,7 +170,7 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
             AddNewSlot(ModContent.ItemType<LunarCrystal>(), 1);
 
-            AddNewSlot(ModContent.ItemType<CrescentScripture>(), 50, new Condition(LocalizedText.Empty, () => WorldFlags.LuminiteShrineUnlocked));
+            AddNewSlot(ModContent.ItemType<CrescentScripture>(), 50, new Condition(LocalizedText.Empty, () => WorldData.LuminiteShrineUnlocked));
 
             shop.Register();
         }

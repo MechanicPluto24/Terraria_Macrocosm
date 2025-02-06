@@ -90,7 +90,7 @@ namespace Macrocosm.Content.Skies.EarthOrbit
                 Main.screenHeight * 2
             );
 
-            stars.SpawnStars(850 * 5, area: area, randomColor: true, baseScale: 0.8f, twinkleFactor: 0.05f);
+            stars.SpawnStars(450 * 5, area: area, randomColor: true, baseScale: 0.8f, twinkleFactor: 0.05f);
             active = true;
         }
 

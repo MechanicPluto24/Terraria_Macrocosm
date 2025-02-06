@@ -34,7 +34,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
-        private static int spawnTimeLeft = 15 * 60;
         public override void SetDefaults()
         {
             Projectile.width = 66;

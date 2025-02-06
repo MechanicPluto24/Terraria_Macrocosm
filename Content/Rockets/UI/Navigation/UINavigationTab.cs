@@ -98,9 +98,9 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         private void LaunchRocket()
         {
-            if(targetOrbitSubworld != null) 
-                Rocket.Launch(targetOrbitSubworld);
-            else 
+            if(targetOrbitSubworld != null)
+                Rocket.Launch(targetOrbitSubworld.ID, orbitTravel: true);
+            else
                 Rocket.Launch(target.TargetID, targetLaunchPad);
         }
 
@@ -352,12 +352,11 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             }
 
             List<UILaunchDestinationInfoElement> orbitSubworlds = new();
-            
             if(target is not null && target.TargetID == MacrocosmSubworld.CurrentID)
             {
-                foreach (var orbitSubworld in OrbitSubworld.GetOrbitSubworlds(target.TargetID))
+                foreach (var orbitSubworld in OrbitSubworld.GetOrbitSubworlds(target.TargetID).OrderBy(s => s.InstanceIndex))
                 {
-                    if (!WorldFlags.SubworldUnlocked.GetValue(orbitSubworld.ID))
+                    if (!WorldData.GetSubworldData(orbitSubworld.ID).Unlocked)
                         continue;
 
                     UILaunchDestinationInfoElement infoElement = new(orbitSubworld)
@@ -374,8 +373,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             }
 
             launchLocationsList.AddRange(vacant.Cast<UIElement>().ToList());
-
-            if (vacant.Count > 0 && occupied.Count > 0)
+            if (vacant.Count > 0)
                 launchLocationsList.Add(new UIHorizontalSeparator() { Width = new StyleDimension(0, 1), Color = UITheme.Current.SeparatorColor });
 
             launchLocationsList.AddRange(occupied.Cast<UIElement>().ToList());
@@ -413,6 +411,8 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                 launchLocationsList.AddRange(orbitSubworlds.Cast<UIElement>().ToList());
             }
 
+            launchLocationsList.ManualSortMethod = (_) => {};
+            launchLocationsList.UpdateOrder();
             launchLocationsList.Activate();
             return launchLocationsList;
         }

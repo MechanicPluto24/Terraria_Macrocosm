@@ -17,6 +17,6 @@ namespace Macrocosm.Content.Biomes
         public override string MapBackground => Macrocosm.TexturesPath + "MapBackgrounds/Space";
         public override int Music => Main.dayTime ? MusicLoader.GetMusicSlot(Mod, "Assets/Music/OrbitDay") : MusicLoader.GetMusicSlot(Mod, "Assets/Music/OrbitNight");
 
-        public override bool IsSceneEffectActive(Player player) => OrbitSubworld.IsOrbitSubworld(MacrocosmSubworld.CurrentID);
+        public override bool IsSceneEffectActive(Player player) => OrbitSubworld.AnyActive();
     }
 }

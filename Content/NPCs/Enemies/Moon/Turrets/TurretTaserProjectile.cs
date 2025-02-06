@@ -1,15 +1,11 @@
-using Macrocosm.Common.Sets;
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Content.Debuffs.Radiation;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using Terraria.ModLoader;
 using ReLogic.Content;
 
 namespace  Macrocosm.Content.NPCs.Enemies.Moon.Turrets

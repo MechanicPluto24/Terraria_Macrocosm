@@ -65,7 +65,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         bool spawned;
         float mult = 0f;
         float FireDist = 0f;
-        int shootTimer = 0;
         Entity targetNPC;
         float distanceFromTarget;
         Vector2 targetCenter;
