@@ -16,9 +16,13 @@ namespace Macrocosm.Content.Subworlds
 {
     public partial class EarthOrbitSubworld : OrbitSubworld
     {
+        public override void SetStaticDefaults()
+        {
+            WorldData.GetSubworldData(ID).Unlocked = false; 
+        }
+
         protected override int InstanceCount => 50;
         public override string ParentSubworldID => Earth.ID;
-
         public override bool PeacefulWorld => true;
 
         public override string CustomSky => nameof(EarthOrbitSky);
@@ -53,10 +57,5 @@ namespace Macrocosm.Content.Subworlds
             {MapColorType.CavernLower, Color.Black},
             {MapColorType.Underworld, Color.Black}
         };
-
-        public override void PostLoad()
-        {
-            WorldFlags.SubworldUnlocked.SetValue(ID, false);
-        }
     }
 }

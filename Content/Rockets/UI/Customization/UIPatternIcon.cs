@@ -41,7 +41,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             HoverText = Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Customization.Patterns." + Pattern.Name, () => Pattern.Name);
         }
 
-        private static Asset<Effect> colorMaskShading;
         private SpriteBatchState state;
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {

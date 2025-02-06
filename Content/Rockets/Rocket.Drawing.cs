@@ -27,7 +27,6 @@ namespace Macrocosm.Content.Rockets
 
         private Mesh2D mesh;
         private SpriteBatchState sbState;
-        private bool firstDraw = true;
 
         public void ResetRenderTarget()
         {
@@ -99,14 +98,11 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-        private DynamicVertexBuffer vertexBuffer;
-        private DynamicIndexBuffer indexBuffer;
-
         private void DrawLightedMesh(Vector2 position)
         {
             mesh ??= new(Main.graphics.GraphicsDevice);
             mesh.CreateRectangle(position, Width, Height, horizontalResolution: 6, verticalResolution: 8, colorFunction: GetDrawColor);
-            mesh.Draw(renderTargets[(int)DrawMode.World], Main.Transform, null, BlendState.AlphaBlend, SamplerState.PointClamp);
+            mesh.Draw(renderTargets[(int)DrawMode.World], transformMatrix: Main.Transform, samplerState: SamplerState.PointClamp);
         }
 
         private void DrawDummyWithRenderTarget(SpriteBatch spriteBatch, Vector2 position)
@@ -192,7 +188,8 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                module.Draw(spriteBatch, GetModuleRelativePosition(module, position));
+                Vector2 modulePosition = GetModuleRelativePosition(module, position);
+                module.Draw(spriteBatch, modulePosition);
             }
         }
 
@@ -265,7 +262,7 @@ namespace Macrocosm.Content.Rockets
                     scale *= Utility.QuadraticEaseOut((UndockingProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
-                spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height), null, new Color(255, 69, 0), 0f, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height).RotatedBy(Rotation), null, new Color(255, 69, 0), Rotation, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
         }
     }

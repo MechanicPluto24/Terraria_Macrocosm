@@ -66,8 +66,8 @@ namespace Macrocosm.Content.Items.Dev
             bool message = true;
             foreach (var subworld in OrbitSubworld.GetOrbitSubworlds(Earth.ID))
             {
-                bool value = WorldFlags.SubworldUnlocked.GetValue(subworld.ID);
-                WorldFlags.SubworldUnlocked.SetValue(subworld.ID, !value);
+                bool value = WorldData.GetSubworldData(subworld.ID).Unlocked;
+                WorldData.GetSubworldData(subworld.ID).Unlocked = !value;
                 if (message)
                 {
                     Main.NewText(value ? "Orbit locked" : "Orbit unlocked");

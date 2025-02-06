@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Systems
 {
     /// <summary> 
     /// General system, mainly for managing <see cref="MacrocosmSubworld"/>s, and sometimes as an entry point of other systems.
-    /// <br/> Persistent world flags such as downed bosses should go in <see cref="WorldFlags"/>
+    /// <br/> Persistent world flags such as downed bosses should go in <see cref="WorldData"/>
     /// </summary>
     class MacrocosmWorld : ModSystem
     {

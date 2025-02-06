@@ -100,9 +100,7 @@ namespace Macrocosm.Common.Customization
             }; ;
         }
 
-
         public static readonly Func<TagCompound, PatternColorData> DESERIALIZER = DeserializeData;
-
         public static PatternColorData DeserializeData(TagCompound tag)
         {
             if (tag.ContainsKey("JSON"))

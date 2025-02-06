@@ -104,10 +104,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             }
         }
 
-        private Vector2 idleDirection = new Vector2(1, 0);
+        private Vector2 idleDirection = new(1, 0);
         private bool raisedHead = false;
         private bool gasLeak = false;
-        private float runSpeed = 0.01f;
         private int headTimer = 0;
         bool runNoise = false;
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)

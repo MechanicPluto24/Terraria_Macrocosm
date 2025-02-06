@@ -48,7 +48,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         }
 
         private bool spawned;
-        SpriteBatchState state;
         public override void AI()
         {
             if (!spawned)

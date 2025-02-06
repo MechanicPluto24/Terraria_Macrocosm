@@ -44,7 +44,6 @@ namespace Macrocosm.Common.Subworlds
                 subworld = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(id), out _);
             }
 
-
             bool exists = ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + subworld, out Asset<Texture2D> texture, AssetRequestMode.ImmediateLoad);
             UIImage icon = new(exists ? texture : Macrocosm.EmptyTex)
             {

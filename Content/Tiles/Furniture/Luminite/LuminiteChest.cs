@@ -103,36 +103,36 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             switch (style)
             {
                 case LuminiteStyle.Heavenforge:
-                    WorldFlags.HeavenforgeShrineUnlocked = true;
-                    OnFirstUnlock(WorldFlags.HeavenforgeShrineUnlocked, i, j, style);
+                    WorldData.HeavenforgeShrineUnlocked = true;
+                    OnFirstUnlock(WorldData.HeavenforgeShrineUnlocked, i, j, style);
                     break;
                 case LuminiteStyle.LunarRust:
-                    WorldFlags.LunarRustShrineUnlocked = true;
-                    OnFirstUnlock(WorldFlags.LunarRustShrineUnlocked, i, j, style);
+                    WorldData.LunarRustShrineUnlocked = true;
+                    OnFirstUnlock(WorldData.LunarRustShrineUnlocked, i, j, style);
                     break;
                 case LuminiteStyle.Astra:
-                    WorldFlags.AstraShrineUnlocked = true;
-                    OnFirstUnlock(WorldFlags.AstraShrineUnlocked, i, j, style);
+                    WorldData.AstraShrineUnlocked = true;
+                    OnFirstUnlock(WorldData.AstraShrineUnlocked, i, j, style);
                     break;
                 case LuminiteStyle.DarkCelestial:
-                    WorldFlags.DarkCelestialShrineUnlocked = true;
-                    OnFirstUnlock(WorldFlags.DarkCelestialShrineUnlocked, i, j, style);
+                    WorldData.DarkCelestialShrineUnlocked = true;
+                    OnFirstUnlock(WorldData.DarkCelestialShrineUnlocked, i, j, style);
                     break;
                 case LuminiteStyle.Mercury:
-                    WorldFlags.MercuryShrineUnlocked = true;
-                    OnFirstUnlock(WorldFlags.MercuryShrineUnlocked, i, j, style);
+                    WorldData.MercuryShrineUnlocked = true;
+                    OnFirstUnlock(WorldData.MercuryShrineUnlocked, i, j, style);
                     break;
                 case LuminiteStyle.StarRoyale:
-                    WorldFlags.StarRoyaleShrineUnlocked = true;
-                    OnFirstUnlock(WorldFlags.StarRoyaleShrineUnlocked, i, j, style);
+                    WorldData.StarRoyaleShrineUnlocked = true;
+                    OnFirstUnlock(WorldData.StarRoyaleShrineUnlocked, i, j, style);
                     break;
                 case LuminiteStyle.Cryocore:
-                    WorldFlags.CryocoreShrineUnlocked = true;
-                    OnFirstUnlock(WorldFlags.CryocoreShrineUnlocked, i, j, style);
+                    WorldData.CryocoreShrineUnlocked = true;
+                    OnFirstUnlock(WorldData.CryocoreShrineUnlocked, i, j, style);
                     break;
                 case LuminiteStyle.CosmicEmber:
-                    WorldFlags.CosmicEmberShrineUnlocked = true;
-                    OnFirstUnlock(WorldFlags.CosmicEmberShrineUnlocked, i, j, style);
+                    WorldData.CosmicEmberShrineUnlocked = true;
+                    OnFirstUnlock(WorldData.CosmicEmberShrineUnlocked, i, j, style);
                     break;
                 default:
                     break;

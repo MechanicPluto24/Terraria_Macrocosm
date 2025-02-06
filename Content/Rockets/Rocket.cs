@@ -113,6 +113,9 @@ namespace Macrocosm.Content.Rockets
             set => Position = value - Size / 2f;
         }
 
+        public float Rotation { get; set; } = 0f; 
+        public float AngularVelocity { get; set; } = 0f;
+
         /// <summary> The layer this rocket is drawn in </summary>
         public RocketDrawLayer DrawLayer = RocketDrawLayer.BeforeNPCs;
 
@@ -240,6 +243,8 @@ namespace Macrocosm.Content.Rockets
 
             Velocity = GetCollisionVelocity();
             Position += Velocity;
+            Rotation += AngularVelocity;
+            AngularVelocity *= 0.98f;
 
             Effects();
             PlaySound();
@@ -553,7 +558,7 @@ namespace Macrocosm.Content.Rockets
         /// Launches the rocket, with syncing. 
         /// For <paramref name="targetWorld"/>, use the ID format respective to <see cref="MacrocosmSubworld.CurrentID"/> (mod name prepended) 
         /// </summary>
-        public void Launch(string targetWorld, LaunchPad targetLaunchPad = null)
+        public void Launch(string targetWorld, LaunchPad targetLaunchPad = null, bool orbitTravel = false)
         {
             State = TargetIsParentSubworld(targetWorld) ? ActionState.Undocking : ActionState.PreLaunch;
 
@@ -562,19 +567,12 @@ namespace Macrocosm.Content.Rockets
             StartPositionY = Position.Y;
             TargetWorld = targetWorld;
 
-            OrbitTravel = false;
+            OrbitTravel = orbitTravel;
 
             this.targetLaunchPad = targetLaunchPad;
 
             Fuel -= GetFuelCost(targetWorld);
 
-            SyncCommonData();
-        }
-
-        public void Launch(OrbitSubworld targetOrbitSubworld)
-        {
-            Launch(targetOrbitSubworld.ID);
-            OrbitTravel = true;
             SyncCommonData();
         }
 

@@ -68,8 +68,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private Vector2 flyTo;
 
         private int flashFrame = -1;
-        private float flashRotation = 0;
-
         public override void AI()
         {
             if (!spawned)

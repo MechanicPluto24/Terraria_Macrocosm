@@ -105,7 +105,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public abstract int DrawPriority { get; }
 
         /// <summary> The module's draw origin </summary>
-        protected virtual Vector2 Origin => new(0, 0);
+        public virtual Vector2 Origin => new Vector2(Width, Height) / 2f;
 
         public bool IsBlueprint { get; set; } = false;
 
@@ -145,7 +145,6 @@ namespace Macrocosm.Content.Rockets.Modules
         {
         }
 
-        private static Asset<Effect> colorMaskShading;
         private SpriteBatchState state;
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
@@ -158,7 +157,7 @@ namespace Macrocosm.Content.Rockets.Modules
                 //TODO: Decal?.Pattern.Apply();
             }
 
-            spriteBatch.Draw(Texture, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, position + Origin, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
 
             if (SpecialDraw)
             {

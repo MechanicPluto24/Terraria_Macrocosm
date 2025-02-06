@@ -1,6 +1,9 @@
 ﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
+using System.Collections;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.Chat;
@@ -30,6 +33,32 @@ namespace Macrocosm.Common.Netcode
         }
 
         /// <summary>
+        /// Sends a packet from the specified mod directly to all subservers, except the specified one.
+        /// </summary>
+        /// <param name="mod">The mod sending the packet.</param>
+        /// <param name="data">The data to send.</param>
+        /// <param name="exceptSubserverIndex">The subserver ID to exclude.</param>
+        public static void SendToAllSubserversExcept(Mod mod, byte[] data, int exceptSubserverIndex)
+        {
+            if (typeof(SubworldSystem).GetFieldValue("links") is not IDictionary links)
+                throw new Exception("Failed to retrieve SubworldSystem.links.");
+
+            int headerLength = (ModNet.NetModCount < 256) ? 5 : 6;
+            byte[] packetHeader = typeof(SubworldSystem).InvokeMethod<byte[]>("GetPacketHeader", parameters: [data.Length + headerLength, mod.NetID]);
+            Buffer.BlockCopy(data, 0, packetHeader, headerLength, data.Length);
+
+            foreach (DictionaryEntry entry in links)
+            {
+                int subserverID = (int)entry.Key;
+                if (subserverID != exceptSubserverIndex)
+                {
+                    var subserverLink = entry.Value;
+                    subserverLink.GetType().InvokeMethod("Send", subserverLink, parameters: [packetHeader]);
+                }
+            }
+        }
+
+        /// <summary>
         /// Send a <see cref="ModPacket"/> to other servers running.
         /// <br/> If on the main server (not a subworld), the packet is sent to all the SubworldLibrary subservers, except <paramref name="ignoreSubserver"/>
         /// <br/> If on a subserver, the packet is sent to the main server. The main server has the responsibility to relay it to the subservers, except the original sender.
@@ -49,7 +78,7 @@ namespace Macrocosm.Common.Netcode
             else if (ignoreSubserver == -1)
                 SubworldSystem.SendToAllSubservers(mod, data);
             else
-                MacrocosmSubworld.Hacks.SubworldSystem_SendToAllSubserversExcept(mod, data, ignoreSubserver);
+                SendToAllSubserversExcept(mod, data, ignoreSubserver);
         }
 
         /// <summary>

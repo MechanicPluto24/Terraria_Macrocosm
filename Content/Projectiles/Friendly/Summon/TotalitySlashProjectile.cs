@@ -49,7 +49,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
         private bool spawned;
         private Color color;
 
-        private Vector2 lastVelocity;
         private Vector2[] oldPosLerped;
         private float[] oldRotLerped;
 

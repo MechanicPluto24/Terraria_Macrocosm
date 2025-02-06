@@ -106,8 +106,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             }
 
             return true;
-
-            return true;
         }
 
         public override void MouseOver(int i, int j)

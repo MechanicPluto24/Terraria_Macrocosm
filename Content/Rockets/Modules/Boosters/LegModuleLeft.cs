@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
         {
             return new
             (
-                x: 0,
+                x: ((widths[0..4].Max() / 2 - Width / 2)) - 21,
                 y: heights[0..4].Sum() - 136 - 8
             );
         }
@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
         {
             if (drawMode == Rocket.DrawMode.Dummy)
             {
-                int extra = LandingLegFrame.Width - (int)LandingLegDrawOffset.Value.X;
+                int extra = Width - (int)LandingLegDrawOffset.Value.X;
                 return bounds with
                 {
                     Width = bounds.Width + extra,

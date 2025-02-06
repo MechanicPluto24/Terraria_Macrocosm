@@ -11,9 +11,7 @@ namespace Macrocosm.Common.Customization
         public string Context { get; }
 
         public Asset<Texture2D> Texture { get; }
-        private readonly string texturePath;
         public Asset<Texture2D> Icon { get; }
-        private readonly string iconPath;
 
         public Decal(string name, string context, string texturePath, string iconPath)
         {

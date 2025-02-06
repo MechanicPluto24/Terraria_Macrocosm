@@ -215,7 +215,7 @@ namespace Macrocosm.Common.Players
                 return;
 
             if (Collision.TileCollision(Player.position, Player.velocity, Player.width, Player.height, gravDir: (int)Player.gravDir) == Vector2.Zero)
-                Player.velocity = new Vector2(0, 0.01f);
+                Player.velocity = new Vector2(0, 0.02f);
 
             float speed = ZeroGravitySpeed;
 
@@ -269,8 +269,7 @@ namespace Macrocosm.Common.Players
         #region Saving & Loading
         public override void SaveData(TagCompound tag)
         {
-            if (KnowsToUseZombieFinger)
-                tag[nameof(KnowsToUseZombieFinger)] = true;
+            if (KnowsToUseZombieFinger) tag[nameof(KnowsToUseZombieFinger)] = true;
         }
 
         public override void LoadData(TagCompound tag)

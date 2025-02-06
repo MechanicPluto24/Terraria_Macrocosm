@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Tiles.Ambient
                     }, shouldSync: true);
                 }
 
-                WorldFlags.LuminiteShrineUnlocked = true;
+                WorldData.LuminiteShrineUnlocked = true;
                 NetMessage.SendData(MessageID.WorldData);
             }
         }

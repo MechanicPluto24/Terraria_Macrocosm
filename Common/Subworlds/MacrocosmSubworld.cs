@@ -29,14 +29,6 @@ namespace Macrocosm.Common.Subworlds
     {
         public string ID => Mod.Name + "/" + Name;
 
-        public sealed override void SetStaticDefaults()
-        {
-            Subworlds.Add(ID, this);
-            PostLoad();
-        }
-
-        public virtual void PostLoad() { }
-
         #region Sublib options
         public override bool NormalUpdates => false;
         public override bool ShouldSave => true;
@@ -336,7 +328,7 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound data = new();
 
-            WorldFlags.SaveData(data);
+            WorldData.SaveData(data);
             RocketManager.SaveData(data);
             LaunchPadManager.SaveData(data);
             PatternManager.SaveData(data);
@@ -350,7 +342,7 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound data = SubworldSystem.ReadCopiedWorldData<TagCompound>($"{nameof(Macrocosm)}:{nameof(data)}");
 
-            WorldFlags.LoadData(data);
+            WorldData.LoadData(data);
             RocketManager.LoadData(data);
             LaunchPadManager.LoadData(data);
             PatternManager.LoadData(data);

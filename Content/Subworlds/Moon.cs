@@ -79,7 +79,7 @@ namespace Macrocosm.Content.Subworlds
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
 
             DemonSunIntensity = 0f;
-            WorldFlags.DemonSun = false;
+            WorldData.DemonSun = false;
 
             CustomAchievement.Unlock<TravelToMoon>();
         }
@@ -207,23 +207,23 @@ namespace Macrocosm.Content.Subworlds
         {
             meteorStormCounter += Main.worldEventUpdates;
 
-            if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldFlags.MoonMeteorStorm)
+            if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldData.Current.MeteorStorm)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.Start"), Color.Gray);
-                WorldFlags.MoonMeteorStorm = true;
+                WorldData.Current.MeteorStorm = true;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             }
 
-            if (WorldFlags.MoonMeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
+            if (WorldData.Current.MeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.End"), Color.Gray);
-                WorldFlags.MoonMeteorStorm = false;
+                WorldData.Current.MeteorStorm = false;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
             }
 
-            if (WorldFlags.MoonMeteorStorm)
+            if (WorldData.Current.MeteorStorm)
                 MeteorBoost = 1000f;
             else
                 MeteorBoost = 1f;

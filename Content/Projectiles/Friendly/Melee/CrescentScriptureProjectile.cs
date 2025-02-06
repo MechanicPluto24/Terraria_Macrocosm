@@ -47,12 +47,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         private ref float Arc => ref Projectile.ai[1];
         private CrescentScripture blade;
         private bool despawn;
-        private int runeTimer;
         private bool shot;
         float transparency = 0f;
-        private Vector2 aim;
         private bool spawned = false;
-        private int shootTimer = 0;
         public override void OnSpawn(IEntitySource source)
         {
             blade = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as CrescentScripture;
@@ -117,8 +114,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 shot = true;
             }
         }
-
-        private SpriteBatchState state;
 
         public override bool PreDraw(ref Color lightColor)
         {

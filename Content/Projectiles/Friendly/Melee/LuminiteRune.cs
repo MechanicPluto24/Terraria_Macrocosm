@@ -110,7 +110,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         }
 
         public override Color? GetAlpha(Color lightColor) => new Color(255, 255, 255, 255) * Projectile.Opacity;
-        private SpriteBatchState state;
+
         public override bool PreDraw(ref Color lightColor)
         {
             //Projectile.DrawMagicPixelTrail(Vector2.Zero,4f, 0.1f, colour * Projectile.Opacity, Color.Transparent);
