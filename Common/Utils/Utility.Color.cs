@@ -292,6 +292,7 @@ namespace Macrocosm.Common.Utils
                 LuminiteStyle.StarRoyale => new Color(21, 13, 77),
                 LuminiteStyle.Cryocore => new Color(11, 67, 80),
                 LuminiteStyle.CosmicEmber => new Color(53, 133, 103),
+                LuminiteStyle.Haemonova => new Color(233, 27, 68),
                 _ => Color.Transparent,
             };
         }
@@ -309,6 +310,7 @@ namespace Macrocosm.Common.Utils
                 LuminiteStyle.StarRoyale => new Color(131, 198, 255),
                 LuminiteStyle.Cryocore => new Color(121, 245, 231),
                 LuminiteStyle.CosmicEmber => new Color(255, 180, 131),
+                LuminiteStyle.Haemonova => new Color(233, 27, 68),
                 _ => Color.Transparent,
             };
         }
