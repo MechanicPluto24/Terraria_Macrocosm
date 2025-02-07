@@ -1,11 +1,13 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -54,7 +56,7 @@ namespace Macrocosm.Common.Customization
         /// <summary> Whether the rocket's name supports this character </summary>
         public static bool SupportsChar(char c) => SupportedCharacters.Contains(c);
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, float rotation = 0f)
         {
             Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Fonts/RocketLettersSmall").Value;
             int numChars = (int)MathHelper.Clamp(text.Length, 0, MaxChars);
@@ -91,7 +93,7 @@ namespace Macrocosm.Common.Customization
 
             for (int i = 0; i < numChars; i++)
             {
-                spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + i * characterHeight), GetCharacterRectangle(text[i]), TextColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + i * characterHeight), GetCharacterRectangle(text[i]), TextColor, rotation, GetCharacterRectangle(text[i]).Size()/2f, 1f, SpriteEffects.None, 0f);
             }
         }
 

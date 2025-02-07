@@ -1,43 +1,66 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria.GameContent;
+using Terraria;
+using Terraria.DataStructures;
 
 namespace Macrocosm.Common.DataStructures
 {
-    public class RotatedRectangle
+    public struct RotatedRectangle
     {
-        public Vector2 Center { get; set; } 
+        public Vector2 Position { get; set; } 
+        public Vector2 Origin { get; }      
         public int Width { get; }
         public int Height { get; }
-        public float Rotation { get; private set; } 
+        public float Rotation { get; private set; }
 
+        public Vector2 Center => Position + Origin; 
         public Vector2[] Corners { get; private set; }
+        public Vector2 Size => new(Width, Height);
 
-        public RotatedRectangle(Vector2 center, int width, int height, float rotation = 0f)
+        public RotatedRectangle(Vector2 position, Vector2 origin, int width, int height, float rotation = 0f)
         {
-            Center = center;
+            Position = position;
+            Origin = origin;
             Width = width;
             Height = height;
             Rotation = rotation;
+            Corners = new Vector2[4];
             UpdateCorners();
         }
 
+        public RotatedRectangle(Vector2 center, int width, int height, float rotation = 0f)
+        : this(
+            position: center - new Vector2(width / 2f, height / 2f),
+            origin: new Vector2(width / 2f, height / 2f),
+            width,
+            height,
+            rotation
+        ){}
+
+        public RotatedRectangle(Rectangle rect, float rotation = 0f)
+        : this(
+            new Vector2(rect.X, rect.Y),
+            new Vector2(rect.Width / 2f, rect.Height / 2f),
+            rect.Width,
+            rect.Height,
+            rotation
+        ) { }
+
         private void UpdateCorners()
         {
-            Vector2 halfSize = new(Width / 2f, Height / 2f);
-
             Vector2[] localCorners =
             [
-            new(-halfSize.X, -halfSize.Y), // Top-left
-            new(halfSize.X, -halfSize.Y),  // Top-right
-            new(halfSize.X, halfSize.Y),   // Bottom-right
-            new(-halfSize.X, halfSize.Y)   // Bottom-left
+                new Vector2(0, 0),         
+                new Vector2(Width, 0),     
+                new Vector2(Width, Height),
+                new Vector2(0, Height)     
             ];
 
-            Corners = new Vector2[4];
             for (int i = 0; i < 4; i++)
             {
-                Corners[i] = RotateVector(localCorners[i], Rotation) + Center;
+                Corners[i] = Position + RotateVector(localCorners[i] - Origin, Rotation) + Origin;
             }
         }
 
@@ -54,15 +77,43 @@ namespace Macrocosm.Common.DataStructures
             UpdateCorners();
         }
 
-        public bool Intersects(RotatedRectangle other) => SATCollisionCheck(this, other) && SATCollisionCheck(other, this);
+        public bool Contains(Vector2 point)
+        {
+            Vector2 localPoint = RotateVector(point - Position, -Rotation);
+            localPoint += Origin;
+            return localPoint.X >= 0 && localPoint.X <= Width &&
+                   localPoint.Y >= 0 && localPoint.Y <= Height;
+        }
 
-        /// <summary> Separating Axis Theorem (SAT) collision detection </summary>
+        public bool InPlayerInteractionRange(TileReachCheckSettings settings)
+        {
+            Vector2 playerPosition = Main.LocalPlayer.Center;
+            Vector2 closestCorner = Corners[0];
+            float minDistance = Vector2.Distance(playerPosition, Corners[0]);
+            for (int i = 1; i < Corners.Length; i++)
+            {
+                float distance = Vector2.Distance(playerPosition, Corners[i]);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    closestCorner = Corners[i];
+                }
+            }
+
+            Point tileLocation = closestCorner.ToTileCoordinates();
+            return Main.LocalPlayer.IsInTileInteractionRange(tileLocation.X, tileLocation.Y, settings);
+        }
+
+
+        public bool Intersects(RotatedRectangle other) => SATCollisionCheck(this, other) && SATCollisionCheck(other, this);
+        public bool Intersects(Rectangle other) => Intersects(new RotatedRectangle(other));
+
         private bool SATCollisionCheck(RotatedRectangle rectA, RotatedRectangle rectB)
         {
             for (int i = 0; i < 4; i++)
             {
                 Vector2 edge = rectA.Corners[(i + 1) % 4] - rectA.Corners[i];
-                Vector2 axis = new(-edge.Y, edge.X); 
+                Vector2 axis = new(-edge.Y, edge.X);
                 axis.Normalize();
 
                 (float minA, float maxA) = ProjectRectangle(rectA, axis);
@@ -72,11 +123,10 @@ namespace Macrocosm.Common.DataStructures
                     return false;
             }
 
-            return true; 
+            return true;
         }
 
-        /// <summary> Projects a rectangle onto an axis </summary>
-        private (float, float) ProjectRectangle(RotatedRectangle rect, Vector2 axis)
+        private readonly (float, float) ProjectRectangle(RotatedRectangle rect, Vector2 axis)
         {
             float min = Vector2.Dot(axis, rect.Corners[0]);
             float max = min;
@@ -90,6 +140,24 @@ namespace Macrocosm.Common.DataStructures
 
             return (min, max);
         }
-    }
 
+        public void DrawDebugBounds(SpriteBatch spriteBatch, Color color)
+        {
+            static void DrawLine(SpriteBatch spriteBatch, Vector2 start, Vector2 end, Color color)
+            {
+                Vector2 edge = end - start;
+                float angle = (float)Math.Atan2(edge.Y, edge.X);
+                float length = edge.Length();
+
+                spriteBatch.Draw(TextureAssets.MagicPixel.Value, start, new Rectangle(0, 0, 1, 1), color, angle, Vector2.Zero, new Vector2(length, 2), SpriteEffects.None, 0);
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                Vector2 start = Corners[i] - Main.screenPosition;
+                Vector2 end = Corners[(i + 1) % 4] - Main.screenPosition;
+                DrawLine(spriteBatch, start, end, color);
+            }
+        }
+    }
 }

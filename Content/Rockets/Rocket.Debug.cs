@@ -10,20 +10,13 @@ namespace Macrocosm.Content.Rockets
     {
         public void DrawDebugBounds()
         {
-            Rectangle rect = new((int)(Bounds.X - Main.screenPosition.X), (int)(Bounds.Y - Main.screenPosition.Y), Bounds.Width, Bounds.Height);
-            Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Red * 0.1f);
+            Bounds.DrawDebugBounds(Main.spriteBatch, Color.Red);
         }
 
         public void DrawDebugModuleHitbox()
         {
             foreach (RocketModule module in Modules)
-            {
-                Rectangle rect = new((int)module.Bounds.X - (int)Main.screenPosition.X, (int)module.Bounds.Y - (int)Main.screenPosition.Y, module.Bounds.Width, module.Bounds.Height);
-                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green * 0.2f);
-
-                rect = new((int)(module.Bounds.X - (int)Main.screenPosition.X), (int)(module.Bounds.Y - (int)Main.screenPosition.Y), module.Bounds.Width, module.Bounds.Height);
-                Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Blue * 0.2f);
-            }
+                module.Bounds.DrawDebugBounds(Main.spriteBatch, Color.Blue);
         }
 
         public void DisplayWhoAmI()

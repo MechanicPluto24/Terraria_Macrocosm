@@ -171,7 +171,7 @@ namespace Macrocosm.Content.LoadingScreens
         private void DrawRocket(SpriteBatch spriteBatch)
         {
             Vector2 center = Utility.ScreenCenter;
-            Vector2 spriteSize = rocket.Bounds.Size();
+            Vector2 spriteSize = rocket.Bounds.Size;
             Vector2 randomOffset = Main.rand.NextVector2Circular(1f, 5f);
 
             Vector2 position = center - spriteSize * 0.5f + randomOffset;

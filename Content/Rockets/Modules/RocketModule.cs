@@ -91,8 +91,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public abstract int Width { get; }
         public abstract int Height { get; }
-        public Rectangle Bounds => new((int)Position.X, (int)Position.Y, Width, Height);
-
+        public RotatedRectangle Bounds => new(Position, origin: Vector2.Zero, Width, Height, Rocket.Rotation);
 
         public Pattern Pattern { get; set; }
         public Decal Decal { get; set; }
@@ -157,7 +156,7 @@ namespace Macrocosm.Content.Rockets.Modules
                 //TODO: Decal?.Pattern.Apply();
             }
 
-            spriteBatch.Draw(Texture, position + Origin, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, position, null, Color.White, Rocket.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             if (SpecialDraw)
             {

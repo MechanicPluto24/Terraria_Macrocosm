@@ -79,14 +79,15 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
             spriteBatch.End();
             spriteBatch.Begin(state2);
 
-            // Draw the engine module with the base logic
+            // Apply rotation and draw base module
             base.Draw(spriteBatch, position);
 
             spriteBatch.End();
             spriteBatch.Begin(SamplerState.PointClamp, state2);
 
-            // Draw the nameplate
-            Rocket.Nameplate.Draw(spriteBatch, position + new Vector2(Width / 2, 0));
+            // Rotate and adjust nameplate
+            Vector2 nameplateOffset = new Vector2(Width / 2, 0).RotatedBy(Rocket.Rotation);
+            Rocket.Nameplate.Draw(spriteBatch, position + nameplateOffset, Rocket.Rotation);
 
             spriteBatch.End();
             spriteBatch.Begin(state2);
@@ -98,13 +99,16 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
             int stripDataCount = (int)(58 * intensity);
             if (stripDataCount < 0)
                 stripDataCount = 0;
+
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
-            Array.Fill(positions, new Vector2(position.X + Width / 2f, position.Y + Height - 28));
+
+            Vector2 basePosition = new Vector2(position.X + Width / 2f, position.Y + Height - 28).RotatedBy(Rocket.Rotation);
+            Array.Fill(positions, basePosition);
             Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
 
             for (int i = 0; i < stripDataCount; i++)
-                positions[i] += new Vector2(0f, 4f * i);
+                positions[i] += new Vector2(0f, 4f * i).RotatedBy(Rocket.Rotation);
 
             var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
                 .UseProjectionMatrix(doUse: false)
