@@ -102,7 +102,7 @@ namespace Macrocosm.Content.Rockets
         {
             mesh ??= new(Main.graphics.GraphicsDevice);
             mesh.CreateRectangle(position, Width, Height, horizontalResolution: 6, verticalResolution: 8, colorFunction: GetDrawColor);
-            mesh.Draw(renderTargets[(int)DrawMode.World], transformMatrix: Main.Transform, samplerState: SamplerState.PointClamp);
+            mesh.Draw(renderTargets[(int)DrawMode.World], Main.Transform, rotation: Rotation, origin: Center - Main.screenPosition, samplerState: SamplerState.PointClamp);
         }
 
         private void DrawDummyWithRenderTarget(SpriteBatch spriteBatch, Vector2 position)
@@ -188,8 +188,7 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                Vector2 modulePosition = GetModuleRelativePosition(module, position);
-                module.Draw(spriteBatch, modulePosition);
+                module.Draw(spriteBatch, GetModuleRelativePosition(module, position));
             }
         }
 

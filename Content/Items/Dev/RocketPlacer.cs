@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Items.Dev
                     bool despawned = false;
                     foreach (var rocket in RocketManager.Rockets.Where(r => r.Active))
                     {
-                        if (rocket.Bounds.Contains(Main.MouseWorld.ToPoint()))
+                        if (rocket.Bounds.Contains(Main.MouseWorld))
                         {
                             rocket.Despawn();
                             despawned = true;

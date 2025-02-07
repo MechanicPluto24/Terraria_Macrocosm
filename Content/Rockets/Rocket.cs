@@ -1,4 +1,5 @@
 using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
@@ -104,7 +105,7 @@ namespace Macrocosm.Content.Rockets
         public int Height => (int)Size.Y;
 
         /// <summary> The rectangle occupied by the Rocket in the world </summary>
-        public Rectangle Bounds => new((int)Position.X, (int)Position.Y, Width, Height);
+        public RotatedRectangle Bounds => new(Position, Size / 2f, Width, Height, Rotation);
 
         /// <summary> The rocket's center in world coordinates </summary>
         public Vector2 Center
@@ -113,7 +114,7 @@ namespace Macrocosm.Content.Rockets
             set => Position = value - Size / 2f;
         }
 
-        public float Rotation { get; set; } = 0f; 
+        public float Rotation { get; set; } = 0f;
         public float AngularVelocity { get; set; } = 0f;
 
         /// <summary> The layer this rocket is drawn in </summary>
@@ -414,7 +415,7 @@ namespace Macrocosm.Content.Rockets
                         UndockingProgress = 0f;
                         ResetAnimation();
 
-                        if(Main.netMode != NetmodeID.MultiplayerClient)
+                        if (Main.netMode != NetmodeID.MultiplayerClient)
                         {
                             FlightTime = 0;
                             Velocity = Vector2.Zero;
@@ -652,13 +653,18 @@ namespace Macrocosm.Content.Rockets
             if (pixelAlign)
                 origin = new((int)origin.X, (int)origin.Y);
 
-            return origin + offset;
+            Vector2 center = origin + Size / 2f;
+            // Rotate the offset relative to the rocket's center
+            Vector2 rotatedOffset = (origin + offset - center).RotatedBy(Rotation);
+            return center + rotatedOffset;
         }
 
         private void UpdateModules()
         {
             foreach (RocketModule module in Modules)
-                module.Position = GetModuleRelativePosition(module, Position, pixelAlign: false);
+            {
+                module.Position = GetModuleRelativePosition(module, Position);
+            }
         }
 
         private Vector2 CalculateSize()
@@ -693,9 +699,14 @@ namespace Macrocosm.Content.Rockets
         public bool CheckTileCollision()
         {
             foreach (RocketModule module in Modules)
-                if (Math.Abs(Collision.TileCollision(module.Position, Velocity, module.Width, module.Height).Y) > 0.1f)
-                    return true;
-
+            {
+                foreach (Vector2 corner in module.Bounds.Corners)
+                {
+                    Point tilePos = corner.ToTileCoordinates();
+                    if (WorldGen.InWorld(tilePos.X, tilePos.Y) && Main.tile[tilePos.X, tilePos.Y].HasTile && Main.tileSolid[Main.tile[tilePos.X, tilePos.Y].TileType])
+                        return true;
+                }
+            }
             return false;
         }
 
@@ -705,7 +716,7 @@ namespace Macrocosm.Content.Rockets
             if (Main.netMode == NetmodeID.Server)
                 return;
 
-            if (MouseCanInteract() && Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple) && State == ActionState.Idle)
+            if (MouseCanInteract() && State == ActionState.Idle && Bounds.InPlayerInteractionRange(TileReachCheckSettings.Simple))
             {
                 RocketPlayer rocketPlayer = GetRocketPlayer(Main.myPlayer);
 
@@ -765,10 +776,12 @@ namespace Macrocosm.Content.Rockets
             }
         }
 
-
         private Vector2 GetCollisionVelocity()
         {
-            return Collision.TileCollision(Position, Velocity, Width, Height - 2);
+            if (CheckTileCollision())
+                return Vector2.Zero;
+
+            return Velocity;
         }
 
         private bool MouseCanInteract()
@@ -777,7 +790,7 @@ namespace Macrocosm.Content.Rockets
                 return false;
 
             foreach (RocketModule module in Modules.Where((module) => module.Interactible))
-                if (module.Bounds.Contains(Main.MouseWorld.ToPoint()))
+                if (module.Bounds.Contains(Main.MouseWorld))
                     return true;
 
             return false;

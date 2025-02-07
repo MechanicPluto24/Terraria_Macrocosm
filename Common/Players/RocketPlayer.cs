@@ -111,8 +111,8 @@ namespace Macrocosm.Common.Players
                     if (cameraModifier is not null)
                         cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
 
-                    if (!rocket.Bounds.Contains(Player.Center.ToPoint()))
-                        DisembarkFromRocket();
+                   // if (!rocket.Bounds.Contains(Player.Center))
+                   //     DisembarkFromRocket();
 
                     bool escapePressed = Main.keyState.KeyPressed(Keys.Escape) && !Main.oldKeyState.KeyPressed(Keys.Escape);
                     bool dismountPressed = Player.controlMount;

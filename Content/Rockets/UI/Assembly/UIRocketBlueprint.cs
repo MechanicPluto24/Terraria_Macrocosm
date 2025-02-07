@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 return;
 
             CalculatedStyle dimensions = GetDimensions();
-            Vector2 position = dimensions.Center() - Rocket.Bounds.Size() / 2f;
+            Vector2 position = dimensions.Center() - Rocket.Bounds.Size / 2f;
 
             state.SaveState(spriteBatch);
             spriteBatch.End();

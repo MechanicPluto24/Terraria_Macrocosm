@@ -115,7 +115,7 @@ namespace Macrocosm.Common.Graphics
             indexBuffer.SetData(indices);
         }
 
-        public void Draw(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, BlendState blendState = null, SamplerState samplerState = null)
+        public void Draw(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, float rotation = 0f, Vector2 origin = default, BlendState blendState = null, SamplerState samplerState = null)
         {
             Effect shader = effect.Value;
             var oldBlendState = graphicsDevice.BlendState;
@@ -133,7 +133,10 @@ namespace Macrocosm.Common.Graphics
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             graphicsDevice.Indices = indexBuffer;
 
-            shader.Parameters["uTransformMatrix"].SetValue(transformMatrix * Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0, 0, 1));
+            Matrix rotationMatrix =  Matrix.CreateTranslation(-origin.X, -origin.Y, 0)  * Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(origin.X, origin.Y, 0);
+            Matrix worldViewProjection = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0, 0, 1);
+            Matrix matrix = rotationMatrix * transformMatrix * worldViewProjection;
+            shader.Parameters["uTransformMatrix"].SetValue(matrix);
 
             Vector4 sourceRectV4 = sourceRect is Rectangle source
                 ? new Vector4(source.X / (float)texture.Width, source.Y / (float)texture.Height, source.Width / (float)texture.Width, source.Height / (float)texture.Height)
