@@ -119,7 +119,7 @@ namespace Macrocosm.Common.Bases.NPCs
         {
             NPC following = worm.GetFollowingSegment();
 
-            if (following is not null && FlipSprite && BehindTile())
+            if (following is not null && FlipSprite)
                 worm.NPC.spriteDirection = following.spriteDirection;
         }
 
@@ -434,7 +434,7 @@ namespace Macrocosm.Common.Bases.NPCs
             }
 
             HeadAI_Movement_SetRotation(collision);
-            FlipHead(collision);
+            FlipHead(CanFly? true:collision);
         }
 
         private void HeadAI_Movement_HandleFallingFromNoCollision(float dirX, float speed, float acceleration)
