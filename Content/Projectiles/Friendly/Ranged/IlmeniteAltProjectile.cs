@@ -105,7 +105,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             if (!exploded)
             {
-                Projectile.NewProjectile(Projectile.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), damageDone, hit.Knockback * 5, Projectile.owner, Strength, target.Center.X, target.Center.Y);
+                Projectile.NewProjectile(Projectile.GetSource_OnHit(target), target.Center, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), damageDone, hit.Knockback * 0.2f, Projectile.owner, Strength, target.Center.X, target.Center.Y);
                 exploded = true;
             }
         }
@@ -114,7 +114,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             if (!exploded)
             {
-                Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center + oldVelocity, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), Projectile.damage, Projectile.knockBack * 5, Projectile.owner, Strength, Projectile.Center.X, Projectile.Center.Y);
+                Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.Center + oldVelocity, Vector2.Zero, ModContent.ProjectileType<IlmeniteExplosion>(), Projectile.damage, Projectile.knockBack * 0.2f, Projectile.owner, Strength, Projectile.Center.X, Projectile.Center.Y);
                 exploded = true;
             }
             return true;
