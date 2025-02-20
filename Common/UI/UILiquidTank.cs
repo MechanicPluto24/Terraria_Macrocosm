@@ -5,12 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent.UI.Elements;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.UI;
-
-/// <summary> Panel wrapper for <see cref="UILiquid"/> with automatic hiding of overflow and (TODO) gradations </summary>
-public class UILiquidTank : UIPanel
+namespace Macrocosm.Common.UI
 {
-    private readonly LiquidType liquidType;
+    /// <summary> Panel wrapper for <see cref="UILiquid"/> with automatic hiding of overflow and (TODO) gradations </summary>
+    public class UILiquidTank : UIPanel
+    {
+        private readonly int liquidType;
 
     private UILiquid uiLiquid;
     private UILiquid uiPreviewLiquid;
@@ -21,16 +21,16 @@ public class UILiquidTank : UIPanel
         set => uiLiquid.Bubbles = value;
     }
 
-    public UILiquidTank(LiquidType liquidType) : base
-    (
-        customBackground: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBackground"),
-        customborder: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBorder"),
-        customCornerSize: 12,
-        customBarSize: 4
-    )
-    {
-        this.liquidType = liquidType;
-    }
+        public UILiquidTank(int liquidType) : base
+        (
+            customBackground: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBackground"),
+            customborder: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBorder"),
+            customCornerSize: 12,
+            customBarSize: 4
+        )
+        {
+            this.liquidType = liquidType;
+        }
 
     public float LiquidLevel { get; set; }
     public float PreviewLiquidLevel { get; set; }

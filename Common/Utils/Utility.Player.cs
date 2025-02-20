@@ -1,7 +1,9 @@
 ﻿using Macrocosm.Common.Players;
 using Macrocosm.Content.CameraModifiers;
 using Microsoft.Xna.Framework;
+using ModLiquidLib.ModLoader;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -86,8 +88,108 @@ public static partial class Utility
             if ((position - player.Center).Length() < radius && player.dontHurtCritters)
                 return false;
         }
+       
 
         return true;
+    }
+
+    public static void PlaceLiquid<T>(int x, int y) where T : ModLiquid => PlaceLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>());
+    public static void PlaceLiquid(int x, int y, int type)
+    {
+        Tile tile = Main.tile[x, y];
+        if (tile.LiquidAmount >= 200 || (tile.HasUnactuatedTile && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType] && tile.TileType != TileID.Grate))
+        {
+            tile.LiquidType = type;
+            tile.LiquidAmount = 255;
+
+            WorldGen.SquareTileFrame(x, y);
+
+            SoundEngine.PlaySound(SoundID.Splash, new Vector2(x, y) * 16f);
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
+                NetMessage.sendWater(x, y);
+        }
+    }
+
+    public static void RemoveLiquid<T>(int x, int y, bool sponge = false) where T : ModLiquid => RemoveLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>(), sponge);
+    public static void RemoveLiquid(int x, int y, int type, bool sponge = false)
+    {
+        Tile tile = Main.tile[x, y];
+        int liquidType = tile.LiquidType;
+        int liquidAmount = tile.LiquidAmount;
+
+        if (type != liquidType)
+            return;
+
+        int nearbyAmount = 0;
+        for (int i = x - 1; i <= x + 1; i++)
+        {
+            for (int j = y - 1; j <= y + 1; j++)
+            {
+                if (Main.tile[i, j].LiquidType == liquidType)
+                    nearbyAmount += Main.tile[i, j].LiquidAmount;
+            }
+        }
+
+        if (tile.LiquidAmount <= 0 || (nearbyAmount <= 100 && !sponge))
+            return;
+
+        SoundEngine.PlaySound(SoundID.Splash, new Vector2(x, y) * 16f);
+
+        tile.LiquidAmount = 0;
+        tile.LiquidType = 0;
+
+        WorldGen.SquareTileFrame(x, y, resetFrame: false);
+
+        if (Main.netMode == NetmodeID.MultiplayerClient)
+            NetMessage.sendWater(x, y);
+        else
+            Liquid.AddWater(x, y);
+
+        if (liquidAmount < 255)
+        {
+            for (int k = x - 1; k <= x + 1; k++)
+            {
+                for (int l = y - 1; l <= y + 1; l++)
+                {
+                    if ((k != x || l != y) && Main.tile[k, l].LiquidAmount > 0 && Main.tile[k, l].LiquidType == liquidType)
+                    {
+                        Tile t = Main.tile[k, l];
+                        int amt = t.LiquidAmount;
+                        if (amt + liquidAmount > 255)
+                            amt = 255 - liquidAmount;
+
+                        liquidAmount += amt;
+                        t.LiquidAmount -= (byte)amt;
+                        t.LiquidType = liquidType;
+
+                        WorldGen.SquareTileFrame(k, l, resetFrame: false);
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                            NetMessage.sendWater(k, l);
+                        else
+                            Liquid.AddWater(k, l);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void TransformItemAndPutInInventory(this Player player, Item selecteditem, int targetType)
+    {
+        if (player.whoAmI != Main.myPlayer)
+            return;
+
+        selecteditem.stack--;
+        player.PutItemInInventoryFromItemUsage(targetType, player.selectedItem);
+    }
+
+    public static bool CanHurtCritterAroundPosition(Vector2 position, float radius)
+    {
+        foreach (var player in Main.ActivePlayers)
+        {
+            if ((position - player.Center).Length() < radius && player.dontHurtCritters)
+                return false;
+        }
     }
 
     public static Rectangle GetSwungItemHitbox(this Player player)

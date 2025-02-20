@@ -18,7 +18,7 @@ public class UILiquidTankPiston : UILiquidTank
     private int pistonFrame = 0;
     private const int pistonFrameMax = 9;
 
-    public UILiquidTankPiston(LiquidType liquidType) : base(liquidType) { }
+        public UILiquidTankPiston(int liquidType) : base(liquidType) { }
 
     public override void OnInitialize()
     {

@@ -5,16 +5,15 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
-namespace Macrocosm.Content.Items.Ores;
-
-public class OilShale : ModItem
+namespace Macrocosm.Content.Items.Ores
 {
-    public override void SetStaticDefaults()
+    public class OilShale : ModItem
     {
-        Item.ResearchUnlockCount = 100;
-
-        ItemSets.LiquidExtractData[Type] = new(LiquidType.Oil, 10f);
-    }
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 100;
+            ItemSets.LiquidExtractData[Type] = new(ModLiquidLib.ModLiquidLib.LiquidType<Oil>(), 10f);
+        }
 
     public override void SetDefaults()
     {

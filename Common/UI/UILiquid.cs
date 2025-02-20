@@ -6,6 +6,8 @@ using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib;
+using ModLiquidLib.ModLoader;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,7 @@ public class UILiquid : UIElement
     private /*const*/ readonly int sliceSize = 1;
     private /*const*/ readonly int surfaceSliceHeight = 3;
 
-    private readonly LiquidType liquidType;
+        private readonly int liquidType;
 
     public float LiquidLevel { get; set; } = 0f;
     public float WaveFrequency { get; set; } = 5f;
@@ -36,20 +38,19 @@ public class UILiquid : UIElement
     public bool Bubbles { get; set; } = true;
     public float Opacity { get; set; } = 1f;
 
-    public UILiquid(LiquidType liquidType)
-    {
-        this.liquidType = liquidType;
-
-        texture = liquidType switch
+        public UILiquid(int liquidType)
         {
-            LiquidType.Water => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Purity],
-            LiquidType.Lava => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Lava],
-            LiquidType.Honey => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Honey],
-            LiquidType.Shimmer => LiquidRenderer.Instance._liquidTextures[14],
-            LiquidType.Oil => ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/" + liquidType.ToString(), AssetRequestMode.ImmediateLoad),
-            LiquidType.RocketFuel => ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/" + liquidType.ToString(), AssetRequestMode.ImmediateLoad),
-            _ => Macrocosm.EmptyTex,
-        };
+            this.liquidType = liquidType;
+
+            texture = (short)liquidType switch
+            {
+                LiquidID.Water => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Purity],
+                LiquidID.Lava => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Lava],
+                LiquidID.Honey => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Honey],
+                LiquidID.Shimmer => LiquidRenderer.Instance._liquidTextures[14],
+                _ when liquidType < LiquidLoader.LiquidCount => LiquidLoader.LiquidAssets[liquidType],
+                _ => Macrocosm.EmptyTex,
+            };
 
         surfaceSourceRectangle = new(16, 1280, sliceSize * 2, surfaceSliceHeight);
         fillSourceRectangle = new(16, 64, sliceSize, sliceSize);
@@ -61,33 +62,33 @@ public class UILiquid : UIElement
         Rectangle fillArea = GetFillArea();
         List<Particle> bubbles = ParticleManager.GetParticlesDrawnBy(this);
 
-        if (Bubbles && bubbles.Count < (float)(20 * LiquidLevel))
-        {
-            if (liquidType == LiquidType.RocketFuel)
+            if (Bubbles && bubbles.Count < (float)(20 * LiquidLevel))
             {
-                Particle.Create<RocketFuelBubble>((p) =>
+                if (liquidType == ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
                 {
-                    p.Position = new(fillArea.X + Main.rand.NextFloat(fillArea.Width), fillArea.Bottom);
-                    p.Velocity = new Vector2(Main.rand.NextFloat(-0.1f, 0.1f), Main.rand.NextFloat(0.5f, 2.2f) * -1f * LiquidLevel);
-                    p.Scale = new(Main.rand.NextFloat(0.3f, 0.7f));
-                    p.CustomDrawer = this;
-                });
-            }
-            /*
-            else if (liquidType == LiquidType.Oil)
-            {
-                Rectangle fillArea = GetFillArea();
-                Particle.CreateParticle<OilBubble>((p) =>
+                    Particle.Create<RocketFuelBubble>((p) =>
+                    {
+                        p.Position = new(fillArea.X + Main.rand.NextFloat(fillArea.Width), fillArea.Bottom);
+                        p.Velocity = new Vector2(Main.rand.NextFloat(-0.1f, 0.1f), Main.rand.NextFloat(0.5f, 2.2f) * -1f * LiquidLevel);
+                        p.Scale = new(Main.rand.NextFloat(0.3f, 0.7f));
+                        p.CustomDrawer = this;
+                    });
+                }
+                /*
+                else if (liquidType == LiquidType.Oil)
                 {
-                    p.Position = new(fillArea.X + Main.rand.NextFloat(fillArea.Width), fillArea.Bottom);
-                    p.MaxY = fillArea.Top;
-                    p.Velocity = new Vector2(Main.rand.NextFloat(-0.1f, 0.1f), Main.rand.NextFloat(0.5f, 2f) * -1f * LiquidLevel);
-                    p.Scale = Main.rand.NextFloat(0.3f, 0.7f);
-                    p.CustomDrawer = this;
-                });
+                    Rectangle fillArea = GetFillArea();
+                    Particle.CreateParticle<OilBubble>((p) =>
+                    {
+                        p.Position = new(fillArea.X + Main.rand.NextFloat(fillArea.Width), fillArea.Bottom);
+                        p.MaxY = fillArea.Top;
+                        p.Velocity = new Vector2(Main.rand.NextFloat(-0.1f, 0.1f), Main.rand.NextFloat(0.5f, 2f) * -1f * LiquidLevel);
+                        p.Scale = Main.rand.NextFloat(0.3f, 0.7f);
+                        p.CustomDrawer = this;
+                    });
+                }
+                */
             }
-            */
-        }
 
         foreach (Particle bubble in bubbles)
         {
