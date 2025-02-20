@@ -4,16 +4,16 @@ namespace Macrocosm.Common.DataStructures
 {
     public readonly struct LiquidExtractData
     {
-        public LiquidType LiquidType { get; init; }
+        public int LiquidType { get; init; }
 
         public float ExtractedAmount { get; init; }
 
         public LiquidExtractData() 
         { 
-            LiquidType = LiquidType.None;
+            LiquidType = 0;
         }
 
-        public LiquidExtractData(LiquidType liquidType, float extractedAmount)
+        public LiquidExtractData(int liquidType, float extractedAmount)
         {
             LiquidType = liquidType;
             ExtractedAmount = extractedAmount;

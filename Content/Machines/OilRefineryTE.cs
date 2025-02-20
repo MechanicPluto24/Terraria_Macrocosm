@@ -160,7 +160,7 @@ namespace Macrocosm.Content.Machines
                     {
                         fillTimer = 0;
 
-                        int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.RocketFuel, ContainerSlot.type);
+                        int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(), ContainerSlot.type);
                         if (fillType > 0 && (OutputSlot.type == fillType || OutputSlot.IsAir))
                         {
                             if (OutputSlot.IsAir)

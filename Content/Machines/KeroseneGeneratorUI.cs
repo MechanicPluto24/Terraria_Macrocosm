@@ -6,6 +6,7 @@ using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Rockets.UI.Cargo;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -107,7 +108,7 @@ namespace Macrocosm.Content.Machines
             pistons = new();
             for(int i = 0; i < 6; i++)
             {
-                var piston = new UILiquidTankPiston(Liquids.LiquidType.RocketFuel)
+                var piston = new UILiquidTankPiston(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
                 {
                     Left = new(42 + i * 66, 0),
                     Top = new(-6, 0.5f),

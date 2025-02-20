@@ -4,20 +4,20 @@ namespace Macrocosm.Common.DataStructures
 {
     public readonly struct LiquidContainerData
     {
-        public LiquidType LiquidType { get; init; }
+        public int LiquidType { get; init; }
         public float Capacity { get; init; }
         public int EmptyContainerType { get; init; }
         public bool Empty { get; init; }
 
         public LiquidContainerData()
         {
-            LiquidType = LiquidType.None;
+            LiquidType = 0;
             Capacity = 0;
             EmptyContainerType = -1;
             Empty = false;
         }
 
-        public LiquidContainerData(LiquidType liquidType, float capacity, int emptyContainerType)
+        public LiquidContainerData(int liquidType, float capacity, int emptyContainerType) 
         {
             LiquidType = liquidType;
             Capacity = capacity;
@@ -34,7 +34,7 @@ namespace Macrocosm.Common.DataStructures
             };
         }
 
-        public static LiquidContainerData CreateInfinite(LiquidType liquidType)
+        public static LiquidContainerData CreateInfinite(int liquidType)
         {
             return new()
             {
@@ -55,7 +55,7 @@ namespace Macrocosm.Common.DataStructures
             return filledTypeData.EmptyContainerType;
         }
 
-        public static int GetFillType(LiquidContainerData[] data, LiquidType liquidType, int emptyType)
+        public static int GetFillType(LiquidContainerData[] data, int liquidType, int emptyType)
         {
             LiquidContainerData emptyTypeData = data[emptyType];
             if (!emptyTypeData.Valid || !emptyTypeData.Empty)

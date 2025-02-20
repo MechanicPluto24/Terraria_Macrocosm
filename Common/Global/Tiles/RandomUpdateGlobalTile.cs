@@ -57,33 +57,36 @@ namespace Macrocosm.Common.Global.Tiles
             double worldUpdateRate = WorldGen.GetWorldUpdateRate();
             if (worldUpdateRate == 0)
                 return;
+            /*
 
-            double overgroundUpdateRate = 3E-05f * (float)worldUpdateRate;
-            double overgroundTileUpdateNumber = Main.maxTilesX * Main.maxTilesY * overgroundUpdateRate;
-            int plantUpdateChance = (int)Terraria.Utils.Lerp(151, 151 * 2.8, Terraria.Utils.Clamp(Main.maxTilesX / 4200.0 - 1.0, 0.0, 1.0));
+double overgroundUpdateRate = 3E-05f * (float)worldUpdateRate;
+double overgroundTileUpdateNumber = Main.maxTilesX * Main.maxTilesY * overgroundUpdateRate;
+int plantUpdateChance = (int)Terraria.Utils.Lerp(151, 151 * 2.8, Terraria.Utils.Clamp(Main.maxTilesX / 4200.0 - 1.0, 0.0, 1.0));
 
-            for (int k = 0; k < overgroundTileUpdateNumber; k++)
-            {
-                if (Main.rand.NextBool(plantUpdateChance * 100))
-                    WorldGen.PlantAlch();
+for (int k = 0; k < overgroundTileUpdateNumber; k++)
+{
+    if (Main.rand.NextBool(plantUpdateChance * 100))
+        WorldGen.PlantAlch();
 
-                int i = WorldGen.genRand.Next(10, Main.maxTilesX - 10);
-                int j = WorldGen.genRand.Next(10, (int)Main.worldSurface - 1);
+    int i = WorldGen.genRand.Next(10, Main.maxTilesX - 10);
+    int j = WorldGen.genRand.Next(10, (int)Main.worldSurface - 1);
 
-                WorldGen_UpdateWorld_OvergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
-                TownNPCSystem.TrySpawningTownNPC(i, j);
-            }
+    WorldGen_UpdateWorld_OvergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
+    TownNPCSystem.TrySpawningTownNPC(i, j);
+}
 
-            double undergroundUpdateRate = 1.5E-05f * (float)worldUpdateRate;
-            double undergroundTileUpdateNumber = Main.maxTilesX * Main.maxTilesY * undergroundUpdateRate;
-            for (int k = 0; k < undergroundTileUpdateNumber; k++)
-            {
-                int i = WorldGen.genRand.Next(10, Main.maxTilesX - 10);
-                int j = WorldGen.genRand.Next((int)Main.worldSurface - 1, Main.maxTilesY - 20);
+double undergroundUpdateRate = 1.5E-05f * (float)worldUpdateRate;
+double undergroundTileUpdateNumber = Main.maxTilesX * Main.maxTilesY * undergroundUpdateRate;
+for (int k = 0; k < undergroundTileUpdateNumber; k++)
+{
+    int i = WorldGen.genRand.Next(10, Main.maxTilesX - 10);
+    int j = WorldGen.genRand.Next((int)Main.worldSurface - 1, Main.maxTilesY - 20);
 
-                WorldGen_UpdateWorld_UndergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
-                TownNPCSystem.TrySpawningTownNPC(i, j); 
-            }
+    WorldGen_UpdateWorld_UndergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
+    TownNPCSystem.TrySpawningTownNPC(i, j); 
+}
+
+*/
 
             double liquidRandomUpdateRate = 10E-03f * (float)worldUpdateRate;
             double liquidRandomUpdateNumber = Main.maxTilesX * Main.maxTilesY * liquidRandomUpdateRate;

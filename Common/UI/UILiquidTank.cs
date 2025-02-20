@@ -10,7 +10,7 @@ namespace Macrocosm.Common.UI
     /// <summary> Panel wrapper for <see cref="UILiquid"/> with automatic hiding of overflow and (TODO) gradations </summary>
     public class UILiquidTank : UIPanel
     {
-        private readonly LiquidType liquidType;
+        private readonly int liquidType;
 
         private UILiquid uiLiquid;
         private UILiquid uiPreviewLiquid;
@@ -21,7 +21,7 @@ namespace Macrocosm.Common.UI
             set => uiLiquid.Bubbles = value;
         }
 
-        public UILiquidTank(LiquidType liquidType) : base
+        public UILiquidTank(int liquidType) : base
         (
             customBackground: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBackground"),
             customborder: ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/SquarePanelBorder"),

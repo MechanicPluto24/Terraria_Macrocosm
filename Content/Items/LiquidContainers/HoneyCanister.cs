@@ -7,14 +7,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.LiquidContainers
 {
-    public class RocketFuelCanister : ModItem
+    public class HoneyCanister : ModItem
     {
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
-
-            ItemSets.LiquidContainerData[Type] = new LiquidContainerData(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(), 20, ModContent.ItemType<Canister>());
-            ItemSets.FuelData[Type] = new FuelData(FuelPotency.VeryHigh, 240);
+            ItemSets.LiquidContainerData[Type] = new LiquidContainerData(LiquidID.Honey, 20, ModContent.ItemType<Canister>());
         }
 
         public override void SetDefaults()
@@ -24,7 +22,6 @@ namespace Macrocosm.Content.Items.LiquidContainers
             Item.maxStack = 9999;
             Item.value = 100;
             Item.rare = ItemRarityID.LightRed;
-            
         }
     }
 }

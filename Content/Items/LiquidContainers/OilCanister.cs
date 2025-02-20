@@ -7,14 +7,12 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.LiquidContainers
 {
-    public class RocketFuelCanister : ModItem
+    public class OilCanister : ModItem
     {
         public override void SetStaticDefaults()
         {
-            Item.ResearchUnlockCount = 100;
-
-            ItemSets.LiquidContainerData[Type] = new LiquidContainerData(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(), 20, ModContent.ItemType<Canister>());
-            ItemSets.FuelData[Type] = new FuelData(FuelPotency.VeryHigh, 240);
+            Item.ResearchUnlockCount = 1;
+            ItemSets.LiquidContainerData[Type] = new LiquidContainerData(ModLiquidLib.ModLiquidLib.LiquidType<Oil>(), 20, ModContent.ItemType<Canister>());
         }
 
         public override void SetDefaults()

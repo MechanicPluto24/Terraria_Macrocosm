@@ -4,6 +4,7 @@ using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.LiquidContainers;
+using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -71,7 +72,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
             Append(titleSeparator);
 
-            rocketFuelTank = new(Liquids.LiquidType.RocketFuel)
+            rocketFuelTank = new(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
             {
                 Width = new(0, 0.421f),
                 Height = new(0, 0.8f),

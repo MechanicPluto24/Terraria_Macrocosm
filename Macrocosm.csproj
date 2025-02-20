@@ -22,12 +22,23 @@
 	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Content\Items\LiquidContainers\HoneyCanister.png" />
+    <None Remove="Content\Items\LiquidContainers\LavaCanister.png" />
+    <None Remove="Content\Items\LiquidContainers\OilCanister.png" />
+    <None Remove="Content\Items\LiquidContainers\RocketFuelBucket.png" />
+    <None Remove="Content\Items\LiquidContainers\ShimmerCanister.png" />
+    <None Remove="Content\Items\LiquidContainers\WaterCanister.png" />
+  </ItemGroup>
    <ItemGroup>
     <Reference Include="SubworldLibrary">
       <HintPath>References\SubworldLibrary.dll</HintPath>
     </Reference>
 	<Reference Include="StructureHelper">
 		<HintPath>References\StructureHelper.dll</HintPath>
+	</Reference>
+	<Reference Include="ModLiquidLib">
+		<HintPath>References\ModLiquidLib.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.fxc"> -->

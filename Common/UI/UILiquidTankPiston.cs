@@ -8,7 +8,6 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-    /// <summary> Panel wrapper for <see cref="UILiquid"/> with automatic hiding of overflow and (TODO) gradations </summary>
     public class UILiquidTankPiston : UILiquidTank
     {
         private static Asset<Texture2D> piston;
@@ -18,7 +17,7 @@ namespace Macrocosm.Common.UI
         private int pistonFrame = 0;
         private const int pistonFrameMax = 9;
 
-        public UILiquidTankPiston(LiquidType liquidType) : base(liquidType) { }
+        public UILiquidTankPiston(int liquidType) : base(liquidType) { }
 
         public override void OnInitialize()
         {

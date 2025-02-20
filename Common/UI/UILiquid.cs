@@ -6,6 +6,8 @@ using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib;
+using ModLiquidLib.ModLoader;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
@@ -27,7 +29,7 @@ namespace Macrocosm.Common.UI
         private /*const*/ readonly int sliceSize = 1;
         private /*const*/ readonly int surfaceSliceHeight = 3;
 
-        private readonly LiquidType liquidType;
+        private readonly int liquidType;
 
         public float LiquidLevel { get; set; } = 0f;
         public float WaveFrequency { get; set; } = 5f;
@@ -36,18 +38,17 @@ namespace Macrocosm.Common.UI
         public bool Bubbles { get; set; } = true;
         public float Opacity { get; set; } = 1f;
 
-        public UILiquid(LiquidType liquidType)
+        public UILiquid(int liquidType)
         {
             this.liquidType = liquidType;
 
-            texture = liquidType switch
+            texture = (short)liquidType switch
             {
-                LiquidType.Water => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Purity],
-                LiquidType.Lava => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Lava],
-                LiquidType.Honey => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Honey],
-                LiquidType.Shimmer => LiquidRenderer.Instance._liquidTextures[14],
-                LiquidType.Oil => ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/" + liquidType.ToString(), AssetRequestMode.ImmediateLoad),
-                LiquidType.RocketFuel => ModContent.Request<Texture2D>("Macrocosm/Content/Liquids/" + liquidType.ToString(), AssetRequestMode.ImmediateLoad),
+                LiquidID.Water => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Purity],
+                LiquidID.Lava => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Lava],
+                LiquidID.Honey => LiquidRenderer.Instance._liquidTextures[WaterStyleID.Honey],
+                LiquidID.Shimmer => LiquidRenderer.Instance._liquidTextures[14],
+                _ when liquidType < LiquidLoader.LiquidCount => LiquidLoader.LiquidAssets[liquidType],
                 _ => Macrocosm.EmptyTex,
             };
 
@@ -63,7 +64,7 @@ namespace Macrocosm.Common.UI
 
             if (Bubbles && bubbles.Count < (float)(20 * LiquidLevel))
             {
-                if (liquidType == LiquidType.RocketFuel)
+                if (liquidType == ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
                 {
                     Particle.Create<RocketFuelBubble>((p) =>
                     {

@@ -10,6 +10,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Tech;
+using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
@@ -858,7 +859,7 @@ namespace Macrocosm.Content.Rockets
 
             Inventory.SetReserved(
                 SpecialInventorySlot_FuelTank,
-                (item) => ItemSets.LiquidContainerData[item.type].Valid && ItemSets.LiquidContainerData[item.type].LiquidType == Liquids.LiquidType.RocketFuel,
+                (item) => ItemSets.LiquidContainerData[item.type].Valid && ItemSets.LiquidContainerData[item.type].LiquidType == ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(),
                 Lang.GetItemName(ModContent.ItemType<Canister>()),
                 ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
             );

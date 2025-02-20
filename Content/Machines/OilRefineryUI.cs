@@ -99,7 +99,7 @@ namespace Macrocosm.Content.Machines
             };
             backgroundPanel.Append(extractArrowProgressBar);
 
-            inputLiquidTank = new(LiquidType.Oil)
+            inputLiquidTank = new(ModLiquidLib.ModLiquidLib.LiquidType<Oil>())
             {
                 Width = new(64, 0),
                 Height = new(0, 0.7f),
@@ -108,7 +108,7 @@ namespace Macrocosm.Content.Machines
             };
             backgroundPanel.Append(inputLiquidTank);
 
-            inputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.Oil)}"))
+            inputTankLiquidName = new(ModContent.GetInstance<Oil>().Name)
             {
                 HAlign = 0.335f,
                 Top = new(0, 0.08f),
@@ -132,7 +132,7 @@ namespace Macrocosm.Content.Machines
             };
             backgroundPanel.Append(refineArrowProgressBar);
 
-            outputLiquidTank = new(LiquidType.RocketFuel)
+            outputLiquidTank = new(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
             {
                 Width = new(64, 0),
                 Height = new(0, 0.7f),
@@ -141,7 +141,7 @@ namespace Macrocosm.Content.Machines
             };
             backgroundPanel.Append(outputLiquidTank);
 
-            outputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.RocketFuel)}"))
+            outputTankLiquidName = new(ModContent.GetInstance<RocketFuel>().Name)
             {
                 HAlign = 0.68f,
                 Top = new(0, 0.08f),

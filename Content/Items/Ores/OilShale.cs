@@ -12,8 +12,7 @@ namespace Macrocosm.Content.Items.Ores
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
-
-            ItemSets.LiquidExtractData[Type] = new(LiquidType.Oil, 10f);
+            ItemSets.LiquidExtractData[Type] = new(ModLiquidLib.ModLiquidLib.LiquidType<Oil>(), 10f);
         }
 
         public override void SetDefaults()
