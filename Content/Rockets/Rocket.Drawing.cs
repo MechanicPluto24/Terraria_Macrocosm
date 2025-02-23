@@ -2,15 +2,11 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
-using Macrocosm.Content.Rockets.Modules.Boosters;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Linq;
 using Terraria;
-using Terraria.Map;
 using Terraria.ModLoader;
-using static Terraria.GameContent.TextureAssets;
 
 namespace Macrocosm.Content.Rockets
 {
@@ -101,8 +97,8 @@ namespace Macrocosm.Content.Rockets
         private void DrawLightedMesh(Vector2 position)
         {
             mesh ??= new(Main.graphics.GraphicsDevice);
-            mesh.CreateRectangle(position, Width, Height, horizontalResolution: 6, verticalResolution: 8, colorFunction: GetDrawColor);
-            mesh.Draw(renderTargets[(int)DrawMode.World], Main.Transform, rotation: Rotation, origin: Center - Main.screenPosition, samplerState: SamplerState.PointClamp);
+            mesh.CreateRectangle(position, Width, Height, horizontalResolution: 6, verticalResolution: 8, rotation: Rotation, origin: Center - Main.screenPosition, colorFunction: GetDrawColor);
+            mesh.Draw(renderTargets[(int)DrawMode.World], Main.Transform, samplerState: SamplerState.PointClamp);
         }
 
         private void DrawDummyWithRenderTarget(SpriteBatch spriteBatch, Vector2 position)
@@ -134,15 +130,8 @@ namespace Macrocosm.Content.Rockets
             target = new(spriteBatch.GraphicsDevice, renderBounds.Width, renderBounds.Height, mipMap: false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
             renderTargets[(int)drawMode] = target;
 
-            // Store previous settings
-            //var scissorRectangle = spriteBatch.GraphicsDevice.ScissorRectangle;
-            //var rasterizerState = spriteBatch.GraphicsDevice.RasterizerState;
-
             // Capture original RenderTargets and preserve their contents
             spriteBatch.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
-           //RenderTargetBinding[] originalRenderTargets = spriteBatch.GraphicsDevice.GetRenderTargets();
-           //foreach (var binding in originalRenderTargets)
-           //    typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
 
             // Draw our modules
             sbState = spriteBatch.SaveState();
@@ -153,6 +142,8 @@ namespace Macrocosm.Content.Rockets
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Matrix.CreateScale(1f));
 
+            float rotation = Rotation;
+            Rotation = 0f;
             switch (drawMode)
             {
                 case DrawMode.World:
@@ -165,21 +156,12 @@ namespace Macrocosm.Content.Rockets
 
                 case DrawMode.Blueprint:
                     DrawBlueprint(spriteBatch, drawOffset);
-                    break;  
+                    break;
             }
+            Rotation = rotation;
 
             spriteBatch.End();
-
-            // Revert our RenderTargets back to the vanilla ones
-            //if (originalRenderTargets.Length > 0)
-            //    spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
-            //else
             spriteBatch.GraphicsDevice.SetRenderTarget(null);
-
-            // Reset our settings back to the previous ones
-            //spriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
-            //spriteBatch.GraphicsDevice.RasterizerState = rasterizerState;
-
             return target;
         }
 
@@ -210,7 +192,7 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                 module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
+                module.PreDrawBeforeTiles(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
@@ -218,7 +200,7 @@ namespace Macrocosm.Content.Rockets
         {
             foreach (RocketModule module in ModulesByDrawPriority)
             {
-                 module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
+                module.PostDraw(spriteBatch, GetModuleRelativePosition(module, position), inWorld);
             }
         }
 
@@ -244,7 +226,6 @@ namespace Macrocosm.Content.Rockets
             if (ForcedFlightAppearance || (State != ActionState.Idle && State != ActionState.PreLaunch))
             {
                 float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
-
                 if (ForcedFlightAppearance)
                     scale *= 1.25f;
 
@@ -261,7 +242,9 @@ namespace Macrocosm.Content.Rockets
                     scale *= Utility.QuadraticEaseOut((UndockingProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
-                spriteBatch.Draw(flare, position + new Vector2(Bounds.Width / 2, Bounds.Height).RotatedBy(Rotation), null, new Color(255, 69, 0), Rotation, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
+
+                Vector2 flarePos = position + Size / 2f + new Vector2(0, Size.Y / 2).RotatedBy(Rotation);
+                spriteBatch.Draw(flare, flarePos, null, new Color(255, 69, 0), Rotation, flare.Size () / 2f, scale, SpriteEffects.None, 0f);
             }
         }
     }

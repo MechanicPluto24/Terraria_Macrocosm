@@ -241,3 +241,17 @@ SmogWisp: {
 	DisplayName: Smog Wisp
 	BestiaryFlavorText: Ethereal predators that drift silently through densely polluted areas, blending seamlessly with the toxic haze until they close in on their prey. They’re thought to exclusively target humans and small critters.
 }
+
+Trashnado: {
+	DisplayName: Trashnado
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.Trashnado.BestiaryFlavorText
+}
+
+WyrmwoodBody.DisplayName: Wyrmwood Body
+
+WyrmwoodHead: {
+	DisplayName: Wyrmwood Head
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.WyrmwoodHead.BestiaryFlavorText
+}
+
+WyrmwoodTail.DisplayName: Wyrmwood Tail

@@ -8,6 +8,7 @@ using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
+using static Macrocosm.Common.WorldGeneration.CustomActions;
 
 namespace Macrocosm.Content.Rockets.Modules.Engine
 {
@@ -27,36 +28,20 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
         private SpriteBatchState state1, state2;
         public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
-            state1.SaveState(spriteBatch, true);
-            spriteBatch.End();
-            spriteBatch.Begin(BlendState.AlphaBlend, SamplerState.PointClamp, state1);
-
-            // Draw the rear landing behind the rear booster 
-            if (LandingLegDrawOffset.HasValue)
-            {
-                Vector2 drawPos = position + new Vector2(Width / 2f - RearLandingLeg.Width() / 2f, Height) + LandingLegDrawOffset.Value;
-                Color lightColor = inWorld ? Lighting.GetColor((drawPos + Main.screenPosition).ToTileCoordinates()) : Color.White;
-                spriteBatch.Draw(RearLandingLeg.Value, drawPos, RearLandingLegFrame, lightColor * Rocket.Transparency);
-            }
-
-            // Draw the rear booster behind the engine module 
-            if (BoosterRearDrawOffset.HasValue)
-            {
-                Vector2 drawPos = position + new Vector2(Width / 2f - BoosterRear.Width() / 2f, Height) + BoosterRearDrawOffset.Value;
-                Color lightColor = inWorld ? Lighting.GetColor((drawPos + Main.screenPosition).ToTileCoordinates()) : Color.White;
-                spriteBatch.Draw(BoosterRear.Value, drawPos, null, lightColor * Rocket.Transparency);
-            }
-
             // Draw the exhaust trail 
             if (Rocket.ForcedFlightAppearance || Rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch)
             {
+                state1.SaveState(spriteBatch, true);
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.Additive, state1);
+
+                if (Rocket.ForcedFlightAppearance)
+                    DrawTrail(position, 1.1f);
 
                 if (Rocket.State is Rocket.ActionState.StaticFire)
                     DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(Rocket.StaticFireProgress));
 
-                if (Rocket.State is Rocket.ActionState.Flight || Rocket.ForcedFlightAppearance)
+                if (Rocket.State is Rocket.ActionState.Flight)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.FlightProgress, 0f, 0.1f) * 10f));
 
                 if (Rocket.State is Rocket.ActionState.Landing)
@@ -67,10 +52,10 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
 
                 if (Rocket.State is Rocket.ActionState.Undocking)
                     DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.UndockingProgress, 0f, 0.1f) * 10f));
-            }
 
-            spriteBatch.End();
-            spriteBatch.Begin(state1);
+                spriteBatch.End();
+                spriteBatch.Begin(state1);
+            }
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 position)
@@ -79,7 +64,21 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
             spriteBatch.End();
             spriteBatch.Begin(state2);
 
-            // Apply rotation and draw base module
+            // Draw the rear landing behind the rear booster 
+            if (LandingLegDrawOffset.HasValue)
+            {
+                Vector2 drawPos = position + (new Vector2(Width / 2f , Height) + LandingLegDrawOffset.Value).RotatedBy(Rocket.Rotation);
+                spriteBatch.Draw(RearLandingLeg.Value, drawPos, RearLandingLegFrame, Color.White * Rocket.Transparency, Rocket.Rotation, RearLandingLegFrame.Size() / 2f, 1f, SpriteEffects.None, 0f);
+            }
+
+            // Draw the rear booster behind the engine module 
+            if (BoosterRearDrawOffset.HasValue)
+            {
+                Vector2 drawPos = position + (new Vector2(Width / 2f, Height) + BoosterRearDrawOffset.Value).RotatedBy(Rocket.Rotation);
+                spriteBatch.Draw(BoosterRear.Value, drawPos, null, Color.White * Rocket.Transparency, Rocket.Rotation, BoosterRear.Size() / 2f, 1f, SpriteEffects.None, 0f);
+            }
+
+            // Draw base module
             base.Draw(spriteBatch, position);
 
             spriteBatch.End();
@@ -102,13 +101,11 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
 
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
-
-            Vector2 basePosition = new Vector2(position.X + Width / 2f, position.Y + Height - 28).RotatedBy(Rocket.Rotation);
-            Array.Fill(positions, basePosition);
-            Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
-
             for (int i = 0; i < stripDataCount; i++)
-                positions[i] += new Vector2(0f, 4f * i).RotatedBy(Rocket.Rotation);
+            {
+                positions[i] = position + new Vector2(Width / 2f, Height - 28 + 4f * i).RotatedBy(Rocket.Rotation);
+                rotations[i] = MathHelper.Pi + MathHelper.PiOver2 + Rocket.Rotation;
+            }
 
             var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
                 .UseProjectionMatrix(doUse: false)

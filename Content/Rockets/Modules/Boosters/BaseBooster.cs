@@ -71,8 +71,10 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
             landingLegMesh ??= new(spriteBatch.GraphicsDevice);
 
             Func<Vector2, Color> getDrawColor = inWorld ? Rocket.GetDrawColor : (_) => Color.White;
-            landingLegMesh.CreateRectangle(position + (LandingLegDrawOffset ?? default), LandingLegFrame.Width, LandingLegFrame.Height, horizontalResolution: 2, verticalResolution: 2, colorFunction: getDrawColor);
 
+            Vector2 rotatedOffset = LandingLegDrawOffset.Value.RotatedBy(Rocket.Rotation);
+            Vector2 drawPosition = position + rotatedOffset;
+            landingLegMesh.CreateRectangle(drawPosition, LandingLegFrame.Width, LandingLegFrame.Height, horizontalResolution: 2, verticalResolution: 2, rotation: Rocket.Rotation, origin: drawPosition, colorFunction: getDrawColor);
             state1.SaveState(spriteBatch);
             spriteBatch.End();
             landingLegMesh.Draw(LandingLeg.Value, state1.Matrix, sourceRect: LandingLegFrame, samplerState: SamplerState.PointClamp);
@@ -90,11 +92,11 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
                 stripDataCount = 0;
             Vector2[] positions = new Vector2[stripDataCount];
             float[] rotations = new float[stripDataCount];
-            Array.Fill(positions, new Vector2(position.X + ExhaustOffset.Value.X, position.Y + Height));
-            Array.Fill(rotations, MathHelper.Pi + MathHelper.PiOver2);
-
             for (int i = 0; i < stripDataCount; i++)
-                positions[i] += new Vector2(0f, 4f * i);
+            {
+                positions[i] = position + new Vector2(ExhaustOffset.Value.X, Height + ExhaustOffset.Value.Y + 4f * i).RotatedBy(Rocket.Rotation);
+                rotations[i] = MathHelper.Pi + MathHelper.PiOver2 + Rocket.Rotation;
+            }
 
             var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
                 .UseProjectionMatrix(doUse: false)

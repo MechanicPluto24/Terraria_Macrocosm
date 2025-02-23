@@ -32,11 +32,7 @@ namespace Macrocosm.Common.Graphics
             UpdateBuffers();
         }
 
-        /// <summary>
-        /// Creates or updates the mesh with rectangle geometry.
-        /// Resizes buffers only if necessary.
-        /// </summary>
-        public void CreateRectangle(Vector2 origin, float width, float height, int horizontalResolution, int verticalResolution, Func<Vector2, Color> colorFunction = null)
+        public void CreateRectangle(Vector2 position, float width, float height, int horizontalResolution, int verticalResolution, float rotation, Vector2 origin, Func<Vector2, Color> colorFunction = null)
         {
             if (horizontalResolution < 2 || verticalResolution < 2)
                 throw new ArgumentOutOfRangeException(nameof(horizontalResolution), "Resolution must be at least 2.");
@@ -60,14 +56,14 @@ namespace Macrocosm.Common.Graphics
                     float v = j / (float)(verticalResolution - 1);
 
                     Vector2 vertexPosition = new(
-                        origin.X + u * width,
-                        origin.Y + v * height
+                        position.X + u * width, 
+                        position.Y + v * height
                     );
 
-                    Color vertexColor = colorFunction?.Invoke(vertexPosition) ?? Color.White;
-
+                    Vector2 rotatedPosition = (vertexPosition - origin).RotatedBy(rotation) + origin;
+                    Color vertexColor = colorFunction?.Invoke(rotatedPosition) ?? Color.White;
                     vertices[i * verticalResolution + j] = new VertexPositionColorTexture(
-                        new Vector3(vertexPosition, 0f),
+                        new Vector3(rotatedPosition, 0f),
                         vertexColor,
                         new Vector2(u, v)
                     );
@@ -90,7 +86,6 @@ namespace Macrocosm.Common.Graphics
                 }
             }
 
-            // Update GPU buffers
             UpdateBuffers();
         }
 
@@ -115,7 +110,7 @@ namespace Macrocosm.Common.Graphics
             indexBuffer.SetData(indices);
         }
 
-        public void Draw(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, float rotation = 0f, Vector2 origin = default, BlendState blendState = null, SamplerState samplerState = null)
+        public void Draw(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, BlendState blendState = null, SamplerState samplerState = null)
         {
             Effect shader = effect.Value;
             var oldBlendState = graphicsDevice.BlendState;
@@ -133,9 +128,8 @@ namespace Macrocosm.Common.Graphics
             graphicsDevice.SetVertexBuffer(vertexBuffer);
             graphicsDevice.Indices = indexBuffer;
 
-            Matrix rotationMatrix =  Matrix.CreateTranslation(-origin.X, -origin.Y, 0)  * Matrix.CreateRotationZ(rotation) * Matrix.CreateTranslation(origin.X, origin.Y, 0);
             Matrix worldViewProjection = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0, 0, 1);
-            Matrix matrix = rotationMatrix * transformMatrix * worldViewProjection;
+            Matrix matrix = transformMatrix * worldViewProjection;
             shader.Parameters["uTransformMatrix"].SetValue(matrix);
 
             Vector4 sourceRectV4 = sourceRect is Rectangle source

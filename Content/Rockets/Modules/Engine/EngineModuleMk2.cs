@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
         public override int Height => 302;
 
         protected override Vector2? LandingLegDrawOffset => new(0, 10);
-        protected override Vector2? BoosterRearDrawOffset => new(0, -6);
+        protected override Vector2? BoosterRearDrawOffset => new(0, -4);
 
         public override Vector2 GetDynamicOffset(int[] widths, int[] heights, Vector2 globalOffsetAggregate)
         {
