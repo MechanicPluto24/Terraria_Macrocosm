@@ -247,10 +247,6 @@ namespace Macrocosm.Content.Rockets
             Rotation += AngularVelocity;
             AngularVelocity *= 0.98f;
 
-
-            Rotation += 0.045f;
-            ForcedFlightAppearance = true;
-
             Effects();
             PlaySound();
 
