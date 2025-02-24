@@ -165,7 +165,7 @@ namespace Macrocosm.Content.Machines
                                 p.Scale = new(0.3f);
                                 p.Rotation = 0f;
                                 p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
-                                p.FadeIn = true;
+                                p.VanillaFadeIn = true;
                                 p.Opacity = 0f;
                                 p.ScaleVelocity = new(0.0075f);
                                 p.WindFactor = 0.01f;

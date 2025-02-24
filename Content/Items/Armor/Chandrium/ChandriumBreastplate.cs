@@ -1,4 +1,3 @@
-// using Macrocosm.Tiles;
 using Macrocosm.Common.Players;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Rarities;
@@ -11,17 +10,16 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
     [AutoloadEquip(EquipType.Body)]
     public class ChandriumBreastplate : ModItem
     {
-        public override void SetStaticDefaults()
-        {
-            ArmorIDs.Body.Sets.IncludedCapeBack[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = capeSlot;
-            ArmorIDs.Body.Sets.IncludedCapeBackFemale[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = capeSlot;
-        }
 
-        private int capeSlot;
-
+        private int backSlot;
         public override void Load()
         {
-            capeSlot = EquipLoader.AddEquipTexture(Mod, "Macrocosm/Content/Items/Armor/Chandrium/ChandriumCape", EquipType.Back, name: "ChandriumCape");
+            backSlot = EquipLoader.AddEquipTexture(Mod, Texture + "_Back", EquipType.Back, name: "ChandriumCape");
+        }
+        public override void SetStaticDefaults()
+        {
+            ArmorIDs.Body.Sets.IncludedCapeBack[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = backSlot;
+            ArmorIDs.Body.Sets.IncludedCapeBackFemale[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = backSlot;
         }
 
         public override void SetDefaults()

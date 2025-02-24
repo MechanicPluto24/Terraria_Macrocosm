@@ -2921,3 +2921,8 @@ EngineComponentMk2: {
 	DisplayName: Engine Component Mk2
 	Tooltip: ""
 }
+
+MannedManeuveringUnit: {
+	DisplayName: Manned Maneuvering Unit
+	Tooltip: ""
+}
