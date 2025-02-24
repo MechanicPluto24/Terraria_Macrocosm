@@ -205,7 +205,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                             p.Scale = new(1f);
                             p.Rotation = 0f;
                             p.Color = Smoke.GetTileHitColor(Utility.GetClosestTile(NPC.Center, -1, addTile: (t) => Main.tileSolid[t.TileType] && !t.IsActuated));
-                            p.VanillaFadeIn = true;
+                            p.VanillaUpdate = true;
                             p.Opacity = 0f;
                             p.ScaleVelocity = new(0.0075f);
                         });
