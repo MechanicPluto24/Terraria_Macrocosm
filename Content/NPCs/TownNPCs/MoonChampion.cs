@@ -3,7 +3,10 @@ using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Accessories;
 using Macrocosm.Content.Items.Armor.Astronaut;
+using Macrocosm.Content.Items.Armor.Vanity.Employee;
+using Macrocosm.Content.Items.Armor.Vanity.MoonChampion;
 using Macrocosm.Content.Items.Consumables.Throwable;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
@@ -164,11 +167,10 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
             //AddNewSlot(ModContent.ItemType<RocketFuelCanister>(), 2);
 
-            AddNewSlot(ModContent.ItemType<AstronautHelmet>(), 20);
-            AddNewSlot(ModContent.ItemType<AstronautSuit>(), 20);
-            AddNewSlot(ModContent.ItemType<AstronautLeggings>(), 20);
-
-            AddNewSlot(ModContent.ItemType<LunarCrystal>(), 1);
+            AddNewSlot(ModContent.ItemType<MoonChampionHelmet>(), 20);
+            AddNewSlot(ModContent.ItemType<MoonChampionSuit>(), 20);
+            AddNewSlot(ModContent.ItemType<MoonChampionLeggings>(), 20);
+            AddNewSlot(ModContent.ItemType<MannedManeuveringUnit>(), 50);
 
             AddNewSlot(ModContent.ItemType<CrescentScripture>(), 50, new Condition(LocalizedText.Empty, () => WorldData.LuminiteShrineUnlocked));
 
