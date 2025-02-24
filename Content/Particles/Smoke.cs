@@ -13,14 +13,14 @@ namespace Macrocosm.Content.Particles
 
         public float WindFactor { get; set; }
         public float Opacity { get; set; }
-        public bool VanillaFadeIn { get; set; }
+        public bool VanillaUpdate { get; set; }
         private bool fadedIn;
 
         public override void SetDefaults()
         {
             ScaleVelocity = new(-0.005f);
             Opacity = 1f;
-            VanillaFadeIn = false;
+            VanillaUpdate = false;
             fadedIn = false;
             WindFactor = 0f;
         }
@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
-            if (VanillaFadeIn)
+            if (VanillaUpdate)
             {
                 if (!fadedIn)
                 {
@@ -49,7 +49,7 @@ namespace Macrocosm.Content.Particles
 
             Velocity.X += WindFactor * Utility.WindSpeedScaled;
 
-            if(VanillaFadeIn)
+            if(VanillaUpdate)
                 if (Scale.X < 0.1f || (Opacity <= 0 && fadedIn))
                     Kill();
         }

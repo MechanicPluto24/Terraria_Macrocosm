@@ -1055,7 +1055,7 @@ namespace Macrocosm.Content.Rockets
                     p.Scale = new(Main.rand.NextFloat(0.5f, 1.2f));
                     p.Rotation = Utility.RandomRotation();
                     p.Color = Smoke.GetTileHitColor(tileCoords);
-                    p.VanillaFadeIn = true;
+                    p.VanillaUpdate = true;
                     p.Opacity = 0f;
                     p.ScaleVelocity = new(0.0075f);
                 });
