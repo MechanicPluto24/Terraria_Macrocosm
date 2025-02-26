@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.width = 32;
             Item.height = 74;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.channel = true;
             Item.UseSound = null;
             Item.noUseGraphic = true;

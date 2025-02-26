@@ -1,4 +1,6 @@
-﻿using Macrocosm.Content.Items.Furniture.Industrial;
+﻿using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Items.Fishes;
+using Macrocosm.Content.Items.Furniture.Industrial;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
@@ -39,31 +41,52 @@ namespace Macrocosm.Common.Players
             // Moon fishing
             if (SubworldSystem.IsActive<Moon>())
             {
+                int[] moonQuestFishes = 
+                [
+                    ModContent.ItemType<DunceCraterfish>()
+                ];
+
                 if (inWater)
                 {
                     if (attempt.crate)
                     {
-                        // Always drop MB crates on the Moon
+                        // Always drop MB crates on the Moon (for now...)
                         itemDrop = ModContent.ItemType<IndustrialCrate>();
                     }
+                    else if (attempt.uncommon && moonQuestFishes.Contains(attempt.questFish))
+                    {
+                        itemDrop = attempt.questFish;
+                    }
+                    else
+                    { 
+                        itemDrop = ModContent.ItemType<Craterfish>();
+                    }
                 }
-                /*
-                else if (attempt.inLava)
+            }
+            // Earth fishing
+            else
+            {
+                if (Player.InModBiome<PollutionBiome>())
                 {
+                    int[] pollutionQuestFishes =
+                    [
+                        ModContent.ItemType<SmogWispfish>(),
+                        ModContent.ItemType<HermitCan>(),
+                        ModContent.ItemType<MutatedGoldfish>()
+                    ];
+
+                    if (attempt.uncommon && pollutionQuestFishes.Contains(attempt.questFish))
+                    {
+                        itemDrop = attempt.questFish;
+                        return;
+                    }
                 }
-                else if (attempt.inHoney)
-                {
-                }
-                else
-                {
-                }
-                */
             }
         }
 
         public override bool? CanConsumeBait(Item bait)
         {
-            return base.CanConsumeBait(bait);
+            return null;
         }
 
         public override void ModifyCaughtFish(Item fish)

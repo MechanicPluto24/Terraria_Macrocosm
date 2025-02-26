@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.noMelee = true;
             Item.knockBack = 5;
             Item.value = 100000;
-            Item.rare = ModContent.RarityType<MoonRarityT3>();
+            Item.rare = ModContent.RarityType<MoonRarity3>();
             Item.UseSound = SoundID.Item43;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<MicronovaPortal>();

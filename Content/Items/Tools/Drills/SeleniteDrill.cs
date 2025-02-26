@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Tools.Drills
             Item.channel = true;
             Item.knockBack = 0.5f;
             Item.value = Item.sellPrice(gold: 8);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.UseSound = SoundID.Item23;
             Item.autoReuse = true;
             Item.useTurn = true;

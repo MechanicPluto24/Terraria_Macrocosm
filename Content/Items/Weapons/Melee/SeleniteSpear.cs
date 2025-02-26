@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             Item.width = 102;
             Item.height = 102;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.value = Item.sellPrice(gold: 1);
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.useAnimation = 13;

@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
             Item.height = 18;
             Item.scale = 1f;
             Item.maxStack = Item.CommonMaxStack;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.useAnimation = 45;
             Item.useTime = 45;
             Item.useStyle = ItemUseStyleID.HoldUp;

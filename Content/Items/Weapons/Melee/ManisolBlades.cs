@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.noUseGraphic = true;
             Item.autoReuse = true;
             Item.UseSound = SoundID.Item1;
-            Item.rare = ModContent.RarityType<MoonRarityT3>();
+            Item.rare = ModContent.RarityType<MoonRarity3>();
         }
 
         public override bool AltFunctionUse(Player player)

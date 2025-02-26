@@ -2926,3 +2926,43 @@ MannedManeuveringUnit: {
 	DisplayName: Manned Maneuvering Unit
 	Tooltip: ""
 }
+
+MoonChampionHelmet: {
+	DisplayName: Moon Champion Helmet
+	Tooltip: ""
+}
+
+MoonChampionLeggings: {
+	DisplayName: Moon Champion Leggings
+	Tooltip: ""
+}
+
+MoonChampionSuit: {
+	DisplayName: Moon Champion Suit
+	Tooltip: ""
+}
+
+Craterfish: {
+	DisplayName: Craterfish
+	Tooltip: ""
+}
+
+DunceCraterfish: {
+	DisplayName: Dunce Craterfish
+	Tooltip: ""
+}
+
+HermitCan: {
+	DisplayName: Hermit Can
+	Tooltip: ""
+}
+
+MutatedGoldfish: {
+	DisplayName: Mutated Goldfish
+	Tooltip: ""
+}
+
+SmogWispfish: {
+	DisplayName: Smog Wispfish
+	Tooltip: ""
+}

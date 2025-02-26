@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.width = 32;
             Item.height = 54;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

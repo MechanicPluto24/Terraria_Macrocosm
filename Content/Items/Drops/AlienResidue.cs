@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Drops
             Item.height = 30;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 500;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             
         }
     }

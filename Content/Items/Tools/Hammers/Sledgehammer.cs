@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Tools.Hammers
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 6;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.tileBoost = 5;

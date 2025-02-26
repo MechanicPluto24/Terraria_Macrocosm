@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.value = Item.sellPrice(silver: 4);
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useAnimation = 30;

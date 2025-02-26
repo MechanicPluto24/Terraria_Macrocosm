@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Items.Consumables.Throwable
             Item.width = 18;
             Item.height = 18;
             Item.value = Item.sellPrice(gold: 2);
-            Item.rare = ModContent.RarityType<MoonRarityT1>(); ;
+            Item.rare = ModContent.RarityType<MoonRarity1>(); ;
         }
     }
 }
