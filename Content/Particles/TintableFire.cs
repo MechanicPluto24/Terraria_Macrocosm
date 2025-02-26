@@ -17,6 +17,7 @@ namespace Macrocosm.Content.Particles
         {
             FadeIn = false;
             FadeOut = true;
+            DrawLayer = ParticleDrawLayer.BeforeNPCs;
         }
 
         public override void OnSpawn()
@@ -34,7 +35,6 @@ namespace Macrocosm.Content.Particles
         private bool fadedIn = false;
         public int TargetAlpha = 255;
 
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             Texture2D Texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flame4").Value;

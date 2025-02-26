@@ -78,15 +78,11 @@ namespace Macrocosm.Content.Subworlds
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
 
-            DemonSunIntensity = 0f;
-            WorldData.DemonSun = false;
-
             CustomAchievement.Unlock<TravelToMoon>();
         }
 
         public override void OnExitSubworld()
         {
-            DemonSunIntensity = 0f;
         }
 
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
@@ -194,6 +190,11 @@ namespace Macrocosm.Content.Subworlds
 
         private void UpdateDemonSun()
         {
+            if (WorldData.DemonSun)
+                DemonSunIntensity = 1f;
+            else
+                DemonSunIntensity = 0f;
+
             if (DemonSunVisualIntensity < DemonSunIntensity)
                 DemonSunVisualIntensity += 0.005f;
 

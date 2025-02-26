@@ -48,6 +48,14 @@ namespace Macrocosm.Common.Sets
         /// </summary>
         public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
 
+        public static float[] TrashnadoChance { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 0f,
+            ItemID.Wood, 1f,
+            ItemID.Gel, 1f,
+            ItemID.CopperCoin, 1f,
+            ItemID.IronHelmet, 1f,
+            ItemID.AshBlock, 1f
+        ); 
+
         /// <summary> Set of items from which liquid can be extracted (e.g. Oil Shale). See <see cref="DataStructures.LiquidExtractData"/></summary>
         public static LiquidExtractData[] LiquidExtractData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new LiquidExtractData());
 

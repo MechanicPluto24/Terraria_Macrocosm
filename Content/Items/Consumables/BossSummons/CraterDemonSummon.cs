@@ -4,7 +4,7 @@ using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Tiles.Ambient;
+using Macrocosm.Content.Tiles.Misc;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

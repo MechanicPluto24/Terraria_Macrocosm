@@ -16,11 +16,11 @@ namespace Macrocosm.Content.Items.Walls
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableWall(ModContent.WallType<Tiles.Walls.IndustrialSquarePaneledWall>());
+            Item.DefaultToPlaceableWall(ModContent.WallType<Content.Walls.IndustrialSquarePaneledWall>());
             Item.width = 24;
             Item.height = 24;
         }
-
+            
         public override void AddRecipes()
         {
             CreateRecipe(4)
@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Items.Walls
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.createWall = ModContent.WallType<Tiles.Walls.IndustrialSquarePaneledWallUnsafe>();
+            Item.createWall = ModContent.WallType<Content.Walls.IndustrialSquarePaneledWallUnsafe>();
         }
     }
 }

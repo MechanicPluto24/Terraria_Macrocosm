@@ -29,7 +29,7 @@ namespace Macrocosm.Common.Players
         Rarity flags, see https://terraria.wiki.gg/wiki/Fishing
         none -> Plentiful (e.g. Bass, Wooden Crate)
         attempt.common -> Common (e.g. Specular Fish,  Neon Tetra)
-        attempt.uncommon -> Uncommon (e.g. Iron Crate, Armored Cavefish, Bomb Fish)
+        attempt.uncommon -> Uncommon (e.g. Quest Fish, Iron Crate, Armored Cavefish, Bomb Fish)
         attempt.rare -> Rare (e.g. Biome Crates, Swordfish)	
         attempt.veryrare -> Very Rare (e.g Gold Crate, Reaver Shark)
         attempt.legendary -> Extremely Rare (e.g. Accesories, Evil Fish Weapons, Gold Crate)

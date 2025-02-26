@@ -11,7 +11,6 @@ namespace Macrocosm.Content.Particles
     public class PortalSwirl : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
         public Vector2 TargetCenter { get; set; }
 
         public override void SetDefaults()

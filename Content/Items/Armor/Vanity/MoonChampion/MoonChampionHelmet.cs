@@ -1,5 +1,6 @@
 using Macrocosm.Content.Rarities;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Armor.Vanity.MoonChampion
@@ -9,6 +10,8 @@ namespace Macrocosm.Content.Items.Armor.Vanity.MoonChampion
     {
         public override void SetStaticDefaults()
         {
+            ArmorIDs.Head.Sets.DrawHead[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Head)] = false;
+
         }
 
         public override void SetDefaults()

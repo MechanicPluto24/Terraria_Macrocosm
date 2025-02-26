@@ -11,8 +11,6 @@ namespace Macrocosm.Content.Particles
     public class EngineSpark : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
-
         public Color ColorOnSpawn { get; set; }
         public Color ColorOnDespawn { get; set; }
 
