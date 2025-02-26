@@ -19,11 +19,11 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
-using Macrocosm.Content.Tiles.Ambient;
+using Macrocosm.Content.Tiles.Misc;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.Tiles.Furniture.Luminite;
-using Macrocosm.Content.Tiles.Walls;
+using Macrocosm.Content.Tiles.Rubble;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Macrocosm.Content.WorldGeneration.Structures.LunarOutposts;
 using Macrocosm.Content.WorldGeneration.Structures.Shrines;
@@ -39,6 +39,7 @@ using Terraria.Localization;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
+using Macrocosm.Content.Walls;
 
 namespace Macrocosm.Content.Subworlds
 {

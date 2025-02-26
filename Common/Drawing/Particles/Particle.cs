@@ -93,6 +93,9 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <summary> Particle animation update speed, in ticks per frame </summary>
         [NetSync] public int FrameSpeed;
 
+        /// <summary> The draw layer of this <c>Particle</c>, see <see cref="ParticleDrawLayer"/>. Unused if <see cref="HasCustomDrawer"/>. </summary>
+        [NetSync] public ParticleDrawLayer DrawLayer = ParticleDrawLayer.AfterProjectiles;
+
         protected int currentFrame = 0;
         protected int frameCounter = 0;
 
@@ -124,9 +127,6 @@ namespace Macrocosm.Common.Drawing.Particles
 
         /// <summary> Whether the <c>Particle</c> should update its position based on velocity </summary>
         public virtual bool ShouldUpdatePosition => true;
-
-        /// <summary> The draw layer of this <c>Particle</c>, see <see cref="ParticleDrawLayer"/>. Unused if <see cref="HasCustomDrawer"/>. </summary>
-        public virtual ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
 
         /// <summary> Fade factor, taking into account the <see cref="FadeInNormalizedTime"/> and <see cref="FadeOutNormalizedTime"/> </summary>
         public float FadeFactor

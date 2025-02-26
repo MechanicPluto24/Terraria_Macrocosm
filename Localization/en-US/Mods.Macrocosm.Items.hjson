@@ -2966,3 +2966,13 @@ SmogWispfish: {
 	DisplayName: Smog Wispfish
 	Tooltip: ""
 }
+
+RadioactiveSlimeBannerItem: {
+	DisplayName: Radioactive Slime Banner Item
+	Tooltip: ""
+}
+
+RegolithSlimeBannerItem: {
+	DisplayName: Regolith Slime Banner Item
+	Tooltip: ""
+}

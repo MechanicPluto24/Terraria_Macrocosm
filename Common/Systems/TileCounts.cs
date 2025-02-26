@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Tiles.Ambient;
+using Macrocosm.Content.Tiles.Misc;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;

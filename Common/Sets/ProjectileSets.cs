@@ -27,5 +27,11 @@ namespace Macrocosm.Common.Sets
             ProjectileID.MiniNukeSnowmanRocketI, 0.4f,
             ProjectileID.MiniNukeSnowmanRocketII, 0.4f
         );
+
+        public static float[] TrashnadoChance { get; } = ProjectileID.Sets.Factory.CreateFloatSet(defaultState: 0f,
+            ProjectileID.WoodenArrowFriendly, 1f,
+            ProjectileID.SandBallGun, 1f,
+            ProjectileID.SkeletonBone, 1f
+        );
     }
 }

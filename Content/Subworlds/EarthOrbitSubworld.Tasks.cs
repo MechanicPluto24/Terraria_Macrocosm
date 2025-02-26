@@ -7,7 +7,7 @@ using Macrocosm.Content.Items.Refined;
 using Macrocosm.Content.Subworlds.Orbit.Earth;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
-using Macrocosm.Content.Tiles.Walls;
+using Macrocosm.Content.Walls;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Microsoft.Xna.Framework;
 using System;

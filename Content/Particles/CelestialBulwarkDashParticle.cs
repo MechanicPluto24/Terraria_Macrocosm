@@ -15,7 +15,6 @@ namespace Macrocosm.Content.Particles
     public class CelestialBulwarkDashParticle : Particle
     {
         public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
         public override int TrailCacheLength => 24;
 
         public int PlayerID;
@@ -38,6 +37,8 @@ namespace Macrocosm.Content.Particles
             TimeToLive = 1000;
             PlayerID = 0;
             Opacity = 0f;
+            DrawLayer = ParticleDrawLayer.BeforeNPCs;
+
             collided = false;
         }
 

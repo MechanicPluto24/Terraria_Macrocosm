@@ -28,8 +28,6 @@ namespace Macrocosm.Content.Particles
         private bool fadedIn = false;
         private bool collided = false;
 
-        public override ParticleDrawLayer DrawLayer => collided ? ParticleDrawLayer.AfterProjectiles : ParticleDrawLayer.BeforeNPCs;
-
         public override void SetDefaults()
         {
             TimeToLive = 120;
@@ -65,6 +63,8 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
+            DrawLayer = collided ? ParticleDrawLayer.AfterProjectiles : ParticleDrawLayer.BeforeNPCs;
+
             if (FadeIn && FadeOut)
             {
                 if (!fadedIn)
