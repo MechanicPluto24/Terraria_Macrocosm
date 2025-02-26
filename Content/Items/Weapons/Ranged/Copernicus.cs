@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.channel = true;
             Item.knockBack = 8f;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
             Item.autoReuse = true;
             Item.shootSpeed = 20f;

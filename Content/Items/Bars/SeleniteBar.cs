@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Bars
             Item.consumable = true;
             Item.createTile = TileType<Tiles.Bars.SeleniteBar>();
             Item.placeStyle = 0;
-            Item.rare = RarityType<MoonRarityT1>();
+            Item.rare = RarityType<MoonRarity1>();
             
 
             // Set other Item.X values here

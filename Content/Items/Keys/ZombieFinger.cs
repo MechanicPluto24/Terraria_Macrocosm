@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Keys
             Item.width = 22;
             Item.height = 14;
             Item.value = 200;
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
         }
     }
 }

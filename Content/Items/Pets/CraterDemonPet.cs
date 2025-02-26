@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Pets
             Item.UseSound = SoundID.Item2;
             Item.useAnimation = 20;
             Item.useTime = 20;
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.noMelee = true;
             Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Pets.CraterDemonPet>();
             Item.buffType = ModContent.BuffType<Buffs.Pets.CraterDemonPet>();

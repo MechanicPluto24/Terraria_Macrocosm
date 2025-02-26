@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.height = 54;
 
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
 
             Item.channel = true;
             Item.UseSound = null;

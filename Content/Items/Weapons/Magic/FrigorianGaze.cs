@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.noMelee = true;
             Item.knockBack = 2;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT3>();
+            Item.rare = ModContent.RarityType<MoonRarity3>();
             Item.UseSound = SoundID.Item106;
             Item.shoot = ModContent.ProjectileType<FrigorianGazeProjectile>();
             Item.noUseGraphic = true;

@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.knockBack = 16;
             Item.value = Item.sellPrice(gold: 20);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
         }
 
         public override bool CanUseItemHeldProjectile(Player player)

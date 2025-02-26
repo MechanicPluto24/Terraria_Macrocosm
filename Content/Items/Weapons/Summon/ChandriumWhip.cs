@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             Item.DefaultToWhip(ModContent.ProjectileType<ChandriumWhipProjectile>(), 180, 2, 4);
 
             Item.shootSpeed = 4;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
 
             Item.channel = true;
         }

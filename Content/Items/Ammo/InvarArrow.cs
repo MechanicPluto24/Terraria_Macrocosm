@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Ammo
             Item.consumable = true;
             Item.knockBack = 2.5f;
             Item.value = Item.sellPrice(copper: 3);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Ranged.InvarArrow>();
             Item.shootSpeed = 4f;
             Item.ammo = AmmoID.Arrow;

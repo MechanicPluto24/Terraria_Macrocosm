@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Armor.Vanity.BossMasks
             Item.width = 24;
             Item.height = 20;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.vanity = true;
         }
     }

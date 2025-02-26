@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.consumable = true;
             Item.createTile = TileType<Tiles.Ores.SeleniteOre>();
             Item.placeStyle = 0;
-            Item.rare = RarityType<MoonRarityT1>();
+            Item.rare = RarityType<MoonRarity1>();
             
 
             // Set other Item.X values here

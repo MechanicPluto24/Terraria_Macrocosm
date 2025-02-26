@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Accessories
             Item.accessory = true;
             Item.defense = 5;
             Item.value = Item.sellPrice(gold: 5);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
         }
 
         public override void UpdateAccessory(Player player, bool hideVisual)

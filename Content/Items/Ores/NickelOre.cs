@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.height = 16;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 750;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             
         }
     }

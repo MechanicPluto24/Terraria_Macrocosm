@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Armor.Vanity.MoonChampion
             Item.width = 28;
             Item.height = 18;
             Item.value = Item.sellPrice(silver: 150);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.vanity = true;
         }
 

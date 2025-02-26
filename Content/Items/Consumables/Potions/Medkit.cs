@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Consumables.Potions
             Item.DefaultToHealingPotion(newwidth: 26, newheight: 18, healingAmount: 100);
             Item.useStyle = ItemUseStyleID.EatFood; // ?
             Item.UseSound = SoundID.Item3;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.value = Item.buyPrice(gold: 1);
         }
 

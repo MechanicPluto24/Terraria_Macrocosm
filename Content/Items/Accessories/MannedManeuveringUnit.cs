@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Accessories
     {
         public override void SetStaticDefaults()
         {
-            ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(180, 9f, 2.5f);
+            ArmorIDs.Wing.Sets.Stats[Item.wingSlot] = new WingStats(180, 9f, 2.5f, hasHoldDownHoverFeatures: true, hoverFlySpeedOverride: -1, hoverAccelerationMultiplier: 1);
             ItemSets.WingTimeDependsOnAtmosphericDensity[Type] = false;
         }
 
@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Accessories
             Item.width = 30;
             Item.height = 30;
             Item.value = Item.sellPrice(gold: 15);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.accessory = true;
         }
 
@@ -50,20 +50,28 @@ namespace Macrocosm.Content.Items.Accessories
         {
             if (inUse)
             {
-                Vector2 velocity = default;
-                if (Math.Abs(player.velocity.X) > Math.Abs(player.velocity.Y))
-                    velocity.X = 0.4f * -player.direction;
-                else if(player.velocity.Y < 0)
-                    velocity.Y = 1;
-
-                velocity *= Main.rand.NextFloat(0.8f, 1.3f);
-                for (int i = 0; i < (int)(1 * player.velocity.Length()); i++)
+                for (int i = 0; i < 4; i++)
                 {
+                    Vector2 position = player.Center;
+                    Vector2 velocity = default;
+                    if (Math.Abs(player.velocity.X) > Math.Abs(player.velocity.Y))
+                    {
+                        velocity.X = 0.4f * -player.direction;
+                        position.Y += 10 * (i % 2 == 0 ? 1 : -1);
+                    }
+                    else if (player.velocity.Y < 0)
+                    {
+                        velocity.Y = 1;
+                        position.X += 8 * (i % 2 == 0 ? 1 : -1);
+                    }
+
+                    velocity *= Main.rand.NextFloat(0.8f, 1.3f);
+
                     Particle.Create<Smoke>((p) =>
                     {
-                        p.Position = player.Center + new Vector2(8 * Main.rand.NextDirection(), 10 * Main.rand.NextDirection());
+                        p.Position = position;
                         p.Velocity = velocity;
-                        p.Scale = new Vector2(0.1f);
+                        p.Scale = new Vector2(0.5f) * Main.rand.NextFloat();
                         p.Rotation = Utility.RandomRotation();
                         p.FadeInNormalizedTime = 0.9f;
                         p.FadeOutNormalizedTime = 0.4f;
@@ -74,6 +82,7 @@ namespace Macrocosm.Content.Items.Accessories
                 }
 
                 //TODO: add downwards flight
+                //TODO: add sounds
             }
 
             // TODO: use these for the rocket trail, cool af

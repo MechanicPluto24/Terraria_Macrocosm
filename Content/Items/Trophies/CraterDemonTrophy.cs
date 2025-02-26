@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Trophies
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Trophies.CraterDemonTrophy>());
             Item.width = 32;
             Item.height = 32;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.value = Item.buyPrice(0, 1);
         }
     }

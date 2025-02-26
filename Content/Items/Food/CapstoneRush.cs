@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Items.Food
             // DefaultToFood sets all of the food related item defaults such as the buff type, buff duration, use sound, and animation time.
             Item.DefaultToFood(18, 32, BuffID.WellFed3, 5 * 60 * 60, useGulpSound: true);
             Item.value = Item.sellPrice(silver: 50);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
         }
 
         public override void OnConsumeItem(Player player)
