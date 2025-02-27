@@ -7,7 +7,7 @@ using Macrocosm.Content.Items.Refined;
 using Macrocosm.Content.Subworlds.Orbit.Earth;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
-using Macrocosm.Content.Walls;
+using Macrocosm.Content.Tiles.Walls;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Microsoft.Xna.Framework;
 using System;
@@ -291,7 +291,7 @@ namespace Macrocosm.Content.Subworlds
                         chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
                         break;
                     case 2:
-                        chest.item[slot].SetDefaults(ItemType<NickelOre>());
+                        chest.item[slot].SetDefaults(ItemID.IronOre);
                         chest.item[slot++].stack = WorldGen.genRand.Next(1, 30);
                         break;
                     case 3:

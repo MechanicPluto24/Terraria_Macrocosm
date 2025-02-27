@@ -1,12 +1,10 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
-using Macrocosm.Content.Items.Fishes;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
 using Macrocosm.Content.Tiles.Trees;
 using SubworldLibrary;
-using System;
 using Terraria;
 using Terraria.Graphics.Effects;
 using Terraria.ID;
@@ -65,10 +63,18 @@ namespace Macrocosm.Content.Items.Dev
 
             //WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), Player.tileTargetX, Player.tileTargetY);
 
-            //Main.anglerQuest = Array.IndexOf(Main.anglerQuestItemNetIDs, ModContent.ItemType<DunceCraterfish>());
-
             bool message = true;
             foreach (var subworld in OrbitSubworld.GetOrbitSubworlds(Earth.ID))
+            {
+                bool value = WorldData.GetSubworldData(subworld.ID).Unlocked;
+                WorldData.GetSubworldData(subworld.ID).Unlocked = !value;
+                if (message)
+                {
+                    Main.NewText(value ? "Orbit locked" : "Orbit unlocked");
+                    message = false;
+                }
+            }
+            foreach (var subworld in OrbitSubworld.GetOrbitSubworlds(ModContent.GetInstance<Moon>().ID))
             {
                 bool value = WorldData.GetSubworldData(subworld.ID).Unlocked;
                 WorldData.GetSubworldData(subworld.ID).Unlocked = !value;
