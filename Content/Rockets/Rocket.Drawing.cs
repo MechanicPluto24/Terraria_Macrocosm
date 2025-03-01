@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Rockets
 
         private RenderTarget2D[] renderTargets = new RenderTarget2D[3];
 
-        private Mesh2D mesh;
+        private Mesh mesh;
         private SpriteBatchState sbState;
 
         public void ResetRenderTarget()

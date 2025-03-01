@@ -62,7 +62,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
             }
         }
 
-        private Mesh2D landingLegMesh;
+        private Mesh landingLegMesh;
         public override void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
             if (!LandingLegDrawOffset.HasValue)
