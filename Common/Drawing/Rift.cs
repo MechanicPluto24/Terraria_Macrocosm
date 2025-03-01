@@ -22,7 +22,7 @@ namespace Macrocosm.Common.Drawing
 
         private List<Vector2> borderPoints;
         private List<Vector2> lastBorderPoints;
-        private Mesh2D mesh;
+        private Mesh mesh;
         private GraphicsDevice graphicsDevice;
 
         public Rift(GraphicsDevice graphicsDevice, Vector2 position, float width, float height, Color interiorColor, Color borderColor, int borderPointCount = 64)
@@ -35,7 +35,7 @@ namespace Macrocosm.Common.Drawing
             BorderColor = borderColor;
 
             borderPoints = new List<Vector2>();
-            mesh = new Mesh2D(graphicsDevice);
+            mesh = new Mesh(graphicsDevice);
 
             GenerateBorderPoints(borderPointCount);
             UpdateMesh();

@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
@@ -39,6 +40,9 @@ namespace Macrocosm.Content.Skies.EarthOrbit
         private static List<Asset<Texture2D>> earthBackgrounds;
         private static Asset<Texture2D> earthBackground;
 
+        private static Asset<Texture2D> earthMercator;
+        private static Asset<Texture2D> earthMercatorClouds;
+
         private const string Path = "Macrocosm/Content/Skies/EarthOrbit/";
 
         public EarthOrbitSky()
@@ -54,6 +58,9 @@ namespace Macrocosm.Content.Skies.EarthOrbit
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_NorthAmerica"),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_SouthAmerica")
             ];
+
+            earthMercator = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Mercator");
+            earthMercatorClouds = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_MercatorClouds");
 
             stars = new();
 
@@ -148,6 +155,8 @@ namespace Macrocosm.Content.Skies.EarthOrbit
         }
 
         private SpriteBatchState state;
+        private Mesh earthMesh;
+        private Mesh earthCloudMesh;
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             if (SubworldSystem.IsActive<EarthOrbitSubworld>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)
@@ -163,7 +172,41 @@ namespace Macrocosm.Content.Skies.EarthOrbit
 
                 state.SaveState(spriteBatch);
                 spriteBatch.End();
-                spriteBatch.Begin(BlendState.NonPremultiplied, state);
+                spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.LinearClamp, state);
+
+                float x = -(float)((Main.screenPosition.X / Main.maxTilesX * 16.0) - 1400);
+                float y = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - 1900);
+
+                float depthFactor = 12f;
+                float radius = 1360 * depthFactor;
+                Vector2 position = new(x, y);
+
+                earthMesh ??= new Mesh(Main.graphics.GraphicsDevice);
+                earthCloudMesh ??= new Mesh(Main.graphics.GraphicsDevice);
+
+                earthMesh.CreateSphere(
+                    position: position,
+                    radius: radius,
+                    horizontalResolution: 100,
+                    verticalResolution: 100,
+                    depthFactor: depthFactor,
+                    rotation: new Vector3(0, (float)Main.timeForVisualEffects / 6000 % MathHelper.TwoPi, MathHelper.ToRadians(23.44f))
+                );
+
+                earthCloudMesh.CreateSphere(
+                      position: position,
+                      radius: radius,
+                      horizontalResolution: 100,
+                      verticalResolution: 100,
+                      depthFactor: depthFactor,
+                      rotation: new Vector3(0, (float)Main.timeForVisualEffects / 5500 % MathHelper.TwoPi, MathHelper.ToRadians(23.44f))
+                );
+
+                earthMesh.Draw(earthMercator.Value, state.Matrix);
+                earthCloudMesh.Draw(earthMercatorClouds.Value, state.Matrix, blendState: BlendState.NonPremultiplied);
+
+                /*
+                earthMesh.DebugDraw(state.Matrix);
 
                 float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - earthBackground.Height() / 2);
                 spriteBatch.Draw
@@ -172,7 +215,7 @@ namespace Macrocosm.Content.Skies.EarthOrbit
                     new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
                     GetLightColor().WithAlpha(255)
                 );
-
+                */
                 spriteBatch.End();
                 spriteBatch.Begin(state);
             }
