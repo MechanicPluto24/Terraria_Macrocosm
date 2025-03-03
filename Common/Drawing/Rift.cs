@@ -95,7 +95,6 @@ namespace Macrocosm.Common.Drawing
             short[] indices = new short[indexCount];
 
             vertices[0] = new VertexPositionColorTexture(new Vector3(Position, 0f), InteriorColor, new Vector2(0.5f, 0.5f));
-
             for (int i = 0; i < borderPoints.Count; i++)
             {
                 Vector2 point = borderPoints[i];

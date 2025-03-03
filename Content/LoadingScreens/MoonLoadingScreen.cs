@@ -35,7 +35,7 @@ namespace Macrocosm.Content.LoadingScreens
 
             ResetAnimation();
 
-            lunaBackground ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Luna");
+            lunaBackground ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Luna");
 
             Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/Earth", AssetRequestMode.ImmediateLoad);
             Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);

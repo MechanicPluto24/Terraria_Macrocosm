@@ -1,8 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
+using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -19,6 +18,8 @@ namespace Macrocosm.Content.Skies.Moon
 {
     public class MoonOrbitSky : CustomSky, ILoadable
     {
+        public bool Background3D { get; set; } = false;
+
         private bool active;
         private float intensity;
 
@@ -35,7 +36,12 @@ namespace Macrocosm.Content.Skies.Moon
         private readonly Asset<Texture2D> earthBodyDrunk;
         private readonly Asset<Texture2D> earthBodyFlat;
         private readonly Asset<Texture2D> earthAtmo;
+
         private static Asset<Texture2D> moonBackground;
+
+        private static Asset<Texture2D> moonCylindrical;
+        private static Asset<Effect> pixelate;
+        private Mesh moonMesh;
 
         private readonly Asset<Texture2D>[] nebulaTextures = new Asset<Texture2D>[Main.maxMoons];
         private readonly RawTexture[] nebulaRawTextures = new RawTexture[Main.maxMoons];
@@ -60,17 +66,19 @@ namespace Macrocosm.Content.Skies.Moon
             earthBody = ModContent.Request<Texture2D>(Path + "Earth", mode);
             earthBodyDrunk = ModContent.Request<Texture2D>(Path + "EarthDrunk", mode);
             earthBodyFlat = ModContent.Request<Texture2D>(Path + "EarthFlat", mode);
-            
+
             earthAtmo = ModContent.Request<Texture2D>(Path + "EarthAtmo", mode);
-            
-            moonBackground = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Luna",mode);
+
+            moonBackground = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Luna", mode);
+
+            moonCylindrical = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Luna_Mercator", mode);
+            pixelate = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Pixelate", AssetRequestMode.ImmediateLoad);
 
             stars = new();
 
             sun = new CelestialBody(sunTexture);
             earth = new CelestialBody(earthBody, earthAtmo, scale: 0.9f);
 
-      
             earth.SetLighting(sun);
             earth.ConfigureBackRadialShader = ConfigureEarthAtmoShader;
             earth.ConfigureBodySphericalShader = ConfigureEarthBodyShader;
@@ -130,7 +138,7 @@ namespace Macrocosm.Content.Skies.Moon
         public override Color OnTileColor(Color inColor) => GetLightColor();
         public static Color GetLightColor()
         {
-            Color darkColor = new Color(35, 35, 35);
+            Color darkColor = new(35, 35, 35);
             Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
 
             if (Main.dayTime)
@@ -174,34 +182,60 @@ namespace Macrocosm.Content.Skies.Moon
                 stars.DrawAll(spriteBatch);
 
                 sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
-                float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - moonBackground.Height() / 2);
-                if(Main.dayTime)
+                if (Main.dayTime)
                     sun.Draw(spriteBatch);
-
-           
 
                 earth.Draw(spriteBatch);
                 state1.SaveState(spriteBatch);
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.NonPremultiplied, state1);
-                spriteBatch.Draw
-                (
-                    moonBackground.Value,
-                    new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
-                    GetLightColor().WithAlpha(255)
-                );
+
+                if (Background3D)
+                {
+                    float x = -(float)((Main.screenPosition.X / Main.maxTilesX * 16.0) - 500);
+                    float y = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - 500);
+
+                    float depthFactor = 12f;
+                    float radius = 360 * depthFactor;
+                    Vector2 position = new(x, y);
+
+                    moonMesh ??= new Mesh(Main.graphics.GraphicsDevice);
+
+                    moonMesh.CreateSphere(
+                        position: position,
+                        radius: radius,
+                        horizontalResolution: 100,
+                        verticalResolution: 100,
+                        depthFactor: depthFactor,
+                        rotation: new Vector3((float)Main.timeForVisualEffects / 600 % MathHelper.TwoPi, (float)Main.timeForVisualEffects / 600 % MathHelper.TwoPi, 0),
+                        projectionType: Mesh.SphereProjectionType.Cylindrical
+                    );
+
+                    moonMesh.Draw(moonCylindrical.Value, state1.Matrix);
+                }
+                else
+                {
+                    float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - moonBackground.Height() / 2);
+                    spriteBatch.Draw
+                    (
+                        moonBackground.Value,
+                        new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
+                        GetLightColor().WithAlpha(255)
+                    );
+                }
+
                 spriteBatch.End();
                 spriteBatch.Begin(state1);
+
             }
         }
 
         private void UpdateNebulaStars()
         {
-            if(lastMoonType != Main.moonType)
+            if (lastMoonType != Main.moonType)
                 shouldRefreshNebulaStars = true;
 
             lastMoonType = Main.moonType;
-
             if (shouldRefreshNebulaStars)
             {
                 stars.Clear();
@@ -216,7 +250,6 @@ namespace Macrocosm.Content.Skies.Moon
                 shouldRefreshNebulaStars = false;
             }
         }
-
 
         private void DrawMoonNebula(float brightness)
         {
@@ -233,13 +266,13 @@ namespace Macrocosm.Content.Skies.Moon
 
             sun.Color = new Color(255, 255, 255) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
 
-            earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));  
+            earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
             UpdateTextures();
             RotateSun();
             earth.SetupSkyRotation(SkyRotationMode.None);
-            earth.Center = new Vector2((int)(0.5f * (Main.screenWidth + earth.Width * 2)) - (int)earth.Width, (int)(0.5f * (Main.screenHeight + earth.Height * 2)) - (int)earth.Height-100);
-            float bgTopY =  (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;
+            earth.Center = new Vector2((int)(0.5f * (Main.screenWidth + earth.Width * 2)) - (int)earth.Width, (int)(0.5f * (Main.screenHeight + earth.Height * 2)) - (int)earth.Height - 100);
+            float bgTopY = (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;
             stars.CommonOffset = new Vector2(0, bgTopY);
         }
 
@@ -335,30 +368,30 @@ namespace Macrocosm.Content.Skies.Moon
             shadeResolution /= 2;
             radius = 1f;
         }
+
         private void RotateSun()
         {
             float bgTopY = (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;
             double duration = Main.dayTime ? MacrocosmSubworld.GetDayLength() : MacrocosmSubworld.GetNightLength();
 
-           
-                double progress = Main.dayTime ? Main.time / duration : 1.0 - Main.time / duration;
-                int timeX = (int)(progress * (Main.screenWidth + sun.Width * 2)) - (int)sun.Width;
 
-                double timeY = Main.time < duration / 2
-                    ? Math.Pow((Main.time / duration - 0.5) * 2.0, 2.0) // AM
-                    : Math.Pow(1.0 - Main.time / duration * 2.0, 2.0);   // PM
+            double progress = Main.dayTime ? Main.time / duration : 1.0 - Main.time / duration;
+            int timeX = (int)(progress * (Main.screenWidth + sun.Width * 2)) - (int)sun.Width;
 
-                sun.Rotation = (float)(Main.time / duration) * 2f - 7.3f;
-                sun.Scale = (float)(1.2 - timeY * 0.4);
+            double timeY = Main.time < duration / 2
+                ? Math.Pow((Main.time / duration - 0.5) * 2.0, 2.0) // AM
+                : Math.Pow(1.0 - Main.time / duration * 2.0, 2.0);   // PM
 
-                sun.Color = Color.White;
+            sun.Rotation = (float)(Main.time / duration) * 2f - 7.3f;
+            sun.Scale = (float)(1.2 - timeY * 0.4);
 
-                int posY = Main.dayTime ? (int)(bgTopY + timeY * 250.0 + 240.0) : (int)(bgTopY - timeY * 250.0 + 665.0);
+            sun.Color = Color.White;
 
-                sun.SetupSkyRotation(SkyRotationMode.None);
-                sun.Center = new Vector2(timeX, posY);
-                sun.Draw(Main.spriteBatch);
-            
+            int posY = Main.dayTime ? (int)(bgTopY + timeY * 250.0 + 240.0) : (int)(bgTopY - timeY * 250.0 + 665.0);
+
+            sun.SetupSkyRotation(SkyRotationMode.None);
+            sun.Center = new Vector2(timeX, posY);
+            sun.Draw(Main.spriteBatch);
         }
     }
 }
