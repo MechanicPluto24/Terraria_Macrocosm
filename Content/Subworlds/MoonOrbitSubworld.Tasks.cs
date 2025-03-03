@@ -1,12 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
-using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.LiquidContainers;
-using Macrocosm.Content.Items.Ores;
-using Macrocosm.Content.Items.Refined;
-using Macrocosm.Content.Subworlds.Orbit.Earth;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
-using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.Walls;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Microsoft.Xna.Framework;
