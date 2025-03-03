@@ -22,18 +22,16 @@ namespace Macrocosm.Content.Subworlds
         [Task]
         private void PlaceSpawn(GenerationProgress progress)
         {
-
             Structure module = new BaseSpaceStationModule();
-            int x, y;
-            x = (int)(Main.maxTilesX / 2);
-            y = (int)(Main.maxTilesY / 2);
-            Point16 origin = new(Main.spawnTileX + (int)(module.Size.X / 2), Main.spawnTileY);
+            int x = Main.maxTilesX / 2;
+            int y = Main.maxTilesY / 2;
+            Point16 origin = new(Main.spawnTileX + module.Size.X / 2, Main.spawnTileY);
             module.Place(origin, null);
         }
+
         [Task]
         private void Asteroids(GenerationProgress progress)
         {
-
             //I really do not care if they overlap eachother. BUT they do need to protect the area they spawn in
             for (int x = 50; x < (int)Main.maxTilesX - 50; x++)
             {
@@ -52,29 +50,23 @@ namespace Macrocosm.Content.Subworlds
                         if (WorldGen.genRand.NextBool(20))
                         {
                             ForEachInCircle(
-                                         x,
-                                         y,
-                                         3,
-                                         (i1, j1) =>
-                                         {
-                                             if (CoordinatesOutOfBounds(i1, j1))
-                                             {
-                                                 return;
-                                             }
+                                x,
+                                y,
+                                3,
+                                (i1, j1) =>
+                                {
+                                    if (CoordinatesOutOfBounds(i1, j1))
+                                        return;
 
-                                             float iDistance = Math.Abs(x - i1) / (3 * 0.5f);
-                                             float jDistance = Math.Abs(y - j1) / (3 * 0.5f);
-                                             if (WorldGen.genRand.NextFloat() < iDistance * 0.2f || WorldGen.genRand.NextFloat() < jDistance * 0.2f)
-                                             {
-                                                 return;
-                                             }
+                                    float iDistance = Math.Abs(x - i1) / (3 * 0.5f);
+                                    float jDistance = Math.Abs(y - j1) / (3 * 0.5f);
+                                    if (WorldGen.genRand.NextFloat() < iDistance * 0.2f || WorldGen.genRand.NextFloat() < jDistance * 0.2f)
+                                        return;
 
-                                             if (Main.tile[i1, j1].HasTile)
-                                             {
-                                                 FastPlaceTile(i1, j1, TileID.FleshBlock);
-                                             }
-                                         }
-                                     );
+                                    if (Main.tile[i1, j1].HasTile)
+                                        FastPlaceTile(i1, j1, TileID.FleshBlock);
+                                }
+                            );
                         }
 
                         OrbitStructureMap.AddProtectedStructure(new Rectangle(x - 10, y - 10, x + 10, y + 10), padding: 1);
@@ -88,8 +80,6 @@ namespace Macrocosm.Content.Subworlds
             GenerateOre(TileType<Tiles.Ores.SeleniteOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
             GenerateOre(TileType<Tiles.Ores.DianiteOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
             GenerateOre(TileType<Tiles.Ores.ChandriumOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
-
-
         }
     }
 }

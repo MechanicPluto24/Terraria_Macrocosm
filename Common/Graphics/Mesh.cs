@@ -10,6 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Graphics
 {
+    // TODO: add RT export and shader chaining support
     public class Mesh : IDisposable
     {
         private readonly GraphicsDevice graphicsDevice;
@@ -59,17 +60,15 @@ namespace Macrocosm.Common.Graphics
                     float u = i / (float)(horizontalResolution - 1);
                     float v = j / (float)(verticalResolution - 1);
 
-                    Vector2 vertexPosition = new(
-                        position.X + u * width, 
-                        position.Y + v * height
-                    );
-
+                    Vector2 vertexPosition = new(position.X + u * width, position.Y + v * height);
                     Vector2 rotatedPosition = (vertexPosition - origin).RotatedBy(rotation) + origin;
+
                     Color vertexColor = colorFunction?.Invoke(rotatedPosition) ?? Color.White;
+
                     vertices[i * verticalResolution + j] = new VertexPositionColorTexture(
-                        new Vector3(rotatedPosition, 0f),
-                        vertexColor,
-                        new Vector2(u, v)
+                        position: new Vector3(rotatedPosition, 0f),
+                        color: vertexColor,
+                        textureCoordinate: new Vector2(u, v)
                     );
                 }
             }
@@ -93,7 +92,8 @@ namespace Macrocosm.Common.Graphics
             UpdateBuffers();
         }
 
-        public void CreateSphere(Vector2 position, float radius, int horizontalResolution, int verticalResolution, float depthFactor, Vector3 rotation)
+        public enum SphereProjectionType { Mercator, Cylindrical }
+        public void CreateSphere(Vector2 position, float radius, int horizontalResolution, int verticalResolution, float depthFactor, Vector3 rotation, Func<Vector2, Color> colorFunction = null, SphereProjectionType projectionType = SphereProjectionType.Mercator)
         {
             if (horizontalResolution < 2 || verticalResolution < 2)
                 throw new ArgumentOutOfRangeException(nameof(horizontalResolution), "Resolution must be at least 2.");
@@ -107,10 +107,7 @@ namespace Macrocosm.Common.Graphics
             if (indices == null || indices.Length != indexCount)
                 indices = new short[indexCount];
 
-            Matrix rotationMatrix = Matrix.CreateRotationX(rotation.X) *
-                                    Matrix.CreateRotationY(rotation.Y) *
-                                    Matrix.CreateRotationZ(rotation.Z);
-
+            Matrix rotationMatrix = Matrix.CreateRotationX(rotation.X) * Matrix.CreateRotationY(rotation.Y) * Matrix.CreateRotationZ(rotation.Z);
             for (int i = 0; i < horizontalResolution; i++)
             {
                 for (int j = 0; j < verticalResolution; j++)
@@ -118,27 +115,36 @@ namespace Macrocosm.Common.Graphics
                     float u = i / (float)(horizontalResolution - 1);
                     float v = j / (float)(verticalResolution - 1);
 
-                    float theta = MathHelper.TwoPi * u;
-                    float phi = MathHelper.Pi * (v - 0.5f);
-
-                    Vector3 spherePosition = new(
-                        radius * (float)(Math.Cos(phi) * Math.Cos(theta)),
-                        radius * (float)Math.Sin(phi),
-                        radius * (float)(Math.Cos(phi) * Math.Sin(theta))
-                    );
-
+                    Vector3 spherePosition = default;
+                    switch (projectionType)
+                    {
+                        case SphereProjectionType.Mercator:
+                            {
+                                float longitude = MathHelper.TwoPi * u;
+                                float latitude = MathHelper.Pi * (v - 0.5f);
+                                spherePosition = new(
+                                    x: radius * MathF.Cos(latitude) * MathF.Cos(longitude),
+                                    y: radius * MathF.Sin(latitude),
+                                    z: radius * MathF.Cos(latitude) * MathF.Sin(longitude)
+                                );
+                                break;
+                            }
+                        case SphereProjectionType.Cylindrical:
+                            {
+                                //TODO
+                                break;
+                            }
+                        }
                     spherePosition = Vector3.Transform(spherePosition, rotationMatrix);
 
                     float depth = 1f / (depthFactor - spherePosition.Z / radius);
-                    float projectedX = spherePosition.X * depth;
-                    float projectedY = spherePosition.Y * depth;
+                    Vector2 projectedPosition = new Vector2(spherePosition.X * depth, spherePosition.Y * depth) + position;
+                    Color vertexColor = colorFunction?.Invoke(projectedPosition) ?? Color.White;
 
-
-                    Color vertexColor = Color.White;
                     vertices[i * verticalResolution + j] = new VertexPositionColorTexture(
-                        new Vector3(projectedX + position.X, projectedY + position.Y, 0),
-                        vertexColor,
-                        new(1 - u, v)
+                        position: new Vector3(projectedPosition, 0),
+                        color: vertexColor,
+                        textureCoordinate: new(1 - u, v)
                     );
                 }
             }
@@ -155,15 +161,12 @@ namespace Macrocosm.Common.Graphics
                     indices[index++] = (short)(i * verticalResolution + j);
                     indices[index++] = (short)((i + 1) * verticalResolution + j + 1);
                     indices[index++] = (short)((i + 1) * verticalResolution + j);
-
                 }
             }
 
             cullMode = CullMode.CullCounterClockwiseFace;
             UpdateBuffers();
         }
-
-
 
         /// <summary> Updates the vertex and index buffers on the GPU, resizing if needed. </summary>
         private void UpdateBuffers()
