@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria.Graphics;
 using Terraria;
+using Macrocosm.Content.Liquids.WaterStyles;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Liquids
 {
@@ -22,23 +24,6 @@ namespace Macrocosm.Content.Liquids
             AddMapEntry(Color.Black, CreateMapEntryName());
         }
 
-        public override bool PreDraw(int i, int j, LiquidDrawCache liquidDrawCache, Vector2 drawOffset, bool isBackgroundDraw)
-        {
-            return true;
-        }
-
-        public override bool PreSlopeDraw(int i, int j, bool behindBlocks, ref Vector2 drawPosition, ref Rectangle liquidSize, ref VertexColors colors)
-        {
-            return true;
-        }
-
-        public override bool PreRetroDraw(int i, int j, SpriteBatch spriteBatch)
-        {
-            return true;
-        }
-
-        public override void RetroDrawEffects(int i, int j, SpriteBatch spriteBatch, ref RetroLiquidDrawInfo drawData, float liquidAmountModified, int liquidGFXQuality)
-        {
-        }
+        public override int ChooseWaterfallStyle(int i, int j) => ModContent.GetInstance<OilFallStyle>().Slot;
     }
 }

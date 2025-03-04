@@ -2936,6 +2936,41 @@ ConveyorOutlet: {
 	Tooltip: ""
 }
 
+HoneyCanister: {
+	DisplayName: Honey Canister
+	Tooltip: ""
+}
+
+LavaCanister: {
+	DisplayName: Lava Canister
+	Tooltip: ""
+}
+
+OilBucket: {
+	DisplayName: Oil Bucket
+	Tooltip: ""
+}
+
+OilCanister: {
+	DisplayName: Oil Canister
+	Tooltip: ""
+}
+
+RocketFuelBucket: {
+	DisplayName: Rocket Fuel Bucket
+	Tooltip: ""
+}
+
+ShimmerCanister: {
+	DisplayName: Shimmer Canister
+	Tooltip: ""
+}
+
+WaterCanister: {
+	DisplayName: Water Canister
+	Tooltip: ""
+}
+
 EngineComponentMk1: {
 	DisplayName: Engine Component Mk1
 	Tooltip: ""

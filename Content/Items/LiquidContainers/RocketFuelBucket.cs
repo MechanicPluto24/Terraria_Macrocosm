@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Items.LiquidContainers
         {
             if (player.whoAmI == Main.myPlayer)
             {
-                Utility.PlaceLiquid<Oil>(Player.tileTargetX, Player.tileTargetY);
+                Utility.PlaceLiquid<RocketFuel>(Player.tileTargetX, Player.tileTargetY);
                 Utility.TransformItemAndPutInInventory(player, Item, ItemID.EmptyBucket);
             }
             return null;
