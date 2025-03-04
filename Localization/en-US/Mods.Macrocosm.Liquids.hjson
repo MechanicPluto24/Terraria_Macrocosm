@@ -1,2 +1,9 @@
-Oil: Oil
-RocketFuel: Rocket Fuel
+Oil: {
+	$parentVal: Oil
+	MapEntry: Oil
+}
+
+RocketFuel: {
+	$parentVal: Rocket Fuel
+	MapEntry: Rocket Fuel
+}
