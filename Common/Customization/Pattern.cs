@@ -30,8 +30,6 @@ namespace Macrocosm.Common.Customization
         public const float ColorDistance = 0.1f;
         public int ColorCount => Math.Min(ColorData.Count, MaxColors);
 
-        private static Asset<Effect> shader;
-
         public Pattern()
         {
             Name = "";
@@ -91,8 +89,7 @@ namespace Macrocosm.Common.Customization
 
         public Effect PrepareEffect()
         {
-            shader ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
-            var effect = shader.Value;
+            var effect = Macrocosm.GetShader("ColorMaskShading");
             effect.Parameters["uColorCount"].SetValue(ColorCount);
             effect.Parameters["uColorKey"].SetValue(ColorData.Keys.Select(c => c.ToVector3()).ToArray());
             effect.Parameters["uColor"].SetValue(ColorData.Select(kvp => GetColor(kvp.Key).ToVector4()).ToArray());

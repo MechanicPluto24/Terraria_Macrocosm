@@ -73,7 +73,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             }
         }
 
-        private static Asset<Effect> pixelate;
         private SpriteBatchState state;
         public override void Draw(SpriteBatch spriteBatch)
         {
@@ -116,8 +115,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             int targetPixelsX = 48;
             int targetPixelsY = (int)(targetPixelsX / rtAspect);
 
-            pixelate ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "Pixelate", AssetRequestMode.ImmediateLoad);
-            Effect effect = pixelate.Value;
+            Effect effect = Macrocosm.GetShader("Pixelate");
             effect.Parameters["uPixelCount"].SetValue(new Vector2(targetPixelsX, targetPixelsY));
 
             state.SaveState(spriteBatch);

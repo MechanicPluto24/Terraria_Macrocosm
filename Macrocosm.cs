@@ -34,6 +34,7 @@ namespace Macrocosm
 
         public static Asset<Texture2D> EmptyTex { get; set; }
         public static Type[] GetTypes() => AssemblyManager.GetLoadableTypes(Instance.Code);
+        public static Effect GetShader(string name) => GameShaders.Misc[$"{Instance.Name}:{name}"].Shader;
 
         public override void Load()
         {
@@ -72,9 +73,22 @@ namespace Macrocosm
         {
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
+            // Load misc shaders
+            foreach (var fullPath in Instance.RootContentSource.GetAllAssetsStartingWith("Assets/Effects/"))
+            {
+                string path = Path.ChangeExtension(fullPath, null);
+                string name = Path.GetFileName(path);
+                GameShaders.Misc[$"{Instance.Name}:{name}"] = new MiscShaderData(Instance.Assets.Request<Effect>(path, AssetRequestMode.ImmediateLoad), name);
+            }
+
+            // Load filters
             Filters.Scene["Macrocosm:RadiationNoise"] = new Filter(new ScreenShaderData(ModContent.Request<Effect>(ShadersPath + "RadiationNoise", mode), "RadiationNoise"));
             Filters.Scene["Macrocosm:RadiationNoise"].Load();
 
+            Filters.Scene["Macrocosm:Shockwave"] = new Filter(new ScreenShaderData(ModContent.Request<Effect>(ShadersPath + "Shockwave", mode), "Shockwave"));
+            Filters.Scene["Macrocosm:Shockwave"].Load();
+
+            // Vanilla shader clones
             Filters.Scene["Macrocosm:FilterMoonLordShake"] = new Filter(new MoonLordScreenShaderData("FilterMoonLordShake", aimAtPlayer: false), EffectPriority.VeryHigh);
             Filters.Scene["Macrocosm:FilterMoonLordShake"].Load();
 

@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
             landingLegMesh.CreateRectangle(drawPosition, LandingLegFrame.Width, LandingLegFrame.Height, horizontalResolution: 2, verticalResolution: 2, rotation: Rocket.Rotation, origin: drawPosition, colorFunction: getDrawColor);
             state1.SaveState(spriteBatch);
             spriteBatch.End();
-            landingLegMesh.Draw(LandingLeg.Value, state1.Matrix, sourceRect: LandingLegFrame, samplerState: SamplerState.PointClamp);
+            landingLegMesh.Draw(LandingLeg.Value, state1.Matrix, sourceRect: LandingLegFrame, samplerState: SamplerState.PointClamp, scissorTestEnable: true);
             spriteBatch.Begin(state1);
         }
 

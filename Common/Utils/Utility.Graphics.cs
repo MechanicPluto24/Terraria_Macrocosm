@@ -24,6 +24,75 @@ namespace Macrocosm.Common.Utils
             spriteBatch.Draw(texture, position, null, color, 0.0f, origin, scale, SpriteEffects.None, 0.0f);
         }
 
+        private static RenderTarget2D _swapRT1, _swapRT2;
+        private static SpriteBatchState _state;
+        /// <summary>
+        /// Applies multiple shader effects sequentially to a Texture2D.
+        /// </summary>
+        /// <param name="source">The source texture to apply effects on.</param>
+        /// <param name="effects">An array of pre-configured shader Effects.</param>
+        /// <returns>A Texture2D with all effects applied sequentially.</returns>
+        public static Texture2D ApplyEffects(Texture2D source, Effect[] effects)
+        {
+            if (effects == null || effects.Length == 0)
+                return source;
+
+            var graphicsDevice = Main.graphics.GraphicsDevice;
+
+            if (_swapRT1 == null || _swapRT1.Width != source.Width || _swapRT1.Height != source.Height)
+            {
+                _swapRT1?.Dispose();
+                _swapRT1 = new RenderTarget2D(graphicsDevice, source.Width, source.Height, false, SurfaceFormat.Color, DepthFormat.None);
+            }
+
+            if (_swapRT2 == null || _swapRT2.Width != source.Width || _swapRT2.Height != source.Height)
+            {
+                _swapRT2?.Dispose();
+                _swapRT2 = new RenderTarget2D(graphicsDevice, source.Width, source.Height, false, SurfaceFormat.Color, DepthFormat.None);
+            }
+
+            static void DrawToRenderTarget(Texture2D texture, Effect effect)
+            {
+                if (Main.spriteBatch.BeginCalled())
+                {
+                    _state.SaveState(Main.spriteBatch);
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, effect);
+                    Main.spriteBatch.Draw(texture, new Rectangle(0, 0, texture.Width, texture.Height), Color.White);
+                    Main.spriteBatch.End();
+                    Main.spriteBatch.Begin(_state);
+                }
+                else
+                {
+                    Main.spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, null, null, null, effect);
+                    Main.spriteBatch.Draw(texture, new Rectangle(0, 0, texture.Width, texture.Height), Color.White);
+                    Main.spriteBatch.End();
+                }
+            }
+
+            // Initial copy of source texture to persistent RT
+            graphicsDevice.SetRenderTarget(_swapRT1);
+            graphicsDevice.Clear(Color.Transparent);
+            DrawToRenderTarget(source, null);
+            graphicsDevice.SetRenderTarget(null);
+
+            bool swapFlag = false;
+
+            for (int i = 0; i < effects.Length; i++)
+            {
+                var input = swapFlag ? _swapRT2 : _swapRT1;
+                var output = swapFlag ? _swapRT1 : _swapRT2;
+                swapFlag = !swapFlag;
+
+                graphicsDevice.SetRenderTarget(output);
+                graphicsDevice.Clear(Color.Transparent);
+                DrawToRenderTarget(input, effects[i]);
+                graphicsDevice.SetRenderTarget(null);
+            }
+
+            return swapFlag ? _swapRT1 : _swapRT2;
+        }
+
         public static bool BeginCalled(this SpriteBatch spriteBatch) => typeof(SpriteBatch).GetFieldValue<bool>("beginCalled", spriteBatch);
 
         /// <summary> Saves the SpriteBatch parameters </summary>

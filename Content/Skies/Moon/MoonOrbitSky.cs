@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;
@@ -11,6 +12,7 @@ using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
+using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using static Macrocosm.Common.Drawing.Sky.CelestialBody;
 
@@ -18,7 +20,7 @@ namespace Macrocosm.Content.Skies.Moon
 {
     public class MoonOrbitSky : CustomSky, ILoadable
     {
-        public bool Background3D { get; set; } = false;
+        public bool Background3D { get; set; } = true;
 
         private bool active;
         private float intensity;
@@ -39,8 +41,7 @@ namespace Macrocosm.Content.Skies.Moon
 
         private static Asset<Texture2D> moonBackground;
 
-        private static Asset<Texture2D> moonCylindrical;
-        private static Asset<Effect> pixelate;
+        private static Asset<Texture2D> moonMercator;
         private Mesh moonMesh;
 
         private readonly Asset<Texture2D>[] nebulaTextures = new Asset<Texture2D>[Main.maxMoons];
@@ -70,9 +71,7 @@ namespace Macrocosm.Content.Skies.Moon
             earthAtmo = ModContent.Request<Texture2D>(Path + "EarthAtmo", mode);
 
             moonBackground = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Luna", mode);
-
-            moonCylindrical = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Luna_Mercator", mode);
-            pixelate = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Pixelate", AssetRequestMode.ImmediateLoad);
+            moonMercator = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Luna_Mercator", mode);
 
             stars = new();
 
@@ -189,7 +188,6 @@ namespace Macrocosm.Content.Skies.Moon
                 state1.SaveState(spriteBatch);
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.NonPremultiplied, state1);
-
                 if (Background3D)
                 {
                     float x = -(float)((Main.screenPosition.X / Main.maxTilesX * 16.0) - 500);
@@ -208,12 +206,28 @@ namespace Macrocosm.Content.Skies.Moon
                         verticalResolution: 100,
                         depthFactor: depthFactor,
                         rotation: new Vector3((float)Main.timeForVisualEffects / 600 % MathHelper.TwoPi, (float)Main.timeForVisualEffects / 600 % MathHelper.TwoPi, 0),
-                        projectionType: Mesh.SphereProjectionType.Cylindrical
+                        projectionType: Mesh.SphereProjectionType.Mercator
                     );
 
-                    moonMesh.Draw(moonCylindrical.Value, state1.Matrix);
+                    //TODO
+                    //var pixelate = Macrocosm.GetShader("Pixelate");
+                    //int pixels = 264;
+                    //pixelate.Parameters["uPixelCount"].SetValue(new Vector2(pixels));
+                    //moonMesh.AddPostEffect(pixelate);
+                    //
+                    //var lighting = Macrocosm.GetShader("SphereLighting");
+                    //lighting.Parameters["uLightSource"].SetValue(sun.Position);
+                    //lighting.Parameters["uEntityPosition"].SetValue(position);
+                    //lighting.Parameters["uTextureSize"].SetValue(moonMercator.Size());
+                    //lighting.Parameters["uEntitySize"].SetValue(new Vector2(radius));
+                    //lighting.Parameters["uRadius"].SetValue(radius);
+                    //lighting.Parameters["uPixelSize"].SetValue(1);
+                    //lighting.Parameters["uColor"].SetValue(Color.White.ToVector4());
+                    //moonMesh.AddPostEffect(lighting);
+
+                    moonMesh.Draw(moonMercator.Value, state1.Matrix);
                 }
-                else
+
                 {
                     float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - moonBackground.Height() / 2);
                     spriteBatch.Draw
@@ -226,9 +240,9 @@ namespace Macrocosm.Content.Skies.Moon
 
                 spriteBatch.End();
                 spriteBatch.Begin(state1);
-
             }
         }
+        private Rift rift;
 
         private void UpdateNebulaStars()
         {

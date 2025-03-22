@@ -40,7 +40,6 @@ namespace Macrocosm.Content.Menus
         private Asset<Texture2D> flare;
         private Asset<Texture2D> scorch1;
         private Asset<Texture2D> scorch2;
-        private Asset<Effect> radialSaturation;
 
         private CelestialBody vulcan;
 
@@ -430,8 +429,7 @@ namespace Macrocosm.Content.Menus
 
         private Effect Sun_GetShader()
         {
-            radialSaturation ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "RadialSaturation", immediate);
-            Effect effect = radialSaturation.Value;
+            Effect effect = Macrocosm.GetShader("RadialSaturation");
             effect.Parameters["uCenter"].SetValue(Vector2.One * 0.5f);
             effect.Parameters["uRadius"].SetValue(0.2f + 0.1f * SolarFlareProgress);
             effect.Parameters["uIntensity"].SetValue(0.2f + 0.1f * SolarFlareProgress);

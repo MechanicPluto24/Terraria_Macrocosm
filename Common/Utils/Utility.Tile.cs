@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
@@ -17,6 +18,29 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        /// <summary> The X coordinate of the Tile </summary>
+        public static int X(this Tile tile) => GetTilePosition(tile).X;
+
+        /// <summary> The Y coordinate of the Tile </summary>
+        public static int Y(this Tile tile) => GetTilePosition(tile).Y;
+
+        /// <summary> Gets the Position of the tile, the same values that would be inputted in Main.tile to get this Tile  </summary>
+        public static Point GetTilePosition(this Tile tile)
+        {
+            GetTilePosition(tile, out int x, out int y);
+            return new Point(x, y);
+        }
+
+        /// <summary>
+        /// Gets the coordinates of the tile, the same values that would be inputted in Main.tile to get this Tile
+        /// <br/> By FoxXD_ and lion8cake
+        /// </summary>
+        public static void GetTilePosition(this Tile tile, out int x, out int y)
+        {
+            uint tileId = Unsafe.BitCast<Tile, uint>(tile); // Get the tile position (packed into an uint32)
+            x = Math.DivRem((int)tileId, Main.tile.Height, out y); //Thanks to FoxXD_ for the help with this
+        }
+
         /// <summary> Get the ModTile of a <see cref="Tile"/>. Returns <langword>null</langword> if it doesn't exist. </summary>
         public static ModTile GetModTile(this Tile tile) => TileLoader.GetTile(tile.TileType);
 

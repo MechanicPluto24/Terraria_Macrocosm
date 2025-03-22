@@ -11,8 +11,6 @@ namespace Macrocosm.Common.UI
 {
     public class UIPanelProgressBar : UIElement
     {
-        private static Asset<Effect> gradient;
-
         private readonly int cornerSize;
         private readonly int barSize;
         private readonly Asset<Texture2D> borderTexture;
@@ -127,9 +125,7 @@ namespace Macrocosm.Common.UI
             scissorRectangle = Rectangle.Intersect(viewportBounds, scissorRectangle);
             spriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
 
-            // Shader depends on texcoord, which doesn't work nice with the slicing done by the panel..  would need a RenderTarget to improve it
-            gradient ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "Gradient", AssetRequestMode.ImmediateLoad);
-            Effect effect = gradient.Value;
+            Effect effect = Macrocosm.GetShader("Gradient");
             effect.Parameters["uHorizontal"].SetValue(!IsVertical);
             effect.Parameters["uColorStart"].SetValue(FillColor.ToVector4());
             effect.Parameters["uColorEnd"].SetValue(FillColorEnd.ToVector4());
