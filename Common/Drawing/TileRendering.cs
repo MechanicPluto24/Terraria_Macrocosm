@@ -39,9 +39,10 @@ namespace Macrocosm.Common.Drawing
         public static int TreeLeafFrequency => typeof(TileDrawing).GetFieldValue<int>("_leafFrequency", TileRenderer);
         public static UnifiedRandom TileRendererRandom => typeof(TileDrawing).GetFieldValue<UnifiedRandom>("_rand", TileRenderer);
 
-
+        /// <summary> Collection of painted tile extra textures for reuse </summary>
         private static readonly Dictionary<TilePaintSystemV2.TileVariationkey, TileExtraTextureRenderTargetHolder> tileExtraTextureRenders = new();
 
+        /// <summary> Collection of custom special points for unique drawing after regular tile rendering </summary>
         private static readonly Dictionary<Point, Action<int, int, SpriteBatch>> customSpecialPoints = new();
 
         /// <summary>
@@ -56,6 +57,7 @@ namespace Macrocosm.Common.Drawing
             customSpecialPoints.Add(new(i, j), drawMethod);
         }
 
+        /// <summary> Hook for clearing custom special points </summary>
         private void On_TileDrawing_PreDrawTiles(On_TileDrawing.orig_PreDrawTiles orig, TileDrawing self, bool solidLayer, bool forRenderTargets, bool intoRenderTargets)
         {
             orig(self, solidLayer, forRenderTargets, intoRenderTargets);
@@ -64,6 +66,7 @@ namespace Macrocosm.Common.Drawing
                 customSpecialPoints.Clear();
         }
 
+        /// <summary> Draw custom special point tiles using the provided custom draw method </summary>
         private void On_TileDrawing_PostDrawTiles(On_TileDrawing.orig_PostDrawTiles orig, TileDrawing self, bool solidLayer, bool forRenderTargets, bool intoRenderTargets)
         {
             if (!solidLayer && !intoRenderTargets)
@@ -77,6 +80,7 @@ namespace Macrocosm.Common.Drawing
             orig(self, solidLayer, forRenderTargets, intoRenderTargets);
         }
 
+        /// <summary> Tile painted RT holder class for extra textures </summary>
         private class TileExtraTextureRenderTargetHolder(Asset<Texture2D> extraTextureAsset) : TilePaintSystemV2.TileRenderTargetHolder
         {
             public override void Prepare()
@@ -91,6 +95,7 @@ namespace Macrocosm.Common.Drawing
             }
         }
 
+        /// <summary> Paint a tile's extra texture using its paint color, or retrieve it if ready </summary>
         public static Texture2D GetOrPreparePaintedExtraTexture(Tile tile, Asset<Texture2D> asset)
         {
             if (!TileDrawing.IsVisible(tile))
@@ -100,7 +105,7 @@ namespace Macrocosm.Common.Drawing
             TilePaintSystemV2.TileVariationkey key = new()
             {
                 TileType = tile.TileType,
-                TileStyle = asset.Name.GetHashCode(),
+                TileStyle = asset.Name.GetHashCode(), // Ensures each extra texture is uniquely identified
                 PaintColor = tile.TileColor
             };
 
@@ -371,6 +376,7 @@ namespace Macrocosm.Common.Drawing
             }
         }
 
+        /// <summary> Submit a tile paint request </summary>
         public static void AddTilePaintRequest(TilePaintSystemV2.ARenderTargetHolder renderTargetHolder) 
             => ((List<TilePaintSystemV2.ARenderTargetHolder>)typeof(TilePaintSystemV2).GetFieldValue("_requests", Main.instance.TilePaintSystem)).Add(renderTargetHolder);
 

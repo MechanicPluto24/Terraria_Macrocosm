@@ -172,10 +172,10 @@ namespace Macrocosm.Common.Drawing
             spriteBatch.Begin(state);
 
             // Revert our RenderTargets back to the vanilla ones
-            if (originalRenderTargets.Length > 0)
-                spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
-            else
-                spriteBatch.GraphicsDevice.SetRenderTarget(null);
+            //if (originalRenderTargets.Length > 0)
+            //    spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
+            //else
+            //    spriteBatch.GraphicsDevice.SetRenderTarget(null);
 
             spriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
             spriteBatch.GraphicsDevice.RasterizerState = rasterizerState;

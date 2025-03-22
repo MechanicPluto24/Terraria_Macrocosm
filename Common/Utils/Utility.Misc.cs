@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using ReLogic.Content;
 using System;
@@ -178,7 +179,25 @@ namespace Macrocosm.Common.Utils
                     Macrocosm.Instance.Logger.Fatal(message);
                     break;
             }
+        }
 
+        // TODO: any other way to do it? -- Feldy
+        public static unsafe int GetParametersHashCode(this Effect effect)
+        {
+            int hash = 0;
+            foreach (var parameter in effect.Parameters)
+            {
+                uint size = typeof(EffectParameter).GetFieldValue<uint>("valuesSizeBytes", parameter);
+                IntPtr valueAddr = typeof(EffectParameter).GetFieldValue<IntPtr>("values", parameter);
+                if (valueAddr == IntPtr.Zero || size == 0)
+                    continue;
+
+                ReadOnlySpan<byte> values = new(valueAddr.ToPointer(), (int)size);
+                foreach (byte value in values)
+                    hash = HashCode.Combine(hash, value);
+            }
+
+            return hash;
         }
 
         //------------------------------------------------------//

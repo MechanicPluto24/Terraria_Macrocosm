@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Skies.EarthOrbit
         private static Asset<Texture2D> earthMercator;
         private static Asset<Texture2D> earthMercatorClouds;
         private static Asset<Texture2D> earthAtmo;
-        private static Asset<Effect> pixelate;
+
         private Mesh earthMesh;
         private Mesh earthCloudMesh;
 
@@ -62,7 +62,6 @@ namespace Macrocosm.Content.Skies.EarthOrbit
             earthMercator = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_Mercator");
             earthMercatorClouds = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_MercatorClouds");
             earthAtmo = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_Atmo");
-            pixelate = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Pixelate", AssetRequestMode.ImmediateLoad);
 
             stars = new();
 
@@ -205,11 +204,6 @@ namespace Macrocosm.Content.Skies.EarthOrbit
                           rotation: new Vector3(0, (float)Main.timeForVisualEffects / 5500 % MathHelper.TwoPi, MathHelper.ToRadians(23.44f)),
                           projectionType: Mesh.SphereProjectionType.Mercator
                     );
-
-                    //var pixelateEffect = pixelate.Value;
-                    //int pixels = 48;
-                    //pixelateEffect.Parameters["uPixelCount"].SetValue(new Vector2(pixels));
-                    //pixelateEffect.CurrentTechnique.Passes[0].Apply();
 
                     earthMesh.Draw(earthMercator.Value, state.Matrix);
                     earthCloudMesh.Draw(earthMercatorClouds.Value, state.Matrix, blendState: BlendState.NonPremultiplied);
