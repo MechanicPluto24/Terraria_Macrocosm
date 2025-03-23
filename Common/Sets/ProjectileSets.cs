@@ -1,4 +1,5 @@
-﻿using Terraria.ID;
+﻿using Macrocosm.Common.DataStructures;
+using Terraria.ID;
 
 namespace Macrocosm.Common.Sets
 {
@@ -11,7 +12,7 @@ namespace Macrocosm.Common.Sets
         /// <summary> Projectiles that spawn dusts on tile collision </summary>
         public static bool[] HitsTiles { get; } = ProjectileID.Sets.Factory.CreateBoolSet();
 
-        /// <summary>  </summary>
+        /// <summary> Damage adjustment for Macrocosm subworlds </summary>
         public static float[] DamageAdjustment { get; } = ProjectileID.Sets.Factory.CreateFloatSet(defaultState: 1f,
             ProjectileID.StardustDragon1, 0.6f,
             ProjectileID.StardustDragon2, 0.6f,
@@ -28,10 +29,10 @@ namespace Macrocosm.Common.Sets
             ProjectileID.MiniNukeSnowmanRocketII, 0.4f
         );
 
-        public static float[] TrashnadoChance { get; } = ProjectileID.Sets.Factory.CreateFloatSet(defaultState: 0f,
-            ProjectileID.WoodenArrowFriendly, 1f,
-            ProjectileID.SandBallGun, 1f,
-            ProjectileID.SkeletonBone, 1f
+        public static TrashData[] TrashData { get; } = ProjectileID.Sets.Factory.CreateCustomSet(defaultState: new TrashData(),
+            ProjectileID.WoodenArrowFriendly, new TrashData(ProjectileID.WoodenArrowFriendly, 7),
+            ProjectileID.SandBallGun, new TrashData(ProjectileID.SandBallGun, DustID.Sand),
+            ProjectileID.SkeletonBone, new TrashData(ProjectileID.SkeletonBone, DustID.Bone)
         );
     }
 }

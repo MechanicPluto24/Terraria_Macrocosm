@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Macrocosm.Common.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,10 @@ namespace Macrocosm.Common.Sets
     /// </summary>
     public class GoreSets
     {
-        public static float[] TrashnadoChance { get; } = GoreID.Sets.Factory.CreateFloatSet(defaultState: 0f,
-            99, 1f,
-            268, 1f,
-            GoreID.SkeletonMerchantBag, 1f
+        public static TrashData[] TrashData { get; } = GoreID.Sets.Factory.CreateCustomSet(defaultState: new TrashData(),
+            99, new TrashData(type: 99, dustType: 54),
+            269, new TrashData(type: 269, dustType: DustID.Bone),
+            GoreID.SkeletonMerchantBag, new TrashData(GoreID.SkeletonMerchantBag, 7)
         );
     }
 }

@@ -2,9 +2,7 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Newtonsoft.Json.Linq;
 using ReLogic.Content;
-using StructureHelper.GUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;

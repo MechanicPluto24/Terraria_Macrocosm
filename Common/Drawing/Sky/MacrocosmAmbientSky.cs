@@ -12,16 +12,18 @@ namespace Macrocosm.Common.Drawing.Sky
 {
     public class MacrocosmAmbientSky : CustomSky, ILoadable
     {
-        public static MacrocosmAmbientSky Instance => (MacrocosmAmbientSky)SkyManager.Instance["Macrocosm:Ambience"];
+        public static MacrocosmAmbientSky Instance => (MacrocosmAmbientSky)SkyManager.Instance[Key];
+        private static string Key => $"{nameof(Macrocosm)}:{nameof(MacrocosmAmbientSky)}";
 
         private bool isActive;
         private readonly SlotVector<MacrocosmSkyEntity> entities = new(500);
         private int frameCounter;
         private delegate MacrocosmSkyEntity EntityFactoryMethod(Player player, int seed);
 
+
         public void Load(Mod mod)
         {
-            SkyManager.Instance["Macrocosm:Ambience"] = new MacrocosmAmbientSky();
+            SkyManager.Instance[Key] = new MacrocosmAmbientSky();
         }
 
         public void Unload()
@@ -55,23 +57,23 @@ namespace Macrocosm.Common.Drawing.Sky
                 if (!value.IsActive)
                 {
                     entities.Remove(item.Id);
-                    if (Main.netMode != NetmodeID.Server && entities.Count == 0 && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
-                        SkyManager.Instance.Deactivate("Macrocosm:Ambience");
+                    if (Main.netMode != NetmodeID.Server && entities.Count == 0 && SkyManager.Instance[Key].IsActive())
+                        SkyManager.Instance.Deactivate(Key);
                 }
             }
 
             frameCounter++;
 
-            if (Main.netMode != NetmodeID.Server && AnActiveSkyConflictsWithAmbience() && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
-                SkyManager.Instance.Deactivate("Macrocosm:Ambience");
+            if (Main.netMode != NetmodeID.Server && AnActiveSkyConflictsWithAmbience() && SkyManager.Instance[Key].IsActive())
+                SkyManager.Instance.Deactivate(Key);
         }
 
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
-            if (Main.gameMenu && Main.netMode == NetmodeID.SinglePlayer && SkyManager.Instance["Macrocosm:Ambience"].IsActive())
+            if (Main.gameMenu && Main.netMode == NetmodeID.SinglePlayer && SkyManager.Instance[Key].IsActive())
             {
                 entities.Clear();
-                SkyManager.Instance.Deactivate("Macrocosm:Ambience");
+                SkyManager.Instance.Deactivate(Key);
             }
 
             foreach (SlotVector<MacrocosmSkyEntity>.ItemPair item in entities)
@@ -99,8 +101,8 @@ namespace Macrocosm.Common.Drawing.Sky
             foreach (var entity in entitiesToAdd)
                 entities.Add(entity);
 
-            if (Main.netMode != NetmodeID.Server && !AnActiveSkyConflictsWithAmbience() && !SkyManager.Instance["Macrocosm:Ambience"].IsActive())
-                SkyManager.Instance.Activate("Macrocosm:Ambience", default);
+            if (Main.netMode != NetmodeID.Server && !AnActiveSkyConflictsWithAmbience() && !SkyManager.Instance[Key].IsActive())
+                SkyManager.Instance.Activate(Key, default);
         }
     }
 }

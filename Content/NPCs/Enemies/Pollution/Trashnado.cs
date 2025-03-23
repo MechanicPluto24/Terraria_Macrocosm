@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
@@ -6,7 +7,6 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -17,18 +17,9 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Content.NPCs.Enemies.Pollution
 {
-    public class Trashnado : ModNPC
+    public partial class Trashnado : ModNPC
     {
-        private static WeightedRandom<TrashEntity> _trashEntityPool;
-        public static WeightedRandom<TrashEntity> TrashEntityRandomPool => _trashEntityPool ??= PrepareTrashEntityPool();
-        public readonly struct TrashEntity(Asset<Texture2D> texture)
-        {
-            public Asset<Texture2D> Texture { get; } = texture;
-            public int Tilt { get; init; }
-            public int Offset { get; init; }
-        }
-
-        private List<TrashEntity> trashEntities;
+        private List<TrashData> trashEntities;
         private int trashOrbitTimer;
         private float trashRotation;
         private int smogTimer = 0;
@@ -130,34 +121,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             }
         }
 
-        private static WeightedRandom<TrashEntity> PrepareTrashEntityPool()
-        {
-            _trashEntityPool = new();
-            for (int type = 0; type < ItemLoader.ItemCount; type++)
-                if (ItemSets.TrashnadoChance[type] > 0f)
-                    _trashEntityPool.Add(new TrashEntity(TextureAssets.Item[type]), weight: ItemSets.TrashnadoChance[type]);
-
-            for (int type = 0; type < ProjectileLoader.ProjectileCount; type++)
-                if (ProjectileSets.TrashnadoChance[type] > 0f)
-                    _trashEntityPool.Add(new TrashEntity(TextureAssets.Projectile[type]), weight: ProjectileSets.TrashnadoChance[type]);
-
-            for (int type = 0; type < GoreLoader.GoreCount; type++)
-                if (GoreSets.TrashnadoChance[type] > 0f)
-                    _trashEntityPool.Add(new TrashEntity(TextureAssets.Gore[type]), weight: GoreSets.TrashnadoChance[type]);
-
-            return _trashEntityPool;
-        }
-
         private void GetTrash()
         {
             trashEntities = new();
             for (int i = 0; i < Main.rand.Next(5, 8); i++)
             {
-                trashEntities.Add(TrashEntityRandomPool.Get() with
-                {
-                    Tilt = Main.rand.Next(-16, 16),
-                    Offset = Main.rand.Next(0, 90)
-                });
+                var data = TrashData.RandomPool.Get();
+                data.Randomize();
+                trashEntities.Add(data);
             }
         }
 
@@ -195,12 +166,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
             for (int i = 0; i < trashEntities.Count; i++)
             {
-                TrashEntity trash = trashEntities[i];
+                TrashData trash = trashEntities[i];
                 float speedFactor = 7.5f - i;
+                Color color = Utility.Colorize(trash.Color, drawColor);
                 Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians((trashOrbitTimer + trash.Offset) * speedFactor)) * 45f, -(float)Math.Sin(MathHelper.ToRadians((trashOrbitTimer + trash.Offset) * speedFactor)) * 12f);
 
                 if ((int)((trashOrbitTimer + trash.Offset) * speedFactor) % 360 < 180 == isFront)
-                    spriteBatch.Draw(trash.Texture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(trash.Tilt)) - Main.screenPosition + new Vector2(0, -20 + (8 * i)), null, drawColor, trashRotation, trash.Texture.Size() / 2, NPC.scale, SpriteEffects.None, 0f);
+                    spriteBatch.Draw(trash.Texture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(trash.Tilt)) - Main.screenPosition + new Vector2(0, -20 + (8 * i)), null, color, trashRotation, trash.Texture.Size() / 2, NPC.scale, SpriteEffects.None, 0f);
             }
         }
     }

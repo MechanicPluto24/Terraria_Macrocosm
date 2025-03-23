@@ -278,7 +278,7 @@ namespace Macrocosm.Content.Skies.Moon
 
         private void UpdateTextures()
         {
-            if (Utility.IsAprilFools())
+            if (Utility.IsAprilFools)
             {
                 earth.SetLighting(null);
                 earth.SetTextures(earthBodyFlat);
