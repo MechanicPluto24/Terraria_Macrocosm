@@ -244,14 +244,13 @@ SmogWisp: {
 
 Trashnado: {
 	DisplayName: Trashnado
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.Trashnado.BestiaryFlavorText
+	BestiaryFlavorText: A cyclone-like wisp that pulls in discarded junk, only to launch it back at its unsuspecting targets. Underestimating it is a surefire way to get taken out like yesterday’s trash, by yesterday’s trash!
 }
-
-WyrmwoodBody.DisplayName: Wyrmwood Body
 
 WyrmwoodHead: {
-	DisplayName: Wyrmwood Head
-	BestiaryFlavorText: Mods.Macrocosm.NPCs.WyrmwoodHead.BestiaryFlavorText
+	DisplayName: Wyrmwood
+	BestiaryFlavorText: A winged serpent seen within areas of extreme pollution. Wherever it flies, it leaves behind a trail of sticky tar, staining the ground in its wake.
 }
 
-WyrmwoodTail.DisplayName: Wyrmwood Tail
+WyrmwoodBody.DisplayName: Wyrmwood
+WyrmwoodTail.DisplayName: Wyrmwood

@@ -62,6 +62,7 @@ namespace Macrocosm.Common.Subworlds
 
         private static Subworld Cache => typeof(SubworldSystem).GetFieldValue<Subworld>("cache");
         public static string CacheID => Cache.FullName;
+        public static WorldFileData MainWorldFileData => typeof(SubworldSystem).GetFieldValue<WorldFileData>("main");
         public static List<MacrocosmSubworld> MacrocosmSubworlds => Subworlds.Where(s => s is MacrocosmSubworld).Cast<MacrocosmSubworld>().ToList();
         public static List<Subworld> Subworlds => typeof(SubworldSystem).GetFieldValue<List<Subworld>>("subworlds");
 

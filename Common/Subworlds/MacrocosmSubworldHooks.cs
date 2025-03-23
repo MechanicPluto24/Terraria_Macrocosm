@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
@@ -12,30 +11,11 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Common.Systems
+namespace Macrocosm.Common.Subworlds
 {
-    /// <summary> 
-    /// General system, mainly for managing <see cref="MacrocosmSubworld"/>s, and sometimes as an entry point of other systems.
-    /// <br/> Persistent world flags such as downed bosses should go in <see cref="WorldData"/>
-    /// </summary>
-    class MacrocosmWorld : ModSystem
+    /// <summary> Offers MacrocosmSubworlds access to select ModSystem hooks </summary>
+    class MacrocosmSubworldHooks : ModSystem
     {
-        public static int Seed => Main.ActiveWorldFileData.Seed;
-        public static string SeedText => Main.ActiveWorldFileData.SeedText;
-
-        /// <summary> Whether the dusk time boundary happened in this update tick </summary>
-        public static bool IsDusk { get; set; } = false;
-
-        /// <summary> Whether the dawn time boundary happened in this update tick </summary>
-        public static bool IsDawn { get; set; } = false;
-
-        // Called before world loading but after header loading
-        public override void OnWorldLoad()
-        {
-            if (!SubworldSystem.AnyActive())
-                Earth.WorldSize = new WorldSize(Main.maxTilesX, Main.maxTilesY);
-        }
-
         #region ModSystem update hooks
         public override void PreUpdateEntities()
         {
@@ -118,15 +98,7 @@ namespace Macrocosm.Common.Systems
         public override void PreUpdateTime()
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
-            {
                 MacrocosmSubworld.Current.PreUpdateTime();
-            }
-            else
-            {
-                // Set these flags on Earth
-                IsDusk = Main.dayTime && Main.time >= Main.dayLength;
-                IsDawn = !Main.dayTime && Main.time >= Main.nightLength;
-            }
         }
 
         public override void PostUpdateTime()

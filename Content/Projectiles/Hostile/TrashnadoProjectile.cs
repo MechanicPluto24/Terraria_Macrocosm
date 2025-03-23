@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.NPCs.Enemies.Pollution;
@@ -31,12 +32,12 @@ namespace Macrocosm.Content.Projectiles.Hostile
         }
 
         private bool spawned;
-        private Trashnado.TrashEntity trashEntity;
+        private TrashData trashData;
         public override void AI()
         {
             if (!spawned)
             {
-                trashEntity = Trashnado.TrashEntityRandomPool.Get();
+                trashData = TrashData.RandomPool.Get();
                 spawned = true;
             }
 
@@ -46,25 +47,15 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void OnKill(int timeLeft)
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Main.rand.Next(10, 16); i++)
             {
-                var particle = Particle.Create<TextureDustParticle>((p) =>
-                {
-                    p.Position = Projectile.Center;
-                    p.Velocity = Main.rand.NextVector2Circular(2f, 2f);
-                    p.Scale = new Vector2(Main.rand.NextFloat(0.5f, 1.2f));
-                    p.ScaleVelocity = new Vector2(Main.rand.NextFloat(-0.1f, -0.01f));
-                    p.Rotation = Main.rand.NextFloat(0, MathHelper.TwoPi);
-                    p.SourceTexture = trashEntity.Texture;
-                    p.TimeToLive = 45;
-                    p.Scale = new(1.6f);
-                });
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, trashData.DustType, newColor: trashData.Color);
             }
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Main.EntitySpriteDraw(trashEntity.Texture.Value, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.White, 1f - Projectile.alpha / 255f)), Projectile.rotation, trashEntity.Texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+            Main.EntitySpriteDraw(trashData.Texture.Value, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.White, 1f - Projectile.alpha / 255f)), Projectile.rotation, trashData.Texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
             return false;
         }
     }

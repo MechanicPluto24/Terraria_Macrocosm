@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Liquids;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 
@@ -48,12 +49,12 @@ namespace Macrocosm.Common.Sets
         /// </summary>
         public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
 
-        public static float[] TrashnadoChance { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 0f,
-            ItemID.Wood, 1f,
-            ItemID.Gel, 1f,
-            ItemID.CopperCoin, 1f,
-            ItemID.IronHelmet, 1f,
-            ItemID.AshBlock, 1f
+        public static TrashData[] TrashData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new TrashData(),
+            ItemID.Wood, new TrashData(ItemID.Wood, 7),
+            ItemID.Gel, new TrashData(ItemID.Gel, DustID.TintableDust, color: new Color(58, 114, 255)),
+            ItemID.CopperCoin, new TrashData(ItemID.CopperCoin, DustID.Copper),
+            ItemID.IronHelmet, new TrashData(ItemID.IronHelmet, DustID.Iron),
+            ItemID.AshBlock, new TrashData(ItemID.AshBlock, DustID.Ash)
         ); 
 
         /// <summary> Set of items from which liquid can be extracted (e.g. Oil Shale). See <see cref="DataStructures.LiquidExtractData"/></summary>

@@ -78,10 +78,7 @@ namespace Macrocosm.Common.Subworlds
         /// <param name="earthWorldSize"> The Earth's world size </param>
         public virtual WorldSize GetSubworldSize(WorldSize earthWorldSize) => earthWorldSize;
 
-        /// <summary> The width is determined in ReadCopiedMainWorldData using <see cref="GetSubworldSize(WorldSize)"> </summary>
         public sealed override int Width => GetSubworldSize(Earth.WorldSize).Width;
-
-        /// <summary> The height is determined in ReadCopiedMainWorldData using <see cref="GetSubworldSize(WorldSize)"> </summary>
         public sealed override int Height => GetSubworldSize(Earth.WorldSize).Height;
 
         #endregion
@@ -181,10 +178,7 @@ namespace Macrocosm.Common.Subworlds
             if (timeRate < 1.0)
                 Main.worldEventUpdates = 1;
 
-            MacrocosmWorld.IsDusk = Main.dayTime && Main.time >= DayLength;
-            MacrocosmWorld.IsDawn = !Main.dayTime && Main.time >= NightLength;
-
-            if (MacrocosmWorld.IsDusk)
+            if (Utility.IsDusk)
             {
                 Main.time = 0;
                 Main.dayTime = false;
@@ -193,7 +187,7 @@ namespace Macrocosm.Common.Subworlds
                     Main.fastForwardTimeToDusk = false;
             }
 
-            if (MacrocosmWorld.IsDawn)
+            if (Utility.IsDawn)
             {
                 Main.time = 0;
                 Main.dayTime = true;
@@ -244,9 +238,8 @@ namespace Macrocosm.Common.Subworlds
         // Freezes environment variables such as rain or clouds. 
         private void UpdateWeather()
         {
-            // TODO: make these per-subworld if using Terraria's weather system for future planets
+            // TODO: make hooks for these if we ever use vanilla's weather system for other planets
             Main.numClouds = 0;
-
             Main.windSpeedCurrent = 0;
             Main.windSpeedTarget = 0;
             Main.windCounter = 0;
@@ -331,9 +324,9 @@ namespace Macrocosm.Common.Subworlds
             WorldData.SaveData(data);
             RocketManager.SaveData(data);
             LaunchPadManager.SaveData(data);
-            PatternManager.SaveData(data);
-            //CustomizationSystem.SaveData(data);
             TownNPCSystem.SaveData(data);
+            PatternManager.SaveData(data);
+            DecalManager.SaveData(data);
 
             SubworldSystem.CopyWorldData($"{nameof(Macrocosm)}:{nameof(data)}", data);
         }
@@ -345,35 +338,19 @@ namespace Macrocosm.Common.Subworlds
             WorldData.LoadData(data);
             RocketManager.LoadData(data);
             LaunchPadManager.LoadData(data);
-            PatternManager.LoadData(data);
-            //CustomizationSystem.LoadData(data);
             TownNPCSystem.LoadData(data);
+            PatternManager.LoadData(data);
+            DecalManager.LoadData(data);
         }
 
         private void CopyVanillaData()
         {
-            SubworldSystem.CopyWorldData("!" + nameof(Earth.WorldSize), Earth.WorldSize);
             SubworldSystem.CopyWorldData(nameof(Main.moonPhase), Main.moonPhase);
         }
 
         private void ReadCopiedVanillaData()
         {
-            SetWorldSize(SubworldSystem.ReadCopiedWorldData<WorldSize>("!" + nameof(Earth.WorldSize)));
             SetMoonPhase(SubworldSystem.ReadCopiedWorldData<int>(nameof(Main.moonPhase)));
-        }
-
-        // Read world size and apply it here. 
-        // In SubworldLibrary maxTiles values are assigned before the data is read.
-        // ReadCopiedMainWorldData is called before worldgen so it can be safely used.
-        private void SetWorldSize(WorldSize worldSize)
-        {
-            Earth.WorldSize = worldSize;    
-            if (SubworldSystem.AnyActive<Macrocosm>())
-            {
-                WorldSize subworldSize = GetSubworldSize(worldSize);
-                Main.maxTilesX = subworldSize.Width;
-                Main.maxTilesY = subworldSize.Height;
-            }
         }
 
         private void SetMoonPhase(int moonPhase)

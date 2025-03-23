@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using MonoMod.Cil;
@@ -21,6 +22,10 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        public static bool IsDusk => Main.dayTime && Main.time >= MacrocosmSubworld.GetDayLength();
+        public static bool IsDawn => !Main.dayTime && Main.time >= MacrocosmSubworld.GetNightLength();
+        public static bool IsAprilFools => DateTime.Now.Month == 5 && DateTime.Now.Day == 1;
+
         public static string GetNamespacePath(this object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
 
         public static string GetNamespacePath(this Type type) => (type.Namespace + "." + type.Name).Replace('.', '/');
@@ -43,11 +48,6 @@ namespace Macrocosm.Common.Utils
             {
                 action();
             }
-        }
-
-        public static bool IsAprilFools()
-        {
-            return DateTime.Now.Month == 5 && DateTime.Now.Day == 1;
         }
 
         /// <summary>
@@ -75,15 +75,9 @@ namespace Macrocosm.Common.Utils
             NetMessage.SendData(MessageID.WorldData);
         }
 
-        public static string GetCompassCoordinates(Player player)
-        {
-            return GetCompassCoordinates(player.Center);
-        }
+        public static string GetCompassCoordinates(Player player) => GetCompassCoordinates(player.Center);
 
-        public static string GetCompassCoordinates(Vector2 position)
-        {
-            return GetCompassCoordinates((int)(position.X / 16f));
-        }
+        public static string GetCompassCoordinates(Vector2 position) => GetCompassCoordinates((int)(position.X / 16f));
 
         public static string GetCompassCoordinates(int tileX)
         {
@@ -378,43 +372,22 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-        public static bool CanHit(Rectangle rect, Rectangle rect2)
-        {
-            return Collision.CanHit(new Vector2(rect.X, rect.Y), rect.Width, rect.Height, new Vector2(rect2.X, rect2.Y), rect2.Width, rect2.Height);
-        }
+        public static bool CanHit(Rectangle rect, Rectangle rect2) => Collision.CanHit(new Vector2(rect.X, rect.Y), rect.Width, rect.Height, new Vector2(rect2.X, rect2.Y), rect2.Width, rect2.Height);
 
-        public static Vector2 TileToPos(Vector2 tile)
-        {
-            return tile * new Vector2(16, 16);
-        }
+        public static Vector2 TileToPos(Vector2 tile) => tile * new Vector2(16, 16);
 
-        public static Vector2 PosToTile(Vector2 pos)
-        {
-            return pos / new Vector2(16, 16);
-        }
+        public static Vector2 PosToTile(Vector2 pos) => pos / new Vector2(16, 16);
 
         ///<summary>
         /// These two methods convert from game ticks to seconds and vise versa.
         ///</summary>
-        public static int TicksToSeconds(int ticks)
-        {
-            return ticks / 60;
-        }
+        public static int TicksToSeconds(int ticks) => ticks / 60;
 
-        public static int SecondsToTicks(int seconds)
-        {
-            return seconds * 60;
-        }
+        public static int SecondsToTicks(int seconds) => seconds * 60;
 
-        public static int TicksToMinutes(int ticks)
-        {
-            return TicksToSeconds(ticks) / 60;
-        }
+        public static int TicksToMinutes(int ticks) => TicksToSeconds(ticks) / 60;
 
-        public static int MinutesToTicks(int minutes)
-        {
-            return SecondsToTicks(minutes) * 60;
-        }
+        public static int MinutesToTicks(int minutes) => SecondsToTicks(minutes) * 60;
 
         ///<summary>
         /// Adds a value to the given array at the specified index. If index is -1, it adds it to the end.
@@ -619,10 +592,7 @@ namespace Macrocosm.Common.Utils
         ///<summary>
         /// Returns a rotation from startPos pointing to endPos.
         ///</summary>
-        public static float RotationTo(Vector2 startPos, Vector2 endPos)
-        {
-            return (float)Math.Atan2(endPos.Y - startPos.Y, endPos.X - startPos.X);
-        }
+        public static float RotationTo(Vector2 startPos, Vector2 endPos) => (float)Math.Atan2(endPos.Y - startPos.Y, endPos.X - startPos.X);
 
         /// <summary>	
         /// Flips a vector using another vector as the origin axis.
@@ -647,10 +617,7 @@ namespace Macrocosm.Common.Utils
             return new Vector2(newPosX, newPosY);
         }
 
-        public static Vector2 GetRandomPosNear(Vector2 pos, int minDistance, int maxDistance, bool circular = false)
-        {
-            return GetRandomPosNear(pos, Main.rand, minDistance, maxDistance, circular);
-        }
+        public static Vector2 GetRandomPosNear(Vector2 pos, int minDistance, int maxDistance, bool circular = false) => GetRandomPosNear(pos, Main.rand, minDistance, maxDistance, circular);
 
         ///<summary>
         /// Returns a random position near the position given.
@@ -676,10 +643,7 @@ namespace Macrocosm.Common.Utils
         ///<summary>
         /// Sends the given string to chat, with the given color.
         ///</summary>
-        public static void Chat(string s, Color color, bool sync = true)
-        {
-            Chat(s, color.R, color.G, color.B, sync);
-        }
+        public static void Chat(string s, Color color, bool sync = true) => Chat(s, color.R, color.G, color.B, sync);
 
         ///<summary>
         /// Sends the given string to chat, with the given color values.

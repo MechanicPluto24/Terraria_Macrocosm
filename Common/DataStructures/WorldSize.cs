@@ -1,6 +1,7 @@
 ﻿
 using System;
 using Terraria;
+using Terraria.IO;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.DataStructures
@@ -14,6 +15,12 @@ namespace Macrocosm.Common.DataStructures
         {
             Width = x;
             Height = y;
+        }
+
+        public WorldSize(WorldFileData data)
+        {
+            Width = data.WorldSizeX;
+            Height = data.WorldSizeY;
         }
 
         public static WorldSize Small => new(4200, 1200);
