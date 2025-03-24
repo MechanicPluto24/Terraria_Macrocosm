@@ -119,7 +119,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override Color? GetAlpha(Color lightColor)
             => Color.White * (1f - Projectile.alpha / 255f);
 
-        private static Asset<Effect> skew;
         private SpriteBatchState state;
         public override void PostDraw(Color lightColor)
         {
@@ -130,8 +129,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
             Color color = Color.White * Projectile.Opacity;
 
-            skew ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "Skew", AssetRequestMode.ImmediateLoad);
-            Effect effect = skew.Value;
+            Effect effect = Macrocosm.GetShader("Skew");
             effect.Parameters["uScale"].SetValue(0.6f);
             effect.Parameters["uRotation"].SetValue(Projectile.rotation * 2);
 
@@ -147,7 +145,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(100, 170, 200).WithOpacity(1f), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.305f, SpriteEffects.None, 0f);
             Main.EntitySpriteDraw(glow.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);
 
-            effect = skew.Value;
             effect.Parameters["uScale"].SetValue(0.6f);
             effect.Parameters["uRotation"].SetValue(Projectile.rotation);
 

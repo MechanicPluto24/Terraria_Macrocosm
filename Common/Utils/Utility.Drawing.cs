@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Microsoft.Xna.Framework;
@@ -381,7 +380,7 @@ namespace Macrocosm.Common.Utils
             return ChatManager.DrawColorCodedString(spriteBatch, font, snippets, position, Color.White.WithAlpha(baseColor.A), rotation, origin, baseScale, out _, maxWidth);
         }
 
- 
+
         #region BaseMod BaseDrawing
 
         //public static ShaderContext shaderContext = new ShaderContext();
@@ -598,7 +597,7 @@ namespace Macrocosm.Common.Utils
             }
             if (returnColor != null && brightness != 1f)
             {
-                returnColor = Utility.ColorMult((Color)returnColor, brightness);
+                returnColor = ColorMult((Color)returnColor, brightness);
             }
 
             return returnColor;
@@ -609,20 +608,17 @@ namespace Macrocosm.Common.Utils
         ///</summary>
         public static Color GetGemColor(int type)
         {
-            if (type == 181) { return Color.MediumOrchid; }
-            else //Amethyst
-            if (type == 180) { return Color.Gold; }
-            else //Topaz
-            if (type == 177) { return Color.DeepSkyBlue; }
-            else //Sapphire
-            if (type == 178) { return Color.Crimson; }
-            else //Ruby
-            if (type == 179) { return Color.LimeGreen; }
-            else //Emerald
-            if (type == 182) { return Color.GhostWhite; }
-            else //Diamond
-            if (type == 999) { return Color.Orange; } //Amber
-            return Color.Black;
+            return type switch
+            {
+                181 => Color.MediumOrchid,
+                180 => Color.Gold,
+                177 => Color.DeepSkyBlue,
+                178 => Color.Crimson,
+                179 => Color.LimeGreen,
+                182 => Color.GhostWhite,
+                999 => Color.Orange,
+                _ => Color.Black,
+            };
         }
 
         ///<summary>

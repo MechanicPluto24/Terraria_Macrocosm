@@ -107,10 +107,6 @@ namespace Macrocosm.Common.Drawing.Sky
         public FuncOverrideDraw OverrideFrontDraw = null;
 
         #region Private vars 
-
-        private static Asset<Effect> sphereLightingShader;
-        private static Asset<Effect> radialLightingShader;
-
         private Asset<Texture2D> backTexture;
         private Asset<Texture2D> bodyTexture;
         private Asset<Texture2D> frontTexture;
@@ -178,9 +174,6 @@ namespace Macrocosm.Common.Drawing.Sky
 
             Scale = scale;
             Rotation = rotation;
-
-            radialLightingShader = ModContent.Request<Effect>(Macrocosm.ShadersPath + "RadialLighting", AssetRequestMode.ImmediateLoad);
-            sphereLightingShader = ModContent.Request<Effect>(Macrocosm.ShadersPath + "SphereLighting", AssetRequestMode.ImmediateLoad);
         }
 
         /// <summary> Set the position using absolut coordinates </summary>
@@ -383,7 +376,7 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (ConfigureBackRadialShader is not null)
                 {
-                    backShader = radialLightingShader.Value;
+                    backShader = Macrocosm.GetShader("RadialLighting");
                     float rotation = (Center - lightSource.Center).ToRotation();
                     Vector2 shadeResolution = backTexture.Size();
                     Vector4 sourceRect = backSourceRect.HasValue ? backSourceRect.Value.Normalize(backTexture.Size()) : new Vector4(0, 0, 1, 1);
@@ -397,7 +390,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 }
                 else if (ConfigureBackSphericalShader is not null)
                 {
-                    backShader = sphereLightingShader.Value;
+                    backShader = Macrocosm.GetShader("SphereLighting");
                     ConfigureBackSphericalShader(this, lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
                     backShader.Parameters["uLightSource"].SetValue(lightPosition);
                     backShader.Parameters["uEntityPosition"].SetValue(Position);
@@ -433,7 +426,7 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (ConfigureBodyRadialShader is not null)
                 {
-                    bodyShader = radialLightingShader.Value;
+                    bodyShader = Macrocosm.GetShader("RadialLighting");
                     float rotation = (Center - lightSource.Center).ToRotation();
                     Vector2 shadeResolution = bodyTexture.Size();
                     Vector4 sourceRect = bodySourceRect.HasValue ? bodySourceRect.Value.Normalize(bodyTexture.Size()) : new Vector4(0, 0, 1, 1);
@@ -447,7 +440,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 }
                 else if (ConfigureBodySphericalShader is not null)
                 {
-                    bodyShader = sphereLightingShader.Value;
+                    bodyShader = Macrocosm.GetShader("SphereLighting");
                     ConfigureBodySphericalShader(this, lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
                     bodyShader.Parameters["uLightSource"].SetValue(lightPosition);
                     bodyShader.Parameters["uEntityPosition"].SetValue(Position);
@@ -482,7 +475,7 @@ namespace Macrocosm.Common.Drawing.Sky
             {
                 if (ConfigureFrontRadialShader is not null)
                 {
-                    frontShader = radialLightingShader.Value;
+                    frontShader = Macrocosm.GetShader("RadialLighting");
                     float rotation = (Center - lightSource.Center).ToRotation();
                     Vector2 shadeResolution = frontTexture.Size();
                     Vector4 sourceRect = frontSourceRect.HasValue ? frontSourceRect.Value.Normalize(frontTexture.Size()) : new Vector4(0, 0, 1, 1);
@@ -496,7 +489,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 }
                 else if (ConfigureFrontSphericalShader is not null)
                 {
-                    frontShader = sphereLightingShader.Value;
+                    frontShader = Macrocosm.GetShader("SphereLighting");
                     ConfigureFrontSphericalShader(this, lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
                     frontShader.Parameters["uLightSource"].SetValue(lightPosition);
                     frontShader.Parameters["uEntityPosition"].SetValue(Position);

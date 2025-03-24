@@ -37,6 +37,8 @@ namespace Macrocosm.Common.Systems.Power
         private static int clusterTimer = 0;
         private static void BuildClusters()
         {
+            return;
+
             if (clusterTimer++ >= (int)ServerConfig.Instance.ClusterFindUpdateRate)
             {
                 IEnumerable<MachineTE> clusterable = ByID.Values.Where(te => te is MachineTE m && m.CanCluster).Cast<MachineTE>();

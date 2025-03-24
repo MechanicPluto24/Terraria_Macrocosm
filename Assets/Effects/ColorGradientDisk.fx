@@ -8,7 +8,7 @@ float4 uColorIntensity;
 
 float uSize = 1;
 
-float4 ColorGradientSquare(float2 texCoord : TEXCOORD) : COLOR
+float4 ColorGradientDisk(float2 texCoord : TEXCOORD) : COLOR
 {
     float4 color = tex2D(uImage0, texCoord);
     
@@ -29,9 +29,9 @@ float4 ColorGradientSquare(float2 texCoord : TEXCOORD) : COLOR
 
 technique
 {
-    pass ColorGradientSquare
+    pass ColorGradientDisk
     {
-        PixelShader = compile ps_3_0 ColorGradientSquare();
+        PixelShader = compile ps_3_0 ColorGradientDisk();
     }
 }
 
