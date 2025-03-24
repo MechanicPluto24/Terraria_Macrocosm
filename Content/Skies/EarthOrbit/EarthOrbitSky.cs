@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;
@@ -174,56 +175,86 @@ namespace Macrocosm.Content.Skies.EarthOrbit
                 spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.LinearClamp, state);
 
                 if (Background3D)
-                {
-                    float x = -(float)((Main.screenPosition.X / Main.maxTilesX * 16.0) - 1400);
-                    float y = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - 1900);
-
-                    float depthFactor = 12f;
-                    float radius = 1360 * depthFactor;
-                    Vector2 position = new(x, y);
-
-                    earthMesh ??= new Mesh(Main.graphics.GraphicsDevice);
-                    earthCloudMesh ??= new Mesh(Main.graphics.GraphicsDevice);
-
-                    earthMesh.CreateSphere(
-                        position: position,
-                        radius: radius,
-                        horizontalResolution: 100,
-                        verticalResolution: 100,
-                        depthFactor: depthFactor,
-                        rotation: new Vector3(0, (float)Main.timeForVisualEffects / 6000 % MathHelper.TwoPi, MathHelper.ToRadians(23.44f)),
-                        projectionType: Mesh.SphereProjectionType.Mercator
-                    );
-
-                    earthCloudMesh.CreateSphere(
-                          position: position,
-                          radius: radius,
-                          horizontalResolution: 100,
-                          verticalResolution: 100,
-                          depthFactor: depthFactor,
-                          rotation: new Vector3(0, (float)Main.timeForVisualEffects / 5500 % MathHelper.TwoPi, MathHelper.ToRadians(23.44f)),
-                          projectionType: Mesh.SphereProjectionType.Mercator
-                    );
-
-                    earthMesh.Draw(earthMercator.Value, state.Matrix);
-                    earthCloudMesh.Draw(earthMercatorClouds.Value, state.Matrix, blendState: BlendState.NonPremultiplied);
-
-                    //earthMesh.DebugDraw(state.Matrix);
-                }
+                    DrawEarth3D(spriteBatch);
                 else
-                {
-                    float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - earthBackground.Height() / 2);
-                    spriteBatch.Draw
-                    (
-                        earthBackground.Value,
-                        new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
-                        GetLightColor().WithAlpha(255)
-                    );
-                }
+                    DrawEarth2D(spriteBatch);
 
                 spriteBatch.End();
                 spriteBatch.Begin(state);
             }
+        }
+
+        private void DrawEarth3D(SpriteBatch spriteBatch)
+        {
+            float x = -(float)((Main.screenPosition.X / Main.maxTilesX * 16.0) + 800);
+            float y = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - 50);
+
+            float depthFactor = 16f;
+            float radius = 1580 * depthFactor;
+            Vector2 position = new(x, y);
+
+            earthMesh ??= new Mesh();
+            earthCloudMesh ??= new Mesh();
+
+            earthMesh.CreateSphere(
+                position: default,
+                radius: radius,
+                horizontalResolution: 100,
+                verticalResolution: 100,
+                depthFactor: depthFactor,
+                rotation: new Vector3(
+                    x: 0,
+                    y: (float)Main.timeForVisualEffects / 6000 % MathHelper.TwoPi, // axial rotation
+                    z: MathHelper.ToRadians(23.44f)), // axial tilt
+                projectionType: Mesh.SphereProjectionType.Mercator
+            );
+
+            earthCloudMesh.CreateSphere(
+                  position: default,
+                  radius: radius,
+                  horizontalResolution: 100,
+                  verticalResolution: 100,
+                  depthFactor: depthFactor,
+                  rotation: new Vector3(
+                      x: 0,
+                      y: (float)Main.timeForVisualEffects / 5500 % MathHelper.TwoPi, // axial rotation
+                      z: MathHelper.ToRadians(23.44f)), // axial tilt
+                  projectionType: Mesh.SphereProjectionType.Mercator
+            );
+
+            Effect pixelate = Macrocosm.GetShader("Pixelate");
+            pixelate.Parameters["uPixelCount"].SetValue(new Vector2(1024));
+            Texture2D earth = earthMesh.DrawToRenderTarget(earthMercator.Value.ApplyEffects(pixelate), state.Matrix);
+            Texture2D earthClouds = earthCloudMesh.DrawToRenderTarget(earthMercatorClouds.Value.ApplyEffects(pixelate), state.Matrix, blendState: BlendState.NonPremultiplied);
+
+            Vector2 center = position + earth.Size() / 2f;
+            Vector3 lightPosition;
+            float depth = 1600f;
+            lightPosition = new Vector3(sun.Center, depth);
+            radius = 0.01f;
+
+            Effect lighting = Macrocosm.GetShader("SphereLighting");
+            lighting.Parameters["uLightSource"].SetValue(lightPosition);
+            lighting.Parameters["uEntityPosition"].SetValue(center);
+            lighting.Parameters["uTextureSize"].SetValue(earth.Size());
+            lighting.Parameters["uEntitySize"].SetValue(earth.Size());
+            lighting.Parameters["uRadius"].SetValue(radius);
+            lighting.Parameters["uPixelSize"].SetValue(1);
+            lighting.Parameters["uColor"].SetValue(Color.White.ToVector4());
+
+            spriteBatch.Draw(earth.ApplyEffects(lighting), new Vector2(x, y), Color.White);
+            spriteBatch.Draw(earthClouds.ApplyEffects(null), new Vector2(x, y), Color.White);
+        }
+
+        private static void DrawEarth2D(SpriteBatch spriteBatch)
+        {
+            float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - earthBackground.Height() / 2);
+            spriteBatch.Draw
+            (
+                earthBackground.Value,
+                new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
+                GetLightColor().WithAlpha(255)
+            );
         }
 
         // CelestialBody.Rotate is NOT working for drawing under the surface

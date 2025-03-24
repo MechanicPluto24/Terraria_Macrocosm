@@ -2,22 +2,16 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Graphics
 {
-    // TODO: add RT export and shader chaining support
     public class Mesh : IDisposable
     {
-        private readonly GraphicsDevice graphicsDevice;
-
-
         private DynamicVertexBuffer vertexBuffer;
         private DynamicIndexBuffer indexBuffer;
 
@@ -26,9 +20,12 @@ namespace Macrocosm.Common.Graphics
 
         private CullMode cullMode = CullMode.None;
 
-        public Mesh(GraphicsDevice graphicsDevice)
+        private RenderTarget2D renderTarget;
+
+        public GraphicsDevice GraphicsDevice => Main.graphics.GraphicsDevice;
+
+        public Mesh()
         {
-            this.graphicsDevice = graphicsDevice;
         }
 
         #region Create methods
@@ -142,7 +139,6 @@ namespace Macrocosm.Common.Graphics
                     float depth = 1f / (depthFactor - spherePosition.Z / radius);
                     Vector2 projectedPosition = new Vector2(spherePosition.X * depth, spherePosition.Y * depth) + position;
                     Color vertexColor = colorFunction?.Invoke(projectedPosition) ?? Color.White;
-
                     vertices[i * verticalResolution + j] = new VertexPositionColorTexture(
                         position: new Vector3(projectedPosition, 0),
                         color: vertexColor,
@@ -174,22 +170,22 @@ namespace Macrocosm.Common.Graphics
         #region Render
         public void Draw(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, BlendState blendState = null, SamplerState samplerState = null, bool scissorTestEnable = false)
         {
-            if (vertices == null || indices == null) 
+            if (vertices == null || indices == null)
                 return;
 
-            graphicsDevice.BlendState = blendState ?? BlendState.AlphaBlend;
-            graphicsDevice.SamplerStates[0] = samplerState ?? SamplerState.LinearClamp;
-            graphicsDevice.RasterizerState = new RasterizerState
+            GraphicsDevice.BlendState = blendState ?? BlendState.AlphaBlend;
+            GraphicsDevice.SamplerStates[0] = samplerState ?? SamplerState.LinearClamp;
+            GraphicsDevice.RasterizerState = new RasterizerState
             {
                 CullMode = cullMode,
-                ScissorTestEnable = true
+                ScissorTestEnable = scissorTestEnable
             };
-            graphicsDevice.SetVertexBuffer(vertexBuffer);
-            graphicsDevice.Indices = indexBuffer;
-            graphicsDevice.Textures[0] = texture;
+            GraphicsDevice.SetVertexBuffer(vertexBuffer);
+            GraphicsDevice.Indices = indexBuffer;
+            GraphicsDevice.Textures[0] = texture;
 
             Effect meshShader = Macrocosm.GetShader("Mesh");
-            Matrix worldViewProjection = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0, 0, 1);
+            Matrix worldViewProjection = Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1);
             Matrix matrix = transformMatrix * worldViewProjection;
             meshShader.Parameters["uTransformMatrix"].SetValue(matrix);
 
@@ -199,10 +195,49 @@ namespace Macrocosm.Common.Graphics
             foreach (var pass in meshShader.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertices.Length, 0, indices.Length / 3);
+                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertices.Length, 0, indices.Length / 3);
             }
 
-            graphicsDevice.Textures[0] = texture;
+            GraphicsDevice.Textures[0] = texture;
+        }
+
+        public RenderTarget2D DrawToRenderTarget(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, BlendState blendState = null, SamplerState samplerState = null, bool scissorTestEnable = false)
+        {
+            if (vertices == null || indices == null || vertices.Length == 0)
+                return null;
+
+            List<Vector3> projectedPoints = vertices.Select(v => Vector3.Transform(v.Position, transformMatrix)).ToList();
+            float minX = projectedPoints.Min(v => v.X);
+            float minY = projectedPoints.Min(v => v.Y);
+            float maxX = projectedPoints.Max(v => v.X);
+            float maxY = projectedPoints.Max(v => v.Y);
+
+            // Calculate RT size
+            int width = Math.Max(1, (int)Math.Ceiling(maxX - minX));
+            int height = Math.Max(1, (int)Math.Ceiling(maxY - minY));
+
+            // Create and bind RT if needed
+            if (renderTarget == null || renderTarget.Width != width || renderTarget.Height != height || renderTarget.IsDisposed)
+            {
+                renderTarget?.Dispose();
+                renderTarget = new RenderTarget2D(GraphicsDevice, width, height);
+            }
+
+            var renders = GraphicsDevice.SaveRenderTargets();
+            Viewport originalViewport = GraphicsDevice.Viewport;
+            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.Viewport = new Viewport(0, 0, width, height);
+            GraphicsDevice.Clear(Color.Transparent);
+
+            // Translate and draw to RT
+            Matrix traslatedMatrix = Matrix.CreateTranslation(-minX, -minY, 0) * transformMatrix;
+            Draw(texture, traslatedMatrix, sourceRect, blendState, samplerState, scissorTestEnable);
+
+            // Restore state
+            GraphicsDevice.SetRenderTargets(renders);
+            GraphicsDevice.Viewport = originalViewport;
+
+            return renderTarget;
         }
 
         #endregion
@@ -264,13 +299,13 @@ namespace Macrocosm.Common.Graphics
             if (vertexBuffer == null || vertexBuffer.VertexCount != vertices.Length)
             {
                 vertexBuffer?.Dispose();
-                vertexBuffer = new DynamicVertexBuffer(graphicsDevice, typeof(VertexPositionColorTexture), vertices.Length, BufferUsage.WriteOnly);
+                vertexBuffer = new DynamicVertexBuffer(GraphicsDevice, typeof(VertexPositionColorTexture), vertices.Length, BufferUsage.WriteOnly);
             }
 
             if (indexBuffer == null || indexBuffer.IndexCount != indices.Length)
             {
                 indexBuffer?.Dispose();
-                indexBuffer = new DynamicIndexBuffer(graphicsDevice, IndexElementSize.SixteenBits, indices.Length, BufferUsage.WriteOnly);
+                indexBuffer = new DynamicIndexBuffer(GraphicsDevice, IndexElementSize.SixteenBits, indices.Length, BufferUsage.WriteOnly);
             }
 
             vertexBuffer.SetData(vertices);
@@ -281,6 +316,7 @@ namespace Macrocosm.Common.Graphics
         {
             vertexBuffer?.Dispose();
             indexBuffer?.Dispose();
+            renderTarget?.Dispose();
         }
     }
 }

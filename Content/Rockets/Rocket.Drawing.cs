@@ -96,7 +96,7 @@ namespace Macrocosm.Content.Rockets
 
         private void DrawLightedMesh(Vector2 position)
         {
-            mesh ??= new(Main.graphics.GraphicsDevice);
+            mesh ??= new();
             mesh.CreateRectangle(position, Width, Height, horizontalResolution: 6, verticalResolution: 8, rotation: Rotation, origin: Center - Main.screenPosition, colorFunction: GetDrawColor);
             mesh.Draw(renderTargets[(int)DrawMode.World], Main.Transform, samplerState: SamplerState.PointClamp);
         }
