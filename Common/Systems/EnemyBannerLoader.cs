@@ -33,6 +33,23 @@ namespace Macrocosm.Common.Systems
                         mod.AddContent(new EnemyBannerItem(modTexturePath + itemSuffix, internalName + itemSuffix, tile.Type));
                 }
             }
+
+            foreach (string fullTexturePath in mod.RootContentSource.EnumerateAssets().Where(t => t.Contains("EnemyBannersLarge/")))
+            {
+                string texturePath = Path.ChangeExtension(fullTexturePath, null);
+                string internalName = Path.GetFileName(texturePath);
+                string modTexturePath = $"{mod.Name}/{texturePath}";
+
+                // Load in pairs, to ensure the tile is loaded first
+                string itemSuffix = "Item";
+                if (!internalName.EndsWith(itemSuffix))
+                {
+                    var tile = new EnemyBannerLargeTile(modTexturePath, internalName);
+                    mod.AddContent(tile); // tile.Type is assigned here
+                    if (mod.HasAsset(texturePath + itemSuffix))
+                        mod.AddContent(new EnemyBannerItem(modTexturePath + itemSuffix, internalName + itemSuffix, tile.Type));
+                }
+            }
         }
 
         public void Unload()
