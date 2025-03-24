@@ -52,11 +52,11 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR
 }
 
 // Techniques just encapsulate a bunch of passes
-technique DefaultTechnique
+technique
 {
 	// A pass contains a certain set of functions to compile and apply
-	pass DefaultPass
-	{
+    pass Mesh
+    {
 		VertexShader = compile vs_3_0 VertexShaderFunction();
 		PixelShader = compile ps_3_0 PixelShaderFunction();
 	}

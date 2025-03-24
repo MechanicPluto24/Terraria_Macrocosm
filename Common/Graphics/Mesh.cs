@@ -2,20 +2,16 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Graphics
 {
-    // TODO: add RT export and shader chaining support
     public class Mesh : IDisposable
     {
-        private readonly GraphicsDevice graphicsDevice;
-        private readonly Asset<Effect> effect;
-
         private DynamicVertexBuffer vertexBuffer;
         private DynamicIndexBuffer indexBuffer;
 
@@ -24,12 +20,15 @@ namespace Macrocosm.Common.Graphics
 
         private CullMode cullMode = CullMode.None;
 
-        public Mesh(GraphicsDevice graphicsDevice)
+        private RenderTarget2D renderTarget;
+
+        public GraphicsDevice GraphicsDevice => Main.graphics.GraphicsDevice;
+
+        public Mesh()
         {
-            this.graphicsDevice = graphicsDevice;
-            effect = ModContent.Request<Effect>(Macrocosm.ShadersPath + "Mesh", AssetRequestMode.ImmediateLoad);
         }
 
+        #region Create methods
         public void Create(VertexPositionColorTexture[] vertices, short[] indices)
         {
             this.vertices = vertices;
@@ -134,13 +133,12 @@ namespace Macrocosm.Common.Graphics
                                 //TODO
                                 break;
                             }
-                        }
+                    }
                     spherePosition = Vector3.Transform(spherePosition, rotationMatrix);
 
                     float depth = 1f / (depthFactor - spherePosition.Z / radius);
                     Vector2 projectedPosition = new Vector2(spherePosition.X * depth, spherePosition.Y * depth) + position;
                     Color vertexColor = colorFunction?.Invoke(projectedPosition) ?? Color.White;
-
                     vertices[i * verticalResolution + j] = new VertexPositionColorTexture(
                         position: new Vector3(projectedPosition, 0),
                         color: vertexColor,
@@ -167,68 +165,85 @@ namespace Macrocosm.Common.Graphics
             cullMode = CullMode.CullCounterClockwiseFace;
             UpdateBuffers();
         }
+        #endregion
 
-        /// <summary> Updates the vertex and index buffers on the GPU, resizing if needed. </summary>
-        private void UpdateBuffers()
-        {
-            if (vertexBuffer == null || vertexBuffer.VertexCount != vertices.Length)
-            {
-                vertexBuffer?.Dispose();
-                vertexBuffer = new DynamicVertexBuffer(graphicsDevice, typeof(VertexPositionColorTexture), vertices.Length, BufferUsage.WriteOnly);
-            }
-
-            if (indexBuffer == null || indexBuffer.IndexCount != indices.Length)
-            {
-                indexBuffer?.Dispose();
-                indexBuffer = new DynamicIndexBuffer(graphicsDevice, IndexElementSize.SixteenBits, indices.Length, BufferUsage.WriteOnly);
-            }
-
-            vertexBuffer.SetData(vertices);
-            indexBuffer.SetData(indices);
-        }
-
-        public void Draw(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, BlendState blendState = null, SamplerState samplerState = null)
+        #region Render
+        public void Draw(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, BlendState blendState = null, SamplerState samplerState = null, bool scissorTestEnable = false)
         {
             if (vertices == null || indices == null)
                 return;
 
-            Effect shader = effect.Value;
-            var oldBlendState = graphicsDevice.BlendState;
-            var oldSamplerState = graphicsDevice.SamplerStates[0];
-
-            graphicsDevice.BlendState = blendState ?? BlendState.AlphaBlend;
-            graphicsDevice.SamplerStates[0] = samplerState ?? SamplerState.LinearClamp;
-            graphicsDevice.RasterizerState = new RasterizerState
+            GraphicsDevice.BlendState = blendState ?? BlendState.AlphaBlend;
+            GraphicsDevice.SamplerStates[0] = samplerState ?? SamplerState.LinearClamp;
+            GraphicsDevice.RasterizerState = new RasterizerState
             {
                 CullMode = cullMode,
-                ScissorTestEnable = true
+                ScissorTestEnable = scissorTestEnable
             };
+            GraphicsDevice.SetVertexBuffer(vertexBuffer);
+            GraphicsDevice.Indices = indexBuffer;
+            GraphicsDevice.Textures[0] = texture;
 
-            graphicsDevice.Textures[0] = texture;
-            graphicsDevice.SetVertexBuffer(vertexBuffer);
-            graphicsDevice.Indices = indexBuffer;
-
-            Matrix worldViewProjection = Matrix.CreateOrthographicOffCenter(0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height, 0, 0, 1);
+            Effect meshShader = Macrocosm.GetShader("Mesh");
+            Matrix worldViewProjection = Matrix.CreateOrthographicOffCenter(0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height, 0, 0, 1);
             Matrix matrix = transformMatrix * worldViewProjection;
-            shader.Parameters["uTransformMatrix"].SetValue(matrix);
+            meshShader.Parameters["uTransformMatrix"].SetValue(matrix);
 
-            Vector4 sourceRectV4 = sourceRect is Rectangle source
-                ? new Vector4(source.X / (float)texture.Width, source.Y / (float)texture.Height, source.Width / (float)texture.Width, source.Height / (float)texture.Height)
-                : new Vector4(0, 0, 1, 1);
-            shader.Parameters["uSourceRect"].SetValue(sourceRectV4);
+            Vector4 rectV = sourceRect is Rectangle r ? new(r.X / (float)texture.Width, r.Y / (float)texture.Height, r.Width / (float)texture.Width, r.Height / (float)texture.Height) : new(0, 0, 1, 1);
+            meshShader.Parameters["uSourceRect"].SetValue(rectV);
 
-            foreach (var pass in shader.CurrentTechnique.Passes)
+            foreach (var pass in meshShader.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertices.Length, 0, indices.Length / 3);
+                GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, vertices.Length, 0, indices.Length / 3);
             }
 
-            graphicsDevice.BlendState = oldBlendState;
-            graphicsDevice.SamplerStates[0] = oldSamplerState;
+            GraphicsDevice.Textures[0] = texture;
         }
 
+        public RenderTarget2D DrawToRenderTarget(Texture2D texture, Matrix transformMatrix, Rectangle? sourceRect = null, BlendState blendState = null, SamplerState samplerState = null, bool scissorTestEnable = false)
+        {
+            if (vertices == null || indices == null || vertices.Length == 0)
+                return null;
 
-        private SpriteBatchState state;
+            List<Vector3> projectedPoints = vertices.Select(v => Vector3.Transform(v.Position, transformMatrix)).ToList();
+            float minX = projectedPoints.Min(v => v.X);
+            float minY = projectedPoints.Min(v => v.Y);
+            float maxX = projectedPoints.Max(v => v.X);
+            float maxY = projectedPoints.Max(v => v.Y);
+
+            // Calculate RT size
+            int width = Math.Max(1, (int)Math.Ceiling(maxX - minX));
+            int height = Math.Max(1, (int)Math.Ceiling(maxY - minY));
+
+            // Create and bind RT if needed
+            if (renderTarget == null || renderTarget.Width != width || renderTarget.Height != height || renderTarget.IsDisposed)
+            {
+                renderTarget?.Dispose();
+                renderTarget = new RenderTarget2D(GraphicsDevice, width, height);
+            }
+
+            var renders = GraphicsDevice.SaveRenderTargets();
+            Viewport originalViewport = GraphicsDevice.Viewport;
+            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.Viewport = new Viewport(0, 0, width, height);
+            GraphicsDevice.Clear(Color.Transparent);
+
+            // Translate and draw to RT
+            Matrix traslatedMatrix = Matrix.CreateTranslation(-minX, -minY, 0) * transformMatrix;
+            Draw(texture, traslatedMatrix, sourceRect, blendState, samplerState, scissorTestEnable);
+
+            // Restore state
+            GraphicsDevice.SetRenderTargets(renders);
+            GraphicsDevice.Viewport = originalViewport;
+
+            return renderTarget;
+        }
+
+        #endregion
+
+        #region Debug
+        private SpriteBatchState _state;
         public void DebugDraw() => DebugDraw(Main.GameViewMatrix.ZoomMatrix);
         public void DebugDraw(Matrix matrix, Color? color = null, Color? backFaceColor = null)
         {
@@ -236,7 +251,7 @@ namespace Macrocosm.Common.Graphics
 
             if (beginCalled)
             {
-                state.SaveState(Main.spriteBatch);
+                _state.SaveState(Main.spriteBatch);
                 Main.spriteBatch.End();
             }
 
@@ -274,14 +289,34 @@ namespace Macrocosm.Common.Graphics
 
             Main.spriteBatch.End();
             if (beginCalled)
-                Main.spriteBatch.Begin(state);
+                Main.spriteBatch.Begin(_state);
         }
+        #endregion
 
+        /// <summary> Updates the vertex and index buffers on the GPU, resizing if needed. </summary>
+        private void UpdateBuffers()
+        {
+            if (vertexBuffer == null || vertexBuffer.VertexCount != vertices.Length)
+            {
+                vertexBuffer?.Dispose();
+                vertexBuffer = new DynamicVertexBuffer(GraphicsDevice, typeof(VertexPositionColorTexture), vertices.Length, BufferUsage.WriteOnly);
+            }
+
+            if (indexBuffer == null || indexBuffer.IndexCount != indices.Length)
+            {
+                indexBuffer?.Dispose();
+                indexBuffer = new DynamicIndexBuffer(GraphicsDevice, IndexElementSize.SixteenBits, indices.Length, BufferUsage.WriteOnly);
+            }
+
+            vertexBuffer.SetData(vertices);
+            indexBuffer.SetData(indices);
+        }
 
         public void Dispose()
         {
             vertexBuffer?.Dispose();
             indexBuffer?.Dispose();
+            renderTarget?.Dispose();
         }
     }
 }

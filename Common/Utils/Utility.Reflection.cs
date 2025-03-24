@@ -42,14 +42,14 @@ namespace Macrocosm.Common.Utils
             => (T)(GetCachedFieldInfo(type, fieldName, bindingFlags ?? GetDefaultBindingFlags(obj))?.GetValue(obj) ?? default(T));
 
         /// <summary>
-        /// Gets the value of a property using reflection. Caches the PropertyInfo. Targets non-public properties by default.
+        /// Gets the value of a property using reflection. Caches the PropertyInfo. 
         /// </summary>
         /// <inheritdoc cref="GetFieldValue"/>
         public static object GetPropertyValue(this Type type, string propertyName, object obj = null, BindingFlags? bindingFlags = null)
             => GetCachedPropertyInfo(type, propertyName, bindingFlags ?? GetDefaultBindingFlags(obj))?.GetValue(obj);
 
         /// <summary>
-        /// Gets the value of a property and casts it to the specified type. Caches the PropertyInfo. Targets non-public properties by default.
+        /// Gets the value of a property and casts it to the specified type. Caches the PropertyInfo. 
         /// </summary>
         /// <inheritdoc cref="GetPropertyValue"/>
         /// <typeparam name="T">The expected return type.</typeparam>
@@ -57,7 +57,7 @@ namespace Macrocosm.Common.Utils
             => (T)(GetCachedPropertyInfo(type, propertyName, bindingFlags ?? GetDefaultBindingFlags(obj))?.GetValue(obj) ?? default(T));
 
         /// <summary>
-        /// Sets the value of a property using reflection. Caches the PropertyInfo. Targets non-public properties by default.
+        /// Sets the value of a property using reflection. Caches the PropertyInfo. 
         /// </summary>
         /// <inheritdoc cref="GetPropertyValue"/>
         /// <param name="value">The new value to assign to the property.</param>
@@ -65,7 +65,7 @@ namespace Macrocosm.Common.Utils
             => GetCachedPropertyInfo(type, propertyName, bindingFlags ?? GetDefaultBindingFlags(obj))?.SetValue(obj, value);
 
         /// <summary>
-        /// Invokes a method using reflection. Caches the MethodInfo. Targets non-public methods by default.
+        /// Invokes a method using reflection. Caches the MethodInfo.
         /// </summary>
         /// <param name="type">The type containing the method.</param>
         /// <param name="methodName">The name of the method to invoke.</param>
@@ -81,7 +81,7 @@ namespace Macrocosm.Common.Utils
             => GetCachedMethodInfo(type, methodName, bindingFlags ?? GetDefaultBindingFlags(obj))?.Invoke(obj, parameters);
 
         /// <summary>
-        /// Invokes a method and casts the return value to the specified type. Caches the MethodInfo. Targets non-public methods by default.
+        /// Invokes a method and casts the return value to the specified type. Caches the MethodInfo. 
         /// </summary>
         /// <typeparam name="TResult">The expected return type.</typeparam>
         /// <returns>The result of the method invocation, or <c>default(<typeparamref name="TResult"/>)</c> if the method does not exist. </returns>
@@ -90,7 +90,7 @@ namespace Macrocosm.Common.Utils
             => (TResult)(GetCachedMethodInfo(type, methodName, bindingFlags ?? GetDefaultBindingFlags(obj))?.Invoke(obj, parameters) ?? default(TResult));
 
         private static BindingFlags GetDefaultBindingFlags(object obj)
-            => (obj == null ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.NonPublic;
+            => (obj == null ? BindingFlags.Static : BindingFlags.Instance) | BindingFlags.NonPublic | BindingFlags.Public;
 
         private static FieldInfo GetCachedFieldInfo(Type type, string fieldName, BindingFlags flags)
         {
