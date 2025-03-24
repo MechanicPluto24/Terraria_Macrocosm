@@ -8,8 +8,6 @@ namespace Macrocosm.Content.Walls
 {
     public class ProtolithBrickWall : ModWall
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public override void SetStaticDefaults()
         {
             Main.wallHouse[Type] = true;

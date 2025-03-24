@@ -2976,3 +2976,13 @@ RegolithSlimeBannerItem: {
 	DisplayName: Regolith Slime Banner Item
 	Tooltip: ""
 }
+
+IndustrialFishingRod: {
+	DisplayName: Industrial Fishing Rod
+	Tooltip: ""
+}
+
+MoonBeastFishingRod: {
+	DisplayName: Moon Beast Fishing Rod
+	Tooltip: ""
+}
