@@ -15,6 +15,7 @@ using Terraria.Graphics.Effects;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using static Macrocosm.Common.Drawing.Sky.CelestialBody;
+using static Macrocosm.Content.Tiles.Furniture.Industrial.IndustrialChest;
 
 namespace Macrocosm.Content.Skies.Moon
 {
@@ -188,62 +189,74 @@ namespace Macrocosm.Content.Skies.Moon
                 state1.SaveState(spriteBatch);
                 spriteBatch.End();
                 spriteBatch.Begin(BlendState.NonPremultiplied, state1);
+
                 if (Background3D)
-                {
-                    float x = -(float)((Main.screenPosition.X / Main.maxTilesX * 16.0) - 500);
-                    float y = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - 500);
-
-                    float depthFactor = 12f;
-                    float radius = 360 * depthFactor;
-                    Vector2 position = new(x, y);
-
-                    moonMesh ??= new Mesh(Main.graphics.GraphicsDevice);
-
-                    moonMesh.CreateSphere(
-                        position: position,
-                        radius: radius,
-                        horizontalResolution: 100,
-                        verticalResolution: 100,
-                        depthFactor: depthFactor,
-                        rotation: new Vector3((float)Main.timeForVisualEffects / 600 % MathHelper.TwoPi, (float)Main.timeForVisualEffects / 600 % MathHelper.TwoPi, 0),
-                        projectionType: Mesh.SphereProjectionType.Mercator
-                    );
-
-                    //TODO
-                    //var pixelate = Macrocosm.GetShader("Pixelate");
-                    //int pixels = 264;
-                    //pixelate.Parameters["uPixelCount"].SetValue(new Vector2(pixels));
-                    //moonMesh.AddPostEffect(pixelate);
-                    //
-                    //var lighting = Macrocosm.GetShader("SphereLighting");
-                    //lighting.Parameters["uLightSource"].SetValue(sun.Position);
-                    //lighting.Parameters["uEntityPosition"].SetValue(position);
-                    //lighting.Parameters["uTextureSize"].SetValue(moonMercator.Size());
-                    //lighting.Parameters["uEntitySize"].SetValue(new Vector2(radius));
-                    //lighting.Parameters["uRadius"].SetValue(radius);
-                    //lighting.Parameters["uPixelSize"].SetValue(1);
-                    //lighting.Parameters["uColor"].SetValue(Color.White.ToVector4());
-                    //moonMesh.AddPostEffect(lighting);
-
-                    moonMesh.Draw(moonMercator.Value, state1.Matrix);
-                }
-
-                {
-                    float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - moonBackground.Height() / 2);
-                    spriteBatch.Draw
-                    (
-                        moonBackground.Value,
-                        new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
-                        GetLightColor().WithAlpha(255)
-                    );
-                }
+                    DrawMoon3D(spriteBatch);
+                else
+                    DrawMoon2D(spriteBatch);
 
                 spriteBatch.End();
                 spriteBatch.Begin(state1);
             }
         }
-        private Rift rift;
 
+        private static void DrawMoon2D(SpriteBatch spriteBatch)
+        {
+            float bgTopY = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - moonBackground.Height() / 2);
+            spriteBatch.Draw
+            (
+                moonBackground.Value,
+                new System.Drawing.RectangleF(0, bgTopY, Main.screenWidth, Main.screenHeight),
+                GetLightColor().WithAlpha(255)
+            );
+        }
+
+        private void DrawMoon3D(SpriteBatch spriteBatch)
+        {
+            float x = -(float)((Main.screenPosition.X / Main.maxTilesX * 16.0) - 350);
+            float y = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - 300);
+
+            float depthFactor = 16f;
+            float radius = 800 * depthFactor;
+            Vector2 position = new(x, y);
+
+            moonMesh ??= new Mesh();
+            moonMesh.CreateSphere(
+                position: default,
+                radius: radius,
+                horizontalResolution: 100,
+                verticalResolution: 100,
+                depthFactor: depthFactor,
+                rotation: new Vector3(
+                    x: 0,
+                    y: (float)Main.timeForVisualEffects / 6000 % MathHelper.TwoPi, // axial rotation
+                    z: 0), // axial tilt
+                projectionType: Mesh.SphereProjectionType.Mercator
+            );
+
+            Effect pixelate = Macrocosm.GetShader("Pixelate");
+            pixelate.Parameters["uPixelCount"].SetValue(new Vector2(1024));
+            Texture2D moon = moonMesh.DrawToRenderTarget(moonMercator.Value.ApplyEffects(pixelate), state1.Matrix);
+
+            Vector2 center = position + moon.Size() / 2f;
+            Vector3 lightPosition;
+            float depth = 1600f;
+            lightPosition = new Vector3(sun.Center, depth);
+            radius = 0.01f;
+
+            Effect lighting = Macrocosm.GetShader("SphereLighting");
+            lighting.Parameters["uLightSource"].SetValue(lightPosition);
+            lighting.Parameters["uEntityPosition"].SetValue(center);
+            lighting.Parameters["uTextureSize"].SetValue(moon.Size());
+            lighting.Parameters["uEntitySize"].SetValue(moon.Size());
+            lighting.Parameters["uRadius"].SetValue(radius);
+            lighting.Parameters["uPixelSize"].SetValue(1);
+            lighting.Parameters["uColor"].SetValue(Color.White.ToVector4());
+
+            spriteBatch.Draw(moon.ApplyEffects(lighting), new Vector2(x, y), Color.White);
+        }
+
+        private Rift rift;
         private void UpdateNebulaStars()
         {
             if (lastMoonType != Main.moonType)
@@ -285,7 +298,7 @@ namespace Macrocosm.Content.Skies.Moon
             UpdateTextures();
             RotateSun();
             earth.SetupSkyRotation(SkyRotationMode.None);
-            earth.Center = new Vector2((int)(0.5f * (Main.screenWidth + earth.Width * 2)) - (int)earth.Width, (int)(0.5f * (Main.screenHeight + earth.Height * 2)) - (int)earth.Height - 100);
+            earth.Center = new Vector2((int)(0.3f * (Main.screenWidth + earth.Width * 2)) - (int)earth.Width, (int)(0.5f * (Main.screenHeight + earth.Height * 2)) - (int)earth.Height - 100);
             float bgTopY = (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;
             stars.CommonOffset = new Vector2(0, bgTopY);
         }

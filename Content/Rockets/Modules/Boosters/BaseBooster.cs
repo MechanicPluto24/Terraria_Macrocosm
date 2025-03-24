@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
             if (!LandingLegDrawOffset.HasValue)
                 return;
 
-            landingLegMesh ??= new(spriteBatch.GraphicsDevice);
+            landingLegMesh ??= new();
 
             Func<Vector2, Color> getDrawColor = inWorld ? Rocket.GetDrawColor : (_) => Color.White;
 

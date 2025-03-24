@@ -24,6 +24,24 @@ namespace Macrocosm.Common.Utils
             spriteBatch.Draw(texture, position, null, color, 0.0f, origin, scale, SpriteEffects.None, 0.0f);
         }
 
+        public static RenderTargetBinding[] RenderTargetBindings => Main.graphics.GraphicsDevice.GetRenderTargets();
+        public static void RenderTargetPreserveContents()
+        {
+            foreach (var rtb in Main.graphics.GraphicsDevice.GetRenderTargets())
+                typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, rtb.RenderTarget);
+            Main.graphics.GraphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+        }
+
+        public static RenderTargetBinding[] SaveRenderTargets(this GraphicsDevice graphicsDevice)
+        {
+            RenderTargetBinding[] renderTargetBindings = graphicsDevice.GetRenderTargets();
+            foreach (RenderTargetBinding binding in renderTargetBindings)
+                typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
+            graphicsDevice.PresentationParameters.RenderTargetUsage = RenderTargetUsage.PreserveContents;
+
+            return renderTargetBindings.Length > 0 ? renderTargetBindings : null;
+        }
+
         private static RenderTarget2D _swapRT1, _swapRT2;
         private static SpriteBatchState _state;
         /// <summary>
@@ -32,7 +50,7 @@ namespace Macrocosm.Common.Utils
         /// <param name="source">The source texture to apply effects on.</param>
         /// <param name="effects">An array of pre-configured shader Effects.</param>
         /// <returns>A Texture2D with all effects applied sequentially.</returns>
-        public static Texture2D ApplyEffects(Texture2D source, Effect[] effects)
+        public static Texture2D ApplyEffects(this Texture2D source, params Effect[] effects)
         {
             if (effects == null || effects.Length == 0)
                 return source;
@@ -70,14 +88,13 @@ namespace Macrocosm.Common.Utils
                 }
             }
 
-            // Initial copy of source texture to persistent RT
+            var renders = graphicsDevice.SaveRenderTargets();
             graphicsDevice.SetRenderTarget(_swapRT1);
             graphicsDevice.Clear(Color.Transparent);
             DrawToRenderTarget(source, null);
-            graphicsDevice.SetRenderTarget(null);
+            graphicsDevice.SetRenderTargets(renders);
 
             bool swapFlag = false;
-
             for (int i = 0; i < effects.Length; i++)
             {
                 var input = swapFlag ? _swapRT2 : _swapRT1;
@@ -87,10 +104,10 @@ namespace Macrocosm.Common.Utils
                 graphicsDevice.SetRenderTarget(output);
                 graphicsDevice.Clear(Color.Transparent);
                 DrawToRenderTarget(input, effects[i]);
-                graphicsDevice.SetRenderTarget(null);
+                graphicsDevice.SetRenderTargets(renders);
             }
 
-            return swapFlag ? _swapRT1 : _swapRT2;
+            return swapFlag ? _swapRT2 : _swapRT1;
         }
 
         public static bool BeginCalled(this SpriteBatch spriteBatch) => typeof(SpriteBatch).GetFieldValue<bool>("beginCalled", spriteBatch);
