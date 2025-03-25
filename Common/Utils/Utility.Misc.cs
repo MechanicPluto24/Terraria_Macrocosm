@@ -176,6 +176,7 @@ namespace Macrocosm.Common.Utils
         }
 
         // TODO: any other way to do it? -- Feldy
+        /*
         public static unsafe int GetParametersHashCode(this Effect effect)
         {
             int hash = 0;
@@ -193,6 +194,7 @@ namespace Macrocosm.Common.Utils
 
             return hash;
         }
+        */
 
         //------------------------------------------------------//
         //--------------------- BASE UTILITY -------------------//
