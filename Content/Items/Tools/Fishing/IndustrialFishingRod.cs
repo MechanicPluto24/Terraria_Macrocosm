@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Tools.Fishing
 
         public override void SetDefaults()
         {
-            Item.width = 24;
+            Item.width = 16;
             Item.height = 28;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useAnimation = 8;
@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Tools.Fishing
 
             if (bobber.type == Item.shoot)
                 lineColor = new Color(206, 206, 206);
-            else if(bobber.type == ProjectileID.FishingBobberGlowingRainbow)
+            else if (bobber.type == ProjectileID.FishingBobberGlowingRainbow)
                 lineColor = Main.DiscoColor;
         }
 
