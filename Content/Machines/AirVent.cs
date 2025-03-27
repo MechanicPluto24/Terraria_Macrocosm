@@ -29,8 +29,8 @@ namespace Macrocosm.Content.Machines
             Main.tileTable[Type] = false;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.Width = 1;
-            TileObjectData.newTile.Height = 1;
+            TileObjectData.newTile.Width = Width;
+            TileObjectData.newTile.Height = Height;
             TileObjectData.newTile.Origin = new Point16(0, 0);
 
             TileObjectData.newTile.CoordinateHeights = [16];

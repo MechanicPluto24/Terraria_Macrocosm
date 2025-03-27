@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Tools.Fishing
 
         public override void SetDefaults()
         {
-            Item.width = 24;
+            Item.width = 16;
             Item.height = 28;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.useAnimation = 8;
