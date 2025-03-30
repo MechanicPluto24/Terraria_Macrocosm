@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.LiquidContainers;
@@ -48,7 +50,7 @@ namespace Macrocosm.Content.Subworlds
                 {
                     if (WorldGen.genRand.NextBool(80000) && Math.Abs(Main.spawnTileX - x) > 200)
                     {
-                        Utility.BlobTileRunner(x, y, (ushort)TileType<Protolith>(), 0..3, 1..4, 4..6, 1f, 4, wallType: (ushort)WallType<ProtolithWall>());
+                        Utility.BlobTileRunner(x, y, (ushort)TileType<Protolith>(), 0..3, 1..4, 4..6, 1f, 4, wallType: (ushort)VariantWall.WallType<ProtolithWall>(WallSafetyType.Natural));
                         //very small chance to create a flesh meteor
                         if (WorldGen.genRand.NextBool(20))
                         {
@@ -254,7 +256,7 @@ namespace Macrocosm.Content.Subworlds
                 {
                     if (!Main.tile[x, y].HasTile)
                     {
-                        if (Main.tile[x, y].WallType == WallType<ProtolithWall>() || Main.tile[x, y].WallType == WallType<RegolithWall>())
+                        if (Main.tile[x, y].WallType == VariantWall.WallType<ProtolithWall>() || Main.tile[x, y].WallType == VariantWall.WallType<RegolithWall>())
                         {
                             Tile tile = Main.tile[x, y];
                             tile.WallType = 0;

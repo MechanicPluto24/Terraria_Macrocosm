@@ -3,8 +3,10 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Enemies.Moon;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -16,7 +18,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         {
             Main.projFrames[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 10;
-            ProjectileID.Sets.TrailingMode[Type] = 0;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
         public ref float AI_Timer => ref Projectile.ai[0];
@@ -34,8 +36,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void SetDefaults()
         {
-            Projectile.width = 8;
-            Projectile.height = 8;
+            Projectile.width = 16;
+            Projectile.height = 16;
             Projectile.hostile = true;
             Projectile.friendly = false;
             Projectile.tileCollide = false;
@@ -48,7 +50,19 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, LuminiteSlime.EffectColor, LuminiteSlime.EffectColor * 0f);
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 3;
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
+            {
+                Texture2D texture = TextureAssets.Projectile[Type].Value;
+                Rectangle frame = texture.Frame(verticalFrames: 2, frameY: Projectile.frame);
+                Vector2 drawPos = Projectile.oldPos[i] + frame.Size() / 2f - Main.screenPosition;
+                float progress = (float)i / Projectile.oldPos.Length;
+                Color trailColor = Projectile.GetAlpha(LuminiteSlime.EffectColor).WithAlpha(50) * (1f - progress) * 0.75f;
+                float scale = Projectile.scale * Utility.QuadraticEaseIn(1f - progress) * 1.4f;
+                if (i == 0) scale *= 1.1f;
+                Main.spriteBatch.Draw(texture, drawPos, frame, trailColor * 0.6f, Projectile.oldRot[i], frame.Size() / 2f, scale, SpriteEffects.None, 0f);
+            }
             return true;
         }
 
@@ -62,12 +76,13 @@ namespace Macrocosm.Content.Projectiles.Hostile
             {
                 baseShootSpeed = Projectile.velocity.Length();
                 Projectile.frame = Main.rand.Next(0, 1);
+                Projectile.rotation = Projectile.velocity.ToRotation();
                 spawned = true;
             }
 
-            Projectile.rotation = Projectile.velocity.ToRotation();
             bool hasTarget = TargetPlayer >= 0 && TargetPlayer < Main.maxPlayers;
             float shootDeviation = 0.5f;
+            Projectile.alpha = 0;
 
             if (hasTarget)
             {
@@ -100,6 +115,11 @@ namespace Macrocosm.Content.Projectiles.Hostile
             {
                 Projectile.tileCollide = !WorldGen.SolidTile(Projectile.Center.ToTileCoordinates());
                 Projectile.velocity.Y += hasTarget ? 0.1f : 0.3f;
+                Projectile.rotation += 0.25f;
+            }
+            else
+            {
+                Projectile.rotation += 0.15f;
             }
         }
 
@@ -111,6 +131,11 @@ namespace Macrocosm.Content.Projectiles.Hostile
             {
                 Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
+            }
+
+            for (int i = 0; i < 5; i++)
+            {
+                Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.LunarOre, dustVelocity.X, dustVelocity.Y, newColor: Color.White);
             }
         }

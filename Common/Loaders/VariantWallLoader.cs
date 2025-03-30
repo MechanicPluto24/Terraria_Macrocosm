@@ -28,6 +28,7 @@ namespace Macrocosm.Common.Loaders
 
         public void Unload()
         {
+            throw new NotImplementedException();
         }
     }
 }

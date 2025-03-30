@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
 using Microsoft.Xna.Framework;
 using ReLogic.Utilities;
@@ -135,30 +136,6 @@ namespace Macrocosm.Common.Utils
             return result;
         }
 
-        public static ModWall GetWallVariant(int wallType, WallSafetyType variant)
-        {
-            ModWall current = ModContent.GetModWall(wallType);
-            if (current is null)
-                return null;
-
-            string currentFullName = current.FullName;
-            string variantSuffix = variant switch
-            {
-                WallSafetyType.Normal => "",
-                WallSafetyType.Natural => "Natural",
-                WallSafetyType.Unsafe => "Unsafe",
-                _ => ""
-            };
-
-            string targetFullName = currentFullName.Replace("Unsafe", "").Replace("Natural", "") + variantSuffix;
-            if (ModContent.TryFind(targetFullName, out ModWall target))
-                return target;
-
-            return current;
-        }
-
-        public static int GetWallVariantType(int wallType, WallSafetyType variant) => GetWallVariant(wallType, variant)?.Type ?? 0;
-
         /// <summary>
         /// Convert a single wall tile to its specified variant (Normal, Unsafe, or Natural).
         /// </summary>
@@ -168,7 +145,7 @@ namespace Macrocosm.Common.Utils
         public static void ConvertWallSafety(int x, int y, WallSafetyType variant)
         {
             Tile tile = Main.tile[x, y];
-            tile.WallType = (ushort)GetWallVariantType(tile.WallType, variant);
+            tile.WallType = (ushort)VariantWall.GetWallVariantType(tile.WallType, variant);
         }
 
         /// <summary>

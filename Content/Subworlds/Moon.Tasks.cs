@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Enums;
+﻿using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
@@ -162,7 +163,7 @@ namespace Macrocosm.Content.Subworlds
                     FastPlaceTile(i, j, protolithType);
             }
 
-            int regolithWall = WallType<RegolithWall>();
+            int regolithWall = (ushort)VariantWall.WallType<RegolithWall>(WallSafetyType.Natural);
             for (int i = 0; i < Main.maxTilesX; i++)
             {
                 progress.Set(0.8f + (i / (float)Main.maxTilesX) * 0.2f);
@@ -330,7 +331,7 @@ namespace Macrocosm.Content.Subworlds
         private void WallTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.WallTask");
-            int protolithWall = WallType<ProtolithWall>();
+            int protolithWall = (ushort)VariantWall.WallType<ProtolithWall>(WallSafetyType.Natural);
 
             int wallCount = 100;
             for (int z = 0; z < wallCount; z++)
@@ -518,7 +519,7 @@ namespace Macrocosm.Content.Subworlds
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.IrradiationTask");
             //So many variables, but hey, this is how I do world gen. It does make it consice.
             ushort irradiationRockType = (ushort)TileType<IrradiatedRock>();
-            ushort irradiationWallType = (ushort)WallType<IrradiatedRockWall>();
+            ushort irradiationWallType = (ushort)VariantWall.WallType<IrradiatedRockWall>(WallSafetyType.Natural);
             int irradiationCenter = gen_IsIrradiationRight ? (int)(Main.maxTilesX / 2) + WorldGen.genRand.Next(500, 600) : (int)(Main.maxTilesX / 2) - WorldGen.genRand.Next(500, 600);
             int irradiationHeight = 200;
             int irradiationWidth = WorldGen.genRand.Next(170, 230);
