@@ -4,7 +4,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseToilet")]
     public class IndustrialToilet : ModItem
     {
         public override void SetStaticDefaults()

@@ -1,6 +1,4 @@
-using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.Plants;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

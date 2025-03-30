@@ -1,12 +1,6 @@
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Players;
-using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -42,7 +36,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             NPC.value = 60f;
             NPC.knockBackResist = 0.5f;
             NPC.aiStyle = 1;
-            NPC.alpha=10;
+            NPC.alpha = 10;
             AIType = NPCID.BlueSlime;
             Banner = Item.NPCtoBanner(NPCID.BlueSlime);
             BannerItem = Item.BannerToItem(Banner);
@@ -77,7 +71,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         }
 
         public override bool PreAI()
-        { 
+        {
             return true;
         }
 

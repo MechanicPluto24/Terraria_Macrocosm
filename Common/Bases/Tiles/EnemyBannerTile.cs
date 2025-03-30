@@ -1,7 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Terraria;
-using Terraria.Enums;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Bases.Tiles
 {

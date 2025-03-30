@@ -1,7 +1,4 @@
-using Macrocosm.Content.Items.Blocks.Terrain;
-using Macrocosm.Content.Items.Walls;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Blocks.Bricks

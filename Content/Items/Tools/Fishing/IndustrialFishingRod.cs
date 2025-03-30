@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Content.Projectiles.Friendly.Tools;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 

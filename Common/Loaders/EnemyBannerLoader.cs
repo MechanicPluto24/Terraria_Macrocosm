@@ -1,11 +1,10 @@
 ﻿using Macrocosm.Common.Bases.Items;
 using Macrocosm.Common.Bases.Tiles;
-using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using System.Linq;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Systems
+namespace Macrocosm.Common.Loaders
 {
     /// <summary>
     /// Automatically loads enemy banners from any "EnemyBanners/" directory.

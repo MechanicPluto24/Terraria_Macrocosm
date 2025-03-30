@@ -39,9 +39,9 @@ namespace Macrocosm.Content.Subworlds
                 {
                     if (WorldGen.genRand.NextBool(80000) && Math.Abs(Main.spawnTileX - x) > 200)
                     {
-                        if(WorldGen.genRand.NextBool(3))
+                        if (WorldGen.genRand.NextBool(3))
                             Utility.BlobTileRunner(x, y, (ushort)TileType<Protolith>(), 0..3, 1..4, 4..6, 1f, 4, wallType: (ushort)WallType<ProtolithWall>());
-                        else if(WorldGen.genRand.NextBool(2))
+                        else if (WorldGen.genRand.NextBool(2))
                             Utility.BlobTileRunner(x, y, (ushort)TileType<Cynthalith>(), 0..3, 1..4, 4..6, 1f, 4, wallType: (ushort)WallType<RegolithWall>());
                         else
                             Utility.BlobTileRunner(x, y, (ushort)TileType<Regolith>(), 0..3, 1..4, 4..6, 1f, 4, wallType: (ushort)WallType<RegolithWall>());

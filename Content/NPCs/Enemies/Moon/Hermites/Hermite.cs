@@ -1,6 +1,5 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Blocks.Terrain;
 using Microsoft.Xna.Framework;

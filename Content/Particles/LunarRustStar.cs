@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Particles
 {
     public class LunarRustStar : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public float Opacity { get; set; }
         public int StarPointCount { get; set; } = 1;
         private int rotationDirection = 1;

@@ -1,22 +1,11 @@
-﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Sets;
-using Macrocosm.Common.Storage;
-using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.UI.Cargo;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
-using System;
 using System.Collections.Generic;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.Localization;
-using Terraria.ModLoader;
 using Terraria.UI;
 
 
@@ -105,7 +94,7 @@ namespace Macrocosm.Content.Machines
             backgroundPanel.Append(fuelPanel);
 
             pistons = new();
-            for(int i = 0; i < 6; i++)
+            for (int i = 0; i < 6; i++)
             {
                 var piston = new UILiquidTankPiston(Liquids.LiquidType.RocketFuel)
                 {
@@ -154,7 +143,7 @@ namespace Macrocosm.Content.Machines
             if (rpmProgress > 0)
             {
                 // how do I animate this shit
-                int interval = (int)MathHelper.Lerp(120, 30, rpmProgress); 
+                int interval = (int)MathHelper.Lerp(120, 30, rpmProgress);
                 for (int i = 0; i < pistons.Count; i++)
                 {
                     UILiquidTankPiston piston = pistons[i];

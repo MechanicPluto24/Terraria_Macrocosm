@@ -1,19 +1,12 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-using Newtonsoft.Json.Linq;
 using System;
-using System.IO;
 using Terraria;
 using Terraria.Audio;
-using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -66,7 +59,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public Vector2 AI_Target
         {
-            get => new (Projectile.ai[1], Projectile.ai[2]);
+            get => new(Projectile.ai[1], Projectile.ai[2]);
             set { Projectile.ai[1] = value.X; Projectile.ai[2] = value.Y; }
         }
 
@@ -156,7 +149,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 float rotation = Projectile.velocity.X < 0 ? MathHelper.Pi + Projectile.oldRot[i] : Projectile.oldRot[i];
                 float scale = Projectile.scale * 0.8f * (1f - progress);
 
-                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor , rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, drawPos, null, trailColor, rotation, Projectile.Size / 2f, (float)scale, effects, 0f);
             }
 
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, Color.White.WithOpacity(0.8f) * Projectile.Opacity, Projectile.rotation, Projectile.Size / 2f, Projectile.scale, effects, 0f);

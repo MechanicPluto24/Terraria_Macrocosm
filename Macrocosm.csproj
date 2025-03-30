@@ -22,6 +22,11 @@
 	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Content\NPCs\Enemies\Moon\Hermite.png" />
+    <None Remove="Content\NPCs\Enemies\Moon\LuminiteElemental_Eye.png" />
+    <None Remove="Content\Projectiles\Hostile\LuminitePebble.png" />
+  </ItemGroup>
    <ItemGroup>
     <Reference Include="SubworldLibrary">
       <HintPath>References\SubworldLibrary.dll</HintPath>

@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Particles
 {
     public class CelestialBulwarkDashParticle : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public override int TrailCacheLength => 24;
 
         public int PlayerID;

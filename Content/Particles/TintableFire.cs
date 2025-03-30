@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Particles
     {
         public override int TrailCacheLength => 15;
 
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public bool FadeIn { get; set; }
         public bool FadeOut { get; set; }
 

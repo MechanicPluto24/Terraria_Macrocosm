@@ -3,13 +3,12 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 
 namespace Macrocosm.Content.Rockets
 {
     public partial class Rocket
     {
-        public static Rocket Create(Vector2 position, RocketModule[] modules = null, bool sync = true, Action <Rocket> action = null)
+        public static Rocket Create(Vector2 position, RocketModule[] modules = null, bool sync = true, Action<Rocket> action = null)
         {
             // Rocket will not be managed.. we have to avoid ever reaching this  
             if (RocketManager.ActiveRocketCount > RocketManager.MaxRockets)
@@ -30,7 +29,7 @@ namespace Macrocosm.Content.Rockets
 
             action?.Invoke(rocket);
 
-            if(sync) 
+            if (sync)
                 rocket.SyncEverything();
 
             return rocket;

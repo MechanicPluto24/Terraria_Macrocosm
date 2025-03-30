@@ -1,15 +1,12 @@
-﻿using Macrocosm.Common.Sets;
-using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
-using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 

@@ -1,14 +1,11 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Systems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
@@ -130,7 +127,7 @@ namespace Macrocosm.Common.Utils
 
 
         /// <inheritdoc cref="TryGetTileEntityAs{T}(int, int, out T)"/>
-        public static bool TryGetTileEntityAs<T>(Point position, out T entity) where T : TileEntity 
+        public static bool TryGetTileEntityAs<T>(Point position, out T entity) where T : TileEntity
             => TryGetTileEntityAs(position.X, position.Y, out entity);
 
         /// <inheritdoc cref="TryGetTileEntityAs{T}(int, int, out T)"/>
@@ -165,7 +162,7 @@ namespace Macrocosm.Common.Utils
             int dir = 1;
             int tileX = topLeft.X + data.Origin.X;
             int tileY = topLeft.Y + data.Origin.Y;
-            if(TileObject.CanPlace(tileX, tileY, type, style, dir, out TileObject tileObject))
+            if (TileObject.CanPlace(tileX, tileY, type, style, dir, out TileObject tileObject))
             {
                 WorldGen.PlaceObject(tileX, tileY, type, mute: true, style, alternate);
                 TileObjectData.CallPostPlacementPlayerHook(tileX, tileY, type, style, dir, alternate, tileObject);
@@ -175,6 +172,7 @@ namespace Macrocosm.Common.Utils
         public static Color GetPaintColor(Point coords) => WorldGen.paintColor(Main.tile[coords].TileColor);
         public static Color GetPaintColor(int i, int j) => WorldGen.paintColor(Main.tile[i, j].TileColor);
         public static Color GetPaintColor(this Tile tile) => WorldGen.paintColor(tile.TileColor);
+        public static bool IsBasePaint(byte paintID) => paintID >= PaintID.RedPaint && paintID <= PaintID.PinkPaint;
         public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
         public static Color GetTileColor(int i, int j)
         {
@@ -203,9 +201,9 @@ namespace Macrocosm.Common.Utils
                 Color paintColor = tile.GetPaintColor();
                 byte max = Math.Max(Math.Max(baseColor.R, baseColor.G), baseColor.B);
 
-                if (paintID >= PaintID.RedPaint && paintID <= PaintID.PinkPaint)
+                if (IsBasePaint(paintID))
                     baseColor = Color.Lerp(baseColor, paintColor, 0.5f); // Regular paints
-                else 
+                else
                     baseColor = paintColor * (max / 255f); // Deep paints & other
             }
 
@@ -380,12 +378,12 @@ namespace Macrocosm.Common.Utils
                 int nx = x + dir.X;
                 int ny = y + dir.Y;
 
-                if (!WorldGen.InWorld(nx, ny)) 
+                if (!WorldGen.InWorld(nx, ny))
                     continue;
 
                 Tile neighborTile = Main.tile[nx, ny];
 
-                if(wireType.HasValue)
+                if (wireType.HasValue)
                 {
                     if (HasWire(neighborTile, wireType.Value))
                         yield return new Point16(nx, ny);

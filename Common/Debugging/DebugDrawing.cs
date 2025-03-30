@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Config;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -67,9 +68,6 @@ namespace Macrocosm.Common.Debugging
         private static List<DebugDrawData> DrawDatas { get; set; }
         private static Asset<Texture2D> DebugCrossTexture { get; set; }
 
-        public static bool DrawCursorTileCoords { get; set; }
-        public static bool DrawCursorWorldCoords { get; set; }
-
         public void Load(Mod mod)
         {
             DrawDatas = new();
@@ -119,18 +117,16 @@ namespace Macrocosm.Common.Debugging
                 }
             }
 
-            if (DrawCursorTileCoords || DrawCursorWorldCoords)
-            {
-                string mouseText = "";
+            string mouseText = string.Empty;
 
-                if (DrawCursorTileCoords)
-                    mouseText += $"{Main.MouseWorld.ToTileCoordinates()}\n";
+            if (DebugConfig.Instance.ShowCursorTileCoords)
+                mouseText += $"{Main.MouseWorld.ToTileCoordinates()}\n";
 
-                if (DrawCursorWorldCoords)
-                    mouseText += $"{Main.MouseWorld}\n";
+            if (DebugConfig.Instance.ShowCursorWorldCoords)
+                mouseText += $"{Main.MouseWorld}\n";
 
+            if (mouseText != string.Empty)
                 Main.instance.MouseText(mouseText);
-            }
 
             Main.spriteBatch.End();
         }

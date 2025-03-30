@@ -1,12 +1,7 @@
-﻿using Macrocosm.Common.Sets;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
-using Macrocosm.Content.Tiles.Special;
-using System;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Global.Tiles
@@ -80,7 +75,7 @@ namespace Macrocosm.Common.Global.Tiles
 
         public override void NumDust(int i, int j, int type, bool fail, ref int num)
         {
-            if(!CanTileBeAltered(i, j))
+            if (!CanTileBeAltered(i, j))
                 num = 0;
         }
 

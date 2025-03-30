@@ -1,12 +1,7 @@
-﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.Sets;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.IO;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
@@ -59,7 +54,7 @@ namespace Macrocosm.Common.Hooks
                     {
                         int data = op[i, j];
 
-                        if (data == TileObjectPreviewData.None) 
+                        if (data == TileObjectPreviewData.None)
                             continue;
 
                         Color color = (data == TileObjectPreviewData.InvalidSpot) ? Color.Red * 0.7f : Color.White;

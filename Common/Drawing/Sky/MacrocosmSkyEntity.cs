@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using Terraria.Utilities;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
-    public abstract class MacrocosmSkyEntity : ModType
+    public abstract class MacrocosmSkyEntity : ModTexturedType
     {
         protected sealed override void Register()
         {
@@ -20,15 +19,14 @@ namespace Macrocosm.Common.Drawing.Sky
         public sealed override void SetupContent() => SetStaticDefaults();
 
         public Vector2 Position;
-        public Asset<Texture2D> Texture;
+        public Asset<Texture2D> TextureAsset;
         public SpriteFrame Frame;
         public float Depth;
         public SpriteEffects Effects;
         public bool IsActive = true;
         public float Rotation;
 
-        public virtual string TexturePath => this.GetNamespacePath();
-        public Rectangle SourceRectangle => Frame.GetSourceRectangle(Texture.Value);
+        public Rectangle SourceRectangle => Frame.GetSourceRectangle(TextureAsset.Value);
 
         protected Player player;
         protected FastRandom random;
@@ -37,7 +35,7 @@ namespace Macrocosm.Common.Drawing.Sky
         {
             this.player = player;
             this.random = random;
-            Texture = ModContent.Request<Texture2D>(TexturePath);
+            TextureAsset = ModContent.Request<Texture2D>(Texture);
         }
 
         public virtual List<MacrocosmSkyEntity> CreateGroup(Player player, FastRandom random)
@@ -76,7 +74,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 Color color = GetColor(Main.ColorOfTheSkies) * Main.atmo;
                 Vector2 origin = SourceRectangle.Size() / 2f;
                 float scale = depthScale / Depth;
-                spriteBatch.Draw(Texture.Value, drawPositionByDepth - Main.Camera.UnscaledPosition, SourceRectangle, color, Rotation, origin, scale, Effects, 0f);
+                spriteBatch.Draw(TextureAsset.Value, drawPositionByDepth - Main.Camera.UnscaledPosition, SourceRectangle, color, Rotation, origin, scale, Effects, 0f);
             }
         }
 

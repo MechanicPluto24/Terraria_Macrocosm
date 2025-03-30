@@ -74,7 +74,7 @@ namespace Macrocosm.Common.Utils
         public static void DecreaseStack(this Item item, int amount = 1)
         {
             item.stack -= amount;
-            if(item.stack < 1 || item.type == ItemID.None)
+            if (item.stack < 1 || item.type == ItemID.None)
                 item.TurnToAir(fullReset: true);
         }
 

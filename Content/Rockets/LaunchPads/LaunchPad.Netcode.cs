@@ -1,6 +1,4 @@
 ﻿using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Subworlds;
-using SubworldLibrary;
 using System.IO;
 using Terraria;
 using Terraria.ID;

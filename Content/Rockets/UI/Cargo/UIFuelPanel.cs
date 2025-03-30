@@ -3,7 +3,6 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.LiquidContainers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -230,12 +229,12 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
 
                 if (neededFuel <= 0)
-                    return; 
+                    return;
 
                 int canistersUsed = (int)Math.Min(availableCanisters, Math.Floor(neededFuel / fuelPerCanister));
 
                 if (canistersUsed == 0)
-                    return; 
+                    return;
 
                 float addedFuel = canistersUsed * fuelPerCanister;
                 Rocket.Fuel += addedFuel;

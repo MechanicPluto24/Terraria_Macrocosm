@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;

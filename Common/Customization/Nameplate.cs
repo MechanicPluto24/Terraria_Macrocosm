@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
@@ -93,7 +92,7 @@ namespace Macrocosm.Common.Customization
 
             for (int i = 0; i < numChars; i++)
             {
-                spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + i * characterHeight), GetCharacterRectangle(text[i]), TextColor, rotation, GetCharacterRectangle(text[i]).Size()/2f, 1f, SpriteEffects.None, 0f);
+                spriteBatch.Draw(texture, new Vector2(position.X + offsetX, position.Y + offsetY + i * characterHeight), GetCharacterRectangle(text[i]), TextColor, rotation, GetCharacterRectangle(text[i]).Size() / 2f, 1f, SpriteEffects.None, 0f);
             }
         }
 

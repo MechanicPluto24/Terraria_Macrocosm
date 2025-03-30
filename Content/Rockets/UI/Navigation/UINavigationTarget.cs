@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
@@ -200,7 +200,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         {
             Rectangle rect = GetDimensions().ToRectangle();
 
-            if (UISystem.DebugModeActive)
+            if (DebugConfig.Instance.UIDebug)
                 spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.WithOpacity(0.1f));
 
             // Should draw the outline if not fully transparent

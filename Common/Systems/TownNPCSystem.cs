@@ -6,7 +6,6 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using SubworldLibrary;
 using System.Collections.Generic;
-using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

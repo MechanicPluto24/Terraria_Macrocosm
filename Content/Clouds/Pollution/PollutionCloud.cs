@@ -21,7 +21,7 @@ namespace Macrocosm.Content.Clouds.Pollution
             if (!Main.LocalPlayer.InModBiome<PollutionBiome>())
             {
                 opacity -= 0.005f;
-                if(opacity < 0f)
+                if (opacity < 0f)
                     cloud.active = false;
             }
             else

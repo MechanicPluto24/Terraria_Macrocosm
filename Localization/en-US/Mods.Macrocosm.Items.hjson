@@ -2986,3 +2986,8 @@ MoonBeastFishingRod: {
 	DisplayName: Moon Beast Fishing Rod
 	Tooltip: ""
 }
+
+ACUnit: {
+	DisplayName: A C Unit
+	Tooltip: ""
+}

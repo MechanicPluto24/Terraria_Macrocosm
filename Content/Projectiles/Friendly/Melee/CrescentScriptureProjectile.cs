@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;

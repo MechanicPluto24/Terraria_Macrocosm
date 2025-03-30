@@ -1,15 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.GameContent;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.UI.Chat;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Systems.Power
 {

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Enums;
 using System;
 using Terraria.Localization;
 
@@ -12,15 +13,14 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 
         protected override LocalizedText GetLocalizedValueUnitText(ref float value)
         {
-            var type = ClientConfig.Instance.UnitSystem;
+            UnitSystemType unitType = ClientConfig.Instance.UnitSystem;
 
             // convert to miles
-            if (type == ClientConfig.UnitSystemType.Imperial)
+            if (unitType == UnitSystemType.Imperial)
                 value *= 0.621f;
 
             value = MathF.Round(value, 2);
-
-            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.Radius.Unit" + type.ToString());
+            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.Radius.Unit" + unitType.ToString());
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Macrocosm.Common.Players;
 using Macrocosm.Content.Rarities;
 using Terraria;
-using Terraria.Audio;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Accessories.Info

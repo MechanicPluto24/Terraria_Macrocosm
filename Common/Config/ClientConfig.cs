@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Macrocosm.Common.Enums;
+using System;
 using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
@@ -6,6 +7,7 @@ using Terraria.ModLoader.Config;
 
 namespace Macrocosm.Common.Config
 {
+
     /// <summary> Config class for miscellaneous configuration, client-side only </summary>
     public class ClientConfig : ModConfig
     {
@@ -13,24 +15,19 @@ namespace Macrocosm.Common.Config
         public static ClientConfig Instance;
         public override ConfigScope Mode => ConfigScope.ClientSide;
 
-        /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
-        public event EventHandler OnConfigChanged;
-
-        [Header("$Mods.Macrocosm.Configs.ClientConfig.GameplayHeader")]
+        /// <summary> Whether subworld title cards are displayed on the first visit or every time </summary>
+        [Header("GameplayHeader")]
         [DefaultValue(false)]
         public bool AlwaysDisplayTitleCards { get; set; }
 
+        /// <summary> Whether gun kickback animations are enabled </summary>
         [DefaultValue(true)]
         public bool GunRecoilEffects { get; set; }
 
-        [Header("$Mods.Macrocosm.Configs.ClientConfig.UIHeader")]
-        [DrawTicks]
-        [DefaultValue("Macrocosm")]
-        [OptionStrings(["Macrocosm", "Terraria"])]
+        /// <summary> The UI theme </summary>
+        [Header("UIHeader")]
+        [DrawTicks, OptionStrings(["Macrocosm", "Terraria"]), DefaultValue("Macrocosm")]
         public string SelectedUITheme { get; set; }
-
-        /// <summary> Supported unit systems in Macrocosm </summary>
-        public enum UnitSystemType { Metric, Imperial };
 
         /// <summary> The unit system used for displays throughout the mod </summary>
         [DefaultValue(UnitSystemType.Metric)]
@@ -40,14 +37,11 @@ namespace Macrocosm.Common.Config
         [DefaultValue(true)]
         public bool DisplayGravityInGs { get; set; }
 
-        /*
-        [Header("$Mods.Macrocosm.Configs.ClientConfig.GraphicsHeader")]
-        [DefaultValue(false)]
-        public bool HighResolutionEffects { get; set; }
-        */
-        public override void OnChanged()
-        {
-            OnConfigChanged?.Invoke(this, EventArgs.Empty);
-        }
+        //[Header("$Mods.Macrocosm.Configs.ClientConfig.GraphicsHeader")]
+        // [DefaultValue(false)] public bool HighResolutionEffects { get; set; }
+
+        /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
+        public event EventHandler OnConfigChanged;
+        public override void OnChanged() => OnConfigChanged?.Invoke(this, EventArgs.Empty);
     }
 }

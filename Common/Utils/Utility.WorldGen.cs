@@ -123,7 +123,7 @@ namespace Macrocosm.Common.Utils
                 {
                     Tile tile = Main.tile[i + dx, j + dy];
                     if (tile.HasTile)
-                        return false; 
+                        return false;
                 }
             }
 
@@ -132,8 +132,32 @@ namespace Macrocosm.Common.Utils
             if (sync)
                 NetMessage.SendObjectPlacement(-1, i, j, type, 0, 0, -1, -1);
 
-            return result; 
+            return result;
         }
+
+        public static ModWall GetWallVariant(int wallType, WallSafetyType variant)
+        {
+            ModWall current = ModContent.GetModWall(wallType);
+            if (current is null)
+                return null;
+
+            string currentFullName = current.FullName;
+            string variantSuffix = variant switch
+            {
+                WallSafetyType.Normal => "",
+                WallSafetyType.Natural => "Natural",
+                WallSafetyType.Unsafe => "Unsafe",
+                _ => ""
+            };
+
+            string targetFullName = currentFullName.Replace("Unsafe", "").Replace("Natural", "") + variantSuffix;
+            if (ModContent.TryFind(targetFullName, out ModWall target))
+                return target;
+
+            return current;
+        }
+
+        public static int GetWallVariantType(int wallType, WallSafetyType variant) => GetWallVariant(wallType, variant)?.Type ?? 0;
 
         /// <summary>
         /// Convert a single wall tile to its specified variant (Normal, Unsafe, or Natural).
@@ -143,36 +167,9 @@ namespace Macrocosm.Common.Utils
         /// <param name="variant">The variant type to convert to.</param>
         public static void ConvertWallSafety(int x, int y, WallSafetyType variant)
         {
-            var tile = Main.tile[x, y];
-            int currentWallType = tile.WallType;
-
-            string baseTypeName = ModContent.GetModWall(currentWallType)?.Name;
-            if (baseTypeName == null)
-                return;
-
-            string variantSuffix = variant switch
-            {
-                WallSafetyType.Normal => "",
-                WallSafetyType.Natural => "Natural",
-                WallSafetyType.Unsafe => "Unsafe",
-                _ => ""
-            };
-
-            string targetTypeName = baseTypeName.Replace("Unsafe", "").Replace("Natural", "") + variantSuffix;
-
-            int targetType = currentWallType;
-            foreach (var modWall in ModContent.GetContent<ModWall>())
-            {
-                if (modWall.Name == targetTypeName)
-                {
-                    targetType = modWall.Type;
-                    break;
-                }
-            }
-
-            tile.WallType = (ushort)targetType;
+            Tile tile = Main.tile[x, y];
+            tile.WallType = (ushort)GetWallVariantType(tile.WallType, variant);
         }
-
 
         /// <summary>
         /// Convert a rectangular area of walls to their specified variant.
@@ -198,8 +195,7 @@ namespace Macrocosm.Common.Utils
         /// </summary>
         /// <param name="area">The Rectangle defining the area to convert.</param>
         /// <param name="variant">The variant type to convert to.</param>
-        public static void ConvertWallSafetyInArea(Rectangle area, WallSafetyType variant)
-            => ConvertWallSafetyInArea(area.X, area.Y, area.Width, area.Height, variant);
+        public static void ConvertWallSafetyInArea(Rectangle area, WallSafetyType variant) => ConvertWallSafetyInArea(area.X, area.Y, area.Width, area.Height, variant);
 
         /// <summary> This implementation also allows for tile removal (<paramref name="type"/> = -1) </summary>
         /// <inheritdoc cref="WorldGen.OreRunner(int, int, double, int, ushort)"/>
@@ -239,7 +235,7 @@ namespace Macrocosm.Common.Utils
                     {
                         if (Math.Abs((double)k - position.X) + Math.Abs((double)l - position.Y) < strength * 0.5 * (1.0 + (double)genRand.Next(-10, 11) * 0.015) && Main.tile[k, l].HasTile && (TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[k, l].TileType] || (Main.remixWorld && Main.tile[k, l].TileType == 230) || (Main.tile[k, l].TileType == 225 && Main.tile[k, l].TileType != 108)))
                         {
-                            if(type > 0)
+                            if (type > 0)
                             {
                                 Main.tile[k, l].TileType = (ushort)type;
                             }
@@ -277,7 +273,7 @@ namespace Macrocosm.Common.Utils
         /// <param name="blobSize"></param>
         /// <param name="density"></param>
         /// <param name="smoothing"></param>
-        public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null,ushort wallType=0)
+        public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null, ushort wallType = 0)
         {
             int sprayRandom = genRand.Next(repeatCount);
 
@@ -319,7 +315,8 @@ namespace Macrocosm.Common.Utils
                             {
                                 FastPlaceTile(i, j, (ushort)tileType);
                             }
-                            if(wallType>0){
+                            if (wallType > 0)
+                            {
                                 FastPlaceWall(i, j, (ushort)wallType);
                             }
                         }
@@ -372,7 +369,7 @@ namespace Macrocosm.Common.Utils
             }
         }
         //Why wasn't this a thing already
-        public static void BlobLiquidTileRunner(int i, int j,int liquidType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null)
+        public static void BlobLiquidTileRunner(int i, int j, int liquidType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null)
         {
             int sprayRandom = genRand.Next(repeatCount);
 
@@ -407,9 +404,9 @@ namespace Macrocosm.Common.Utils
                             }
                             FastRemoveTile(i, j);
                             Tile tile = Main.tile[i, j];
-                            tile.LiquidAmount=255;
-                            tile.LiquidType=liquidType;
-                           
+                            tile.LiquidAmount = 255;
+                            tile.LiquidType = liquidType;
+
                         }
                     }
                 );

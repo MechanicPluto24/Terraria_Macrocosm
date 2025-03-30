@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.createTile = TileType<Tiles.Ores.ChandriumOre>();
             Item.placeStyle = 0;
             Item.rare = RarityType<MoonRarity1>();
-            
+
 
             // Set other Item.X values here
         }

@@ -10,7 +10,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseSink")]
     public class IndustrialSink : ModTile
     {
         public override void SetStaticDefaults()

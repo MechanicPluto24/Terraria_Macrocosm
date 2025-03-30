@@ -4,16 +4,12 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.Achievements;
 using Terraria.GameContent.UI.Chat;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -123,7 +119,7 @@ namespace Macrocosm.Common.UI
                 shouldNetsync = false;
             }
 
-            if(IsMouseHovering)
+            if (IsMouseHovering)
                 Main.LocalPlayer.mouseInterface = true;
         }
 
@@ -373,7 +369,7 @@ namespace Macrocosm.Common.UI
                     Main.HoverItem = itemClone;
                     Main.hoverItemName = itemClone.Name;
                 }
-                else if(inventory.GetReservedTooltip(itemIndex) is not null)
+                else if (inventory.GetReservedTooltip(itemIndex) is not null)
                 {
                     Main.instance.MouseTextNoOverride(inventory.GetReservedTooltip(itemIndex).Value);
                 }

@@ -1,11 +1,7 @@
-﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.Utils;
-using Terraria.DataStructures;
-using Terraria.ID;
+﻿using Macrocosm.Common.Utils;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
-using System.Collections.Generic;
 
 namespace Macrocosm.Common.Systems.Power
 {

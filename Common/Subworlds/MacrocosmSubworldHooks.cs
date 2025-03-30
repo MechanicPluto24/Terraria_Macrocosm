@@ -1,15 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Systems.Flags;
-using Macrocosm.Content.Subworlds;
-using SubworldLibrary;
-using System;
-using System.Reflection;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
+﻿using SubworldLibrary;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Subworlds
 {

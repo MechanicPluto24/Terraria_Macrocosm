@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Particles
     /// <summary> Adapted from vanilla <see cref="PrettySparkleParticle"/> </summary>
     public class PrettySparkle : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
 
         public float AdditiveAmount;
         public float FadeInEnd;

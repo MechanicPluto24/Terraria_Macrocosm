@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Particles
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
             this.DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(104, 255, 255, 255), new Color(0, 0, 0, 0));
-            spriteBatch.Draw(Texture.Value, Center - screenPosition, null, Color.White * FadeFactor, Rotation, Size / 2, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Center - screenPosition, null, Color.White * FadeFactor, Rotation, Size / 2, Scale, SpriteEffects.None, 0f);
         }
 
         public override void AI()

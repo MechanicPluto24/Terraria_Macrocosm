@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Particles
 {
     public class EngineSpark : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public Color ColorOnSpawn { get; set; }
         public Color ColorOnDespawn { get; set; }
 

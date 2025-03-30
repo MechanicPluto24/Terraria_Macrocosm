@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Subworlds
     /// <summary> Not a subworld, used for fetching the main world defaults of subworld-dependent values </summary>
     public static class Earth
     {
-        public const string ID = "Macrocosm/Earth";
+        public const string ID = $"{nameof(Macrocosm)}/{nameof(Earth)}";
 
         public const double TimeRate = 1.0;
         public const double DayLength = Main.dayLength;

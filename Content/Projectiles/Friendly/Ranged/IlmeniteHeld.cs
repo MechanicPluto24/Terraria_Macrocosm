@@ -121,12 +121,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                                 ai1: extra,
                                 ai2: pen
                             );
-                            
+
                             Player.GetModPlayer<MacrocosmPlayer>().HeldProjectileCooldown = 0;
-                            
-                            if (currentAttack > 1) 
+
+                            if (currentAttack > 1)
                                 currentAttack = 0;
-                            else 
+                            else
                                 currentAttack += 1;
 
                             SoundEngine.PlaySound(SoundID.Item5, Projectile.position);

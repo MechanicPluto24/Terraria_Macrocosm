@@ -1,11 +1,9 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Utils;
 using System.Collections.Generic;
-using Terraria.DataStructures;
-using Terraria;
-using Macrocosm.Common.Config;
 using System.Linq;
-using System.Reflection.PortableExecutable;
-using Terraria.ID;
+using Terraria;
+using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -14,8 +12,8 @@ namespace Macrocosm.Common.Systems.Power
         public virtual bool CanCluster => false;
 
         public List<Point16> Cluster { get; private set; } = null;
-        public int ClusterSize => Cluster != null ? Cluster.Count : 1;   
-        
+        public int ClusterSize => Cluster != null ? Cluster.Count : 1;
+
         /// <summary> 
         /// Used for checking for new clusters when a tile is broken
         /// <br/> Run on the template instance
@@ -50,7 +48,7 @@ namespace Macrocosm.Common.Systems.Power
                 {
                     // Get all tile coordinates where there is a connected tile of the same type as this machine's
                     List<Point16> cluster = FindCluster(machine.Position.X, machine.Position.Y, machine.MachineTile.Type);
-                    if(cluster.Count > 0)
+                    if (cluster.Count > 0)
                     {
                         machine.Cluster = cluster;
                         Point16 clusterOrigin = cluster.MinBy(tile => (tile.Y, tile.X));
@@ -113,9 +111,9 @@ namespace Macrocosm.Common.Systems.Power
         private static Point16[] GetNeighborOffsets() =>
         [
             new Point16(-1, 0),
-            new Point16(1, 0), 
+            new Point16(1, 0),
             new Point16(0, -1),
-            new Point16(0, 1), 
+            new Point16(0, 1),
         ];
     }
 }

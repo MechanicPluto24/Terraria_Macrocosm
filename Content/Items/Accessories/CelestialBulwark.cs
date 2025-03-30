@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
-            player.dashType=0;    
+            player.dashType = 0;
             dashPlayer.AccDashHorizontal = true;
             dashPlayer.AccDashVertical = true;
 

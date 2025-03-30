@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Machines
             TileObjectData.addTile(Type);
 
             TileID.Sets.DisableSmartCursor[Type] = true;
-            AddMapEntry(new Color(107, 107, 110));
+            AddMapEntry(new Color(107, 107, 110), CreateMapEntryName());
         }
 
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= 18;

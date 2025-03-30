@@ -45,6 +45,11 @@ ClientConfig: {
 		Label: Disable Oil Shale Generation
 		Tooltip: ""
 	}
+
+	Headers: {
+		GameplayHeader: Gameplay Header Header
+		UIHeader: U I Header Header
+	}
 }
 
 ServerConfig: {
@@ -82,6 +87,11 @@ ServerConfig: {
 		Label: Cluster Find Update Rate
 		Tooltip: ""
 	}
+
+	Headers: {
+		WorldGenHeader: World Gen Header Header
+		UpdatesHeader: Updates Header Header
+	}
 }
 
 UnitSystemType: {
@@ -96,4 +106,48 @@ UpdateRate: {
 	Fast.Label: Fast (6 times per second)
 	Medium.Label: Medium (twice per second)
 	Slow.Label: Slow (once per second)
+}
+
+DebugConfig: {
+	DisplayName: Debug Config
+
+	RocketBounds: {
+		Label: Rocket Bounds
+		Tooltip: ""
+	}
+
+	RocketIndex: {
+		Label: Rocket Index
+		Tooltip: ""
+	}
+
+	RocketCount: {
+		Label: Rocket Count
+		Tooltip: ""
+	}
+
+	UIDebug: {
+		Label: U I Debug
+		Tooltip: ""
+	}
+
+	PacketDebug: {
+		Label: Packet Debug
+		Tooltip: ""
+	}
+
+	RoomOxygenDebug: {
+		Label: Room Oxygen Debug
+		Tooltip: ""
+	}
+
+	ShowCursorTileCoords: {
+		Label: Show Cursor Tile Coords
+		Tooltip: ""
+	}
+
+	ShowCursorWorldCoords: {
+		Label: Show Cursor World Coords
+		Tooltip: ""
+	}
 }

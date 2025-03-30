@@ -1,5 +1,3 @@
-using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

@@ -4,11 +4,9 @@ using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.UI.Customization
 {

@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using Terraria.ModLoader;
-using Terraria.ModLoader.Config;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Rockets.Modules

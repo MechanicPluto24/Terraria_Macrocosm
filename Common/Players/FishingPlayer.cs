@@ -5,10 +5,7 @@ using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -38,48 +35,51 @@ namespace Macrocosm.Common.Players
         {
             bool inWater = !attempt.inLava && !attempt.inHoney;
 
-            // Moon fishing
-            if (SubworldSystem.IsActive<Moon>())
+            // Earth fishing
+            if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                int[] moonQuestFishes = 
-                [
-                    ModContent.ItemType<DunceCraterfish>()
-                ];
-
                 if (inWater)
                 {
+                    if (Player.InModBiome<PollutionBiome>())
+                    {
+                        int[] pollutionQuestFishes = [
+                            ModContent.ItemType<SmogWispfish>(),
+                            ModContent.ItemType<HermitCan>(),
+                            ModContent.ItemType<MutatedGoldfish>()
+                        ];
+
+                        if (attempt.uncommon && pollutionQuestFishes.Contains(attempt.questFish))
+                        {
+                            itemDrop = attempt.questFish;
+                            return;
+                        }
+                    }
+                }
+            }
+            // Moon fishing
+            else if (SubworldSystem.IsActive<Moon>())
+            {
+                if (inWater)
+                {
+                    // Crates
                     if (attempt.crate)
                     {
                         // Always drop MB crates on the Moon (for now...)
                         itemDrop = ModContent.ItemType<IndustrialCrate>();
+                        return;
                     }
-                    else if (attempt.uncommon && moonQuestFishes.Contains(attempt.questFish))
-                    {
-                        itemDrop = attempt.questFish;
-                    }
-                    else
-                    { 
-                        itemDrop = ModContent.ItemType<Craterfish>();
-                    }
-                }
-            }
-            // Earth fishing
-            else
-            {
-                if (Player.InModBiome<PollutionBiome>())
-                {
-                    int[] pollutionQuestFishes =
-                    [
-                        ModContent.ItemType<SmogWispfish>(),
-                        ModContent.ItemType<HermitCan>(),
-                        ModContent.ItemType<MutatedGoldfish>()
-                    ];
 
-                    if (attempt.uncommon && pollutionQuestFishes.Contains(attempt.questFish))
+                    int[] moonQuestFishes = [
+                        ModContent.ItemType<DunceCraterfish>()
+                    ];
+                    if (attempt.uncommon && moonQuestFishes.Contains(attempt.questFish))
                     {
                         itemDrop = attempt.questFish;
                         return;
                     }
+
+                    itemDrop = ModContent.ItemType<Craterfish>();
+                    return;
                 }
             }
         }

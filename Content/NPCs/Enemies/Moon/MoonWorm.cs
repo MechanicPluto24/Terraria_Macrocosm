@@ -2,14 +2,13 @@ using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Systems;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Environment.Debris;
 using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -120,7 +119,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 			});
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) 
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
             => !Main.dayTime && spawnInfo.SpawnTileY < Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.01f : 0f;
 
         public override void Init()

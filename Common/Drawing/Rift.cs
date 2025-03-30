@@ -1,13 +1,12 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using System;
-using Terraria;
-using Macrocosm.Common.Utils;
-using static Terraria.GameContent.TextureAssets;
-using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Graphics;
-using Terraria.Graphics.Effects;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using Terraria;
+using static Terraria.GameContent.TextureAssets;
 
 namespace Macrocosm.Common.Drawing
 {

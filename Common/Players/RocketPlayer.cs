@@ -9,7 +9,6 @@ using Microsoft.Xna.Framework.Input;
 using SubworldLibrary;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -111,8 +110,8 @@ namespace Macrocosm.Common.Players
                     if (cameraModifier is not null)
                         cameraModifier.TargetPosition = RocketManager.Rockets[RocketID].Center - new Vector2(Main.screenWidth, Main.screenHeight) / 2f;
 
-                   // if (!rocket.Bounds.Contains(Player.Center))
-                   //     DisembarkFromRocket();
+                    // if (!rocket.Bounds.Contains(Player.Center))
+                    //     DisembarkFromRocket();
 
                     bool escapePressed = Main.keyState.KeyPressed(Keys.Escape) && !Main.oldKeyState.KeyPressed(Keys.Escape);
                     bool dismountPressed = Player.controlMount;
@@ -243,16 +242,16 @@ namespace Macrocosm.Common.Players
 
         public override void SaveData(TagCompound tag)
         {
-            if (InRocket) 
+            if (InRocket)
                 tag[nameof(InRocket)] = InRocket;
 
-            if (IsCommander)  
+            if (IsCommander)
                 tag[nameof(IsCommander)] = IsCommander;
 
-            if (RocketID >= 0) 
+            if (RocketID >= 0)
                 tag[nameof(RocketID)] = RocketID;
 
-            if (!string.IsNullOrEmpty(TargetWorld)) 
+            if (!string.IsNullOrEmpty(TargetWorld))
                 tag[nameof(TargetWorld)] = TargetWorld;
         }
 

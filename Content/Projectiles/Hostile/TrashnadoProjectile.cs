@@ -1,11 +1,7 @@
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.NPCs.Enemies.Pollution;
-using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using Terraria;
 using Terraria.ModLoader;
 

@@ -1,11 +1,9 @@
 ﻿using Macrocosm.Common.Drawing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -40,7 +38,7 @@ namespace Macrocosm.Common.Bases.Tiles
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.SolidBottom | AnchorType.PlanterBox, TileObjectData.newTile.Width, 0);
-            TileObjectData.newTile.DrawYOffset = -2; 
+            TileObjectData.newTile.DrawYOffset = -2;
 
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.Platform, TileObjectData.newTile.Width, 0);

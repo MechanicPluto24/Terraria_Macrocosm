@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class PhantasmalSkullSpawnEffect : Particle
     {
-        public override string TexturePath => Macrocosm.TextureEffectsPath + "Circle3";
+        public override string Texture => Macrocosm.TextureEffectsPath + "Circle3";
 
         private float defScale;
         private float actualScale;
@@ -41,7 +41,7 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale * 0.5f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale * 0.5f, SpriteEffects.None, 0f);
             return false;
         }
     }

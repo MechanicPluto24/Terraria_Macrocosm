@@ -1,9 +1,7 @@
-﻿using System;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Microsoft.Xna.Framework;
 using SubworldLibrary;
-using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {
@@ -19,11 +17,11 @@ namespace Macrocosm.Common.Hooks
             On_Projectile.ExplodeTiles -= On_Projectile_ExplodeTiles;
         }
         //Though the explosion global tile works well for tiles, it doesn't work for walls :(
-        private void On_Projectile_ExplodeTiles(On_Projectile.orig_ExplodeTiles orig,Projectile self, Vector2 compareSpot, int radius, int minI, int maxI, int minJ, int maxJ, bool wallSplode)
+        private void On_Projectile_ExplodeTiles(On_Projectile.orig_ExplodeTiles orig, Projectile self, Vector2 compareSpot, int radius, int minI, int maxI, int minJ, int maxJ, bool wallSplode)
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
                 return;
-            orig(self,compareSpot, radius, minI, maxI, minJ, maxJ, wallSplode);
+            orig(self, compareSpot, radius, minI, maxI, minJ, maxJ, wallSplode);
         }
     }
 }

@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 namespace Macrocosm.Common.Drawing.Particles
 {
     /// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-    public abstract partial class Particle : ModType
+    public abstract partial class Particle : ModTexturedType
     {
         /// <summary> Cached particle type as integer index, used for netcode purposes </summary>
         public int Type => type == -1 ? (type = ParticleManager.Types.IndexOf(this.GetType())) : type;
@@ -23,7 +23,7 @@ namespace Macrocosm.Common.Drawing.Particles
         #region Loading
         public override void Load()
         {
-            ParticleManager.Textures.Add(ModContent.Request<Texture2D>(TexturePath));
+            ParticleManager.Textures.Add(ModContent.Request<Texture2D>(Texture));
             OnLoad();
         }
 
@@ -103,7 +103,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
         #region Common Properties
         /// <summary> The <c>Particle</c>'s texture, autoloaded </summary>
-        public Asset<Texture2D> Texture => ParticleManager.Textures[Type];
+        public Asset<Texture2D> TextureAsset => ParticleManager.Textures[Type];
 
         /// <summary> The texture size of this <c>Particle</c> </summary>
         // TODO: Maybe replace this to an overridable size if ever implementing particle collision
@@ -113,7 +113,7 @@ namespace Macrocosm.Common.Drawing.Particles
             {
                 // BANDAID: Returns (1,1) on servers because I'm dumb -- Feldy
                 if (GetFrame() is null)
-                    return Texture is null ? new Vector2(1, 1) : Texture.Size();
+                    return TextureAsset is null ? new Vector2(1, 1) : TextureAsset.Size();
 
                 return GetFrame().Value.Size();
             }
@@ -121,9 +121,6 @@ namespace Macrocosm.Common.Drawing.Particles
 
         /// <summary> The <c>Particle</c>'s center coordinates in the world </summary>
         public Vector2 Center => Position + Size / 2;
-
-        /// <summary> Path to the <c>Particle</c>'s texture, override for custom loading. </summary>
-        public virtual string TexturePath => Utility.GetNamespacePath(this);
 
         /// <summary> Whether the <c>Particle</c> should update its position based on velocity </summary>
         public virtual bool ShouldUpdatePosition => true;
@@ -251,7 +248,7 @@ namespace Macrocosm.Common.Drawing.Particles
         }
 
         /// <summary> 
-        /// The current frame, as a nullabe <see cref="Rectangle"/>, representing the source <see cref="Texture"/> coordinates. 
+        /// The current frame, as a nullabe <see cref="Rectangle"/>, representing the source <see cref="TextureAsset"/> coordinates. 
         /// If null, draws the entire texture.
         /// </summary>
         public virtual Rectangle? GetFrame()
@@ -263,8 +260,8 @@ namespace Macrocosm.Common.Drawing.Particles
             if (FrameCount <= 1 && !SetRandomFrameOnSpawn)
                 return null;
 
-            int frameHeight = Texture.Height() / FrameCount;
-            return new Rectangle(0, frameHeight * currentFrame, Texture.Width(), frameHeight);
+            int frameHeight = TextureAsset.Height() / FrameCount;
+            return new Rectangle(0, frameHeight * currentFrame, TextureAsset.Width(), frameHeight);
         }
 
         #endregion
@@ -346,7 +343,7 @@ namespace Macrocosm.Common.Drawing.Particles
         /// <param name="lightColor"> The light color at the particle's position </param>
         public virtual void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor) * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor) * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
         /// <summary> 

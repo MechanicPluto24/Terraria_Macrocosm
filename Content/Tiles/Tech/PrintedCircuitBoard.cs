@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Tiles.Tech
 
         public override ushort GetMapOption(int i, int j)
         {
-            return (ushort)(Main.tile[i, j].TileFrameY / 18); 
+            return (ushort)(Main.tile[i, j].TileFrameY / 18);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class PhantasmalSkullHitEffect : Particle
     {
-        public override string TexturePath => Macrocosm.TextureEffectsPath + "Star6";
+        public override string Texture => Macrocosm.TextureEffectsPath + "Star6";
         public override int MaxPoolCount => 100;
 
         public int StarPointCount { get; set; }
@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale, SpriteEffects.None, 0f);
             return false;
         }
     }

@@ -128,7 +128,7 @@ namespace Macrocosm.Common.Global.Items
                     {
                         itemLoot.Add(ItemDropRule.NotScalingWithLuck(oilShaleType, 2, 5, 15));
                     }
-                    else if(item.type == ItemID.OceanCrateHard)
+                    else if (item.type == ItemID.OceanCrateHard)
                     {
                         itemLoot.Add(ItemDropRule.NotScalingWithLuck(siliconType, 2, 10, 20));
                     }

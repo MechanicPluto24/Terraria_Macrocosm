@@ -13,7 +13,6 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
@@ -43,10 +42,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.DropsMoonstone[Type] = true;
         }
 
-        private ActiveSound sound1;    
-        private ActiveSound sound2;    
-        private SlotId slot1;    
-        private SlotId slot2;  
+        private ActiveSound sound1;
+        private ActiveSound sound2;
+        private SlotId slot1;
+        private SlotId slot2;
 
         private readonly Range headRaiseFrame = 0..2;
         private readonly Range idleFrames = 3..14;
@@ -130,7 +129,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             }
         }
-     
+
         public override void AI()
         {
             NPC.TargetClosest();
@@ -226,7 +225,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 gasLeak = true;
                 if (sound2 == null)
                     slot2 = SoundEngine.PlaySound(SFX.ZombieEngineerGasLeak, NPC.position);
-                
+
             }
 
 

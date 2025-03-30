@@ -1,11 +1,7 @@
-﻿using Macrocosm.Common.CrossMod;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Achievements;
-using Macrocosm.Content.Particles;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
@@ -14,7 +10,6 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.GameContent.UI.Elements;
@@ -345,7 +340,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                     };
 
                     assemblyElements[module.Name] = assemblyElement;
-                    if(Rocket.Modules.Select(m => m.Name).Contains(module.Name))
+                    if (Rocket.Modules.Select(m => m.Name).Contains(module.Name))
                     {
                         Append(assemblyElement);
                         assemblyElement.Activate();
@@ -356,7 +351,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
             return assemblyElements;
         }
 
-        public void RefreshAssemblyElements() 
+        public void RefreshAssemblyElements()
         {
             this.RemoveAllChildrenWhere(element => element is UIModuleAssemblyElement);
             assemblyElements = CreateAssemblyElements();

@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Particles
 {
     public class CelestialStar : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public BlendState BlendStateOverride;
 
         private bool fadeIn;

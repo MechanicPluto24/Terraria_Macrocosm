@@ -1,12 +1,8 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
-using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Tiles.Trees;
-using SubworldLibrary;
 using Terraria;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
 

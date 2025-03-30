@@ -14,7 +14,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseBulkheadOpen")]
     public class IndustrialBulkheadOpen : ModTile, IDoorTile
     {
         public int Height => 5;

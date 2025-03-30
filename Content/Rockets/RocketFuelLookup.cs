@@ -38,8 +38,8 @@ namespace Macrocosm.Content.Rockets
         private static void PopulateTable()
         {
             // Earth 
-            Add("Earth", "Earth", 20f); 
-            Add("Earth", "Moon", 200f); 
+            Add("Earth", "Earth", 20f);
+            Add("Earth", "Moon", 200f);
             Add("Earth", "Sun", 5900f);
             Add("Earth", "Mercury", 3200f);
             Add("Earth", "Venus", 1900f);
@@ -62,8 +62,8 @@ namespace Macrocosm.Content.Rockets
             Add("Earth", "Eris", 7700f);
 
             // Moon 
-            Add("Moon", "Moon", 12f); 
-            Add("Moon", "Earth", 120f);   
+            Add("Moon", "Moon", 12f);
+            Add("Moon", "Earth", 120f);
             Add("Moon", "Sun", 5800f);
             Add("Moon", "Mercury", 3100f);
             Add("Moon", "Venus", 2000f);

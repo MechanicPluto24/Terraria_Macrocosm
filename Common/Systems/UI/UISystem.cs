@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Customization;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
@@ -28,7 +27,6 @@ namespace Macrocosm.Common.Systems.UI
         public MachineUIState UIMachineState { get; set; }
 
         private GameTime lastGameTime;
-        public static bool DebugModeActive { get; set; } = false;
 
         public static void ShowRocketUI(Rocket rocket) => Instance.ShowRocketUI_Internal(rocket);
         public static void ShowAssemblyUI(LaunchPad launchPad) => Instance.ShowAssemblyUI_Internal(launchPad);

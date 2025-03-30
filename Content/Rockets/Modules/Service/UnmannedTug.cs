@@ -1,8 +1,6 @@
-﻿using Macrocosm.Common.Sets;
-using Macrocosm.Content.Items.Tech;
+﻿using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using System.Linq;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules.Service

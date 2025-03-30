@@ -12,7 +12,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseDeskLamp")]
     public class IndustrialDeskLamp : ModTile, IToggleableTile
     {
         public override void SetStaticDefaults()

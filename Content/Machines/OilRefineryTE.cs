@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
+using Macrocosm.Common.ItemCreationContexts;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
@@ -167,6 +167,8 @@ namespace Macrocosm.Content.Machines
                                 OutputSlot.SetDefaults(fillType);
                             else
                                 OutputSlot.stack++;
+
+                            OutputSlot.OnCreated(new MachineItemCreationContext(OutputSlot, this));
 
                             if (ContainerSlot.stack <= 1)
                                 ContainerSlot.TurnToAir();

@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Tiles.Trees
 
         public override void RandomUpdate(int i, int j)
         {
-            if(WorldGen.genRand.NextBool(20))
+            if (WorldGen.genRand.NextBool(20))
                 WorldGen.AttemptToGrowTreeFromSapling(i, j, j > (int)Main.worldSurface - 1);
         }
 

@@ -1,11 +1,8 @@
-﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Refined;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Terraria.Map;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Wiring

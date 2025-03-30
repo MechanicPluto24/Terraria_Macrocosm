@@ -19,8 +19,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
         private const float MaxBeamLength = 3000f;
         private const float BeamHitboxCollisionWidth = 22f;
 
-        public int AITimer=0;
-        
+        public int AITimer = 0;
+
 
 
         float Transparency = 0f;
@@ -35,19 +35,20 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
             Projectile.timeLeft = 35;
-   
+
         }
-        public override void OnKill (int timeLeft){
-            NPC OwnerTurret= Main.npc[(int)Projectile.ai[0]];
-            if(OwnerTurret.active && OwnerTurret.type == ModContent.NPCType<LaserTurret>())
-                OwnerTurret.ai[0]=0f;
+        public override void OnKill(int timeLeft)
+        {
+            NPC OwnerTurret = Main.npc[(int)Projectile.ai[0]];
+            if (OwnerTurret.active && OwnerTurret.type == ModContent.NPCType<LaserTurret>())
+                OwnerTurret.ai[0] = 0f;
         }
         public override bool ShouldUpdatePosition() => false;
 
         public override void AI()
-        {            
-            NPC OwnerTurret= Main.npc[(int)Projectile.ai[0]];
-            if(!OwnerTurret.active || OwnerTurret.type != ModContent.NPCType<LaserTurret>())
+        {
+            NPC OwnerTurret = Main.npc[(int)Projectile.ai[0]];
+            if (!OwnerTurret.active || OwnerTurret.type != ModContent.NPCType<LaserTurret>())
                 Projectile.Kill();
 
             Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.UnitX);
@@ -62,7 +63,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
                 Transparency -= 0.2f;
         }
 
-     
+
 
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {
@@ -99,10 +100,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Color color = new Color(255, 255, 255).WithAlpha(225) * Transparency * (0.9f + (0.1f * MathF.Sin(AITimer)));
-            
+
             Vector2 visualStartPosition = startPosition;
             Utility.DrawBeam(texture, visualStartPosition, endPosition, drawScale, color, new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
-            
+
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);

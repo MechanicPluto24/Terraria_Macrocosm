@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,8 +28,6 @@ namespace Macrocosm.Content.Rockets
         public static Rocket[] Rockets { get; private set; }
 
         public const int MaxRockets = 256;
-
-        public static bool DebugModeActive = false;
 
         public override void Load()
         {
@@ -99,7 +98,7 @@ namespace Macrocosm.Content.Rockets
             {
                 Rocket rocket = Rockets[i];
 
-                if(rocket.Active)
+                if (rocket.Active)
                     rocket.Despawn();
             }
         }
@@ -130,17 +129,21 @@ namespace Macrocosm.Content.Rockets
                 if (rocket.DrawLayer != layer)
                     continue;
 
-                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition, useRenderTarget: !DebugModeActive);
+                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition, useRenderTarget: !DebugConfig.Instance.RocketBounds);
 
-                if (DebugModeActive)
+                if (DebugConfig.Instance.RocketIndex)
                 {
                     rocket.DisplayWhoAmI();
+                }
+
+                if (DebugConfig.Instance.RocketBounds)
+                {
                     rocket.DrawDebugBounds();
                     rocket.DrawDebugModuleHitbox();
                 }
             }
 
-            if (DebugModeActive)
+            if (DebugConfig.Instance.RocketCount)
             {
                 string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
                 ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.14f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);

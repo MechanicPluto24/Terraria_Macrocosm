@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

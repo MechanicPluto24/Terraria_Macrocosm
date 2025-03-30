@@ -2,7 +2,6 @@
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.LiquidContainers;
-using Macrocosm.Content.Items.Ores;
 using Macrocosm.Content.Items.Refined;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
@@ -31,7 +30,7 @@ namespace Macrocosm.Content.Subworlds
             gen_StructureMap = new();
         }
 
-            [Task]
+        [Task]
         private void PlaceSpawn(GenerationProgress progress)
         {
             Structure module = Structure.Get<BaseSpaceStationModule>();

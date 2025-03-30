@@ -1,5 +1,4 @@
 using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

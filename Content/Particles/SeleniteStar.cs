@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Particles
 {
     public class SeleniteStar : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public override int MaxPoolCount => 100;
 
         public int StarPointCount { get; set; }

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Subworlds
 {
     public abstract class MultiSubworld : MacrocosmSubworld
     {
-        public override string Name => base.Name + InstanceIndex; 
+        public override string Name => base.Name + InstanceIndex;
         public int InstanceIndex { get; private set; } = 0;
         protected abstract int InstanceCount { get; }
 

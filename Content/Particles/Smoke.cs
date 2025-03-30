@@ -49,14 +49,14 @@ namespace Macrocosm.Content.Particles
 
             Velocity.X += WindFactor * Utility.WindSpeedScaled;
 
-            if(VanillaUpdate)
+            if (VanillaUpdate)
                 if (Scale.X < 0.1f || (Opacity <= 0 && fadedIn))
                     Kill();
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor).WithAlpha(Color.A) * Opacity * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor).WithAlpha(Color.A) * Opacity * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
         public static Color GetTileHitColor(Point coords) => GetTileHitColor(coords.X, coords.Y);

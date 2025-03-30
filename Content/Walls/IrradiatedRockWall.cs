@@ -1,41 +1,22 @@
+using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.Enums;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Walls
 {
-    public class IrradiatedRockWall : ModWall
+    public class IrradiatedRockWall : VariantWall
     {
-        public override void SetStaticDefaults()
+        public override void SetVariantStaticDefaults(WallSafetyType variant)
         {
-            Main.wallHouse[Type] = false;
             AddMapEntry(new Color(64, 64, 58));
-
             DustType = ModContent.DustType<IrradiatedRockDust>();
-        }
-    }
 
-    public class IrradiatedRockWallNatural : IrradiatedRockWall
-    {
-        public override string Texture => base.Texture.Replace("Natural", "");
-
-        public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            Main.wallHouse[Type] = false;
-            RegisterItemDrop(ModContent.ItemType<Items.Walls.IrradiatedRockWall>());
-        }
-    }
-
-    public class IrradiatedRockWallUnsafe : IrradiatedRockWall
-    {
-        public override string Texture => base.Texture.Replace("Unsafe", "");
-
-        public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            Main.wallHouse[Type] = false;
+            if (variant == WallSafetyType.Unsafe)
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.IrradiatedRockWallUnsafe>());
+            else
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.IrradiatedRockWall>());
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
@@ -242,7 +241,7 @@ namespace Macrocosm.Content.Skies.Moon
 
         private void UpdateNebulaStars()
         {
-            if(lastMoonType != Main.moonType)
+            if (lastMoonType != Main.moonType)
                 shouldRefreshNebulaStars = true;
 
             lastMoonType = Main.moonType;
@@ -307,7 +306,7 @@ namespace Macrocosm.Content.Skies.Moon
 
             sun.Color = new Color(255, 255, 255) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
 
-            earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));  
+            earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
             UpdateTextures();
 

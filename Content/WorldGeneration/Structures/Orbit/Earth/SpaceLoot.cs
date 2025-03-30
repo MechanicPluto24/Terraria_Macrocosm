@@ -4,14 +4,13 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Tiles.Rubble;
+using Macrocosm.Content.Walls;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
-using Macrocosm.Content.Tiles.Rubble;
-using Macrocosm.Content.Walls;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
 {

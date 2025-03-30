@@ -338,7 +338,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
 
         public ref float LegTimer => ref NPC.ai[1];
 
-        public Player TargetPlayer => Main.player[NPC.target];
+        public Player TargetPlayer => NPC.HasValidTarget ? Main.player[NPC.target] : Main.LocalPlayer;
         public bool HasTarget => TargetPlayer is not null && TargetPlayer.active && !TargetPlayer.dead;
 
         private Rectangle collisionHitbox;

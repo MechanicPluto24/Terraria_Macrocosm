@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Particles
 {
     public class PortalSwirl : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public Vector2 TargetCenter { get; set; }
 
         public override void SetDefaults()

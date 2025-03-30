@@ -1,6 +1,4 @@
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Items.Ores;
-using Macrocosm.Content.Items.Refined;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
 
         protected abstract int Direction { get; }
 
-        protected virtual string LandingLegPath => TexturePath.Replace(Name, "LandingLeg" + (Direction > 0 ? "Right" : "Left"));
+        protected virtual string LandingLegPath => Texture.Replace(Name, "LandingLeg" + (Direction > 0 ? "Right" : "Left"));
 
         protected Rectangle LandingLegFrame => LandingLeg.Frame(1, base.NumberOfFrames, frameY: CurrentFrame);
         protected Asset<Texture2D> LandingLeg => _landingLeg ??= ModContent.Request<Texture2D>(LandingLegPath, AssetRequestMode.ImmediateLoad);

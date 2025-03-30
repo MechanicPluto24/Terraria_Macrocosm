@@ -3,8 +3,6 @@ using SubworldLibrary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -244,8 +242,8 @@ namespace Macrocosm.Common.Systems.Flags
                 HeavenforgeShrineUnlocked,
                 LunarRustShrineUnlocked,
                 AstraShrineUnlocked
-            ) 
-            = reader.ReadBitsByte(); 
+            )
+            = reader.ReadBitsByte();
             (
                 DarkCelestialShrineUnlocked,
                 MercuryShrineUnlocked,

@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.createTile = TileType<Tiles.Ores.AluminumOre>();
             Item.placeStyle = 0;
             Item.rare = ItemRarityID.White;
-            
+
             // Set other Item.X values here
         }
 

@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class IceMist : Particle
     {
-        public override string TexturePath => Macrocosm.TextureEffectsPath + "Smoke1";
+        public override string Texture => Macrocosm.TextureEffectsPath + "Smoke1";
 
         public float Opacity { get; set; }
         public float ExpansionRate { get; set; }
@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Particles
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor).WithAlpha(Color.A) * Opacity, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor).WithAlpha(Color.A) * Opacity, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
     }
 }

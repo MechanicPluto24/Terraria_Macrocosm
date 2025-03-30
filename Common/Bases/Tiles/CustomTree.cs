@@ -8,7 +8,6 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -778,8 +777,8 @@ namespace Macrocosm.Common.Bases.Tiles
 
         #region Loot & Shaking
 
-        public virtual IEnumerable<Item> GetExtraItemDrops(int i, int j) 
-        { 
+        public virtual IEnumerable<Item> GetExtraItemDrops(int i, int j)
+        {
             yield break;
         }
 

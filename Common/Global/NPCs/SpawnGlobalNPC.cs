@@ -5,7 +5,6 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Subworlds;
 using SubworldLibrary;
 using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -66,7 +65,7 @@ namespace Macrocosm.Common.Global.NPCs
                 maxSpawns = (int)(maxSpawns * 1f);
             }
 
-            if (RoomOxygenSystem.IsRoomPressurized(player.Center))
+            if (RoomOxygenSystem.CheckRoomOxygen(player.Center))
             {
                 spawnRate = (int)(spawnRate * 0.1f);
                 maxSpawns = (int)(maxSpawns * 0.6f);

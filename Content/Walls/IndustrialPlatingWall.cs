@@ -1,25 +1,27 @@
+using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Walls
 {
-    [LegacyName("MoonBasePlatingWall")]
-    public class IndustrialPlatingWall : ModWall
+    public class IndustrialPlatingWall : VariantWall
     {
         private static int[][] wallFrameNumberLookup;
 
-        public override void SetStaticDefaults()
+        public override void SetVariantStaticDefaults(WallSafetyType variant)
         {
-            Main.wallHouse[Type] = true;
             AddMapEntry(new Color(71, 71, 74));
-
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
-            // Adaptation of stone slab framing style (wallLargeFrames = 1),
-            // but without the interlocked pattern (2 fewer repeats on Y)
+            if (variant == WallSafetyType.Unsafe)
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialPlatingWallUnsafe>());
+            else
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialPlatingWall>());
+
+            // Adaption of stone slab framing style (wallLargeFrames = 1), but without the interlocked pattern (2 fewer repeats on Y)
             wallFrameNumberLookup = [
                 [2, 4, 2],
                 [1, 3, 1],
@@ -33,31 +35,6 @@ namespace Macrocosm.Content.Walls
 
             frameNumber = wallFrameNumberLookup[j % 2][i % 3] - 1;
             return true;
-        }
-    }
-
-    [LegacyName("MoonBasePlatingWallNatural")]
-    public class IndustrialPlatingWallNatural : IndustrialPlatingWall
-    {
-        public override string Texture => base.Texture.Replace("Natural", "");
-
-        public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            Main.wallHouse[Type] = false;
-            RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialPlatingWall>());
-        }
-    }
-
-    [LegacyName("MoonBasePlatingWallUnsafe")]
-    public class IndustrialPlatingWallUnsafe : IndustrialPlatingWall
-    {
-        public override string Texture => base.Texture.Replace("Unsafe", "");
-
-        public override void SetStaticDefaults()
-        {
-            base.SetStaticDefaults();
-            Main.wallHouse[Type] = false;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class TintableFlash : Particle
     {
-        public override string TexturePath => Macrocosm.TextureEffectsPath + "Flare2";
+        public override string Texture => Macrocosm.TextureEffectsPath + "Flare2";
 
         public override void SetDefaults()
         {
@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, null, Color, Rotation, Texture.Size() / 2f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, null, Color, Rotation, TextureAsset.Size() / 2f, Scale, SpriteEffects.None, 0f);
             return false;
         }
     }

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;

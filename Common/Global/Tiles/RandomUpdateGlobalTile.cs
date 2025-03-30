@@ -1,11 +1,8 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Subworlds;
+﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Tiles.Trees;
-using Microsoft.Xna.Framework;
 using SubworldLibrary;
-using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -26,7 +23,7 @@ namespace Macrocosm.Common.Global.Tiles
 
         public override void RandomUpdate(int i, int j, int type)
         {
-            if(type == TileID.JungleGrass)
+            if (type == TileID.JungleGrass)
             {
                 bool aboveGround = j < Main.worldSurface + 10;
                 if (aboveGround)
@@ -40,7 +37,7 @@ namespace Macrocosm.Common.Global.Tiles
 
         private bool On_WorldGen_PlaceAlch(On_WorldGen.orig_PlaceAlch orig, int x, int y, int style)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.IsRoomPressurized(x, y))
+            if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.CheckRoomOxygen(x, y))
                 return false;
 
             return orig(x, y, style);
@@ -80,7 +77,7 @@ namespace Macrocosm.Common.Global.Tiles
                 int j = WorldGen.genRand.Next((int)Main.worldSurface - 1, Main.maxTilesY - 20);
 
                 WorldGen_UpdateWorld_UndergroundTile(i, j, checkNPCSpawns: false, wallDist: 3);
-                TownNPCSystem.TrySpawningTownNPC(i, j); 
+                TownNPCSystem.TrySpawningTownNPC(i, j);
             }
 
             double liquidRandomUpdateRate = 10E-03f * (float)worldUpdateRate;
@@ -93,7 +90,7 @@ namespace Macrocosm.Common.Global.Tiles
 
                 // Trigger liquid random updates for evaporation
                 if (Main.tile[i, j].LiquidAmount > 0)
-                    if (!RoomOxygenSystem.IsRoomPressurized(i, j))
+                    if (!RoomOxygenSystem.CheckRoomOxygen(i, j))
                         WorldGen.PlaceLiquid(i, j, (byte)Main.tile[i, j].LiquidType, 0);
             }
         }
@@ -103,7 +100,7 @@ namespace Macrocosm.Common.Global.Tiles
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                if (RoomOxygenSystem.IsRoomPressurized(i, j))
+                if (RoomOxygenSystem.CheckRoomOxygen(i, j))
                 {
                     typeof(WorldGen).InvokeMethod("UpdateWorld_OvergroundTile", parameters: [i, j, checkNPCSpawns, wallDist]);
                 }
@@ -124,7 +121,7 @@ namespace Macrocosm.Common.Global.Tiles
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                if (RoomOxygenSystem.IsRoomPressurized(i, j))
+                if (RoomOxygenSystem.CheckRoomOxygen(i, j))
                 {
                     typeof(WorldGen).InvokeMethod("UpdateWorld_UndergroundTile", parameters: [i, j, checkNPCSpawns, wallDist]);
                 }

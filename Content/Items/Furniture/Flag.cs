@@ -1,6 +1,5 @@
-﻿using Macrocosm.Content.Items.Blocks;
+﻿using Macrocosm.Content.Items.Bars;
 using Terraria;
-using Macrocosm.Content.Items.Bars;
 using Terraria.ID;
 using Terraria.ModLoader;
 
