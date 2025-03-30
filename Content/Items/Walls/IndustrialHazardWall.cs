@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Walls;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks;
@@ -17,7 +18,9 @@ namespace Macrocosm.Content.Items.Walls
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableWall(ModContent.WallType<Content.Walls.IndustrialHazardWall>());
+            Content.Walls.IndustrialHazardWall inst = ModContent.GetInstance<Content.Walls.IndustrialHazardWall>();
+            var type = inst?.Type ?? 0;
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.IndustrialHazardWall>());
             Item.width = 22;
             Item.height = 22;
         }
@@ -46,7 +49,7 @@ namespace Macrocosm.Content.Items.Walls
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.createWall = Utility.GetWallVariantType(Item.createWall, WallSafetyType.Unsafe);
+            Item.createWall = VariantWall.WallType<Content.Walls.IndustrialHazardWall>(WallSafetyType.Unsafe);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Tiles.Misc
             Main.tileNoFail[Type] = true;
             Main.tileObsidianKill[Type] = true;
             Main.tileSpelunker[Type] = true;
-
+            Main.tileFrameImportant[Type] = true;
             AddMapEntry(new Color(0, 200, 100), CreateMapEntryName());
 
             HitSound = SoundID.Item27;
@@ -48,6 +48,12 @@ namespace Macrocosm.Content.Tiles.Misc
 
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
         {
+            if(!CanPlace(i, j))
+            {
+                WorldGen.KillTile(i, j);
+                return false;
+            }
+
             Tile below = Main.tile[i, j + 1];
             Tile above = Main.tile[i, j - 1];
             Tile right = Main.tile[i + 1, j];

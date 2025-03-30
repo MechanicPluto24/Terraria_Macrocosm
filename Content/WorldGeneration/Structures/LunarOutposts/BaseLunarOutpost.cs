@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
+using Macrocosm.Common.Bases.Walls;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
@@ -28,14 +29,18 @@ namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
             ];
 
             ushort[] clearableWalls = [
-                (ushort)ModContent.WallType<IndustrialPlatingWall>(),
-                (ushort)ModContent.WallType<IndustrialHazardWall>(),
-                (ushort)ModContent.WallType<IndustrialSquarePaneledWall>(),
-                (ushort)ModContent.WallType<IndustrialTrimmingWall>(),
+                (ushort)VariantWall.WallType<IndustrialPlatingWall>(),
+                (ushort)VariantWall.WallType<IndustrialHazardWall>(),
+                (ushort)VariantWall.WallType<IndustrialSquarePaneledWall>(),
+                (ushort)VariantWall.WallType<IndustrialTrimmingWall>(),
+                (ushort)VariantWall.WallType<IndustrialPlatingWall>(WallSafetyType.Natural),
+                (ushort)VariantWall.WallType<IndustrialHazardWall>(WallSafetyType.Natural),
+                (ushort)VariantWall.WallType<IndustrialSquarePaneledWall>(WallSafetyType.Natural),
+                (ushort)VariantWall.WallType<IndustrialTrimmingWall>(WallSafetyType.Natural),
             ];
 
             // Age room
-            WorldUtils.Gen(new Point(origin.X, origin.Y), new Shapes.Rectangle(Size.X, Size.Y), Actions.Chain(new Modifiers.Dither(0.85), new Modifiers.Blotches(), new Modifiers.OnlyWalls(clearableWalls), (new Actions.PlaceWall((ushort)ModContent.WallType<ProtolithWall>()))));
+            WorldUtils.Gen(new Point(origin.X, origin.Y), new Shapes.Rectangle(Size.X, Size.Y), Actions.Chain(new Modifiers.Dither(0.85), new Modifiers.Blotches(), new Modifiers.OnlyWalls(clearableWalls), new Actions.PlaceWall((ushort)VariantWall.WallType<ProtolithWall>(WallSafetyType.Natural))));
             WorldUtils.Gen(new Point(origin.X, origin.Y), new Shapes.Rectangle(Size.X, Size.Y), Actions.Chain(new Modifiers.Dither(0.95), new Modifiers.OnlyTiles(clearableTiles), new Actions.ClearTile(frameNeighbors: true)));
 
             for (int i = origin.X; i < origin.X + Size.X; i++)
