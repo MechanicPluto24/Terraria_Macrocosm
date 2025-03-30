@@ -13,7 +13,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseToilet")]
     public class IndustrialToilet : ModTile
     {
         public override void SetStaticDefaults()

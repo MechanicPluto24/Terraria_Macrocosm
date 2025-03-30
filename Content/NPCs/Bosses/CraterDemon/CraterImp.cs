@@ -199,7 +199,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 NPC.spriteDirection = 1;
             }
 
-            Player player = NPC.target >= 0 && NPC.target < Main.maxPlayers ? Main.player[NPC.target] : null;
+            Player player = NPC.HasValidTarget ? Main.player[NPC.target] : Main.LocalPlayer;
 
             if (AI_Attack == AttackType.Wait && !(NPC.target < 0 || NPC.target >= Main.maxPlayers || player.dead || !player.active))
             {

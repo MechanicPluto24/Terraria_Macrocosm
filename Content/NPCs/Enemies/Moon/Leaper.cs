@@ -1,14 +1,13 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using System;
-using Terraria;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
-using Terraria.ID;
-using Terraria.DataStructures;
-using Terraria.ModLoader;
 using System.IO;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
@@ -45,7 +44,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
         }
-       
+
 
 
         private float lightValueFlee = 0.1f; // This light value causes the leaper to flee.
@@ -74,7 +73,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             fear = reader.ReadBoolean();
             jumping = reader.ReadBoolean();
             performingWallAnimation = reader.ReadBoolean();
-       }
+        }
 
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? 0.1f : 0f;

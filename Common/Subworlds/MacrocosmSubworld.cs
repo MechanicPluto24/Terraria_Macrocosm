@@ -10,10 +10,7 @@ using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Stubble.Core.Classes;
 using SubworldLibrary;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -40,6 +37,12 @@ namespace Macrocosm.Common.Subworlds
 
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
         protected virtual double TimeRate { get; } = Earth.TimeRate;
+
+        /// <summary> The world update rate of this subworld, compared to Earth's (1.0) </summary>
+        protected virtual double WorldUpdateRate { get; } = Earth.TimeRate;
+
+        /// <summary> The tile update rate of this subworld, compared to Earth's (1.0) </summary>
+        protected virtual double TileUpdateRate { get; } = Earth.TimeRate;
 
         /// <summary> Day length of this subworld in ticks </summary>
         protected virtual double DayLength { get; } = Earth.DayLength;
@@ -150,33 +153,45 @@ namespace Macrocosm.Common.Subworlds
         private void UpdateTime()
         {
             double timeRate = TimeRate;
+            double worldUpdateRate = WorldUpdateRate;
+            double tileUpdateRate = TileUpdateRate;
 
-            // Fast forward 60 times if using sun/moon-dials
+            // Fast forward 60 times if using sun/moon-dials (except tile updates)
             if (Main.IsFastForwardingTime())
+            {
                 timeRate *= 60.0;
-
-            // Apply current journey power time modifier
-            timeRate *= CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
-
-            // Apply all players sleeping multiplier 
-            if (Main.CurrentFrameFlags.SleepingPlayersCount == Main.CurrentFrameFlags.ActivePlayersCount && Main.CurrentFrameFlags.SleepingPlayersCount > 0)
-                timeRate *= 5;
-
-            // Don't pass time if disabled from the journey powers 
-            if (CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled)
+                worldUpdateRate *= 60.0;
+            }
+            else if (CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled)
+            {
+                // Don't pass time if disabled from the journey powers 
                 timeRate = 0;
+                worldUpdateRate = 0;
+                tileUpdateRate = 0;
+            }
+            else
+            {
+                int targetTimeRate = CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
+                bool allPlayersSleeping = Main.CurrentFrameFlags.SleepingPlayersCount == Main.CurrentFrameFlags.ActivePlayersCount && Main.CurrentFrameFlags.SleepingPlayersCount > 0;
+
+                // Apply current journey power time modifier
+                timeRate *= targetTimeRate;
+                worldUpdateRate *= targetTimeRate;
+                tileUpdateRate *= targetTimeRate;
+
+                // Apply all players sleeping multiplier 
+                if (allPlayersSleeping)
+                {
+                    timeRate *= 5;
+                    worldUpdateRate *= 5;
+                    tileUpdateRate *= 5;
+                }
+            }
 
             // Update time
             Main.time += timeRate;
-
-            // Set update rates
-            Main.desiredWorldTilesUpdateRate = timeRate / 60.0;
-            Main.desiredWorldEventsUpdateRate = timeRate;
-
-            // We don't want slower updates if the time rate is less than Earth
-            // TODO: adjust this for subworlds with a faster rate than Earth, while still letting vanilla time speedups increase the update rate
-            if (timeRate < 1.0)
-                Main.worldEventUpdates = 1;
+            Main.desiredWorldTilesUpdateRate = worldUpdateRate;
+            Main.desiredWorldEventsUpdateRate = tileUpdateRate;
 
             if (Utility.IsDusk)
             {

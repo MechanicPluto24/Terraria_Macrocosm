@@ -1,9 +1,8 @@
-﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
-using System.Collections;
 using System;
+using System.Collections;
 using System.IO;
 using Terraria;
 using Terraria.Chat;

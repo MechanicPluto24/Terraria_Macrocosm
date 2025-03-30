@@ -96,7 +96,7 @@ namespace Macrocosm.Content.Machines
             float rotation = rotationCounter;
 
             // Disable sway if pole is in a place with no wind
-            if(!WorldGen.InAPlaceWithWind(i, j, Width, Height - 2))
+            if (!WorldGen.InAPlaceWithWind(i, j, Width, Height - 2))
                 windCycle = 0;
 
             // Disable rotation and sway if turbine and blades are in a place with no wind

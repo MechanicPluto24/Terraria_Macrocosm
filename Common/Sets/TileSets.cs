@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria.GameContent;
+﻿using Terraria.GameContent;
 using Terraria.ID;
 
 namespace Macrocosm.Common.Sets

@@ -1,7 +1,6 @@
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Subworlds;
 using MonoMod.Cil;
-using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 

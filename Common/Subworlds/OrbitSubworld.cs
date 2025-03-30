@@ -1,8 +1,6 @@
 ﻿using SubworldLibrary;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -12,7 +10,7 @@ namespace Macrocosm.Common.Subworlds
 
         public static IEnumerable<OrbitSubworld> GetOrbitSubworlds(string parentSubworldId)
         {
-            foreach(var subworld in MacrocosmSubworlds)
+            foreach (var subworld in MacrocosmSubworlds)
                 if (subworld is OrbitSubworld orbitSubworld && orbitSubworld.ParentSubworldID == parentSubworldId)
                     yield return orbitSubworld;
         }

@@ -1,15 +1,6 @@
-﻿using SubworldLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria;
+﻿using Macrocosm.Common.Sets;
 using Terraria.GameContent;
-using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.Sets;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
 {

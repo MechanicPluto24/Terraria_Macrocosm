@@ -1,19 +1,16 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria.GameContent.Drawing;
-using Terraria.ObjectData;
 using Terraria;
-using Microsoft.Xna.Framework;
-using System.Reflection;
-using Terraria.Utilities;
 using Terraria.GameContent;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
+using Terraria.GameContent.Drawing;
 using Terraria.ModLoader;
-using Terraria.DataStructures;
+using Terraria.ObjectData;
+using Terraria.Utilities;
 
 namespace Macrocosm.Common.Drawing
 {
@@ -72,7 +69,7 @@ namespace Macrocosm.Common.Drawing
             if (!solidLayer && !intoRenderTargets)
             {
                 Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
-                foreach(var (coords, drawMethod) in customSpecialPoints)
+                foreach (var (coords, drawMethod) in customSpecialPoints)
                     drawMethod.Invoke(coords.X, coords.Y, Main.spriteBatch);
                 Main.spriteBatch.End();
             }
@@ -189,7 +186,7 @@ namespace Macrocosm.Common.Drawing
                         heightModifier = 0f;
 
                     TileRenderer.GetTileDrawData(i, j, tile, type, ref tileFrameX, ref tileFrameY, out var tileWidth, out var tileHeight, out var tileTop, out var halfBrickHeight, out var addFrX, out var addFrY, out var tileSpriteEffect, out _, out _, out _);
-                    
+
                     bool canDoDust = TileRendererRandom.NextBool(4);
                     Color tileLight = colorOverride ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
                     AdjustForVisionChangers(i, j, tile, type, tileFrameX, tileFrameY, ref tileLight, canDoDust);
@@ -285,7 +282,7 @@ namespace Macrocosm.Common.Drawing
 
         */
 
-        public static void DrawMultiTileInWindTopAnchor(int topLeftX, int topLeftY, Asset<Texture2D> texture = null, Color? color = null, bool perTileLighting = true, Vector2 offset = default, bool applyPaint = false, float windSensitivity = 0.15f, float windOffsetFactorY = -4f, int rowsToIgnore = 0,  float? windHeightSensitivityOverride = null)
+        public static void DrawMultiTileInWindTopAnchor(int topLeftX, int topLeftY, Asset<Texture2D> texture = null, Color? color = null, bool perTileLighting = true, Vector2 offset = default, bool applyPaint = false, float windSensitivity = 0.15f, float windOffsetFactorY = -4f, int rowsToIgnore = 0, float? windHeightSensitivityOverride = null)
         {
             Tile sourceTile = Main.tile[topLeftX, topLeftY];
             TileObjectData data = TileObjectData.GetTileData(sourceTile);
@@ -350,7 +347,7 @@ namespace Macrocosm.Common.Drawing
                         windHeightSensitivity = 0f;
 
                     TileRenderer.GetTileDrawData(i, j, tile, type, ref tileFrameX, ref tileFrameY, out var tileWidth, out var tileHeight, out var tileTop, out var halfBrickHeight, out var addFrX, out var addFrY, out var tileSpriteEffect, out var _, out var _, out var _);
-                    
+
                     bool canDoDust = TileRendererRandom.NextBool(4);
                     Color tileLight = color ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
                     AdjustForVisionChangers(i, j, tile, type, tileFrameX, tileFrameY, ref tileLight, canDoDust);
@@ -377,7 +374,7 @@ namespace Macrocosm.Common.Drawing
         }
 
         /// <summary> Submit a tile paint request </summary>
-        public static void AddTilePaintRequest(TilePaintSystemV2.ARenderTargetHolder renderTargetHolder) 
+        public static void AddTilePaintRequest(TilePaintSystemV2.ARenderTargetHolder renderTargetHolder)
             => ((List<TilePaintSystemV2.ARenderTargetHolder>)typeof(TilePaintSystemV2).GetFieldValue("_requests", Main.instance.TilePaintSystem)).Add(renderTargetHolder);
 
         public static void AdjustForVisionChangers(int i, int j, Tile tileCache, ushort typeCache, short tileFrameX, short tileFrameY, ref Color tileLight, bool canDoDust)

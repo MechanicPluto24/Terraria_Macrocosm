@@ -1,5 +1,4 @@
-﻿using Macrocosm.Content.Items.Blocks;
-using Macrocosm.Content.Items.Tech;
+﻿using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using Terraria.ModLoader;

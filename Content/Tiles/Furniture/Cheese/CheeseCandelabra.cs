@@ -78,7 +78,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             Tile tile = Main.tile[i, j];
             //if (tile.TileFrameX / 18 % 2 == 0)
             if (tile.TileFrameX == 0)
-                tile.GetEmmitedLight(new Color(87, 230, 158), applyPaint: false, out r, out g, out b); 
+                tile.GetEmmitedLight(new Color(87, 230, 158), applyPaint: false, out r, out g, out b);
         }
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)

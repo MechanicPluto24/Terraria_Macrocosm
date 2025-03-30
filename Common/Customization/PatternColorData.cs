@@ -79,13 +79,13 @@ namespace Macrocosm.Common.Customization
             {
                 string name = functionObject["name"]?.Value<string>() ?? throw new ArgumentException("Missing 'name' field.");
                 object[] parameters = functionObject["parameters"]?.ToObject<List<object>>()?.ToArray() ?? throw new ArgumentException("Missing 'parameters' field.");
-                var colorFunction = ColorFunction.CreateByName(name, parameters); 
+                var colorFunction = ColorFunction.CreateByName(name, parameters);
                 return new PatternColorData(colorFunction);
             }
 
             // Whether the color data is modifiable or not, defaults to false
             bool isUserModifiable = jObject["isUserModifiable"]?.Value<bool>() ?? false;
-             string colorHexValue = jObject["color"]?.Value<string>() ?? throw new ArgumentException("Missing color field.");
+            string colorHexValue = jObject["color"]?.Value<string>() ?? throw new ArgumentException("Missing color field.");
             if (!Utility.TryGetColorFromHex(colorHexValue, out Color colorValue))
                 throw new ArgumentException($"Invalid color: {colorHexValue}");
 

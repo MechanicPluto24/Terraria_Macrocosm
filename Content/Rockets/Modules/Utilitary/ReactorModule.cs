@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Rockets.Modules.Utilitary
         {
             if (inWorld)
             {
-                glowmask ??= ModContent.Request<Texture2D>(TexturePath + "_Glow");
+                glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
                 spriteBatch.Draw(glowmask.Value, position, null, Color.White * Rocket.Transparency, Rocket.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
             }
         }

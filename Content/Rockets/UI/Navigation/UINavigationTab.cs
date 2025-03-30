@@ -98,7 +98,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
 
         private void LaunchRocket()
         {
-            if(targetOrbitSubworld != null)
+            if (targetOrbitSubworld != null)
                 Rocket.Launch(targetOrbitSubworld.ID, orbitTravel: true);
             else
                 Rocket.Launch(target.TargetID, targetLaunchPad);
@@ -171,7 +171,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                 {
                     if (lpInfo.LaunchPad is not null)
                         targetLaunchPad = lpInfo.LaunchPad;
-                    else if(lpInfo.OrbitSubworld is not null)
+                    else if (lpInfo.OrbitSubworld is not null)
                         targetOrbitSubworld = lpInfo.OrbitSubworld;
                     else
                         selectedSpawnLocation = true;
@@ -352,7 +352,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
             }
 
             List<UILaunchDestinationInfoElement> orbitSubworlds = new();
-            if(target is not null && target.TargetID == MacrocosmSubworld.CurrentID)
+            if (target is not null && target.TargetID == MacrocosmSubworld.CurrentID)
             {
                 foreach (var orbitSubworld in OrbitSubworld.GetOrbitSubworlds(target.TargetID).OrderBy(s => s.InstanceIndex))
                 {
@@ -411,7 +411,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
                 launchLocationsList.AddRange(orbitSubworlds.Cast<UIElement>().ToList());
             }
 
-            launchLocationsList.ManualSortMethod = (_) => {};
+            launchLocationsList.ManualSortMethod = (_) => { };
             launchLocationsList.UpdateOrder();
             launchLocationsList.Activate();
             return launchLocationsList;

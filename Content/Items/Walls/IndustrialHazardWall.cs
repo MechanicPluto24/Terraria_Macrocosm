@@ -1,3 +1,5 @@
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
@@ -5,7 +7,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Walls
 {
-    [LegacyName("MoonBaseHazardWall")]
     public class IndustrialHazardWall : ModItem
     {
         public override void SetStaticDefaults()
@@ -31,7 +32,6 @@ namespace Macrocosm.Content.Items.Walls
         }
     }
 
-    [LegacyName("MoonBaseHazardWallUnsafe")]
     public class IndustrialHazardWallUnsafe : IndustrialHazardWall
     {
         public override string Texture => base.Texture.Replace("Unsafe", "");
@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Items.Walls
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.createWall = ModContent.WallType<Content.Walls.IndustrialHazardWallUnsafe>();
+            Item.createWall = Utility.GetWallVariantType(Item.createWall, WallSafetyType.Unsafe);
         }
     }
 }

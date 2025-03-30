@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Players;
-using Macrocosm.Common.Systems;
+﻿using Macrocosm.Common.Systems;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.LoadingScreens;
 using Macrocosm.Content.Rockets;
@@ -9,13 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using SubworldLibrary;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Terraria;
-using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 
@@ -71,6 +66,8 @@ namespace Macrocosm.Common.Subworlds
         public static Guid MainWorldUniqueID => SubworldSystem.AnyActive() ? typeof(SubworldSystem).GetFieldValue<WorldFileData>("main").UniqueId : Main.ActiveWorldFileData.UniqueId;
 
         public static double CurrentTimeRate => Current is not null ? Current.TimeRate : Earth.TimeRate;
+        public static double CurrentWorldUpdateRate => Current is not null ? Current.WorldUpdateRate : Earth.TimeRate;
+        public static double CurrentTileUpdateRate => Current is not null ? Current.TileUpdateRate : Earth.TimeRate;
 
         public static double GetDayLength() => Current is not null ? Current.DayLength : Earth.DayLength;
 
@@ -83,7 +80,7 @@ namespace Macrocosm.Common.Subworlds
             if (Current is not null)
             {
                 float density = Current.AtmosphericDensity(position);
-                if (checkRooms && RoomOxygenSystem.IsRoomPressurized(position))
+                if (checkRooms && RoomOxygenSystem.CheckRoomOxygen(position))
                     density = Earth.AtmosphericDensity;
                 return density;
             }
@@ -130,6 +127,6 @@ namespace Macrocosm.Common.Subworlds
             LoadingScreen?.Setup();
         }
 
-       
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
 using Macrocosm.Common.Loot;
 using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Common.Loot.DropRules;

@@ -13,19 +13,16 @@ namespace Macrocosm.Common.Config
         /// <summary> This config's instance, assigned by tML before Macrocosm content loads! </summary>
         public static ServerConfig Instance;
 
-        /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
-        public event EventHandler OnConfigChanged;
-
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
-        [Header("$Mods.Macrocosm.Configs.ServerConfig.WorldGenHeader")]
+        [Header("WorldGenHeader")]
         [DefaultValue(false)]
         public bool DisableSilicaSandGeneration { get; set; }
 
         [DefaultValue(false)]
         public bool DisableOilShaleGeneration { get; set; }
 
-        [Header("$Mods.Macrocosm.Configs.ServerConfig.Updates")]
+        [Header("UpdatesHeader")]
         [DefaultValue(UpdateRate.Realtime)]
         public UpdateRate CircuitSearchUpdateRate { get; set; }
 
@@ -38,9 +35,8 @@ namespace Macrocosm.Common.Config
         [DefaultValue(UpdateRate.Realtime)]
         public UpdateRate RoomPressureUpdateRate { get; set; }
 
-        public override void OnChanged()
-        {
-            OnConfigChanged?.Invoke(this, EventArgs.Empty);
-        }
+        /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
+        public event EventHandler OnConfigChanged;
+        public override void OnChanged() => OnConfigChanged?.Invoke(this, EventArgs.Empty);
     }
 }

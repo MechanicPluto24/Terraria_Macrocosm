@@ -18,23 +18,23 @@ namespace Macrocosm.Content.Rockets
         {
             TagCompound tag = new();
 
-            if(Modules != null) tag[nameof(Modules)] = Modules;
+            if (Modules != null) tag[nameof(Modules)] = Modules;
 
-            if(Active) tag[nameof(Active)] = true;
-            if(WhoAmI != -1) tag[nameof(WhoAmI)] = WhoAmI;
-            if(CurrentWorld != "") tag[nameof(CurrentWorld)] = CurrentWorld;
+            if (Active) tag[nameof(Active)] = true;
+            if (WhoAmI != -1) tag[nameof(WhoAmI)] = WhoAmI;
+            if (CurrentWorld != "") tag[nameof(CurrentWorld)] = CurrentWorld;
 
-            if(State != ActionState.Idle) tag[nameof(State)] = (int)State;
-            if(Position != default) tag[nameof(Position)] = Position;
+            if (State != ActionState.Idle) tag[nameof(State)] = (int)State;
+            if (Position != default) tag[nameof(Position)] = Position;
 
-            if(OrbitTravel) tag[nameof(OrbitTravel)] = true;
-            if(TargetTravelPosition != default) tag[nameof(TargetTravelPosition)] = TargetTravelPosition;
+            if (OrbitTravel) tag[nameof(OrbitTravel)] = true;
+            if (TargetTravelPosition != default) tag[nameof(TargetTravelPosition)] = TargetTravelPosition;
 
-            if(Fuel != 0f) tag[nameof(Fuel)] = Fuel;
-            if(FuelCapacity != DefaultFuelCapacity) tag[nameof(FuelCapacity)] = FuelCapacity;
+            if (Fuel != 0f) tag[nameof(Fuel)] = Fuel;
+            if (FuelCapacity != DefaultFuelCapacity) tag[nameof(FuelCapacity)] = FuelCapacity;
 
-            if(Nameplate != null) tag[nameof(Nameplate)] = Nameplate;
-            if(Inventory != null) tag[nameof(Inventory)] = Inventory;
+            if (Nameplate != null) tag[nameof(Nameplate)] = Nameplate;
+            if (Inventory != null) tag[nameof(Inventory)] = Inventory;
 
             return tag;
         }
@@ -64,7 +64,7 @@ namespace Macrocosm.Content.Rockets
             if (tag.ContainsKey(nameof(Nameplate)))
                 rocket.Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
 
-            if (tag.ContainsKey(nameof(Inventory))) 
+            if (tag.ContainsKey(nameof(Inventory)))
                 rocket.Inventory = tag.Get<Inventory>(nameof(Inventory));
 
             return rocket;

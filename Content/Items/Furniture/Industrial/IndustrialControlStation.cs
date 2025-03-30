@@ -6,7 +6,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseControlStation")]
     public class IndustrialControlStation : ModItem
     {
         public override void SetStaticDefaults()

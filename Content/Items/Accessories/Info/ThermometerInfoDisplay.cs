@@ -1,13 +1,9 @@
 ﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -26,13 +22,12 @@ namespace Macrocosm.Content.Items.Accessories.Info
         public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
         {
             temperature = MathHelper.Lerp(temperature, MacrocosmSubworld.GetAmbientTemperature(), 0.1f);
-
-            string text = string.Empty;
-            if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Metric)
-                text = Language.GetText("Mods.Macrocosm.Machines.Common.TemperatureMetric").Format((int)temperature);
-            else if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Imperial)
-                text = Language.GetText("Mods.Macrocosm.Machines.Common.TemperatureImperial").Format((int)Utility.CelsiusToFarhenheit(temperature));
-
+            string text = ClientConfig.Instance.UnitSystem switch
+            {
+                UnitSystemType.Metric => Language.GetText("Mods.Macrocosm.Machines.Common.TemperatureMetric").Format((int)temperature),
+                UnitSystemType.Imperial => Language.GetText("Mods.Macrocosm.Machines.Common.TemperatureImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)),
+                _ => "",
+            };
             displayColor = Color.White;
             return text;
         }

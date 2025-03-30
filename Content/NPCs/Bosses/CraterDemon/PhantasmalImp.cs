@@ -3,7 +3,6 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Threading;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;

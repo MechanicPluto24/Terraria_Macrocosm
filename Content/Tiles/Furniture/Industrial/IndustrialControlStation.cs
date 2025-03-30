@@ -15,7 +15,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseControlStation")]
     public class IndustrialControlStation : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
@@ -83,7 +82,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             if (tile.TileFrameY < 18 * 3)
                 frameYOffset = 18 * 3 * ((Main.tileFrame[type] + i / 3) % 6);
             else
-                frameYOffset = 18 * 3 * 5;  
+                frameYOffset = 18 * 3 * 5;
         }
 
         public override void AnimateTile(ref int frame, ref int frameCounter)

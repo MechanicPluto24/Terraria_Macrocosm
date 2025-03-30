@@ -1,18 +1,13 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
-using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Systems;
-using Macrocosm.Content.Items.Drops;
-using Macrocosm.Content.Items.Food;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -71,7 +66,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             // If you want the segment length to be constant, set these two properties to the same value
             MinSegmentLength = 5;
             MaxSegmentLength = 9;
-            CanFly=true;
+            CanFly = true;
             CommonWormInit(this);
         }
 
@@ -155,7 +150,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             NPC.height = 28;
             NPC.aiStyle = -1;
             Main.npcFrameCount[Type] = 1;
-            attackCounter=Main.rand.Next(400,500);
+            attackCounter = Main.rand.Next(400, 500);
         }
 
         public override void Init()
@@ -175,8 +170,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 Player target = Main.player[NPC.target];
                 if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 1000f)
                 {
-                    Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0,5), ModContent.ProjectileType<WyrmwoodProjectile>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer);
-                    attackCounter=Main.rand.Next(400,500);
+                    Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 5), ModContent.ProjectileType<WyrmwoodProjectile>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer);
+                    attackCounter = Main.rand.Next(400, 500);
                 }
             }
         }

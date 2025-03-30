@@ -1,6 +1,4 @@
-﻿using Macrocosm.Common.Customization;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -56,7 +54,7 @@ namespace Macrocosm.Content.Machines
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             var topLeft = Utility.GetMultitileTopLeft(i, j);
-            if(WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, Width, Height))
+            if (WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, Width, Height))
                 frameYOffset = 18 * Height * Main.tileFrame[type];
         }
 

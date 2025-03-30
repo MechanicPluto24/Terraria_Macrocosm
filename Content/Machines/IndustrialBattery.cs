@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

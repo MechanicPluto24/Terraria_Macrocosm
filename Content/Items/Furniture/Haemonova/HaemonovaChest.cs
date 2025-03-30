@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Furniture.Haemonova
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<HaemonovaBrick>( 8)
+                .AddIngredient<HaemonovaBrick>(8)
                 .AddRecipeGroup(RecipeGroupID.IronBar, 2)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

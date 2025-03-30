@@ -1,6 +1,6 @@
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent;
 
 namespace Macrocosm.Content.Tiles.Trees
 {

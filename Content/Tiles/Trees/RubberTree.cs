@@ -236,7 +236,7 @@ namespace Macrocosm.Content.Tiles.Trees
                 else if (tile.TileFrameX == 176)
                 {
                     // Break if bottom of trunk is not on the left
-                    if (tileLeft.TileType != type) 
+                    if (tileLeft.TileType != type)
                         WorldGen.KillTile(i, j);
                 }
                 // Root frame to the left
@@ -262,7 +262,7 @@ namespace Macrocosm.Content.Tiles.Trees
                         tile.TileFrameX = 0;
 
                     // Switch to stump frame if not tile above
-                    if(typeAbove != type)
+                    if (typeAbove != type)
                         tile.TileFrameX += 4 * 22;
                 }
             }

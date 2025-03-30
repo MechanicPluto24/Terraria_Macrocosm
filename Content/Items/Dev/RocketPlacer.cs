@@ -5,7 +5,6 @@ using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Rockets.Modules.Service;
 using Macrocosm.Content.Rockets.Modules.Top;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -51,7 +50,7 @@ namespace Macrocosm.Content.Items.Dev
                     }
 
                     if (!despawned)
-                    { 
+                    {
                         moduleConfig++;
                         if (moduleConfig > 2)
                             moduleConfig = 0;

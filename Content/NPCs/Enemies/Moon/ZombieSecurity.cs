@@ -39,7 +39,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public int ShotsCounter = 1;
         public int MaxConsecutiveShots = 3;
 
-        public Player TargetPlayer => Main.player[NPC.target];
+        public Player TargetPlayer => NPC.HasValidTarget ? Main.player[NPC.target] : Main.LocalPlayer;
 
         #region Privates 
         private readonly Range shootFramesCommon = 0..5;

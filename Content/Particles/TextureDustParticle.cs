@@ -1,22 +1,20 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using System.Linq;
 using ReLogic.Content;
-using Macrocosm.Common.DataStructures;
-using Terraria.GameContent;
 using System.Collections.Generic;
+using System.Linq;
+using Terraria;
+using Terraria.GameContent;
 
 namespace Macrocosm.Content.Particles
 {
     /// <summary> Create pixel box dusts randomly picked from a texture. Blatantly inefficient, avoid </summary>
     public class TextureDustParticle : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public override int MaxPoolCount => 1000;
 
         public Asset<Texture2D> SourceTexture = Macrocosm.EmptyTex;
@@ -32,10 +30,10 @@ namespace Macrocosm.Content.Particles
         {
             textureData = RawTexture.FromAsset(SourceTexture);
             List<Color> opaque = textureData.Data.Where((c) => c.A == 255).ToList();
-            if(opaque.Count > 0)
+            if (opaque.Count > 0)
             {
                 Color = opaque.GetRandom(Main.rand);
-                if(Color == Color.White)
+                if (Color == Color.White)
                 {
                     Main.NewText(SourceTexture.Name);
                 }

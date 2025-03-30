@@ -1,6 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.LiquidContainers;
+﻿using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using System.Linq;

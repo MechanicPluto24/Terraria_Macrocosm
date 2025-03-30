@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;

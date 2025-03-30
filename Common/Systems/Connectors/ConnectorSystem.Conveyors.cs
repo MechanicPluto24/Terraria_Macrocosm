@@ -1,20 +1,14 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Utils;
-using System;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria.DataStructures;
 using Terraria;
-using Terraria.ModLoader;
-using Macrocosm.Common.Drawing.Particles;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Particles;
-using Terraria.ID;
-using Terraria.Graphics.Shaders;
-using Macrocosm.Common.Config;
-using Terraria.UI;
-using Macrocosm.Common.Systems.Power;
+using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
@@ -90,7 +84,7 @@ namespace Macrocosm.Common.Systems.Connectors
                             continue;
 
                         Item sourceClone = sourceItem.Clone();
-                        sourceClone.stack = transferAmount; 
+                        sourceClone.stack = transferAmount;
                         Item visualClone = sourceClone.Clone();
 
                         if (inletNode.Storage is Chest inletChest)

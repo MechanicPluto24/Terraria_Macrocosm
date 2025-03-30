@@ -1,8 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System.IO;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tools
@@ -17,7 +13,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Tools
             Projectile.bobber = true;
             Projectile.penetrate = -1;
             Projectile.netImportant = true;
-            DrawOriginOffsetY = -8; 
+            DrawOriginOffsetY = -8;
         }
     }
 }

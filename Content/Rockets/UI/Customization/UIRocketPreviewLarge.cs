@@ -3,11 +3,9 @@ using Macrocosm.Common.Graphics;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -97,12 +95,12 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         {
             return slot switch
             {
-                 0 => 0.35f,
-                 1 => 0.35f,
-                 2 => 0.35f,
-                 3 => 0.55f,
-                 4 => 0.52f,
-                 5 => 0.52f,
+                0 => 0.35f,
+                1 => 0.35f,
+                2 => 0.35f,
+                3 => 0.55f,
+                4 => 0.52f,
+                5 => 0.52f,
                 _ => 0f
             };
         }
@@ -129,7 +127,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 AnimationActive = !ZoomedOut;
 
                 if (changed)
-                    OnModuleChange( CurrentModuleIndex);
+                    OnModuleChange(CurrentModuleIndex);
             }
         }
 

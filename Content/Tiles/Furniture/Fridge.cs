@@ -145,7 +145,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             player.cursorItemIconID = -1;
             if (chest < 0)
             {
-                player.cursorItemIconText = tile.GetModTile().DefaultContainerName(tile.TileFrameX, tile.TileFrameY).Value; 
+                player.cursorItemIconText = tile.GetModTile().DefaultContainerName(tile.TileFrameX, tile.TileFrameY).Value;
             }
             else
             {

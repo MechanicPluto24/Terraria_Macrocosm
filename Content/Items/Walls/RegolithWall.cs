@@ -1,3 +1,5 @@
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks.Terrain;
 using Terraria;
 using Terraria.ID;
@@ -43,7 +45,7 @@ namespace Macrocosm.Content.Items.Walls
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.createWall = ModContent.WallType<Content.Walls.RegolithWallUnsafe>();
+            Item.createWall = Utility.GetWallVariantType(Item.createWall, WallSafetyType.Unsafe);
         }
     }
 }

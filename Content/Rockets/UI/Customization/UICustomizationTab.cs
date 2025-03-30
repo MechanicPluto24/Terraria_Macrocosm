@@ -270,7 +270,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
                 if (matchingIcon != null)
                 {
                     currentPatternIcon = matchingIcon;
-                    foreach(var colorData in currentDummyPattern.ColorData)
+                    foreach (var colorData in currentDummyPattern.ColorData)
                         currentPatternIcon.Pattern.ColorData[colorData.Key] = colorData.Value;
 
                     currentPatternIcon.HasFocus = true;
@@ -437,7 +437,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         private void OnCurrentModuleChange(int moduleIndex)
         {
-            currentModuleIndex = moduleIndex;   
+            currentModuleIndex = moduleIndex;
             modulePickerTitle.SetText(CustomizationDummy.Modules[moduleIndex].DisplayName);
             modulePickerIconPanel.SetModule(CustomizationDummy.Modules[moduleIndex]);
             RefreshPatternConfigPanel();
@@ -1285,7 +1285,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
         private void PatternIconOnClick(UIPatternIcon icon)
         {
-            if(icon.Pattern.Name != (CurrentModule?.Pattern.Name ?? ""))
+            if (icon.Pattern.Name != (CurrentModule?.Pattern.Name ?? ""))
             {
                 SelectPattern(icon);
                 RefreshPatternColorPickers();

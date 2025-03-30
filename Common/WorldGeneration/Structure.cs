@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Drawing.Sky;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using StructureHelper;
 using StructureHelper.Models;

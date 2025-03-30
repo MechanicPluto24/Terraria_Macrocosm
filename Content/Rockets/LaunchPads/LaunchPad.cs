@@ -5,7 +5,6 @@ using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Particles;
@@ -17,14 +16,12 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.Net;
 
 namespace Macrocosm.Content.Rockets.LaunchPads
 {
@@ -68,7 +65,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         private Dictionary<string, Range> _moduleSlotRanges = new();
 
         public RocketModule.ConfigurationType CurrentConfiguration { get; private set; } = RocketModule.ConfigurationType.Manned;
-        private List<RocketModule.ConfigurationType> Configurations 
+        private List<RocketModule.ConfigurationType> Configurations
             => Enum.GetValues(typeof(RocketModule.ConfigurationType)).Cast<RocketModule.ConfigurationType>().Where(c => c != RocketModule.ConfigurationType.Any).ToList();
 
 

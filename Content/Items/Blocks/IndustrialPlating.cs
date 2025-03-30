@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Blocks
 {
-    [LegacyName("MoonBasePlating")]
     public class IndustrialPlating : ModItem
     {
         public override void SetStaticDefaults()
@@ -38,7 +37,7 @@ namespace Macrocosm.Content.Items.Blocks
                 .Register();
 
             CreateRecipe()
-                .AddIngredient<IndustrialSquarePaneledWall>(4)
+                .AddIngredient<IrradiatedRockWall>(4)
                 .AddTile(TileID.WorkBenches)
                 .Register();
 

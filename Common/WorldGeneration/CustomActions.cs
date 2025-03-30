@@ -20,7 +20,7 @@ namespace Macrocosm.Common.WorldGeneration
 
             public override bool Apply(Point origin, int x, int y, params object[] args)
             {
-                if(Utility.CoordinatesOutOfBounds(x, y))
+                if (Utility.CoordinatesOutOfBounds(x, y))
                     return false;
 
                 if (TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[x, y].TileType])

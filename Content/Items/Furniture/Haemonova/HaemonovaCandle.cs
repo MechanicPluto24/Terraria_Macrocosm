@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Enums;
-using Macrocosm.Content.Items.Consumables.Throwable;
 using Macrocosm.Content.Items.Blocks.Bricks;
+using Macrocosm.Content.Items.Consumables.Throwable;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Furniture.Haemonova
         public override void AddRecipes()
         {
             CreateRecipe()
-                .AddIngredient<HaemonovaBrick>( 4)
+                .AddIngredient<HaemonovaBrick>(4)
                 .AddIngredient<LunarCrystal>(1)
                 .AddTile(TileID.MythrilAnvil)
                 .Register();

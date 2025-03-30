@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Customization;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Consumables.Unlockables;
-using Macrocosm.Content.Rockets.Modules;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -54,7 +53,7 @@ namespace Macrocosm.Content.Rockets
                         }
                     }
                 }
-        }
+            }
 
             if (sync)
                 SyncCustomizationData();

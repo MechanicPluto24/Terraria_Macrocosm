@@ -1,10 +1,9 @@
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Tiles.Blocks.Terrain
 {
@@ -37,7 +36,7 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             return false;
         }
 
-        public override bool HasWalkDust() => MacrocosmSubworld.GetGravityMultiplier()!=0f;
+        public override bool HasWalkDust() => MacrocosmSubworld.GetGravityMultiplier() != 0f;
 
         public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
         {

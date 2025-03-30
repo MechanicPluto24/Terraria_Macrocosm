@@ -1,8 +1,6 @@
 ﻿using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
-using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Utils;
 using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Debuffs.Environment;
 using Macrocosm.Content.Subworlds;
@@ -145,7 +143,7 @@ namespace Macrocosm.Common.Players
                 Player.buffImmune[BuffType<Depressurized>()] = true;
                 Player.setBonus = Language.GetTextValue("Mods.Macrocosm.Items.SetBonuses.SpaceProtection_" + (int)(SpaceProtection / 3f));
             }
-            else if(RoomOxygenSystem.IsRoomPressurized(Player.Center))
+            else if (RoomOxygenSystem.CheckRoomOxygen(Player.Center))
             {
                 Player.buffImmune[BuffType<Depressurized>()] = true;
             }
@@ -202,7 +200,7 @@ namespace Macrocosm.Common.Players
 
         public void HandleAchievements()
         {
-            if(SubworldSystem.IsActive<Moon>())
+            if (SubworldSystem.IsActive<Moon>())
                 CustomAchievement.IncreaseEventValue<SurviveMoon>(nameof(SurviveMoon), 1f);
         }
 

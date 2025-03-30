@@ -1,7 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Tools.Wiring;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems.Power
 {

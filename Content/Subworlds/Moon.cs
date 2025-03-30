@@ -3,7 +3,6 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Achievements;
@@ -12,13 +11,11 @@ using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
 using Macrocosm.Content.Skies.Moon;
 using Microsoft.Xna.Framework;
-using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -142,26 +139,26 @@ namespace Macrocosm.Content.Subworlds
                     lastMoonPhase = moonPhase;
 
                     if (Main.netMode != NetmodeID.SinglePlayer)
-                        NetMessage.SendData(MessageID.WorldData); 
+                        NetMessage.SendData(MessageID.WorldData);
                 }
             }
         }
 
         public void SetTimeFromMoonPhase()
-        { 
-            Main.dayTime = Main.GetMoonPhase() 
-                is not MoonPhase.HalfAtLeft 
-                and not MoonPhase.QuarterAtLeft 
-                and not MoonPhase.Empty; 
+        {
+            Main.dayTime = Main.GetMoonPhase()
+                is not MoonPhase.HalfAtLeft
+                and not MoonPhase.QuarterAtLeft
+                and not MoonPhase.Empty;
 
             // Set time as the middle of the phases
             Main.time = Main.GetMoonPhase() switch
             {
-                MoonPhase.QuarterAtRight => DayLength * 0.1, 
-                MoonPhase.HalfAtRight => DayLength * 0.3, 
-                MoonPhase.ThreeQuartersAtRight => DayLength * 0.5, 
-                MoonPhase.Full => DayLength * 0.7, 
-                MoonPhase.ThreeQuartersAtLeft => DayLength * 0.9, 
+                MoonPhase.QuarterAtRight => DayLength * 0.1,
+                MoonPhase.HalfAtRight => DayLength * 0.3,
+                MoonPhase.ThreeQuartersAtRight => DayLength * 0.5,
+                MoonPhase.Full => DayLength * 0.7,
+                MoonPhase.ThreeQuartersAtLeft => DayLength * 0.9,
 
                 MoonPhase.HalfAtLeft => NightLength * (1.0 / 6.0),
                 MoonPhase.QuarterAtLeft => NightLength * (3.0 / 6.0),
@@ -170,7 +167,7 @@ namespace Macrocosm.Content.Subworlds
                 _ => 0,
             };
 
-            if(Main.netMode != NetmodeID.SinglePlayer)
+            if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendData(MessageID.WorldData);
         }
 

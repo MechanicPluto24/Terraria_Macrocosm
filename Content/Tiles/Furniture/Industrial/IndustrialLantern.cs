@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -16,7 +15,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseLantern")]
     public class IndustrialLantern : ModTile, IToggleableTile
     {
         public override void SetStaticDefaults()
@@ -65,7 +63,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, i, topY, 1, 2);
-        }   
+        }
 
         public override void HitWire(int i, int j)
         {

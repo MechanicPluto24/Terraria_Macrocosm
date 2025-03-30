@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Projectile.alpha > 0)
                 Projectile.alpha -= 15;
 
-            for(int i = 0; i < 3; i++)
+            for (int i = 0; i < 3; i++)
             {
                 Vector2 velocity = -Projectile.velocity.RotatedByRandom(MathHelper.Pi / 16f) * 0.2f;
                 Dust dust = Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(Projectile.width, Projectile.height) * 0.5f, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: 0.55f);

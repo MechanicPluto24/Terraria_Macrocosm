@@ -100,3 +100,6 @@ KeroseneGenerator.MapEntry: Kerosene Generator
 SolarPanelTile.MapEntry: Solar Panel Tile
 Flag.MapEntry: Flag
 ApolloLander.MapEntry: Apollo Lander
+ACUnit.MapEntry: A C Unit
+AirVent.MapEntry: Air Vent
+LuminiteCrystal.MapEntry: Luminite Crystal

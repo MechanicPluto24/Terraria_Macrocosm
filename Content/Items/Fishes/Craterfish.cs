@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ID;
+﻿using Macrocosm.Content.Rarities;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Rarities;
 
 namespace Macrocosm.Content.Items.Fishes
 {

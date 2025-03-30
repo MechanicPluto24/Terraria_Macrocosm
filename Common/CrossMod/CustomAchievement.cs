@@ -1,7 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Terraria.Achievements;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.CrossMod
@@ -39,9 +37,9 @@ namespace Macrocosm.Common.CrossMod
         // Nothing really happens on regular loading, besides registering the ModType
         public sealed override void SetupContent() => SetStaticDefaults();
         public sealed override void SetStaticDefaults() { }
-        protected sealed override void Register() 
-        { 
-            ModTypeLookup<CustomAchievement>.Register(this); 
+        protected sealed override void Register()
+        {
+            ModTypeLookup<CustomAchievement>.Register(this);
         }
 
         // After setting up content, the achievement is registered to TMLAchievements
@@ -122,7 +120,7 @@ namespace Macrocosm.Common.CrossMod
         public void IncreaseEventValue(string valueEventName, float amount)
         {
             if (!valueEvents.ContainsKey(valueEventName))
-                return; 
+                return;
 
             if (ModLoader.TryGetMod("TMLAchievements", out Mod mod))
                 mod.Call("ValueEvent", valueEventName, amount);

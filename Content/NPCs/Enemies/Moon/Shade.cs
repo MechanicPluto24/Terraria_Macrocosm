@@ -173,7 +173,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 NPC.velocity = ((NPC.velocity + (direction * 4f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) 
+        public override float SpawnChance(NPCSpawnInfo spawnInfo)
             => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.05f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)

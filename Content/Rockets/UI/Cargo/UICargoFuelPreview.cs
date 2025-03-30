@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private UIText title;
 
-        private UILiquidTank rocketFuelTank; 
+        private UILiquidTank rocketFuelTank;
         private UITextPanel<string> textPanel;
 
 

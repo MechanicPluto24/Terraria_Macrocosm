@@ -12,10 +12,8 @@ using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.Graphics.Effects;
-using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 using static Macrocosm.Common.Drawing.Sky.CelestialBody;
-using static Macrocosm.Content.Tiles.Furniture.Industrial.IndustrialChest;
 
 namespace Macrocosm.Content.Skies.Moon
 {

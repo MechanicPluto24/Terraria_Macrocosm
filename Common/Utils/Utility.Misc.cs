@@ -2,7 +2,6 @@
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using MonoMod.Cil;
 using ReLogic.Content;
 using System;
@@ -28,6 +27,7 @@ namespace Macrocosm.Common.Utils
         public static bool IsAprilFools => DateTime.Now.Month == 5 && DateTime.Now.Day == 1;
 
         public static string GetNamespacePath(this object obj) => (obj.GetType().Namespace + "." + obj.GetType().Name).Replace('.', '/');
+        public static string GetModTypePath(this ModType modType) => (modType.GetType().Namespace + "." + modType.Name).Replace('.', '/');
 
         public static string GetNamespacePath(this Type type) => (type.Namespace + "." + type.Name).Replace('.', '/');
 

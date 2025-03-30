@@ -1,5 +1,4 @@
-﻿using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.Modules;
+﻿using Macrocosm.Content.Rockets.Modules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +56,7 @@ namespace Macrocosm.Common.Customization
         public static Decal GetDecal(string decalName, string context)
             => decals[(decalName, context)];
 
-        public static List<Decal> GetUnlockedDecals(string context) 
+        public static List<Decal> GetUnlockedDecals(string context)
             => GetDecalsWhere(context, decal => decalUnlockStatus.TryGetValue((decal.Name, context), out bool value) && value);
 
         public static List<Decal> GetDecalsWhere(string context, Func<Decal, bool> match)

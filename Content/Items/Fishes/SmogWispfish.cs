@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Terraria;
 using Terraria.ID;
-using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Content.Biomes;
 
 namespace Macrocosm.Content.Items.Fishes
 {
@@ -24,7 +18,7 @@ namespace Macrocosm.Content.Items.Fishes
         }
 
         public override bool IsQuestFish() => true;
-        public override bool IsAnglerQuestAvailable() => true; 
+        public override bool IsAnglerQuestAvailable() => true;
         public override void AnglerQuestChat(ref string description, ref string catchLocation)
         {
             description = this.GetLocalization("AnglerDescription").Value;

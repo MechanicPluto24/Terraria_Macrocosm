@@ -1,10 +1,7 @@
 using Macrocosm.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Reflection;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {

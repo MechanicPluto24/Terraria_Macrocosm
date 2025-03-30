@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 750;
             Item.rare = ItemRarityID.White;
-            
+
         }
     }
 }

@@ -3,22 +3,20 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using Terraria;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
-using static Macrocosm.Common.WorldGeneration.CustomActions;
 
 namespace Macrocosm.Content.Rockets.Modules.Engine
 {
     public abstract class BaseEngineModule : AnimatedRocketModule
     {
-        protected Asset<Texture2D> RearLandingLeg => _rearLandingLeg ??= ModContent.Request<Texture2D>(TexturePath.Replace(Name, "LandingLeg"), AssetRequestMode.ImmediateLoad);
+        protected Asset<Texture2D> RearLandingLeg => _rearLandingLeg ??= ModContent.Request<Texture2D>(Texture.Replace(Name, "LandingLeg"), AssetRequestMode.ImmediateLoad);
         private Asset<Texture2D> _rearLandingLeg;
         protected Rectangle RearLandingLegFrame => RearLandingLeg.Frame(1, base.NumberOfFrames, frameY: CurrentFrame);
 
-        protected Asset<Texture2D> BoosterRear => _boosterRear ??= ModContent.Request<Texture2D>(TexturePath.Replace(Name, "BoosterRear"), AssetRequestMode.ImmediateLoad);
+        protected Asset<Texture2D> BoosterRear => _boosterRear ??= ModContent.Request<Texture2D>(Texture.Replace(Name, "BoosterRear"), AssetRequestMode.ImmediateLoad);
         private Asset<Texture2D> _boosterRear;
 
         protected virtual Vector2? LandingLegDrawOffset => null;
@@ -67,7 +65,7 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
             // Draw the rear landing behind the rear booster 
             if (LandingLegDrawOffset.HasValue)
             {
-                Vector2 drawPos = position + (new Vector2(Width / 2f , Height) + LandingLegDrawOffset.Value).RotatedBy(Rocket.Rotation);
+                Vector2 drawPos = position + (new Vector2(Width / 2f, Height) + LandingLegDrawOffset.Value).RotatedBy(Rocket.Rotation);
                 spriteBatch.Draw(RearLandingLeg.Value, drawPos, RearLandingLegFrame, Color.White * Rocket.Transparency, Rocket.Rotation, RearLandingLegFrame.Size() / 2f, 1f, SpriteEffects.None, 0f);
             }
 

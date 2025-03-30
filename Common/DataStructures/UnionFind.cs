@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Macrocosm.Common.DataStructures
 {
@@ -40,7 +39,7 @@ namespace Macrocosm.Common.DataStructures
             T rootB = Find(itemB);
 
             if (EqualityComparer<T>.Default.Equals(rootA, rootB))
-                return; 
+                return;
 
             // Union by Rank
             int rankA = rank[rootA];

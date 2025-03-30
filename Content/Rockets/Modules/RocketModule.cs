@@ -5,17 +5,15 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
-    public abstract partial class RocketModule : ModType, ILocalizedModType
+    public abstract partial class RocketModule : ModTexturedType, ILocalizedModType
     {
         public enum SlotType
         {
@@ -40,7 +38,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public static List<RocketModule> DefaultModules => Templates
                 .Where(m => m.Configuration != ConfigurationType.Unmanned)
                 .GroupBy(m => (int)m.Slot)
-                .Select(g => g.OrderBy(m => m.Tier).First().Clone()) 
+                .Select(g => g.OrderBy(m => m.Tier).First().Clone())
                 .OrderBy(m => (int)m.Slot)
                 .ToList();
 
@@ -64,7 +62,7 @@ namespace Macrocosm.Content.Rockets.Modules
         public override void SetupContent() => SetStaticDefaults();
         public override void SetStaticDefaults()
         {
-            foreach(AssemblyRecipeEntry entry in Recipe)
+            foreach (AssemblyRecipeEntry entry in Recipe)
             {
                 if (entry.ItemType.HasValue)
                     ItemID.Sets.IsAMaterial[entry.ItemType.Value] = true;
@@ -110,18 +108,17 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public virtual bool Interactible => true;
 
-        public virtual string TexturePath => Utility.GetNamespacePath(this);
 
-        private Asset<Texture2D> texture;
-        public Texture2D Texture => (texture ??= ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad)).Value;
+        private Asset<Texture2D> _moduleTexture;
+        public Texture2D ModuleTexture => (_moduleTexture ??= ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad)).Value;
 
-        public virtual string IconPath => (this.GetNamespacePath() + "_Icon").Replace(".", "/");
-        private Asset<Texture2D> icon;
-        public Texture2D Icon => (icon ??= ModContent.RequestIfExists<Texture2D>(IconPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
+        public virtual string IconPath => (Texture + "_Icon").Replace(".", "/");
+        private Asset<Texture2D> _icon;
+        public Texture2D Icon => (_icon ??= ModContent.RequestIfExists<Texture2D>(IconPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
 
-        public virtual string BlueprintPath => (this.GetNamespacePath() + "_Blueprint").Replace(".", "/");
-        private Asset<Texture2D> blueprint;
-        public Texture2D Blueprint => (blueprint ??= ModContent.RequestIfExists<Texture2D>(BlueprintPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
+        public virtual string BlueprintPath => (Texture + "_Blueprint").Replace(".", "/");
+        private Asset<Texture2D> _blueprint;
+        public Texture2D Blueprint => (_blueprint ??= ModContent.RequestIfExists<Texture2D>(BlueprintPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
 
         public bool BlueprintHighlighted { get; set; } = false;
 
@@ -156,7 +153,7 @@ namespace Macrocosm.Content.Rockets.Modules
                 //TODO: Decal?.Pattern.Apply();
             }
 
-            spriteBatch.Draw(Texture, position, null, Color.White, Rocket.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(ModuleTexture, position, null, Color.White, Rocket.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
             if (SpecialDraw)
             {

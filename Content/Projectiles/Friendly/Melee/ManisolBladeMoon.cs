@@ -13,7 +13,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
     public class ManisolBladeMoon : ManisolBladeBase
     {
         private int recallPierceLimit = 3;
-        private HashSet<int> hitList = new(); 
+        private HashSet<int> hitList = new();
 
         public override void SetDefaults()
         {
@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             recallPierceLimit = npcStick > -1 ? 4 : 1;
             returnSpeed *= 2f;
-            hitList.Clear(); 
+            hitList.Clear();
         }
 
         public override void Returning()

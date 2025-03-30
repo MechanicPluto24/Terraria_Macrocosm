@@ -5,8 +5,6 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -28,7 +26,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         )
         {
             Pattern = PatternManager.Get(pattern.Name, "Icon");
-            foreach(var colorData in pattern.ColorData)
+            foreach (var colorData in pattern.ColorData)
                 Pattern.ColorData[colorData.Key] = colorData.Value;
 
             panel = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad);

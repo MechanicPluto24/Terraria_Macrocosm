@@ -244,7 +244,7 @@ namespace Macrocosm.Content.Rockets
                 var flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
 
                 Vector2 flarePos = position + Size / 2f + new Vector2(0, Size.Y / 2).RotatedBy(Rotation);
-                spriteBatch.Draw(flare, flarePos, null, new Color(255, 69, 0), Rotation, flare.Size () / 2f, scale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(flare, flarePos, null, new Color(255, 69, 0), Rotation, flare.Size() / 2f, scale, SpriteEffects.None, 0f);
             }
         }
     }

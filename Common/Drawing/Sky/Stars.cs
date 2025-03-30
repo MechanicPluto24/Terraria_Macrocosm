@@ -69,8 +69,8 @@ namespace Macrocosm.Common.Drawing.Sky
                 ];
 
                 Color? color = null;
-                if(randomColor && Main.rand.NextBool(5))
-                     color = starColors[Main.rand.Next(starColors.Length)];
+                if (randomColor && Main.rand.NextBool(5))
+                    color = starColors[Main.rand.Next(starColors.Length)];
 
                 stars.Add(new MacrocosmStar(position, baseScale, twinkleFactor, color));
             }
@@ -80,7 +80,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
         private void OnResolutionChanged(Matrix obj)
         {
-            
+
         }
 
         public void SpawnStars(RawTexture colorMap, int count, Rectangle? area = null, float baseScale = 1f, float twinkleFactor = 0.4f)
@@ -88,7 +88,7 @@ namespace Macrocosm.Common.Drawing.Sky
             Rectangle spawnArea = area ?? new Rectangle(0, 0, Main.screenWidth, Main.screenHeight);
 
             int starsSpawned = 0;
-            int maxAttempts = count * 10; 
+            int maxAttempts = count * 10;
             int attempts = 0;
 
             while (starsSpawned < count && attempts < maxAttempts)
@@ -109,7 +109,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
                 if (Main.rand.NextFloat(1f) <= chance)
                 {
-                    Vector2 position = new(x, y); 
+                    Vector2 position = new(x, y);
                     stars.Add(new MacrocosmStar(position, baseScale, twinkleFactor, pixelColor));
                     starsSpawned++;
                 }

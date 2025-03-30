@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
@@ -42,7 +43,7 @@ namespace Macrocosm.Common.Netcode
         {
             MessageType messageType = (MessageType)reader.ReadByte();
 
-            if(DebugModeActive)
+            if (DebugConfig.Instance.PacketDebug)
                 DebugPackets(messageType, whoAmI);
 
             switch (messageType)
@@ -109,8 +110,6 @@ namespace Macrocosm.Common.Netcode
                     break;
             }
         }
-
-        public static bool DebugModeActive { get; set; } = false;
 
         private static void DebugPackets(MessageType messageType, int sender)
         {

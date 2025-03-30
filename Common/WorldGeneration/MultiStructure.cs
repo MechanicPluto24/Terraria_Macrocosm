@@ -23,7 +23,7 @@ namespace Macrocosm.Common.WorldGeneration
         public static MultiStructure Get<T>() where T : MultiStructure => ModContent.GetInstance<T>();
 
         /// <inheritdoc cref="Place(Point16, StructureMap, int?, int, bool, GenFlags)"/>
-        public static void Place<T>(Point16 origin, StructureMap structures, int? index = null, int padding = 0, bool ignoreNull = false, GenFlags genFlags = GenFlags.None) where T : MultiStructure 
+        public static void Place<T>(Point16 origin, StructureMap structures, int? index = null, int padding = 0, bool ignoreNull = false, GenFlags genFlags = GenFlags.None) where T : MultiStructure
             => Get<T>().Place(origin, structures, index, padding, ignoreNull, genFlags);
 
         private MultiStructureData data;

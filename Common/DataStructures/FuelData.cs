@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using System;
 using Terraria;
 
 namespace Macrocosm.Common.DataStructures

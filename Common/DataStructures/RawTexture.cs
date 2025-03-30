@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -45,7 +44,7 @@ namespace Macrocosm.Common.DataStructures
         public static RawTexture FromAsset(Asset<Texture2D> asset) => FromTexture2D(asset.Value);
         public static RawTexture FromTexture2D(Texture2D texture)
         {
-            if(texture == null) 
+            if (texture == null)
                 return new();
 
             Color[] data = new Color[texture.Width * texture.Height];

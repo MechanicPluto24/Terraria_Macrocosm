@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ModLoader;
-using Terraria;
-using SubworldLibrary;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Backgrounds.Moon;
+﻿using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Backgrounds.Blank;
+using SubworldLibrary;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Biomes
 {

@@ -75,10 +75,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 spawned = true;
             }
 
-            if(!reachedTarget)
+            if (!reachedTarget)
             {
                 Vector2 direction = Projectile.DirectionTo(Target).SafeNormalize(Vector2.Zero);
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * speed , 0.02f);
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * speed, 0.02f);
 
                 if ((Projectile.Center - Target).LengthSquared() < 100 * 100)
                     reachedTarget = true;

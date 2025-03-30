@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
-using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -136,20 +135,8 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
 
         private void UpdateInventory()
         {
-            // Use H and J to increase/decrease inventory size, for testing
-            if (UISystem.DebugModeActive)
-            {
-                if (Main.LocalPlayer.controlQuickHeal && Rocket.Inventory.Size < Inventory.MaxInventorySize)
-                    Rocket.Inventory.Size += 1;
-
-                if (Main.LocalPlayer.controlQuickMana && Rocket.Inventory.Size > 1)
-                    Rocket.Inventory.Size -= 1;
-            }
-
             if (cacheSize != InventorySize)
-            {
                 RefreshInventory();
-            }
 
             if (Rocket is not null && Main.netMode == NetmodeID.MultiplayerClient)
             {

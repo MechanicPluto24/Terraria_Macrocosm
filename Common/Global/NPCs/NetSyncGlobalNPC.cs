@@ -1,8 +1,8 @@
-﻿using System.IO;
-using Terraria.ModLoader.IO;
+﻿using Macrocosm.Common.Netcode;
+using System.IO;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Netcode;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Global.NPCs
 {

@@ -1,4 +1,3 @@
-using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.NPCs.Critters;

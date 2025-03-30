@@ -1,21 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using Terraria.GameContent;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 
 namespace Macrocosm.Common.DataStructures
 {
     public struct RotatedRectangle
     {
-        public Vector2 Position { get; set; } 
-        public Vector2 Origin { get; }      
+        public Vector2 Position { get; set; }
+        public Vector2 Origin { get; }
         public int Width { get; }
         public int Height { get; }
         public float Rotation { get; private set; }
 
-        public Vector2 Center => Position + Origin; 
+        public Vector2 Center => Position + Origin;
         public Vector2[] Corners { get; private set; }
         public Vector2 Size => new(Width, Height);
 
@@ -37,7 +37,8 @@ namespace Macrocosm.Common.DataStructures
             width,
             height,
             rotation
-        ){}
+        )
+        { }
 
         public RotatedRectangle(Rectangle rect, float rotation = 0f)
         : this(
@@ -46,16 +47,17 @@ namespace Macrocosm.Common.DataStructures
             rect.Width,
             rect.Height,
             rotation
-        ) { }
+        )
+        { }
 
         private void UpdateCorners()
         {
             Vector2[] localCorners =
             [
-                new Vector2(0, 0),         
-                new Vector2(Width, 0),     
+                new Vector2(0, 0),
+                new Vector2(Width, 0),
                 new Vector2(Width, Height),
-                new Vector2(0, Height)     
+                new Vector2(0, Height)
             ];
 
             for (int i = 0; i < 4; i++)

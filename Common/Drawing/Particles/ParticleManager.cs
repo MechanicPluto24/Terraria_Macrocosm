@@ -253,7 +253,7 @@ namespace Macrocosm.Common.Drawing.Particles
             spriteBatch.End();
             spriteBatch.Begin(state2);
         }
-            
+
         private void DrawParticles_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
@@ -263,7 +263,7 @@ namespace Macrocosm.Common.Drawing.Particles
 
             spriteBatch.End();
 
-            orig(self); 
+            orig(self);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, default, default, RasterizerState.CullNone, default, Main.Transform);
 

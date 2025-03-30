@@ -5,7 +5,6 @@ using Terraria;
 using Terraria.GameContent.Achievements;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.WorldBuilding;
 
 namespace Macrocosm.Common.Systems
 {

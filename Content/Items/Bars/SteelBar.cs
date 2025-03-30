@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Bars
             Item.createTile = TileType<Tiles.Bars.SteelBar>();
             Item.placeStyle = 0;
             Item.rare = ItemRarityID.Green;
-            
+
         }
 
         public override void AddRecipes()

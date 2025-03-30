@@ -6,7 +6,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseDeskMonitor")]
     public class IndustrialDeskMonitor : ModItem
     {
         public override void SetDefaults()

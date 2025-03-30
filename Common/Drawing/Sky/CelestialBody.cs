@@ -7,7 +7,6 @@ using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Drawing.Sky
 {
@@ -555,7 +554,7 @@ namespace Macrocosm.Common.Drawing.Sky
                 Color = new Color((byte)(255f * cloudAlphaMult), (byte)(Color.White.G * cloudAlphaMult), (byte)(Color.White.B * cloudAlphaMult), (byte)(255f * cloudAlphaMult));
                 int posY = Main.dayTime ? (int)(bgTopY + timeY * 250.0 + 180.0) : (int)(bgTopY - timeY * 250.0 + 665.0);
 
-                Center = new Vector2(timeX, posY); 
+                Center = new Vector2(timeX, posY);
             }
             else if (rotationMode == SkyRotationMode.Night)
             {
@@ -575,7 +574,7 @@ namespace Macrocosm.Common.Drawing.Sky
 
                 Center = new Vector2(timeX, posY);
             }
-        }       
+        }
 
         private void Orbit()
         {

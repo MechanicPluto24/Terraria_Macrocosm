@@ -1,9 +1,4 @@
-﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
+﻿using Macrocosm.Common.Systems.Power;
 using Terraria;
 using Terraria.ModLoader;
 

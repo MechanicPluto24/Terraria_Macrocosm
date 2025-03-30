@@ -1,14 +1,10 @@
 ﻿using Macrocosm.Common.Sets;
-using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Tiles.Misc;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
+using Macrocosm.Content.Tiles.Misc;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Systems
@@ -36,10 +32,10 @@ namespace Macrocosm.Common.Systems
         public bool HasMonolith => MonolithCount > 0;
         public bool EnoughPollution => PollutionLevel > PollutionLevelThreshold;
 
-        public float PollutionLevel 
-        { 
+        public float PollutionLevel
+        {
             get => pollutionLevel;
-            set => pollutionLevel = MathHelper.Clamp(value, 0f, PollutionLevelMax); 
+            set => pollutionLevel = MathHelper.Clamp(value, 0f, PollutionLevelMax);
         }
         private float pollutionLevel = 0f;
         public float PollutionLevelThreshold => 6f;

@@ -2,8 +2,8 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Items.Currency;
 using Macrocosm.Content.Subworlds;
-using Terraria.GameContent.ItemDropRules;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Global.NPCs
@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Global.NPCs
                 npcLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<Moonstone>(), 10, 1, 5, new SubworldDropCondition<Moon>(canShowInBestiary: true)));
 
             //if(npc.type == NPCID.MoonLordCore)
-                //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CortexFragment>(), 10));
+            //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CortexFragment>(), 10));
         }
     }
 }

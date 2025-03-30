@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.createTile = TileType<Tiles.Ores.Coal>();
             Item.placeStyle = 0;
             Item.rare = ItemRarityID.White;
-            
+
         }
 
         public override void AddRecipes()

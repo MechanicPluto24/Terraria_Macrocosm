@@ -79,7 +79,7 @@ namespace Macrocosm.Common.Utils
 
         public static bool CanHurtCritterAroundPosition(Vector2 position, float radius)
         {
-            foreach(var player in Main.ActivePlayers)
+            foreach (var player in Main.ActivePlayers)
             {
                 if ((position - player.Center).Length() < radius && player.dontHurtCritters)
                     return false;

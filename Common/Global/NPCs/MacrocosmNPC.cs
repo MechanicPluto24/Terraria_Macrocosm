@@ -1,20 +1,9 @@
-using Macrocosm.Common.Loot.DropConditions;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Currency;
-using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SubworldLibrary;
-using System.IO;
-using System.Linq;
 using Terraria;
-using Terraria.GameContent.Bestiary;
-using Terraria.GameContent.ItemDropRules;
 using Terraria.ModLoader;
-using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Global.NPCs
 {

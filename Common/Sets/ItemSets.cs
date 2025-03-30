@@ -55,7 +55,7 @@ namespace Macrocosm.Common.Sets
             ItemID.CopperCoin, new TrashData(ItemID.CopperCoin, DustID.Copper),
             ItemID.IronHelmet, new TrashData(ItemID.IronHelmet, DustID.Iron),
             ItemID.AshBlock, new TrashData(ItemID.AshBlock, DustID.Ash)
-        ); 
+        );
 
         /// <summary> Set of items from which liquid can be extracted (e.g. Oil Shale). See <see cref="DataStructures.LiquidExtractData"/></summary>
         public static LiquidExtractData[] LiquidExtractData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new LiquidExtractData());
