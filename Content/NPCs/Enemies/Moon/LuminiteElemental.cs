@@ -16,7 +16,6 @@ using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static tModPorter.ProgressUpdate;
 namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class LuminiteElemental : ModNPC
@@ -296,7 +295,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 DrawPebbles(spriteBatch, drawColor, orbit);
 
             spriteBatch.Draw(TextureAssets.Npc[Type].Value, NPC.Center - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, TextureAssets.Npc[Type].Size() / 2, NPC.scale, NPC.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
-            DrawStar(spriteBatch);
+            DrawEye(spriteBatch);
 
             if ((-(float)Math.Sin(MathHelper.ToRadians(pebbleOrbitTimer * 2)) * 12f) >= 0f)
                 DrawPebbles(spriteBatch, drawColor, orbit);
@@ -327,47 +326,69 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 spriteBatch.Draw(pebbleTexture.Value, NPC.Center + previousOrbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, frame2, trailColor, pebbleRotation, frame2.Size() / 2, NPC.scale * (1f - lerpFactor), SpriteEffects.FlipHorizontally, 0f);
             }
 
-            Color glowColor = NPC.GetAlpha(LuminiteSlime.EffectColor).WithAlpha(50);
-            float glowScale = NPC.scale * 1.44f;
-            spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, frame1, glowColor, pebbleRotation, frame1.Size() / 2, glowScale, SpriteEffects.None, 0f);
-            spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, frame1, drawColor, pebbleRotation, frame1.Size() / 2, NPC.scale, SpriteEffects.None, 0f);
+            for (int i = 0; i < 10; i++)
+            {
+                Color glowColor = default;
+                float glowScale = NPC.scale;
+                if (AI_State == ActionState.Attacking)
+                {
+                    glowColor = new Color(100, 243, 172, 50) * (AI_Timer / attackPeriod) * (1f - i / 10f);
+                    glowScale = NPC.scale + (0.075f * i);
+                }
 
-            spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, frame2, glowColor, pebbleRotation, frame2.Size() / 2, glowScale, SpriteEffects.FlipHorizontally, 0f);
+                if (AI_State == ActionState.Panicking)
+                {
+                    glowColor = new Color(100, 243, 172, 50) * (AI_Timer / panicAttackPeriod) * (1f - i / 10f);
+                    glowScale = NPC.scale + (0.075f * i);
+                }
+                spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, frame1, glowColor, pebbleRotation, frame1.Size() / 2, glowScale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, frame2, glowColor, pebbleRotation, frame2.Size() / 2, glowScale, SpriteEffects.FlipHorizontally, 0f);
+            }
+
+            spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, frame1, drawColor, pebbleRotation, frame1.Size() / 2, NPC.scale, SpriteEffects.None, 0f);
             spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, frame2, drawColor, pebbleRotation, frame2.Size() / 2, NPC.scale, SpriteEffects.FlipHorizontally, 0f);
         }
 
-        private void DrawStar(SpriteBatch spriteBatch)
+        private void DrawEye(SpriteBatch spriteBatch)
         {
+            eyeTexture ??= ModContent.Request<Texture2D>(Texture + "_Eye");
+
+            float targetScale = NPC.scale * 0.5f * Main.rand.NextFloat(0.8f, 1f);
+            if (AI_State == ActionState.Attacking)
+                targetScale += 0.5f * (AI_Timer / attackPeriod);
+
+            if (AI_State == ActionState.Panicking)
+                targetScale += 0.5f * (AI_Timer / panicAttackPeriod);
+
+            eyeScale = MathHelper.Lerp(targetScale, eyeScale, 1f - 0.075f);
+            float eyeRotation = NPC.rotation;
+            Vector2 position = NPC.Center + new Vector2(3.5f * NPC.direction, -2) - Main.screenPosition;
+            if (NPC.HasValidTarget)
+            {
+                float radians = (Main.player[NPC.target].Center - NPC.Center).ToRotation();
+                position += new Vector2(2).RotatedBy(radians);
+            }
+
             state.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state);
 
-            eyeTexture ??= ModContent.Request<Texture2D>(Texture + "_Eye");
-
-            Color targetColor = new Color(100, 243, 172).WithOpacity(Main.rand.NextFloat(0.8f, 1f)) * Main.rand.NextFloat(1f, 1.2f);
-            float targetScale = NPC.scale * 0.5f * Main.rand.NextFloat(0.8f, 1f);
-
-            if (AI_State == ActionState.Attacking)
+            for(int i = 0; i < 10; i++)
             {
-                targetColor *= 1f + 0.5f * (AI_Timer / attackPeriod);
-                targetScale += 1f * (AI_Timer / attackPeriod);
+                Color eyeColor = default;
+                if (AI_State == ActionState.Attacking)
+                    eyeColor = new Color(100, 243, 172) * (1f - i / 10f) * (AI_Timer / attackPeriod);
+
+                if (AI_State == ActionState.Panicking)
+                    eyeColor = new Color(100, 243, 172) * (1f - i / 10f) * (AI_Timer / panicAttackPeriod);
+
+                spriteBatch.Draw(eyeTexture.Value, position, null, eyeColor, eyeRotation, eyeTexture.Size() / 2, eyeScale + (0.115f * i), SpriteEffects.None, 0f);
             }
-
-            if (AI_State == ActionState.Panicking)
-            {
-                targetColor *= 1f + 0.5f * (AI_Timer / panicAttackPeriod);
-                targetScale += 1f * (AI_Timer / panicAttackPeriod);
-            }
-
-            eyeColor = Color.Lerp(targetColor, eyeColor, 1f - 0.075f);
-            eyeScale = MathHelper.Lerp(targetScale, eyeScale, 1f - 0.075f);
-
-            Vector2 position = ((NPC.Center + new Vector2(3.5f * NPC.spriteDirection, 0f)) + NPC.velocity.SafeNormalize(Vector2.UnitX) * 1.5f) - Main.screenPosition;
-            spriteBatch.Draw(eyeTexture.Value, position, null, eyeColor * 0.5f, NPC.rotation + MathHelper.PiOver2, eyeTexture.Size() / 2, eyeScale * 1.4f, SpriteEffects.None, 0f);
-            spriteBatch.Draw(eyeTexture.Value, position, null, Color.White, NPC.rotation, eyeTexture.Size() / 2, eyeScale, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
+
+            spriteBatch.Draw(eyeTexture.Value, position, null, Color.White, eyeRotation, eyeTexture.Size() / 2, eyeScale, SpriteEffects.None, 0f);
         }
 
         public override void SendExtraAI(BinaryWriter writer)

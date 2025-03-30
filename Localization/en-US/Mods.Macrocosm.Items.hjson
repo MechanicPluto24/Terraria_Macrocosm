@@ -2991,3 +2991,8 @@ ACUnit: {
 	DisplayName: A C Unit
 	Tooltip: ""
 }
+
+MoonChampionSentryItem: {
+	DisplayName: Moon Champion Sentry Item
+	Tooltip: ""
+}
