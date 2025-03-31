@@ -1,7 +1,7 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Systems;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Ores
 {
@@ -10,6 +10,8 @@ namespace Macrocosm.Content.Items.Ores
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
+
+            ShimmerSystem.RegisterOverride(ItemID.Hellstone, Type);
         }
 
         public override void SetDefaults()
@@ -24,7 +26,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.LithiumOre>();
+            Item.createTile = ModContent.TileType<Tiles.Ores.LithiumOre>();
             Item.placeStyle = 0;
             Item.rare = ItemRarityID.White;
 

@@ -18,14 +18,14 @@ namespace Macrocosm.Content.Items.Keys
     {
         public override void SetStaticDefaults()
         {
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseFull.Description, () => Main.moonPhase == 0 && WorldData.AnyShimmerShrine), ModContent.ItemType<Procellarum>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaningGibbous.Description, () => Main.moonPhase == 1 && WorldData.AnyShimmerShrine), ModContent.ItemType<Ilmenite>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseThirdQuarter.Description, () => Main.moonPhase == 2 && WorldData.AnyShimmerShrine), ModContent.ItemType<Micronova>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaningCrescent.Description, () => Main.moonPhase == 3 && WorldData.AnyShimmerShrine), ModContent.ItemType<Totality>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseNew.Description, () => Main.moonPhase == 4 && WorldData.AnyShimmerShrine), ModContent.ItemType<ManisolBlades>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaxingCrescent.Description, () => Main.moonPhase == 5 && WorldData.AnyShimmerShrine), ModContent.ItemType<StarDestroyer>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseFirstQuarter.Description, () => Main.moonPhase == 6 && WorldData.AnyShimmerShrine), ModContent.ItemType<FrigorianGaze>());
-            ShimmerSystem.RegisterOverride(Type, new Condition(Condition.MoonPhaseWaxingGibbous.Description, () => Main.moonPhase == 7 && WorldData.AnyShimmerShrine), ModContent.ItemType<GreatstaffOfHorus>());
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Procellarum>(), TODO);
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Ilmenite>(), TODO);
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Micronova>(), TODO);
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Totality>(), TODO);
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<ManisolBlades>(), TODO);
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<StarDestroyer>(), TODO);
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<FrigorianGaze>(), TODO);
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<GreatstaffOfHorus>(), TODO);
         }
 
         public override void SetDefaults()

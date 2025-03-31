@@ -1,9 +1,9 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Systems;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Ores
 {
@@ -13,6 +13,9 @@ namespace Macrocosm.Content.Items.Ores
         {
             Item.ResearchUnlockCount = 100;
             ItemSets.FuelData[Type] = new FuelData(FuelPotency.High, 240);
+
+            ShimmerSystem.RegisterOverride(ItemID.CopperOre, Type);
+            ShimmerSystem.RegisterOverride(Type, ItemID.StoneBlock);
         }
 
         public override void SetDefaults()
@@ -27,7 +30,7 @@ namespace Macrocosm.Content.Items.Ores
             Item.useTime = 10;
             Item.autoReuse = true;
             Item.consumable = true;
-            Item.createTile = TileType<Tiles.Ores.Coal>();
+            Item.createTile = ModContent.TileType<Tiles.Ores.Coal>();
             Item.placeStyle = 0;
             Item.rare = ItemRarityID.White;
 

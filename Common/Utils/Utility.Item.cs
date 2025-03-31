@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.Achievements;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 
@@ -166,6 +167,38 @@ namespace Macrocosm.Common.Utils
             FlexibleTileWand.RubblePlacementMedium.AddVariations(itemType, tileType, tileStyles);
             FlexibleTileWand.RubblePlacementLarge.AddVariations(itemType, tileType, tileStyles);
         }
+
+        public static void Shimmer(this Item item, int targetType)
+        {
+            int originalStack = item.stack;
+
+            item.SetDefaults(targetType);
+            item.shimmered = true;
+            item.stack = originalStack;
+            item.shimmerTime = item.stack > 0 ? 1f : 0f;
+            item.shimmerWet = true;
+            item.wet = true;
+            item.velocity *= 0.1f;
+
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                Item.ShimmerEffect(item.Center);
+            }
+            else
+            {
+                NetMessage.SendData(MessageID.ShimmerActions, -1, -1, null, 0, (int)item.Center.X, (int)item.Center.Y);
+                NetMessage.SendData(MessageID.SyncItemsWithShimmer, -1, -1, null, item.whoAmI, 1f);
+            }
+
+            AchievementsHelper.NotifyProgressionEvent(AchievementHelperID.Events.TransmuteItem);
+
+            if (item.stack == 0)
+            {
+                item.makeNPC = -1;
+                item.active = false;
+            }
+        }
+
 
         public static void DrawBossBagEffect(this Item item, SpriteBatch spriteBatch, Color colorFront, Color colorBack, float rotation, float scale)
         {
