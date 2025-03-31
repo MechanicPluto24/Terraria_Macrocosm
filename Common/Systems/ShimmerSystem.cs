@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.Systems.Flags;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks.Bricks;
+using Macrocosm.Content.Items.Ores;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Achievements;
@@ -26,10 +28,11 @@ namespace Macrocosm.Common.Systems
 
         public override void PostSetupContent()
         {
-            RegisterOverride(ItemID.LunarBrick, new Condition(Condition.BloodMoon.Description, () => Main.bloodMoon || WorldData.DemonSun), ModContent.ItemType<HaemonovaBrick>());
+            // Register vanilla to vanilla (or other mod) shimmer overrides here
+            // Macrocosm items should do it in their SetStaticDefaults methods
         }
 
-        public static void RegisterOverride(int itemType, Condition condition, int resultType)
+        public static void RegisterOverride(int itemType, int resultType, Condition condition = null)
         {
             if (ItemID.Sets.ShimmerTransformToItem[itemType] <= 0)
                 ItemID.Sets.ShimmerTransformToItem[itemType] = resultType;
@@ -42,47 +45,15 @@ namespace Macrocosm.Common.Systems
 
         private void On_Item_GetShimmered(On_Item.orig_GetShimmered orig, Item self)
         {
-            if (itemShimmerOverrides.TryGetValue(self.type, out var overrides))
+            if (!itemShimmerOverrides.TryGetValue(self.type, out List<ShimmerOverride> shimmerOverrides))
+                return;
+
+            foreach (ShimmerOverride shimmerOverride in shimmerOverrides)
             {
-                foreach (var shimmerOverride in overrides)
+                if (shimmerOverride.Condition is null || shimmerOverride.Condition.Predicate.Invoke())
                 {
-                    if (shimmerOverride.Condition.Predicate.Invoke())
-                    {
-                        int originalStack = self.stack;
-
-                        self.SetDefaults(shimmerOverride.ResultType);
-
-                        self.shimmered = true;
-                        self.stack = originalStack;
-
-                        if (self.stack > 0)
-                            self.shimmerTime = 1f;
-                        else
-                            self.shimmerTime = 0f;
-
-                        self.shimmerWet = true;
-                        self.wet = true;
-                        self.velocity *= 0.1f;
-
-                        if (Main.netMode == NetmodeID.SinglePlayer)
-                        {
-                            Item.ShimmerEffect(self.Center);
-                        }
-                        else
-                        {
-                            NetMessage.SendData(146, -1, -1, null, 0, (int)self.Center.X, (int)self.Center.Y);
-                            NetMessage.SendData(145, -1, -1, null, self.whoAmI, 1f);
-                        }
-
-                        AchievementsHelper.NotifyProgressionEvent(27);
-                        if (self.stack == 0)
-                        {
-                            self.makeNPC = -1;
-                            self.active = false;
-                        }
-
-                        return;
-                    }
+                    self.Shimmer(shimmerOverride.ResultType);
+                    return;
                 }
             }
 

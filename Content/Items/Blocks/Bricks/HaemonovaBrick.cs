@@ -1,4 +1,7 @@
+using Macrocosm.Common.Systems;
+using Macrocosm.Common.Systems.Flags;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Blocks.Bricks
@@ -9,6 +12,7 @@ namespace Macrocosm.Content.Items.Blocks.Bricks
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
+            ShimmerSystem.RegisterOverride(ItemID.LunarBrick, Type, new(Condition.BloodMoon.Description, () => Main.bloodMoon || WorldData.DemonSun));
         }
 
         public override void SetDefaults()
