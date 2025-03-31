@@ -1130,28 +1130,48 @@ MercurianBanner: {
 }
 
 DeadworldMusicBox: {
-	DisplayName: Music Box (Deadworld)
-	Tooltip: ""
+	DisplayName: Music Box (Moon Day)
+	Tooltip: 
+		'''
+		Plays Deadworld
+		By Lincolnennis
+		'''
 }
 
 RequiemMusicBox: {
-	DisplayName: Music Box (Requiem)
-	Tooltip: ""
+	DisplayName: Music Box (Moon Night)
+	Tooltip:
+		'''
+		Plays Requiem
+		By Lincolnennis
+		'''
 }
 
 SpaceInvaderMusicBox: {
-	DisplayName: Music Box (Space Invader)
-	Tooltip: ""
+	DisplayName: Music Box (Crater Demon)
+	Tooltip:
+		'''
+		Plays Space Invader
+		By Lincolnennis
+		'''
 }
 
 StygiaMusicBox: {
-	DisplayName: Music Box (Stygia)
-	Tooltip: ""
+	DisplayName: Music Box (Underground Moon)
+	Tooltip:
+		'''
+		Plays Stygia
+		By Lincolnennis
+		'''	
 }
 
 IntoTheUnknownMusicBox: {
-	DisplayName: Music Box (Into The Unknown)
-	Tooltip: ""
+	DisplayName: Music Box (Menu)
+	Tooltip:
+		'''
+		Plays Into The Unknown
+		By Lincolnennis
+		'''	
 }
 
 OsmiumBoots: {
