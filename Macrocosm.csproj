@@ -26,6 +26,21 @@
     <None Remove="Content\NPCs\Enemies\Moon\Hermite.png" />
     <None Remove="Content\NPCs\Enemies\Moon\LuminiteElemental_Eye.png" />
     <None Remove="Content\Projectiles\Hostile\LuminitePebble.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithBed_Highlight.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithCandelabra_Flame.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithCandle_Flame.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithChair_Highlight.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithChandelier_Glow.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithChest_Highlight.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithClock_Highlight.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithDoorClosed_Highlight.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithDoorOpen_Highlight.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithDresser_Highlight.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithLamp_Glow.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithLantern_Glow.png" />
+    <None Remove="Content\Tiles\Furniture\Regolith\RegolithSofa_Highlight.png" />
+    <None Remove="Localization\en-US\Mods.Macrocosm.Conditions.hjson" />
+    <None Remove="Localization\en-US\Mods.Macrocosm.Gametips.hjson" />
   </ItemGroup>
    <ItemGroup>
     <Reference Include="SubworldLibrary">

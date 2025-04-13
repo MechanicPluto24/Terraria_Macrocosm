@@ -1131,7 +1131,7 @@ MercurianBanner: {
 
 DeadworldMusicBox: {
 	DisplayName: Music Box (Moon Day)
-	Tooltip: 
+	Tooltip:
 		'''
 		Plays Deadworld
 		By Lincolnennis
@@ -1162,7 +1162,7 @@ StygiaMusicBox: {
 		'''
 		Plays Stygia
 		By Lincolnennis
-		'''	
+		'''
 }
 
 IntoTheUnknownMusicBox: {
@@ -1171,7 +1171,7 @@ IntoTheUnknownMusicBox: {
 		'''
 		Plays Into The Unknown
 		By Lincolnennis
-		'''	
+		'''
 }
 
 OsmiumBoots: {
@@ -3014,5 +3014,95 @@ ACUnit: {
 
 MoonChampionSentryItem: {
 	DisplayName: Moon Champion Sentry Item
+	Tooltip: ""
+}
+
+RegolithBathtub: {
+	DisplayName: Regolith Bathtub
+	Tooltip: ""
+}
+
+RegolithBed: {
+	DisplayName: Regolith Bed
+	Tooltip: ""
+}
+
+RegolithBookcase: {
+	DisplayName: Regolith Bookcase
+	Tooltip: ""
+}
+
+RegolithCandelabra: {
+	DisplayName: Regolith Candelabra
+	Tooltip: ""
+}
+
+RegolithCandle: {
+	DisplayName: Regolith Candle
+	Tooltip: ""
+}
+
+RegolithChair: {
+	DisplayName: Regolith Chair
+	Tooltip: ""
+}
+
+RegolithChandelier: {
+	DisplayName: Regolith Chandelier
+	Tooltip: ""
+}
+
+RegolithChest: {
+	DisplayName: Regolith Chest
+	Tooltip: ""
+}
+
+RegolithClock: {
+	DisplayName: Regolith Clock
+	Tooltip: ""
+}
+
+RegolithDoor: {
+	DisplayName: Regolith Door
+	Tooltip: ""
+}
+
+RegolithDresser: {
+	DisplayName: Regolith Dresser
+	Tooltip: ""
+}
+
+RegolithLamp: {
+	DisplayName: Regolith Lamp
+	Tooltip: ""
+}
+
+RegolithLantern: {
+	DisplayName: Regolith Lantern
+	Tooltip: ""
+}
+
+RegolithPiano: {
+	DisplayName: Regolith Piano
+	Tooltip: ""
+}
+
+RegolithSink: {
+	DisplayName: Regolith Sink
+	Tooltip: ""
+}
+
+RegolithSofa: {
+	DisplayName: Regolith Sofa
+	Tooltip: ""
+}
+
+RegolithTable: {
+	DisplayName: Regolith Table
+	Tooltip: ""
+}
+
+RegolithWorkbench: {
+	DisplayName: Regolith Workbench
 	Tooltip: ""
 }

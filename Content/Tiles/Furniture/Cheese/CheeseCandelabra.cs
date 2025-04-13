@@ -76,7 +76,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
         {
             Tile tile = Main.tile[i, j];
-            //if (tile.TileFrameX / 18 % 2 == 0)
             if (tile.TileFrameX == 0)
                 tile.GetEmmitedLight(new Color(87, 230, 158), applyPaint: false, out r, out g, out b);
         }
@@ -85,7 +84,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         {
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
             ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
-
             for (int k = 0; k < 7; k++)
             {
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;

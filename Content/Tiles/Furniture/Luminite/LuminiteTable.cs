@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             TileID.Sets.DisableSmartCursor[Type] = true;
             TileID.Sets.IgnoredByNpcStepUp[Type] = true;
 
-            DustType = ModContent.DustType<CheeseDust>();
+            DustType = DustID.LunarOre;
             AdjTiles = [TileID.Tables];
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);

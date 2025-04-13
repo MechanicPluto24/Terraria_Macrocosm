@@ -1,3 +1,4 @@
+using Macrocosm.Common.Conditions;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Terraria;
@@ -8,11 +9,10 @@ namespace Macrocosm.Content.Items.Blocks.Bricks
 {
     public class HaemonovaBrick : ModItem
     {
-
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 100;
-            ShimmerSystem.RegisterOverride(ItemID.LunarBrick, Type, new(Condition.BloodMoon.Description, () => Main.bloodMoon || WorldData.DemonSun));
+            ShimmerSystem.RegisterOverride(ItemID.LunarBrick, Type, CustomConditions.BloodMoonOrDemonSun);
         }
 
         public override void SetDefaults()

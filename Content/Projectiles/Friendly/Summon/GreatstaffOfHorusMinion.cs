@@ -1,4 +1,5 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Trails;
@@ -8,6 +9,7 @@ using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 

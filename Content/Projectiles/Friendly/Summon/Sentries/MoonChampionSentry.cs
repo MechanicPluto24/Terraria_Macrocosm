@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.ModLoader;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Macrocosm.Content.Projectiles.Friendly.Ranged;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries
 {
@@ -34,43 +32,47 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries
             Projectile.DamageType = DamageClass.Summon;
             Projectile.penetrate = -1;
         }
+
         public override bool? CanDamage() => false;
         private NPC target;
-        bool init=false;
-        private float TurretRotation =0f;  
-        int Timer=0;
-        float offset=0f;
+        bool init = false;
+        private float TurretRotation = 0f;
+        int Timer = 0;
+        float offset = 0f;
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
-            if(!init){
-                init=true;
-                Projectile.spriteDirection=owner.Center.X<Projectile.Center.X ? -1:1;
+            if (!init)
+            {
+                init = true;
+                Projectile.spriteDirection = owner.Center.X < Projectile.Center.X ? -1 : 1;
             }
             Projectile.velocity.Y += 1;
             SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
-            
-            if(foundTarget&&Projectile.spriteDirection == -1 ? targetCenter.X<Projectile.Center.X : targetCenter.X>Projectile.Center.X){
-                Vector2 turningVector = (targetCenter- Projectile.Center).SafeNormalize(Vector2.UnitX);
-                TurretRotation = (new Vector2(5,0).RotatedBy(TurretRotation) + (turningVector * 0.6f)).ToRotation();
+
+            if (foundTarget && Projectile.spriteDirection == -1 ? targetCenter.X < Projectile.Center.X : targetCenter.X > Projectile.Center.X)
+            {
+                Vector2 turningVector = (targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX);
+                TurretRotation = (new Vector2(5, 0).RotatedBy(TurretRotation) + (turningVector * 0.6f)).ToRotation();
                 Timer++;
-                if(Timer==60)
+                if (Timer == 60)
                 {
-                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center+new Vector2(-14,0), new Vector2(16f,0).RotatedBy(TurretRotation), ModContent.ProjectileType<NWAMissile>(), Projectile.damage/2, 1f, Main.myPlayer);
-                    Timer=0;
-                    p.DamageType= DamageClass.Summon;
-                    offset=5f;
+                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(-14, 0), new Vector2(16f, 0).RotatedBy(TurretRotation), ProjectileID.RocketI, Projectile.damage / 2, 1f, Main.myPlayer);
+                    Timer = 0;
+                    p.DamageType = DamageClass.Summon;
+                    offset = 5f;
                 }
             }
             else
             {
-                
-                TurretRotation = MathHelper.Lerp(TurretRotation,Projectile.spriteDirection == 1 ? 0 : MathHelper.Pi,0.08f);
-                Timer=0;        
+
+                TurretRotation = MathHelper.Lerp(TurretRotation, Projectile.spriteDirection == 1 ? 0 : MathHelper.Pi, 0.08f);
+                Timer = 0;
             }
-            offset*=0.9f;
+            offset *= 0.9f;
 
         }
+
         private void SearchForTargets(Player owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter)
         {
 
@@ -100,7 +102,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries
                 {
                     NPC npc = Main.npc[i];
 
-                    if (npc.CanBeChasedBy()&&Vector2.Distance(npc.Center, Projectile.Center)<4000f)
+                    if (npc.CanBeChasedBy() && Vector2.Distance(npc.Center, Projectile.Center) < 4000f)
                     {
                         float between = Vector2.Distance(npc.Center, Projectile.Center);
                         bool closest = Vector2.Distance(Projectile.Center, targetCenter) > between;
@@ -127,8 +129,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries
             SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             SpriteEffects effect2 = Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
-            Main.EntitySpriteDraw(backTexture.Value, Projectile.Center- Main.screenPosition , null, lightColor, 0f, backTexture.Size() / 2, Projectile.scale, effect, 0f);
-            Main.EntitySpriteDraw(turretTexture.Value, Projectile.Center + new Vector2(0,-14)- Main.screenPosition+new Vector2(-offset,0).RotatedBy(TurretRotation) , null, lightColor, TurretRotation, turretTexture.Size() / 2, Projectile.scale, effect2, 0f);
+            Main.EntitySpriteDraw(backTexture.Value, Projectile.Center - Main.screenPosition, null, lightColor, 0f, backTexture.Size() / 2, Projectile.scale, effect, 0f);
+            Main.EntitySpriteDraw(turretTexture.Value, Projectile.Center + new Vector2(0, -14) - Main.screenPosition + new Vector2(-offset, 0).RotatedBy(TurretRotation), null, lightColor, TurretRotation, turretTexture.Size() / 2, Projectile.scale, effect2, 0f);
 
             return true;
         }
@@ -144,6 +146,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries
                 Projectile.velocity.Y = 0;
             return false;
         }
-       
+
     }
 }
