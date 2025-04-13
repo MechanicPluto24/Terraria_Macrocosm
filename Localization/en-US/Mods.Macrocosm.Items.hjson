@@ -1131,7 +1131,7 @@ MercurianBanner: {
 
 DeadworldMusicBox: {
 	DisplayName: Music Box (Moon Day)
-	Tooltip:
+	Tooltip: 
 		'''
 		Plays Deadworld
 		By Lincolnennis
@@ -1162,7 +1162,7 @@ StygiaMusicBox: {
 		'''
 		Plays Stygia
 		By Lincolnennis
-		'''
+		'''	
 }
 
 IntoTheUnknownMusicBox: {
@@ -1171,7 +1171,7 @@ IntoTheUnknownMusicBox: {
 		'''
 		Plays Into The Unknown
 		By Lincolnennis
-		'''
+		'''	
 }
 
 OsmiumBoots: {

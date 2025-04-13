@@ -55,6 +55,44 @@ namespace Macrocosm.Common.Systems
                         return;
                     }
                 }
+                else
+                {
+                    int originalStack = self.stack;
+
+                        self.SetDefaults(shimmerOverride.ResultType);
+
+                        self.shimmered = true;
+                        self.stack = originalStack;
+
+                        if (self.stack > 0)
+                            self.shimmerTime = 1f;
+                        else
+                            self.shimmerTime = 0f;
+
+                        self.shimmerWet = true;
+                        self.wet = true;
+                        self.velocity *= 0.1f;
+
+                        if (Main.netMode == NetmodeID.SinglePlayer)
+                        {
+                            Item.ShimmerEffect(self.Center);
+                        }
+                        else
+                        {
+                            NetMessage.SendData(146, -1, -1, null, 0, (int)self.Center.X, (int)self.Center.Y);
+                            NetMessage.SendData(145, -1, -1, null, self.whoAmI, 1f);
+                        }
+
+                        AchievementsHelper.NotifyProgressionEvent(27);
+                        if (self.stack == 0)
+                        {
+                            self.makeNPC = -1;
+                            self.active = false;
+                        }
+
+                        return;
+                }
+                }
             }
 
             orig(self);
