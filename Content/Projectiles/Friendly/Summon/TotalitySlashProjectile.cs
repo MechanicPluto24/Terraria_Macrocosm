@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Dusts;
@@ -9,6 +10,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -39,7 +41,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Projectile.scale = 1f + (float)Main.rand.Next(30) * 0.01f;
             Projectile.extraUpdates = 2;
             Projectile.timeLeft = 480;
-
 
             oldPosLerped = new Vector2[ProjectileID.Sets.TrailCacheLength[Type]];
             oldRotLerped = new float[ProjectileID.Sets.TrailCacheLength[Type]];

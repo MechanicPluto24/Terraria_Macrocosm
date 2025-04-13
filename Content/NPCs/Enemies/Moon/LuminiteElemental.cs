@@ -187,7 +187,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         for (int i = 0; i < Main.rand.Next(3, 6); i++)
                         {
                             Vector2 projVelocity = Utility.PolarVector(8f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
-                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminitePebble>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
+                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminitePebble>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 25f);
                         }
                     }
                 }
@@ -222,7 +222,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Vector2 projVelocity = Utility.PolarVector(12f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
-                        Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminitePebble>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
+                        Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminitePebble>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 20f);
                     }
                 }
 
@@ -293,6 +293,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             if ((-(float)Math.Sin(MathHelper.ToRadians(pebbleOrbitTimer * 2)) * 12f) < 0f)
                 DrawPebbles(spriteBatch, drawColor, orbit);
+
+            if (AI_State != ActionState.Panicking)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Color glowColor = new Color(100, 243, 172, 0) * (1f - i / 10f) * 0.1f;
+                    float glowScale = NPC.scale + (0.07f * i);
+                    spriteBatch.Draw(TextureAssets.Npc[Type].Value, NPC.Center - Main.screenPosition, NPC.frame, glowColor, NPC.rotation, TextureAssets.Npc[Type].Size() / 2, glowScale, NPC.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+                }
+            }
 
             spriteBatch.Draw(TextureAssets.Npc[Type].Value, NPC.Center - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, TextureAssets.Npc[Type].Size() / 2, NPC.scale, NPC.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
             DrawEye(spriteBatch);
@@ -373,7 +383,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state);
 
-            for(int i = 0; i < 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Color eyeColor = default;
                 if (AI_State == ActionState.Attacking)

@@ -1,11 +1,5 @@
-Mods: {
-	Common: {
-	}
-
-	Macrocosm.GameTips.Generic_Tip1: You may find silica sand beneath the ocean. Use it for highly advanced technologies!
-	SubworldLibrary.Return: Save & Exit
-}
-
+Mods.SubworldLibrary.Return: Save & Exit
+// Vanilla overrides
 ItemName.Coal: Christmas Coal
 
 Bestiary_FlavorText: {

@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Walls
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableWall(ModContent.WallType<Content.Walls.RegolithWall>());
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.RegolithWall>());
             Item.width = 24;
             Item.height = 24;
         }

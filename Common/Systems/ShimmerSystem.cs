@@ -45,15 +45,15 @@ namespace Macrocosm.Common.Systems
 
         private void On_Item_GetShimmered(On_Item.orig_GetShimmered orig, Item self)
         {
-            if (!itemShimmerOverrides.TryGetValue(self.type, out List<ShimmerOverride> shimmerOverrides))
-                return;
-
-            foreach (ShimmerOverride shimmerOverride in shimmerOverrides)
+            if (itemShimmerOverrides.TryGetValue(self.type, out List<ShimmerOverride> shimmerOverrides))
             {
-                if (shimmerOverride.Condition is null || shimmerOverride.Condition.Predicate.Invoke())
+                foreach (ShimmerOverride shimmerOverride in shimmerOverrides)
                 {
-                    self.Shimmer(shimmerOverride.ResultType);
-                    return;
+                    if (shimmerOverride.Condition is null || shimmerOverride.Condition.Predicate.Invoke())
+                    {
+                        self.Shimmer(shimmerOverride.ResultType);
+                        return;
+                    }
                 }
             }
 

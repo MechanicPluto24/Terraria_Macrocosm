@@ -1,5 +1,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -10,6 +11,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
+using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
@@ -63,6 +65,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private int timeUntilMandatoryBreak = 500;
         private int numBounces = 3;
         private bool spawned = false;
+        private bool canCreateALotOfIce = true;
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
@@ -77,7 +80,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Broke = true;
             Projectile.oldVelocity = -Projectile.velocity;
             Bounce(Projectile.oldVelocity);
-
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -89,6 +91,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, (-Vector2.UnitY * 8f).RotatedByRandom(Math.PI / 4), ModContent.ProjectileType<FrigorianIceCrystal>(), Projectile.damage / 2, 2, -1);
                 }
             }
+
+            target.AddBuff(BuffID.Frostburn2, 120);
             CreateALotOfIce();
         }
 
@@ -192,6 +196,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         private void CreateALotOfIce()
         {
+            if (!canCreateALotOfIce)
+                return;
+
             if (Projectile.owner == Main.myPlayer)
             {
                 for (int i = 0; i < IceShardCounter; i++)
@@ -230,7 +237,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 dust.noGravity = true;
             }
 
-            Projectile.Kill();
+            canCreateALotOfIce = false;
+            Projectile.timeLeft = 3;
+            Projectile.alpha = 255;
+            Projectile.Resize(200, 200);
         }
 
         public override Color? GetAlpha(Color lightColor) => lightColor;

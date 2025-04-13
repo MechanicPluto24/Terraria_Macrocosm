@@ -18,13 +18,10 @@ namespace Macrocosm.Common.Drawing
     {
         public void Load(Mod mod)
         {
-            On_TileDrawing.PreDrawTiles += On_TileDrawing_PreDrawTiles;
-            On_TileDrawing.PostDrawTiles += On_TileDrawing_PostDrawTiles;
         }
 
         public void Unload()
         {
-            On_TileDrawing.PostDrawTiles -= On_TileDrawing_PostDrawTiles;
         }
 
         public static TileDrawing TileRenderer => Main.instance.TilesRenderer;
@@ -38,44 +35,6 @@ namespace Macrocosm.Common.Drawing
 
         /// <summary> Collection of painted tile extra textures for reuse </summary>
         private static readonly Dictionary<TilePaintSystemV2.TileVariationkey, TileExtraTextureRenderTargetHolder> tileExtraTextureRenders = new();
-
-        /// <summary> Collection of custom special points for unique drawing after regular tile rendering </summary>
-        private static readonly Dictionary<Point, Action<int, int, SpriteBatch>> customSpecialPoints = new();
-
-        /// <summary>
-        /// Used for custom special drawing of tiles (drawcode run after single tiles are drawn, used for things who would be impossible to draw due to tile draw order).
-        /// <br/> Options, in this order:
-        /// <br/> - <see cref="TileDrawing.AddSpecialLegacyPoint(int, int)"/> for custom drawing. Use <see cref="ModTile.SpecialDraw(int, int, SpriteBatch)"></see>
-        /// <br/> - <see cref="AddCustomSpecialPoint"/> for other custom drawing. Simply pass the drawcode action.
-        /// <br/> - <see cref="TileDrawing.AddSpecialPoint"/> for vanilla style rendering of things such as tiles swaying in wind, pylons, etc. Limited to <see cref="TileDrawing.TileCounterType"/>.
-        /// </summary>
-        public static void AddCustomSpecialPoint(int i, int j, Action<int, int, SpriteBatch> drawMethod)
-        {
-            customSpecialPoints.Add(new(i, j), drawMethod);
-        }
-
-        /// <summary> Hook for clearing custom special points </summary>
-        private void On_TileDrawing_PreDrawTiles(On_TileDrawing.orig_PreDrawTiles orig, TileDrawing self, bool solidLayer, bool forRenderTargets, bool intoRenderTargets)
-        {
-            orig(self, solidLayer, forRenderTargets, intoRenderTargets);
-
-            if (!solidLayer && (intoRenderTargets || Lighting.UpdateEveryFrame))
-                customSpecialPoints.Clear();
-        }
-
-        /// <summary> Draw custom special point tiles using the provided custom draw method </summary>
-        private void On_TileDrawing_PostDrawTiles(On_TileDrawing.orig_PostDrawTiles orig, TileDrawing self, bool solidLayer, bool forRenderTargets, bool intoRenderTargets)
-        {
-            if (!solidLayer && !intoRenderTargets)
-            {
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
-                foreach (var (coords, drawMethod) in customSpecialPoints)
-                    drawMethod.Invoke(coords.X, coords.Y, Main.spriteBatch);
-                Main.spriteBatch.End();
-            }
-
-            orig(self, solidLayer, forRenderTargets, intoRenderTargets);
-        }
 
         /// <summary> Tile painted RT holder class for extra textures </summary>
         private class TileExtraTextureRenderTargetHolder(Asset<Texture2D> extraTextureAsset) : TilePaintSystemV2.TileRenderTargetHolder

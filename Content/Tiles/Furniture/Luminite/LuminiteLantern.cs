@@ -98,12 +98,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-
-            int offsetY = 8;
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
-            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
-                offsetY -= 8;
-
             TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true, Color.White);
         }
     }

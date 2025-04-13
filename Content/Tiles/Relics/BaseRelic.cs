@@ -6,6 +6,7 @@ using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -15,18 +16,18 @@ namespace Macrocosm.Content.Tiles.Relics
 {
     public abstract class BaseRelic : ModTile
     {
+        protected Asset<Texture2D> relicTexture;
         public virtual string RelicTextureName { get; set; }
-        public virtual bool RightPlaceStyle => true;
+        // Vanilla copy of the pedestal texture 
+        public override string Texture => "Macrocosm/Content/Tiles/Relics/RelicPedestal";
+
+        /// <summary> Whether the floating relic should flip with the place direction </summary>
+        public virtual bool ShouldFlip => true;
 
         public const int FrameWidth = 18 * 3;
         public const int FrameHeight = 18 * 4;
         public const int HorizontalFrames = 1;
         public const int VerticalFrames = 1;
-
-        protected Asset<Texture2D> relicTexture;
-
-        // Vanilla copy of the pedestal texture 
-        public override string Texture => "Macrocosm/Content/Tiles/Relics/RelicPedestal";
         public override void Load()
         {
             relicTexture = ModContent.Request<Texture2D>(RelicTextureName);
@@ -61,16 +62,12 @@ namespace Macrocosm.Content.Tiles.Relics
 
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
         {
-            if (drawData.tileFrameX % FrameWidth == 0 && drawData.tileFrameY % FrameHeight == 0)
-                Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
+            if (TileObjectData.IsTopLeft(i, j))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
         }
 
         public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Vector2 offScreen = new(Main.offScreenRange);
-            if (Main.drawToScreen)
-                offScreen = Vector2.Zero;
-
             Point p = new(i, j);
             Tile tile = Main.tile[p.X, p.Y];
             if (tile == null || !tile.HasTile)
@@ -87,10 +84,10 @@ namespace Macrocosm.Content.Tiles.Relics
             Color color = Lighting.GetColor(p.X, p.Y);
 
             bool direction = tile.TileFrameY / FrameHeight != 0;
-            SpriteEffects effects = direction && RightPlaceStyle ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            SpriteEffects effects = direction && ShouldFlip ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
 
             float offset = (float)Math.Sin(Main.GlobalTimeWrappedHourly * MathHelper.TwoPi / 5f);
-            Vector2 drawPos = worldPos + offScreen - Main.screenPosition + new Vector2(0f, -40f) + new Vector2(0f, offset * 4f);
+            Vector2 drawPos = worldPos - Main.screenPosition + new Vector2(0f, -40f) + new Vector2(0f, offset * 4f);
 
             spriteBatch.Draw(texture, drawPos, frame, color, 0f, origin, 1f, effects, 0f);
 
@@ -98,8 +95,8 @@ namespace Macrocosm.Content.Tiles.Relics
 
             Color effectColor = (color * 0.1f * scale).WithOpacity(0f);
 
-            for (float num5 = 0f; num5 < 1f; num5 += 355f / (678f * (float)Math.PI))
-                spriteBatch.Draw(texture, drawPos + (MathHelper.TwoPi * num5).ToRotationVector2() * (6f + offset * 2f), frame, effectColor, 0f, origin, 1f, effects, 0f);
+            for (float f = 0f; f < 1f; f += 355f / (678f * (float)Math.PI))
+                spriteBatch.Draw(texture, drawPos + (MathHelper.TwoPi * f).ToRotationVector2() * (6f + offset * 2f), frame, effectColor, 0f, origin, 1f, effects, 0f);
         }
     }
 }

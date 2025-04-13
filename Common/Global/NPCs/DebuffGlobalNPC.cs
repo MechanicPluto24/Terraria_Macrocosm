@@ -49,7 +49,7 @@ namespace Macrocosm.Common.Global.NPCs
                 }
             }
 
-            if (npc.HasBuff<TotalityTag>() && projectile.minion)
+            if (npc.HasBuff<TotalityTag>() && projectile.DamageType == DamageClass.Summon)
             {
                 for (int i = 0; i < 2; i++)
                 {

@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailCacheLength[Type] = 25;
             ProjectileID.Sets.TrailingMode[Type] = 3;
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
@@ -115,11 +115,11 @@ namespace Macrocosm.Content.Projectiles.Hostile
             {
                 Projectile.tileCollide = !WorldGen.SolidTile(Projectile.Center.ToTileCoordinates());
                 Projectile.velocity.Y += hasTarget ? 0.1f : 0.3f;
-                Projectile.rotation += 0.25f;
+                Projectile.rotation += 0.15f;
             }
             else
             {
-                Projectile.rotation += 0.15f;
+                Projectile.rotation += 0.05f;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Systems;
+﻿using Macrocosm.Common.Conditions;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
@@ -18,14 +19,15 @@ namespace Macrocosm.Content.Items.Keys
     {
         public override void SetStaticDefaults()
         {
-            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Procellarum>(), TODO);
-            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Ilmenite>(), TODO);
-            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Micronova>(), TODO);
-            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Totality>(), TODO);
-            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<ManisolBlades>(), TODO);
-            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<StarDestroyer>(), TODO);
-            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<FrigorianGaze>(), TODO);
-            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<GreatstaffOfHorus>(), TODO);
+            Condition anyShimmerShrine = DynamicConditions.Get<WorldData>(nameof(WorldData.AnyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Procellarum>(), ConditionChain.All(Condition.MoonPhaseFull, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Ilmenite>(), ConditionChain.All(Condition.MoonPhaseWaningGibbous, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Micronova>(), ConditionChain.All(Condition.MoonPhaseThirdQuarter, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Totality>(), ConditionChain.All(Condition.MoonPhaseWaningCrescent, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<ManisolBlades>(), ConditionChain.All(Condition.MoonPhaseNew, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<StarDestroyer>(), ConditionChain.All(Condition.MoonPhaseWaxingCrescent, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<FrigorianGaze>(), ConditionChain.All(Condition.MoonPhaseFirstQuarter, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<GreatstaffOfHorus>(), ConditionChain.All(Condition.MoonPhaseWaxingGibbous, anyShimmerShrine));
         }
 
         public override void SetDefaults()

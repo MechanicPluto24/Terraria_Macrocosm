@@ -206,7 +206,7 @@ namespace Macrocosm.Common.Utils
             Rectangle frame = texture.Frame();
 
             Vector2 frameOrigin = frame.Size() / 2f;
-            Vector2 offset = new Vector2(item.width / 2 - frameOrigin.X, item.height - frame.Height);
+            Vector2 offset = new(item.width / 2 - frameOrigin.X, item.height - frame.Height);
             Vector2 drawPos = item.position - Main.screenPosition + frameOrigin + offset;
 
             float time = Main.GlobalTimeWrappedHourly;
