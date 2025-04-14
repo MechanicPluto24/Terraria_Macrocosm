@@ -25,8 +25,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
             AIType = ProjectileID.Bullet;
             Projectile.width = 4;
             Projectile.height = 4;
+            Projectile.alpha = 0;
         }
-
 
         bool spawned = false;
         public override bool PreAI()
@@ -36,6 +36,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
                 if (!Main.dedServ)
                     SoundEngine.PlaySound(SFX.DesertEagleShot with { Volume = 0.3f }, Projectile.position);
 
+                Projectile.alpha = 0;
                 spawned = true;
             }
 
@@ -46,7 +47,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetBrightness(), new Color(184, 58, 24, 0) * lightColor.GetBrightness());
+            Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetBrightness() * Projectile.Opacity, new Color(184, 58, 24, 0) * lightColor.GetBrightness() * Projectile.Opacity);
             return true;
         }
     }

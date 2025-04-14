@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Trails
 {
     public class DianiteForkTrail : VertexTrail
     {
-        private static MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+        private static MiscShaderData shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
             .UseProjectionMatrix(doUse: true)
             .UseImage0("Images/Extra_195")
             .UseImage1("Images/Extra_195")

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Trails;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Trails
             Color = color;
         }
 
-        public override MiscShaderData TrailShader => new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+        public override MiscShaderData TrailShader => new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
             .UseProjectionMatrix(doUse: true)
             .UseSaturation(Saturation)
             .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))

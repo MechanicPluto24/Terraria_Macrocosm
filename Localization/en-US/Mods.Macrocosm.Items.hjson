@@ -1131,7 +1131,7 @@ MercurianBanner: {
 
 DeadworldMusicBox: {
 	DisplayName: Music Box (Moon Day)
-	Tooltip: 
+	Tooltip:
 		'''
 		Plays Deadworld
 		By Lincolnennis
@@ -1162,7 +1162,7 @@ StygiaMusicBox: {
 		'''
 		Plays Stygia
 		By Lincolnennis
-		'''	
+		'''
 }
 
 IntoTheUnknownMusicBox: {
@@ -1171,7 +1171,7 @@ IntoTheUnknownMusicBox: {
 		'''
 		Plays Into The Unknown
 		By Lincolnennis
-		'''	
+		'''
 }
 
 OsmiumBoots: {
@@ -3017,6 +3017,11 @@ MoonChampionSentryItem: {
 	Tooltip: ""
 }
 
+MoonChampionSentry: {
+	DisplayName: Moon Champion Sentry
+	Tooltip: ""
+}
+
 RegolithBathtub: {
 	DisplayName: Regolith Bathtub
 	Tooltip: ""
@@ -3104,5 +3109,10 @@ RegolithTable: {
 
 RegolithWorkbench: {
 	DisplayName: Regolith Workbench
+	Tooltip: ""
+}
+
+Thermometer: {
+	DisplayName: Thermometer
 	Tooltip: ""
 }

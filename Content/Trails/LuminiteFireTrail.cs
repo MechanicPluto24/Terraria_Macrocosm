@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Trails
 {
     public class LuminiteFireTrail : VertexTrail
     {
-        private static readonly MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+        private static readonly MiscShaderData shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
                         .UseProjectionMatrix(doUse: true)
                         .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
                         .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))

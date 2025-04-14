@@ -45,6 +45,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public ref float AI_Timer => ref NPC.ai[2];
         public ref float AI_Speed => ref NPC.ai[3];
 
+        // Extra AI
         public Vector2 TargetPosition { get; set; } = default;
         public int HealTimer { get; set; } = 0;
 
@@ -52,10 +53,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         private int pebbleOrbitTimer;
         private float pebbleRotation;
-
         private float eyeScale;
-        private Color eyeColor;
-
         private int attackPeriod;
         private int panicAttackPeriod;
 

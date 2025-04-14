@@ -220,7 +220,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             for (int i = 0; i < stripDataCount; i++)
                 positions[i] += Utility.PolarVector(4f * i, Projectile.rotation);
 
-            var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+            var shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
                 .UseProjectionMatrix(doUse: true)
                 .UseSaturation(-2.4f)
                 .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))

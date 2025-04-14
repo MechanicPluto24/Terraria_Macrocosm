@@ -35,42 +35,47 @@ namespace Macrocosm.Common.Systems.Power
         private static int clusterTimer = 0;
         private static void BuildClusters()
         {
-            return;
-
-            if (clusterTimer++ >= (int)ServerConfig.Instance.ClusterFindUpdateRate)
+            try
             {
-                IEnumerable<MachineTE> clusterable = ByID.Values.Where(te => te is MachineTE m && m.CanCluster).Cast<MachineTE>();
-
-                foreach (MachineTE machine in clusterable)
-                    machine.Cluster = null;
-
-                foreach (MachineTE machine in clusterable)
+                if (clusterTimer++ >= (int)ServerConfig.Instance.ClusterFindUpdateRate)
                 {
-                    // Get all tile coordinates where there is a connected tile of the same type as this machine's
-                    List<Point16> cluster = FindCluster(machine.Position.X, machine.Position.Y, machine.MachineTile.Type);
-                    if (cluster.Count > 0)
-                    {
-                        machine.Cluster = cluster;
-                        Point16 clusterOrigin = cluster.MinBy(tile => (tile.Y, tile.X));
+                    IEnumerable<MachineTE> clusterable = ByID.Values.Where(te => te is MachineTE m && m.CanCluster).Cast<MachineTE>();
 
-                        // Note: Tile type checks would be redundant here
-                        foreach (var position in cluster)
+                    foreach (MachineTE machine in clusterable)
+                        machine.Cluster = null;
+
+                    foreach (MachineTE machine in clusterable)
+                    {
+                        // Get all tile coordinates where there is a connected tile of the same type as this machine's
+                        List<Point16> cluster = FindCluster(machine.Position.X, machine.Position.Y, machine.MachineTile.Type);
+                        if (cluster.Count > 0)
                         {
-                            if (position == clusterOrigin)
+                            machine.Cluster = cluster;
+                            Point16 clusterOrigin = cluster.MinBy(tile => (tile.Y, tile.X));
+
+                            // Note: Tile type checks would be redundant here
+                            foreach (var position in cluster)
                             {
-                                // On the origin 
-                                if (!Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out _))
-                                    machine.Place(position.X, position.Y);
-                            }
-                            else
-                            {
-                                // Kill other TEs of the same type that are part of this cluster 
-                                if (Utility.TryGetTileEntityAs(position, out MachineTE other) && machine.Type == other.Type)
-                                    other.Kill(position.X, position.Y);
+                                if (position == clusterOrigin)
+                                {
+                                    // On the origin 
+                                    if (!Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out _))
+                                        machine.Place(position.X, position.Y);
+                                }
+                                else
+                                {
+                                    // Kill other TEs of the same type that are part of this cluster 
+                                    if (Utility.TryGetTileEntityAs(position, out MachineTE other) && machine.Type == other.Type)
+                                        other.Kill(position.X, position.Y);
+                                }
                             }
                         }
                     }
                 }
+            }
+            catch 
+            {
+                // idk
             }
         }
 

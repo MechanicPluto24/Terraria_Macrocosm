@@ -1,7 +1,9 @@
 using Macrocosm.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
@@ -12,6 +14,15 @@ namespace Macrocosm.Common.Utils
         public static Vector2 ScreenCenterInWorld => Main.screenPosition + ScreenCenter;
 
         public static Rectangle ScreenRectangle => new(0, 0, Main.screenWidth, Main.screenHeight);
+
+        private static Asset<Effect> _vanillaScreenShader;
+        private static Asset<Effect> _vanillaPixelShader;
+        private static Asset<Effect> _vanillaTileShader;
+        public static Asset<Effect> VanillaScreenShader => _vanillaScreenShader ??= ModContent.Request<Effect>("Terraria/ScreenShader");
+        public static Asset<Effect> VanillaPixelShader => _vanillaPixelShader ??= ModContent.Request<Effect>("Terraria/PixelShader");
+        public static Asset<Effect> VanillaVertexShader => _vanillaPixelShader ??= ModContent.Request<Effect>("Terraria/PixelShader");
+        public static Asset<Effect> VanillaTileShader => _vanillaTileShader ??= ModContent.Request<Effect>("Terraria/TileShader");
+
 
         public static void Draw(this SpriteBatch spriteBatch, Texture2D texture, System.Drawing.RectangleF destinationRectangle, Color color)
         {

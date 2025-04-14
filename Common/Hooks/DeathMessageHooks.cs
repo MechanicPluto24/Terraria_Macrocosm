@@ -3,6 +3,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs.Environment;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Hooks
@@ -24,13 +25,13 @@ namespace Macrocosm.Common.Hooks
             // 8 is the Burning "other" death message type.
             // Bad life regen (a.k.a. damage over time) deaths default to this
             // Here we are overriding it to our custom reasons.
-            // Only overrided on the local client, will be synced and message will be broadcasted by the server 
+            // Only overrided on the local client, will be synced and message will be broadcast by the server 
             if (damageSource.SourceOtherIndex == 8 && player.whoAmI == Main.myPlayer)
             {
                 if (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel > 0f)
-                    damageSource.SourceCustomReason = IrradiationPlayer.DeathMessages.GetRandom().Format(player.name);
+                    damageSource.CustomReason = IrradiationPlayer.DeathMessages.GetRandom().ToNetworkText(player.name);
                 else if (player.HasBuff(ModContent.BuffType<Depressurized>()))
-                    damageSource.SourceCustomReason = Depressurized.DeathMessages.GetRandom().Format(player.name);
+                    damageSource.CustomReason =Depressurized.DeathMessages.GetRandom().ToNetworkText(player.name);
             }
 
             orig(player, damageSource, dmg, hitDirection, pvp);

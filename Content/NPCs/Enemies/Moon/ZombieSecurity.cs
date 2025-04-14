@@ -277,8 +277,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             aimSpeedX *= aimLength;
             aimSpeedY *= aimLength;
 
-            aimPosition.X += aimSpeedX;
-            aimPosition.Y += aimSpeedY;
+            aimPosition.X += aimSpeedX / 2;
+            aimPosition.Y += aimSpeedY / 2;
 
             return aimPosition;
         }
