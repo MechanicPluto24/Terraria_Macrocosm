@@ -185,8 +185,6 @@ namespace Macrocosm.Content.Skies.Moon
             }
         }
 
-        private SpriteBatchState state1, state2;
-        //private Rift rift;
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             if (SubworldSystem.IsActive<Subworlds.Moon>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)

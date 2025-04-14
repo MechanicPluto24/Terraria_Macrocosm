@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 2;
-            ProjectileID.Sets.TrailCacheLength[Type] = 10;
+            ProjectileID.Sets.TrailCacheLength[Type] = 25;
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
@@ -47,11 +47,8 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.tileCollide = false;
         }
 
-        private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 25;
-            ProjectileID.Sets.TrailingMode[Type] = 3;
             for (int i = 0; i < Projectile.oldPos.Length; i++)
             {
                 Texture2D texture = TextureAssets.Projectile[Type].Value;

@@ -18,7 +18,6 @@ namespace Macrocosm.Content.Items.Accessories.Info
         }
 
         private float temperature;
-
         public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
         {
             temperature = MathHelper.Lerp(temperature, MacrocosmSubworld.GetAmbientTemperature(), 0.1f);

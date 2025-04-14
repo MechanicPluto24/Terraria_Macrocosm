@@ -34,48 +34,48 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries
         }
 
         public override bool? CanDamage() => false;
-        private NPC target;
-        bool init = false;
-        private float TurretRotation = 0f;
-        int Timer = 0;
-        float offset = 0f;
+
+        private bool spawned = false;
+        private float turretRotation = 0f;
+        private int timer = 0;
+        private float offset = 0f;
+
         public override void AI()
         {
             Player owner = Main.player[Projectile.owner];
-            if (!init)
+            if (!spawned)
             {
-                init = true;
+                spawned = true;
                 Projectile.spriteDirection = owner.Center.X < Projectile.Center.X ? -1 : 1;
             }
+
             Projectile.velocity.Y += 1;
             SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
-
             if (foundTarget && Projectile.spriteDirection == -1 ? targetCenter.X < Projectile.Center.X : targetCenter.X > Projectile.Center.X)
             {
                 Vector2 turningVector = (targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX);
-                TurretRotation = (new Vector2(5, 0).RotatedBy(TurretRotation) + (turningVector * 0.6f)).ToRotation();
-                Timer++;
-                if (Timer == 60)
+                turretRotation = (new Vector2(5, 0).RotatedBy(turretRotation) + (turningVector * 0.6f)).ToRotation();
+                timer++;
+                if (timer == 60)
                 {
-                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(-14, 0), new Vector2(16f, 0).RotatedBy(TurretRotation), ProjectileID.RocketI, Projectile.damage / 2, 1f, Main.myPlayer);
-                    Timer = 0;
+                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(-14, 0), new Vector2(16f, 0).RotatedBy(turretRotation), ProjectileID.RocketI, Projectile.damage / 2, 1f, Main.myPlayer);
                     p.DamageType = DamageClass.Summon;
+                    timer = 0;
                     offset = 5f;
                 }
             }
             else
             {
 
-                TurretRotation = MathHelper.Lerp(TurretRotation, Projectile.spriteDirection == 1 ? 0 : MathHelper.Pi, 0.08f);
-                Timer = 0;
+                turretRotation = MathHelper.Lerp(turretRotation, Projectile.spriteDirection == 1 ? 0 : MathHelper.Pi, 0.08f);
+                timer = 0;
             }
-            offset *= 0.9f;
 
+            offset *= 0.9f;
         }
 
         private void SearchForTargets(Player owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter)
         {
-
             distanceFromTarget = 700f;
             targetCenter = Projectile.position;
             foundTarget = false;
@@ -124,13 +124,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries
         }
         public override bool PreDraw(ref Color lightColor)
         {
-            turretTexture ??= ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/Sentries/MoonChampionSentryTurret");
-            backTexture ??= ModContent.Request<Texture2D>("Macrocosm/Content/Projectiles/Friendly/Summon/Sentries/MoonChampionSentryBack");
+            backTexture ??= ModContent.Request<Texture2D>(Texture + "_Back");
+            turretTexture ??= ModContent.Request<Texture2D>(Texture + "_Turret");
             SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             SpriteEffects effect2 = Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
             Main.EntitySpriteDraw(backTexture.Value, Projectile.Center - Main.screenPosition, null, lightColor, 0f, backTexture.Size() / 2, Projectile.scale, effect, 0f);
-            Main.EntitySpriteDraw(turretTexture.Value, Projectile.Center + new Vector2(0, -14) - Main.screenPosition + new Vector2(-offset, 0).RotatedBy(TurretRotation), null, lightColor, TurretRotation, turretTexture.Size() / 2, Projectile.scale, effect2, 0f);
+            Main.EntitySpriteDraw(turretTexture.Value, Projectile.Center + new Vector2(0, -14) - Main.screenPosition + new Vector2(-offset, 0).RotatedBy(turretRotation), null, lightColor, turretRotation, turretTexture.Size() / 2, Projectile.scale, effect2, 0f);
 
             return true;
         }

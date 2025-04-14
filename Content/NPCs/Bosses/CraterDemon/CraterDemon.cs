@@ -30,6 +30,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
@@ -1869,7 +1870,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 // Can't use info.DamageSource = PlayerDeathReason.ByCustomReason(...) here:
                 // HurtInfo is a value type and a DamageSource reassignment won't be reflected outside this method
                 // Called on the hit player client, will be synced and message will be broadcasted by the server 
-                info.DamageSource.SourceCustomReason = this.GetLocalization("FunnyDeathMessage").Format(target.name);
+                info.DamageSource.CustomReason = this.GetLocalization("FunnyDeathMessage").ToNetworkText(target.name);
             }
         }
 

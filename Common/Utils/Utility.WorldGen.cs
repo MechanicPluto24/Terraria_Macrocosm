@@ -1425,10 +1425,6 @@ namespace Macrocosm.Common.Utils
                 vector2D2.Y = speedY;
             }
 
-            bool flag = type == 368;
-            bool flag2 = type == 367;
-            bool lava = false;
-
             while (num > 0.0 && num2 > 0.0)
             {
                 if (drunkWorldGen && genRand.NextBool(30))
@@ -1460,17 +1456,12 @@ namespace Macrocosm.Common.Utils
 
                 for (int k = num3; k < num4; k++)
                 {
-                    if (k < beachDistance + 50 || k >= Main.maxTilesX - beachDistance - 50)
-                        lava = false;
 
                     for (int l = num5; l < num6; l++)
                     {
 
-
                         if (addTile)
-                        {
                             Main.tile[k, l].LiquidAmount = 0;
-                        }
 
                         FastPlaceTile(k, l, (ushort)type);
                     }
@@ -1610,7 +1601,6 @@ namespace Macrocosm.Common.Utils
         /// <summary> Used to spread walls alongside tiles. FIXME: Y change is too high </summary>
         public static void TileWallRunner(int i, int j, double strength, int steps, int tileType, bool addTile = false, int wallType = 0, bool addWall = false, float speedX = 0.0f, float speedY = 0.0f, bool noYChange = false, int ignoreTileType = -1)
         {
-
             double num = strength;
             double num2 = steps;
 

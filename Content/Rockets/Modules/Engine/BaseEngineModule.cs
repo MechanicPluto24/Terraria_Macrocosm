@@ -105,7 +105,7 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
                 rotations[i] = MathHelper.Pi + MathHelper.PiOver2 + Rocket.Rotation;
             }
 
-            var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+            var shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
                 .UseProjectionMatrix(doUse: false)
                 .UseSaturation(-2.2f)
                 .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))

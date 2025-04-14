@@ -160,7 +160,7 @@ namespace Macrocosm.Content.Skies.Moon
             }
         }
 
-        private SpriteBatchState state1, state2;
+        private SpriteBatchState state;
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             if (SubworldSystem.IsActive<Subworlds.MoonOrbitSubworld>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)
@@ -184,9 +184,9 @@ namespace Macrocosm.Content.Skies.Moon
                     sun.Draw(spriteBatch);
 
                 earth.Draw(spriteBatch);
-                state1.SaveState(spriteBatch);
+                state.SaveState(spriteBatch);
                 spriteBatch.End();
-                spriteBatch.Begin(BlendState.NonPremultiplied, state1);
+                spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
                 if (Background3D)
                     DrawMoon3D(spriteBatch);
@@ -194,7 +194,7 @@ namespace Macrocosm.Content.Skies.Moon
                     DrawMoon2D(spriteBatch);
 
                 spriteBatch.End();
-                spriteBatch.Begin(state1);
+                spriteBatch.Begin(state);
             }
         }
 
@@ -234,7 +234,7 @@ namespace Macrocosm.Content.Skies.Moon
 
             Effect pixelate = Macrocosm.GetShader("Pixelate");
             pixelate.Parameters["uPixelCount"].SetValue(new Vector2(1024));
-            Texture2D moon = moonMesh.DrawToRenderTarget(moonMercator.Value.ApplyEffects(pixelate), state1.Matrix);
+            Texture2D moon = moonMesh.DrawToRenderTarget(moonMercator.Value.ApplyEffects(pixelate), state.Matrix);
 
             Vector2 center = position + moon.Size() / 2f;
             Vector3 lightPosition;
@@ -254,7 +254,6 @@ namespace Macrocosm.Content.Skies.Moon
             spriteBatch.Draw(moon.ApplyEffects(lighting), new Vector2(x, y), Color.White);
         }
 
-        private Rift rift;
         private void UpdateNebulaStars()
         {
             if (lastMoonType != Main.moonType)
