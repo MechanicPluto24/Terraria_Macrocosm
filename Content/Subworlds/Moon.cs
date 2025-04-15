@@ -222,7 +222,7 @@ namespace Macrocosm.Content.Subworlds
             }
 
             if (WorldData.Current.MeteorStorm)
-                MeteorBoost = 1000f;
+                MeteorBoost = 300f;
             else
                 MeteorBoost = 1f;
         }
@@ -230,11 +230,10 @@ namespace Macrocosm.Content.Subworlds
         private void UpdateMeteorSpawn()
         {
             meteorTimePass += Main.desiredWorldEventsUpdateRate;
-
             for (int l = 1; l <= (int)meteorTimePass; l++)
             {
                 int closestPlayer;
-                int chance = 6000;
+                int chance = 10000;
                 float baseFrequency = 1f;
                 float frequency = baseFrequency * MeteorBoost;
 
@@ -242,7 +241,7 @@ namespace Macrocosm.Content.Subworlds
                 {
                     Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)(Main.maxTilesY * 0.05)) * 16);
 
-                    // 3/4 chance to spawn close to a an active (not afk) player on the surface.
+                    // 3/4 chance to spawn close to an active (not afk) player on the surface.
                     // In vanilla, this only happens with a 1/15 chance, only in expert mode
                     if (!Main.rand.NextBool(4))
                     {

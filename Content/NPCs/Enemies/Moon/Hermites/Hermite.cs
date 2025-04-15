@@ -35,7 +35,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.value = 60f;
             NPC.knockBackResist = 0f;
-            NPC.scale = 3f;//I had to make them A little larger, remove this when we have offical sprites.
         }
 
         public override void AI()
