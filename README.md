@@ -17,43 +17,50 @@ After the Moon is complete, the next celestial body to be visited will be Mars.
 ### Developer Team
 MechanicPluto24 - Creator, Artist, Lead Developer
 
-RighteousRyan - Server Administrator, Programmer \
-ClockworkCorvus - Server Moderator, Diplomat, Intellect \
-Toxin - Server Moderator, Artist, Intellect
+RighteousRyan - Administrator, Programmer \
+ClockworkCorvus - Moderator, Diplomat, Intellect \
+Toxin - Moderator, Artist, Intellect \
+Feldy - Moderator, Programmer
 
 Lincolnennis - Composer \
-Universe - Composer \
+Sc0p3r - Composer \
+TYESKI - Composer \
 Zetry - Soundsmith
 
-Dawnables - Scholar, Artist \
-dontkickmychick - Scholar
-
+Dandy - Spriter \
+Dawnables - Artist, Scholar \
+dontkickmychick - Scholar \
 Dovahkick - Spriter \
 Goat - Artist, Spriter \
 OmegA-Vinier - Spriter, Programmer \
+pil - Spriter \
 Rocket - Spriter \
 SpicySpaceSnake - Spriter \
 Uncon_Arts - Artist \
 William - Spriter
 
 Clyder8 - Programmer \
-Feldy - Programmer \
 Halmska - Programmer \
 LadyLone - Programmer \
 SnowyStarfall - Programmer \
-sucss - Programmer \
+scss - Programmer \
 Yttrium - Tester
 
-
 ### Contributors
-Dandy - Spriter \
-Ebon1 - Programmer \
+Dominick - Spriter \
+Ebonfly - Programmer \
 EduaRRdo - Spriter \
-Nicola - Artist \
-Nurby - Programmer 
+IamPolaaris - Spriter \
+Jamiscus - Spriter \
+Lion8cake - Programmer \
+LuckyCat - Spriter \
+miniaturetruffle - Programmer \
+Nicola - Artist, Scholar \
+Nurby - Programmer \
+Thanatos - Programmer, Composer
 
 ### Special thanks
-4mbr0s3, absoluteAquarian, ADVERSE KC, Almarduk, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat, Thanatos
+4mbr0s3, absoluteAquarian, ADVERSE KC, Almarduk, Delly, Dracos_V2, Draedon_Gaming, DrakonVörðr, Kiraa, Kirito, Master-Bit, Snowfall-The-Cat
 
 </center>
 
