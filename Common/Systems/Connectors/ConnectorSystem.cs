@@ -143,11 +143,11 @@ namespace Macrocosm.Common.Systems.Connectors
                         if (data.AnyConveyor)
                         {
                             // Type frame
-                            int frameY = 0;
+                            int frameY = 18 * 0;
                             if (data.ConveyorInlet)
-                                frameY = 18;
+                                frameY = 18 * 4;
                             else if (data.ConveyorOutlet)
-                                frameY = 36;
+                                frameY = 18 * 5;
 
                             // Connection frame
                             int frameX = 0;

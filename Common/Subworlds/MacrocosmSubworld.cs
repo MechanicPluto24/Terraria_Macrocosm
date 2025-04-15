@@ -190,8 +190,8 @@ namespace Macrocosm.Common.Subworlds
 
             // Update time
             Main.time += timeRate;
-            Main.desiredWorldTilesUpdateRate = worldUpdateRate;
-            Main.desiredWorldEventsUpdateRate = tileUpdateRate;
+            Main.desiredWorldTilesUpdateRate = tileUpdateRate;
+            Main.desiredWorldEventsUpdateRate = worldUpdateRate;
 
             if (Utility.IsDusk)
             {
