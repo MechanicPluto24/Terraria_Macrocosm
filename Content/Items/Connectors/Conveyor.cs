@@ -34,15 +34,8 @@ namespace Macrocosm.Content.Items.Connectors
             if (player.whoAmI == Main.myPlayer)
             {
                 Point targetCoords = player.TargetCoords();
-                ConnectorData data = ConnectorSystem.Map[player.TargetCoords()];
-
-                if (!data.AnyConveyor)
-                {
-                    ConnectorSystem.PlaceConnector(targetCoords, ConnectorType.Conveyor);
-                    return true;
-                }
-
-                return false;
+                ConveyorSystem.Place(targetCoords, ConveyorType.RedPipe);
+                return true;
             }
 
             return null;

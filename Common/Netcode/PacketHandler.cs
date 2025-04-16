@@ -102,7 +102,7 @@ namespace Macrocosm.Common.Netcode
                     break;
 
                 case MessageType.SyncPowerWire:
-                    ConnectorSystem.ReceiveSyncConnector(reader, whoAmI);
+                    ConveyorSystem.ReceiveSyncConveyor(reader, whoAmI);
                     break;
 
                 default:
