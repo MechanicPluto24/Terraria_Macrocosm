@@ -13,14 +13,9 @@ namespace Macrocosm.Common.Global.Items
 
         public override bool? UseItem(Item item, Player player)
         {
-            Tile targetTile = player.TargetTile();
             Point targetCoords = player.TargetCoords();
-            if (targetTile.HasWire() || targetTile.HasActuator)
-                return null;
-
-            if (ConnectorSystem.Map[targetCoords].Any)
+            if (ConveyorSystem.TryRemove(targetCoords.X, targetCoords.Y))
             {
-                ConnectorSystem.CutWire(targetCoords);
                 return true;
             }
 
