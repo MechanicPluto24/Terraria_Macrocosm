@@ -1,6 +1,6 @@
 ﻿namespace Macrocosm.Common.Systems.Connectors
 {
-    public enum ConveyorType
+    public enum ConveyorPipeType
     {
         RedPipe,
         GreenPipe,

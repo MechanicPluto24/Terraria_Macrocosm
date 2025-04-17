@@ -6,9 +6,9 @@ namespace Macrocosm.Common.Systems.Connectors
     /// <summary>
     /// Represents a conveyor tile plus any associated inventory object (such as a Chest or an IInventoryOwner).
     /// </summary>
-    public class ConveyorNode(ConveyorType type, ConveyorData data, Point16 position, object storage, ConveyorCircuit circuit = null)
+    public class ConveyorNode(ConveyorPipeType type, ConveyorData data, Point16 position, object storage, ConveyorCircuit circuit = null)
     {
-        public ConveyorType Type = type;
+        public ConveyorPipeType Type = type;
         public ConveyorData Data = data;
         public Point16 Position = position;
         public object Storage = storage;

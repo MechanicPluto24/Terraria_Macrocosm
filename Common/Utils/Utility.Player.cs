@@ -254,7 +254,7 @@ namespace Macrocosm.Common.Utils
             return consume;
         }
 
-        public static void ReduceSlot(this Player player, int slot, int amount) => player.inventory[slot].DecreaseStack(amount);
+        public static void ReduceSlot(this Player player, int slot, int amount) => player.inventory[slot].DecreaseStack(amount, player);
 
         public static bool HasEmptySlots(this Player player, int slotCount, bool includeInventory = true, bool includeCoins = false, bool includeAmmo = false)
         {

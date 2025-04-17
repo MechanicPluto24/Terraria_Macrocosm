@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Systems.Connectors
     public class MachineTEConveyorProvider : IConveyorContainerProvider<MachineTE>
     {
  
-        public IEnumerable<ConveyorNode> GetConveyorNodes(MachineTE container)
+        public IEnumerable<ConveyorNode> GetAllConveyorNodes(MachineTE container)
         {
             if (container is not IInventoryOwner inventoryOwner)
                 yield break;
@@ -27,7 +27,7 @@ namespace Macrocosm.Common.Systems.Connectors
                 if (!data.Inlet && !data.Outlet)
                     continue;
 
-                for (ConveyorType type = 0; type < ConveyorType.Count; type++)
+                for (ConveyorPipeType type = 0; type < ConveyorPipeType.Count; type++)
                 {
                     if (!data.HasPipe(type))
                         continue;

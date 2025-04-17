@@ -21,6 +21,9 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Terraria.GameContent.Bestiary.IL_BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions;
+using static Terraria.ID.ContentSamples.CreativeHelper;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
@@ -52,58 +55,122 @@ namespace Macrocosm.Common.Systems.Connectors
         }
 
         public static bool ShouldDraw => Main.LocalPlayer.CurrentItem().mech;
-        public static ConveyorVisibility[] Visibility { get; set; } = new ConveyorVisibility[(int)ConveyorType.Count];
-        public static void Place(Point targetCoords, ConveyorType type, bool sync = true) => Place(targetCoords.X, targetCoords.Y, type, sync);
-        public static void Place(Point16 targetCoords, ConveyorType type, bool sync = true) => Place(targetCoords.X, targetCoords.Y, type, sync);
-        public static void Place(int x, int y, ConveyorType type, bool sync = true)
+        public static ConveyorVisibility[] Visibility { get; set; } = new ConveyorVisibility[(int)ConveyorPipeType.Count];
+
+        public static void PlacePipe(Point targetCoords, ConveyorPipeType type, bool sync = true) => PlacePipe(targetCoords.X, targetCoords.Y, type, sync);
+        public static void PlacePipe(Point16 targetCoords, ConveyorPipeType type, bool sync = true) => PlacePipe(targetCoords.X, targetCoords.Y, type, sync);
+        public static void PlacePipe(int x, int y, ConveyorPipeType type, bool sync = true)
         {
             ref var data = ref Main.tile[x, y].Get<ConveyorData>();
-            data.Set(type);
+            data.SetPipe(type);
             if (sync && Main.netMode != NetmodeID.SinglePlayer)
                 SyncConveyor(x, y);
         }
 
-        public static bool TryRemove(Point targetCoords, bool sync = true) => TryRemove(targetCoords.X, targetCoords.Y, sync);
-        public static bool TryRemove(Point16 targetCoords, bool sync = true) => TryRemove(targetCoords.X, targetCoords.Y, sync);
-        public static bool TryRemove(int x, int y, bool sync = true)
+        public static void PlaceInlet(Point targetCoords, bool sync = true) => PlaceInlet(targetCoords.X, targetCoords.Y, sync);
+        public static void PlaceInlet(Point16 targetCoords, bool sync = true) => PlaceInlet(targetCoords.X, targetCoords.Y, sync);
+        public static void PlaceInlet(int x, int y, bool sync = true)
         {
-            Tile tile = Main.tile[x, y];
-            if (tile.HasWire())
-                return false;
-
-            bool result = false;
+            bool dust = false;
             ref var data = ref Main.tile[x, y].Get<ConveyorData>();
-            for (int c = 0; c < (int)ConveyorType.Count; c++)
+            if (data.Outlet)
             {
-                var type = (ConveyorType)c;
-                if (data.HasPipe(type))
+                data.Outlet = false;
+
+                dust = true;
+                DustEffects(x, y);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Item.NewItem(new EntitySource_TileBreak(x, x, "Conveyor"), new Vector2(x * 16 + 8, y * 16 + 8), ModContent.ItemType<ConveyorOutlet>());
+            }
+
+            data.Inlet = true;
+            if (sync && Main.netMode != NetmodeID.SinglePlayer)
+                SyncConveyor(x, y, dust);
+        }
+
+        public static void PlaceOutlet(Point targetCoords, bool sync = true) => PlaceOutlet(targetCoords.X, targetCoords.Y, sync);
+        public static void PlaceOutlet(Point16 targetCoords, bool sync = true) => PlaceOutlet(targetCoords.X, targetCoords.Y, sync);
+        public static void PlaceOutlet(int x, int y, bool sync = true)
+        {
+            bool dust = false;
+            ref var data = ref Main.tile[x, y].Get<ConveyorData>();
+            if (data.Inlet)
+            {
+                data.Inlet = false;
+
+                dust = true;
+                DustEffects(x, y);
+
+                if (Main.netMode != NetmodeID.MultiplayerClient)
+                    Item.NewItem(new EntitySource_TileBreak(x, x, "Conveyor"), new Vector2(x * 16 + 8, y * 16 + 8), ModContent.ItemType<ConveyorInlet>());
+            }
+
+            data.Outlet = true;
+            if (sync && Main.netMode != NetmodeID.SinglePlayer)
+                SyncConveyor(x, y, dust);
+        }
+
+        public static bool Remove(Point targetCoords, bool sync = true) => Remove(targetCoords.X, targetCoords.Y, sync);
+        public static bool Remove(Point16 targetCoords, bool sync = true) => Remove(targetCoords.X, targetCoords.Y, sync);
+        public static bool Remove(int x, int y, bool sync = true)
+        {
+            bool removed = false;
+            int itemDrop = 0;
+            ref var data = ref Main.tile[x, y].Get<ConveyorData>();
+
+            // TODO: multiple type removal for Grand Design
+            if (data.Inlet)
+            {
+                itemDrop = ModContent.ItemType<ConveyorInlet>();
+                data.Inlet = false;
+                removed = true;
+            }
+            else if (data.Outlet)
+            {
+                itemDrop = ModContent.ItemType<ConveyorInlet>();
+                data.Outlet = false;
+                removed = true;
+            }
+            else if (data.AnyPipe)
+            {
+                for (int c = 0; c < (int)ConveyorPipeType.Count; c++)
                 {
-                    data.Clear(type);
-                    result = true;
-                    Visuals(x, y);
-                    break;
+                    var type = (ConveyorPipeType)c;
+                    if (data.HasPipe(type))
+                    {
+                        data.ClearPipe(type);
+                        itemDrop = ModContent.ItemType<Conveyor>();
+                        removed = true;
+                        break;
+                    }
                 }
             }
 
-            if (!data.AnyPipe)
+            if (removed)
             {
-                data.Inlet = false;
-                data.Outlet = false;
+                // Sanity check
+                if (!data.AnyPipe)
+                {
+                    data.Inlet = false;
+                    data.Outlet = false;
+                }
+
+                DustEffects(x, y);
+
+                if (itemDrop > 0 && Main.netMode != NetmodeID.MultiplayerClient)
+                    Item.NewItem(new EntitySource_TileBreak(x, x, "Conveyor"), new Vector2(x * 16 + 8, y * 16 + 8), itemDrop);
+
+                if (sync && Main.netMode != NetmodeID.SinglePlayer)
+                    SyncConveyor(x, y, dustEffects: true);
             }
 
-            if (sync && Main.netMode != NetmodeID.SinglePlayer)
-                SyncConveyor(x, y);
-
-            return result;
+            return removed;
         }
 
-        private static void Visuals(int x, int y)
+        private static void DustEffects(int x, int y)
         {
-            int itemDrop = ModContent.ItemType<Conveyor>();
             int dustType = DustID.Copper;
-            if (itemDrop > 0 && Main.netMode != NetmodeID.MultiplayerClient)
-                Item.NewItem(new EntitySource_TileBreak(x, x, "Conveyor"), new Vector2(x * 16 + 8, y * 16 + 8), itemDrop);
-
             if (dustType >= 0)
                 for (int i = 0; i < 10; i++)
                     Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, dustType);
@@ -139,14 +206,15 @@ namespace Macrocosm.Common.Systems.Connectors
         {
             foreach (var container in provider.EnumerateContainers())
             {
-                foreach (var node in provider.GetConveyorNodes(container))
+                foreach (var node in provider.GetAllConveyorNodes(container))
                 {
                     if (node.Circuit != null)
                         continue;
 
                     var search = new ConnectionSearch<ConveyorNode>(
                         connectionCheck: p => Main.tile[p.X, p.Y].Get<ConveyorData>().HasPipe(node.Type),
-                        retrieveNode: p => provider.TryGetContainer(p, out T cont) ? provider.GetConveyorNodes(cont).FirstOrDefault(n => n.Position == p && n.Type == node.Type) : null);
+                        retrieveNode: p => provider.GetConveyorNode(p, node.Type)
+                    );
 
                     HashSet<ConveyorNode> connectedNodes = search.FindConnectedNodes(startingPositions: [node.Position]);
                     if (connectedNodes.Count == 0)
@@ -183,19 +251,6 @@ namespace Macrocosm.Common.Systems.Connectors
                         circuits.Add(circuit);
                 }
             }
-        }
-
-        private static object TryGetStorageObject(int x, int y)
-        {
-            Point16 position = Utility.GetMultitileTopLeft(x, y);
-            int chestIndex = Chest.FindChest(position.X, position.Y);
-            if (chestIndex >= 0 && Main.chest[chestIndex] is Chest chest)
-                return chest;
-
-            if (Utility.TryGetTileEntityAs(new Point16(x, y), out TileEntity te) && te is IInventoryOwner inventoryOwner)
-                return inventoryOwner;
-
-            return null;
         }
 
         private static void SolveConveyorCircuits()
@@ -238,12 +293,23 @@ namespace Macrocosm.Common.Systems.Connectors
                 for (int j = startY + screenOverdrawOffset.Y; j < endY - screenOverdrawOffset.Y; j++)
                 {
                     ref var data = ref Main.tile[i, j].Get<ConveyorData>();
-                    for(int t = 0; i < (int)ConveyorType.Count; t++)
+
+                    float pipeCount = 0f;
+                    for (int t = 0; t < (int)ConveyorPipeType.Count; t++)
                     {
-                        ConveyorType type = (ConveyorType)t;
+                        ConveyorPipeType type = (ConveyorPipeType)t;
+                        if (data.HasPipe(type) && GetColor(i, j, Visibility[t]) != Color.Transparent)
+                            pipeCount++;
+                    }
+
+                    for (int t = 0; i < (int)ConveyorPipeType.Count; t++)
+                    {
+                        ConveyorPipeType type = (ConveyorPipeType)t;
                         Color color = GetColor(i, j, Visibility[t]);
                         if (data.HasPipe(type) && color != Color.Transparent)
-                        {   
+                        {
+                            color *= 1f / pipeCount;
+
                             // Type frame
                             int frameY = 18 * t;
 
@@ -276,30 +342,24 @@ namespace Macrocosm.Common.Systems.Connectors
         private static Color GetColor(int i, int j, ConveyorVisibility visibilty)
         {
             Color color = Lighting.GetColor(i, j);
-            switch (visibilty)
+            return visibilty switch
             {
-                case ConveyorVisibility.Bright:
-                    color = Color.White;
-                    break;
-                case ConveyorVisibility.Subtle:
-                    color *= 0.5f;
-                    break;
-                case ConveyorVisibility.Hidden:
-                    color = Color.Transparent;
-                    break;
-            }
-            return color;
+                ConveyorVisibility.Bright => Color.White,
+                ConveyorVisibility.Subtle => color * 0.5f,
+                ConveyorVisibility.Hidden => Color.Transparent,
+                _ => color
+            };
         }
 
-        public static void SyncConveyor(int x, int y, bool visuals = false, int toClient = -1, int ignoreClient = -1)
+        public static void SyncConveyor(int x, int y, bool dustEffects = false, int toClient = -1, int ignoreClient = -1)
         {
             ModPacket packet = Macrocosm.Instance.GetPacket();
 
             packet.Write((byte)MessageType.SyncPowerWire);
             packet.Write((ushort)x);
             packet.Write((ushort)y);
-            packet.Write(visuals);
             packet.Write(Main.tile[x, y].Get<ConveyorData>().Packed);
+            packet.Write(dustEffects);
             packet.Send(toClient, ignoreClient);
         }
 
@@ -307,17 +367,17 @@ namespace Macrocosm.Common.Systems.Connectors
         {
             int x = reader.ReadUInt16();
             int y = reader.ReadUInt16();
-            bool visuals = reader.ReadBoolean();
             byte data = reader.ReadByte();
+            bool dustEffects = reader.ReadBoolean();
 
             ref var localData = ref Main.tile[x, y].Get<ConveyorData>();
             localData = new(data);
 
-            if (visuals)
-                Visuals(x, y);
+            if (dustEffects)
+                DustEffects(x, y);
 
             if (Main.netMode == NetmodeID.Server)
-                SyncConveyor(x, y, visuals, ignoreClient: sender);
+                SyncConveyor(x, y, dustEffects, ignoreClient: sender);
         }
 
         public override void SaveWorldData(TagCompound tag)

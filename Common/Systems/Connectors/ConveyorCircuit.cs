@@ -12,11 +12,11 @@ namespace Macrocosm.Common.Systems.Connectors
 {
     public class ConveyorCircuit : Circuit<ConveyorNode>
     {
-        public ConveyorType ConveyorType { get; }
+        public ConveyorPipeType PipeType { get; }
 
-        public ConveyorCircuit(ConveyorType type)
+        public ConveyorCircuit(ConveyorPipeType type)
         {
-            ConveyorType = type;
+            PipeType = type;
         }
 
         public override void Add(ConveyorNode node)
@@ -27,7 +27,7 @@ namespace Macrocosm.Common.Systems.Connectors
 
         public override void Merge(Circuit<ConveyorNode> other)
         {
-            if (other is ConveyorCircuit conveyorOther && conveyorOther.ConveyorType == ConveyorType)
+            if (other is ConveyorCircuit conveyorOther && conveyorOther.PipeType == PipeType)
             {
                 foreach (var node in conveyorOther.nodes)
                 {
