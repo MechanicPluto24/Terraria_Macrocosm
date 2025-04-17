@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Systems.Connectors
     public class ChestConveyorProvider : IConveyorContainerProvider<Chest>
     {
         public IEnumerable<Chest> EnumerateContainers() => Main.chest.Where(c => c != null);
-        public IEnumerable<ConveyorNode> GetConveyorNodes(Chest chest)
+        public IEnumerable<ConveyorNode> GetAllConveyorNodes(Chest chest)
         {
             if(Utility.CoordinatesOutOfBounds(chest.x, chest.y))
                 yield break;
@@ -48,7 +48,7 @@ namespace Macrocosm.Common.Systems.Connectors
                     if (!data.Inlet && !data.Outlet)
                         continue;
 
-                    for (ConveyorType type = 0; type < ConveyorType.Count; type++)
+                    for (ConveyorPipeType type = 0; type < ConveyorPipeType.Count; type++)
                     {
                         if (!data.HasPipe(type))
                             continue;
