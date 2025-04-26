@@ -34,7 +34,8 @@ namespace Macrocosm.Common.Netcode
         SyncNPCFromClient,
 
         SyncTEFromClient,
-        SyncPowerWire
+        SyncConveyor,
+        SyncConveyorRectangle
     }
 
     public class PacketHandler
@@ -88,7 +89,6 @@ namespace Macrocosm.Common.Netcode
                     DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
                     break;
 
-
                 case MessageType.SpawnNPCFromClient:
                     NetHelper.ReceiveSpawnNPCFromClient(reader, whoAmI);
                     break;
@@ -101,8 +101,12 @@ namespace Macrocosm.Common.Netcode
                     NetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
                     break;
 
-                case MessageType.SyncPowerWire:
+                case MessageType.SyncConveyor:
                     ConveyorSystem.ReceiveSyncConveyor(reader, whoAmI);
+                    break;
+
+                case MessageType.SyncConveyorRectangle:
+                    ConveyorSystem.ReceiveSyncConveyorRectangle(reader, whoAmI);
                     break;
 
                 default:

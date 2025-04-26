@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Systems;
 using Microsoft.Xna.Framework;
 using System;
@@ -395,6 +396,52 @@ namespace Macrocosm.Common.Utils
                 }
             }
         }
+
+        /// <summary> Similar to <see cref="Chest.FindChestByGuessing(int, int)"/> but also works with dressers and <see cref="TileSets.CustomContainer"/></summary>
+        public static bool TryGetChest(Point16 pos, out Chest chest)
+        {
+            for (int i = 0; i < Main.chest.Length; i++)
+            {
+                var c = Main.chest[i];
+                if (c == null)
+                    continue;
+
+                int x = c.x;
+                int y = c.y;
+                if (CoordinatesOutOfBounds(x, y))
+                    continue;
+
+                Tile tile = Main.tile[x, y];
+                int w = 0;
+                int h = 0;
+                if (TileID.Sets.BasicChest[tile.TileType])
+                {
+                    w = 2;
+                    h = 2;
+                }
+                if (TileID.Sets.BasicDresser[tile.TileType])
+                {
+                    w = 3;
+                    h = 2;
+                }
+                else if (TileSets.CustomContainer[tile.TileType])
+                {
+                    var data = TileObjectData.GetTileData(tile);
+                    w = data?.Width ?? 1;
+                    h = data?.Height ?? 1;
+                }
+
+                if (w > 0 && h > 0 && pos.X >= x && pos.X < x + w && pos.Y >= y && pos.Y < y + h)
+                {
+                    chest = c;
+                    return true;
+                }
+            }
+
+            chest = null;
+            return false;
+        }
+
 
 
         public static bool AlchemyFlower(int type) { return type is 82 or 83 or 84; }

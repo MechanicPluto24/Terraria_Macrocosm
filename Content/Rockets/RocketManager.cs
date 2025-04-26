@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Rockets
         AfterNPCs
     }
 
-    public class RocketManager : ModSystem
+    public class RocketManager : ModSystem, IOnPlayerJoining
     {
         public static Rocket[] Rockets { get; private set; }
 
@@ -185,18 +185,13 @@ namespace Macrocosm.Content.Rockets
                 Rockets[i] = new Rocket();
         }
 
-        public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+        public void OnPlayerJoining(int playerIndex)
         {
-            if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+            for (int i = 0; i < MaxRockets; i++)
             {
-                for (int i = 0; i < MaxRockets; i++)
-                {
-                    var rocket = Rockets[i];
-                    rocket.SyncEverything(toClient: remoteClient);
-                }
+                var rocket = Rockets[i];
+                rocket.SyncEverything(toClient: playerIndex);
             }
-
-            return false;
         }
 
         public override void SaveWorldData(TagCompound tag) => SaveData(tag);

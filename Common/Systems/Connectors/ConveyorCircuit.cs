@@ -43,12 +43,12 @@ namespace Macrocosm.Common.Systems.Connectors
         {
             var outlets = nodes
                 .OfType<ConveyorNode>()
-                .Where(n => n.Data.Outlet)
+                .Where(n => n.Outlet)
                 .ToList();
 
             var inlets = nodes
                 .OfType<ConveyorNode>()
-                .Where(n => n.Data.Inlet)
+                .Where(n => n.Inlet)
                 .ToList();
 
             foreach (var outletNode in outlets)
@@ -78,7 +78,7 @@ namespace Macrocosm.Common.Systems.Connectors
 
                     if (inletNode.Storage is Chest inletChest)
                     {
-                        if (Utility.TryPlaceItemInChest(ref sourceClone, inletChest, justCheck: false))
+                        if (Utility.TryPlacingItemInChest(ref sourceClone, inletChest, justCheck: false))
                         {
                             Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
                             ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, inletChest);
@@ -119,7 +119,7 @@ namespace Macrocosm.Common.Systems.Connectors
 
                     if (inletNode.Storage is Chest inletChest)
                     {
-                        if (Utility.TryPlaceItemInChest(ref sourceClone, inletChest, justCheck: false))
+                        if (Utility.TryPlacingItemInChest(ref sourceClone, inletChest, justCheck: false))
                         {
                             Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
                             ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, inletChest);

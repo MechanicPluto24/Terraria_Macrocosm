@@ -77,6 +77,8 @@ namespace Macrocosm.Common.Utils
         public static Tile TargetTile() => Main.tile[Player.tileTargetX, Player.tileTargetY];
         public static Tile TargetTile(this Player _) => Main.tile[Player.tileTargetX, Player.tileTargetY];
 
+        public static bool ItemInTileReach(this Player player, Item item) => player.position.X / 16f - Player.tileRangeX - item.tileBoost - player.blockRange <= Player.tileTargetX && (player.position.X + player.width) / 16f + Player.tileRangeX + item.tileBoost - 1f + player.blockRange >= Player.tileTargetX && player.position.Y / 16f - Player.tileRangeY - item.tileBoost - player.blockRange <= Player.tileTargetY && (player.position.Y + player.height) / 16f + Player.tileRangeY + item.tileBoost - 2f + player.blockRange >= Player.tileTargetY;
+
         public static bool CanHurtCritterAroundPosition(Vector2 position, float radius)
         {
             foreach (var player in Main.ActivePlayers)
