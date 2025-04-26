@@ -83,7 +83,7 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-        public static bool TryPlaceItemInChest(ref Item item, Chest targetChest, bool justCheck, bool serverSync = true)
+        public static bool TryPlacingItemInChest(ref Item item, Chest targetChest, bool justCheck, bool serverSync = true)
         {
             if (item.IsAir || item.stack <= 0)
                 return false;

@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Config;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Connectors;
 using Microsoft.Xna.Framework;
@@ -9,25 +8,28 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
+using Terraria.GameContent.UI;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
-    public partial class ConveyorSystem : ModSystem
+    public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
     {
         private static Asset<Texture2D> conveyorTexture;
         private static Asset<Texture2D> inletTexture;
         private static Asset<Texture2D> outletTexture;
 
-        private static readonly HashSet<Point16> nodeCache = new();
+        private static Dictionary<Point16, ConveyorNode> nodeLookup = new();
         private static readonly List<ConveyorCircuit> circuits = new();
         private static int buildTimer = 0;
         private static int solveTimer = 0;
@@ -48,8 +50,9 @@ namespace Macrocosm.Common.Systems.Connectors
         {
         }
 
-        public static bool ShouldDraw => Main.LocalPlayer.CurrentItem().mech;
+        public static bool ShouldDraw => WiresUI.Settings.DrawWires;
         public static ConveyorVisibility[] Visibility { get; set; } = new ConveyorVisibility[(int)ConveyorPipeType.Count];
+        public static ConveyorVisibility InletOutletVisibility { get; set; } = ConveyorVisibility.Normal;
 
         public static bool PlacePipe(Point targetCoords, ConveyorPipeType type, bool sync = true) => PlacePipe(targetCoords.X, targetCoords.Y, type, sync);
         public static bool PlacePipe(Point16 targetCoords, ConveyorPipeType type, bool sync = true) => PlacePipe(targetCoords.X, targetCoords.Y, type, sync);
@@ -71,7 +74,7 @@ namespace Macrocosm.Common.Systems.Connectors
         public static bool PlaceInlet(int x, int y, bool sync = true)
         {
             ref var data = ref Main.tile[x, y].Get<ConveyorData>();
-            if(data.Inlet)
+            if (data.Inlet)
                 return false;
 
             bool dust = false;
@@ -181,7 +184,7 @@ namespace Macrocosm.Common.Systems.Connectors
         {
             int dustType = DustID.Copper;
             if (dustType >= 0)
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 5; i++)
                     Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, dustType);
         }
 
@@ -189,6 +192,7 @@ namespace Macrocosm.Common.Systems.Connectors
         {
             UpdateConveyors();
         }
+
         private static void UpdateConveyors()
         {
             if (++buildTimer >= (int)ServerConfig.Instance.CircuitSolveUpdateRate)
@@ -206,64 +210,85 @@ namespace Macrocosm.Common.Systems.Connectors
 
         private static void BuildConveyorCircuits()
         {
+            nodeLookup.Clear();
             circuits.Clear();
-            BuildFor(new ChestConveyorProvider());
-            BuildFor(new MachineTEConveyorProvider());
+
+            GetNodesFor(new ChestConveyorContainerProvider());
+            GetNodesFor(new MachineTEConveyorContainerProvider());
+
+            foreach (var node in nodeLookup.Values)
+            {
+                if (node.Circuit != null)
+                    continue;
+
+                var search = new ConnectionSearch<ConveyorNode>(
+                    connectionCheck: p => Main.tile[p.X, p.Y].Get<ConveyorData>().HasPipe(node.Type),
+                    retrieveNode: p => nodeLookup.TryGetValue(p, out var foundNode) && foundNode.Type == node.Type ? foundNode : null
+                );
+
+                HashSet<ConveyorNode> connectedNodes = search.FindConnectedNodes(node.ConnectionPositions);
+                if (connectedNodes.Count == 0)
+                    continue;
+
+                HashSet<ConveyorCircuit> existingCircuits = circuits
+                    .Where(circuit => connectedNodes.Any(node => circuit.Contains(node)))
+                    .ToHashSet();
+
+                ConveyorCircuit circuit;
+                if (existingCircuits.Count > 0)
+                {
+                    circuit = existingCircuits.First();
+                    foreach (var otherCircuit in existingCircuits.Skip(1))
+                    {
+                        circuit.Merge(otherCircuit);
+                    }
+                }
+                else
+                {
+                    circuit = new ConveyorCircuit(node.Type);
+                }
+
+                foreach (var n in connectedNodes)
+                {
+                    if (n.Circuit == null)
+                    {
+                        circuit.Add(n);
+                        n.Circuit = circuit;
+                    }
+                }
+
+                if (node.Circuit == null)
+                {
+                    circuit.Add(node);
+                    node.Circuit = circuit;
+                }
+
+                if (!circuits.Contains(circuit))
+                    circuits.Add(circuit);
+            }
         }
 
-        private static void BuildFor<T>(IConveyorContainerProvider<T> provider) where T : class
+        private static void GetNodesFor<T>(IConveyorContainerProvider<T> provider) where T : class
         {
             foreach (var container in provider.EnumerateContainers())
             {
-                foreach (var node in provider.GetAllConveyorNodes(container))
+                foreach (var node in GetAllConveyorNodes(provider, container))
                 {
-                    if (node.Circuit != null)
-                        continue;
+                    if (!nodeLookup.ContainsKey(node.Position))
+                        nodeLookup[node.Position] = node;
+                }
+            }
+        }
 
-                    var search = new ConnectionSearch<ConveyorNode>(
-                        connectionCheck: p => Main.tile[p.X, p.Y].Get<ConveyorData>().HasPipe(node.Type),
-                        retrieveNode: p => provider.GetConveyorNode(p, node.Type)
-                    );
-
-                    HashSet<ConveyorNode> connectedNodes = search.FindConnectedNodes(provider.GetConnectionPositions(container));
-                    if (connectedNodes.Count == 0)
-                        continue;
-
-                    HashSet<ConveyorCircuit> existingCircuits = circuits
-                        .Where(circuit => connectedNodes.Any(node => circuit.Contains(node)))
-                        .ToHashSet();
-
-                    ConveyorCircuit circuit;
-                    if (existingCircuits.Count > 0)
-                    {
-                        circuit = existingCircuits.First();
-                        foreach (var otherCircuit in existingCircuits.Skip(1))
-                        {
-                            circuit.Merge(otherCircuit);
-                        }
-                    }
-                    else
-                    {
-                        circuit = new ConveyorCircuit(node.Type);
-                    }
-
-                    foreach (var n in connectedNodes)
-                    {
-                        if (n.Circuit == null)
-                        {
-                            circuit.Add(node);
-                            n.Circuit = circuit;
-                        }
-                    }
-
-                    if (node.Circuit == null)
-                    {
-                        circuit.Add(node);
-                        node.Circuit = circuit;
-                    }
-
-                    if (!circuits.Contains(circuit))
-                        circuits.Add(circuit);
+        private static IEnumerable<ConveyorNode> GetAllConveyorNodes<T>(IConveyorContainerProvider<T> provider, T container) where T : class
+        {
+            foreach (var pos in provider.GetConnectionPositions(container))
+            {
+                for (ConveyorPipeType type = 0; type < ConveyorPipeType.Count; type++)
+                {
+                    var node = provider.GetConveyorNode(pos, type);
+                    if (node is not null)
+                        yield return node;
                 }
             }
         }
@@ -309,21 +334,16 @@ namespace Macrocosm.Common.Systems.Connectors
                 {
                     ref var data = ref Main.tile[i, j].Get<ConveyorData>();
 
-                    float pipeCount = 0f;
-                    for (int t = 0; t < (int)ConveyorPipeType.Count; t++)
-                    {
-                        ConveyorPipeType type = (ConveyorPipeType)t;
-                        if (data.HasPipe(type) && GetColor(i, j, Visibility[t]) != Color.Transparent)
-                            pipeCount++;
-                    }
-
+                    float visiblePipeCount = 0f;
                     for (int t = 0; t < (int)ConveyorPipeType.Count; t++)
                     {
                         ConveyorPipeType type = (ConveyorPipeType)t;
                         Color color = GetColor(i, j, Visibility[t]);
                         if (data.HasPipe(type) && color != Color.Transparent)
                         {
-                            color *= 1f / pipeCount;
+                            visiblePipeCount += 1f;
+                            float alphaFactor = 1f / visiblePipeCount;
+                            color *= alphaFactor;
 
                             // Type frame
                             int frameY = 18 * t;
@@ -344,20 +364,18 @@ namespace Macrocosm.Common.Systems.Connectors
 
                             frame.Y = frameY;
                             frame.X = frameX;
-       
+
                             spriteBatch.Draw(conveyorTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
                         }
                     }
 
-                    if (data.Inlet)
+                    if(InletOutletVisibility != ConveyorVisibility.Hidden && visiblePipeCount > 0)
                     {
-                        spriteBatch.Draw(inletTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, null, Color.White, 0f, zero, 1f, SpriteEffects.None, 0f);
+                        if (data.Inlet)
+                            spriteBatch.Draw(inletTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, null, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
+                        else if (data.Outlet)
+                            spriteBatch.Draw(outletTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, null, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
                     }
-                    else if (data.Outlet)
-                    {
-                        spriteBatch.Draw(outletTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, null, Color.White, 0f, zero, 1f, SpriteEffects.None, 0f);
-                    }
-
                 }
             }
 
@@ -380,7 +398,7 @@ namespace Macrocosm.Common.Systems.Connectors
         {
             ModPacket packet = Macrocosm.Instance.GetPacket();
 
-            packet.Write((byte)MessageType.SyncPowerWire);
+            packet.Write((byte)MessageType.SyncConveyor);
             packet.Write((ushort)x);
             packet.Write((ushort)y);
             packet.Write(Main.tile[x, y].Get<ConveyorData>().Packed);
@@ -403,6 +421,68 @@ namespace Macrocosm.Common.Systems.Connectors
 
             if (Main.netMode == NetmodeID.Server)
                 SyncConveyor(x, y, dustEffects, ignoreClient: sender);
+        }
+
+        public static void SyncConveyorRectangle(int startX, int startY, int width, int height, int toClient = -1, int ignoreClient = -1)
+        {
+            ModPacket packet = Macrocosm.Instance.GetPacket();
+
+            packet.Write((byte)MessageType.SyncConveyorRectangle);
+            packet.Write((ushort)startX);
+            packet.Write((ushort)startY);
+            packet.Write((ushort)width);
+            packet.Write((ushort)height);
+
+            using (MemoryStream memoryStream = new())
+            {
+                using (BinaryWriter writer = new(new Ionic.Zlib.DeflateStream(memoryStream, Ionic.Zlib.CompressionMode.Compress, true)))
+                {
+                    for (int x = startX; x < startX + width; x++)
+                    {
+                        for (int y = startY; y < startY + height; y++)
+                        {
+                            writer.Write(Main.tile[x, y].Get<ConveyorData>().Packed);
+                        }
+                    }
+                }
+
+                byte[] compressedData = memoryStream.ToArray();
+                packet.Write(compressedData.Length);
+                packet.Write(compressedData);
+            }
+
+            packet.Send(toClient, ignoreClient);
+        }
+
+        public static void ReceiveSyncConveyorRectangle(BinaryReader reader, int sender)
+        {
+            int startX = reader.ReadUInt16();
+            int startY = reader.ReadUInt16();
+            int width = reader.ReadUInt16();
+            int height = reader.ReadUInt16();
+            int compressedLength = reader.ReadInt32();
+            byte[] compressedData = reader.ReadBytes(compressedLength);
+
+            using (MemoryStream memoryStream = new(compressedData))
+            using (BinaryReader compressedReader = new(new Ionic.Zlib.DeflateStream(memoryStream, Ionic.Zlib.CompressionMode.Decompress)))
+            {
+                for (int x = startX; x < startX + width; x++)
+                {
+                    for (int y = startY; y < startY + height; y++)
+                    {
+                        byte data = compressedReader.ReadByte();
+                        Main.tile[x, y].Get<ConveyorData>() = new ConveyorData(data);
+                    }
+                }
+            }
+
+            if (Main.netMode == NetmodeID.Server)
+                SyncConveyorRectangle(startX, startY, width, height, ignoreClient: sender);
+        }
+
+        public void OnPlayerJoining(int playerIndex)
+        {
+            SyncConveyorRectangle(0, 0, Main.maxTilesX, Main.maxTilesY, toClient: playerIndex);
         }
 
         public override void SaveWorldData(TagCompound tag)
