@@ -32,12 +32,7 @@ namespace Macrocosm.Content.Items.Connectors
         public override bool? UseItem(Player player)
         {
             if (player.whoAmI == Main.myPlayer)
-            {
-                Point targetCoords = player.TargetCoords();
-                ref var data = ref Main.tile[targetCoords].Get<ConveyorData>();
-                data.Inlet = true;
-                return false;
-            }
+                return ConveyorSystem.PlaceInlet(player.TargetCoords());
 
             return null;
         }

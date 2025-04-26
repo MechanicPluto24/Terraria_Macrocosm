@@ -9,6 +9,8 @@ using Macrocosm.Common.Utils;
 using Terraria.ID;
 using Macrocosm.Common.Sets;
 using Terraria.ObjectData;
+using Microsoft.Xna.Framework;
+using static AssGen.Assets;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
@@ -17,12 +19,31 @@ namespace Macrocosm.Common.Systems.Connectors
         public IEnumerable<Chest> EnumerateContainers() => Main.chest.Where(c => c != null);
         public IEnumerable<ConveyorNode> GetAllConveyorNodes(Chest chest)
         {
-            if(Utility.CoordinatesOutOfBounds(chest.x, chest.y))
+            foreach (var pos in GetConnectionPositions(chest))
+            {
+                var data = Main.tile[pos.X, pos.Y].Get<ConveyorData>();
+                if (!data.Inlet && !data.Outlet)
+                    continue;
+
+                for (ConveyorPipeType type = 0; type < ConveyorPipeType.Count; type++)
+                {
+                    if (!data.HasPipe(type))
+                        continue;
+
+                    yield return new ConveyorNode(type, data, pos, chest);
+                }
+            }
+        }
+
+        public IEnumerable<Point16> GetConnectionPositions(Chest chest)
+        {
+            if (Utility.CoordinatesOutOfBounds(chest.x, chest.y))
                 yield break;
 
             Tile tile = Main.tile[chest.x, chest.y];
             int sizeX = 0;
             int sizeY = 0;
+
             if (TileID.Sets.BasicChest[tile.TileType])
             {
                 sizeX = sizeY = 2;
@@ -43,18 +64,7 @@ namespace Macrocosm.Common.Systems.Connectors
             {
                 for (int dy = 0; dy < sizeY; dy++)
                 {
-                    Point16 pos = new(chest.x + dx, chest.y + dy);
-                    var data = Main.tile[pos.X, pos.Y].Get<ConveyorData>();
-                    if (!data.Inlet && !data.Outlet)
-                        continue;
-
-                    for (ConveyorPipeType type = 0; type < ConveyorPipeType.Count; type++)
-                    {
-                        if (!data.HasPipe(type))
-                            continue;
-
-                        yield return new ConveyorNode(type, data, pos, chest);
-                    }
+                    yield return new Point16(chest.x + dx, chest.y + dy);
                 }
             }
         }

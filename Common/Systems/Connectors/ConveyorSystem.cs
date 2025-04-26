@@ -1,8 +1,6 @@
 ﻿using Macrocosm.Common.Config;
 using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
 using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Connectors;
@@ -10,7 +8,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,9 +18,6 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using static Terraria.GameContent.Bestiary.IL_BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions;
-using static Terraria.ID.ContentSamples.CreativeHelper;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
@@ -57,22 +51,30 @@ namespace Macrocosm.Common.Systems.Connectors
         public static bool ShouldDraw => Main.LocalPlayer.CurrentItem().mech;
         public static ConveyorVisibility[] Visibility { get; set; } = new ConveyorVisibility[(int)ConveyorPipeType.Count];
 
-        public static void PlacePipe(Point targetCoords, ConveyorPipeType type, bool sync = true) => PlacePipe(targetCoords.X, targetCoords.Y, type, sync);
-        public static void PlacePipe(Point16 targetCoords, ConveyorPipeType type, bool sync = true) => PlacePipe(targetCoords.X, targetCoords.Y, type, sync);
-        public static void PlacePipe(int x, int y, ConveyorPipeType type, bool sync = true)
+        public static bool PlacePipe(Point targetCoords, ConveyorPipeType type, bool sync = true) => PlacePipe(targetCoords.X, targetCoords.Y, type, sync);
+        public static bool PlacePipe(Point16 targetCoords, ConveyorPipeType type, bool sync = true) => PlacePipe(targetCoords.X, targetCoords.Y, type, sync);
+        public static bool PlacePipe(int x, int y, ConveyorPipeType type, bool sync = true)
         {
             ref var data = ref Main.tile[x, y].Get<ConveyorData>();
+            if (data.HasPipe(type))
+                return false;
+
             data.SetPipe(type);
             if (sync && Main.netMode != NetmodeID.SinglePlayer)
                 SyncConveyor(x, y);
+
+            return true;
         }
 
-        public static void PlaceInlet(Point targetCoords, bool sync = true) => PlaceInlet(targetCoords.X, targetCoords.Y, sync);
-        public static void PlaceInlet(Point16 targetCoords, bool sync = true) => PlaceInlet(targetCoords.X, targetCoords.Y, sync);
-        public static void PlaceInlet(int x, int y, bool sync = true)
+        public static bool PlaceInlet(Point targetCoords, bool sync = true) => PlaceInlet(targetCoords.X, targetCoords.Y, sync);
+        public static bool PlaceInlet(Point16 targetCoords, bool sync = true) => PlaceInlet(targetCoords.X, targetCoords.Y, sync);
+        public static bool PlaceInlet(int x, int y, bool sync = true)
         {
-            bool dust = false;
             ref var data = ref Main.tile[x, y].Get<ConveyorData>();
+            if(data.Inlet)
+                return false;
+
+            bool dust = false;
             if (data.Outlet)
             {
                 data.Outlet = false;
@@ -87,14 +89,19 @@ namespace Macrocosm.Common.Systems.Connectors
             data.Inlet = true;
             if (sync && Main.netMode != NetmodeID.SinglePlayer)
                 SyncConveyor(x, y, dust);
+
+            return true;
         }
 
-        public static void PlaceOutlet(Point targetCoords, bool sync = true) => PlaceOutlet(targetCoords.X, targetCoords.Y, sync);
-        public static void PlaceOutlet(Point16 targetCoords, bool sync = true) => PlaceOutlet(targetCoords.X, targetCoords.Y, sync);
-        public static void PlaceOutlet(int x, int y, bool sync = true)
+        public static bool PlaceOutlet(Point targetCoords, bool sync = true) => PlaceOutlet(targetCoords.X, targetCoords.Y, sync);
+        public static bool PlaceOutlet(Point16 targetCoords, bool sync = true) => PlaceOutlet(targetCoords.X, targetCoords.Y, sync);
+        public static bool PlaceOutlet(int x, int y, bool sync = true)
         {
-            bool dust = false;
             ref var data = ref Main.tile[x, y].Get<ConveyorData>();
+            if (data.Outlet)
+                return false;
+
+            bool dust = false;
             if (data.Inlet)
             {
                 data.Inlet = false;
@@ -109,6 +116,8 @@ namespace Macrocosm.Common.Systems.Connectors
             data.Outlet = true;
             if (sync && Main.netMode != NetmodeID.SinglePlayer)
                 SyncConveyor(x, y, dust);
+
+            return true;
         }
 
         public static bool Remove(Point targetCoords, bool sync = true) => Remove(targetCoords.X, targetCoords.Y, sync);
@@ -216,7 +225,7 @@ namespace Macrocosm.Common.Systems.Connectors
                         retrieveNode: p => provider.GetConveyorNode(p, node.Type)
                     );
 
-                    HashSet<ConveyorNode> connectedNodes = search.FindConnectedNodes(startingPositions: [node.Position]);
+                    HashSet<ConveyorNode> connectedNodes = search.FindConnectedNodes(provider.GetConnectionPositions(container));
                     if (connectedNodes.Count == 0)
                         continue;
 
@@ -245,6 +254,12 @@ namespace Macrocosm.Common.Systems.Connectors
                             circuit.Add(node);
                             n.Circuit = circuit;
                         }
+                    }
+
+                    if (node.Circuit == null)
+                    {
+                        circuit.Add(node);
+                        node.Circuit = circuit;
                     }
 
                     if (!circuits.Contains(circuit))
@@ -302,7 +317,7 @@ namespace Macrocosm.Common.Systems.Connectors
                             pipeCount++;
                     }
 
-                    for (int t = 0; i < (int)ConveyorPipeType.Count; t++)
+                    for (int t = 0; t < (int)ConveyorPipeType.Count; t++)
                     {
                         ConveyorPipeType type = (ConveyorPipeType)t;
                         Color color = GetColor(i, j, Visibility[t]);
@@ -333,6 +348,16 @@ namespace Macrocosm.Common.Systems.Connectors
                             spriteBatch.Draw(conveyorTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
                         }
                     }
+
+                    if (data.Inlet)
+                    {
+                        spriteBatch.Draw(inletTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, null, Color.White, 0f, zero, 1f, SpriteEffects.None, 0f);
+                    }
+                    else if (data.Outlet)
+                    {
+                        spriteBatch.Draw(outletTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, null, Color.White, 0f, zero, 1f, SpriteEffects.None, 0f);
+                    }
+
                 }
             }
 
