@@ -618,7 +618,7 @@ namespace Macrocosm.Content.Subworlds
             GenerateOre(TileID.LunarOre, 0.00005, WorldGen.genRand.Next(9, 15), WorldGen.genRand.Next(9, 15), protolithType);
         }
 
-        //[Task]
+        [Task]
         private void QuartzTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OreTask");
