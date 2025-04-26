@@ -31,13 +31,6 @@ namespace Macrocosm.Content.Items.Connectors
 
         public override bool? UseItem(Player player)
         {
-            if (player.whoAmI == Main.myPlayer)
-            {
-                Point targetCoords = player.TargetCoords();
-                ConveyorSystem.PlacePipe(targetCoords, ConveyorPipeType.RedPipe);
-                return true;
-            }
-
             return null;
         }
     }

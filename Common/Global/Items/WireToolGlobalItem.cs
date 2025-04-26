@@ -25,53 +25,47 @@ namespace Macrocosm.Common.Global.Items
             if(player.whoAmI == Main.myPlayer)
             {
                 Point targetCoords = player.TargetCoords();
-                switch (item.type)
+                if(item.type == ItemID.WireCutter)
                 {
-                    case ItemID.WireCutter:
-                        if (Main.tile[targetCoords].HasWire())
-                            return null;
+                    // Default WireCutter logic if wires are present
+                    if (Main.tile[targetCoords].HasWire())
+                        return null;
 
-                        return ConveyorSystem.Remove(targetCoords) ? true : null;
-
-                    case ItemID.Wrench:
-                        if (PickPipe(player))
-                        {
-                            ConveyorSystem.PlacePipe(targetCoords, ConveyorPipeType.RedPipe);
-                        }
-                        else return null;
-                        break;
-
-                    case ItemID.BlueWrench:
-                        break;
-
-                    case ItemID.GreenWrench:
-                        break;
-
-                    case ItemID.YellowWrench:
-                        break;
+                    // Remove pipe or run default WireCutter logic
+                    return ConveyorSystem.Remove(targetCoords);
                 }
+                else if (TryGetPipeTypeFromWrench(item.type, out ConveyorPipeType pipeType))
+                {
+                    // Pipe over wires in ammo slots/inventory
+                    if (PickPipe(player, skipWires: Main.tile[targetCoords].HasWire()))
+                        return ConveyorSystem.PlacePipe(targetCoords, pipeType);
 
+                    return null; // Default wrench if no pipe
+                }
             }
 
             return null;
         }
 
-        private bool PickPipe(Player player)
+        /// <summary> Used to pick pipes over wires, in ammo priority </summary>
+        private static bool PickPipe(Player player, bool skipWires)
         {
+            // Ammo slots first, top to bottom
             for (int i = 55; i < 59; i++)
             {
                 Item item = player.inventory[i];
-                if (item.type == ItemID.Wire)
+                if (item.type == ItemID.Wire && !skipWires)
                     return false;
 
                 if (item.type == ModContent.ItemType<Conveyor>())
                     return true;
             }
 
+            // Main inventory slots, from top-left
             for (int i = 0; i < 55; i++)
             {
                 Item item = player.inventory[i];
-                if (item.type == ItemID.Wire)
+                if (item.type == ItemID.Wire && !skipWires)
                     return false;
 
                 if (item.type == ModContent.ItemType<Conveyor>())
@@ -79,6 +73,33 @@ namespace Macrocosm.Common.Global.Items
             }
 
             return false;
+        }
+
+        /// <summary> Wrench Item ID to <see cref="ConveyorPipeType"/></summary>
+        private static bool TryGetPipeTypeFromWrench(int itemType, out ConveyorPipeType pipeType)
+        {
+            switch (itemType)
+            {
+                case ItemID.Wrench:
+                    pipeType = ConveyorPipeType.RedPipe;
+                    return true;
+
+                case ItemID.BlueWrench:
+                    pipeType = ConveyorPipeType.BluePipe;
+                    return true;
+
+                case ItemID.GreenWrench:
+                    pipeType = ConveyorPipeType.GreenPipe;
+                    return true;
+
+                case ItemID.YellowWrench:
+                    pipeType = ConveyorPipeType.YellowPipe;
+                    return true;
+
+                default:
+                    pipeType = 0;
+                    return false;
+            }
         }
     }
 }

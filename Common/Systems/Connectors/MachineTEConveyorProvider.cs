@@ -37,6 +37,8 @@ namespace Macrocosm.Common.Systems.Connectors
             }
         }
 
+        public IEnumerable<Point16> GetConnectionPositions(MachineTE container) => container.GetConnectionPositions();
+
         public bool TryGetContainer(Point16 tilePos, out MachineTE container)
         {
             if (Utility.TryGetTileEntityAs(tilePos, out MachineTE te))
