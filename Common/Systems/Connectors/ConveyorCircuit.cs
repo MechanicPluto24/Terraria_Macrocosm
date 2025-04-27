@@ -53,9 +53,9 @@ namespace Macrocosm.Common.Systems.Connectors
 
             foreach (var outletNode in outlets)
             {
-                if (outletNode.Storage is Chest chestOut)
+                if (outletNode.Entity is Chest chestOut)
                     TransferFromChest(chestOut, inlets);
-                else if (outletNode.Storage is IInventoryOwner ownerOut)
+                else if (outletNode.Entity is IInventoryOwner ownerOut)
                     TransferFromTE(ownerOut, inlets);
             }
         }
@@ -76,7 +76,7 @@ namespace Macrocosm.Common.Systems.Connectors
                     sourceClone.stack = transferAmount;
                     Item visualClone = sourceClone.Clone();
 
-                    if (inletNode.Storage is Chest inletChest)
+                    if (inletNode.Entity is Chest inletChest)
                     {
                         if (Utility.TryPlacingItemInChest(ref sourceClone, inletChest, justCheck: false))
                         {
@@ -86,7 +86,7 @@ namespace Macrocosm.Common.Systems.Connectors
                             break;
                         }
                     }
-                    else if (inletNode.Storage is IInventoryOwner inletOwner)
+                    else if (inletNode.Entity is IInventoryOwner inletOwner)
                     {
                         if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, justCheck: false))
                         {
@@ -117,7 +117,7 @@ namespace Macrocosm.Common.Systems.Connectors
                     sourceClone.stack = transferAmount;
                     Item visualClone = sourceClone.Clone();
 
-                    if (inletNode.Storage is Chest inletChest)
+                    if (inletNode.Entity is Chest inletChest)
                     {
                         if (Utility.TryPlacingItemInChest(ref sourceClone, inletChest, justCheck: false))
                         {
@@ -127,7 +127,7 @@ namespace Macrocosm.Common.Systems.Connectors
                             break;
                         }
                     }
-                    else if (inletNode.Storage is IInventoryOwner inletOwner)
+                    else if (inletNode.Entity is IInventoryOwner inletOwner)
                     {
                         if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, justCheck: false))
                         {

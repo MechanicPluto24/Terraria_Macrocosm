@@ -13,11 +13,11 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
-    public class TileEntityConveyorContainerProvider : IConveyorContainerProvider<TileEntity>
+    public class TileEntityInventoryOwnerConveyorContainerProvider : IConveyorContainerProvider<TileEntity>
     {
-        public IEnumerable<TileEntity> EnumerateContainers() => TileEntity.ByID.Values.Where(te => te is IInventoryOwner); // TODO: extend to TEs with simple Item[] inventory?
+        public IEnumerable<TileEntity> EnumerateContainers() => TileEntity.ByID.Values.Where(te => te is IInventoryOwner);
 
-        public bool TryGetContainer(Point16 tilePos, out TileEntity container) => Utility.TryGetTileEntityAs(tilePos, out container);
+        public bool TryGetContainer(Point16 tilePos, out TileEntity te) => Utility.TryGetTileEntityAs(tilePos, out te);
 
         public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
         {

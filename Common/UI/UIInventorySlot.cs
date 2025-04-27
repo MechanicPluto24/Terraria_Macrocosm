@@ -10,6 +10,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.Achievements;
 using Terraria.GameContent.UI.Chat;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -369,14 +370,16 @@ namespace Macrocosm.Common.UI
                     Main.HoverItem = itemClone;
                     Main.hoverItemName = itemClone.Name;
                 }
-                else if (inventory.GetReservedTooltip(itemIndex) is not null)
+                else if (inventory.GetReservedTooltip(itemIndex) is LocalizedText reservedTooltip)
                 {
-                    Main.instance.MouseTextNoOverride(inventory.GetReservedTooltip(itemIndex).Value);
+                    Main.instance.MouseTextNoOverride(reservedTooltip.Value);
                 }
             }
 
-            if (inventory.GetReservedTexture(itemIndex) is not null && item.type == ItemID.None)
-                spriteBatch.Draw(inventory.GetReservedTexture(itemIndex).Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, slotBorderColor, 0f, inventory.GetReservedTexture(itemIndex).Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
+            Asset<Texture2D> reservedTexture = inventory.GetReservedTexture(itemIndex);
+            Color color = inventory.GetReservedColor(itemIndex) ?? slotBorderColor;
+            if (reservedTexture is not null && item.type == ItemID.None)
+                spriteBatch.Draw(reservedTexture.Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, color, 0f, reservedTexture.Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);
 
             if (item.favorited)
                 spriteBatch.Draw(slotFavoritedTexture.Value, position, null, slotFavoritedColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);

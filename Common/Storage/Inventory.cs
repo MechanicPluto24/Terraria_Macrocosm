@@ -32,11 +32,14 @@ namespace Macrocosm.Common.Storage
         private Item[] items;
         private UIInventorySlot[] uiItemSlots;
 
+        private InventorySlotRole[] slotRoles;
+
         private bool[] reservedSlots;
         private int[] reservedTypes;
         private Func<Item, bool>[] reservedChecks;
         private LocalizedText[] reservedTooltips;
         private Asset<Texture2D>[] reservedTextures;
+        private Color?[] reservedColors;
 
         public Item this[int index]
         {
@@ -95,16 +98,21 @@ namespace Macrocosm.Common.Storage
             items = new Item[clampedSize];
             uiItemSlots = new UIInventorySlot[clampedSize];
 
+            slotRoles = new InventorySlotRole[clampedSize];
+
             reservedSlots = new bool[clampedSize];
             reservedTypes = new int[clampedSize];
             reservedChecks = new Func<Item, bool>[clampedSize];
             reservedTooltips = new LocalizedText[clampedSize];
             reservedTextures = new Asset<Texture2D>[clampedSize];
+            reservedColors = new Color?[clampedSize];
 
             for (int i = 0; i < items.Length; i++)
             {
                 items[i] = new Item();
                 uiItemSlots[i] = new(this, i);
+                slotRoles[i] = InventorySlotRole.General;
+                ClearReserved(i);
             }
 
             Owner = owner;
@@ -169,25 +177,44 @@ namespace Macrocosm.Common.Storage
             if (oldSize != newSize)
             {
                 Array.Resize(ref items, newSize);
-
                 Array.Resize(ref uiItemSlots, newSize);
+
+                Array.Resize(ref slotRoles, newSize);
 
                 Array.Resize(ref reservedSlots, newSize);
                 Array.Resize(ref reservedTypes, newSize);
                 Array.Resize(ref reservedChecks, newSize);
                 Array.Resize(ref reservedTooltips, newSize);
                 Array.Resize(ref reservedTextures, newSize);
+                Array.Resize(ref reservedColors, newSize);
             }
 
             if (oldSize < newSize)
             {
                 Array.Fill(items, new Item(), oldSize, newSize - oldSize);
                 for (int i = oldSize; i < newSize; i++)
+                {
                     uiItemSlots[i] = new(this, i);
+                    slotRoles[i] = InventorySlotRole.General;
+                    ClearReserved(i);
+                }
             }
         }
+        public void SetSlotRole(int index, InventorySlotRole role)
+        {
+            if (index >= 0 && index < Size)
+                slotRoles[index] = role;
+        }
 
-        public void SetReserved(int index, Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        public InventorySlotRole GetSlotRole(int index)
+        {
+            if (index >= 0 && index < Size)
+                return slotRoles[index];
+            return InventorySlotRole.General;
+        }
+
+
+        public void SetReserved(int index, Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null, Color? color = null)
         {
             if (index < 0 || index >= Size)
                 return;
@@ -197,9 +224,10 @@ namespace Macrocosm.Common.Storage
             reservedChecks[index] = checkReserved;
             reservedTooltips[index] = tooltip;
             reservedTextures[index] = texture;
+            reservedColors[index] = color ?? Color.White;
         }
 
-        public void SetReserved(int index, int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        public void SetReserved(int index, int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null, Color? color = null)
         {
             if (index < 0 || index >= Size)
                 return;
@@ -209,9 +237,10 @@ namespace Macrocosm.Common.Storage
             reservedChecks[index] = (item) => item.type == itemType;
             reservedTooltips[index] = tooltip;
             reservedTextures[index] = texture;
+            reservedColors[index] = color ?? Color.White;
         }
 
-        public void SetReserved(Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        public void SetReserved(Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null, Color? color = null)
         {
             for (int i = 0; i < Size; i++)
             {
@@ -220,10 +249,11 @@ namespace Macrocosm.Common.Storage
                 reservedChecks[i] = checkReserved;
                 reservedTooltips[i] = tooltip;
                 reservedTextures[i] = texture;
+                reservedColors[i] = color ?? Color.White;
             }
         }
 
-        public void SetReserved(int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        public void SetReserved(int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null, Color? color = null)
         {
             for (int i = 0; i < Size; i++)
             {
@@ -232,6 +262,7 @@ namespace Macrocosm.Common.Storage
                 reservedChecks[i] = (item) => item.type == itemType;
                 reservedTooltips[i] = tooltip;
                 reservedTextures[i] = texture;
+                reservedColors[i] = color ?? Color.White;
             }
         }
 
@@ -245,6 +276,7 @@ namespace Macrocosm.Common.Storage
             reservedChecks[index] = null;
             reservedTooltips[index] = null;
             reservedTextures[index] = null;
+            reservedColors[index] = null;
         }
 
         public bool ReservedCheck(int index, Item item)
@@ -267,17 +299,11 @@ namespace Macrocosm.Common.Storage
             return false;
         }
 
-        public LocalizedText GetReservedTooltip(int index)
-        {
-            return index >= 0 && index < reservedTooltips.Length ? reservedTooltips[index] : null;
-        }
+        public LocalizedText GetReservedTooltip(int index) => index >= 0 && index < reservedTooltips.Length ? reservedTooltips[index] : null;
+        public Asset<Texture2D> GetReservedTexture(int index) => index >= 0 && index < reservedTextures.Length ? reservedTextures[index] : null;
+        public Color? GetReservedColor(int index) => index >= 0 && index < reservedColors.Length ? reservedColors[index] : null;
 
-        public Asset<Texture2D> GetReservedTexture(int index)
-        {
-            return index >= 0 && index < reservedTextures.Length ? reservedTextures[index] : null;
-        }
-
-        public bool TryPlacingItem(ref Item item, bool justCheck = false, bool sound = true, bool serverSync = true, int startFromIndex = 0)
+        public bool TryPlacingItem(ref Item item, bool justCheck = false, bool fromPlayer = false, bool sound = true, bool serverSync = true, int startIndex = 0, int? endIndex = null)
         {
             if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
                 return false;
@@ -288,9 +314,12 @@ namespace Macrocosm.Common.Storage
             bool result = false;
             if (item.maxStack > 1)
             {
-                for (int i = startFromIndex; i < Size; i++)
+                for (int i = startIndex; i <= (endIndex ?? Size - 1); i++)
                 {
-                    if (!uiItemSlots[i].CanInteract)
+                    if (fromPlayer && !uiItemSlots[i].CanInteract)
+                        continue;
+
+                    if (fromPlayer && GetSlotRole(i) == InventorySlotRole.OutputLocked)
                         continue;
 
                     if (!ReservedCheck(i, item))
@@ -379,118 +408,20 @@ namespace Macrocosm.Common.Storage
             return result;
         }
 
-        public bool TryPlacingItemInSlot(Item item, int slot, bool justCheck = false, bool sound = true, bool serverSync = true)
-        {
-            if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
-                return false;
-
-            bool shouldSync = Main.netMode == NetmodeID.MultiplayerClient || (serverSync && Main.netMode == NetmodeID.Server);
-
-            Player player = Main.LocalPlayer;
-            bool result = false;
-            if (item.maxStack > 1)
-            {
-                // Yes, I'm lazy - Feldy
-                for (int i = slot; i <= slot; i++)
-                {
-                    if (!uiItemSlots[i].CanInteract)
-                        continue;
-
-                    if (!ReservedCheck(i, item))
-                        continue;
-
-                    if (items[i].stack >= items[i].maxStack || item.type != items[i].type)
-                        continue;
-
-                    if (!ItemLoader.CanStack(items[i], item))
-                        continue;
-
-                    int stackDifference = item.stack;
-                    if (item.stack + items[i].stack > items[i].maxStack)
-                        stackDifference = items[i].maxStack - items[i].stack;
-
-                    if (justCheck)
-                    {
-                        result = result || stackDifference > 0;
-                        break;
-                    }
-
-                    ItemLoader.StackItems(items[i], item, out _);
-
-                    if (sound)
-                        SoundEngine.PlaySound(SoundID.Grab);
-
-                    if (item.stack <= 0)
-                    {
-                        item.SetDefaults();
-                        uiItemSlots[i].ClearGlow();
-
-                        if (Main.netMode == NetmodeID.MultiplayerClient)
-                            SyncItem(i);
-
-                        break;
-                    }
-
-                    if (items[i].type == ItemID.None)
-                    {
-                        items[i] = item.Clone();
-                        item.SetDefaults();
-                        uiItemSlots[i].ClearGlow();
-                    }
-
-                    if (shouldSync)
-                        SyncItem(i);
-
-                    result = true;
-                }
-            }
-
-            if (item.stack > 0)
-            {
-                // Lol - Feldy
-                for (int j = slot; j <= slot; j++)
-                {
-                    if (!uiItemSlots[j].CanInteract)
-                        continue;
-
-                    if (!ReservedCheck(j, item))
-                        continue;
-
-                    if (items[j].stack != 0)
-                        continue;
-
-                    if (justCheck)
-                    {
-                        result = true;
-                        break;
-                    }
-
-                    if (sound)
-                        SoundEngine.PlaySound(SoundID.Grab);
-
-                    items[j] = item.Clone();
-                    item.SetDefaults();
-                    uiItemSlots[j].ClearGlow();
-                    ItemSlot.AnnounceTransfer(new ItemSlot.ItemTransferInfo(items[j], 0, 3));
-
-                    if (shouldSync)
-                        SyncItem(j);
-
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
+        public bool TryPlacingItemInSlot(Item item, int slot, bool justCheck = false, bool fromPlayer = false, bool sound = true, bool serverSync = true)
+            => TryPlacingItem(ref item, justCheck, fromPlayer, sound, serverSync, slot, slot);
+    
         /// <summary> Loot all items from this inventory, to the player's </summary>
         public void LootAll()
         {
             Player player = Main.LocalPlayer;
             for (int i = 0; i < Size; i++)
             {
-                if (items[i].type > ItemID.None && uiItemSlots[i].CanInteract)
+                if (items[i].type > ItemID.None)
                 {
+                    if (!uiItemSlots[i].CanInteract)
+                        continue;
+
                     items[i].position = player.Center;
                     items[i] = player.GetItem(Main.myPlayer, items[i], GetItemSettings.LootAllSettingsRegularChest);
                     uiItemSlots[i].ClearGlow();
@@ -516,6 +447,9 @@ namespace Macrocosm.Common.Storage
                         for (int i = 0; i < Size; i++)
                         {
                             if (!uiItemSlots[i].CanInteract)
+                                continue;
+
+                            if (GetSlotRole(i) == InventorySlotRole.OutputLocked)
                                 continue;
 
                             if (items[i].stack >= items[i].maxStack || player.inventory[slot].type != items[i].type)
@@ -589,14 +523,20 @@ namespace Macrocosm.Common.Storage
 
             for (int i = 0; i < Size; i++)
             {
-                if (items[i].type > ItemID.None && items[i].stack > 0 && (items[i].type < ItemID.CopperCoin || items[i].type > ItemID.PlatinumCoin) && uiItemSlots[i].CanInteract)
+                if (!uiItemSlots[i].CanInteract)
+                    continue;
+
+                if (GetSlotRole(i) == InventorySlotRole.OutputLocked)
+                    continue;
+
+                bool empty = items[i].type == ItemID.None || items[i].stack <= 0;
+                if (!empty && !Utility.IsCoin(i))
                 {
                     itemIndexes.Add(i);
                     itemTypes.Add(items[i].netID);
                 }
 
-                if (items[i].type == ItemID.None || items[i].stack <= 0)
-                    emptySlotIndexes.Add(i);
+                if (empty) emptySlotIndexes.Add(i);
             }
 
             int endInventoryIndex = 50;
