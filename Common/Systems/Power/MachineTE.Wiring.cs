@@ -120,7 +120,7 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        protected virtual IEnumerable<Point16> GetConnectionPositions()
+        public virtual IEnumerable<Point16> GetConnectionPositions()
         {
             if (CanCluster && Cluster != null)
             {

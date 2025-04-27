@@ -1,6 +1,6 @@
 ﻿namespace Macrocosm.Common.Systems.Connectors
 {
-    public enum ConnectorVisibility
+    public enum ConveyorVisibility
     {
         Normal,
         Bright,

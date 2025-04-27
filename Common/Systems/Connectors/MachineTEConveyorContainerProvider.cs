@@ -1,0 +1,33 @@
+﻿using Macrocosm.Common.Storage;
+using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Utils;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection.PortableExecutable;
+using System.Text;
+using System.Threading.Tasks;
+using Terraria;
+using Terraria.DataStructures;
+
+namespace Macrocosm.Common.Systems.Connectors
+{
+    public class MachineTEConveyorContainerProvider : IConveyorContainerProvider<MachineTE>
+    {
+        public IEnumerable<MachineTE> EnumerateContainers() => TileEntity.ByID.Values.Where(te => te is MachineTE machine and IInventoryOwner).Select(te => te as MachineTE);
+
+        public bool TryGetContainer(Point16 tilePos, out MachineTE container) => Utility.TryGetTileEntityAs(tilePos, out container);
+
+        public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
+        {
+            var data = Main.tile[tilePos].Get<ConveyorData>();
+            if (data.HasPipe(type) && (data.Inlet || data.Outlet) && TryGetContainer(tilePos, out MachineTE te) && te is IInventoryOwner)
+                return new ConveyorNode(te, data, type, tilePos, GetConnectionPositions(te));
+
+            return null;
+        }
+
+        public IEnumerable<Point16> GetConnectionPositions(MachineTE container) => container.GetConnectionPositions();
+    }
+}
