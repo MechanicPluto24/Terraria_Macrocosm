@@ -65,7 +65,7 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
             List<DropRateInfo> dropRates = new();
             DropRateInfoChainFeed ratesInfo = new(1f);
             foreach (var drop in OreExcavator.Loot.Entries)
-                if (drop.CanDrop(SimpleLootTable.CommonDropAttemptInfo) || drop is IBlacklistable blacklistable && blacklistable.Blacklisted)
+                if (drop.CanDrop(LootTable.CommonDropAttemptInfo) || drop is IBlacklistable blacklistable && blacklistable.Blacklisted)
                     drop.ReportDroprates(dropRates, ratesInfo);
 
             List<DropRateInfo> sortedDropRates = dropRates.OrderBy(entry => new Terraria.Item(entry.itemId).value).OrderBy(entry => entry.ComputeDropRarity()).ToList();

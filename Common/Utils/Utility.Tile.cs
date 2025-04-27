@@ -135,6 +135,21 @@ namespace Macrocosm.Common.Utils
         public static bool TryGetTileEntityAs<T>(Point16 position, out T entity) where T : TileEntity
             => TryGetTileEntityAs(position.X, position.Y, out entity);
 
+        public static IEnumerable<Point16> GetTilePositions(this TileEntity te)
+        {
+            Tile tile = Main.tile[te.Position];
+            TileObjectData data = TileObjectData.GetTileData(tile);
+            int width = data?.Width ?? 1;
+            int height = data?.Height ?? 1;
+            for (int x = te.Position.X; x < te.Position.X + width; x++)
+            {
+                for (int y = te.Position.Y; y < te.Position.Y + height; y++)
+                {
+                    yield return new Point16(x, y);
+                }
+            }
+        }
+
         /// <summary>
         /// Sets the tile <paramref name="style"/> and <paramref name="alternate"/> placement at the specified <paramref name="x"/> and <paramref name="y"/> coordinates.
         /// Uses <see cref="WorldGen.PlaceObject"/> to set the tile, ensuring multi-tile structures are placed at their origin.

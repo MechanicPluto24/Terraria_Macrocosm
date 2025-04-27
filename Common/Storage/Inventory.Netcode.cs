@@ -48,7 +48,6 @@ namespace Macrocosm.Common.Storage
             packet.Write((byte)MessageType.SyncInventory);
             packet.Write((byte)InventoryMessageType.SyncEverything);
 
-
             packet.Write(toSubservers);
             packet.Write((short)NetHelper.GetServerIndex());
 
@@ -72,7 +71,7 @@ namespace Macrocosm.Common.Storage
             bool toSubservers = reader.ReadBoolean();
             int senderSubserver = reader.ReadInt16();
 
-            string ownerType = reader.ReadString();
+            InventoryOwnerType ownerType = (InventoryOwnerType)reader.ReadByte();
             int ownerSerializationIndex = reader.ReadInt32();
 
             int newSize = reader.ReadUInt16();
@@ -86,11 +85,7 @@ namespace Macrocosm.Common.Storage
             if (owner is not null)
             {
                 Inventory inventory;
-
-                //if (owner.Inventory is not null)
                 inventory = owner.Inventory;
-                //else
-                //    owner.Inventory = inventory = new(newSize, owner);
 
                 if (inventory.Size != newSize)
                     inventory.OnResize(inventory.Size, newSize);
@@ -119,7 +114,7 @@ namespace Macrocosm.Common.Storage
 
             packet.Write((byte)MessageType.SyncInventory);
             packet.Write((byte)InventoryMessageType.SyncItem);
-            packet.Write(Owner.InventoryOwnerType);
+            packet.Write((byte)Owner.InventoryOwnerType);
             packet.Write(Owner.InventoryIndex);
             packet.Write((ushort)index);
 
@@ -130,7 +125,7 @@ namespace Macrocosm.Common.Storage
 
         private static void ReceiveSyncItem(BinaryReader reader, int sender)
         {
-            string ownerType = reader.ReadString();
+            InventoryOwnerType ownerType = (InventoryOwnerType)reader.ReadByte();
             int ownerSerializationIndex = reader.ReadInt32();
             int itemIndex = reader.ReadUInt16();
             Item item = ItemIO.Receive(reader, readStack: true, readFavorite: false);
@@ -155,7 +150,7 @@ namespace Macrocosm.Common.Storage
 
             packet.Write((byte)MessageType.SyncInventory);
             packet.Write((byte)InventoryMessageType.SyncInteraction);
-            packet.Write(Owner.InventoryOwnerType);
+            packet.Write((byte)Owner.InventoryOwnerType);
             packet.Write(Owner.InventoryIndex);
             packet.Write((byte)interactingPlayer);
 
@@ -164,7 +159,7 @@ namespace Macrocosm.Common.Storage
 
         private static void ReceiveSyncInteraction(BinaryReader reader, int sender)
         {
-            string ownerType = reader.ReadString();
+            InventoryOwnerType ownerType = (InventoryOwnerType)reader.ReadByte();
             int ownerSerializationIndex = reader.ReadInt32();
             int interactingPlayer = reader.ReadByte();
 
