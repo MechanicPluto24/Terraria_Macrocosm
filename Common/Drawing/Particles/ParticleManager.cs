@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -23,7 +24,7 @@ namespace Macrocosm.Common.Drawing.Particles
     }
 
     /// <summary> Particle system by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-    public class ParticleManager : ModSystem
+    public class ParticleManager : ModSystem, IOnPlayerJoining
     {
         public static List<Type> Types { get; private set; }
         public static List<Particle> Particles { get; private set; }
@@ -179,18 +180,13 @@ namespace Macrocosm.Common.Drawing.Particles
             }
         }
 
-        public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+        public void OnPlayerJoining(int playerIndex)
         {
-            if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+            foreach (var particle in Particles)
             {
-                foreach (var particle in Particles)
-                {
-                    // TODO: add a NetImportant field?
-                    particle.NetSync(toClient: remoteClient);
-                }
+                // TODO: add a NetImportant field?
+                particle.NetSync(toClient: playerIndex);
             }
-
-            return false;
         }
 
         private static void DrawParticles(ParticleDrawLayer layer)

@@ -7,6 +7,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.Achievements;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Utils
 {
@@ -72,14 +73,17 @@ namespace Macrocosm.Common.Utils
             return type;
         }
 
-        public static void DecreaseStack(this Item item, int amount = 1)
+        public static void DecreaseStack(this Item item, int amount = 1, Player player = null)
         {
-            item.stack -= amount;
-            if (item.stack < 1 || item.type == ItemID.None)
-                item.TurnToAir(fullReset: true);
+            if(ItemLoader.ConsumeItem(item, player ?? Main.LocalPlayer))
+            {
+                item.stack -= amount;
+                if (item.stack < 1 || item.type == ItemID.None)
+                    item.TurnToAir(fullReset: true);
+            }
         }
 
-        public static bool TryPlaceItemInChest(ref Item item, Chest targetChest, bool justCheck, bool serverSync = true)
+        public static bool TryPlacingItemInChest(ref Item item, Chest targetChest, bool justCheck, bool serverSync = true)
         {
             if (item.IsAir || item.stack <= 0)
                 return false;

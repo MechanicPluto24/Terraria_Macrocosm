@@ -17,9 +17,9 @@ namespace Macrocosm.Common.Systems.Power
 
         public override void Merge(Circuit<MachineTE> other)
         {
-            if (other is WireCircuit otherWireCircuit && otherWireCircuit.WireType == WireType)
+            if (other is WireCircuit wireOther && wireOther.WireType == WireType)
             {
-                foreach (var node in otherWireCircuit.nodes)
+                foreach (var node in wireOther.nodes)
                 {
                     Add(node);
                     if (node is MachineTE machine)
