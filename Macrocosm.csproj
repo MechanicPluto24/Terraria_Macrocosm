@@ -24,6 +24,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Content\Items\Accessories\Info\Thermometer.png" />
+    <None Remove="Content\Machines\AutocrafterT1_Glow.png" />
+    <None Remove="Content\Machines\AutocrafterT2_Glow.png" />
+    <None Remove="Content\Machines\AutocrafterT3_Glow.png" />
     <None Remove="Content\NPCs\Enemies\Moon\Hermite.png" />
     <None Remove="Content\NPCs\Enemies\Moon\LuminiteElemental_Eye.png" />
     <None Remove="Content\Projectiles\Hostile\LuminitePebble.png" />

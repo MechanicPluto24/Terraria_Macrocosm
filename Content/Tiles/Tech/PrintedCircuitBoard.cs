@@ -34,9 +34,6 @@ namespace Macrocosm.Content.Tiles.Tech
             AddMapEntry(new Color(120, 7, 9), name);
         }
 
-        public override ushort GetMapOption(int i, int j)
-        {
-            return (ushort)(Main.tile[i, j].TileFrameY / 18);
-        }
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / 18);
     }
 }

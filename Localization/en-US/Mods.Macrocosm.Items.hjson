@@ -3116,3 +3116,23 @@ Thermometer: {
 	DisplayName: Thermometer
 	Tooltip: ""
 }
+
+AutocrafterT1: {
+	DisplayName: Autocrafter T1
+	Tooltip: ""
+}
+
+AutocrafterT2Cobalt: {
+	DisplayName: Autocrafter T2 Cobalt
+	Tooltip: ""
+}
+
+AutocrafterT2Palladium: {
+	DisplayName: Autocrafter T2 Palladium
+	Tooltip: ""
+}
+
+AutocrafterT3: {
+	DisplayName: Autocrafter T3
+	Tooltip: ""
+}

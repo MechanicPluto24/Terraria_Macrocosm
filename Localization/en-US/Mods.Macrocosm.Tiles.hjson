@@ -104,3 +104,6 @@ ACUnit.MapEntry: A C Unit
 AirVent.MapEntry: Air Vent
 LuminiteCrystal.MapEntry: Luminite Crystal
 RegolithChest.MapEntry: Regolith Chest
+AutocrafterT1.MapEntry: Autocrafter T1
+AutocrafterT2.MapEntry: Autocrafter T2
+AutocrafterT3.MapEntry: Autocrafter T3
