@@ -15,8 +15,8 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
         public override int OutputSlots => 1;
         public override void MachineUpdate()
         {
-            base.MachineUpdate();
             MaxPower = 0.1f;
+            base.MachineUpdate();
         }
     }
 }

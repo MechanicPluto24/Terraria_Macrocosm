@@ -54,26 +54,27 @@ namespace Macrocosm.Common.Loot.DropRules
                 int stack = info.rng.Next(amountDroppedMinimum, amountDroppedMaximum + 1);
                 Vector2 position = MachineTE.Position.ToWorldCoordinates();
                 TileObjectData data = TileObjectData.GetTileData(Main.tile[MachineTE.Position]);
-                if (data is not null)
-                    position = new(position.X + data.Width * 16 / 2, position.Y + (data.Height + 3) * 16);
+                if (data is not null) position = new(position.X + data.Width * 16 / 2, position.Y + (data.Height + 3) * 16);
 
+                Item item = new(itemId, stack);
+                item.OnCreated(new MachineItemCreationContext(item, MachineTE));
+                bool placed = false;
                 if (MachineTE is IInventoryOwner inventoryOwner && inventoryOwner.Inventory is not null)
-                {
-                    Item item = new(itemId, stack);
-                    item.OnCreated(new MachineItemCreationContext(item, MachineTE));
-                    inventoryOwner.Inventory.TryPlacingItem(ref item, sound: false);
+                    placed = inventoryOwner.Inventory.TryPlacingItem(ref item, sound: false);
 
+                if (placed && item.stack > 0)
+                {
                     Particle.Create<ItemTransferParticle>((p) =>
                     {
                         p.StartPosition = position + Main.rand.NextVector2Circular(32, 16);
                         p.EndPosition = position + new Vector2(0, -96) + Main.rand.NextVector2Circular(16, 16);
-                        p.ItemType = itemId;
+                        p.ItemType = item.type;
                         p.TimeToLive = Main.rand.Next(60, 80);
                     });
                 }
                 else
                 {
-                    CommonCode.DropItem(position, new EntitySource_TileEntity(MachineTE), itemId, stack);
+                    CommonCode.DropItem(position, new EntitySource_TileEntity(MachineTE), item.type, item.stack);
                 }
 
                 result = default;

@@ -283,6 +283,8 @@ namespace Macrocosm.Common.Utils
             return -1;
         }
 
+        public static bool IsCoin(int itemType) => itemType >= ItemID.CopperCoin && itemType <= ItemID.PlatinumCoin;
+
         public static void SimulateGuideVoodooDollBurn(Vector2 position)
         {
             int index = Item.NewItem(Item.GetSource_None(), new Rectangle((int)position.X, (int)position.Y, 1, 1), ItemID.GuideVoodooDoll, Stack: 1, noBroadcast: true);

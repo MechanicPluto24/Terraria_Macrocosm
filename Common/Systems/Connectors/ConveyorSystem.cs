@@ -214,7 +214,7 @@ namespace Macrocosm.Common.Systems.Connectors
             circuits.Clear();
 
             GetNodesFor(new ChestConveyorContainerProvider());
-            GetNodesFor(new TileEntityConveyorContainerProvider());
+            GetNodesFor(new TileEntityInventoryOwnerConveyorContainerProvider());
 
             foreach (var node in nodeLookup.Values)
             {

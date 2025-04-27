@@ -3,12 +3,14 @@ using Macrocosm.Common.ItemCreationContexts;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -101,18 +103,12 @@ namespace Macrocosm.Content.Machines.Consumers
                     if (inputExtractTimer >= ExtractRate)
                     {
                         inputExtractTimer -= ExtractRate;
-
-                        if (inputItem.stack <= 1)
-                            inputItem.TurnToAir();
-                        else
-                            inputItem.stack--;
-
+                        Inventory[i].DecreaseStack();
                         InputTankAmount += data.ExtractedAmount;
                     }
 
                     return;
                 }
-
             }
 
             inputExtractTimer = 0;
@@ -143,37 +139,29 @@ namespace Macrocosm.Content.Machines.Consumers
         private void FillContainers()
         {
             LiquidContainerData containerData = ItemSets.LiquidContainerData[ContainerSlot.type];
-            LiquidContainerData outputData = ItemSets.LiquidContainerData[OutputSlot.type];
-            if (containerData.Valid && containerData.Empty)
+            if (containerData.Valid && containerData.Empty && OutputTankAmount > 0f && !ContainerSlot.IsAir)
             {
-                if (OutputTankAmount > 0f && !ContainerSlot.IsAir)
+                fillTimer += 1f * PowerProgress;
+                if (fillTimer >= FillRate)
                 {
-                    fillTimer += 1f * PowerProgress;
-                    if (fillTimer >= FillRate)
+                    fillTimer -= FillRate;
+
+                    int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.RocketFuel, ContainerSlot.type);
+                    if (fillType > 0)
                     {
-                        fillTimer -= FillRate;
+                        Item filledItem = new(fillType);
+                        filledItem.OnCreated(new MachineItemCreationContext(filledItem, this));
 
-                        int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.RocketFuel, ContainerSlot.type);
-                        if (fillType > 0 && (OutputSlot.type == fillType || OutputSlot.IsAir))
-                        {
-                            if (OutputSlot.IsAir)
-                                OutputSlot.SetDefaults(fillType);
-                            else
-                                OutputSlot.stack++;
+                        if (!Inventory.TryPlacingItem(ref filledItem, sound: false, serverSync: true, startIndex: 1, endIndex: 1) && filledItem.stack > 0)
+                            Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, filledItem);
 
-                            OutputSlot.OnCreated(new MachineItemCreationContext(OutputSlot, this));
-
-                            if (ContainerSlot.stack <= 1)
-                                ContainerSlot.TurnToAir();
-                            else
-                                ContainerSlot.stack--;
-
-                            OutputTankAmount -= ItemSets.LiquidContainerData[fillType].Capacity;
-                        }
+                        ContainerSlot.DecreaseStack();
+                        OutputTankAmount -= ItemSets.LiquidContainerData[fillType].Capacity;
                     }
                 }
             }
         }
+
 
         public override void NetSend(BinaryWriter writer)
         {

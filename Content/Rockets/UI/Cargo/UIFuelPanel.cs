@@ -174,7 +174,6 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
             if (neededFuel <= 0f)
                 dumpButtonInteractible = false;
 
-            //TODO: localize
             string text = "";
             text += $"{Rocket.Fuel}\n";
             text += $"{Rocket.FuelCapacity}\n";

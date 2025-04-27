@@ -34,7 +34,7 @@ namespace Macrocosm.Common.Players
             {
                 Item item = inventory[slot];
 
-                if (Inventory.ActiveInventory.TryPlacingItem(ref item, justCheck: true))
+                if (Inventory.ActiveInventory.TryPlacingItem(ref item, justCheck: true, fromPlayer: true))
                     Main.cursorOverride = CursorOverrideID.InventoryToChest;
 
                 return true;
@@ -49,7 +49,7 @@ namespace Macrocosm.Common.Players
             if (Inventory.CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
             {
                 Item item = inventory[slot];
-                if (Inventory.ActiveInventory.TryPlacingItem(ref item))
+                if (Inventory.ActiveInventory.TryPlacingItem(ref item, fromPlayer: true))
                     return true;
             }
 
