@@ -408,7 +408,7 @@ namespace Macrocosm.Common.Storage
             return result;
         }
 
-        public bool TryPlacingItemInSlot(Item item, int slot, bool justCheck = false, bool fromPlayer = false, bool sound = true, bool serverSync = true)
+        public bool TryPlacingItemInSlot(ref Item item, int slot, bool justCheck = false, bool fromPlayer = false, bool sound = true, bool serverSync = true)
             => TryPlacingItem(ref item, justCheck, fromPlayer, sound, serverSync, slot, slot);
     
         /// <summary> Loot all items from this inventory, to the player's </summary>
