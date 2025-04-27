@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
 
         public override void MachineUpdate()
         {
-            if (!PoweredOn || SelectedRecipes.Count == 0)
+            if (!PoweredOn || SelectedRecipes.Length == 0)
                 return;
 
             craftTimer += 1f * PowerProgress;
@@ -100,8 +100,9 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
 
             craftTimer -= CraftRate;
 
-            foreach (var (outputSlot, recipe) in SelectedRecipes)
+            for (int outputSlot = 0; outputSlot < SelectedRecipes.Length; outputSlot++)
             {
+                Recipe recipe = SelectedRecipes[outputSlot];
                 if (recipe is null)
                     continue;
 
@@ -118,12 +119,12 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
 
                     int amountToConsume = requiredItem.stack;
 
-                    for (int i = inputStart; i < inputEnd; i++)
+                    for (int inputSlot = inputStart; inputSlot < inputEnd; inputSlot++)
                     {
-                        if (Inventory[i].type == requiredItem.type)
+                        if (Inventory[inputSlot].type == requiredItem.type)
                         {
-                            int consume = Math.Min(Inventory[i].stack, amountToConsume);
-                            Inventory[i].DecreaseStack(consume);
+                            int consume = Math.Min(Inventory[inputSlot].stack, amountToConsume);
+                            Inventory[inputSlot].DecreaseStack(consume);
                             amountToConsume -= consume;
                             if (amountToConsume <= 0)
                                 break;
@@ -133,7 +134,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
 
                 Item result = recipe.createItem.Clone();
                 result.OnCreated(new MachineItemCreationContext(result, this));
-                if (!Inventory.TryPlacingItem(ref result, sound: false, serverSync: true, startIndex: outputSlot, endIndex: outputSlot) && result.stack > 0)
+                if (!Inventory.TryPlacingItemInSlot(ref result, outputSlot, sound: false, serverSync: true) && result.stack > 0)
                     Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, result);
             }
         }
@@ -185,13 +186,13 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
 
             if (SelectedRecipes is not null)
             {
-                TagCompound[] recipes = new TagCompound[SelectedRecipes.Length];
+                TagCompound[] recipeTags = new TagCompound[SelectedRecipes.Length];
                 for (int i = 0; i < SelectedRecipes.Length; i++)
                 {
                     var recipe = SelectedRecipes[i];
                     if (recipe is not null)
                     {
-                        recipes[i] = new TagCompound
+                        recipeTags[i] = new TagCompound
                         {
                             [nameof(Recipe.createItem)] = ItemIO.Save(recipe.createItem),
                             [nameof(Recipe.requiredItem)] = recipe.requiredItem
@@ -202,11 +203,11 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                     }
                     else
                     {
-                        recipes[i] = new TagCompound(); // empty if no recipe
+                        recipeTags[i] = new TagCompound(); // empty if no recipe
                     }
                 }
 
-                tag[nameof(SelectedRecipes)] = recipes;
+                tag[nameof(SelectedRecipes)] = recipeTags;
             }
         }
 
@@ -214,12 +215,12 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
         {
             base.LoadData(tag);
 
-            if (tag.TryGet<TagCompound[]>(nameof(SelectedRecipes), out var recipeArray))
+            if (tag.TryGet(nameof(SelectedRecipes), out TagCompound[] recipeTags))
             {
                 SelectedRecipes = new Recipe[OutputSlots];
-                for (int i = 0; i < Math.Min(recipeArray.Length, OutputSlots); i++)
+                for (int i = 0; i < Math.Min(recipeTags.Length, OutputSlots); i++)
                 {
-                    var recipeTag = recipeArray[i];
+                    var recipeTag = recipeTags[i];
                     if (recipeTag.Count == 0)
                         continue;
 
