@@ -131,9 +131,9 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
 
             int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
             int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
-            if (Utility.TryGetTileEntityAs(i, j, out KeroseneGeneratorTE keroseneGenerator))
+            if (Utility.TryGetTileEntityAs(i, j, out MachineTE te))
             {
-                if (keroseneGenerator.PoweredOn)
+                if (te.PoweredOn)
                 {
                     // Exhaust position - spawn smoke
                     if (tileOffsetX == 0 && tileOffsetY == 0)
@@ -178,8 +178,8 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
-            if (Utility.TryGetTileEntityAs(i, j, out KeroseneGeneratorTE keroseneGenerator))
-                UISystem.ShowMachineUI(keroseneGenerator, new KeroseneGeneratorUI());
+            if (Utility.TryGetTileEntityAs(i, j, out MachineTE te))
+                UISystem.ShowMachineUI(te, new KeroseneGeneratorUI());
 
             return true;
         }

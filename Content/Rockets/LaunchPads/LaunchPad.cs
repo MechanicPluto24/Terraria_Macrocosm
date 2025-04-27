@@ -51,7 +51,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public string CompassCoordinates => Utility.GetCompassCoordinates(CenterWorld);
 
         public Vector2 InventoryPosition => CenterWorld;
-        public int InventorySerializationIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
+        public int InventoryIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
         public Inventory Inventory
         {
             get => assemblyInventory;

@@ -28,8 +28,6 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
         public override MachineTile MachineTile => ModContent.GetInstance<OreExcavator>();
 
         public SimpleLootTable Loot { get; set; }
-        protected virtual int OreGenerationRate => 60;
-
         public List<int> BlacklistedItems { get; set; } = new();
 
 
@@ -37,10 +35,11 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
         protected virtual int InventorySize => 50;
         public Vector2 InventoryPosition => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
-        protected int checkTimer;
+        private float excavateTimer;
+        private float ExcavateRate => 60;
 
-        protected int sceneCheckTimer;
-        protected SceneData scene;
+        private int sceneCheckTimer;
+        private SceneData scene;
 
         public override void OnFirstUpdate()
         {
@@ -59,26 +58,29 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
 
         public override void MachineUpdate()
         {
-            RequiredPower = 25f;
+            MinPower = 1f;
+            MaxPower = 25f;
 
             if (PoweredOn)
             {
-                checkTimer++;
+
+                excavateTimer += 1f * PowerProgress;
+                if (excavateTimer >= ExcavateRate)
+                {
+                    excavateTimer -= ExcavateRate;
+                    ApplyBlacklist();
+                    Loot?.Drop(Utility.GetClosestPlayer(Position, MachineTile.Width * 16, MachineTile.Height * 16));
+                }
+
                 sceneCheckTimer++;
+                if (sceneCheckTimer >= 5 * 60 * 60)
+                {
+                    sceneCheckTimer = 0;
+                    scene?.Scan();
+                }
             }
 
-            if (checkTimer >= OreGenerationRate)
-            {
-                checkTimer = 0;
-                ApplyBlacklist();
-                Loot?.Drop(Utility.GetClosestPlayer(Position, MachineTile.Width * 16, MachineTile.Height * 16));
-            }
 
-            if (sceneCheckTimer >= 5 * 60 * 60)
-            {
-                sceneCheckTimer = 0;
-                scene?.Scan();
-            }
         }
 
         private void ApplyBlacklist()

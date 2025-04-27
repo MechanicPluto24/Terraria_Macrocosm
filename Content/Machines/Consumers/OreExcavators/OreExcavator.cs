@@ -110,8 +110,8 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
             }
             else
             {
-                if (Utility.TryGetTileEntityAs(i, j, out OreExcavatorTE oreExcavator))
-                    UISystem.ShowMachineUI(oreExcavator, new OreExcavatorUI());
+                if (Utility.TryGetTileEntityAs(i, j, out MachineTE te))
+                    UISystem.ShowMachineUI(te, new OreExcavatorUI());
             }
 
             return true;

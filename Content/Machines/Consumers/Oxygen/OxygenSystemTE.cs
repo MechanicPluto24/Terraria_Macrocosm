@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Machines.Consumers.Oxygen
 
         public override void MachineUpdate()
         {
-            RequiredPower = 5f;
+            MaxPower = MinPower = 5f;
         }
     }
 }

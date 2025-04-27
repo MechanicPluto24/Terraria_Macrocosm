@@ -37,14 +37,14 @@ namespace Macrocosm.Content.Machines.Consumers
 
         private bool refining;
 
-        private int inputExtractTimer;
-        private const int maxInputExtractTimer = 60;
+        private float inputExtractTimer;
+        private float refineTimer;
+        private float fillTimer;
 
-        private int refineTimer;
-        private const int maxRefineTimer = 60;
+        private float ExtractRate => 60;
+        private float RefineRate => 60;
+        private float FillRate => 60;
 
-        private int fillTimer;
-        private const int maxFillTimer = 60;
 
         public bool CanRefine => PoweredOn && InputTankAmount > 0f && OutputTankAmount < ResultTankCapacity;
 
@@ -85,7 +85,8 @@ namespace Macrocosm.Content.Machines.Consumers
         {
             StartRefining();
 
-            RequiredPower = 5f;
+            MinPower = 0.1f;
+            MaxPower = 5f;
 
             Extract();
             Refine();
@@ -103,10 +104,10 @@ namespace Macrocosm.Content.Machines.Consumers
                 LiquidExtractData data = ItemSets.LiquidExtractData[inputItem.type];
                 if (PoweredOn && InputTankAmount < SourceTankCapacity && data.Valid)
                 {
-                    inputExtractTimer++;
-                    if (inputExtractTimer >= maxInputExtractTimer)
+                    inputExtractTimer += 1f * PowerProgress;
+                    if (inputExtractTimer >= ExtractRate)
                     {
-                        inputExtractTimer = 0;
+                        inputExtractTimer -= ExtractRate;
 
                         if (inputItem.stack <= 1)
                             inputItem.TurnToAir();
@@ -131,11 +132,10 @@ namespace Macrocosm.Content.Machines.Consumers
 
             if (refining)
             {
-                refineTimer++;
-
-                if (refineTimer >= maxRefineTimer)
+                refineTimer += 1f * PowerProgress;
+                if (refineTimer >= RefineRate)
                 {
-                    refineTimer = 0;
+                    refineTimer -= RefineRate;
 
                     InputTankAmount -= 20f;
                     OutputTankAmount += 15f;
@@ -155,10 +155,10 @@ namespace Macrocosm.Content.Machines.Consumers
             {
                 if (OutputTankAmount > 0f && !ContainerSlot.IsAir)
                 {
-                    fillTimer++;
-                    if (fillTimer >= maxFillTimer)
+                    fillTimer += 1f * PowerProgress;
+                    if (fillTimer >= FillRate)
                     {
-                        fillTimer = 0;
+                        fillTimer -= FillRate;
 
                         int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.RocketFuel, ContainerSlot.type);
                         if (fillType > 0 && (OutputSlot.type == fillType || OutputSlot.IsAir))

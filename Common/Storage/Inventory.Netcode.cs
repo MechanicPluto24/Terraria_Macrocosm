@@ -52,9 +52,8 @@ namespace Macrocosm.Common.Storage
             packet.Write(toSubservers);
             packet.Write((short)NetHelper.GetServerIndex());
 
-
-            packet.Write(Owner.InventoryOwnerType);
-            packet.Write(Owner.InventorySerializationIndex);
+            packet.Write((byte)Owner.InventoryOwnerType);
+            packet.Write(Owner.InventoryIndex);
 
             packet.Write((ushort)Size);
             packet.Write((byte)interactingPlayer);
@@ -121,7 +120,7 @@ namespace Macrocosm.Common.Storage
             packet.Write((byte)MessageType.SyncInventory);
             packet.Write((byte)InventoryMessageType.SyncItem);
             packet.Write(Owner.InventoryOwnerType);
-            packet.Write(Owner.InventorySerializationIndex);
+            packet.Write(Owner.InventoryIndex);
             packet.Write((ushort)index);
 
             ItemIO.Send(items[index], packet, writeStack: true, writeFavorite: false);
@@ -157,7 +156,7 @@ namespace Macrocosm.Common.Storage
             packet.Write((byte)MessageType.SyncInventory);
             packet.Write((byte)InventoryMessageType.SyncInteraction);
             packet.Write(Owner.InventoryOwnerType);
-            packet.Write(Owner.InventorySerializationIndex);
+            packet.Write(Owner.InventoryIndex);
             packet.Write((byte)interactingPlayer);
 
             packet.Send(toClient, ignoreClient);

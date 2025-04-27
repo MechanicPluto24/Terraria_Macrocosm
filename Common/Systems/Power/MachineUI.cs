@@ -87,7 +87,7 @@ namespace Macrocosm.Common.Systems.Power
 
             if (MachineTE is ConsumerTE consumer)
             {
-                if (consumer.InputPower >= consumer.RequiredPower)
+                if (consumer.InputPower >= consumer.MinPower)
                 {
                     powerOnIcon.SetVisibility(1f);
                     powerOffIcon.SetVisibility(0f);
