@@ -9,11 +9,11 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines.Consumers.Autocrafters
 {
-    public abstract class AutocrafterTEBase : ConsumerTE, IInventoryOwner
+    public abstract class AutocrafterTEBase : ConsumerTE
     {
-        public Inventory Inventory { get; set; }
-        protected virtual int InventorySize => 50;
-        public Vector2 InventoryPosition => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+        public abstract int OutputSlots { get; }
+        public virtual int InputSlots => OutputSlots * 15;
+        public sealed override int InventorySize => InputSlots + OutputSlots;
 
         protected virtual bool RecipeAllowed(Recipe recipe)
         {
@@ -29,13 +29,6 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
 
         public override void OnFirstUpdate()
         {
-            // Create new inventory if none found on world load
-            Inventory ??= new(InventorySize, this);
-
-            // Assign inventory owner if the inventory was found on load
-            // IInvetoryOwner does not work well with TileEntities >:(
-            if (Inventory.Owner is null)
-                Inventory.Owner = this;
         }
 
         public override void MachineUpdate()

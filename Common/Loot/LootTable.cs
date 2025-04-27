@@ -11,11 +11,11 @@ namespace Macrocosm.Common.Loot
     /// Simple loot table that isn't bound to anything (neither NPCs nor Grab Bags). 
     /// Includes its own resolver.
     /// </summary>
-    public class SimpleLootTable : ILoot, IEnumerable<IItemDropRule>
+    public class LootTable : ILoot, IEnumerable<IItemDropRule>
     {
         public readonly List<IItemDropRule> Entries;
 
-        public SimpleLootTable()
+        public LootTable()
         {
             Entries = new();
         }

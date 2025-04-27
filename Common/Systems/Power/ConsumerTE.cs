@@ -13,15 +13,15 @@ namespace Macrocosm.Common.Systems.Power
     {
         public float InputPower { get; set; }
 
-        public float MinPower { get; set; }
+        public float MinPower { get; set; } = 0f;
         public float MaxPower { get; set; }
         public float PowerProgress => MathHelper.Clamp(MinPower / MaxPower, 0f, 1f);
 
         public override void UpdatePowerState()
         {
-            if (PoweredOn && InputPower < MinPower)
+            if (PoweredOn && InputPower <= MinPower)
                 TurnOff(automatic: true);
-            else if (!PoweredOn && InputPower >= MinPower && !ManuallyTurnedOff)
+            else if (!PoweredOn && InputPower > MinPower && !ManuallyTurnedOff)
                 TurnOn(automatic: true);
         }
 

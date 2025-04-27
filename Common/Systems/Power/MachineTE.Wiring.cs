@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ModLoader;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Systems.Power
 {
@@ -123,20 +125,10 @@ namespace Macrocosm.Common.Systems.Power
         public virtual IEnumerable<Point16> GetConnectionPositions()
         {
             if (CanCluster && Cluster != null)
-            {
-                foreach (var position in Cluster)
-                    yield return position;
-            }
+                foreach (var position in Cluster) yield return position;
             else
-            {
-                for (int x = Position.X; x < Position.X + MachineTile.Width; x++)
-                {
-                    for (int y = Position.Y; y < Position.Y + MachineTile.Height; y++)
-                    {
-                        yield return new Point16(x, y);
-                    }
-                }
-            }
+                foreach (var pos in this.GetTilePositions()) yield return pos;   
         }
+
     }
 }

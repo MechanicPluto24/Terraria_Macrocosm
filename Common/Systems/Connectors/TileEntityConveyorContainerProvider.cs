@@ -13,21 +13,21 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
-    public class MachineTEConveyorContainerProvider : IConveyorContainerProvider<MachineTE>
+    public class TileEntityConveyorContainerProvider : IConveyorContainerProvider<TileEntity>
     {
-        public IEnumerable<MachineTE> EnumerateContainers() => TileEntity.ByID.Values.Where(te => te is MachineTE machine and IInventoryOwner).Select(te => te as MachineTE);
+        public IEnumerable<TileEntity> EnumerateContainers() => TileEntity.ByID.Values.Where(te => te is IInventoryOwner); // TODO: extend to TEs with simple Item[] inventory?
 
-        public bool TryGetContainer(Point16 tilePos, out MachineTE container) => Utility.TryGetTileEntityAs(tilePos, out container);
+        public bool TryGetContainer(Point16 tilePos, out TileEntity container) => Utility.TryGetTileEntityAs(tilePos, out container);
 
         public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
         {
             var data = Main.tile[tilePos].Get<ConveyorData>();
-            if (data.HasPipe(type) && (data.Inlet || data.Outlet) && TryGetContainer(tilePos, out MachineTE te) && te is IInventoryOwner)
+            if (data.HasPipe(type) && (data.Inlet || data.Outlet) && TryGetContainer(tilePos, out TileEntity te) && te is IInventoryOwner)
                 return new ConveyorNode(te, data, type, tilePos, GetConnectionPositions(te));
 
             return null;
         }
 
-        public IEnumerable<Point16> GetConnectionPositions(MachineTE container) => container.GetConnectionPositions();
+        public IEnumerable<Point16> GetConnectionPositions(TileEntity te) => te.GetTilePositions();
     }
 }

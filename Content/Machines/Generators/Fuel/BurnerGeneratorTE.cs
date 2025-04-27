@@ -13,7 +13,7 @@ using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines.Generators.Fuel
 {
-    public class BurnerGeneratorTE : GeneratorTE, IInventoryOwner
+    public class BurnerGeneratorTE : GeneratorTE
     {
         public override MachineTile MachineTile => ModContent.GetInstance<BurnerGenerator>();
 
@@ -36,25 +36,15 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
 
         /// <summary> The item currently being burned. </summary>
         public Item ConsumedItem { get; set; } = new(ItemID.None);
-
-        public Inventory Inventory { get; set; }
-        protected virtual int InventorySize => 6;
-        public Vector2 InventoryPosition => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+        public override int InventorySize => 6;
 
         public override void OnFirstUpdate()
         {
-            // Create new inventory if none found on world load
-            Inventory ??= new(InventorySize, this);
             Inventory.SetReserved(
                  (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Potency > 0,
                  Language.GetText("Mods.Macrocosm.Machines.Common.BurnFuel"),
                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/BurnFuel")
             );
-
-            // Assign inventory owner if the inventory was found on load
-            // IInvetoryOwner does not work well with TileEntities >:(
-            if (Inventory.Owner is null)
-                Inventory.Owner = this;
         }
 
         public override void MachineUpdate()
@@ -150,11 +140,7 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
         {
             base.NetSend(writer);
 
-            Inventory ??= new(InventorySize, this);
-            TagIO.Write(Inventory.SerializeData(), writer);
-
             ItemIO.Send(ConsumedItem, writer);
-
             writer.Write(hullHeatProgress);
         }
 
@@ -162,11 +148,7 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
         {
             base.NetReceive(reader);
 
-            TagCompound tag = TagIO.Read(reader);
-            Inventory = Inventory.DeserializeData(tag);
-
             ConsumedItem = ItemIO.Receive(reader);
-
             hullHeatProgress = reader.ReadSingle();
         }
 
@@ -174,10 +156,7 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
         {
             base.SaveData(tag);
 
-            tag[nameof(Inventory)] = Inventory;
-
             tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
-
             if (hullHeatProgress > 0f)
                 tag[nameof(hullHeatProgress)] = hullHeatProgress;
         }
@@ -185,9 +164,6 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
         public override void LoadData(TagCompound tag)
         {
             base.LoadData(tag);
-
-            if (tag.ContainsKey(nameof(Inventory)))
-                Inventory = tag.Get<Inventory>(nameof(Inventory));
 
             if (tag.ContainsKey(nameof(ConsumedItem)))
                 ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));

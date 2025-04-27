@@ -11,6 +11,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
     public class AutocrafterT2TE : AutocrafterTEBase
     {
         public override MachineTile MachineTile => ModContent.GetInstance<AutocrafterT2>();
+        public override int OutputSlots => 2;
 
         public override void MachineUpdate()
         {

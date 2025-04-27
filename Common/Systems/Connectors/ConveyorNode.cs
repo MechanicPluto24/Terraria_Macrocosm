@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Terraria;
 using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Systems.Connectors
@@ -10,6 +11,7 @@ namespace Macrocosm.Common.Systems.Connectors
     public class ConveyorNode(object storage, ConveyorData data, ConveyorPipeType type, Point16 position, IEnumerable<Point16> connectionPositions, ConveyorCircuit circuit = null)
     {
         public object Storage = storage;
+        //public Item[] Items = items;
         public ConveyorData Data = data;
         public ConveyorPipeType Type = type;
         public Point16 Position = position;

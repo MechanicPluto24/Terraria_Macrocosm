@@ -27,8 +27,8 @@ namespace Macrocosm.Common.Storage
             return type switch
             {
                 InventoryOwnerType.Rocket => (index >= 0 && index < RocketManager.MaxRockets) ? RocketManager.Rockets[index] : new(),
-                InventoryOwnerType.Launchpad => LaunchPadManager.TryGetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, new Point16(index & 0xFFFF, (index >> 16) & 0xFFFF), out LaunchPad launchPad) ? launchPad as IInventoryOwner : null,
-                InventoryOwnerType.TileEntity => TileEntity.ByID[index] as IInventoryOwner,
+                InventoryOwnerType.Launchpad => LaunchPadManager.TryGetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, new Point16(index & 0xFFFF, (index >> 16) & 0xFFFF), out LaunchPad launchPad) ? launchPad : null,
+                InventoryOwnerType.TileEntity => TileEntity.ByID.TryGetValue(index, out var te) && te is IInventoryOwner owner ? owner : null,
                 _ => null,
             };
         }

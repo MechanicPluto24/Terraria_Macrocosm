@@ -195,6 +195,7 @@ namespace Macrocosm.Content.Rockets
         }
 
         public Inventory Inventory { get; set; }
+        public InventoryOwnerType InventoryOwnerType => InventoryOwnerType.Rocket;
 
         public const int DefaultGeneralInventorySize = 50;
 
@@ -203,7 +204,6 @@ namespace Macrocosm.Content.Rockets
         public const int SpecialInventorySlot_Count = 2;
 
         public const int DefaultTotalInventorySize = DefaultGeneralInventorySize + SpecialInventorySlot_Count;
-
         public Vector2 InventoryPosition => Center;
         public int InventoryIndex => WhoAmI;
 

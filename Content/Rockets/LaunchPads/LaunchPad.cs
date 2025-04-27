@@ -50,13 +50,16 @@ namespace Macrocosm.Content.Rockets.LaunchPads
         public Vector2 CenterWorld => new(((StartTile.X + (EndTile.X - StartTile.X) / 2f) * 16f), StartTile.Y * 16f);
         public string CompassCoordinates => Utility.GetCompassCoordinates(CenterWorld);
 
-        public Vector2 InventoryPosition => CenterWorld;
-        public int InventoryIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
         public Inventory Inventory
         {
             get => assemblyInventory;
             set => assemblyInventory = value;
         }
+
+        public InventoryOwnerType InventoryOwnerType => InventoryOwnerType.TileEntity;
+        public int InventoryIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
+        public Vector2 InventoryPosition => CenterWorld;
+
 
         private bool isMouseOver = false;
         private bool spawned = false;
