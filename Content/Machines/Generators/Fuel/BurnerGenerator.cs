@@ -103,8 +103,8 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
             }
             else
             {
-                if (Utility.TryGetTileEntityAs(i, j, out BurnerGeneratorTE burnerGenerator))
-                    UISystem.ShowMachineUI(burnerGenerator, new BurnerGeneratorUI());
+                if (Utility.TryGetTileEntityAs(i, j, out MachineTE te))
+                    UISystem.ShowMachineUI(te, new BurnerGeneratorUI());
             }
 
             return true;

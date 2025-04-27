@@ -98,8 +98,8 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             Player player = Main.LocalPlayer;
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
-            if (Utility.TryGetTileEntityAs(i, j, out AutocrafterT1TE autocrafter))
-                UISystem.ShowMachineUI(autocrafter, new AutocrafterUI());
+            if (Utility.TryGetTileEntityAs(i, j, out MachineTE te))
+                UISystem.ShowMachineUI(te, new AutocrafterUI());
 
             return true;
         }

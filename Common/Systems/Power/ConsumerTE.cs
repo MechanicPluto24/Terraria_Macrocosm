@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -11,13 +12,16 @@ namespace Macrocosm.Common.Systems.Power
     public abstract class ConsumerTE : MachineTE
     {
         public float InputPower { get; set; }
-        public float RequiredPower { get; set; }
+
+        public float MinPower { get; set; }
+        public float MaxPower { get; set; }
+        public float PowerProgress => MathHelper.Clamp(MinPower / MaxPower, 0f, 1f);
 
         public override void UpdatePowerState()
         {
-            if (PoweredOn && InputPower < RequiredPower)
+            if (PoweredOn && InputPower < MinPower)
                 TurnOff(automatic: true);
-            else if (!PoweredOn && InputPower >= RequiredPower && !ManuallyTurnedOff)
+            else if (!PoweredOn && InputPower >= MinPower && !ManuallyTurnedOff)
                 TurnOn(automatic: true);
         }
 
@@ -26,14 +30,13 @@ namespace Macrocosm.Common.Systems.Power
             InputPower = 0;
         }
 
-        public override Color DisplayColor => Color.Orange;
-
-        public override string GetPowerInfo() => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Consumer").Format($"{InputPower:F2}", $"{RequiredPower:F2}")}";
+        public override Color DisplayColor => InputPower >= MinPower ? Color.Orange : Color.Orange.WithLuminance(0.5f);
+        public override string GetPowerInfo() => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Consumer").Format($"{InputPower:F2}", $"{MaxPower:F2}")}";
 
         public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
         {
             string active = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format($"{InputPower:F2}");
-            string total = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format($"{RequiredPower:F2}");
+            string total = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format($"{MaxPower:F2}");
             string line = new('_', Math.Max(active.Length, total.Length) / 2);
 
             Vector2 textSize = FontAssets.MouseText.Value.MeasureString(total);

@@ -7,43 +7,28 @@ using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Storage
 {
-    // This needs some attention, it's not that great as it was in my mind.
-    // Owner references for Inventories are currently needed for:
-    // - finding the correct owner on remote clients
-    // - the Position, in case the inventory is resized or the container is destroyed.
-    // Maybe there's a better way to do this. 
-    // -- Feldy
+    public enum InventoryOwnerType
+    {
+        None,
+        Rocket,
+        Launchpad,
+        TileEntity
+    }
+
     public interface IInventoryOwner
     {
         public Inventory Inventory { get; set; }
-        public string InventoryOwnerType
-        {
-            get
-            {
-                if (this is TileEntity)
-                    return nameof(TileEntity);
-
-                return GetType().Name;
-            }
-        }
-
+        public InventoryOwnerType InventoryOwnerType { get; }
+        public int InventoryIndex => 0;
         public Vector2 InventoryPosition => Main.LocalPlayer.Center;
-        public int InventorySerializationIndex => 0;
 
-        // TODO: Unhardcode this, make getting the instance part of the interface... somehow
-        public static IInventoryOwner GetInventoryOwnerInstance(string ownerType, int serializationIndex)
+        public static IInventoryOwner GetInventoryOwnerInstance(InventoryOwnerType type, int index)
         {
-            return ownerType switch
+            return type switch
             {
-                "Rocket" => (serializationIndex >= 0 && serializationIndex < RocketManager.MaxRockets) ? RocketManager.Rockets[serializationIndex] : new(),
-
-                "Launchpad" => LaunchPadManager.TryGetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, new Point16(serializationIndex & 0xFFFF, (serializationIndex >> 16) & 0xFFFF), out LaunchPad launchPad) ? launchPad as IInventoryOwner : null,
-
-                // TEs are added to the ByID dictionary after the deserialization...
-                // the owner association has to be done manually in the TE update hook
-                // This might not work as expected in multiplayer... pls help!!!
-                "TileEntity" => null,
-
+                InventoryOwnerType.Rocket => (index >= 0 && index < RocketManager.MaxRockets) ? RocketManager.Rockets[index] : new(),
+                InventoryOwnerType.Launchpad => LaunchPadManager.TryGetLaunchPadAtStartTile(MacrocosmSubworld.CurrentID, new Point16(index & 0xFFFF, (index >> 16) & 0xFFFF), out LaunchPad launchPad) ? launchPad as IInventoryOwner : null,
+                InventoryOwnerType.TileEntity => TileEntity.ByID[index] as IInventoryOwner,
                 _ => null,
             };
         }

@@ -52,7 +52,7 @@ namespace Macrocosm.Common.Systems.Power
                 else if (node is ConsumerTE consumer)
                 {
                     consumers.Add(consumer);
-                    totalConsumerDemand += consumer.RequiredPower;
+                    totalConsumerDemand += consumer.MaxPower;
                 }
                 else if (node is BatteryTE battery)
                 {
@@ -82,20 +82,20 @@ namespace Macrocosm.Common.Systems.Power
                 else
                 {
                     float totalAvailablePower = totalGeneratorOutput + totalBatteryStoredEnergy;
-                    float powerFactor = totalAvailablePower / totalConsumerDemand;
+                    float circuitPowerFactor = totalAvailablePower / totalConsumerDemand;
 
-                    DistributePowerToConsumers(consumers, powerFactor);
+                    DistributePowerToConsumers(consumers, circuitPowerFactor);
                     DrainAllBatteries(batteries);
                 }
             }
         }
 
 
-        private void DistributePowerToConsumers(List<ConsumerTE> consumers, float powerFactor)
+        private void DistributePowerToConsumers(List<ConsumerTE> consumers, float circuitPowerFactor)
         {
             foreach (var consumer in consumers)
             {
-                consumer.InputPower = consumer.RequiredPower * powerFactor;
+                consumer.InputPower = consumer.MaxPower * circuitPowerFactor;
             }
         }
 

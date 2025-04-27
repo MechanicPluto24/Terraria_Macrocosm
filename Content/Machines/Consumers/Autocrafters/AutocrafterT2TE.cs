@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
         public override void MachineUpdate()
         {
             base.MachineUpdate();
-            RequiredPower = 0.1f;
+            MaxPower = 0.1f;
         }
     }
 }
