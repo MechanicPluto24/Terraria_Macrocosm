@@ -1,10 +1,10 @@
 ﻿using Macrocosm.Common.UI;
+using Macrocosm.Common.UI.Rockets.Cargo;
+using Macrocosm.Common.UI.Rockets.Customization;
+using Macrocosm.Common.UI.Rockets.Navigation;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.UI.Cargo;
-using Macrocosm.Content.Rockets.UI.Customization;
-using Macrocosm.Content.Rockets.UI.Navigation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;

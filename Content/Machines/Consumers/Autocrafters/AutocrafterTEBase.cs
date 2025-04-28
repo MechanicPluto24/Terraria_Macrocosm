@@ -20,8 +20,9 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
     public abstract class AutocrafterTEBase : ConsumerTE
     {
         public abstract int OutputSlots { get; }
-        public virtual int InputSlots => OutputSlots * 30; // Should be enough
-        public sealed override int InventorySize => InputSlots + OutputSlots;
+        public virtual int InputPoolSize => 100;
+        public sealed override int InventorySize => OutputSlots + InputPoolSize;
+        public Dictionary<int, List<int>> InputSlotAllocation { get; private set; } = new();
 
         protected virtual int[] AvailableCraftingStations => [];
         public Recipe[] SelectedRecipes { get; private set; }
@@ -38,13 +39,10 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                 Inventory.SetSlotRole(i, InventorySlotRole.Input);
         }
 
-        protected virtual bool RecipeAllowed(Recipe recipe)
+        public virtual bool RecipeAllowed(Recipe recipe)
         {
-            // "By Hand" recipes allowed by default
             if (recipe.requiredTile.All(tile => tile == -1))
                 return true;
-
-            // Whether AvailableCraftingStations contains all recipe.requiredTile
             return recipe.requiredTile.Where(tile => tile != -1).All(tile => AvailableCraftingStations.Contains(tile));
         }
 
@@ -56,42 +54,53 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             if (outputSlot < 0 || outputSlot >= OutputSlots)
                 return;
 
+            Inventory.ClearReserved(outputSlot);
+            if (InputSlotAllocation.TryGetValue(outputSlot, out var oldInputSlots))
+                foreach (var slot in oldInputSlots)
+                    Inventory.ClearReserved(slot);
+
             SelectedRecipes[outputSlot] = recipe;
-
-            int inputsPerOutput = InputSlots / OutputSlots;
-            int inputStart = OutputSlots + outputSlot * inputsPerOutput;
-            int inputEnd = inputStart + inputsPerOutput;
-
-            for (int i = inputStart; i < inputEnd; i++)
-                Inventory.ClearReserved(i);
+            InputSlotAllocation[outputSlot] = new List<int>();
 
             if (recipe is null)
                 return;
 
-            int index = inputStart;
-            foreach (var item in recipe.requiredItem)
+            Inventory.SetReserved(
+                outputSlot,
+                recipe.createItem.type,
+                tooltip: null,
+                texture: TextureAssets.Item[recipe.createItem.type],
+                color: Color.White * 0.8f 
+            );
+
+            int inputIndex = OutputSlots;
+            foreach (var requiredItem in recipe.requiredItem)
             {
-                if (item.type <= ItemID.None)
+                if (requiredItem.type <= ItemID.None)
                     continue;
 
+                while (inputIndex < Inventory.Size && Inventory[inputIndex].type != 0)
+                    inputIndex++;
+
+                if (inputIndex >= Inventory.Size)
+                    break;
+
+                InputSlotAllocation[outputSlot].Add(inputIndex);
+
                 Inventory.SetReserved(
-                    index,
-                    item.type,
+                    inputIndex,
+                    requiredItem.type,
                     tooltip: null,
-                    texture: TextureAssets.Item[item.type],
+                    texture: TextureAssets.Item[requiredItem.type],
                     color: Color.White * 0.5f
                 );
-
-                index++;
-                if (index >= inputEnd)
-                    break;
+                inputIndex++;
             }
         }
 
-
         public override void MachineUpdate()
         {
-            if (!PoweredOn || SelectedRecipes.Length == 0)
+            if (!PoweredOn || SelectedRecipes is null)
                 return;
 
             craftTimer += 1f * PowerProgress;
@@ -106,31 +115,10 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                 if (recipe is null)
                     continue;
 
-                int inputStart = OutputSlots + outputSlot * (InputSlots / OutputSlots);
-                int inputEnd = inputStart + (InputSlots / OutputSlots);
-
-                if (!CanCraftRecipe(recipe, inputStart, inputEnd))
+                if (!CanCraftRecipe(outputSlot, recipe))
                     continue;
 
-                foreach (var requiredItem in recipe.requiredItem)
-                {
-                    if (requiredItem.type <= ItemID.None || requiredItem.stack <= 0)
-                        continue;
-
-                    int amountToConsume = requiredItem.stack;
-
-                    for (int inputSlot = inputStart; inputSlot < inputEnd; inputSlot++)
-                    {
-                        if (Inventory[inputSlot].type == requiredItem.type)
-                        {
-                            int consume = Math.Min(Inventory[inputSlot].stack, amountToConsume);
-                            Inventory[inputSlot].DecreaseStack(consume);
-                            amountToConsume -= consume;
-                            if (amountToConsume <= 0)
-                                break;
-                        }
-                    }
-                }
+                ConsumeRecipeIngredients(outputSlot, recipe);
 
                 Item result = recipe.createItem.Clone();
                 result.OnCreated(new MachineItemCreationContext(result, this));
@@ -139,34 +127,55 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             }
         }
 
-        private bool CanCraftRecipe(Recipe recipe, int inputStart, int inputEnd)
+        private bool CanCraftRecipe(int outputSlot, Recipe recipe)
         {
+            if (!InputSlotAllocation.TryGetValue(outputSlot, out var inputSlots))
+                return false;
+
             foreach (var requiredItem in recipe.requiredItem)
             {
                 if (requiredItem.type <= ItemID.None || requiredItem.stack <= 0)
                     continue;
 
-                int amountNeeded = requiredItem.stack;
-                int amountFound = 0;
-
-                for (int i = inputStart; i < inputEnd; i++)
+                int found = 0;
+                foreach (var slot in inputSlots)
                 {
-                    if (Inventory[i].type == requiredItem.type)
-                        amountFound += Inventory[i].stack;
-
-                    if (amountFound >= amountNeeded)
-                        break;
+                    if (Inventory[slot].type == requiredItem.type)
+                        found += Inventory[slot].stack;
                 }
-
-                if (amountFound < amountNeeded)
+                if (found < requiredItem.stack)
                     return false;
             }
             return true;
         }
 
+        private void ConsumeRecipeIngredients(int outputSlot, Recipe recipe)
+        {
+            if (!InputSlotAllocation.TryGetValue(outputSlot, out var inputSlots))
+                return;
+
+            foreach (var requiredItem in recipe.requiredItem)
+            {
+                if (requiredItem.type <= ItemID.None || requiredItem.stack <= 0)
+                    continue;
+
+                int toConsume = requiredItem.stack;
+                foreach (var slot in inputSlots)
+                {
+                    if (Inventory[slot].type == requiredItem.type)
+                    {
+                        int consume = Math.Min(toConsume, Inventory[slot].stack);
+                        Inventory[slot].DecreaseStack(consume);
+                        toConsume -= consume;
+                        if (toConsume <= 0)
+                            break;
+                    }
+                }
+            }
+        }
+
         public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
         {
-            //basePosition.X -= 12;
             base.DrawMachinePowerInfo(spriteBatch, basePosition, lightColor);
         }
 
@@ -183,7 +192,6 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
         public override void SaveData(TagCompound tag)
         {
             base.SaveData(tag);
-
             if (SelectedRecipes is not null)
             {
                 TagCompound[] recipeTags = new TagCompound[SelectedRecipes.Length];
@@ -203,10 +211,9 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                     }
                     else
                     {
-                        recipeTags[i] = new TagCompound(); // empty if no recipe
+                        recipeTags[i] = new TagCompound();
                     }
                 }
-
                 tag[nameof(SelectedRecipes)] = recipeTags;
             }
         }
@@ -214,7 +221,6 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
         public override void LoadData(TagCompound tag)
         {
             base.LoadData(tag);
-
             if (tag.TryGet(nameof(SelectedRecipes), out TagCompound[] recipeTags))
             {
                 SelectedRecipes = new Recipe[OutputSlots];
@@ -225,11 +231,11 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                         continue;
 
                     Item result = ItemIO.Load(recipeTag.Get<TagCompound>(nameof(Recipe.createItem)));
-                    List<Item> ingredients = recipeTag.GetList<TagCompound>(nameof(Recipe.requiredItem)).Select(ItemIO.Load).ToList();
-
+                    IEnumerable<Item> ingredients = recipeTag.GetList<TagCompound>(nameof(Recipe.requiredItem)).Select(ItemIO.Load);
                     Recipe matchingRecipe = Main.recipe.FirstOrDefault(r =>
                     {
-                        if (r.createItem.type != result.type) return false;
+                        if (r.createItem.type != result.type)
+                            return false;
                         IEnumerable<int> recipeIngredients = r.requiredItem.Where(item => item.type > ItemID.None && item.stack > 0).Select(item => item.type);
                         IEnumerable<int> savedIngredients = ingredients.Where(item => item.type > ItemID.None).Select(item => item.type);
                         return recipeIngredients.OrderBy(x => x).SequenceEqual(savedIngredients.OrderBy(x => x));

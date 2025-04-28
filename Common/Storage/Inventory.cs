@@ -299,6 +299,21 @@ namespace Macrocosm.Common.Storage
             return false;
         }
 
+
+        public int CountItems(int type, int startIndex = 0, int? endIndex = null, bool countStack = true) => CountItems((i) => i.type == type, startIndex, endIndex, countStack);
+        public int CountItems(Func<Item, bool> predicate, int startIndex = 0, int? endIndex = null, bool countStack = true)
+        {
+            int count = 0;
+            for (int i = startIndex; i <= Math.Min(Size - 1, endIndex ?? Size - 1); i++)
+            {
+                Item item = Items[i];
+                if (predicate(item))
+                    count += countStack ? item.stack : 1;
+            }
+            return count;
+        }
+
+
         public LocalizedText GetReservedTooltip(int index) => index >= 0 && index < reservedTooltips.Length ? reservedTooltips[index] : null;
         public Asset<Texture2D> GetReservedTexture(int index) => index >= 0 && index < reservedTextures.Length ? reservedTextures[index] : null;
         public Color? GetReservedColor(int index) => index >= 0 && index < reservedColors.Length ? reservedColors[index] : null;
@@ -314,9 +329,9 @@ namespace Macrocosm.Common.Storage
             bool result = false;
             if (item.maxStack > 1)
             {
-                for (int i = startIndex; i <= (endIndex ?? Size - 1); i++)
+                for (int i = startIndex; i <= Math.Min(Size - 1, endIndex ?? Size - 1); i++)
                 {
-                    if (fromPlayer && !uiItemSlots[i].CanInteract)
+                    if (fromPlayer && !uiItemSlots[i].CanInteractWithItem)
                         continue;
 
                     if (fromPlayer && GetSlotRole(i) == InventorySlotRole.OutputLocked)
@@ -375,7 +390,7 @@ namespace Macrocosm.Common.Storage
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    if (!uiItemSlots[j].CanInteract)
+                    if (!uiItemSlots[j].CanInteractWithItem)
                         continue;
 
                     if (!ReservedCheck(j, item))
@@ -419,7 +434,7 @@ namespace Macrocosm.Common.Storage
             {
                 if (items[i].type > ItemID.None)
                 {
-                    if (!uiItemSlots[i].CanInteract)
+                    if (!uiItemSlots[i].CanInteractWithItem)
                         continue;
 
                     items[i].position = player.Center;
@@ -446,7 +461,7 @@ namespace Macrocosm.Common.Storage
                     {
                         for (int i = 0; i < Size; i++)
                         {
-                            if (!uiItemSlots[i].CanInteract)
+                            if (!uiItemSlots[i].CanInteractWithItem)
                                 continue;
 
                             if (GetSlotRole(i) == InventorySlotRole.OutputLocked)
@@ -483,7 +498,7 @@ namespace Macrocosm.Common.Storage
                     {
                         for (int i = 0; i < Size; i++)
                         {
-                            if (!uiItemSlots[i].CanInteract)
+                            if (!uiItemSlots[i].CanInteractWithItem)
                                 continue;
 
                             if (items[i].stack == 0)
@@ -523,7 +538,7 @@ namespace Macrocosm.Common.Storage
 
             for (int i = 0; i < Size; i++)
             {
-                if (!uiItemSlots[i].CanInteract)
+                if (!uiItemSlots[i].CanInteractWithItem)
                     continue;
 
                 if (GetSlotRole(i) == InventorySlotRole.OutputLocked)
@@ -676,7 +691,7 @@ namespace Macrocosm.Common.Storage
             bool successfulTransfer = false;
             for (int i = 0; i < Size; i++)
             {
-                if (!uiItemSlots[i].CanInteract)
+                if (!uiItemSlots[i].CanInteractWithItem)
                     continue;
 
                 if (items[i].stack < 1 || !foundItemIds.Contains(items[i].netID))

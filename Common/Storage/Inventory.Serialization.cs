@@ -16,7 +16,7 @@ namespace Macrocosm.Common.Storage
 
             if(Owner is not null)
             {
-                tag[nameof(Owner.InventoryOwnerType)] = Owner.InventoryOwnerType;
+                tag[nameof(Owner.InventoryOwnerType)] = (byte)Owner.InventoryOwnerType;
                 tag[nameof(Owner.InventoryIndex)] = Owner.InventoryIndex;
             }
 
@@ -43,7 +43,7 @@ namespace Macrocosm.Common.Storage
             if (tag.ContainsKey("OwnerSerializationIndex")) ownerSerializationIndex = tag.GetInt("OwnerSerializationIndex");
             if (!string.IsNullOrEmpty(legacyOwnerType) && Enum.TryParse(legacyOwnerType, ignoreCase: true, out InventoryOwnerType result)) ownerType = result;
 
-            if (tag.ContainsKey(nameof(Owner.InventoryOwnerType))) ownerType = (InventoryOwnerType)tag.GetInt(nameof(Owner.InventoryOwnerType));
+            if (tag.ContainsKey(nameof(Owner.InventoryOwnerType))) ownerType = (InventoryOwnerType)tag.GetByte(nameof(Owner.InventoryOwnerType));
             if (tag.ContainsKey(nameof(Owner.InventoryIndex))) ownerSerializationIndex = tag.GetInt(nameof(Owner.InventoryIndex));
 
             IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
