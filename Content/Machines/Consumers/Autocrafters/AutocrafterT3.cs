@@ -2,6 +2,7 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
+using Macrocosm.Common.UI.Machines;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
@@ -160,7 +161,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
 
                 for (int k = 0; k < (int)(12f * intensity); k++)
                 {
-                    Dust dust = Dust.NewDustPerfect(position, ModContent.DustType<ElectricSparkDust>(), Main.rand.NextVector2Circular(1f, 1f), Scale: Main.rand.NextFloat(0.1f, 0.3f));
+                    Dust dust = Dust.NewDustPerfect(position, ModContent.DustType<ElectricSparkDust>(), Main.rand.NextVector2Circular(1f, 1f), Scale: Main.rand.NextFloat(0.2f, 0.3f));
                     dust.noGravity = false;
                     dust.color = new Color(112, 179, 218) * 0.6f;
                     dust.alpha = Main.rand.Next(10);
@@ -172,10 +173,10 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                     {
                         p.Position = position;
                         p.Velocity = Main.rand.NextVector2Circular(2f, 2f);
-                        p.Scale = new(Main.rand.NextFloat(0.1f, 0.15f));
-                        p.FadeOutNormalizedTime = 0.5f;
+                        p.Scale = new(Main.rand.NextFloat(0.05f, 0.1f));
+                        p.FadeOutNormalizedTime = 0.2f;
                         p.Color = new Color(112, 179, 218).WithAlpha((byte)Main.rand.Next(0, 64));
-                        p.OutlineColor = new Color(112, 179, 218) * 0.2f;
+                        p.OutlineColor = new Color(112, 179, 218) * 0.8f;
                     });
                 }
             }

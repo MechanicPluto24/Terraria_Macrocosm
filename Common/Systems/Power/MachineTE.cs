@@ -25,9 +25,8 @@ namespace Macrocosm.Common.Systems.Power
 
         public virtual Color DisplayColor { get; } = Color.White;
 
-        public bool HasInventory => Inventory is not null && InventorySize > 0;
         public virtual int InventorySize => 0;
-        public Inventory Inventory { get; set; }
+        public Inventory Inventory { get; set; } = new(0);
         public InventoryOwnerType InventoryOwnerType => InventoryOwnerType.TileEntity;
         public Vector2 InventoryPosition => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
@@ -122,10 +121,8 @@ namespace Macrocosm.Common.Systems.Power
 
         public void CreateInventory()
         {
-            if(Inventory is null && InventorySize > 0)
-            {
+            if(Inventory.Size != InventorySize)
                 Inventory = new(InventorySize, this);
-            }
         }
 
         public override void OnKill()
@@ -199,18 +196,15 @@ namespace Macrocosm.Common.Systems.Power
         public override void SaveData(TagCompound tag)
         {
             if (ManuallyTurnedOff) tag[nameof(ManuallyTurnedOff)] = true;
-            tag[nameof(Inventory)] = Inventory;
+            if (Inventory.Size > 0) tag[nameof(Inventory)] = Inventory;
         }
 
         /// <summary> Load TE data. Always call base if overriding </summary>
         public override void LoadData(TagCompound tag)
         {
             ManuallyTurnedOff = tag.ContainsKey(nameof(ManuallyTurnedOff));
-            if (tag.ContainsKey(nameof(Inventory)))
-            {
-                Inventory = tag.Get<Inventory>(nameof(Inventory)) ?? new(InventorySize, this);
-                Inventory.Owner = this;
-            }
+            Inventory = tag.TryGet(nameof(Inventory), out Inventory inventory) ? inventory : new(InventorySize, this);
+            Inventory.Owner = this;
         }
     }
 }

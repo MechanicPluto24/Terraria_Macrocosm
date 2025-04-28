@@ -37,19 +37,29 @@ namespace Macrocosm.Common.UI
         private Asset<Texture2D> slotBorderTexture;
         private Color slotColor;
         private Color slotBorderColor;
-        private float notInteractibleMultiplier;
+        private float notInteractibleFactor;
 
         private Asset<Texture2D> slotFavoritedTexture;
         private Color slotFavoritedColor;
 
-        public bool CanInteract { get; set; } = true;
+        private bool canInteractWithItem = true;
+        public bool CanInteractWithItem 
+        { 
+            get => canInteractWithItem && inventory.CanInteract; 
+            set => canInteractWithItem = value; 
+        }
         public bool CanTrash { get; set; } = false;
         public bool CanFavorite { get; set; } = false;
         public bool CanRightClickSwap { get; set; } = false;
         public bool CanOpenContainer { get; set; } = false;
         protected Vector2 DrawOffset { get; set; } = new Vector2(52f, 52f) * -0.5f;
-
+        public Color? HoverHighlightColor { get; set; } = null;
         public float SizeLimit { get; set; } = 32f;
+
+        public UIInventorySlot(ref Item item, int itemSlotContext = Context.ChestItem, float scale = default) : this(new Inventory(1), 0, itemSlotContext, scale)
+        {
+            inventory[0] = item;
+        }
 
         public UIInventorySlot(Inventory inventory, int itemIndex, int itemSlotContext = Context.ChestItem, float scale = default)
         {
@@ -78,13 +88,13 @@ namespace Macrocosm.Common.UI
             );
         }
 
-        public void SetAppearance(Asset<Texture2D> slotTexture, Asset<Texture2D> slotBorderTexture, Color slotColor, Color slotBorderColor, float notInteractibleMultiplier = 0.8f)
+        public void SetAppearance(Asset<Texture2D> slotTexture, Asset<Texture2D> slotBorderTexture, Color slotColor, Color slotBorderColor, float notInteractibleFactor = 0.85f)
         {
             this.slotTexture = slotTexture;
             this.slotBorderTexture = slotBorderTexture;
             this.slotColor = slotColor;
             this.slotBorderColor = slotBorderColor;
-            this.notInteractibleMultiplier = notInteractibleMultiplier;
+            this.notInteractibleFactor = notInteractibleFactor;
         }
 
         public void SetFavoritedAppearance(Asset<Texture2D> slotFavoritedTexture, Color slotFavoritedColor)
@@ -104,7 +114,7 @@ namespace Macrocosm.Common.UI
 
         protected virtual void HandleItemSlotLogic()
         {
-            if (IsMouseHovering && (inventory.CanInteract || CanInteract))
+            if (IsMouseHovering && CanInteractWithItem)
             {
                 Item inv = inventory[itemIndex];
                 HandleCursor(ref inv);
@@ -195,7 +205,7 @@ namespace Macrocosm.Common.UI
                 return;
             }
 
-            if (!CanInteract)
+            if (!CanInteractWithItem)
                 return;
 
             if (!inventory.ReservedCheck(itemIndex, Main.mouseItem))
@@ -352,13 +362,16 @@ namespace Macrocosm.Common.UI
             slotColor = GetSlotGlow(item, slotColor, 0.85f);
             slotBorderColor = GetSlotGlow(item, slotBorderColor, 1.25f);
 
-            if (!inventory.CanInteract)
+            if (!CanInteractWithItem)
             {
                 var hsl = slotColor.ToHSL();
-                slotColor = slotColor.WithSaturation(hsl.Y * 0.85f);
+                slotColor = slotColor.WithSaturation(hsl.Y * notInteractibleFactor);
                 hsl = slotBorderColor.ToHSL();
-                slotBorderColor = slotColor.WithLuminance(hsl.Z * 0.85f);
+                slotBorderColor = slotColor.WithLuminance(hsl.Z * notInteractibleFactor);
             }
+
+            if (IsMouseHovering && HoverHighlightColor is Color hoverColor)
+                slotBorderColor = hoverColor;
 
             spriteBatch.Draw(slotTexture.Value, position, null, slotColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
             spriteBatch.Draw(slotBorderTexture.Value, position, null, slotBorderColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
