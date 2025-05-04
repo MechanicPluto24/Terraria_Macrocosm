@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
@@ -267,12 +268,12 @@ namespace Macrocosm.Common.Systems.Connectors
 
         private static object TryGetStorageObject(int x, int y)
         {
-            Point16 position = Utility.GetMultitileTopLeft(x, y);
+            Point16 position = TileObjectData.TopLeft(x, y);
             int chestIndex = Chest.FindChest(position.X, position.Y);
             if (chestIndex >= 0 && Main.chest[chestIndex] is Chest chest)
                 return chest;
 
-            if (Utility.TryGetTileEntityAs(new Point16(x, y), out TileEntity te) && te is IInventoryOwner inventoryOwner)
+            if (TileEntity.TryGet(new Point16(x, y), out TileEntity te) && te is IInventoryOwner inventoryOwner)
                 return inventoryOwner;
 
             return null;

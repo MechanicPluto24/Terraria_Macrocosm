@@ -1,14 +1,3 @@
 ﻿Rocket: Rocket
 LaunchPad: Launchpad
 MapNames.Poster: Poster
-
-// TODO: move this when merging other language localization
-Tooltips: {
-	DeveloperItem: Developer
-	UnobtainableItem: Unobtainable
-	Unusable: This item can not be used on {0}
-	BurnFuel: This flammable item can be used as fuel
-	LiquidContainer: This item can store liquids
-	WeaponNerf: Cosmic radiation has degraded this weapon
-	WeaponBuff: Cosmic radiation has made this weapon more powerful
-}

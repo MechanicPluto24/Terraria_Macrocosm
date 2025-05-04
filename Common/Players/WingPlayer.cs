@@ -31,11 +31,10 @@ namespace Macrocosm.Common.Players
 
             if (SubworldSystem.AnyActive<Macrocosm>() && wingItemType > 0)
             {
-                if (SubworldSystem.IsActive<Moon>())
-                    stats.FlyTime = (int)(stats.FlyTime * ItemSets.WingTimeMultiplier_Moon[wingItemType]);
-
                 if (ItemSets.WingTimeDependsOnAtmosphericDensity[wingItemType])
                     stats.FlyTime = (int)(stats.FlyTime * MacrocosmSubworld.GetAtmosphericDensity(player.Center));
+                else
+                    stats.FlyTime = (int)(stats.FlyTime * ItemSets.WingTimeMultiplier[wingItemType]);
 
                 player.wingTimeMax = stats.FlyTime;
             }

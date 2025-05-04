@@ -82,7 +82,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         // Workaround for platform hanging, alternates don't work currently
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
             if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
                 offsetY -= 8;
         }
