@@ -29,9 +29,5 @@ namespace Macrocosm.Content.Tiles.Furniture
 
             AddMapEntry(new Color(51, 47, 199), CreateMapEntryName());
         }
-
-        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
-        {
-        }
     }
 }

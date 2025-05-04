@@ -74,7 +74,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         // Workaround for platform hanging, alternates don't work currently
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
             if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
                 offsetY -= 8;
         }
@@ -89,14 +89,15 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
             if (TileObjectData.IsTopLeft(i, j))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
 
             return false;
         }
 
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void AdjustMultiTileVineParameters(int i, int j, ref float? overrideWindCycle, ref float windPushPowerX, ref float windPushPowerY, ref bool dontRotateTopTiles, ref float totalWindMultiplier, ref Texture2D glowTexture, ref Color glowColor)
         {
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
+            overrideWindCycle = 1f;
+            windPushPowerY = 0f;
         }
     }
 }

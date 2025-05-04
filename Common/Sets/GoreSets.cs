@@ -1,12 +1,11 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Sets
 {
-    /// <summary>
-    /// Gore Sets for special behavior of some Gores, useful for crossmod.
-    /// Note: Only initalize sets with vanilla content here, add modded content to sets in SetStaticDefaults.
-    /// </summary>
+    /// <summary> Gore Sets for special behavior of some Gores, useful for crossmod. </summary>
+    [ReinitializeDuringResizeArrays]
     public class GoreSets
     {
         public static TrashData[] TrashData { get; } = GoreID.Sets.Factory.CreateCustomSet(defaultState: new TrashData(),

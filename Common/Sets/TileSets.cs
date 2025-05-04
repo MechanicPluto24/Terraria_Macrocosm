@@ -1,28 +1,27 @@
 ﻿using Terraria.GameContent;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Sets
 {
-    /// <summary>
-    /// Tile Sets for special behavior of some Tiles, useful for crossmod.
-    /// Note: Only initalize sets with vanilla content here, add modded content to sets in SetStaticDefaults.
-    /// </summary>
+    /// <summary> Tile Sets for special behavior of some Tiles, useful for crossmod. </summary>
+    [ReinitializeDuringResizeArrays]
     internal class TileSets
     {
-        /// <summary> This tile type counts for graveyard, where applicable (e.g. Earth) </summary>
-        public static bool[] GraveyardTile { get; } = TileID.Sets.Factory.CreateBoolSet();
+        /// <summary> Tile types that count for the Graveyard biome. </summary>
+        public static bool[] CountsForGraveyard { get; } = TileID.Sets.Factory.CreateNamedSet(nameof(CountsForGraveyard)).Description("Tile types that count for the Graveyard biome.").RegisterBoolSet();
 
-        public static int[] RandomStyles { get; } = TileID.Sets.Factory.CreateIntSet(defaultState: 1);
+        /// <summary> The Tree Tile type, different from <see cref="TileID.Trees"/>, that this tile grows into. Used for custom saplings. </summary>
+        public static int[] SaplingTreeGrowthType { get; } = TileID.Sets.Factory.CreateNamedSet(nameof(SaplingTreeGrowthType)).Description("The Tree Tile type, different from TileID.Trees, that this tile grows into. Used for custom saplings.").RegisterIntSet(defaultState: -1);
 
-        /// <summary> Used for custom growth of sapling tiles into trees </summary>
-        public static int[] SaplingTreeGrowthType { get; } = TileID.Sets.Factory.CreateIntSet(defaultState: -1);
-
-        /// <summary>
-        /// For custom sized containers (different from 2x2 chests and 3x2 dressers) 
-        /// </summary>
+        /// <summary> Tile types that are containers of Width and Height different from Chests or Dressers. </summary>
         // TODO: add support for net serializaton (and proper unloading but this needs to be in tML directly) 
-        public static bool[] CustomContainer { get; } = TileID.Sets.Factory.CreateBoolSet();
+        public static bool[] CustomContainer { get; } = TileID.Sets.Factory.CreateNamedSet(nameof(CustomContainer)).Description("Tile types that are containers of Width and Height different from Chests or Dressers.").RegisterBoolSet();
 
-        public static TreePaintingSettings[] PaintingSettings { get; } = TileID.Sets.Factory.CreateCustomSet<TreePaintingSettings>(defaultState: null);
+        /// <summary> Tile types with custom <see cref="TreePaintingSettings"/> </summary>
+        public static TreePaintingSettings[] PaintingSettings { get; } = TileID.Sets.Factory.CreateNamedSet(nameof(PaintingSettings)).Description("Tile types with custom TreePaintingSettings").RegisterCustomSet<TreePaintingSettings>(defaultState: null);
+
+        // TODO: this needs a rework
+        public static int[] RandomStyles { get; } = TileID.Sets.Factory.CreateIntSet(defaultState: 1);
     }
 }

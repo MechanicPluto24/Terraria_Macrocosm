@@ -127,8 +127,10 @@ namespace Macrocosm.Common.Bases.Tiles
             TileID.Sets.IsShakeable[Type] = true;
             TileID.Sets.GetsDestroyedForMeteors[Type] = true;
             TileID.Sets.GetsCheckedForLeaves[Type] = true;
+
             TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
             TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type] = true;
+            TileID.Sets.PreventsTileHammeringIfOnTopOfIt[Type] = true;
 
             TileSets.PaintingSettings[Type] = PaintingSettings;
         }
@@ -1201,18 +1203,18 @@ namespace Macrocosm.Common.Bases.Tiles
             {
                 int offset = tilePosX - grassPosX;
                 position.X += offset * 12;
-                int windOffsetFactorY = 0;
+                int windPushPowerY = 0;
                 if (tile.TileFrameY == 220)
                 {
-                    windOffsetFactorY = 1;
+                    windPushPowerY = 1;
                 }
                 else if (tile.TileFrameY == 242)
                 {
-                    windOffsetFactorY = 2;
+                    windPushPowerY = 2;
                 }
                 if (tile.TileFrameX == 66)
                 {
-                    switch (windOffsetFactorY)
+                    switch (windPushPowerY)
                     {
                         case 0:
                             position += new Vector2(0f, -6f);
@@ -1227,7 +1229,7 @@ namespace Macrocosm.Common.Bases.Tiles
                 }
                 else
                 {
-                    switch (windOffsetFactorY)
+                    switch (windPushPowerY)
                     {
                         case 0:
                             position += new Vector2(0f, 4f);

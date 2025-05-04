@@ -59,13 +59,13 @@ namespace Macrocosm.Common.Systems.Power
                                 if (position == clusterOrigin)
                                 {
                                     // On the origin 
-                                    if (!Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out _))
+                                    if (!TileEntity.TryGet<MachineTE>(position.X, position.Y, out _))
                                         machine.Place(position.X, position.Y);
                                 }
                                 else
                                 {
                                     // Kill other TEs of the same type that are part of this cluster 
-                                    if (Utility.TryGetTileEntityAs(position, out MachineTE other) && machine.Type == other.Type)
+                                    if (TileEntity.TryGet(position, out MachineTE other) && machine.Type == other.Type)
                                         other.Kill(position.X, position.Y);
                                 }
                             }
