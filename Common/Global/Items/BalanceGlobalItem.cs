@@ -23,9 +23,9 @@ namespace Macrocosm.Common.Global.Items
             {
                 float adjustment = ItemSets.DamageAdjustment[item.type];
                 if (adjustment < 1f)
-                    tooltips.Add(new TooltipLine(Macrocosm.Instance, "WeaponNerf", Language.GetTextValue("Mods.Macrocosm.Common.Tooltips.WeaponNerf")) { OverrideColor = Color.GreenYellow });
+                    tooltips.Add(new TooltipLine(Macrocosm.Instance, "WeaponNerf", Language.GetTextValue("Mods.Macrocosm.Tooltips.WeaponNerf")) { OverrideColor = Color.GreenYellow });
                 else if (adjustment > 1f)
-                    tooltips.Add(new TooltipLine(Macrocosm.Instance, "WeaponBuff", Language.GetTextValue("Mods.Macrocosm.Common.Tooltips.WeaponBuff")) { OverrideColor = Color.GreenYellow });
+                    tooltips.Add(new TooltipLine(Macrocosm.Instance, "WeaponBuff", Language.GetTextValue("Mods.Macrocosm.Tooltips.WeaponBuff")) { OverrideColor = Color.GreenYellow });
             }
         }
 

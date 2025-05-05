@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Items.Furniture.Luminite
     {
         public override void SetStaticDefaults()
         {
-            ItemSets.Chest[Type] = true;
+            
         }
 
         public override void SetDefaults()

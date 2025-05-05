@@ -55,14 +55,9 @@ namespace Macrocosm.Common.Bases.Tiles
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
             if (TileObjectData.IsTopLeft(i, j))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
 
             return false; 
-        }
-
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
-        {
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j);
         }
 
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)

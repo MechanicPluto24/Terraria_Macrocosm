@@ -75,24 +75,32 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
             if (TileObjectData.IsTopLeft(i, j))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
 
             return false;
         }
 
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void AdjustMultiTileVineParameters(int i, int j, ref float? overrideWindCycle, ref float windPushPowerX, ref float windPushPowerY, ref bool dontRotateTopTiles, ref float totalWindMultiplier, ref Texture2D glowTexture, ref Color glowColor)
         {
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
+            overrideWindCycle = 1f;
+            windPushPowerY = 0f;
+        }
 
+        public override void GetTileFlameData(int i, int j, ref TileDrawing.TileFlameData tileFlameData)
+        {
             flameTexture ??= ModContent.Request<Texture2D>(Texture + "_Flame");
-            ulong randSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
-            for (int k = 0; k < 7; k++)
-            {
-                float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
-                float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
+            tileFlameData.flameTexture = flameTexture.Value;
+            tileFlameData.flameSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
-                TileRendering.DrawMultiTileInWindTopAnchor(i, j, flameTexture, color: new Color(100, 100, 100, 0), offset: new Vector2(xx, yy), applyPaint: false, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
-            }
+            tileFlameData.flameCount = 12;
+            tileFlameData.flameColor = new Color(25, 25, 25, 0);
+
+            tileFlameData.flameRangeXMin = -10;
+            tileFlameData.flameRangeXMax = 11;
+            tileFlameData.flameRangeYMin = -10;
+            tileFlameData.flameRangeYMax = 1;
+            tileFlameData.flameRangeMultX = 0.15f;
+            tileFlameData.flameRangeMultY = 0.35f;
         }
     }
 }

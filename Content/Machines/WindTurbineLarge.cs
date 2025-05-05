@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Machines
         private SpriteBatchState state;
         public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, windSensitivity: 0.02f, rowsToIgnore: 2);
+            TileRendering.DrawMultiTileGrass(i, j, totalWindMultiplier: 0.02f, rowsToIgnore: 2);
 
             turbineTexture ??= ModContent.Request<Texture2D>(Texture + "_Turbine");
             bladesTexture ??= ModContent.Request<Texture2D>(Texture + "_Blades");
