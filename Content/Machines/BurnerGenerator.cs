@@ -70,7 +70,7 @@ namespace Macrocosm.Content.Machines
 
         public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            Point16 origin = TileObjectData.TopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
             {
                 for (int y = origin.Y; y < origin.Y + Height; y++)
@@ -96,14 +96,14 @@ namespace Macrocosm.Content.Machines
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            Point16 origin = TileObjectData.TopLeft(i, j);
             if ((i >= origin.X + 2 && i <= origin.X + 3) && (j >= origin.Y + 0 && j <= origin.Y + 1))
             {
                 Toggle(i, j, automatic: false, skipWire: false);
             }
             else
             {
-                if (Utility.TryGetTileEntityAs(i, j, out BurnerGeneratorTE burnerGenerator))
+                if (TileEntity.TryGet(i, j, out BurnerGeneratorTE burnerGenerator))
                     UISystem.ShowMachineUI(burnerGenerator, new BurnerGeneratorUI());
             }
 
@@ -117,7 +117,7 @@ namespace Macrocosm.Content.Machines
             if (!player.mouseInterface)
             {
                 player.noThrow = 2;
-                Point16 origin = Utility.GetMultitileTopLeft(i, j);
+                Point16 origin = TileObjectData.TopLeft(i, j);
                 if ((i >= origin.X + 2 && i <= origin.X + 3) && (j >= origin.Y + 0 && j <= origin.Y + 1))
                 {
                     if (IsPoweredOnFrame(origin.X, origin.Y))
@@ -172,14 +172,13 @@ namespace Macrocosm.Content.Machines
             TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
         }
 
-        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
+        public override void EmitParticles(int i, int j, Tile tile, short tileFrameX, short tileFrameY, Color tileLight, bool visible)
         {
-            if (Main.gamePaused)
+            if (!visible)
                 return;
 
-            Tile tile = Main.tile[i, j];
-            int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
-            int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
+            int tileOffsetX = tileFrameX % (Width * 18) / 18;
+            int tileOffsetY = tileFrameY % (Height * 18) / 18;
 
             if (IsPoweredOnFrame(i, j))
             {

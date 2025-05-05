@@ -12,10 +12,8 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static CustomDrawGlobalItem CustomDrawData(this Item item)
-        {
-            return item.GetGlobalItem<CustomDrawGlobalItem>();
-        }
+        public static CustomDrawGlobalItem CustomDrawData(this Item item) => item.GetGlobalItem<CustomDrawGlobalItem>();
+        public static bool IsChest(this Item item) => TileID.Sets.BasicChest[item.createTile];
 
         /// <summary>
         /// Helper method that converts the first rocket ammo found in the inventory 
@@ -27,22 +25,6 @@ namespace Macrocosm.Common.Utils
         /// <returns> The projectile ID, defaults to Rocket I </returns>
         public static int GetRocketAmmoProjectileID(Player player, int copyWeaponType)
         {
-            static bool TryFindingSpecificMatches(int launcher, int ammo, out int pickedProjectileId)
-            {
-                pickedProjectileId = 0;
-                if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var value) && value.TryGetValue(ammo, out pickedProjectileId))
-                    return true;
-
-                launcher = AmmoID.Sets.SpecificLauncherAmmoProjectileFallback[launcher];
-                if (launcher != -1)
-                {
-                    if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var fallbackValue) && fallbackValue.TryGetValue(ammo, out pickedProjectileId))
-                        return true;
-                }
-
-                return false;
-            }
-
             if (copyWeaponType != ItemID.GrenadeLauncher && copyWeaponType != ItemID.RocketLauncher && copyWeaponType != ItemID.ProximityMineLauncher)
                 return ProjectileID.RocketI;
 
@@ -54,20 +36,20 @@ namespace Macrocosm.Common.Utils
 
             int type;
 
-            // for mini nukes, liquid rockets
-            if (TryFindingSpecificMatches(copyWeaponType, ammo.type, out int pickedProjectileId))
+            static bool TryFindingSpecificMatches(int launcher, int ammo, out int pickedProjectileId)
             {
+                pickedProjectileId = 0;
+                if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var value) && value.TryGetValue(ammo, out pickedProjectileId)) return true;
+                launcher = AmmoID.Sets.SpecificLauncherAmmoProjectileFallback[launcher];
+                return launcher != -1 && AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var fallbackValue) && fallbackValue.TryGetValue(ammo, out pickedProjectileId);
+            }
+
+            if (TryFindingSpecificMatches(copyWeaponType, ammo.type, out int pickedProjectileId)) // for mini nukes, liquid rockets
                 type = pickedProjectileId;
-            }
-            // for rockets I to IV
-            else if (ammo.ammo == AmmoID.Rocket)
-            {
+            else if (ammo.ammo == AmmoID.Rocket) // for rockets I to IV
                 type = launcher.shoot + ammo.shoot;
-            }
             else
-            {
                 type = ProjectileID.RocketI;
-            }
 
             return type;
         }

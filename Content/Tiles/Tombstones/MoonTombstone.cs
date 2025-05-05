@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Tiles.Tombstones
             Main.tileLavaDeath[Type] = false;
             Main.tileSign[Type] = true;
 
-            TileSets.GraveyardTile[Type] = true;
+            TileSets.CountsForGraveyard[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
             TileObjectData.newTile.Origin = new Point16(0, 1);

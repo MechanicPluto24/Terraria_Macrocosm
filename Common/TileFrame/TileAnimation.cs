@@ -8,6 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.TileFrame
 {
+    // TODO: replace with Animation.NewTemporaryFrame entirely
     public readonly struct AnimationData(int frameMax, int frameCounterMax, int[] frameData, bool forcedUpdate = false, Action<Point16, ushort> onAnimationComplete = null)
     {
 
@@ -16,8 +17,8 @@ namespace Macrocosm.Common.TileFrame
         public readonly int[] FrameData = frameData;
 
         // Excluded from Equals
-        public readonly bool ForcedUpdate = forcedUpdate;
-        public readonly Action<Point16, ushort> OnAnimationComplete = onAnimationComplete;
+        public readonly bool ForcedUpdate = forcedUpdate; // TODO: work around this
+        public readonly Action<Point16, ushort> OnAnimationComplete = onAnimationComplete; // TODO: work around this
 
         public override int GetHashCode() => HashCode.Combine(FrameMax, FrameCounterMax, FrameData);
 
@@ -40,6 +41,7 @@ namespace Macrocosm.Common.TileFrame
         }
     }
 
+    // TODO: replace with Animation.NewTemporaryFrame entirely
     public class TileAnimation : ILoadable
     {
         private static List<TileAnimation> animations;

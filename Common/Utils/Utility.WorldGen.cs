@@ -891,7 +891,7 @@ namespace Macrocosm.Common.Utils
                     if (width > 1 || height > 1)
                     {
                         int xs = x, ys = y;
-                        Point16 newPos = GetMultitileTopLeft(xs, ys);
+                        Point16 newPos = TileObjectData.TopLeft(xs, ys);
                         for (int x1 = 0; x1 < width; x1++)
                         {
                             for (int y1 = 0; y1 < height; y1++)

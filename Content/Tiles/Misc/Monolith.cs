@@ -21,6 +21,8 @@ namespace Macrocosm.Content.Tiles.Misc
 
             TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
             TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type] = true;
+            TileID.Sets.PreventsTileHammeringIfOnTopOfIt[Type] = true;
+
             TileID.Sets.GeneralPlacementTiles[Type] = false;
 
             MinPick = 9999; // Very hard to break.

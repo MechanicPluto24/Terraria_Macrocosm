@@ -42,7 +42,7 @@ namespace Macrocosm.Common.Global.Tiles
                 if (tileAbove.HasTile && type != tileAbove.TileType)
                     return false;
 
-                Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+                Point16 topLeft = TileObjectData.TopLeft(i, j);
                 if (!Chest.CanDestroyChest(topLeft.X, topLeft.Y))
                     return false;
             }

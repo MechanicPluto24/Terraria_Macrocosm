@@ -63,7 +63,7 @@ namespace Macrocosm.Content.Tiles.Flags
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            Point16 origin = TileObjectData.TopLeft(i, j);
             // Open UI
             return true;
         }
@@ -83,7 +83,7 @@ namespace Macrocosm.Content.Tiles.Flags
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             int frame = Main.tileFrame[type];
-            var topLeft = Utility.GetMultitileTopLeft(i, j);
+            var topLeft = TileObjectData.TopLeft(i, j);
             if (frame > 0 && WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, 3, 2))
             {
                 frame = 1 + (topLeft.X + frame) % 4;
@@ -143,7 +143,7 @@ namespace Macrocosm.Content.Tiles.Flags
                 pattern.Apply();
             }
 
-            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, perTileLighting: false, windSensitivity: 0.07f);
+            TileRendering.DrawMultiTileGrass(i, j, totalWindMultiplier: 0.07f, perTileLighting: false);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
