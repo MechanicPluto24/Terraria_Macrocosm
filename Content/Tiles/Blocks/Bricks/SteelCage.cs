@@ -1,3 +1,4 @@
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -5,18 +6,16 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks.Bricks
 {
-    public class HaemonovaBrick : ModTile
+    public class SteelCage : ModTile
     {
         public override void SetStaticDefaults()
         {
             Main.tileSolid[Type] = true;
-            Main.tileBrick[Type] = true;
-            Main.tileBlockLight[Type] = true;
+            Main.tileBlockLight[Type] = false;
 
-            AddMapEntry(new Color(78, 25, 25));
+            AddMapEntry(new Color(103, 120, 138));
 
-            //DustType = ModContent.DustType<HaemonovaDust>();
-            DustType = DustID.LunarOre;
+            DustType = ModContent.DustType<SteelDust>();
             HitSound = SoundID.Tink;
         }
     }

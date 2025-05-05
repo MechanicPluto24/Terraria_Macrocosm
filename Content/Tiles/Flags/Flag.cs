@@ -18,6 +18,8 @@ namespace Macrocosm.Content.Tiles.Flags
 {
     public class Flag : ModTile
     {
+        private static int testing_globalFlagStyle;
+
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -64,7 +66,10 @@ namespace Macrocosm.Content.Tiles.Flags
             Utility.UICloseOthers();
 
             Point16 origin = TileObjectData.TopLeft(i, j);
-            // Open UI
+            // TOOD: Open UI
+
+            testing_globalFlagStyle++;
+
             return true;
         }
 
@@ -137,9 +142,9 @@ namespace Macrocosm.Content.Tiles.Flags
             spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
 
             Pattern[] patterns = PatternManager.GetAll(context: "FlagTile").ToArray();
-            if (patterns.Length > 0)
+            if (patterns.Length > 0 && testing_globalFlagStyle > 0 && testing_globalFlagStyle < patterns.Length)
             {
-                var pattern = patterns[i % patterns.Length];
+                var pattern = patterns[testing_globalFlagStyle % patterns.Length];
                 pattern.Apply();
             }
 

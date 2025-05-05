@@ -3116,3 +3116,13 @@ Thermometer: {
 	DisplayName: Thermometer
 	Tooltip: ""
 }
+
+CorrugatedSteelBrick: {
+	DisplayName: Corrugated Steel Brick
+	Tooltip: ""
+}
+
+SteelCage: {
+	DisplayName: Steel Cage
+	Tooltip: ""
+}
