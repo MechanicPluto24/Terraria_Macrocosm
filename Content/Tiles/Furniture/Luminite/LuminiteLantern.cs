@@ -84,7 +84,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         {
             Point16 topLeft = TileObjectData.TopLeft(i, j);
             if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
-                offsetY -= 8;
+                offsetY -= 4;
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)

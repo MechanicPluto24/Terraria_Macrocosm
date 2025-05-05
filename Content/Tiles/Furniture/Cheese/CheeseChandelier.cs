@@ -92,8 +92,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             tileFlameData.flameTexture = flameTexture.Value;
             tileFlameData.flameSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
-            tileFlameData.flameCount = 7;
-            tileFlameData.flameColor = new Color(100, 100, 100, 0);
+            tileFlameData.flameCount = 12;
+            tileFlameData.flameColor = new Color(25, 25, 25, 0);
 
             tileFlameData.flameRangeXMin = -10;
             tileFlameData.flameRangeXMax = 11;

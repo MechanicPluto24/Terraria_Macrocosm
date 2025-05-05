@@ -54,5 +54,10 @@ namespace Macrocosm.Content.Tiles.Banners
 
             return false;
         }
+
+        public override void AdjustMultiTileVineParameters(int i, int j, ref float? overrideWindCycle, ref float windPushPowerX, ref float windPushPowerY, ref bool dontRotateTopTiles, ref float totalWindMultiplier, ref Texture2D glowTexture, ref Color glowColor)
+        {
+            totalWindMultiplier = 0.1f;
+        }
     }
 }

@@ -79,9 +79,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
         // Workaround for platform hanging, alternates don't work currently
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
-            Point16 topLeft = TileObjectData.TopLeft(i, j);
-            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
-                offsetY -= 8;
         }
 
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
@@ -104,8 +101,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             tileFlameData.flameTexture = flameTexture.Value;
             tileFlameData.flameSeed = Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i);
 
-            tileFlameData.flameCount = 7;
-            tileFlameData.flameColor = new Color(100, 100, 100, 0);
+            tileFlameData.flameCount = 8;
+            tileFlameData.flameColor = new Color(25, 25, 25, 0);
 
             tileFlameData.flameRangeXMin = -10;
             tileFlameData.flameRangeXMax = 11;
