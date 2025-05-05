@@ -12,6 +12,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.GameContent;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
@@ -84,27 +85,14 @@ namespace Macrocosm.Common.Bases.Tiles
         /// <summary> Determine variant at tile coordinates. Defaults to a single variant (0) </summary>
         public virtual int GetVariant(int x, int y) => 0;
 
-        /// <summary> Determine tree top frame size. Allows you to modify the <paramref name="treeFrame"/> </summary>
-        public abstract void GetTopTextureFrame(int i, int j, ref int treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight);
+        /// <summary> Determine tree top frame size. Also allows you to modify the <paramref name="treeFrame"/> </summary>
+        public abstract void GetFoliageData(int i, int j, ref int treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight);
 
         /// <summary> Check ground tile valid for this tree. Defaults to a <see cref="GrowsOnTileId"/> check </summary>
-        //public virtual bool GroundTest(int tileType) => GrowsOnTileId.Contains(tileType) || tileType == Type;
         public virtual bool GroundTest(int tileType) => GrowsOnTileId.Contains(tileType) || tileType == Type;
 
         /// <summary> Check wall behing valid for this tree. Defaults to vanilla logic </summary>
         public virtual bool WallTest(int wallType) => WorldGen.DefaultTreeWallTest(wallType);
-
-        /// <summary> Shake logic. Return true to also allow vanilla shake logic to run, based on <see cref="CountsAsTreeType"/> </summary>
-        public virtual bool Shake(int x, int y, IEntitySource source, ref bool createLeaves) => true;
-
-        /// <summary> Use for custom tile frame (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
-        public virtual void CustomTileFrame(int i, int j, ref bool resetFrame, ref bool noBreak) { }
-
-        /// <summary> Use for growing (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
-        public virtual bool CustomGrowTree(int x, int y) { return false; }
-
-        /// <summary> Use for custom drawing (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
-        public virtual void CustomPostDrawTree(int x, int y, Tile tile, SpriteBatch spriteBatch, double treeWindCounter, Vector2 unscaledPosition, Vector2 zero, float topsWindFactor, float branchWindFactor) { }
 
         public virtual Asset<Texture2D> GetTexture() => ModContent.RequestIfExists<Texture2D>(Texture, out var texture) ? texture : null;
 
@@ -140,6 +128,9 @@ namespace Macrocosm.Common.Bases.Tiles
             width = 20;
             height = 20;
         }
+
+        /// <summary> Use for custom tile frame (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
+        public virtual void CustomTileFrame(int i, int j, ref bool resetFrame, ref bool noBreak) { }
 
         public sealed override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
         {
@@ -193,6 +184,9 @@ namespace Macrocosm.Common.Bases.Tiles
             if (Main.tile[i, j].TileFrameX != frameX && Main.tile[i, j].TileFrameY != frameY && frameX >= 0 && frameY >= 0)
                 WorldGen.DiamondTileFrame(i, j);
         }
+
+        /// <summary> Use for growing (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
+        public virtual bool CustomGrowTree(int i, int j) { return false; }
 
         /// <summary>
         /// Grow a tree of this type. 
@@ -852,6 +846,10 @@ namespace Macrocosm.Common.Bases.Tiles
         }
 
         public virtual bool IsTileALeafyTreeTop(int i, int j) => WorldGen.IsTileALeafyTreeTop(i, j);
+
+        /// <summary> Shake logic. Return true to also allow vanilla shake logic to run, based on <see cref="CountsAsTreeType"/> </summary>
+        public virtual bool Shake(int x, int y, IEntitySource source, ref bool createLeaves) => true;
+
         public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
             Tile tile = Main.tile[i, j];
@@ -973,119 +971,58 @@ namespace Macrocosm.Common.Bases.Tiles
             return GetBranchTexture(variant).Value;
         }
 
-        public sealed override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        public virtual bool ShouldTileDrawFoliage(int i, int j, short tileFrameX, short tileFrameY)
         {
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, Matrix.Identity);
+            return DrawingMode switch
+            {
+                TreeCategory.Tree => tileFrameX >= 22 && tileFrameY >= 198,
+                TreeCategory.Palm => tileFrameX >= 88 && tileFrameX <= 132,
+                _ => false,
+            };
+        }
 
-            double treeWindCounter = TileRendering.TreeWindCounter;
-            Vector2 unscaledPosition = Main.Camera.UnscaledPosition;
-            Vector2 zero = new(Main.offScreenRange, Main.offScreenRange);
+        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
+        {
+            if (ShouldTileDrawFoliage(i, j, drawData.tileFrameX, drawData.tileFrameY))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
+        }
 
-            if (Main.drawToScreen)
-                zero = Vector2.Zero;
-
-            float topsWindFactor = 0.08f;
-            float branchWindFactor = 0.06f;
-
+        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
             Tile tile = Main.tile[i, j];
             if (!tile.HasTile)
                 return;
 
-            switch (DrawingMode)
-            {
-                case TreeCategory.Palm:
-                    PostDrawPalmTree(i, j, spriteBatch, tile, treeWindCounter, unscaledPosition, zero, topsWindFactor);
-                    break;
-                case TreeCategory.Tree:
-                    PostDrawRegularTree(i, j, spriteBatch, tile, treeWindCounter, unscaledPosition, zero, topsWindFactor, branchWindFactor);
-                    break;
-                default:
-                    CustomPostDrawTree(i, j, tile, spriteBatch, treeWindCounter, unscaledPosition, zero, topsWindFactor, branchWindFactor);
-                    break;
-            }
-
-            spriteBatch.End();
-            spriteBatch.Begin(); // No params as PostDraw doesn't use spritebatch with params
+            DrawTreeFoliage(i, j, spriteBatch, TileRendering.TreeWindCounter, Main.Camera.UnscaledPosition);
         }
 
-        protected void PostDrawPalmTree(int x, int y, SpriteBatch spriteBatch, Tile tile, double treeWindCounter, Vector2 unscaledPosition, Vector2 zero, float topsWindFactor)
+        public virtual void DrawTreeFoliage(int i, int j, SpriteBatch spriteBatch, double treeWindCounter, Vector2 unscaledPosition, float topsWindFactor = 0.08f, float branchWindFactor = 0.06f)
         {
-            short frameX = tile.TileFrameX;
-            bool wallBehind = tile.WallType > 0;
-
-            if (frameX < 88 || frameX > 132)
-                return;
-
-            int treeFrame = 0;
-            switch (frameX)
-            {
-                case 110:
-                    treeFrame = 1;
-                    break;
-                case 132:
-                    treeFrame = 2;
-                    break;
-            }
-
-            int xOffset = 0;
-            if (!GetTreeFoliageData(x, y, xOffset, ref treeFrame, out int floorY, out int topTextureFrameWidth, out int topTextureFrameHeight))
-                return;
-
-            byte tileColor = tile.TileColor;
-            int variant = GetVariant(x, y);
-
-            Texture2D treeTopTexture = TryGetTreeTopAndRequestIfNotReady(Type, variant, tileColor);
-            Vector2 position = new Vector2(x * 16 - (int)unscaledPosition.X - 42 + Main.tile[x, y].TileFrameY + topTextureFrameWidth / 2, y * 16 - (int)unscaledPosition.Y) + zero;
-            float windCycle = 0f;
-            if (!wallBehind)
-                windCycle = Main.instance.TilesRenderer.GetWindCycle(x, y, treeWindCounter);
-
-            position.X += windCycle * 2f;
-            position.Y += Math.Abs(windCycle) * 2f;
-
-            Color color = Lighting.GetColor(x, y);
-            if (tile.IsTileFullbright)
-                color = Color.White;
-
-            Rectangle frame = new(treeFrame * (topTextureFrameWidth + 2), 0, topTextureFrameWidth, topTextureFrameHeight);
-            spriteBatch.Draw(treeTopTexture, position, frame, color, windCycle * topsWindFactor, new Vector2(topTextureFrameWidth / 2, topTextureFrameHeight), 1f, SpriteEffects.None, 0f);
-        }
-
-        protected void PostDrawRegularTree(int x, int y, SpriteBatch spriteBatch, Tile tile, double treeWindCounter, Vector2 unscaledPosition, Vector2 zero, float topsWindFactor, float branchWindFactor)
-        {
-            short frameX = tile.TileFrameX;
-            short frameY = tile.TileFrameY;
-            bool wallBehind = tile.WallType > 0;
-
-            if (frameY >= 198 && frameX >= 22)
+            Tile tile = Main.tile[i, j];
+            if (DrawingMode == TreeCategory.Tree)
             {
                 int treeFrame = WorldGen.GetTreeFrame(tile);
-                switch (frameX)
+                switch (tile.TileFrameX)
                 {
                     case 22:
                         {
-                            int xOffset = 0;
-                            int grassPosX = x + xOffset;
-                            if (!GetTreeFoliageData(x, y, xOffset, ref treeFrame, out int floorY, out int topTextureFrameWidth, out int topTextureFrameHeight))
-                                return;
-
-                            EmitLeaves(x, y, grassPosX, floorY);
+                            GetFoliageData(i, j, ref treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight);
+                            EmitLeaves_RegularTree(i, j, foliagePosX: i);
 
                             byte tileColor = tile.TileColor;
-                            int variant = GetVariant(x, y);
+                            int variant = GetVariant(i, j);
 
                             Texture2D treeTopTexture = TryGetTreeTopAndRequestIfNotReady(Type, variant, tileColor);
-                            Vector2 position = new Vector2(x * 16 - (int)unscaledPosition.X + 8, y * 16 - (int)unscaledPosition.Y + 16) + zero;
+                            Vector2 position = new(i * 16 - (int)unscaledPosition.X + 8, j * 16 - (int)unscaledPosition.Y + 16);
                             float windCycle = 0f;
 
-                            if (!wallBehind)
-                                windCycle = Main.instance.TilesRenderer.GetWindCycle(x, y, treeWindCounter);
+                            if (tile.WallType == WallID.None)
+                                windCycle = Main.instance.TilesRenderer.GetWindCycle(i, j, treeWindCounter);
 
                             position.X += windCycle * 2f;
                             position.Y += Math.Abs(windCycle) * 2f;
 
-                            Color color6 = Lighting.GetColor(x, y);
+                            Color color6 = Lighting.GetColor(i, j);
 
                             if (tile.IsTileFullbright)
                                 color6 = Color.White;
@@ -1097,28 +1034,24 @@ namespace Macrocosm.Common.Bases.Tiles
 
                     case 44:
                         {
-                            int grassPosX = x;
-                            int xOffset = 1;
-                            if (!GetTreeFoliageData(x, y, xOffset, ref treeFrame, out int floorY2, out _, out _))
-                                return;
-
-                            EmitLeaves(x, y, grassPosX + xOffset, floorY2);
+                            GetFoliageData(i, j, ref treeFrame, out _, out _);
+                            EmitLeaves_RegularTree(i, j, foliagePosX: i + 1);
 
                             byte tileColor = tile.TileColor;
-                            int variant = GetVariant(x, y);
+                            int variant = GetVariant(i, j);
 
                             Texture2D treeBranchTexture = TryGetTreeBranchAndRequestIfNotReady(Type, variant, tileColor);
-                            Vector2 position = new Vector2(x * 16, y * 16) - unscaledPosition.Floor() + zero + new Vector2(16f, 12f);
+                            Vector2 position = new Vector2(i * 16, j * 16) - unscaledPosition.Floor() + new Vector2(16f, 12f);
                             float windCycle = 0f;
 
-                            if (!wallBehind)
-                                windCycle = Main.instance.TilesRenderer.GetWindCycle(x, y, treeWindCounter);
+                            if (tile.WallType == WallID.None)
+                                windCycle = Main.instance.TilesRenderer.GetWindCycle(i, j, treeWindCounter);
 
                             if (windCycle > 0f)
                                 position.X += windCycle;
 
                             position.X += Math.Abs(windCycle) * 2f;
-                            Color color = Lighting.GetColor(x, y);
+                            Color color = Lighting.GetColor(i, j);
 
                             if (tile.IsTileFullbright)
                                 color = Color.White;
@@ -1129,28 +1062,24 @@ namespace Macrocosm.Common.Bases.Tiles
 
                     case 66:
                         {
-                            int grassPosX = x;
-                            int xOffset = -1;
-                            if (!GetTreeFoliageData(x, y, xOffset, ref treeFrame, out int floorY, out _, out _))
-                                return;
-
-                            EmitLeaves(x, y, grassPosX + xOffset, floorY);
+                            GetFoliageData(i, j, ref treeFrame, out _, out _);
+                            EmitLeaves_RegularTree(i, j, foliagePosX: i - 1);
 
                             byte tileColor = tile.TileColor;
-                            int variant = GetVariant(x, y);
+                            int variant = GetVariant(i, j);
 
                             Texture2D treeBranchTexture = TryGetTreeBranchAndRequestIfNotReady(Type, variant, tileColor);
-                            Vector2 position = new Vector2(x * 16, y * 16) - unscaledPosition.Floor() + zero + new Vector2(0f, 18f);
+                            Vector2 position = new Vector2(i * 16, j * 16) - unscaledPosition.Floor() + new Vector2(0f, 18f);
                             float windCycle = 0f;
 
-                            if (!wallBehind)
-                                windCycle = Main.instance.TilesRenderer.GetWindCycle(x, y, treeWindCounter);
+                            if (tile.WallType == WallID.None)
+                                windCycle = Main.instance.TilesRenderer.GetWindCycle(i, j, treeWindCounter);
 
                             if (windCycle < 0f)
                                 position.X += windCycle;
 
                             position.X -= Math.Abs(windCycle) * 2f;
-                            Color color = Lighting.GetColor(x, y);
+                            Color color = Lighting.GetColor(i, j);
 
                             if (tile.IsTileFullbright)
                                 color = Color.White;
@@ -1160,88 +1089,117 @@ namespace Macrocosm.Common.Bases.Tiles
                         }
                 }
             }
+            else if (DrawingMode == TreeCategory.Palm)
+            {
+                int treeFrame = tile.TileFrameX switch
+                {
+                    110 => 1,
+                    132 => 2,
+                    _ => 0,
+                };
+
+                GetFoliageData(i, j, ref treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight);
+
+                byte tileColor = tile.TileColor;
+                int variant = GetVariant(i, j);
+
+                Texture2D treeTopTexture = TryGetTreeTopAndRequestIfNotReady(Type, variant, tileColor);
+                Vector2 position = new(i * 16 - (int)unscaledPosition.X - 42 + Main.tile[i, j].TileFrameY + topTextureFrameWidth / 2, j * 16 - (int)unscaledPosition.Y);
+                float windCycle = 0f;
+                if (tile.WallType == WallID.None)
+                    windCycle = Main.instance.TilesRenderer.GetWindCycle(i, j, treeWindCounter);
+
+                position.X += windCycle * 2f;
+                position.Y += Math.Abs(windCycle) * 2f;
+
+                Color color = Lighting.GetColor(i, j);
+                if (tile.IsTileFullbright)
+                    color = Color.White;
+
+                Rectangle frame = new(treeFrame * (topTextureFrameWidth + 2), 0, topTextureFrameWidth, topTextureFrameHeight);
+                spriteBatch.Draw(treeTopTexture, position, frame, color, windCycle * topsWindFactor, new Vector2(topTextureFrameWidth / 2, topTextureFrameHeight), 1f, SpriteEffects.None, 0f);
+            }
+        }
+        #endregion
+
+        #region Particles
+
+        /// <summary> 
+        /// Used for emitting leaves and other particles. 
+        /// <br/> Runs on ALL tiles, when game is active and not paused, only on non-<see cref="TreeCategory.Tree"/> types. 
+        /// <br/> Defaults to <see langword="false"/>. 
+        /// </summary>
+        public virtual bool CanEmitLeaves(int i, int j, Tile tile, short tileFrameX, short tileFrameY, Color tileLight, bool visible, int leafFrequency, UnifiedRandom rand, out Vector2 offset, out Vector2? velocityOverride, out float? scaleOverride)
+        {
+            offset = Vector2.Zero;
+            velocityOverride = null;
+            scaleOverride = null;
+            return FramingMode == TreeCategory.Tree && DrawingMode == TreeCategory.Tree; // Regular trees can emit by default, under custom logic. 
         }
 
-        protected bool GetTreeFoliageData(int i, int j, int xOffset, ref int treeFrame, out int floorY, out int topTextureFrameWidth, out int topTextureFrameHeight)
+        public override void EmitParticles(int i, int j, Tile tile, short tileFrameX, short tileFrameY, Color tileLight, bool visible)
         {
-            GetTopTextureFrame(i, j, ref treeFrame, out topTextureFrameWidth, out topTextureFrameHeight);
-
-            int x = i + xOffset;
-            floorY = j;
-            return true;
-        }
-
-        public virtual void EmitLeaves(int tilePosX, int tilePosY, int grassPosX, int grassPosY)
-        {
-            int leaf = TreeLeaf;
-            if (leaf < 0)
+            if (ShouldEmitDefaultLeaves(i, j)) // Regular trees handled by foliage renderer
                 return;
 
-            int leafFrequency = TileRendering.TreeLeafFrequency;
-            bool isActiveAndNotPaused = !Main.gamePaused && Main.instance.IsActive;
-            UnifiedRandom rand = TileRendering.TileRendererRandom;
-
-            if (!isActiveAndNotPaused)
-                return;
-
-            Tile tile = Main.tile[tilePosX, tilePosY];
             if (tile.LiquidAmount > 0)
                 return;
 
-            if (!WorldGen.DoesWindBlowAtThisHeight(tilePosY))
+            int leafFrequency = TileRendering.TreeLeafFrequency;
+            if (!WorldGen.DoesWindBlowAtThisHeight(j))
                 leafFrequency = 10000;
 
-            bool onGrassPosX = tilePosX - grassPosX != 0;
-            if (onGrassPosX)
+            if (CanEmitLeaves(i, j, tile, tileFrameX, tileFrameY, tileLight, visible, leafFrequency, TileRendering.TileRendererRandom, out Vector2 offset, out Vector2? velocityOverride, out float? scaleOverride))
+            {
+                Vector2 position = new Vector2(i * 16 + 8, j * 16 + 8) + offset;
+                Vector2 velocity = velocityOverride ?? Terraria.Utils.RandomVector2(Main.rand, -2f, 2f);
+                float scale = scaleOverride ?? 0.7f + Main.rand.NextFloat() * 0.6f;
+                EmitLeaf(position, velocity, scale, tile.TileColor);
+            }
+        }
+
+        protected virtual void EmitLeaf(Vector2 position, Vector2 velocity, float scale, byte tileColor)
+        {
+            Gore gore = Gore.NewGoreDirect(new EntitySource_Misc(""), position, velocity, TreeLeaf, scale);
+            gore.Frame.CurrentColumn = tileColor;
+        }
+
+        protected bool ShouldEmitDefaultLeaves(int i, int j) => FramingMode == TreeCategory.Tree && DrawingMode == TreeCategory.Tree && TreeLeaf >= 0;
+        private void EmitLeaves_RegularTree(int i, int j, int foliagePosX = 0)
+        {
+            if (!ShouldEmitDefaultLeaves(i, j))
+                return;
+
+            Tile tile = Main.tile[i, j];
+            if (!Main.instance.IsActive || Main.gamePaused || tile.LiquidAmount > 0)
+                return;
+
+            int leafFrequency = TileRendering.TreeLeafFrequency;
+            UnifiedRandom rand = TileRendering.TileRendererRandom;
+
+            if (!WorldGen.DoesWindBlowAtThisHeight(j))
+                leafFrequency = 10000;
+
+            bool notCentered = i - foliagePosX != 0;
+            if (notCentered)
                 leafFrequency *= 3;
 
             if (!rand.NextBool(leafFrequency))
                 return;
 
-            Vector2 position = new(tilePosX * 16 + 8, tilePosY * 16 + 8);
-            if (onGrassPosX)
+            Vector2 position = new(i * 16 + 8, j * 16 + 8);
+
+            if (notCentered)
             {
-                int offset = tilePosX - grassPosX;
+                int offset = i - foliagePosX;
                 position.X += offset * 12;
-                int windPushPowerY = 0;
-                if (tile.TileFrameY == 220)
-                {
-                    windPushPowerY = 1;
-                }
-                else if (tile.TileFrameY == 242)
-                {
-                    windPushPowerY = 2;
-                }
-                if (tile.TileFrameX == 66)
-                {
-                    switch (windPushPowerY)
-                    {
-                        case 0:
-                            position += new Vector2(0f, -6f);
-                            break;
-                        case 1:
-                            position += new Vector2(0f, -6f);
-                            break;
-                        case 2:
-                            position += new Vector2(0f, 8f);
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (windPushPowerY)
-                    {
-                        case 0:
-                            position += new Vector2(0f, 4f);
-                            break;
-                        case 1:
-                            position += new Vector2(2f, -6f);
-                            break;
-                        case 2:
-                            position += new Vector2(6f, -6f);
-                            break;
-                    }
-                }
+                position += tile.TileFrameX == 66 
+                    ? tile.TileFrameY == 242  ? new Vector2(0, -6) : new Vector2(0, 8)
+                    : tile.TileFrameY switch {
+                        220 => new Vector2(2f, -6f),
+                        242 => new Vector2(6f, -6f),
+                        _ => new Vector2(0f, 4f)
+                    };
             }
             else
             {
@@ -1250,9 +1208,12 @@ namespace Macrocosm.Common.Bases.Tiles
 
             if (!WorldGen.SolidTile(position.ToTileCoordinates()))
             {
-                Gore.NewGoreDirect(new EntitySource_Misc(""), position, Terraria.Utils.RandomVector2(Main.rand, -2, 2), leaf, 0.7f + Main.rand.NextFloat() * 0.6f).Frame.CurrentColumn = Main.tile[tilePosX, tilePosY].TileColor;
+                Vector2 velocity = Terraria.Utils.RandomVector2(Main.rand, -2f, 2f);
+                float scale = 0.7f + Main.rand.NextFloat() * 0.6f;
+                EmitLeaf(position, velocity, scale, tile.TileColor);
             }
         }
+
         #endregion
     }
 }

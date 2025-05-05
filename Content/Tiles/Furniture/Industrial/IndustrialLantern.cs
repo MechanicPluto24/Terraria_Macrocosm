@@ -74,9 +74,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         // Workaround for platform hanging, alternates don't work currently
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
-            Point16 topLeft = TileObjectData.TopLeft(i, j);
-            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
-                offsetY -= 8;
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
