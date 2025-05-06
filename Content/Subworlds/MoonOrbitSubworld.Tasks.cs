@@ -5,6 +5,7 @@ using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Walls;
 using Macrocosm.Content.WorldGeneration.Structures;
+using Macrocosm.Content.WorldGeneration.Structures.Orbit.Moon;
 using Microsoft.Xna.Framework;
 using System;
 using System.Threading.Tasks;
@@ -19,14 +20,18 @@ namespace Macrocosm.Content.Subworlds
 {
     public partial class MoonOrbitSubworld
     {
-        public StructureMap OrbitStructureMap { get; private set; } = new();
+        public StructureMap gen_StructureMap;
+
+        [Task]
+        private void PrepareTask(GenerationProgress progress)
+        {
+            gen_StructureMap = new();
+        }
 
         [Task]
         private void PlaceSpawn(GenerationProgress progress)
         {
-            Structure module = new BaseSpaceStationModule();
-            int x = Main.maxTilesX / 2;
-            int y = Main.maxTilesY / 2;
+            Structure module = Structure.Get<BaseSpaceStationModule>();
             Point16 origin = new(Main.spawnTileX + module.Size.X / 2, Main.spawnTileY);
             module.Place(origin, null);
         }
@@ -71,7 +76,7 @@ namespace Macrocosm.Content.Subworlds
                             );
                         }
 
-                        OrbitStructureMap.AddProtectedStructure(new Rectangle(x - 10, y - 10, x + 10, y + 10), padding: 1);
+                        gen_StructureMap.AddProtectedStructure(new Rectangle(x - 10, y - 10, x + 10, y + 10), padding: 1);
                     }
                 }
             }
@@ -82,6 +87,40 @@ namespace Macrocosm.Content.Subworlds
             GenerateOre(TileType<Tiles.Ores.SeleniteOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
             GenerateOre(TileType<Tiles.Ores.DianiteOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
             GenerateOre(TileType<Tiles.Ores.ChandriumOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
+
+            //The cool stuff
+            for (int x = 50; x < Main.maxTilesX - 50; x++)
+            {
+                for (int y = 50; y < Main.maxTilesY - 50; y++)
+                {
+                    if (WorldGen.genRand.NextBool(50000) && Math.Abs(Main.spawnTileX - x) > 200)
+                    {
+                        Structure structure = GetACommonStructure();
+                        if (gen_StructureMap.CanPlace(new Rectangle(x - 10, y - 10, structure.Size.X + 10, structure.Size.Y + 10)))
+                        {
+                            structure.Place(new(x, y), gen_StructureMap);
+                        }
+                    }
+                }
+
+            }
+
+        }
+        private Structure GetACommonStructure()
+        {
+            int random = WorldGen.genRand.Next(0, 8);
+            Structure structure = random switch
+            {
+                1 => Structure.Get<LunarRemnant1>(),
+                2 => Structure.Get<LuminiteOrbitVein4>(),
+                3 => Structure.Get<LuminiteOrbitVein3>(),
+                4 => Structure.Get<LuminiteOrbitVein2>(),
+                5 => Structure.Get<Satellite1>(),
+                6 => Structure.Get<ManmadePod1>(),
+                7 => Structure.Get<LunarianCameoPod>(),
+                _ => Structure.Get<LuminiteVeinOrbit1>(),
+            };
+            return structure;
         }
     }
 }
