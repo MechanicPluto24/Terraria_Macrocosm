@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
@@ -84,7 +85,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             for (int n = 1; n < trailCount; n++)
             {
                 Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * distanceMult;
-                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.55f - (float)n / trailCount), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+
+                Color glowColor = new Color(165, 146, 90, 0) * (((float)trailCount - n) / trailCount) * 0.45f * (1f - Projectile.alpha / 255f);
+                Main.EntitySpriteDraw(TextureAssets.Extra[ExtrasID.SharpTears].Value, trailPosition - Main.screenPosition, null, glowColor, Projectile.rotation, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+                
+                Color trailColor = Color.White * (0.55f - (float)n / trailCount);
+                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, trailColor, Projectile.rotation, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
             }
 
             Main.spriteBatch.End();

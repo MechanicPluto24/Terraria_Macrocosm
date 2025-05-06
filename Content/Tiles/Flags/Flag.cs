@@ -69,6 +69,7 @@ namespace Macrocosm.Content.Tiles.Flags
             // TOOD: Open UI
 
             testing_globalFlagStyle++;
+            testing_globalFlagStyle %= PatternManager.GetAll(context: "FlagTile").Count();
 
             return true;
         }
@@ -142,9 +143,9 @@ namespace Macrocosm.Content.Tiles.Flags
             spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
 
             Pattern[] patterns = PatternManager.GetAll(context: "FlagTile").ToArray();
-            if (patterns.Length > 0 && testing_globalFlagStyle > 0 && testing_globalFlagStyle < patterns.Length)
+            if (patterns.Length > 0)
             {
-                var pattern = patterns[testing_globalFlagStyle % patterns.Length];
+                var pattern = patterns[testing_globalFlagStyle];
                 pattern.Apply();
             }
 

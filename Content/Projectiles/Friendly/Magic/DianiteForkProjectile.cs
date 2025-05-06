@@ -271,7 +271,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = TextureAssets.Projectile[Type].Value;
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
+            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle6").Value;
             Vector2 origin = Projectile.Size / 2f;
 
             state.SaveState(Main.spriteBatch);

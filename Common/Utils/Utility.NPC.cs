@@ -119,6 +119,39 @@ namespace Macrocosm.Common.Utils
             npc.velocity = move;
         }
 
+        /// <summary>
+        /// Finds the closest valid NPC within range. 
+        /// </summary>
+        /// <param name="start">The origin point.</param>
+        /// <param name="maxRange">Maximum range in coords.</param>
+        /// <param name="exclude">Optional list of NPCs to ignore. If non-null, the chosen NPC will be marked as used.</param>
+        public static int FindNPC(Vector2 start, float maxRange, bool[] exclude = null)
+        {
+            int target = -1;
+            float maxRangeSq = maxRange * maxRange;
+            float bestDistSq = maxRangeSq;
+
+            for (int i = 0; i < Main.maxNPCs; i++)
+            {
+                NPC npc = Main.npc[i];
+
+                if (npc.CanBeChasedBy() && (exclude == null || !exclude[i]))
+                {
+                    float distSq = Vector2.DistanceSquared(start, npc.Center);
+                    if (distSq <= bestDistSq && Collision.CanHitLine(start, 0, 0, npc.Center, 0, 0))
+                    {
+                        target = i;
+                        bestDistSq = distSq;
+                    }
+                }
+            }
+
+            if (exclude != null && target != -1)
+                exclude[target] = true;
+
+            return target;
+        }
+
         public static int CountNPCs(int type)
         {
             int count = 0;

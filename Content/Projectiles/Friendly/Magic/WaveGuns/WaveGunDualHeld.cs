@@ -75,22 +75,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                 if (AI_Timer % AI_FireRate == 0)
                 {
+                    float spreadAngle = MathHelper.Pi / 64f;
+                    Vector2 velocity = Vector2.Normalize(Projectile.velocity.RotatedByRandom(spreadAngle)) * (currentItem.shootSpeed / ContentSamples.ProjectilesByType[ModContent.ProjectileType<WaveGunBlueBolt>()].extraUpdates);
                     Vector2 position = Projectile.Center - Projectile.velocity * 5;
-                    Vector2 velocity = Vector2.Normalize(Projectile.velocity) * (currentItem.shootSpeed / ContentSamples.ProjectilesByType[ModContent.ProjectileType<WaveGunEnergyBolt>()].extraUpdates);
 
                     if (AI_ShotCount % 2 == 0)
                     {
                         if (ClientConfig.Instance.GunRecoilEffects)
                             redRotation += 0.3f;
 
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Red);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunRedBolt>(), (int)(damage), knockback, Projectile.owner);
                     }
                     else
                     {
                         if (ClientConfig.Instance.GunRecoilEffects)
                             blueRotation += 0.3f;
 
-                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Blue);
+                        Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunBlueBolt>(), (int)(damage), knockback, Projectile.owner);
                     }
 
                     if (!Player.CheckMana(currentItem.mana, pay: true))

@@ -223,9 +223,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             var shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
                 .UseProjectionMatrix(doUse: true)
                 .UseSaturation(-2.4f)
-                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
-                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
+                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutMask"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "RocketExhaustTrail1"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "RocketExhaustTrail2"));
 
             shader.Apply();
 

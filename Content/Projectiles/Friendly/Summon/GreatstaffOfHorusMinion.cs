@@ -330,7 +330,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star5");
+            glow ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Star5");
             float opacity = 1f;
             Main.EntitySpriteDraw(glow.Value, Projectile.Center - Main.screenPosition, null, new Color(255, 170, 142, 255) * opacity, Projectile.rotation, glow.Size() / 2, Projectile.scale * Main.rand.NextFloat(0.19f, 0.21f), SpriteEffects.None, 0f);
             if ((-(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbitY) >= 0f)
