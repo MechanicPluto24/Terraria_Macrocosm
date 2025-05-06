@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class PhantasmalSkullSpawnEffect : Particle
     {
-        public override string Texture => Macrocosm.TextureEffectsPath + "Circle3";
+        public override string Texture => Macrocosm.FancyTexturesPath + "Circle3";
 
         private float defScale;
         private float actualScale;

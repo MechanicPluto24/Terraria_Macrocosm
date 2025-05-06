@@ -37,9 +37,6 @@ namespace Macrocosm.Common.Config
         [DefaultValue(true)]
         public bool DisplayGravityInGs { get; set; }
 
-        //[Header("$Mods.Macrocosm.Configs.ClientConfig.GraphicsHeader")]
-        // [DefaultValue(false)] public bool HighResolutionEffects { get; set; }
-
         /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
         public event EventHandler OnConfigChanged;
         public override void OnChanged() => OnConfigChanged?.Invoke(this, EventArgs.Empty);

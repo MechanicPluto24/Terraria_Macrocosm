@@ -265,11 +265,11 @@ namespace Macrocosm.Content.Skies.Moon
         private void DrawDemonSunEffects(SpriteBatch spriteBatch, CelestialBody Sun)
         {
             float intensity = Subworlds.Moon.Instance.DemonSunVisualIntensity;
-            var flare = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3").Value;
-            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1").Value;
-            var scorch2 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2").Value;
+            var flare = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Flare3").Value;
+            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch1").Value;
+            var scorch2 = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch2").Value;
             var sun = ModContent.Request<Texture2D>(Path + "DemonSunBack").Value;
-            var beam = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scratch2").Value;
+            var beam = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scratch2").Value;
             float pulse = Utility.PositiveSineWave(450, MathF.PI / 2);
             spriteBatch.Draw(sun, Sun.Center, null, new Color(255, 255, 255, 0) * intensity, MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), sun.Size() / 2f, (1f) * intensity, SpriteEffects.None, 0);
 

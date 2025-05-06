@@ -5,6 +5,7 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using System;
 using Terraria;
 using Terraria.Audio;
@@ -15,6 +16,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class StarDestroyerStar : ModProjectile
     {
+        private static Asset<Texture2D> fireball;
+
         public enum StarVariant
         {
             /// <summary> Blue stars penetrate enemies </summary>
@@ -175,31 +178,45 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
+            Texture2D aura = TextureAssets.Extra[ExtrasID.FallingStar].Value;
             Texture2D tex = TextureAssets.Projectile[Type].Value;
+            fireball ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Fireball");
+
+            Vector2 spinningPoint = new(0f, -8f);
             Rectangle sourceRect = tex.Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
-            Vector2 origin = tex.Size() / 2f;
+            Vector2 drawPosition = Projectile.Center + Projectile.velocity - Projectile.velocity * 0.5f;
+            Vector2 offset = new(0f, Projectile.gfxOffY);
+            float rotation = (float)Main.timeForVisualEffects / 40f;
+            float angle = Projectile.velocity.ToRotation();
+
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
-            trail?.Draw(Projectile, Projectile.Size / 2f);
-            Main.spriteBatch.End();
-            Main.spriteBatch.Begin(state);
 
+            trail?.Draw(Projectile, Projectile.Size / 2f);
+
+            Vector2 origin = new(fireball.Width() / 2f, 36f);
+            Color auraColor = color * Projectile.Opacity * 0.8f;
+            float scale = 1.6f;
+            Main.EntitySpriteDraw(fireball.Value, Projectile.Center - Main.screenPosition, null, auraColor, angle + (float)Math.PI / 2f, origin, scale, SpriteEffects.None);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+
+            auraColor = color.WithAlpha(0) * Projectile.Opacity * 0.6f;
+            scale = 0.8f;
+
+            origin = tex.Size() / 2f;
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (Color.White) * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
             Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (color) * 0.4f * Projectile.Opacity, Projectile.rotation + MathHelper.Pi, origin, Projectile.scale * 1.6f, SpriteEffects.None, 0);
 
-            Vector2 spinningPoint = new Vector2(0f, -8f);
-            Texture2D aura = TextureAssets.Extra[91].Value;
-            Vector2 auraOrigin = new Vector2((float)aura.Width / 2f, 10f);
-            Vector2 drawPosition = Projectile.Center + Projectile.velocity - Projectile.velocity * 0.5f;
-            Vector2 offset = new Vector2(0f, Projectile.gfxOffY);
-            float rotation = (float)Main.timeForVisualEffects / 40f;
-            float scale = 0f;
-            Color auraColor = (color * 0.4f).WithAlpha(0) * Projectile.Opacity * 0.6f;
-            float angle = Projectile.velocity.ToRotation();
-            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.5f + scale, SpriteEffects.None);
-            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation + (float)Math.PI * 2f / 3f), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.1f + scale, SpriteEffects.None);
-            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation + 4.1887903f), null, auraColor, angle + (float)Math.PI / 2f, auraOrigin, 1.3f + scale, SpriteEffects.None);
+            origin = new(aura.Width / 2f, 10f);
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation), null, auraColor, angle + (float)Math.PI / 2f, origin, scale + 0.4f, SpriteEffects.None);
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation + (float)Math.PI * 2f / 3f), null, auraColor, angle + (float)Math.PI / 2f, origin, scale, SpriteEffects.None);
+            Main.EntitySpriteDraw(aura, drawPosition - Main.screenPosition + offset + spinningPoint.RotatedBy((float)Math.PI * 2f * rotation + 4.1887903f), null, auraColor, angle + (float)Math.PI / 2f, origin, scale + 0.2f, SpriteEffects.None);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
 
             return false;
         }

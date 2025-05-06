@@ -21,20 +21,20 @@ namespace Macrocosm.Content.Trails
         public override MiscShaderData TrailShader => new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
             .UseProjectionMatrix(doUse: true)
             .UseSaturation(Saturation)
-            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark6"))
-            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark6"));
+            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutMask"))
+            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Spark6"))
+            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Spark6"));
 
-        public override float Saturation => -6f;
+        public override float Saturation => -4f;
 
         public override Color TrailColors(float progressOnStrip)
         {
-            return Color.Lerp(Color.Transparent, Color, 1f - progressOnStrip);
+            return Color.Lerp(Color * 0.1f, Color, progressOnStrip);
         }
 
         public override float TrailWidths(float progressOnStrip)
         {
-            return 80f * (1f - MathF.Pow(progressOnStrip - 1, 2));
+            return 50f * (1f - MathF.Pow(progressOnStrip - 1, 2));
         }
     }
 }
