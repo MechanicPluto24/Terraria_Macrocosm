@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class IlmeniteRegularProjectile : ModProjectile
+    public class IlmeniteProjectile : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 

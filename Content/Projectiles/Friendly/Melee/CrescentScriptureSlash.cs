@@ -19,8 +19,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 1;
-            ProjectileID.Sets.TrailCacheLength[Type] = 20;
-            ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
         public ref float Speed => ref Projectile.ai[0];
@@ -93,9 +91,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 30;
-            ProjectileID.Sets.TrailingMode[Type] = 3;
-
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
@@ -103,33 +98,56 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
 
-            Vector2 positionOffset = (Projectile.velocity.SafeNormalize(Vector2.UnitY)) * -100f;
-            Vector2 position = (Projectile.Center + positionOffset) - Main.screenPosition;
-            Texture2D texture = TextureAssets.Projectile[Type].Value;
-            Vector2 origin = texture.Frame(1, 4).Size() / 2f;
-            float scale = Projectile.scale * 1.2f;
-            SpriteEffects spriteEffects = ((!(Projectile.velocity.X >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
-
-            Color color = new Color(94, 229, 163) * Projectile.Opacity;
-            Color backDarkColor = color * 0.8f * Projectile.Opacity;
-            Color middleMediumColor = color;
-            Color frontLightColor = new Color(146, 246, 216) * Projectile.Opacity;
-            Color secondaryColor = new Color(164, 101, 124, 160) * Projectile.Opacity;
-
-            float rotation = Projectile.rotation + MathHelper.Pi / 6 * Projectile.direction;
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), secondaryColor, rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -3f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), backDarkColor, rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -2f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), middleMediumColor, rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
-            Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), frontLightColor, rotation + Projectile.spriteDirection * MathHelper.PiOver4 * 0f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
-
-            // This draws some sparkles around the circumference of the swing.
-            for (float i = 0f; i < 14f; i += 1f)
+            for(int i = 45; i >= 0; i--)
             {
-                float edgeRotation = rotation + Projectile.spriteDirection * i * (MathHelper.Pi * -2f) * 0.03f + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4 * 1.6f) * Projectile.spriteDirection;
-                Vector2 drawPos = position + edgeRotation.ToRotationVector2() * ((float)texture.Width * 0.5f - 1f) * scale;
-                Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos, color.WithOpacity(Projectile.Opacity) * (i / 14f), color, progress, 0f, 0.5f, 0.5f, 1f, edgeRotation, new Vector2(0f, Utils.Remap(progress, 0f, 1f, 2f, 0f)) * scale, Vector2.One * scale);
-            }
+                float trailProgress = i == 0 ? 1f : MathHelper.Clamp(1f - (i / 45f), 0f, 1f) * 0.08f;
+                Vector2 positionOffset = (Projectile.velocity.SafeNormalize(Vector2.UnitY)) * -100f ;
+                Vector2 position = (Projectile.Center + positionOffset) - new Vector2(i * 2, 0).RotatedBy(Projectile.velocity.ToRotation()) - Main.screenPosition;
+                Texture2D texture = TextureAssets.Projectile[Type].Value;
+                Vector2 origin = texture.Frame(1, 4).Size() / 2f;
+                float scale = Projectile.scale * 1.2f + i * 0.003f;
+                if (i % 2 == 1) scale *= 1.1f;
+                SpriteEffects spriteEffects = ((!(Projectile.velocity.X >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
 
+                Color color = new(94, 229, 163, 230);
+                Color backDarkColor = color * 0.8f;
+                Color middleMediumColor = color ;
+                Color frontLightColor = new(146, 246, 216, 230);
+                Color secondaryColor = new(240, 146, 180, 230);
+
+                if (i > 1)
+                {
+                    color = color.WithOpacity(0.4f);
+                    frontLightColor = frontLightColor.WithOpacity(0.4f);
+                    secondaryColor = secondaryColor.WithOpacity(0.4f);
+                }
+
+                if (i % 2 == 1) trailProgress *= 0.5f;
+
+                color *= trailProgress * Projectile.Opacity;
+                backDarkColor *= trailProgress * Projectile.Opacity;
+                middleMediumColor *= trailProgress * Projectile.Opacity;
+                frontLightColor *= trailProgress * Projectile.Opacity;
+                secondaryColor *= trailProgress * Projectile.Opacity;
+
+                float rotation = Projectile.rotation + MathHelper.Pi / 6 * Projectile.direction;
+                Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), secondaryColor, rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -3f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), backDarkColor, rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -2f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), middleMediumColor, rotation + Projectile.spriteDirection * MathHelper.PiOver4 * -1f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
+                Main.EntitySpriteDraw(texture, position, texture.Frame(1, 4, frameY: 2), frontLightColor, rotation + Projectile.spriteDirection * MathHelper.PiOver4 * 0f * (1f - progress), origin, scale * 1.05f, spriteEffects, 0f);
+
+                // This draws some sparkles around the circumference of the swing.
+                if(i == 0)
+                {
+                    for (float f = 0f; f < 14f; f += 1f)
+                {
+                    float edgeRotation = rotation + Projectile.spriteDirection * f * (MathHelper.Pi * -2f) * 0.03f + Utils.Remap(progress, 0f, 1f, 0f, MathHelper.PiOver4 * 1.6f) * Projectile.spriteDirection;
+                    Vector2 drawPos = position + edgeRotation.ToRotationVector2() * ((float)texture.Width * 0.5f - 1f) * scale;
+                    Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos, color.WithOpacity(Projectile.Opacity) * (f / 14f) * trailProgress, color, progress, 0f, 0.5f, 0.5f, 1f, edgeRotation, new Vector2(0f, Utils.Remap(progress, 0f, 1f, 2f, 0f)) * scale, Vector2.One * scale);
+                }
+                }
+            }
+           
             return false;
         }
 

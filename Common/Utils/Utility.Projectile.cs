@@ -218,7 +218,7 @@ namespace Macrocosm.Common.Utils
                 Main.spriteBatch.Begin(shader, state);
             }
 
-            Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, scale ?? proj.scale, effect, 0);
+            Main.EntitySpriteDraw(texture, position, sourceRect, proj.GetAlpha(lightColor), proj.rotation, origin, scale ?? proj.scale, effect, 0);
 
             if (shader is not null)
             {

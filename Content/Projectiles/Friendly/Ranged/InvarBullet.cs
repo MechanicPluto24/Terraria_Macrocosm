@@ -1,7 +1,9 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using System.Linq;
@@ -71,8 +73,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnHitNPCEffect(bool didRicochet, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            for (int i = 0; i < Main.rand.Next(10, 20); i++)
-                Dust.NewDustPerfect(Projectile.position, ModContent.DustType<InvarBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.2f, 0.3f), Scale: 2.4f);
+            for (int i = 0; i < 20; i++)
+                Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<InvarBits>(), new Vector2(10, 0).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(), Scale: 2f);
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.25f);
+                p.ScaleVelocity = new(0.01f);
+                p.Color = new Color(157, 125, 36).WithOpacity(0.35f);
+            });
 
             if (didRicochet)
                 SoundEngine.PlaySound(SFX.Ricochet with { Volume = 0.3f }, Projectile.position);
@@ -80,15 +90,23 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            for (int i = 0; i < Main.rand.Next(10, 20); i++)
-                Dust.NewDustPerfect(Projectile.position + Projectile.oldVelocity * 1.2f, ModContent.DustType<InvarBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.2f, 0.3f), Scale: 2.4f);
+            for (int i = 0; i < 20; i++)
+                Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<InvarBits>(), new Vector2(10, 0).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(), Scale: 2f);
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.15f);
+                p.ScaleVelocity = new(0.01f);
+                p.Color = new Color(157, 125, 36).WithOpacity(0.75f);
+            });
 
             return true;
         }
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(new Vector2(0, 40), 2.1f, 0.4f, new Color(121, 92, 18) * Projectile.Opacity, new Color(121, 92, 18, 0) * Projectile.Opacity);
+            Projectile.DrawMagicPixelTrail(new Vector2(0, 68), 2, 2,  new Color(121, 92, 18, 0) * Projectile.Opacity, new Color(121, 92, 18, 255) * Projectile.Opacity);
             return true;
         }
     }

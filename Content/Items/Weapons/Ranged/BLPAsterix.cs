@@ -1,6 +1,7 @@
 using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
@@ -12,12 +13,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class Copernicus : GunHeldProjectileItem
+    public class BLPAsterix : GunHeldProjectileItem
     {
         public override void SetStaticDefaults()
         {
-            ItemSets.ExplosivesShotDealDamageToOwner[Type] = false;
-            ItemSets.ExplosivesShotDealDamageToOwner_GetGoodWorld[Type] = true;
         }
 
         public override void SetDefaultsHeldProjectile()
@@ -34,7 +33,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.knockBack = 8f;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarity2>();
-            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
+            Item.shoot = ModContent.ProjectileType<BLPShot>();
             Item.autoReuse = true;
             Item.shootSpeed = 20f;
             Item.useAmmo = AmmoID.Bullet;
@@ -42,11 +41,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override GunHeldProjectileData GunHeldProjectileData => new()
         {
-            GunBarrelPosition = new Vector2(26f, 7f),
+            GunBarrelPosition = new Vector2(28f, 6f),
             CenterYOffset = 9f,
             MuzzleOffset = 45f,
-            Recoil = (6, 0.1f),
-            RecoilDiminish = 0.9f
+            Recoil = (4, 0.01f),
+            RecoilDiminish = 0.8f
         };
 
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
@@ -54,28 +53,24 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         public override bool? UseItem(Player player)
         {
             if (!Main.dedServ)
-                SoundEngine.PlaySound(SFX.AssaultRifle with { Volume = 0.7f }, player.position);
+                SoundEngine.PlaySound(SoundID.Item75 with { Volume = 0.7f }, player.position);
 
             return true;
         }
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
         {
-            var dummy = Item.Clone();
-            dummy.useAmmo = AmmoID.Rocket;
-
-            if (player.ItemUseCount(Type) % 5 == 0 && player.PickAmmo(dummy, out _, out float speed, out damage, out knockback, out _, dontConsume: false))
-            {
-                int projToShoot = Utility.GetRocketAmmoProjectileID(player, ItemID.RocketLauncher);
-                Projectile.NewProjectile(source, position + new Vector2(30, 8 * player.direction).RotatedBy(velocity.ToRotation()), velocity, projToShoot, damage, knockback, player.whoAmI);
-            }
-
             return true;
         }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position -= new Vector2(8 * player.direction, -2); // so bullets line up with the muzzle
+            type = Item.shoot;
+
+            position.Y += 2f;
+            position += Main.rand.NextVector2Circular(4, 4);
+
+            velocity = velocity.RotatedByRandom(0.05f);
         }
     }
 }

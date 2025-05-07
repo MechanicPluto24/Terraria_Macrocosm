@@ -1,7 +1,9 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -31,7 +33,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
 
-            Projectile.extraUpdates = 4;
+            Projectile.extraUpdates = 3;
         }
 
         public override void AI()
@@ -69,7 +71,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void OnKill(int timeLeft)
         {
             for (int i = 0; i < 40; i++)
-                Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<InvarBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.4f), Scale: 3f);
+                Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<InvarBits>(), new Vector2(10, 0).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(), Scale: 3f);
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.5f);
+                p.ScaleVelocity = new(0.01f);
+                p.Color = new Color(157, 125, 36).WithOpacity(0.5f);
+            });
         }
 
         private SpriteBatchState state;
@@ -81,10 +91,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             int trailCount = 60;
-            float distanceMult = 0.25f;
+            float distanceMult = 0.4f;
             for (int n = 5; n < trailCount; n++)
             {
-                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * distanceMult + Main.rand.NextVector2Circular(5, 5);
+                Vector2 trailPosition = Projectile.Center - new Vector2(10, 0).RotatedBy(Projectile.velocity.ToRotation()) * n * distanceMult + Main.rand.NextVector2Circular(5, 5);
                 Color glowColor = new Color(165, 146, 90, 255) * (((float)trailCount - n) / trailCount) * 0.45f * (1f - Projectile.alpha / 255f);
                 Main.EntitySpriteDraw(TextureAssets.Extra[ExtrasID.SharpTears].Value, trailPosition - Main.screenPosition, null, glowColor, Projectile.rotation, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, Projectile.scale * 1.2f, SpriteEffects.None, 0f);
 

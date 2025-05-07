@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-    public class InhibitorFieldParticle : Particle
+    public class StasisParticle : Particle
     {
         private static Asset<Texture2D> glow;
         public override int TrailCacheLength => 7;

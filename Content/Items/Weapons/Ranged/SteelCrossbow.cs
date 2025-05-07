@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.DefaultToBow(50, 145f, hasAutoReuse: true);
+            Item.DefaultToBow(50, 60f, hasAutoReuse: true);
             Item.width = 70;
             Item.height = 46;
 
