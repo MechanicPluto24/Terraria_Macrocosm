@@ -28,30 +28,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
         public override float ParticleFlashScale => 0.1f;
         public override int TrailLength => 100;
 
-
-        private readonly bool[] hitList = new bool[Main.maxNPCs];
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
             ParticleEffects(0.5f);
-
-            skipTrailUpdate = true;
-            Projectile.extraUpdates = 10;
-            Projectile.damage = (int)(Projectile.damage * 0.8f);
-            hitList[target.whoAmI] = true;
-            int targetIndex = Utility.FindNPC(Projectile.Center, maxRange: 600f, hitList);
-            if (targetIndex != -1)
-            {
-                Vector2 direction = (Main.npc[targetIndex].Center - Projectile.Center).SafeNormalize(Vector2.Zero) * spawnSpeed;
-                Projectile.velocity = direction;
-                Projectile.rotation = direction.ToRotation();
-
-                if (Main.netMode == NetmodeID.MultiplayerClient)
-                    Projectile.netUpdate = true;
-            }
-            else
-            {
-                FalseKill();
-            }
+            //skipTrailUpdate = true;
+            Projectile.damage = (int)(Projectile.damage * 0.9f);
         }
     }
 }

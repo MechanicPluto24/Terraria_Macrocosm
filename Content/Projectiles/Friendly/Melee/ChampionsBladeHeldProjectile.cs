@@ -59,10 +59,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnSpawn(IEntitySource source)
         {
-            blade = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as ChampionsBlade;
+            if(source != null)
+                blade = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as ChampionsBlade;
 
-            hitStacks = blade.HitStacks;
-            SwingDirection = blade.SwingDirection;
+            hitStacks = blade?.HitStacks ?? 5;
+            SwingDirection = blade?.SwingDirection ?? 1;
             Arc = Main.rand.NextFloat(MathHelper.PiOver2, MathHelper.TwoPi * 0.85f);
 
             Projectile.netUpdate = true;

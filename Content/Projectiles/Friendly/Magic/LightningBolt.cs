@@ -11,23 +11,24 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
+namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class WaveGunBlueBolt : ModProjectile
+    public class LightningBolt : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
-        public virtual int MaxPenetrate => 1;
-        public virtual bool UseLocalImmunity => false;
-        public virtual int LocalImmunityCooldown => 0;
 
-        public virtual Color BeamColor => new(75, 75, 255, 0);
-        public virtual Vector3 LightColor => new(0f, 0f, 1f);
+        public virtual int MaxPenetrate => 10;
+        public virtual bool UseLocalImmunity => true;
+        public virtual int LocalImmunityCooldown => -1;
 
-        public virtual int DustCount => 60;
-        public virtual int ParticleLightningCount => 12;
-        public virtual float ParticleLightningSpread => 2f;
-        public virtual float ParticleFlashScale => 0f;
-        public virtual int TrailLength => 75;
+        public virtual Color BeamColor => new(114, 185, 255, 0);
+        public virtual Vector3 LightColor => BeamColor.ToVector3();
+
+        public virtual int DustCount => 80;
+        public virtual int ParticleLightningCount => 32;
+        public virtual float ParticleLightningSpread => 3f;
+        public virtual float ParticleFlashScale => 0.1f;
+        public virtual int TrailLength => 100;
 
         public int AI_Timer
         {
@@ -45,7 +46,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             ProjectileID.Sets.TrailingMode[Type] = -1; // custom trail updates
         }
 
-
         public override void SetDefaults()
         {
             Projectile.width = 12;
@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Projectile.tileCollide = false;
             Projectile.ignoreWater = true;
             Projectile.timeLeft = 3600 * 5;
-            Projectile.extraUpdates = 5;
+            Projectile.extraUpdates = 10;
         }
 
         public override void AI()
@@ -81,7 +81,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                 Projectile.tileCollide = true;
 
             if (Projectile.numUpdates % 2 == 0)
-                Projectile.UpdateTrail(smoothAmount: skipTrailUpdate ? 0.01f : 0.65f);
+                Projectile.UpdateTrail(smoothAmount: skipTrailUpdate ? 0.01f : 0.25f);
 
             Lighting.AddLight(Projectile.Center, LightColor);
         }
@@ -97,13 +97,37 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Projectile.friendly = false;
             Projectile.tileCollide = false;
             Projectile.timeLeft = TrailLength;
-            Projectile.velocity = default;
             Projectile.damage = 0;
+            Projectile.velocity = default;
             ParticleEffects();
         }
 
         public override void OnKill(int timeLeft) { }
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) => ParticleEffects();
+
+        private readonly bool[] hitList = new bool[Main.maxNPCs];
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            ParticleEffects(0.5f);
+
+            skipTrailUpdate = true;
+            Projectile.extraUpdates = 20;
+            Projectile.damage = (int)(Projectile.damage * 0.8f);
+            hitList[target.whoAmI] = true;
+            int targetIndex = Utility.FindNPC(Projectile.Center, maxRange: 1200f, hitList);
+            if (targetIndex != -1)
+            {
+                Vector2 direction = (Main.npc[targetIndex].Center - Projectile.Center).SafeNormalize(Vector2.Zero) * spawnSpeed;
+                Projectile.velocity = direction;
+                Projectile.rotation = direction.ToRotation();
+
+                if (Main.netMode == NetmodeID.MultiplayerClient)
+                    Projectile.netUpdate = true;
+            }
+            else
+            {
+                FalseKill();
+            }
+        }
 
         public virtual void ParticleEffects(float scale = 1f)
         {
@@ -113,7 +137,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             for (int i = 0; i < dustCount; i++)
             {
                 Vector2 velocity = new Vector2(ParticleLightningSpread).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
-                Dust dust = Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity, ModContent.DustType<ElectricSparkDust>(), velocity, Scale: Main.rand.NextFloat(0.1f, 0.6f));
+                Dust dust = Dust.NewDustPerfect(Projectile.oldPosition + Projectile.Size / 2f + Projectile.oldVelocity, ModContent.DustType<ElectricSparkDust>(), velocity, Scale: Main.rand.NextFloat(0.1f, 0.6f));
                 dust.noGravity = false;
                 dust.color = BeamColor;
                 dust.alpha = Main.rand.Next(60);
@@ -151,7 +175,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             ProjectileID.Sets.TrailCacheLength[Type] = TrailLength;
-            for (int n = 0; n < 4; n++)
+            for (int n = 0; n < 6; n++)
             {
                 var positions = (Vector2[])Projectile.oldPos.Clone();
                 for (int i = 1; i < positions.Length; i++)
@@ -159,7 +183,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
                     if (positions[i] == default)
                         continue;
 
-                    positions[i] += Main.rand.NextVector2Unit() * Main.rand.NextFloat((Math.Abs(trail.Saturation) + n * 2)  * Utility.InverseLerp(0, 120, AI_Timer, clamped: true));
+                    positions[i] += Main.rand.NextVector2Unit(0.5f) * Main.rand.NextFloat(6 * Utility.InverseLerp(0, 120, AI_Timer, clamped: true));
                 }
 
                 int trailLength = TrailLength;
@@ -171,9 +195,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(state);
-
-            //Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + $"Trace{Main.rand.Next(2, 5).ToString()}").Value;
-            //Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, color, Projectile.velocity.ToRotation() + MathHelper.PiOver2, texture.Size() / 2f, Projectile.scale * 0.25f, SpriteEffects.None, 0f);
 
             return false;
         }

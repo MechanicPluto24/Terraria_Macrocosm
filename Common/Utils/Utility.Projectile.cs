@@ -199,7 +199,7 @@ namespace Macrocosm.Common.Utils
         /// <param name="lightColor"> Computed environment color </param>
         /// <param name="drawOffset"> Offset to draw from texture center at 0 rotation </param>
         /// <param name="texture"> Leave null to draw as entity with the loaded texture </param>
-        public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, Rectangle? frame = null, Effect shader = null)
+        public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, float? scale = null, Rectangle? frame = null, Effect shader = null)
         {
             texture ??= TextureAssets.Projectile[proj.type].Value;
 
@@ -218,7 +218,7 @@ namespace Macrocosm.Common.Utils
                 Main.spriteBatch.Begin(shader, state);
             }
 
-            Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0);
+            Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, scale ?? proj.scale, effect, 0);
 
             if (shader is not null)
             {
@@ -230,8 +230,8 @@ namespace Macrocosm.Common.Utils
         /// <summary>
         /// Helper to draw an animated projectile extra, such as a glowmask
         /// </summary>
-        public static void DrawAnimatedExtra(this Projectile proj, Texture2D texture, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
-            => proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), texture, frame);
+        public static void DrawAnimatedExtra(this Projectile proj, Texture2D texture, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, float? scale = null, Rectangle? frame = null)
+            => proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), texture, scale, frame);
 
 
         public static void DrawWhipLine(List<Vector2> list, Color color)

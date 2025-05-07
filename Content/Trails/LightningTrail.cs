@@ -9,13 +9,15 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Trails
 {
-    public class WaveGunBeamTrail : VertexTrail
+    public class LightningTrail : VertexTrail
     {
         public Color Color;
+        public float Width;
 
-        public WaveGunBeamTrail(Color color)
+        public LightningTrail(Color color, float width)
         {
             Color = color;
+            Width = width;
         }
 
         public override MiscShaderData TrailShader => new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
@@ -25,7 +27,7 @@ namespace Macrocosm.Content.Trails
             .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Spark6"))
             .UseImage2(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Spark6"));
 
-        public override float Saturation => -4f;
+        public override float Saturation => -2f;
 
         public override Color TrailColors(float progressOnStrip)
         {
@@ -34,7 +36,7 @@ namespace Macrocosm.Content.Trails
 
         public override float TrailWidths(float progressOnStrip)
         {
-            return 50f * (1f - MathF.Pow(progressOnStrip - 1, 2));
+            return Width * (1f - MathF.Pow(progressOnStrip - 1, 2));
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
         public override void SetDefaults()
         {
             NPC.width = 48;
-            NPC.height = 32;
+            NPC.height = 26;
             NPC.damage = 55;
             NPC.defense = 100;
             NPC.lifeMax = 1300;
