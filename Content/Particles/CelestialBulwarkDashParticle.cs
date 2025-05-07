@@ -8,7 +8,9 @@ using Macrocosm.Content.Items.Accessories;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
@@ -16,6 +18,7 @@ namespace Macrocosm.Content.Particles
     public class CelestialBulwarkDashParticle : Particle
     {
         private static Asset<Texture2D> circle;
+        private static Asset<Texture2D> fireball;
         public override string Texture => Macrocosm.FancyTexturesPath + "Slash1";
         public override int TrailCacheLength => 24;
 
@@ -56,6 +59,7 @@ namespace Macrocosm.Content.Particles
         {
             bool specialRainbow = false;
             circle ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle5");
+            fireball ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Fireball");
 
             if (blendStateOverride is not null)
             {
@@ -100,7 +104,7 @@ namespace Macrocosm.Content.Particles
 
                 Color color = scale < 0 ? baseColor * Progress * (1f - trailProgress) : baseColor * Progress;
 
-                Vector2 position = scale < 0 ? OldPositions[i] + new Vector2(0, 55).RotatedBy(OldRotations[i]) : Vector2.Lerp(OldPositions[i], Center, Progress * (1f - trailProgress));
+                Vector2 position = scale < 0 ? OldPositions[i] + new Vector2(0, 55).RotatedBy(OldRotations[i]) : OldPositions[i];
                 spriteBatch.Draw(TextureAsset.Value, position - screenPosition, null, color, OldRotations[i], TextureAsset.Size() / 2, scale, SpriteEffects.None, 0f);
 
                 #region Special code for Midnight Rainbow
@@ -112,8 +116,11 @@ namespace Macrocosm.Content.Particles
                 #endregion
             }
 
-            spriteBatch.Draw(TextureAsset.Value, Center - screenPosition, null, Color * Progress, Rotation, TextureAsset.Size() / 2, Scale, SpriteEffects.None, 0f);
-            spriteBatch.Draw(circle.Value, Center - screenPosition, null, Color.Lerp(Color.White, Color, 0.75f).WithOpacity(0.5f) * Progress, defRotation, circle.Size() / 2, Utility.QuadraticEaseIn(Progress) * 0.7f, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, null, Color * Progress, Rotation, TextureAsset.Size() / 2, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(circle.Value, Position - screenPosition, null, Color.Lerp(Color.White, Color, 0.75f).WithOpacity(0.5f) * Progress, defRotation, circle.Size() / 2, Utility.QuadraticEaseIn(Progress) * 0.7f, SpriteEffects.None, 0f);
+            
+            if(Player.velocity.LengthSquared() > 1f)
+            spriteBatch.Draw(fireball.Value, Position - new Vector2(100 * Utility.QuadraticEaseIn(Progress), 0).RotatedBy(Player.velocity.ToRotation()) - screenPosition, null, Color.Lerp(Color.White, Color, 0.9f).WithOpacity(0.75f) * Progress, defRotation, fireball.Size() / 2, Utility.QuadraticEaseIn(Progress) * 4.8f, SpriteEffects.FlipVertically, 0f);
 
             if (blendStateOverride is not null)
             {

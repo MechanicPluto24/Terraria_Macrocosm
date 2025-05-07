@@ -2,6 +2,7 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Sounds;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -146,12 +147,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void OnKill(int timeLeft)
         {
-            SoundEngine.PlaySound(SoundID.Item10, Projectile.position);
+            SoundEngine.PlaySound(SFX.LaserHit, Projectile.position);
 
             if (StarType is StarVariant.Blue)
             {
                 for (float i = 0f; i < 1.75f; i += 0.0125f)
-                    Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(6f), 0, color * 0.5f).noGravity = true;
+                    Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(6f), 0, color.WithAlpha(0) * 0.75f).noGravity = true;
 
                 for (int i = 0; i < 8; i++)
                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 2).RotatedByRandom(MathHelper.TwoPi), 17);
@@ -159,7 +160,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             else if (StarType is StarVariant.Yellow)
             {
                 for (float i = 0f; i < 3f; i += 0.0125f)
-                    Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(12f), 0, color * 0.5f).noGravity = true;
+                    Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(12f), 0, color.WithAlpha(0) * 0.75f).noGravity = true;
 
                 for (int i = 0; i < 24; i++)
                     Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 4).RotatedByRandom(MathHelper.TwoPi), 16);

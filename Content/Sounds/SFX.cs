@@ -22,6 +22,8 @@ namespace Macrocosm.Content.Sounds
         public static SoundStyle ZombieEngineerSprint { get; } = new(SFXPath + "ZombieEngineerSprint");
 
         // Ranged Weapons
+        public static SoundStyle LaserShoot { get; } = new(SFXPath + "LaserShoot");
+        public static SoundStyle LaserHit { get; } = new(SFXPath + "LaserHit");
         public static SoundStyle AssaultRifle { get; } = new(SFXPath + "AssaultRifle_", 4);
         public static SoundStyle DesertEagleShot { get; } = new(SFXPath + "DesertEagleShot");
         public static SoundStyle Ricochet { get; } = new(SFXPath + "Ricochet_", 6);

@@ -80,17 +80,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            int trailCount = 80;
+            int trailCount = 60;
             float distanceMult = 0.25f;
-            for (int n = 1; n < trailCount; n++)
+            for (int n = 5; n < trailCount; n++)
             {
-                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * distanceMult;
+                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * distanceMult + Main.rand.NextVector2Circular(5, 5);
+                Color glowColor = new Color(165, 146, 90, 255) * (((float)trailCount - n) / trailCount) * 0.45f * (1f - Projectile.alpha / 255f);
+                Main.EntitySpriteDraw(TextureAssets.Extra[ExtrasID.SharpTears].Value, trailPosition - Main.screenPosition, null, glowColor, Projectile.rotation, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, Projectile.scale * 1.2f, SpriteEffects.None, 0f);
 
-                Color glowColor = new Color(165, 146, 90, 0) * (((float)trailCount - n) / trailCount) * 0.45f * (1f - Projectile.alpha / 255f);
-                Main.EntitySpriteDraw(TextureAssets.Extra[ExtrasID.SharpTears].Value, trailPosition - Main.screenPosition, null, glowColor, Projectile.rotation, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
-                
-                Color trailColor = Color.White * (0.55f - (float)n / trailCount);
-                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, trailColor, Projectile.rotation, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
             }
 
             Main.spriteBatch.End();
@@ -100,10 +97,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         }
 
         public override void PostDraw(Color lightColor)
-        {
+        { 
         }
 
         public override Color? GetAlpha(Color lightColor)
-            => new Color(255, 255, 255, 200);
+            => new Color(255, 255, 255, 127);
     }
 }

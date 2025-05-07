@@ -15,9 +15,9 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaultsHeldProjectile()
         {
-            Item.DefaultToBow(30, 25f, hasAutoReuse: true);
+            Item.DefaultToBow(50, 145f, hasAutoReuse: true);
             Item.width = 70;
-            Item.height = 16;
+            Item.height = 46;
 
             Item.rare = ItemRarityID.Orange;
             Item.value = Item.sellPrice(silver: 50);
@@ -28,11 +28,11 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override GunHeldProjectileData GunHeldProjectileData => new()
         {
-            GunBarrelPosition = new Vector2(22f, 7f),
+            GunBarrelPosition = new Vector2(22f, 9f),
             CenterYOffset = 6f,
             MuzzleOffset = 56f,
-            Recoil = (2f, 0f),
-            RecoilDiminish = 0.9f
+            Recoil = (8f, 0f),
+            RecoilDiminish = 0.85f
         };
 
         public override bool? UseItem(Player player)
