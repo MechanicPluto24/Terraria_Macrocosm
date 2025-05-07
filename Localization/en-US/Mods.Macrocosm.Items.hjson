@@ -2053,10 +2053,6 @@ NickelOre: {
 	Tooltip: ""
 }
 
-InhibitorFieldGrenade: {
-	DisplayName: Stasis Grenade
-	Tooltip: ""
-}
 
 QuartzFragment: {
 	DisplayName: Quartz Fragment
@@ -3124,5 +3120,15 @@ CorrugatedSteelBrick: {
 
 SteelCage: {
 	DisplayName: Steel Cage
+	Tooltip: ""
+}
+
+BLPAsterix: {
+	DisplayName: BLP Asterix
+	Tooltip: ""
+}
+
+StasisGrenade: {
+	DisplayName: Stasis Grenade
 	Tooltip: ""
 }

@@ -1,6 +1,7 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -9,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class InhibitorFieldGrenade : ModProjectile
+    public class StasisGrenade : ModProjectile
     {
         public int PlasmaBallCount
         {
@@ -83,7 +84,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Projectile.rotation += Projectile.velocity.X * 0.05f;
 
                 if (Main.rand.NextBool(2))
-                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.InhibitorFieldDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
+                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Dusts.StasisDust>(), Scale: Main.rand.NextFloat(0.8f, 1.2f));
             }
         }
 
@@ -103,7 +104,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             if (Projectile.timeLeft > 3)
                 Projectile.timeLeft = 3;
 
-            target.AddBuff(BuffID.Slow, 95);
+            target.AddBuff(ModContent.BuffType<Stasis>(), 95);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
@@ -111,7 +112,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             if (Projectile.timeLeft > 3)
                 Projectile.timeLeft = 3;
 
-            target.AddBuff(BuffID.Slow, 95);
+            target.AddBuff(ModContent.BuffType<Stasis>(), 60);
         }
 
         public override void PrepareBombToBlow()
@@ -133,7 +134,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Vector2 velocity = Utility.PolarVector(speed, theta);
                 float factor = speed / 14f;
 
-                var p = Particle.Create<InhibitorFieldParticle>(p =>
+                var p = Particle.Create<StasisParticle>(p =>
                 {
                     p.Position = Projectile.Center + netOffset;
                     p.Velocity = velocity;

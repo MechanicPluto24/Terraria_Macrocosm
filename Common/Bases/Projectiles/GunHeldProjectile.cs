@@ -143,6 +143,11 @@ namespace Macrocosm.Common.Bases.Projectiles
                 }
 
                 Vector2 velocity = DirectionToAim * Projectile.velocity.Length();
+                int type = ShootProjectileType;
+                int damage = Projectile.damage;
+                float knockBack = Projectile.knockBack;
+
+                gunHeldProjectileItem.ModifyShootStats(Player, ref shootPosition, ref velocity, ref type, ref damage, ref knockBack);
 
                 if (
                     gunHeldProjectileItem.Shoot(
@@ -150,9 +155,9 @@ namespace Macrocosm.Common.Bases.Projectiles
                         new EntitySource_ItemUse_WithAmmo(Player, item, item.useAmmo),
                         shootPosition,
                         velocity,
-                        ShootProjectileType,
-                        Projectile.damage,
-                        Projectile.knockBack,
+                        type,
+                        damage,
+                        knockBack,
                         this
                         )
                     )
@@ -161,9 +166,9 @@ namespace Macrocosm.Common.Bases.Projectiles
                         new EntitySource_ItemUse_WithAmmo(Player, item, item.useAmmo),
                         shootPosition,
                         velocity,
-                        ShootProjectileType,
-                        Projectile.damage,
-                        Projectile.knockBack,
+                        type,
+                        damage,
+                        knockBack,
                         Projectile.owner
                     );
                 }
