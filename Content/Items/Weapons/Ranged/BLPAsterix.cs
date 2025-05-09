@@ -37,6 +37,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.autoReuse = true;
             Item.shootSpeed = 20f;
             Item.useAmmo = AmmoID.Bullet;
+            Item.UseSound = SFX.EnergyShot with { Volume = 0.5f };
         }
 
         public override GunHeldProjectileData GunHeldProjectileData => new()

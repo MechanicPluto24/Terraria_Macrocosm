@@ -1,3 +1,4 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -12,6 +13,8 @@ namespace Macrocosm.Content.Tiles.Blocks.Bricks
         {
             Main.tileSolid[Type] = true;
             Main.tileBlockLight[Type] = false;
+
+            TileSets.AllowLiquids[Type] = true;
 
             AddMapEntry(new Color(103, 120, 138));
 

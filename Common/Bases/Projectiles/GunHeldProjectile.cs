@@ -118,7 +118,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         {
             if (item.ModItem is not GunHeldProjectileItem gunHeldProjectileItem)
             {
-                UnAlive();
+                Despawn();
                 return;
             }
 

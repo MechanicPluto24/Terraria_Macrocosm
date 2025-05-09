@@ -8,6 +8,7 @@ namespace Macrocosm.Content.Sounds
 
         // Common
         public static SoundStyle BigExplosion { get; } = new(SFXPath + "BigExplosion_", 3);
+        public static SoundStyle EnergyShot { get; } = new SoundStyle(SFXPath + "EnergyShot") with { Volume = 0.5f };
 
         // Rocket
         public static SoundStyle RocketLandingLeg { get; } = new(SFXPath + "RocketLandingLeg");

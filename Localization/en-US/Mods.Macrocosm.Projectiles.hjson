@@ -116,7 +116,6 @@ BlueGunHeld.DisplayName: Blue Gun Held
 PurpleEnergyBolt.DisplayName: Purple Energy Bolt
 RedEnergyBolt.DisplayName: Red Energy Bolt
 RedGunHeld.DisplayName: Red Gun Held
-
 ChampionsBladeSlash.DisplayName: Champion's Blade
 CrescentScriptureProjectile.DisplayName: Crescent Scripture
 LuminiteWave.DisplayName: Luminite Wave
@@ -176,8 +175,6 @@ IndustrialBobber.DisplayName: Industrial Bobber
 MoonBeastBobber.DisplayName: Moon Beast Bobber
 LuminitePebble.DisplayName: Luminite Pebble
 MoonChampionSentry.DisplayName: Moon Champion Sentry
-
 LightningBolt.DisplayName: Lightning Bolt
 BLPShot.DisplayName: BLP Asterix
 StasisGrenade.DisplayName: Stasis Grenade
-
