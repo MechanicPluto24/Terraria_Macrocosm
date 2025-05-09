@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Liquids
 {
-    public class OilFallStyle : ModLiquidFall
+    public class OilFall : ModLiquidFall
     {
     }
 }

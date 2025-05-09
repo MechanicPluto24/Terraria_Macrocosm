@@ -24,6 +24,6 @@ namespace Macrocosm.Content.Liquids
             AddMapEntry(Color.Black, CreateMapEntryName());
         }
 
-        public override int ChooseWaterfallStyle(int i, int j) => ModContent.GetInstance<OilFallStyle>().Slot;
+        public override int ChooseWaterfallStyle(int i, int j) => ModContent.GetInstance<OilFall>().Slot;
     }
 }

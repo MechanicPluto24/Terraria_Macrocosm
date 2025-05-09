@@ -1,33 +1,30 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
+using ModLiquidLib.ModLoader;
 using SubworldLibrary;
-using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Hooks
+namespace Macrocosm.Common.Global
 {
-    public class LiquidHooks : ILoadable
+    public class MacrocosmGlobalLiquid : GlobalLiquid
     {
-        public void Load(Mod mod)
+        public override void Load()
         {
-            On_Liquid.Update += On_Liquid_Update;
             On_Liquid.tilesIgnoreWater += On_Liquid_tilesIgnoreWater;
         }
 
-        public void Unload()
+        public override void Unload()
         {
-            On_Liquid.Update -= On_Liquid_Update;
             On_Liquid.tilesIgnoreWater -= On_Liquid_tilesIgnoreWater;
         }
 
         private static List<int> tilesIgnoreWater;
         private void On_Liquid_tilesIgnoreWater(On_Liquid.orig_tilesIgnoreWater orig, bool ignoreSolids)
         {
-            if(tilesIgnoreWater is null)
+            if (tilesIgnoreWater is null)
             {
                 tilesIgnoreWater = new();
                 for (int type = 0; type < TileLoader.TileCount; type++)
@@ -41,15 +38,15 @@ namespace Macrocosm.Common.Hooks
             orig(ignoreSolids);
         }
 
-        private void On_Liquid_Update(On_Liquid.orig_Update orig, Liquid self)
+        public override bool UpdateLiquid(int i, int j, int type, Liquid liquid)
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
                 int[] evaporatingLiquidTypes = MacrocosmSubworld.Current.EvaporatingLiquidTypes;
                 foreach (int liquidType in evaporatingLiquidTypes)
                 {
-                    Tile tile = Main.tile[self.x, self.y];
-                    if (tile.LiquidType == liquidType && tile.LiquidAmount > 0 && !RoomOxygenSystem.CheckRoomOxygen(self.x, self.y))
+                    Tile tile = Main.tile[i, j];
+                    if (type == liquidType && tile.LiquidAmount > 0 && !RoomOxygenSystem.CheckRoomOxygen(i, j))
                     {
                         byte amount = 2;
                         if (tile.LiquidAmount < amount)
@@ -58,8 +55,7 @@ namespace Macrocosm.Common.Hooks
                     }
                 }
             }
-
-            orig(self);
+            return true;
         }
     }
 }
