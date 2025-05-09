@@ -2,6 +2,7 @@
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Subworlds;
+using Macrocosm.Content.Tiles.Blocks.Bricks;
 using Macrocosm.Content.Tiles.Furniture.Regolith;
 using Terraria;
 using Terraria.ID;
