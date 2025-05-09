@@ -4,7 +4,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseDresser")]
     public class IndustrialDresser : ModItem
     {
         public override void SetStaticDefaults()

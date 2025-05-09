@@ -15,7 +15,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseControlPanel")]
     public class IndustrialControlPanel : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
@@ -31,7 +30,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleLineSkip = 7;
             TileObjectData.newTile.StyleMultiplier = 2;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.Table, 2, 0);
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.addAlternate(1);

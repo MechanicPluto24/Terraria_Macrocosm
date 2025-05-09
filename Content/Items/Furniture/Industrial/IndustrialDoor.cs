@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseDoor")]
     public class IndustrialDoor : ModItem
     {
         public override void SetDefaults()

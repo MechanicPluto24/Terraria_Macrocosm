@@ -39,7 +39,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public int ShotsCounter = 1;
         public int MaxConsecutiveShots = 3;
 
-        public Player TargetPlayer => Main.player[NPC.target];
+        public Player TargetPlayer => NPC.HasValidTarget ? Main.player[NPC.target] : Main.LocalPlayer;
 
         #region Privates 
         private readonly Range shootFramesCommon = 0..5;
@@ -80,10 +80,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             BannerItem = Item.BannerToItem(Banner);
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? .02f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? 0.02f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
@@ -280,8 +277,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             aimSpeedX *= aimLength;
             aimSpeedY *= aimLength;
 
-            aimPosition.X += aimSpeedX;
-            aimPosition.Y += aimSpeedY;
+            aimPosition.X += aimSpeedX / 2;
+            aimPosition.Y += aimSpeedY / 2;
 
             return aimPosition;
         }

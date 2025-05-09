@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             Item.DefaultToWhip(ModContent.ProjectileType<TotalityProjectile>(), 190, 2, 4);
             Item.width = 52;
             Item.height = 48;
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.channel = true;
         }
 

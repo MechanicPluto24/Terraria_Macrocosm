@@ -17,27 +17,9 @@ namespace Macrocosm.Content.Tiles.Furniture
     {
         private static Asset<Texture2D> glowmask;
 
-        private static readonly int[] ticksPerFrameByStyle = [
-            1,
-            1,
-            1,
-            8,
-            8,
-            8,
-            1,
-            4
-        ];
-
-        private static readonly int[] maxFramesByStyle = [
-            1,
-            1,
-            1,
-            12,
-            8,
-            8,
-            1,
-            7
-        ];
+        private static readonly int[] ticksPerFrameByStyle = [1, 1, 1, 8, 8, 8, 1, 4];
+        private static readonly int[] maxFramesByStyle = [1, 1, 1, 12, 8, 8, 1, 7];
+        private static int staticAnimationType;
 
         private int StyleCount => maxFramesByStyle.Length;
         private int MaxVisible => StyleCount - 2;
@@ -68,17 +50,18 @@ namespace Macrocosm.Content.Tiles.Furniture
             AddMapEntry(new Color(63, 63, 64), Language.GetText("Painting"));
 
             RegisterItemDrop(ModContent.ItemType<Items.Furniture.DisplayScreen>(), 0, 1, 2, 3, 4, 5, 6, 7);
+
+            staticAnimationType = Animation.RegisterTemporaryAnimation(frameRate: 3, frames: [0, 1, 2, 3, 4, 5, 6, 7]);
         }
 
         public override void HitWire(int i, int j)
         {
             int style = Main.tile[i, j].TileFrameX / (18 * 6);
-            int leftX = i - Main.tile[i, j].TileFrameX / 18 % 6;
-            int topY = j - Main.tile[i, j].TileFrameY / 18 % 4;
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
 
-            for (int x = leftX; x < leftX + 6; x++)
+            for (int x = topLeft.X; x < topLeft.X + 6; x++)
             {
-                for (int y = topY; y < topY + 4; y++)
+                for (int y = topLeft.Y; y < topLeft.Y + 4; y++)
                 {
                     Tile tile = Main.tile[x, y];
                     if (style == MaxVisible - 1)
@@ -91,32 +74,34 @@ namespace Macrocosm.Content.Tiles.Furniture
                 }
             }
 
+            Animation.NewTemporaryAnimation(staticAnimationType, Type, topLeft.X, topLeft.Y);
+
             if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.SendTileSquare(-1, leftX, topY, 6, 4);
+                NetMessage.SendTileSquare(-1, topLeft.X, topLeft.Y, 6, 4);
+
         }
 
         public override bool RightClick(int i, int j)
         {
             int style = Main.tile[i, j].TileFrameX / (18 * 6);
-            int leftX = i - Main.tile[i, j].TileFrameX / 18 % 6;
-            int topY = j - Main.tile[i, j].TileFrameY / 18 % 4;
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
 
-            for (int x = leftX; x < leftX + 6; x++)
+            for (int x = topLeft.X; x < topLeft.X + 6; x++)
             {
-                for (int y = topY; y < topY + 4; y++)
+                for (int y = topLeft.Y; y < topLeft.Y + 4; y++)
                 {
                     Tile tile = Main.tile[x, y];
                     if (style == MaxVisible - 1)
                         tile.TileFrameX = (short)(tile.TileFrameX % (6 * 18));
                     else
                         tile.TileFrameX += 6 * 18;
-
-                    TileAnimation.NewTemporaryAnimation(new AnimationData(4, 3, [0, 1, 2, 3, 4, 5, 6, 7]), x, y, Type);
                 }
             }
 
+            Animation.NewTemporaryAnimation(staticAnimationType, Type, topLeft.X, topLeft.Y);
+
             if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.SendTileSquare(-1, leftX, topY, 6, 4);
+                NetMessage.SendTileSquare(-1, topLeft.X, topLeft.Y, 6, 4);
 
             return true;
         }
@@ -132,11 +117,11 @@ namespace Macrocosm.Content.Tiles.Furniture
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             Tile tile = Main.tile[i, j];
-
-            if (TileAnimation.GetTemporaryFrame(i, j, out int tempFrame))
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
+            if (Animation.GetTemporaryFrame(topLeft.X, topLeft.Y, out int frameData))
             {
                 frameXOffset = (18 * 6 * (StyleCount - 1)) - tile.TileFrameX + (tile.TileFrameX % (18 * 6));
-                frameYOffset = 18 * 4 * tempFrame;
+                frameYOffset = 18 * 4 * frameData;
             }
             else
             {
@@ -167,7 +152,7 @@ namespace Macrocosm.Content.Tiles.Furniture
                 }
                 else
                 {
-                    if (!TileAnimation.GetTemporaryFrame(i, j, out _))
+                    if (!Animation.GetTemporaryFrame(i, j, out _))
                     {
                         // Assign different colors based on style
                         Color lightColor = style switch
@@ -191,7 +176,7 @@ namespace Macrocosm.Content.Tiles.Furniture
                     }
                     else
                     {
-                        // Temporary animation static frame
+                        // Temporary animation "static" frame
                         tile.GetEmmitedLight(new Color(77, 77, 77), applyPaint: true, out r, out g, out b);
                     }
                 }
@@ -205,7 +190,6 @@ namespace Macrocosm.Content.Tiles.Furniture
                 }
             }
         }
-
 
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {

@@ -20,17 +20,17 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.mana = 10;
             Item.width = 54;
             Item.height = 36;
-            Item.useTime = 20;
+            Item.useTime = 22;
+            Item.useAnimation = 22;
             Item.noUseGraphic = true;
-            Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 3f;
             Item.value = Item.sellPrice(0, 5, 0, 0);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<WaveGunRedHeld>();
-            Item.shootSpeed = 28f;
+            Item.shootSpeed = 26f;
             Item.channel = true;
         }
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

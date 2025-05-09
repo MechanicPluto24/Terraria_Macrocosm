@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Critters
             Item.noUseGraphic = true;
             Item.makeNPC = ModContent.NPCType<NPCs.Critters.KyaniteScarabCritter>();
             Item.value = 150;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
         }
     }
 }

@@ -75,7 +75,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             Tile tile = Main.tile[i, j];
             Main.mouseRightRelease = false;
 
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
             int left = topLeft.X;
             int top = topLeft.Y;
 
@@ -137,7 +137,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
 
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
             int left = topLeft.X;
             int top = topLeft.Y;
 
@@ -145,7 +145,7 @@ namespace Macrocosm.Content.Tiles.Furniture
             player.cursorItemIconID = -1;
             if (chest < 0)
             {
-                player.cursorItemIconText = tile.GetModTile().DefaultContainerName(tile.TileFrameX, tile.TileFrameY).Value; 
+                player.cursorItemIconText = tile.GetModTile().DefaultContainerName(tile.TileFrameX, tile.TileFrameY).Value;
             }
             else
             {

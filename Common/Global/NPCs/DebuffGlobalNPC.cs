@@ -11,11 +11,19 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Global.NPCs
 {
-
     public class DebuffGlobalNPC : GlobalNPC
     {
         public override void Load()
         {
+        }
+
+        public override void AI(NPC npc)
+        {
+            if (npc.HasBuff<Stasis>())
+            {
+                npc.velocity.X = MathHelper.Lerp(npc.velocity.X * 0.5f, npc.velocity.X, 0.01f);
+                npc.velocity.Y = MathHelper.Lerp(0f, npc.velocity.Y, 0.01f);
+            }
         }
 
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
@@ -50,7 +58,7 @@ namespace Macrocosm.Common.Global.NPCs
                 }
             }
 
-            if (npc.HasBuff<TotalityTag>() && projectile.minion)
+            if (npc.HasBuff<TotalityTag>() && projectile.DamageType == DamageClass.Summon)
             {
                 for (int i = 0; i < 2; i++)
                 {
@@ -83,5 +91,12 @@ namespace Macrocosm.Common.Global.NPCs
                 npc.RemoveBuff<TotalityTag>();
             }
         }
+
+        public override void DrawEffects(NPC npc, ref Color drawColor)
+        {
+            if (npc.HasBuff<Stasis>())
+                drawColor = new Color(104, 245, 220, 220);
+        }
+
     }
 }

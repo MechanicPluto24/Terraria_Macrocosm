@@ -1,4 +1,3 @@
-using Macrocosm.Common.Sets;
 using Macrocosm.Content.Items.Ores;
 using Macrocosm.Content.Items.Plants;
 using Terraria;

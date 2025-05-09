@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Tiles.Blocks.Sands;
 using Macrocosm.Content.Tiles.Ores;
+using Macrocosm.Content.Tiles.Trees;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Generation;
@@ -10,7 +11,6 @@ using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using static Terraria.ModLoader.ModContent;
-using Macrocosm.Content.Tiles.Trees;
 
 namespace Macrocosm.Content.Subworlds
 {

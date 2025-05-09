@@ -33,8 +33,8 @@ namespace Macrocosm.Common.Storage
         private UIInventorySlot[] uiItemSlots;
 
         private bool[] reservedSlots;
+        private int[] reservedTypes;
         private Func<Item, bool>[] reservedChecks;
-
         private LocalizedText[] reservedTooltips;
         private Asset<Texture2D>[] reservedTextures;
 
@@ -96,6 +96,7 @@ namespace Macrocosm.Common.Storage
             uiItemSlots = new UIInventorySlot[clampedSize];
 
             reservedSlots = new bool[clampedSize];
+            reservedTypes = new int[clampedSize];
             reservedChecks = new Func<Item, bool>[clampedSize];
             reservedTooltips = new LocalizedText[clampedSize];
             reservedTextures = new Asset<Texture2D>[clampedSize];
@@ -166,10 +167,24 @@ namespace Macrocosm.Common.Storage
             }
 
             if (oldSize != newSize)
+            {
                 Array.Resize(ref items, newSize);
 
+                Array.Resize(ref uiItemSlots, newSize);
+
+                Array.Resize(ref reservedSlots, newSize);
+                Array.Resize(ref reservedTypes, newSize);
+                Array.Resize(ref reservedChecks, newSize);
+                Array.Resize(ref reservedTooltips, newSize);
+                Array.Resize(ref reservedTextures, newSize);
+            }
+
             if (oldSize < newSize)
+            {
                 Array.Fill(items, new Item(), oldSize, newSize - oldSize);
+                for (int i = oldSize; i < newSize; i++)
+                    uiItemSlots[i] = new(this, i);
+            }
         }
 
         public void SetReserved(int index, Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
@@ -178,27 +193,47 @@ namespace Macrocosm.Common.Storage
                 return;
 
             reservedSlots[index] = true;
+            reservedTypes[index] = ItemID.None;
             reservedChecks[index] = checkReserved;
             reservedTooltips[index] = tooltip;
             reservedTextures[index] = texture;
         }
 
-        public void SetReserved(int index, int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
-            => SetReserved(index, (item) => item.type == itemType, reservedTooltip, reservedTexture);
+        public void SetReserved(int index, int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        {
+            if (index < 0 || index >= Size)
+                return;
+
+            reservedSlots[index] = true;
+            reservedTypes[index] = itemType;
+            reservedChecks[index] = (item) => item.type == itemType;
+            reservedTooltips[index] = tooltip;
+            reservedTextures[index] = texture;
+        }
 
         public void SetReserved(Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
         {
             for (int i = 0; i < Size; i++)
             {
                 reservedSlots[i] = true;
+                reservedTypes[i] = ItemID.None;
                 reservedChecks[i] = checkReserved;
                 reservedTooltips[i] = tooltip;
                 reservedTextures[i] = texture;
             }
         }
 
-        public void SetReserved(int itemType, LocalizedText reservedTooltip = null, Asset<Texture2D> reservedTexture = null)
-            => SetReserved((item) => item.type == itemType, reservedTooltip, reservedTexture);
+        public void SetReserved(int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null)
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                reservedSlots[i] = true;
+                reservedTypes[i] = itemType;
+                reservedChecks[i] = (item) => item.type == itemType;
+                reservedTooltips[i] = tooltip;
+                reservedTextures[i] = texture;
+            }
+        }
 
         public void ClearReserved(int index)
         {
@@ -206,6 +241,7 @@ namespace Macrocosm.Common.Storage
                 return;
 
             reservedSlots[index] = false;
+            reservedTypes[index] = ItemID.None;
             reservedChecks[index] = null;
             reservedTooltips[index] = null;
             reservedTextures[index] = null;
@@ -217,6 +253,18 @@ namespace Macrocosm.Common.Storage
                 return true;
 
             return reservedChecks[index]?.Invoke(item) ?? true;
+        }
+
+        public bool TryGetReservedItemClone(int index, out Item item)
+        {
+            if (index >= 0 && index < reservedTooltips.Length && reservedTypes[index] > 0)
+            {
+                item = new Item(reservedTypes[index]);
+                return true;
+            }
+
+            item = new(0);
+            return false;
         }
 
         public LocalizedText GetReservedTooltip(int index)
@@ -794,7 +842,7 @@ namespace Macrocosm.Common.Storage
         // However, this needed a detour on Inventory.Hooks.On_ItemSlot_SetGlow in order to set the inventory slot colors accordingly
         /// <summary> Sort items in an inventory using the vanilla logic </summary>
         public static void SortItems(Item[] items, params int[] ignoreSlots)
-            => Utility.InvokeMethod(typeof(ItemSorting), "Sort", items, ignoreSlots);
+            => Utility.InvokeMethod(typeof(ItemSorting), "Sort", items, parameters: [ignoreSlots]);
 
         // Adapted from Terraria.UI.ChestUI.MoveCoins, but to support dynamic inventory size,
         // and the option of moving coins even though there are no coins already in the container.

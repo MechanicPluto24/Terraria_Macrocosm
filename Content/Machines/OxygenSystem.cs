@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -32,24 +31,22 @@ namespace Macrocosm.Content.Machines
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2Top);
             TileObjectData.newTile.Width = Width;
             TileObjectData.newTile.Height = Height;
 
             TileObjectData.newTile.StyleHorizontal = false;
-            TileObjectData.newTile.StyleLineSkip = 3;
-            TileObjectData.newTile.StyleWrapLimit = 3;
 
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
 
+            TileObjectData.newTile.LavaDeath = true;
+
             TileObjectData.newTile.Origin = new Point16(1, 0);
-            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, Width, 0);
+            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, Width, 0);
 
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
             TileObjectData.newTile.UsesCustomCanPlace = true;
-
             TileObjectData.addTile(Type);
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();

@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using System;
 using Terraria;
-using Terraria.ID;
 using Terraria.Localization;
 
 namespace Macrocosm.Content.Rockets.Modules

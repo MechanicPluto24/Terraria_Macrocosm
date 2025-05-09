@@ -26,14 +26,13 @@ namespace Macrocosm.Content.LoadingScreens
         protected override void Reset()
         {
             ResetAnimation();
-
             earthBackgrounds ??= [
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Africa"),
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Asia"),
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Australia"),
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_Europe"),
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_NorthAmerica"),
-                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/Earth_SouthAmerica")
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Earth_Africa"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Earth_Asia"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Earth_Australia"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Earth_Europe"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Earth_NorthAmerica"),
+                ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Earth_SouthAmerica")
             ];
         }
 

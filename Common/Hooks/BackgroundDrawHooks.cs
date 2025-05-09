@@ -1,10 +1,5 @@
 ﻿using Macrocosm.Common.Subworlds;
 using SubworldLibrary;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -24,7 +19,7 @@ namespace Macrocosm.Common.Hooks
 
         private void On_Main_DrawBackgroundBlackFill(On_Main.orig_DrawBackgroundBlackFill orig, Main self)
         {
-            if (SubworldSystem.Current is OrbitSubworld)
+            if (SubworldSystem.Current is MultiSubworld)
                 return;
 
             orig(self);

@@ -9,7 +9,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseTable")]
     public class IndustrialTable : ModTile
     {
         public override void SetStaticDefaults()

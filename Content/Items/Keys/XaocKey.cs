@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Systems;
+﻿using Macrocosm.Common.Conditions;
+using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
@@ -8,7 +9,6 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,6 +19,15 @@ namespace Macrocosm.Content.Items.Keys
     {
         public override void SetStaticDefaults()
         {
+            Condition anyShimmerShrine = DynamicConditions.Get<WorldData>(nameof(WorldData.AnyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Procellarum>(), ConditionChain.All(Condition.MoonPhaseFull, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Ilmenite>(), ConditionChain.All(Condition.MoonPhaseWaningGibbous, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Micronova>(), ConditionChain.All(Condition.MoonPhaseThirdQuarter, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<Totality>(), ConditionChain.All(Condition.MoonPhaseWaningCrescent, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<ManisolBlades>(), ConditionChain.All(Condition.MoonPhaseNew, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<StarDestroyer>(), ConditionChain.All(Condition.MoonPhaseWaxingCrescent, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<FrigorianGaze>(), ConditionChain.All(Condition.MoonPhaseFirstQuarter, anyShimmerShrine));
+            ShimmerSystem.RegisterOverride(Type, ModContent.ItemType<GreatstaffOfHorus>(), ConditionChain.All(Condition.MoonPhaseWaxingGibbous, anyShimmerShrine));
         }
 
         public override void SetDefaults()
@@ -27,46 +36,8 @@ namespace Macrocosm.Content.Items.Keys
             Item.width = 18;
             Item.height = 30;
             Item.value = 200;
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.consumable = false;
-        }
-
-        public override void Update(ref float gravity, ref float maxFallSpeed)
-        {
-            int shimmerResultType = -1;
-
-            bool anyShrine = WorldFlags.HeavenforgeShrineUnlocked
-                             || WorldFlags.LunarRustShrineUnlocked
-                             || WorldFlags.AstraShrineUnlocked
-                             || WorldFlags.DarkCelestialShrineUnlocked
-                             || WorldFlags.MercuryShrineUnlocked
-                             || WorldFlags.StarRoyaleShrineUnlocked
-                             || WorldFlags.CryocoreShrineUnlocked
-                             || WorldFlags.CosmicEmberShrineUnlocked;
-
-            // if(WorldFlags.DemonSun || Main.bloodMoon)
-            // {
-            //   shimmerResultType = HaemonovaWeapon
-            // }
-            // else
-            if (anyShrine)
-            {
-                shimmerResultType = Main.GetMoonPhase() switch
-                {
-                    MoonPhase.Full => ModContent.ItemType<Procellarum>(),
-                    MoonPhase.ThreeQuartersAtLeft => ModContent.ItemType<Ilmenite>(),
-                    MoonPhase.HalfAtLeft => ModContent.ItemType<Micronova>(),
-                    MoonPhase.QuarterAtLeft => ModContent.ItemType<Totality>(),
-                    MoonPhase.Empty => ModContent.ItemType<ManisolBlades>(),
-                    MoonPhase.QuarterAtRight => ModContent.ItemType<StarDestroyer>(),
-                    MoonPhase.HalfAtRight => ModContent.ItemType<FrigorianGaze>(),
-                    MoonPhase.ThreeQuartersAtRight => ModContent.ItemType<GreatstaffOfHorus>(),
-                    _ => -1
-                };
-            }
-
-            // Come on, tML, there must be a better way (without using strange recipe conditions)
-            ItemID.Sets.ShimmerTransformToItem[Type] = shimmerResultType;
         }
 
         public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)

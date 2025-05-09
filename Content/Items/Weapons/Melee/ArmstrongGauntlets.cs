@@ -26,7 +26,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.noMelee = true;
             Item.knockBack = 2f;
             Item.value = Item.sellPrice(silver: 19, copper: 69);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.UseSound = SoundID.Item7;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<ArmstrongGauntletProjectile>();

@@ -1,3 +1,6 @@
+using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
@@ -5,7 +8,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Walls
 {
-    [LegacyName("MoonBasePlatingWall")]
     public class IndustrialPlatingWall : ModItem
     {
         public override void SetStaticDefaults()
@@ -16,7 +18,7 @@ namespace Macrocosm.Content.Items.Walls
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableWall(ModContent.WallType<Tiles.Walls.IndustrialPlatingWall>());
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.IndustrialPlatingWall>());
             Item.width = 24;
             Item.height = 24;
         }
@@ -30,7 +32,6 @@ namespace Macrocosm.Content.Items.Walls
         }
     }
 
-    [LegacyName("MoonBasePlatingWallUnsafe")]
     public class IndustrialPlatingWallUnsafe : IndustrialPlatingWall
     {
         public override string Texture => base.Texture.Replace("Unsafe", "");
@@ -40,13 +41,13 @@ namespace Macrocosm.Content.Items.Walls
             base.SetStaticDefaults();
             ItemID.Sets.DrawUnsafeIndicator[Type] = true;
             ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialPlatingWall>();
-
         }
 
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.createWall = ModContent.WallType<Tiles.Walls.IndustrialPlatingWallUnsafe>();
+            Item.createWall = VariantWall.WallType<Content.Walls.IndustrialPlatingWall>(WallSafetyType.Unsafe);
+
         }
     }
 }

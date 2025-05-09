@@ -1,19 +1,16 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Global.Tiles;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
-using Macrocosm.Content.Rockets.Customization;
 using Macrocosm.Content.Rockets.LaunchPads;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-using Stubble.Core.Classes;
 using SubworldLibrary;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -29,14 +26,6 @@ namespace Macrocosm.Common.Subworlds
     {
         public string ID => Mod.Name + "/" + Name;
 
-        public sealed override void SetStaticDefaults()
-        {
-            Subworlds.Add(ID, this);
-            PostLoad();
-        }
-
-        public virtual void PostLoad() { }
-
         #region Sublib options
         public override bool NormalUpdates => false;
         public override bool ShouldSave => true;
@@ -48,6 +37,12 @@ namespace Macrocosm.Common.Subworlds
 
         /// <summary> Time rate of this subworld, compared to Earth's (1.0) </summary>
         protected virtual double TimeRate { get; } = Earth.TimeRate;
+
+        /// <summary> The world update rate of this subworld, compared to Earth's (1.0) </summary>
+        protected virtual double WorldUpdateRate { get; } = Earth.TimeRate;
+
+        /// <summary> The tile update rate of this subworld, compared to Earth's (1.0) </summary>
+        protected virtual double TileUpdateRate { get; } = Earth.TimeRate;
 
         /// <summary> Day length of this subworld in ticks </summary>
         protected virtual double DayLength { get; } = Earth.DayLength;
@@ -86,10 +81,7 @@ namespace Macrocosm.Common.Subworlds
         /// <param name="earthWorldSize"> The Earth's world size </param>
         public virtual WorldSize GetSubworldSize(WorldSize earthWorldSize) => earthWorldSize;
 
-        /// <summary> The width is determined in ReadCopiedMainWorldData using <see cref="GetSubworldSize(WorldSize)"> </summary>
         public sealed override int Width => GetSubworldSize(Earth.WorldSize).Width;
-
-        /// <summary> The height is determined in ReadCopiedMainWorldData using <see cref="GetSubworldSize(WorldSize)"> </summary>
         public sealed override int Height => GetSubworldSize(Earth.WorldSize).Height;
 
         #endregion
@@ -161,38 +153,47 @@ namespace Macrocosm.Common.Subworlds
         private void UpdateTime()
         {
             double timeRate = TimeRate;
+            double worldUpdateRate = WorldUpdateRate;
+            double tileUpdateRate = TileUpdateRate;
 
-            // Fast forward 60 times if using sun/moon-dials
+            // Fast forward 60 times if using sun/moon-dials (except tile updates)
             if (Main.IsFastForwardingTime())
+            {
                 timeRate *= 60.0;
-
-            // Apply current journey power time modifier
-            timeRate *= CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
-
-            // Apply all players sleeping multiplier 
-            if (Main.CurrentFrameFlags.SleepingPlayersCount == Main.CurrentFrameFlags.ActivePlayersCount && Main.CurrentFrameFlags.SleepingPlayersCount > 0)
-                timeRate *= 5;
-
-            // Don't pass time if disabled from the journey powers 
-            if (CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled)
+                worldUpdateRate *= 60.0;
+            }
+            else if (CreativePowerManager.Instance.GetPower<CreativePowers.FreezeTime>().Enabled)
+            {
+                // Don't pass time if disabled from the journey powers 
                 timeRate = 0;
+                worldUpdateRate = 0;
+                tileUpdateRate = 0;
+            }
+            else
+            {
+                int targetTimeRate = CreativePowerManager.Instance.GetPower<CreativePowers.ModifyTimeRate>().TargetTimeRate;
+                bool allPlayersSleeping = Main.CurrentFrameFlags.SleepingPlayersCount == Main.CurrentFrameFlags.ActivePlayersCount && Main.CurrentFrameFlags.SleepingPlayersCount > 0;
+
+                // Apply current journey power time modifier
+                timeRate *= targetTimeRate;
+                worldUpdateRate *= targetTimeRate;
+                tileUpdateRate *= targetTimeRate;
+
+                // Apply all players sleeping multiplier 
+                if (allPlayersSleeping)
+                {
+                    timeRate *= 5;
+                    worldUpdateRate *= 5;
+                    tileUpdateRate *= 5;
+                }
+            }
 
             // Update time
             Main.time += timeRate;
+            Main.desiredWorldTilesUpdateRate = tileUpdateRate;
+            Main.desiredWorldEventsUpdateRate = worldUpdateRate;
 
-            // Set update rates
-            Main.desiredWorldTilesUpdateRate = timeRate / 60.0;
-            Main.desiredWorldEventsUpdateRate = timeRate;
-
-            // We don't want slower updates if the time rate is less than Earth
-            // TODO: adjust this for subworlds with a faster rate than Earth, while still letting vanilla time speedups increase the update rate
-            if (timeRate < 1.0)
-                Main.worldEventUpdates = 1;
-
-            MacrocosmWorld.IsDusk = Main.dayTime && Main.time >= DayLength;
-            MacrocosmWorld.IsDawn = !Main.dayTime && Main.time >= NightLength;
-
-            if (MacrocosmWorld.IsDusk)
+            if (Utility.IsDusk)
             {
                 Main.time = 0;
                 Main.dayTime = false;
@@ -201,7 +202,7 @@ namespace Macrocosm.Common.Subworlds
                     Main.fastForwardTimeToDusk = false;
             }
 
-            if (MacrocosmWorld.IsDawn)
+            if (Utility.IsDawn)
             {
                 Main.time = 0;
                 Main.dayTime = true;
@@ -252,9 +253,8 @@ namespace Macrocosm.Common.Subworlds
         // Freezes environment variables such as rain or clouds. 
         private void UpdateWeather()
         {
-            // TODO: make these per-subworld if using Terraria's weather system for future planets
+            // TODO: make hooks for these if we ever use vanilla's weather system for other planets
             Main.numClouds = 0;
-
             Main.windSpeedCurrent = 0;
             Main.windSpeedTarget = 0;
             Main.windCounter = 0;
@@ -336,11 +336,12 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound data = new();
 
-            WorldFlags.SaveData(data);
+            WorldData.SaveData(data);
             RocketManager.SaveData(data);
             LaunchPadManager.SaveData(data);
-            CustomizationStorage.SaveData(data);
             TownNPCSystem.SaveData(data);
+            PatternManager.SaveData(data);
+            DecalManager.SaveData(data);
 
             SubworldSystem.CopyWorldData($"{nameof(Macrocosm)}:{nameof(data)}", data);
         }
@@ -349,37 +350,22 @@ namespace Macrocosm.Common.Subworlds
         {
             TagCompound data = SubworldSystem.ReadCopiedWorldData<TagCompound>($"{nameof(Macrocosm)}:{nameof(data)}");
 
-            WorldFlags.LoadData(data);
+            WorldData.LoadData(data);
             RocketManager.LoadData(data);
             LaunchPadManager.LoadData(data);
-            CustomizationStorage.LoadData(data);
             TownNPCSystem.LoadData(data);
+            PatternManager.LoadData(data);
+            DecalManager.LoadData(data);
         }
 
         private void CopyVanillaData()
         {
-            SubworldSystem.CopyWorldData("!" + nameof(Earth.WorldSize), Earth.WorldSize);
             SubworldSystem.CopyWorldData(nameof(Main.moonPhase), Main.moonPhase);
         }
 
         private void ReadCopiedVanillaData()
         {
-            SetWorldSize(SubworldSystem.ReadCopiedWorldData<WorldSize>("!" + nameof(Earth.WorldSize)));
             SetMoonPhase(SubworldSystem.ReadCopiedWorldData<int>(nameof(Main.moonPhase)));
-        }
-
-        // Read world size and apply it here. 
-        // In SubworldLibrary maxTiles values are assigned before the data is read.
-        // ReadCopiedMainWorldData is called before worldgen so it can be safely used.
-        private void SetWorldSize(WorldSize worldSize)
-        {
-            Earth.WorldSize = worldSize;    
-            if (SubworldSystem.AnyActive<Macrocosm>())
-            {
-                WorldSize subworldSize = GetSubworldSize(worldSize);
-                Main.maxTilesX = subworldSize.Width;
-                Main.maxTilesY = subworldSize.Height;
-            }
         }
 
         private void SetMoonPhase(int moonPhase)

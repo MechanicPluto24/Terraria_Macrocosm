@@ -152,3 +152,8 @@ TotalityTag: {
 	DisplayName: Totality Tag
 	Description: Mods.Macrocosm.Buffs.TotalityTag.Description
 }
+
+Stasis: {
+	DisplayName: Stasis
+	Description: Mods.Macrocosm.Buffs.Stasis.Description
+}

@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.shootSpeed = 25f;
             Item.knockBack = 10;
             Item.value = Item.sellPrice(0, 20, 0, 0);
-            Item.rare = ModContent.RarityType<MoonRarityT3>();
+            Item.rare = ModContent.RarityType<MoonRarity3>();
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.noUseGraphic = true;

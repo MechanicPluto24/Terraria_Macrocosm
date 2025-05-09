@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Enums;
 using Macrocosm.Common.Loot;
 using Macrocosm.Common.Loot.DropConditions;
 using Macrocosm.Common.Loot.DropRules;
@@ -100,7 +99,7 @@ namespace Macrocosm.Content.Machines
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Cynthalith>(), 20, amountDroppedMinimum: 10, amountDroppedMaximum: 100));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<Protolith>(), 20, amountDroppedMinimum: 15, amountDroppedMaximum: 150));
 
-
+                    Loot.Add(new TECommonDrop(this, ModContent.ItemType<QuartzFragment>(), 25));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<SeleniteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<ArtemiteOre>(), 10));
                     Loot.Add(new TECommonDrop(this, ModContent.ItemType<ChandriumOre>(), 10));

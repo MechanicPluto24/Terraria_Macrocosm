@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Sets;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Power;
@@ -10,10 +10,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
-using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.UI;
 
 
 namespace Macrocosm.Content.Machines
@@ -158,10 +156,13 @@ namespace Macrocosm.Content.Machines
             hullHeatProgressBar.Progress = BurnerGenerator.HullHeatProgress;
 
             float temperature = MacrocosmSubworld.GetAmbientTemperature() + BurnerGenerator.HullHeat;
-            if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Metric)
-                hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatMetric").Format((int)temperature));
-            else if (ClientConfig.Instance.UnitSystem is ClientConfig.UnitSystemType.Imperial)
-                hullHeatText.SetText(Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)));
+            string text = ClientConfig.Instance.UnitSystem switch
+            {
+                UnitSystemType.Metric => Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatMetric").Format((int)temperature),
+                UnitSystemType.Imperial => Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)),
+                _ => "",
+            };
+            hullHeatText.SetText(text);
 
             if (itemIcon.Item.type != BurnerGenerator.ConsumedItem.type)
                 itemIcon.Item = BurnerGenerator.ConsumedItem;

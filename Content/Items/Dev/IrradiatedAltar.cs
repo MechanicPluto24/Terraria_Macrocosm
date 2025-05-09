@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Dev
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Ambient.IrradiatedAltar>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Misc.IrradiatedAltar>());
             Item.width = 36;
             Item.height = 24;
             Item.value = 0;

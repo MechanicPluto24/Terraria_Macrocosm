@@ -16,10 +16,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.defense = 40;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.04f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? 0.04f : 0f;
 
         public override void HitEffect(NPC.HitInfo hit)
         {

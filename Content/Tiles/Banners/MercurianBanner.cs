@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Tiles.Banners
             TileObjectData.newTile.StyleHorizontal = true;
 
             TileObjectData.newTile.Origin = new Point16(1, 0);
-            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, 3, 0);
+            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, 3, 0);
 
             TileObjectData.addTile(Type);
 
@@ -49,17 +49,15 @@ namespace Macrocosm.Content.Tiles.Banners
 
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Tile tile = Main.tile[i, j];
+            if (TileObjectData.IsTopLeft(i, j))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
 
-            if (TileObjectData.IsTopLeft(tile))
-                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
-
-            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+            return false;
         }
 
-        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void AdjustMultiTileVineParameters(int i, int j, ref float? overrideWindCycle, ref float windPushPowerX, ref float windPushPowerY, ref bool dontRotateTopTiles, ref float totalWindMultiplier, ref Texture2D glowTexture, ref Color glowColor)
         {
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j);
+            totalWindMultiplier = 0.1f;
         }
     }
 }

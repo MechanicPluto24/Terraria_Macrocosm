@@ -13,7 +13,6 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
-using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon
@@ -43,10 +42,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.DropsMoonstone[Type] = true;
         }
 
-        private ActiveSound sound1;    
-        private ActiveSound sound2;    
-        private SlotId slot1;    
-        private SlotId slot2;  
+        private ActiveSound sound1;
+        private ActiveSound sound2;
+        private SlotId slot1;
+        private SlotId slot2;
 
         private readonly Range headRaiseFrame = 0..2;
         private readonly Range idleFrames = 3..14;
@@ -81,7 +80,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
         {
-            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.02f : 0f;
+            if (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>())
+            {
+                return 0.02f;
+            }
+            else
+            {
+                return 0f;
+            }
         }
         public override void OnKill()
         {
@@ -97,10 +103,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             }
         }
 
-        private Vector2 idleDirection = new Vector2(1, 0);
+        private Vector2 idleDirection = new(1, 0);
         private bool raisedHead = false;
         private bool gasLeak = false;
-        private float runSpeed = 0.01f;
         private int headTimer = 0;
         bool runNoise = false;
         public override void ModifyHitByProjectile(Projectile projectile, ref NPC.HitModifiers modifiers)
@@ -124,7 +129,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             }
         }
-     
+
         public override void AI()
         {
             NPC.TargetClosest();
@@ -220,7 +225,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 gasLeak = true;
                 if (sound2 == null)
                     slot2 = SoundEngine.PlaySound(SFX.ZombieEngineerGasLeak, NPC.position);
-                
+
             }
 
 

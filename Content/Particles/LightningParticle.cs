@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Particles
     {
         private static Asset<Texture2D> outline;
 
-        public override string TexturePath => Macrocosm.TexturesPath + "Lightning";
+        public override string Texture => Macrocosm.TexturesPath + "Lightning";
         public override int FrameCount => 6;
 
         public Color OutlineColor;
@@ -45,9 +45,9 @@ namespace Macrocosm.Content.Particles
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            outline ??= ModContent.Request<Texture2D>(TexturePath + "_Outline");
+            outline ??= ModContent.Request<Texture2D>(Texture + "_Outline");
             spriteBatch.Draw(outline.Value, Position - screenPosition, GetFrame(), OutlineColor * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Color * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
     }
 }

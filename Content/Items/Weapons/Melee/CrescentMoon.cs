@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 2f;
             Item.value = Item.sellPrice(silver: 3, copper: 10);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.UseSound = SoundID.Item7;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<CrescentMoonProjectile>();

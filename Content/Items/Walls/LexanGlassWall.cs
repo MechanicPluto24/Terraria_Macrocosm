@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Walls
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableWall(ModContent.WallType<Tiles.Walls.LexanGlassWall>());
+            Item.DefaultToPlaceableWall(ModContent.WallType<Content.Walls.LexanGlassWall>());
             Item.width = 24;
             Item.height = 24;
         }

@@ -24,13 +24,10 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
         public Rocket Rocket { get; set; } = new();
         private Item ItemInFuelTankSlot => Rocket.Inventory[Rocket.SpecialInventorySlot_FuelTank];
 
-        private bool overflowWarningVisible = false;
         private bool dumpButtonInteractible = true;
 
         private UIText title;
         private UIHorizontalSeparator titleSeparator;
-
-        private UIDynamicTextPanel textPanel;
 
         private UITextPanel<string> textPanel1;
         private UITextPanel<string> currentFuelTextPanel;
@@ -168,7 +165,6 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            overflowWarningVisible = false;
             dumpButtonInteractible = true;
 
             float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
@@ -235,12 +231,12 @@ namespace Macrocosm.Content.Rockets.UI.Cargo
                 float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
 
                 if (neededFuel <= 0)
-                    return; 
+                    return;
 
                 int canistersUsed = (int)Math.Min(availableCanisters, Math.Floor(neededFuel / fuelPerCanister));
 
                 if (canistersUsed == 0)
-                    return; 
+                    return;
 
                 float addedFuel = canistersUsed * fuelPerCanister;
                 Rocket.Fuel += addedFuel;

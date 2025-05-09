@@ -1,11 +1,10 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -15,10 +14,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 {
     public class UIPatternIcon : UIPanelIconButton, IFocusable
     {
-        public Pattern Pattern { get; set; }
-
-
-        private Asset<Texture2D> panel;
+        public Pattern Pattern { get; }
+        private readonly Asset<Texture2D> panel;
         public UIPatternIcon(Pattern pattern)
         : base
         (
@@ -28,7 +25,10 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanelHoverBorder", AssetRequestMode.ImmediateLoad)
         )
         {
-            Pattern = pattern;
+            Pattern = PatternManager.Get(pattern.Name, "Icon");
+            foreach (var colorData in pattern.ColorData)
+                Pattern.ColorData[colorData.Key] = colorData.Value;
+
             panel = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/LargePanel", AssetRequestMode.ImmediateLoad);
         }
 
@@ -39,7 +39,6 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             HoverText = Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Customization.Patterns." + Pattern.Name, () => Pattern.Name);
         }
 
-        private static Asset<Effect> colorMaskShading;
         private SpriteBatchState state;
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
@@ -47,26 +46,10 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             var dimensions = GetOuterDimensions();
 
-            // Load the coloring shader
-            colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
-            Effect effect = colorMaskShading.Value;
-
-            // Pass the pattern icon to the shader via the S1 register
-            Main.graphics.GraphicsDevice.Textures[1] = Pattern.IconTexture.Value;
-
-            // Change sampler state for proper alignment at all UI scales 
+            Effect effect = Pattern.PrepareEffect();
             SamplerState samplerState = spriteBatch.GraphicsDevice.SamplerStates[1];
+            Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture.Value;
             Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-            //Pass the color mask keys as Vector3s and configured colors as Vector4s
-            List<Vector4> colors = new();
-            for (int i = 0; i < Pattern.MaxColorCount; i++)
-                colors.Add(Pattern.GetColor(i).ToVector4());
-
-            effect.Parameters["uColorCount"].SetValue(Pattern.MaxColorCount);
-            effect.Parameters["uColorKey"].SetValue(Pattern.ColorKeys);
-            effect.Parameters["uColor"].SetValue(colors.ToArray());
-            effect.Parameters["uSampleBrightness"].SetValue(false);
 
             state.SaveState(spriteBatch);
             spriteBatch.End();
@@ -76,11 +59,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
             spriteBatch.End();
             spriteBatch.Begin(state);
-
-            // Clear the tex registers  
             Main.graphics.GraphicsDevice.Textures[1] = null;
-
-            // Restore the sampler states
             Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
         }
     }

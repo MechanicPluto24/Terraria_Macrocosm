@@ -14,14 +14,13 @@ namespace Macrocosm.Content.Clouds.Pollution
 
         public override void OnSpawn(Cloud cloud) { }
 
-        int despawnTimer = 0;
-        float opacity = 0.8f;
+        private float opacity = 0.8f;
         public override bool Draw(SpriteBatch spriteBatch, Cloud cloud, int cloudIndex, ref DrawData drawData)
         {
             if (!Main.LocalPlayer.InModBiome<PollutionBiome>())
             {
                 opacity -= 0.005f;
-                if(opacity < 0f)
+                if (opacity < 0f)
                     cloud.active = false;
             }
             else
@@ -32,9 +31,11 @@ namespace Macrocosm.Content.Clouds.Pollution
             drawData.color *= opacity;
             if (drawData.color.A > 200)
                 drawData.color.A = 200;
+
             return true;
         }
     }
+
     public class PollutionCloud1 : PollutionCloud
     {
     }

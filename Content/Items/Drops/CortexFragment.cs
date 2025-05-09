@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Items.Drops
             Item.maxStack = Item.CommonMaxStack;
             Item.value = 100;
             Item.rare = ItemRarityID.Red;
-            
+
         }
     }
 }

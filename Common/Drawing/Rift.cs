@@ -1,13 +1,12 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using System;
-using Terraria.GameContent;
-using Terraria;
-using Macrocosm.Common.Utils;
-using static Terraria.GameContent.TextureAssets;
-using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Graphics;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using Terraria;
+using static Terraria.GameContent.TextureAssets;
 
 namespace Macrocosm.Common.Drawing
 {
@@ -22,12 +21,11 @@ namespace Macrocosm.Common.Drawing
 
         private List<Vector2> borderPoints;
         private List<Vector2> lastBorderPoints;
-        private Mesh2D mesh;
-        private GraphicsDevice graphicsDevice;
+        private Mesh mesh;
+        public GraphicsDevice GraphicsDevice => Main.graphics.GraphicsDevice;
 
-        public Rift(GraphicsDevice graphicsDevice, Vector2 position, float width, float height, Color interiorColor, Color borderColor, int borderPointCount = 64)
+        public Rift(Vector2 position, float width, float height, Color interiorColor, Color borderColor, int borderPointCount = 64)
         {
-            this.graphicsDevice = graphicsDevice;
             Position = position;
             Width = width;
             Height = height;
@@ -35,7 +33,7 @@ namespace Macrocosm.Common.Drawing
             BorderColor = borderColor;
 
             borderPoints = new List<Vector2>();
-            mesh = new Mesh2D(graphicsDevice);
+            mesh = new Mesh();
 
             GenerateBorderPoints(borderPointCount);
             UpdateMesh();
@@ -95,7 +93,6 @@ namespace Macrocosm.Common.Drawing
             short[] indices = new short[indexCount];
 
             vertices[0] = new VertexPositionColorTexture(new Vector3(Position, 0f), InteriorColor, new Vector2(0.5f, 0.5f));
-
             for (int i = 0; i < borderPoints.Count; i++)
             {
                 Vector2 point = borderPoints[i];
@@ -124,7 +121,10 @@ namespace Macrocosm.Common.Drawing
         public void Draw(Texture2D texture, Matrix transformMatrix)
         {
             Update();
-            mesh.Draw(texture, transformMatrix);
+
+            DrawRT();
+            mesh.Draw(renderTarget, transformMatrix);
+            renderTarget.Dispose();
             for (int i = 0; i < borderPoints.Count; i++)
             {
                 Vector2 start = borderPoints[i];
@@ -151,7 +151,6 @@ namespace Macrocosm.Common.Drawing
             foreach (var binding in originalRenderTargets)
                 typeof(RenderTarget2D).SetPropertyValue("RenderTargetUsage", RenderTargetUsage.PreserveContents, binding.RenderTarget);
 
-            // Draw our modules
             state = spriteBatch.SaveState();
             spriteBatch.EndIfBeginCalled();
 
@@ -168,13 +167,13 @@ namespace Macrocosm.Common.Drawing
             );
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, state.RasterizerState, state.Effect, Matrix.CreateScale(1f));
+            spriteBatch.Begin(state);
 
             // Revert our RenderTargets back to the vanilla ones
-            if (originalRenderTargets.Length > 0)
-                spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
-            else
-                spriteBatch.GraphicsDevice.SetRenderTarget(null);
+            //if (originalRenderTargets.Length > 0)
+            //    spriteBatch.GraphicsDevice.SetRenderTargets(originalRenderTargets);
+            //else
+            //    spriteBatch.GraphicsDevice.SetRenderTarget(null);
 
             spriteBatch.GraphicsDevice.ScissorRectangle = scissorRectangle;
             spriteBatch.GraphicsDevice.RasterizerState = rasterizerState;

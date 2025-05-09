@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
@@ -97,6 +98,11 @@ namespace Macrocosm.Common.Utils
         public static Rectangle ToRectangle(this System.Drawing.RectangleF rectangle)
         {
             return new Rectangle((int)rectangle.X, (int)rectangle.Y, (int)rectangle.Width, (int)rectangle.Height);
+        }
+
+        public static bool Intersects(this Rectangle rect, RotatedRectangle rotatedRect)
+        {
+            return new RotatedRectangle(rect).Intersects(rotatedRect);
         }
 
         public static Rectangle ShrinkRectangle(this Rectangle rectangle, int shrinkAmount)

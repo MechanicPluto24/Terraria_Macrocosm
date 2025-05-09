@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.penetrate = -1;
             Projectile.tileCollide = false;
             Projectile.alpha = 255;
-            Projectile.timeLeft = 35;
+            Projectile.timeLeft = 85;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 25;
         }
@@ -48,30 +48,28 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override void AI()
         {
             Player player = Main.player[Projectile.owner];
-
             if (AITimer < 1)
                 Projectile.velocity = new Vector2(AimX, AimY);
 
             Projectile.rotation = Projectile.velocity.ToRotation();
-
-            /*
-            Vector2 beamDims = new Vector2(Projectile.velocity.Length() * MaxBeamLength, Projectile.width * Projectile.scale);
-
-            for (int i = 0; i < 2000; i++)
-            {
-                Vector2 pos = Vector2.Lerp(Projectile.Center, Projectile.Center + Projectile.velocity * MaxBeamLength, i / 2000f);
-                var d = Dust.NewDustPerfect(pos, DustID.Astra, Projectile.velocity.RotatedBy(i % 2 == 0 ? MathHelper.PiOver2 : -MathHelper.PiOver2) * Main.rand.NextFloat(0.2f, 0.5f));
-                d.alpha = 127; 
-                d.noGravity = true; 
-            }
-            */
-
             AITimer++;
 
             if (Transparency < 1f && AITimer < 25)
                 Transparency += 0.1f;
             else
-                Transparency -= 0.2f;
+                Transparency -= 0.1f;
+            /*
+            {
+                float visualBeamLength = MaxBeamLength - 14.5f * Projectile.scale * Projectile.scale;
+                for (int i = 0; i < visualBeamLength; i++)
+                {
+                    Vector2 pos = Vector2.Lerp(Projectile.Center, Projectile.Center + Projectile.velocity * MaxBeamLength, i / 2000f);
+                    var d = Dust.NewDustPerfect(pos, DustID.Electric, Projectile.velocity);
+                    d.alpha = 32;
+                    d.noGravity = true;
+                }
+            }
+            */
         }
 
         public override bool? CanHitNPC(NPC npc)
@@ -81,7 +79,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
         {
-            behindProjectiles.Add(index);
+            overPlayers.Add(index);
         }
 
         public override Color? GetAlpha(Color lightColor)
@@ -91,33 +89,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            // If the beam doesn't have a defined direction, don't draw anything.
             if (Projectile.velocity == Vector2.Zero)
-            {
                 return false;
-            }
 
             Texture2D texture = TextureAssets.Projectile[Type].Value;
             Vector2 centerFloored = Projectile.Center.Floor() + Projectile.velocity * Projectile.scale * 10.5f;
-
-            Vector2 drawScale = new Vector2(Projectile.scale);
-
-            // Reduce the beam length proportional to its square area to reduce block penetration.
             float visualBeamLength = MaxBeamLength - 14.5f * Projectile.scale * Projectile.scale;
-
-            DelegateMethods.f_1 = 1f; // f_1 is an unnamed decompiled variable whose function is unknown. Leave it at 1.
             Vector2 startPosition = centerFloored - Main.screenPosition;
             Vector2 endPosition = startPosition + Projectile.velocity * visualBeamLength;
 
+            Vector2 scale = new Vector2(Projectile.scale * (0.5f + 0.5f * Transparency));
+            Color color = new Color(171, 255, 255).WithAlpha(86) * Transparency * (0.9f + (0.1f * MathF.Sin(AITimer)));
+            startPosition += Main.rand.NextVector2Circular(2, 2);
+
             state.SaveState(Main.spriteBatch);
             Main.spriteBatch.End();
-            Main.spriteBatch.Begin(BlendState.Additive, state);
+            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
 
-            Color color = new Color(171, 255, 255).WithAlpha(225) * Transparency * (0.9f + (0.1f * MathF.Sin(AITimer)));
-            for (int i = 0; i < 3; i++)
+            float count = (4f * Transparency);
+            for (int i = 0; i < count; i++)
             {
-                Vector2 visualStartPosition = startPosition + new Vector2(0, Main.rand.NextFloat(-10f, 4f)).RotatedBy(Projectile.velocity.ToRotation());
-                Utility.DrawBeam(texture, visualStartPosition, endPosition, drawScale, color, new Utils.LaserLineFraming(DelegateMethods.RainbowLaserDraw));
+                float scaleFactor = 1f + i * 0.3f;
+                float alphaFactor = 1f - i / count;
+                Utility.DrawBeam(texture, startPosition, endPosition, scale * scaleFactor, color * alphaFactor, new Utils.LaserLineFraming(DelegateMethods.LightningLaserDraw));
             }
 
             Main.spriteBatch.End();

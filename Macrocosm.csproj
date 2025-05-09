@@ -33,6 +33,7 @@
 		<HintPath>References\ModLiquidLib.dll</HintPath>
 	</Reference>
   </ItemGroup>
+   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
   <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.fxc"> -->
       <!-- <Exec Command="EasyXnb.exe" WorkingDirectory="Tools/EasyXnb" /> -->
   <!-- </Target> -->

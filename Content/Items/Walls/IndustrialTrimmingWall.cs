@@ -1,3 +1,6 @@
+using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks;
 using Terraria;
 using Terraria.ID;
@@ -5,7 +8,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Walls
 {
-    [LegacyName("MoonBaseTrimmingWall")]
     public class IndustrialTrimmingWall : ModItem
     {
         public override void SetStaticDefaults()
@@ -16,7 +18,7 @@ namespace Macrocosm.Content.Items.Walls
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableWall(ModContent.WallType<Tiles.Walls.IndustrialTrimmingWall>());
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.IndustrialTrimmingWall>());
             Item.width = 24;
             Item.height = 24;
         }
@@ -30,7 +32,6 @@ namespace Macrocosm.Content.Items.Walls
         }
     }
 
-    [LegacyName("MoonBaseTrimmingWallUnsafe")]
     public class IndustrialTrimmingWallUnsafe : IndustrialTrimmingWall
     {
         public override string Texture => base.Texture.Replace("Unsafe", "");
@@ -45,7 +46,7 @@ namespace Macrocosm.Content.Items.Walls
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.createWall = ModContent.WallType<Tiles.Walls.IndustrialTrimmingWallUnsafe>();
+            Item.createWall = VariantWall.WallType<Content.Walls.IndustrialTrimmingWall>(WallSafetyType.Unsafe);
         }
     }
 }

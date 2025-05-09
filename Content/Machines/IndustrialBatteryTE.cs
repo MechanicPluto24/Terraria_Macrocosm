@@ -1,6 +1,4 @@
-﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Systems.Power;
-using Terraria;
+﻿using Macrocosm.Common.Systems.Power;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines

@@ -4,16 +4,12 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
-using System.Linq;
-using System.Reflection;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.Achievements;
 using Terraria.GameContent.UI.Chat;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -123,7 +119,7 @@ namespace Macrocosm.Common.UI
                 shouldNetsync = false;
             }
 
-            if(IsMouseHovering)
+            if (IsMouseHovering)
                 Main.LocalPlayer.mouseInterface = true;
         }
 
@@ -324,20 +320,11 @@ namespace Macrocosm.Common.UI
             }
         }
 
-        private static MethodInfo itemSlot_TryItemSwap;
-        private static MethodInfo itemSlot_TryOpenContainer;
-
         private static void TryItemSwap(Item item)
-        {
-            itemSlot_TryItemSwap ??= typeof(ItemSlot).GetMethod("TryItemSwap", BindingFlags.NonPublic | BindingFlags.Static);
-            itemSlot_TryItemSwap.Invoke(null, [item]);
-        }
+            => typeof(ItemSlot).InvokeMethod("TryItemSwap", parameters: [item]);
 
         private static void TryOpenContainer(Item item, Player player)
-        {
-            itemSlot_TryOpenContainer ??= typeof(ItemSlot).GetMethod("TryOpenContainer", BindingFlags.NonPublic | BindingFlags.Static);
-            itemSlot_TryOpenContainer.Invoke(null, [item, player]);
-        }
+            => typeof(ItemSlot).InvokeMethod("TryOpenContainer", parameters: [item, player]);
 
         protected sealed override void DrawSelf(SpriteBatch spriteBatch)
         {
@@ -375,8 +362,18 @@ namespace Macrocosm.Common.UI
             spriteBatch.Draw(slotTexture.Value, position, null, slotColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
             spriteBatch.Draw(slotBorderTexture.Value, position, null, slotBorderColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
-            if (IsMouseHovering && inventory.GetReservedTooltip(itemIndex) is not null)
-                Main.instance.MouseTextNoOverride(inventory.GetReservedTooltip(itemIndex).Value);
+            if (IsMouseHovering)
+            {
+                if (inventory.TryGetReservedItemClone(itemIndex, out Item itemClone))
+                {
+                    Main.HoverItem = itemClone;
+                    Main.hoverItemName = itemClone.Name;
+                }
+                else if (inventory.GetReservedTooltip(itemIndex) is not null)
+                {
+                    Main.instance.MouseTextNoOverride(inventory.GetReservedTooltip(itemIndex).Value);
+                }
+            }
 
             if (inventory.GetReservedTexture(itemIndex) is not null && item.type == ItemID.None)
                 spriteBatch.Draw(inventory.GetReservedTexture(itemIndex).Value, position + (slotTexture.Size() / 2f * Main.inventoryScale), null, slotBorderColor, 0f, inventory.GetReservedTexture(itemIndex).Size() / 2f, Main.inventoryScale, SpriteEffects.None, 0f);

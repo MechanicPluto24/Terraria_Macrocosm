@@ -27,8 +27,8 @@ namespace Macrocosm.Content.Items.Bars
             Item.consumable = true;
             Item.createTile = ModContent.TileType<Tiles.Bars.DianiteBar>();
             Item.placeStyle = 0;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
-            
+            Item.rare = ModContent.RarityType<MoonRarity1>();
+
 
         }
 

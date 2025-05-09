@@ -1,5 +1,4 @@
 ﻿using Macrocosm.Common.Systems;
-using Macrocosm.Common.Systems.Power;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;

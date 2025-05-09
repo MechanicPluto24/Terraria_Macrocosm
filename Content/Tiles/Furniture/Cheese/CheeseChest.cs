@@ -57,10 +57,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
             TileObjectData.addTile(Type);
         }
 
-        public override LocalizedText DefaultContainerName(int frameX, int frameY)
-        {
-            return this.GetLocalization("MapEntry");
-        }
+        public override LocalizedText DefaultContainerName(int frameX, int frameY) => this.GetLocalization("MapEntry");
 
         public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings) => true;
 

@@ -44,7 +44,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.noMelee = true; //so the item's animation doesn't do damage
             Item.knockBack = 0; // Sets the item's knockback. Note that projectiles shot by this weapon will use its and the used ammunition's knockback added together.
             Item.value = Item.sellPrice(silver: 700);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.autoReuse = true; // if you can hold click to automatically use it again
             Item.shoot = Macrocosm.ItemShoot_UsesAmmo; //this gun uses a holdout projectile
             Item.shootSpeed = 32f; // the speed of the projectile (measured in pixels per frame)

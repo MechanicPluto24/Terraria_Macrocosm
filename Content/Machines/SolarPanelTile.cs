@@ -1,12 +1,8 @@
 ﻿using Macrocosm.Common.Systems.Power;
+using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
-using Macrocosm.Content.Dusts;
-using Terraria.DataStructures;
-using Terraria.Enums;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Machines
 {

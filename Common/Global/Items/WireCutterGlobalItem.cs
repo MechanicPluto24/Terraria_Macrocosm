@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Global.Items
         {
             Tile targetTile = player.TargetTile();
             Point targetCoords = player.TargetCoords();
-            if (targetTile.AnyWire() || targetTile.HasActuator)
+            if (targetTile.HasWire() || targetTile.HasActuator)
                 return null;
 
             if (ConnectorSystem.Map[targetCoords].Any)

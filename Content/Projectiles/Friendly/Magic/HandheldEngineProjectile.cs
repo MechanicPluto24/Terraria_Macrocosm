@@ -25,7 +25,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private static Asset<Texture2D> glowmask;
         private static Asset<Texture2D> flame;
         private static Asset<Texture2D> warning;
-        private static Asset<Effect> colorGradientSquare;
 
         public ref float AI_Overheat => ref Projectile.ai[0];
         public ref float AI_UseCounter => ref Projectile.ai[1];
@@ -221,12 +220,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             for (int i = 0; i < stripDataCount; i++)
                 positions[i] += Utility.PolarVector(4f * i, Projectile.rotation);
 
-            var shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+            var shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
                 .UseProjectionMatrix(doUse: true)
                 .UseSaturation(-2.4f)
-                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
-                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
+                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutMask"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "RocketExhaustTrail1"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "RocketExhaustTrail2"));
 
             shader.Apply();
 
@@ -243,8 +242,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             Rectangle sourceRect = TextureAssets.Projectile[Type].Frame(1, Main.projFrames[Type], frameY: Projectile.frame);
 
-            colorGradientSquare ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorGradientSquare", AssetRequestMode.ImmediateLoad);
-            Effect effect = colorGradientSquare.Value;
+            Effect effect = Macrocosm.GetShader("ColorGradientSquare");
             effect.Parameters["uSourceRect"].SetValue(new Vector4((float)sourceRect.X, (float)sourceRect.Y, (float)sourceRect.Width, (float)sourceRect.Height));
             effect.Parameters["uImageSize0"].SetValue(TextureAssets.Projectile[Type].Size());
 

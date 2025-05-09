@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections;
@@ -65,6 +66,11 @@ namespace Macrocosm.Common.UI
         {
             this.title = title?.ProvideUIText();
             this.list = list;
+        }
+
+        public void ReplaceListElement(UIElement toRemove, UIElement newElement)
+        {
+            list.ReplaceChildWith(toRemove, newElement);
         }
 
         public override void OnInitialize()

@@ -1,12 +1,12 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Debuffs.Weapons
 {

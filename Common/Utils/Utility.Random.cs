@@ -15,6 +15,15 @@ namespace Macrocosm.Common.Utils
             return Main.rand.NextFloat(-MathHelper.Pi, MathHelper.Pi);
         }
 
+        public static void Shuffle<T>(UnifiedRandom rand, T[] array)
+        {
+            for (int i = array.Length - 1; i > 0; i--)
+            {
+                int j = rand.Next(i + 1);
+                (array[i], array[j]) = (array[j], array[i]);
+            }
+        }
+
         public static T GetRandom<T>(this IList<T> list, UnifiedRandom random = null)
         {
             random ??= Main.rand;

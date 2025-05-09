@@ -28,8 +28,6 @@ namespace Macrocosm.Content.Particles
         private bool fadedIn = false;
         private bool collided = false;
 
-        public override ParticleDrawLayer DrawLayer => collided ? ParticleDrawLayer.AfterProjectiles : ParticleDrawLayer.BeforeNPCs;
-
         public override void SetDefaults()
         {
             TimeToLive = 120;
@@ -65,6 +63,8 @@ namespace Macrocosm.Content.Particles
 
         public override void AI()
         {
+            DrawLayer = collided ? ParticleDrawLayer.AfterProjectiles : ParticleDrawLayer.BeforeNPCs;
+
             if (FadeIn && FadeOut)
             {
                 if (!fadedIn)
@@ -117,7 +117,7 @@ namespace Macrocosm.Content.Particles
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            spriteBatch.Draw(Texture.Value, Position - screenPosition, GetFrame(), Color.Lerp(Color, lightColor, 0.5f).WithAlpha(Color.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Color.Lerp(Color, lightColor, 0.5f).WithAlpha(Color.A) * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
     }

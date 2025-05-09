@@ -8,13 +8,11 @@ using Terraria.DataStructures;
 using Terraria.GameContent.ObjectInteractions;
 using Terraria.ID;
 using Terraria.Localization;
-using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseLocker")]
     public class IndustrialLocker : ModTile
     {
         public override void SetStaticDefaults()
@@ -80,7 +78,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Tile tile = Main.tile[i, j];
             Main.mouseRightRelease = false;
 
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
             int left = topLeft.X;
             int top = topLeft.Y;
 
@@ -142,7 +140,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             Player player = Main.LocalPlayer;
             Tile tile = Main.tile[i, j];
 
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
             int left = topLeft.X;
             int top = topLeft.Y;
 

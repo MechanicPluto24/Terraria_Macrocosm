@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Cheese
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, i, j, 1, 1);
-        }   
+        }
 
         public override void HitWire(int i, int j)
         {

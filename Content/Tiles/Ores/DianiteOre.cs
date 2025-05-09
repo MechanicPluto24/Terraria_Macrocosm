@@ -38,7 +38,7 @@ namespace Macrocosm.Content.Tiles.Ores
         {
             WorldGen.TileMergeAttempt(-2, ModContent.TileType<Regolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
         }
-        
+
         public override bool CanExplode(int i, int j)
         {
             return false;

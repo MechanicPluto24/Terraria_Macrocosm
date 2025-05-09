@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Enums;
 using System;
 using Terraria.Localization;
 
@@ -13,22 +14,20 @@ namespace Macrocosm.Content.Rockets.UI.Navigation.Info
         protected override LocalizedText GetLocalizedValueUnitText(ref float value)
         {
             bool inGs = ClientConfig.Instance.DisplayGravityInGs;
-            var type = ClientConfig.Instance.UnitSystem;
-
-            string unit = inGs ? "G" : type.ToString();
-
+            UnitSystemType unitType = ClientConfig.Instance.UnitSystem;
             if (!inGs)
             {
-                // approximate value of Earth's gravitational acceleration
+                // Approx of Earth's gravitational acceleration, m/s^2
                 value *= 9.8f;
 
-                // convert to feet/s^2
-                if (type == ClientConfig.UnitSystemType.Imperial)
+                // Convert to feet/s^2
+                if (unitType == UnitSystemType.Imperial)
                     value *= 3.28084f;
-
-                value = MathF.Round(value, 3);
             }
 
+            value = MathF.Round(value, 3);
+
+            string unit = inGs ? "G" : unitType.ToString();
             return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.Gravity.Unit" + unit);
         }
     }

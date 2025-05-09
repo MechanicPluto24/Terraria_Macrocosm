@@ -1,4 +1,5 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
@@ -58,58 +59,44 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 spawned = true;
             }
 
-            if (Projectile.ai[0] == 1f)//Luminite
+            switch ((LuminiteStyle)Projectile.ai[0])
             {
-                color1 = new Color(94, 229, 163);
-                color2 = new Color(213, 155, 148);
-            }
-
-            if (Projectile.ai[0] == 2f)//Heavanforge
-            {
-                color1 = new Color(89, 114, 141);
-                color2 = new Color(114, 107, 122);
-            }
-
-            if (Projectile.ai[0] == 3f)//Lunar Rust
-            {
-                color1 = new Color(112, 242, 243);
-                color2 = new Color(227, 136, 177);
-            }
-
-            if (Projectile.ai[0] == 4f)//Astra
-            {
-                color1 = new Color(132, 255, 221);
-                color2 = new Color(60, 135, 238);
-            }
-
-            if (Projectile.ai[0] == 5f)//Dark Celestial
-            {
-                color1 = new Color(145, 253, 180);
-                color2 = new Color(120, 87, 153);
-            }
-
-            if (Projectile.ai[0] == 6f)//Mercury
-            {
-                color1 = new Color(148, 187, 187);
-                color2 = new Color(212, 209, 209);
-            }
-
-            if (Projectile.ai[0] == 7f)//Star royale
-            {
-                color1 = new Color(240, 198, 96);
-                color2 = new Color(3, 129, 247);
-            }
-
-            if (Projectile.ai[0] == 8f)//Cryocore
-            {
-                color1 = new Color(121, 245, 231);
-                color2 = new Color(144, 146, 221);
-            }
-
-            if (Projectile.ai[0] == 9f)//Cosmic Ember
-            {
-                color1 = new Color(255, 129, 97);
-                color2 = new Color(127, 200, 155);
+                case LuminiteStyle.Luminite:
+                    color1 = new Color(94, 229, 163);
+                    color2 = new Color(213, 155, 148);
+                    break;
+                case LuminiteStyle.Heavenforge:
+                    color1 = new Color(89, 114, 141);
+                    color2 = new Color(114, 107, 122);
+                    break;
+                case LuminiteStyle.LunarRust:
+                    color1 = new Color(112, 242, 243);
+                    color2 = new Color(227, 136, 177);
+                    break;
+                case LuminiteStyle.Astra:
+                    color1 = new Color(132, 255, 221);
+                    color2 = new Color(60, 135, 238);
+                    break;
+                case LuminiteStyle.DarkCelestial:
+                    color1 = new Color(145, 253, 180);
+                    color2 = new Color(120, 87, 153);
+                    break;
+                case LuminiteStyle.Mercury:
+                    color1 = new Color(148, 187, 187);
+                    color2 = new Color(212, 209, 209);
+                    break;
+                case LuminiteStyle.StarRoyale:
+                    color1 = new Color(240, 198, 96);
+                    color2 = new Color(3, 129, 247);
+                    break;
+                case LuminiteStyle.Cryocore:
+                    color1 = new Color(121, 245, 231);
+                    color2 = new Color(144, 146, 221);
+                    break;
+                case LuminiteStyle.CosmicEmber:
+                    color1 = new Color(255, 129, 97);
+                    color2 = new Color(127, 200, 155);
+                    break;
             }
 
             trail = new LunarBloodTrail { BloodColour1 = color1.WithAlpha(60), BloodColour2 = color2.WithAlpha(60) };

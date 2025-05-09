@@ -1,13 +1,11 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs;
 using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -52,13 +50,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            if(ApplyDebuff)
+            if (ApplyDebuff)
                 target.AddBuff<ProcellarumLightningMark>(3 * 60);
         }
 
         public override void OnHitPlayer(Player target, Player.HurtInfo info)
         {
-            if(ApplyDebuff)
+            if (ApplyDebuff)
                 target.AddBuff<ProcellarumLightningMark>(3 * 60);
         }
 

@@ -1,18 +1,16 @@
 ﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.UI;
 
 namespace Macrocosm.Content.Rockets.UI.Assembly
 {
-    public class UIRocketBlueprint : UIPanel, IRocketUIDataConsumer
+    public class UIRocketBlueprint : UIPanel
     {
-        public Rocket Rocket { get; set; } = new();
+        public Rocket Rocket { get; set; }
 
         public UIRocketBlueprint()
         {
@@ -46,7 +44,7 @@ namespace Macrocosm.Content.Rockets.UI.Assembly
                 return;
 
             CalculatedStyle dimensions = GetDimensions();
-            Vector2 position = dimensions.Center() - Rocket.Bounds.Size() / 2f;
+            Vector2 position = dimensions.Center() - Rocket.Bounds.Size / 2f;
 
             state.SaveState(spriteBatch);
             spriteBatch.End();

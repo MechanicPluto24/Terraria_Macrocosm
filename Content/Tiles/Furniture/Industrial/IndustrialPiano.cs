@@ -10,7 +10,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBasePiano")]
     public class IndustrialPiano : ModTile
     {
         public override void SetStaticDefaults()

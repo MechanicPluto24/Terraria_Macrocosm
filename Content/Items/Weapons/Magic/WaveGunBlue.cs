@@ -18,22 +18,22 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
-            Item.damage = 300;
+            Item.damage = 350;
             Item.DamageType = DamageClass.Magic;
             Item.mana = 10;
             Item.width = 54;
             Item.height = 36;
-            Item.useTime = 20;
+            Item.useTime = 18;
+            Item.useAnimation = 18;
             Item.noUseGraphic = true;
-            Item.useAnimation = 20;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.noMelee = true;
             Item.knockBack = 3f;
             Item.value = Item.sellPrice(0, 5, 0, 0);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<WaveGunBlueHeld>();
-            Item.shootSpeed = 28f;
+            Item.shootSpeed = 36f;
             Item.channel = true;
         }
 

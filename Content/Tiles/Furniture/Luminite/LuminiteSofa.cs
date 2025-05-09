@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
 
             AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
             AdjTiles = [TileID.Benches];
-            DustType = ModContent.DustType<CheeseDust>();
+            DustType = DustID.LunarOre;
         }
 
         public override bool CreateDust(int i, int j, ref int type)

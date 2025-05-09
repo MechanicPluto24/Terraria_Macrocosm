@@ -17,8 +17,8 @@ namespace Macrocosm.Content.Items.Drops
             Item.height = 20;
             Item.maxStack = Item.CommonMaxStack;
             Item.value = Item.sellPrice(gold: 1);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
-            
+            Item.rare = ModContent.RarityType<MoonRarity2>();
+
 
         }
     }

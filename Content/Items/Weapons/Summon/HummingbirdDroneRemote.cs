@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             Item.useAnimation = 36;
             Item.useStyle = ItemUseStyleID.HoldUp;
             Item.value = Item.sellPrice(gold: 30);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.UseSound = SFX.RobotSummon;
 
             Item.noMelee = true;

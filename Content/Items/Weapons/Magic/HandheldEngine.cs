@@ -28,7 +28,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.noMelee = true;
             Item.knockBack = 0;
             Item.value = Item.sellPrice(silver: 700);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<HandheldEngineProjectile>();
             Item.shootSpeed = 1f;

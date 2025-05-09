@@ -1,15 +1,10 @@
-﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.Storage;
-using Microsoft.VisualBasic;
+﻿using Macrocosm.Common.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection.PortableExecutable;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.IO;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;

@@ -131,13 +131,29 @@ namespace Macrocosm.Content.Tiles.Torches
             int frameY = tile.TileFrameY;
 
             int style = TileObjectData.GetTileStyle(Main.tile[i, j]);
-            Color color = new Color(105, 255, 145, 0);
+            Color color = new(105, 255, 145, 0);
 
             for (int k = 0; k < 7; k++)
             {
                 float xx = Utils.RandomInt(ref randSeed, -10, 11) * 0.15f;
                 float yy = Utils.RandomInt(ref randSeed, -10, 1) * 0.35f;
                 spriteBatch.Draw(flameTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X - (width - 16f) / 2f + xx, j * 16 - (int)Main.screenPosition.Y + offsetY + yy) + zero, new Rectangle(frameX, frameY, width, height), color, 0f, default, 1f, SpriteEffects.None, 0f);
+            }
+        }
+
+        public override void EmitParticles(int i, int j, Tile tileCache, short tileFrameX, short tileFrameY, Color tileLight, bool visible)
+        {
+            if (!visible)
+                return;
+
+            if (Main.rand.NextBool(40) && tileFrameX < 22 * 3)
+            {
+                Dust dust = Dust.NewDustDirect(new Vector2(i * 16 + 4, j * 16), 4, 4, ModContent.DustType<LuminiteBrightDust>(), 0f, 0f, 100);
+                if (!Main.rand.NextBool(3))
+                    dust.noGravity = true;
+
+                dust.velocity *= 0.3f;
+                dust.velocity.Y -= 1.5f;
             }
         }
     }

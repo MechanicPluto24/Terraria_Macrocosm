@@ -37,10 +37,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             BannerItem = Item.BannerToItem(Banner);
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? .1f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? 0.1f : 0f;
 
         public override bool PreAI()
         {

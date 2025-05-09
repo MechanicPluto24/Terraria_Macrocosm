@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
@@ -78,7 +77,7 @@ namespace Macrocosm.Content.Machines
                     }
                 }
 
-                if (fuelFound )
+                if (fuelFound)
                 {
                     TurnOn(automatic: true);
                 }
@@ -117,7 +116,7 @@ namespace Macrocosm.Content.Machines
                 }
 
                 // Decrease heat if not found
-                if(!fuelFound)
+                if (!fuelFound)
                 {
                     HullHeatProgress -= HullHeatRate * 5f;
                 }

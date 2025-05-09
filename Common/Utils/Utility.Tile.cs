@@ -1,13 +1,11 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Systems;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
@@ -17,13 +15,49 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
+        /// <summary> The X coordinate of the Tile </summary>
+        public static int X(this Tile tile) => GetTilePosition(tile).X;
+
+        /// <summary> The Y coordinate of the Tile </summary>
+        public static int Y(this Tile tile) => GetTilePosition(tile).Y;
+
+        /// <summary> Gets the Position of the tile, the same values that would be inputted in Main.tile to get this Tile  </summary>
+        public static Point GetTilePosition(this Tile tile)
+        {
+            GetTilePosition(tile, out int x, out int y);
+            return new Point(x, y);
+        }
+
+        /// <summary>
+        /// Gets the coordinates of the tile, the same values that would be inputted in Main.tile to get this Tile
+        /// <br/> By FoxXD_ and lion8cake
+        /// </summary>
+        public static void GetTilePosition(this Tile tile, out int x, out int y)
+        {
+            uint tileId = Unsafe.BitCast<Tile, uint>(tile); // Get the tile position (packed into an uint32)
+            x = Math.DivRem((int)tileId, Main.tile.Height, out y); //Thanks to FoxXD_ for the help with this
+        }
+
         /// <summary> Get the ModTile of a <see cref="Tile"/>. Returns <langword>null</langword> if it doesn't exist. </summary>
         public static ModTile GetModTile(this Tile tile) => TileLoader.GetTile(tile.TileType);
 
         public static Vector2 ToWorldCoordinates(this Point point) => new(point.X * 16f, point.Y * 16f);
         public static Vector2 ToWorldCoordinates(this Point16 point) => new(point.X * 16f, point.Y * 16f);
+
         public static bool IsSloped(this Tile tile) => (int)tile.BlockType > 1;
-        public static bool AnyWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
+        public static bool IsPlatform(int type) => Main.tileSolid[type] && Main.tileSolidTop[type];
+        public static bool HasWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
+        public static bool HasWire(this Tile tile, WireType wireType)
+        {
+            return wireType switch
+            {
+                WireType.Red => tile.RedWire,
+                WireType.Blue => tile.BlueWire,
+                WireType.Green => tile.GreenWire,
+                WireType.Yellow => tile.YellowWire,
+                _ => false
+            };
+        }
 
         public static ulong GetTileFrameSeed(int i, int j) => Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i); // Don't remove any casts.
 
@@ -33,72 +67,6 @@ namespace Macrocosm.Common.Utils
             tile.TileFrameX = (short)x;
             tile.TileFrameY = (short)y;
         }
-
-        /// <summary>
-        /// Gets the top-left tile coordinates of a multitile
-        /// </summary>
-        /// <param name="i">The tile X-coordinate</param>
-        /// <param name="j">The tile Y-coordinate</param>
-        public static Point16 GetMultitileTopLeft(int i, int j)
-        {
-            if (!WorldGen.InWorld(i, j))
-                return new Point16(0, 0);
-
-            Tile tile = Main.tile[i, j];
-
-            int frameX = 0;
-            int frameY = 0;
-
-            if (tile.HasTile)
-            {
-                int style = 0, alt = 0;
-                TileObjectData.GetTileInfo(tile, ref style, ref alt);
-                TileObjectData data = TileObjectData.GetTileData(tile.TileType, style, alt);
-
-                if (data != null)
-                {
-                    int padding = 16 + data.CoordinatePadding;
-
-                    frameX = tile.TileFrameX % (padding * data.Width) / padding;
-                    frameY = tile.TileFrameY % (padding * data.Height) / padding;
-                }
-            }
-
-            return new Point16(i - frameX, j - frameY);
-        }
-
-        /// <summary>
-        /// Uses <seealso cref="GetMultitileTopLeft(int, int)"/> to try to get the entity bound to the multitile at (<paramref name="i"/>, <paramref name="j"/>).
-        /// </summary>
-        /// <typeparam name="T">The type to get the entity as</typeparam>
-        /// <param name="i">The tile X-coordinate</param>
-        /// <param name="j">The tile Y-coordinate</param>
-        /// <param name="entity">The found <typeparamref name="T"/> instance, if there was one.</param>
-        /// <returns><see langword="true"/> if there was a <typeparamref name="T"/> instance, or <see langword="false"/> if there was no entity present OR the entity was not a <typeparamref name="T"/> instance.</returns>
-        public static bool TryGetTileEntityAs<T>(int i, int j, out T entity) where T : TileEntity
-        {
-            Point16 origin = GetMultitileTopLeft(i, j);
-
-            //TileEntity.ByPosition is a Dictionary<Point16, TileEntity> which contains all placed TileEntity instances in the world
-            //TryGetValue is used to both check if the dictionary has the key, origin, and get the value from that key if it's there
-            if (TileEntity.ByPosition.TryGetValue(origin, out TileEntity existing) && existing is T existingAsT)
-            {
-                entity = existingAsT;
-                return true;
-            }
-
-            entity = null;
-            return false;
-        }
-
-
-        /// <inheritdoc cref="TryGetTileEntityAs{T}(int, int, out T)"/>
-        public static bool TryGetTileEntityAs<T>(Point position, out T entity) where T : TileEntity 
-            => TryGetTileEntityAs(position.X, position.Y, out entity);
-
-        /// <inheritdoc cref="TryGetTileEntityAs{T}(int, int, out T)"/>
-        public static bool TryGetTileEntityAs<T>(Point16 position, out T entity) where T : TileEntity
-            => TryGetTileEntityAs(position.X, position.Y, out entity);
 
         /// <summary>
         /// Sets the tile <paramref name="style"/> and <paramref name="alternate"/> placement at the specified <paramref name="x"/> and <paramref name="y"/> coordinates.
@@ -121,14 +89,14 @@ namespace Macrocosm.Common.Utils
             // Get the top-left corner of the multi-tile 
             Point16 topLeft = new(x, y);
             if (data.Width > 1 || data.Height > 1)
-                topLeft = GetMultitileTopLeft(x, y);
+                topLeft = TileObjectData.TopLeft(x, y);
 
             WorldGen.KillTile(topLeft.X, topLeft.Y, noItem: true);
 
             int dir = 1;
             int tileX = topLeft.X + data.Origin.X;
             int tileY = topLeft.Y + data.Origin.Y;
-            if(TileObject.CanPlace(tileX, tileY, type, style, dir, out TileObject tileObject))
+            if (TileObject.CanPlace(tileX, tileY, type, style, dir, out TileObject tileObject))
             {
                 WorldGen.PlaceObject(tileX, tileY, type, mute: true, style, alternate);
                 TileObjectData.CallPostPlacementPlayerHook(tileX, tileY, type, style, dir, alternate, tileObject);
@@ -138,9 +106,8 @@ namespace Macrocosm.Common.Utils
         public static Color GetPaintColor(Point coords) => WorldGen.paintColor(Main.tile[coords].TileColor);
         public static Color GetPaintColor(int i, int j) => WorldGen.paintColor(Main.tile[i, j].TileColor);
         public static Color GetPaintColor(this Tile tile) => WorldGen.paintColor(tile.TileColor);
-
+        public static bool IsBasePaint(byte paintID) => paintID >= PaintID.RedPaint && paintID <= PaintID.PinkPaint;
         public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
-
         public static Color GetTileColor(int i, int j)
         {
             if (CoordinatesOutOfBounds(i, j))
@@ -168,9 +135,9 @@ namespace Macrocosm.Common.Utils
                 Color paintColor = tile.GetPaintColor();
                 byte max = Math.Max(Math.Max(baseColor.R, baseColor.G), baseColor.B);
 
-                if (paintID >= PaintID.RedPaint && paintID <= PaintID.PinkPaint)
+                if (IsBasePaint(paintID))
                     baseColor = Color.Lerp(baseColor, paintColor, 0.5f); // Regular paints
-                else 
+                else
                     baseColor = paintColor * (max / 255f); // Deep paints & other
             }
 
@@ -238,7 +205,7 @@ namespace Macrocosm.Common.Utils
                             }
                             else
                             {
-                                Vector2 top = GetMultitileTopLeft(x2, y2).ToVector2();
+                                Vector2 top = TileObjectData.TopLeft(x2, y2).ToVector2();
                                 x2 = (int)top.X;
                                 y2 = (int)top.Y;
                             }
@@ -287,7 +254,7 @@ namespace Macrocosm.Common.Utils
                             }
                             else
                             {
-                                Point p = GetMultitileTopLeft(x2, y2).ToPoint();
+                                Point p = TileObjectData.TopLeft(x2, y2).ToPoint();
                                 x2 = p.X;
                                 y2 = p.Y;
                             }
@@ -330,26 +297,6 @@ namespace Macrocosm.Common.Utils
             return liquidAmt;
         }
 
-        ///<summary>
-        /// Returns true if the tile type acts similarly to a platform.
-        /// By GroxTheGreat @ BaseMod
-        ///</summary>
-        public static bool IsPlatform(int type) => Main.tileSolid[type] && Main.tileSolidTop[type];
-
-        public static bool HasWire(this Tile tile) => tile.RedWire || tile.BlueWire || tile.GreenWire || tile.YellowWire;
-
-        public static bool HasWire(this Tile tile, WireType wireType)
-        {
-            return wireType switch
-            {
-                WireType.Red => tile.RedWire,
-                WireType.Blue => tile.BlueWire,
-                WireType.Green => tile.GreenWire,
-                WireType.Yellow => tile.YellowWire,
-                _ => false
-            };
-        }
-
         public static IEnumerable<Point16> GetWireNeighbors(int x, int y, WireType? wireType = null)
         {
             Point16[] directions =
@@ -365,12 +312,12 @@ namespace Macrocosm.Common.Utils
                 int nx = x + dir.X;
                 int ny = y + dir.Y;
 
-                if (!WorldGen.InWorld(nx, ny)) 
+                if (!WorldGen.InWorld(nx, ny))
                     continue;
 
                 Tile neighborTile = Main.tile[nx, ny];
 
-                if(wireType.HasValue)
+                if (wireType.HasValue)
                 {
                     if (HasWire(neighborTile, wireType.Value))
                         yield return new Point16(nx, ny);

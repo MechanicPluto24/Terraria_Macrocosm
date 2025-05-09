@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Particles
     /// <summary> Dust wrapped by a particle, allows access to Particle fields, for custom behavior </summary>
     public class DustParticle : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public override int MaxPoolCount => 1000;
 
         /// <summary> The type of Dust to use for this particle. </summary>

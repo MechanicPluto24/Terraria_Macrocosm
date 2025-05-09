@@ -2,14 +2,13 @@ using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Systems;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Environment.Debris;
 using Macrocosm.Content.Projectiles.Hostile;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -121,9 +120,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY < Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() ? (RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f: .01f) : 0f;
-        }
+            => !Main.dayTime && spawnInfo.SpawnTileY < Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.01f : 0f;
 
         public override void Init()
         {
@@ -207,7 +204,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                             p.Scale = new(1f);
                             p.Rotation = 0f;
                             p.Color = Smoke.GetTileHitColor(Utility.GetClosestTile(NPC.Center, -1, addTile: (t) => Main.tileSolid[t.TileType] && !t.IsActuated));
-                            p.FadeIn = true;
+                            p.VanillaUpdate = true;
                             p.Opacity = 0f;
                             p.ScaleVelocity = new(0.0075f);
                         });

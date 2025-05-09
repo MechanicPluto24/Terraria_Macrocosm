@@ -8,7 +8,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseGurney")]
     public class IndustrialGurney : ModTile
     {
         public override void SetStaticDefaults()

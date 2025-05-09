@@ -3,7 +3,6 @@ using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Microsoft.CodeAnalysis;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -15,7 +14,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseWallMonitor")]
     public class IndustrialWallMonitor : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;

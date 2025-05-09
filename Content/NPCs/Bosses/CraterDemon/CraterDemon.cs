@@ -30,6 +30,7 @@ using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
@@ -110,8 +111,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                     return;
 
                 Texture2D portal = ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Bosses/CraterDemon/BigPortal").Value;
-                Texture2D circle = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle7").Value;
-                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare1").Value;
+                Texture2D circle = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle7").Value;
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare1").Value;
 
                 spriteBatch.Draw(portal, center - screenPos, null, Color.White * alpha * 0.4f, (-rotation) * 0.65f, portal.Size() / 2f, scale * 1.2f, SpriteEffects.FlipHorizontally, 0);
                 spriteBatch.Draw(portal, center - screenPos, null, Color.White * alpha * 0.8f, rotation, portal.Size() / 2f, scale, SpriteEffects.None, 0);
@@ -524,10 +525,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void OnKill()
         {
-            if (!WorldFlags.DownedCraterDemon)
+            if (!WorldData.DownedCraterDemon)
                 NPC.NewNPC(NPC.GetSource_Death(), (int)NPC.Center.X, (int)NPC.Center.Y, ModContent.NPCType<MoonChampion>());
 
-            WorldFlags.DownedCraterDemon = true;
+            WorldData.DownedCraterDemon = true;
         }
 
         private void UpdateScale(float newScale)
@@ -647,7 +648,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state2);
 
-            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare2").Value;
 
             if (AI_Attack == AttackState.Phase2Transition && AI_AttackProgress >= 1)
             {
@@ -1869,7 +1870,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
                 // Can't use info.DamageSource = PlayerDeathReason.ByCustomReason(...) here:
                 // HurtInfo is a value type and a DamageSource reassignment won't be reflected outside this method
                 // Called on the hit player client, will be synced and message will be broadcasted by the server 
-                info.DamageSource.SourceCustomReason = this.GetLocalization("FunnyDeathMessage").Format(target.name);
+                info.DamageSource.CustomReason = this.GetLocalization("FunnyDeathMessage").ToNetworkText(target.name);
             }
         }
 

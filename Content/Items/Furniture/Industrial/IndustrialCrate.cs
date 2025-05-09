@@ -17,7 +17,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseCrate")]
     public class IndustrialCrate : ModItem
     {
         public override void SetStaticDefaults()
@@ -33,7 +32,7 @@ namespace Macrocosm.Content.Items.Furniture.Industrial
             Item.width = 32;
             Item.height = 32;
             Item.value = 500;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
         }
 
         public override void ModifyResearchSorting(ref ContentSamples.CreativeHelper.ItemGroup itemGroup)

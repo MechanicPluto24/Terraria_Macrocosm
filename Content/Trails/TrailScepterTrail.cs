@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Trails;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -9,12 +10,12 @@ namespace Macrocosm.Content.Trails
 {
     public class TrailScepterTrail : VertexTrail
     {
-        public override MiscShaderData TrailShader => new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
+        public override MiscShaderData TrailShader => new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
             .UseProjectionMatrix(doUse: true)
             .UseSaturation(Saturation)
-            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutTrail"))
-            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail1"))
-            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark7"));
+            .UseImage0(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutTrail"))
+            .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "RocketExhaustTrail1"))
+            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Spark7"));
 
         public override float Saturation => -2f;
 

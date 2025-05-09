@@ -3,11 +3,9 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -44,7 +42,7 @@ namespace Macrocosm.Common.Global.Tiles
                 if (tileAbove.HasTile && type != tileAbove.TileType)
                     return false;
 
-                Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+                Point16 topLeft = TileObjectData.TopLeft(i, j);
                 if (!Chest.CanDestroyChest(topLeft.X, topLeft.Y))
                     return false;
             }
@@ -54,7 +52,7 @@ namespace Macrocosm.Common.Global.Tiles
 
         public override void KillTile(int i, int j, int type, ref bool fail, ref bool effectOnly, ref bool noItem)
         {
-            if(!CanTileBeAltered(i, j, type))
+            if (!CanTileBeAltered(i, j, type))
                 fail = true;
         }
 

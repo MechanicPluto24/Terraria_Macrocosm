@@ -4,7 +4,7 @@ using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Macrocosm.Content.Rarities;
-using Macrocosm.Content.Tiles.Ambient;
+using Macrocosm.Content.Tiles.Misc;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -34,7 +34,7 @@ namespace Macrocosm.Content.Items.Consumables.BossSummons
             Item.height = 18;
             Item.scale = 1f;
             Item.maxStack = Item.CommonMaxStack;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.useAnimation = 45;
             Item.useTime = 45;
             Item.useStyle = ItemUseStyleID.HoldUp;

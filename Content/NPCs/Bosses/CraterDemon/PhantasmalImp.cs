@@ -3,7 +3,6 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Threading;
 using Terraria;
 using Terraria.Audio;
 using Terraria.GameContent;
@@ -34,7 +33,6 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             ProjectileID.Sets.TrailingMode[Type] = 3;
         }
 
-        private static int spawnTimeLeft = 15 * 60;
         public override void SetDefaults()
         {
             Projectile.width = 66;
@@ -182,7 +180,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             if (flashTimer < maxFlashTimer)
             {
-                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare3").Value;
+                Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare3").Value;
                 float progress = flashTimer / maxFlashTimer;
                 float scale = Projectile.scale * progress * (SpawnedFromPortal ? 1.1f : 0.8f);
                 Vector2 position = SpawnedFromPortal ? spawnPosition : Projectile.position + Projectile.Size / 2f;

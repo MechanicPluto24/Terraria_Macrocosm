@@ -1,6 +1,8 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -236,20 +238,40 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void OnKill(int timeLeft)
         {
-            int count = (int)(20f * Projectile.Opacity);
+            int count = (int)(16f * Projectile.Opacity);
             for (int i = 0; i < count; i++)
             {
-                Vector2 velocity = Main.rand.NextVector2Circular(4, 4);
-                Dust dust = Dust.NewDustPerfect(Projectile.position, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(1f, 1.6f));
+                Vector2 velocity = Main.rand.NextVector2Circular(6, 6);
+                Dust dust = Dust.NewDustPerfect(Projectile.position + Projectile.oldVelocity, ModContent.DustType<DianiteBrightDust>(), velocity, Scale: Main.rand.NextFloat(0.8f, 1.4f));
                 dust.noGravity = true;
             }
+
+            count = (int)(10f * Projectile.Opacity);
+            for (int i = 0; i < count; i++)
+            {
+                Particle.Create<TintableSpark>((p) =>
+                {
+                    p.Position = Projectile.Center + Projectile.oldVelocity;
+                    p.Velocity = Main.rand.NextVector2Circular(8, 8);
+                    p.Scale = new(2f);
+                    p.Rotation = 0f;
+                    p.Color = new Color(255, 181, 49);
+                });
+            }
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity;
+                p.Scale = new Vector2(0.2f) * Projectile.Opacity;
+                p.Color = new Color(255, 181, 49) * Projectile.Opacity;
+            });
         }
 
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D tex = TextureAssets.Projectile[Type].Value;
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
+            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle6").Value;
             Vector2 origin = Projectile.Size / 2f;
 
             state.SaveState(Main.spriteBatch);

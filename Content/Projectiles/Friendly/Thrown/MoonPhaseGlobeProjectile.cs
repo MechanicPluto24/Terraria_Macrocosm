@@ -1,8 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
-using Macrocosm.Content.Subworlds;
 using Terraria;
 using Terraria.Audio;
-using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
 

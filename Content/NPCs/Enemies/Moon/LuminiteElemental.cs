@@ -1,7 +1,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Systems;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Hostile;
@@ -21,8 +20,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 {
     public class LuminiteElemental : ModNPC
     {
+        private static Asset<Texture2D> eyeTexture;
         private static Asset<Texture2D> pebbleTexture;
-        private static Asset<Texture2D> starTexture;
 
         public enum ActionState
         {
@@ -46,6 +45,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         public ref float AI_Timer => ref NPC.ai[2];
         public ref float AI_Speed => ref NPC.ai[3];
 
+        // Extra AI
         public Vector2 TargetPosition { get; set; } = default;
         public int HealTimer { get; set; } = 0;
 
@@ -53,10 +53,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         private int pebbleOrbitTimer;
         private float pebbleRotation;
-
-        private float starScale;
-        private Color starColor;
-
+        private float eyeScale;
         private int attackPeriod;
         private int panicAttackPeriod;
 
@@ -98,9 +95,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ?(RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f: .025f) : 0f;
-        }
+            => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.025f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
@@ -190,7 +185,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                         for (int i = 0; i < Main.rand.Next(3, 6); i++)
                         {
                             Vector2 projVelocity = Utility.PolarVector(8f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
-                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
+                            Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminitePebble>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 25f);
                         }
                     }
                 }
@@ -225,7 +220,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     if (Main.netMode != NetmodeID.MultiplayerClient)
                     {
                         Vector2 projVelocity = Utility.PolarVector(12f, Main.rand.NextFloat(0, MathHelper.Pi * 2));
-                        Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminiteShard>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 10f);
+                        Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, projVelocity, ModContent.ProjectileType<LuminitePebble>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer, ai1: NPC.target, ai2: 20f);
                     }
                 }
 
@@ -291,15 +286,24 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         SpriteBatchState state;
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            pebbleTexture ??= ModContent.Request<Texture2D>(Texture + "_Pebble");
             pebbleRotation += 0.001f;
             Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(pebbleOrbitTimer * 2)) * 45f, -(float)Math.Sin(MathHelper.ToRadians(pebbleOrbitTimer * 2)) * 12f);
 
             if ((-(float)Math.Sin(MathHelper.ToRadians(pebbleOrbitTimer * 2)) * 12f) < 0f)
                 DrawPebbles(spriteBatch, drawColor, orbit);
 
+            if (AI_State != ActionState.Panicking)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    Color glowColor = new Color(100, 243, 172, 0) * (1f - i / 10f) * 0.1f;
+                    float glowScale = NPC.scale + (0.07f * i);
+                    spriteBatch.Draw(TextureAssets.Npc[Type].Value, NPC.Center - Main.screenPosition, NPC.frame, glowColor, NPC.rotation, TextureAssets.Npc[Type].Size() / 2, glowScale, NPC.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
+                }
+            }
+
             spriteBatch.Draw(TextureAssets.Npc[Type].Value, NPC.Center - Main.screenPosition, NPC.frame, drawColor, NPC.rotation, TextureAssets.Npc[Type].Size() / 2, NPC.scale, NPC.spriteDirection > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
-            DrawStar(spriteBatch);
+            DrawEye(spriteBatch);
 
             if ((-(float)Math.Sin(MathHelper.ToRadians(pebbleOrbitTimer * 2)) * 12f) >= 0f)
                 DrawPebbles(spriteBatch, drawColor, orbit);
@@ -309,6 +313,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
         private void DrawPebbles(SpriteBatch spriteBatch, Color drawColor, Vector2 orbit)
         {
+            pebbleTexture ??= ModContent.Request<Texture2D>(Texture + "_Pebble");
+            Rectangle frame1 = pebbleTexture.Frame(verticalFrames: 2, frameY: 0);
+            Rectangle frame2 = pebbleTexture.Frame(verticalFrames: 2, frameY: 1);
+
             int trailLength = 50;
             float opacityFactor = 0.1f;
             for (int i = 0; i < trailLength; i++)
@@ -320,53 +328,75 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                     -(float)Math.Sin(MathHelper.ToRadians((pebbleOrbitTimer - i) * 2)) * 12f
                 );
 
-                Color trailColor = drawColor * (1f - lerpFactor) * opacityFactor;
+                Color trailColor = new Color(100, 243, 172, 50) * (1f - lerpFactor) * opacityFactor;
 
-                spriteBatch.Draw(pebbleTexture.Value, NPC.Center + previousOrbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, null, trailColor, pebbleRotation, pebbleTexture.Size() / 2, NPC.scale * (1f - lerpFactor), SpriteEffects.None, 0f);
-                spriteBatch.Draw(pebbleTexture.Value, NPC.Center + previousOrbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, null, trailColor, pebbleRotation, pebbleTexture.Size() / 2, NPC.scale * (1f - lerpFactor), SpriteEffects.FlipHorizontally, 0f);
+                spriteBatch.Draw(pebbleTexture.Value, NPC.Center + previousOrbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, frame1, trailColor, pebbleRotation, frame1.Size() / 2, NPC.scale * (1f - lerpFactor), SpriteEffects.None, 0f);
+                spriteBatch.Draw(pebbleTexture.Value, NPC.Center + previousOrbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, frame2, trailColor, pebbleRotation, frame2.Size() / 2, NPC.scale * (1f - lerpFactor), SpriteEffects.FlipHorizontally, 0f);
             }
 
-            spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, null, drawColor, pebbleRotation, pebbleTexture.Size() / 2, NPC.scale, SpriteEffects.None, 0f);
-            spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, null, drawColor, pebbleRotation, pebbleTexture.Size() / 2, NPC.scale, SpriteEffects.FlipHorizontally, 0f);
+            for (int i = 0; i < 10; i++)
+            {
+                Color glowColor = default;
+                float glowScale = NPC.scale;
+                if (AI_State == ActionState.Attacking)
+                {
+                    glowColor = new Color(100, 243, 172, 50) * (AI_Timer / attackPeriod) * (1f - i / 10f);
+                    glowScale = NPC.scale + (0.075f * i);
+                }
+
+                if (AI_State == ActionState.Panicking)
+                {
+                    glowColor = new Color(100, 243, 172, 50) * (AI_Timer / panicAttackPeriod) * (1f - i / 10f);
+                    glowScale = NPC.scale + (0.075f * i);
+                }
+                spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, frame1, glowColor, pebbleRotation, frame1.Size() / 2, glowScale, SpriteEffects.None, 0f);
+                spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, frame2, glowColor, pebbleRotation, frame2.Size() / 2, glowScale, SpriteEffects.FlipHorizontally, 0f);
+            }
+
+            spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(-30)) - Main.screenPosition, frame1, drawColor, pebbleRotation, frame1.Size() / 2, NPC.scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(pebbleTexture.Value, NPC.Center + orbit.RotatedBy(MathHelper.ToRadians(46)) - Main.screenPosition, frame2, drawColor, pebbleRotation, frame2.Size() / 2, NPC.scale, SpriteEffects.FlipHorizontally, 0f);
         }
 
-        private void DrawStar(SpriteBatch spriteBatch)
+        private void DrawEye(SpriteBatch spriteBatch)
         {
+            eyeTexture ??= ModContent.Request<Texture2D>(Texture + "_Eye");
+
+            float targetScale = NPC.scale * 0.5f * Main.rand.NextFloat(0.8f, 1f);
+            if (AI_State == ActionState.Attacking)
+                targetScale += 0.5f * (AI_Timer / attackPeriod);
+
+            if (AI_State == ActionState.Panicking)
+                targetScale += 0.5f * (AI_Timer / panicAttackPeriod);
+
+            eyeScale = MathHelper.Lerp(targetScale, eyeScale, 1f - 0.075f);
+            float eyeRotation = NPC.rotation;
+            Vector2 position = NPC.Center + new Vector2(3.5f * NPC.direction, -2) - Main.screenPosition;
+            if (NPC.HasValidTarget)
+            {
+                float radians = (Main.player[NPC.target].Center - NPC.Center).ToRotation();
+                position += new Vector2(2).RotatedBy(radians);
+            }
+
             state.SaveState(spriteBatch);
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state);
 
-            starTexture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star1");
-
-            Color targetColor = new Color(100, 243, 172).WithOpacity(Main.rand.NextFloat(0.8f, 1f)) * Main.rand.NextFloat(1f, 1.2f);
-            float targetScale = NPC.scale * 0.02f * Main.rand.NextFloat(0.8f, 1f);
-
-            if (AI_State == ActionState.Attacking)
+            for (int i = 0; i < 10; i++)
             {
-                targetColor *= 1f + 0.5f * (AI_Timer / attackPeriod);
-                targetScale += 0.1f * (AI_Timer / attackPeriod);
+                Color eyeColor = default;
+                if (AI_State == ActionState.Attacking)
+                    eyeColor = new Color(100, 243, 172) * (1f - i / 10f) * (AI_Timer / attackPeriod);
+
+                if (AI_State == ActionState.Panicking)
+                    eyeColor = new Color(100, 243, 172) * (1f - i / 10f) * (AI_Timer / panicAttackPeriod);
+
+                spriteBatch.Draw(eyeTexture.Value, position, null, eyeColor, eyeRotation, eyeTexture.Size() / 2, eyeScale + (0.115f * i), SpriteEffects.None, 0f);
             }
-
-            if (AI_State == ActionState.Panicking)
-            {
-                targetColor *= 1f + 0.5f * (AI_Timer / panicAttackPeriod);
-                targetScale += 0.1f * (AI_Timer / panicAttackPeriod);
-            }
-
-            if (InTiles)
-            {
-                targetColor.A = 50;
-                targetScale *= 0.5f;
-            }
-
-            starColor = Color.Lerp(targetColor, starColor, 1f - 0.075f);
-            starScale = MathHelper.Lerp(targetScale, starScale, 1f - 0.075f);
-
-            Vector2 position = ((NPC.Center + new Vector2(3.5f * NPC.spriteDirection, -1.5f)) + NPC.velocity.SafeNormalize(Vector2.UnitX) * 1.1f) - Main.screenPosition;
-            spriteBatch.Draw(starTexture.Value, position, null, starColor, NPC.rotation, starTexture.Size() / 2, starScale, SpriteEffects.None, 0f);
 
             spriteBatch.End();
             spriteBatch.Begin(state);
+
+            spriteBatch.Draw(eyeTexture.Value, position, null, Color.White, eyeRotation, eyeTexture.Size() / 2, eyeScale, SpriteEffects.None, 0f);
         }
 
         public override void SendExtraAI(BinaryWriter writer)

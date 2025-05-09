@@ -1,19 +1,16 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria.GameContent.Drawing;
-using Terraria.ObjectData;
 using Terraria;
-using Microsoft.Xna.Framework;
-using System.Reflection;
-using Terraria.Utilities;
 using Terraria.GameContent;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Utils;
+using Terraria.GameContent.Drawing;
 using Terraria.ModLoader;
-using Terraria.DataStructures;
+using Terraria.ObjectData;
+using Terraria.Utilities;
 
 namespace Macrocosm.Common.Drawing
 {
@@ -21,98 +18,25 @@ namespace Macrocosm.Common.Drawing
     {
         public void Load(Mod mod)
         {
-            On_TileDrawing.PreDrawTiles += On_TileDrawing_PreDrawTiles; ;
-            On_TileDrawing.PostDrawTiles += On_TileDrawing_PostDrawTiles;
-
-            tileDrawing_DrawAnimatedTile_AdjustForVisionChangers_methodInfo = typeof(TileDrawing).GetMethod("DrawAnimatedTile_AdjustForVisionChangers", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_DrawTiles_GetLightOverride_methodInfo = typeof(TileDrawing).GetMethod("DrawTiles_GetLightOverride", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_GetHighestWindGridPushComplex_methodInfo = typeof(TileDrawing).GetMethod("GetHighestWindGridPushComplex", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            tilePaintSystemV2_requests_fieldInfo = typeof(TilePaintSystemV2).GetField("_requests", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            tileDrawing_treeWindCounter_fieldInfo = typeof(TileDrawing).GetField("_treeWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_grassWindCounter_fieldInfo = typeof(TileDrawing).GetField("_grassWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_sunflowerWindCounter_fieldInfo = typeof(TileDrawing).GetField("_sunflowerWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_vineWindCounter_fieldInfo = typeof(TileDrawing).GetField("_vineWindCounter", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            tileDrawing_leafFrequency_fieldInfo = typeof(TileDrawing).GetField("_leafFrequency", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_rand_fieldInfo = typeof(TileDrawing).GetField("_rand", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            tileDrawing_specialPositions_fieldInfo = typeof(TileDrawing).GetField("_specialPositions", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_specialTileX_fieldInfo = typeof(TileDrawing).GetField("_specialTileX", BindingFlags.NonPublic | BindingFlags.Instance);
-            tileDrawing_specialTileY_fieldInfo = typeof(TileDrawing).GetField("_specialTileY", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         public void Unload()
         {
-            On_TileDrawing.PostDrawTiles -= On_TileDrawing_PostDrawTiles;
         }
 
         public static TileDrawing TileRenderer => Main.instance.TilesRenderer;
 
-        public static double TreeWindCounter => (double)tileDrawing_treeWindCounter_fieldInfo.GetValue(TileRenderer);
-        public static double GrassWindCounter => (double)tileDrawing_grassWindCounter_fieldInfo.GetValue(TileRenderer);
-        public static double SunflowerWindCounter => (double)tileDrawing_sunflowerWindCounter_fieldInfo.GetValue(TileRenderer);
-        public static double VineWindCounter => (double)tileDrawing_vineWindCounter_fieldInfo.GetValue(TileRenderer);
-        public static int TreeLeafFrequency => (int)tileDrawing_leafFrequency_fieldInfo.GetValue(TileRenderer);
-        public static UnifiedRandom TileRendererRandom => (UnifiedRandom)tileDrawing_rand_fieldInfo.GetValue(TileRenderer);
+        public static double TreeWindCounter => typeof(TileDrawing).GetFieldValue<double>("_treeWindCounter", TileRenderer);
+        public static double GrassWindCounter => typeof(TileDrawing).GetFieldValue<double>("_grassWindCounter", TileRenderer);
+        public static double SunflowerWindCounter => typeof(TileDrawing).GetFieldValue<double>("_sunflowerWindCounter", TileRenderer);
+        public static double VineWindCounter => typeof(TileDrawing).GetFieldValue<double>("_vineWindCounter", TileRenderer);
+        public static int TreeLeafFrequency => typeof(TileDrawing).GetFieldValue<int>("_leafFrequency", TileRenderer);
+        public static UnifiedRandom TileRendererRandom => typeof(TileDrawing).GetFieldValue<UnifiedRandom>("_rand", TileRenderer);
 
-        private static MethodInfo tileDrawing_DrawAnimatedTile_AdjustForVisionChangers_methodInfo;
-        private static MethodInfo tileDrawing_DrawTiles_GetLightOverride_methodInfo;
-        private static MethodInfo tileDrawing_GetHighestWindGridPushComplex_methodInfo;
-
-        private static FieldInfo tilePaintSystemV2_requests_fieldInfo;
-
-        private static FieldInfo tileDrawing_treeWindCounter_fieldInfo;
-        private static FieldInfo tileDrawing_grassWindCounter_fieldInfo;
-        private static FieldInfo tileDrawing_sunflowerWindCounter_fieldInfo;
-        private static FieldInfo tileDrawing_vineWindCounter_fieldInfo;
-
-        private static FieldInfo tileDrawing_leafFrequency_fieldInfo;
-        private static FieldInfo tileDrawing_rand_fieldInfo;
-
-        private static FieldInfo tileDrawing_specialPositions_fieldInfo;
-        private static FieldInfo tileDrawing_specialTileX_fieldInfo;
-        private static FieldInfo tileDrawing_specialTileY_fieldInfo;
-
-
+        /// <summary> Collection of painted tile extra textures for reuse </summary>
         private static readonly Dictionary<TilePaintSystemV2.TileVariationkey, TileExtraTextureRenderTargetHolder> tileExtraTextureRenders = new();
 
-        private static readonly Dictionary<Point, Action<int, int, SpriteBatch>> customSpecialPoints = new();
-
-        /// <summary>
-        /// Used for custom special drawing of tiles (drawcode run after single tiles are drawn, used for things who would be impossible to draw due to tile draw order).
-        /// <br/> Options, in this order:
-        /// <br/> - <see cref="TileDrawing.AddSpecialLegacyPoint(int, int)"/> for custom drawing. Use <see cref="ModTile.SpecialDraw(int, int, SpriteBatch)"></see>
-        /// <br/> - <see cref="AddCustomSpecialPoint"/> for other custom drawing. Simply pass the drawcode action.
-        /// <br/> - <see cref="TileDrawing.AddSpecialPoint"/> for vanilla style rendering of things such as tiles swaying in wind, pylons, etc. Limited to <see cref="TileDrawing.TileCounterType"/>.
-        /// </summary>
-        public static void AddCustomSpecialPoint(int i, int j, Action<int, int, SpriteBatch> drawMethod)
-        {
-            customSpecialPoints.Add(new(i, j), drawMethod);
-        }
-
-        private void On_TileDrawing_PreDrawTiles(On_TileDrawing.orig_PreDrawTiles orig, TileDrawing self, bool solidLayer, bool forRenderTargets, bool intoRenderTargets)
-        {
-            orig(self, solidLayer, forRenderTargets, intoRenderTargets);
-
-            if (!solidLayer && (intoRenderTargets || Lighting.UpdateEveryFrame))
-                customSpecialPoints.Clear();
-        }
-
-        private void On_TileDrawing_PostDrawTiles(On_TileDrawing.orig_PostDrawTiles orig, TileDrawing self, bool solidLayer, bool forRenderTargets, bool intoRenderTargets)
-        {
-            if (!solidLayer && !intoRenderTargets)
-            {
-                Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.Transform);
-                foreach(var (coords, drawMethod) in customSpecialPoints)
-                    drawMethod.Invoke(coords.X, coords.Y, Main.spriteBatch);
-                Main.spriteBatch.End();
-            }
-
-            orig(self, solidLayer, forRenderTargets, intoRenderTargets);
-        }
-
+        /// <summary> Tile painted RT holder class for extra textures </summary>
         private class TileExtraTextureRenderTargetHolder(Asset<Texture2D> extraTextureAsset) : TilePaintSystemV2.TileRenderTargetHolder
         {
             public override void Prepare()
@@ -127,6 +51,7 @@ namespace Macrocosm.Common.Drawing
             }
         }
 
+        /// <summary> Paint a tile's extra texture using its paint color, or retrieve it if ready </summary>
         public static Texture2D GetOrPreparePaintedExtraTexture(Tile tile, Asset<Texture2D> asset)
         {
             if (!TileDrawing.IsVisible(tile))
@@ -136,7 +61,7 @@ namespace Macrocosm.Common.Drawing
             TilePaintSystemV2.TileVariationkey key = new()
             {
                 TileType = tile.TileType,
-                TileStyle = asset.Name.GetHashCode(),
+                TileStyle = asset.Name.GetHashCode(), // Ensures each extra texture is uniquely identified
                 PaintColor = tile.TileColor
             };
 
@@ -180,7 +105,7 @@ namespace Macrocosm.Common.Drawing
             spriteBatch.Draw(texture, position, frame, tileLight, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
 
-        public static void DrawMultiTileInWindBottomAnchor(int topLeftX, int topLeftY, Asset<Texture2D> textureOverride = null, Color? drawColor = null, Vector2 drawOffset = default, bool applyPaint = false, float windSensitivity = 0.15f, int rowsToIgnore = 0)
+        public static void DrawMultiTileGrass(int topLeftX, int topLeftY, float totalWindMultiplier = 0.15f, int rowsToIgnore = 0, Asset<Texture2D> customTexture = null, Color? drawColorOverride = null, bool perTileLighting = true, Vector2 drawOffset = default, bool applyPaint = false)
         {
             Tile sourceTile = Main.tile[topLeftX, topLeftY];
             TileObjectData data = TileObjectData.GetTileData(sourceTile);
@@ -195,7 +120,7 @@ namespace Macrocosm.Common.Drawing
             float windCycle = TileRenderer.GetWindCycle(topLeftX, topLeftY, SunflowerWindCounter);
 
             Vector2 position = new Vector2(topLeftX * 16 - (int)screenPosition.X + sizeX * 16f * 0.5f, topLeftY * 16 - (int)screenPosition.Y + 16 * sizeY) + zero;
-            bool wind = WorldGen.InAPlaceWithWind(topLeftX, topLeftY, sizeX, sizeY);
+            bool wind = WorldGen.InAPlaceWithWind(topLeftX, topLeftY, sizeX, sizeY - rowsToIgnore);
 
             for (int i = topLeftX; i < topLeftX + sizeX; i++)
             {
@@ -220,9 +145,9 @@ namespace Macrocosm.Common.Drawing
                         heightModifier = 0f;
 
                     TileRenderer.GetTileDrawData(i, j, tile, type, ref tileFrameX, ref tileFrameY, out var tileWidth, out var tileHeight, out var tileTop, out var halfBrickHeight, out var addFrX, out var addFrY, out var tileSpriteEffect, out _, out _, out _);
-                    
+
                     bool canDoDust = TileRendererRandom.NextBool(4);
-                    Color tileLight = drawColor ?? Lighting.GetColor(i, j);
+                    Color tileLight = drawColorOverride ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
                     AdjustForVisionChangers(i, j, tile, type, tileFrameX, tileFrameY, ref tileLight, canDoDust);
                     tileLight = GetLightOverride(j, i, tile, type, tileFrameX, tileFrameY, tileLight);
 
@@ -231,11 +156,11 @@ namespace Macrocosm.Common.Drawing
                     Vector2 origin = position - tilePos;
                     Rectangle frame = new(tileFrameX + addFrX, tileFrameY + addFrY, tileWidth, tileHeight - halfBrickHeight);
                     Vector2 drawPos = position + new Vector2(0f, windMod.Y) + drawOffset;
-                    float rotation = windCycle * windSensitivity * heightModifier;
+                    float rotation = windCycle * totalWindMultiplier * heightModifier;
 
                     Texture2D tileDrawTexture;
-                    if (textureOverride != null)
-                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, textureOverride) : textureOverride.Value;
+                    if (customTexture != null)
+                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, customTexture) : customTexture.Value;
                     else
                         tileDrawTexture = TileRenderer.GetTileDrawTexture(tile, i, j);
 
@@ -247,76 +172,75 @@ namespace Macrocosm.Common.Drawing
 
         /*
         Chandeliers
-		    windHeightSensitivityOverride = 1f
-		    windOffsetFactorY = 0f
+		    overrideWindCycle = 1f
+		    windPushPowerY = 0f
 		        Flesh
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
 			        windRotationFactor *= 0.3f
 		        Frozen
 			        windRotationFactor *= 0.5f
 		        Rich Mahogany, Living Wood, Bone
-        	        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
+        	        overrideWindCycle = null
+			        windPushPowerY = -1f
 		        Palm Wood
-			        windHeightSensitivityOverride = 0f
+			        overrideWindCycle = 0f
 		        Mushroom
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
 		        Obsidian, Martian
 			        windRotationFactor *= 0.5f
 		        Granite
-			        windHeightSensitivityOverride = 0f
+			        overrideWindCycle = 0f
 		        Marble
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
 		        Crystal
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
 			        windRotationFactor *= 0.5f
 		        Lesion
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
                 Solar, Vortex, Nebula, Stardust
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -2f
-			        firstRowSolid = true;
+			        overrideWindCycle = null
+			        windPushPowerY = -2f
+			        dontRotateTopTiles = true;
 			        windRotationFactor *= 0.5f
 		        Sandstone
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -3f
+			        overrideWindCycle = null
+			        windPushPowerY = -3f
 		Lanterns
-			windHeightSensitivityOverride = 1f
-			windOffsetFactorY = 0f
+			overrideWindCycle = 1f
+			windPushPowerY = 0f
 				Chain, Meteorite, Flesh, Steampunk, Mushroom, Meteorite, Spider
-					windHeightSensitivityOverride = null
-					windOffsetFactorY = -1f
+					overrideWindCycle = null
+					windPushPowerY = -1f
 				Heart, Slime, Obsidian, Martian, Granite
-					windHeightSensitivityOverride = 0f
+					overrideWindCycle = 0f
 				Lesion
-					windHeightSensitivityOverride = null
-					windOffsetFactorY = -1f
-					firstRowSolid = true
+					overrideWindCycle = null
+					windPushPowerY = -1f
+					dontRotateTopTiles = true
 				Solar, Vortex, Nebula, Stardust
-					windHeightSensitivityOverride = null
-					windOffsetFactorY = -1f
-					firstRowSolid = true
+					overrideWindCycle = null
+					windPushPowerY = -1f
+					dontRotateTopTiles = true
 
 		ChineseLanterns, FireflyinaBottle, LightningBuginaBottle, BeeHive, Pigronata, SoulBottles, LavaflyinaBottle, ShimmerflyinaBottle, DiscoGlobe
-			windHeightSensitivityOverride = 1f
-			windOffsetFactorY = 0f
+			overrideWindCycle = 1f
+			windPushPowerY = 0f
 
 		PotsSuspended, BrazierSuspended
-			windOffsetFactorY = -2f
+			windPushPowerY = -2f
 
         */
-
-        public static void DrawMultiTileInWindTopAnchor(int topLeftX, int topLeftY, Asset<Texture2D> textureOverride = null, Color? drawColor = null, Vector2 drawOffset = default, bool applyPaint = false, float windSensitivity = 0.15f, float windOffsetFactorY = -4f, int rowsToIgnore = 0,  float? windHeightSensitivityOverride = null)
+        public static void DrawMultiTileVine(int topLeftX, int topLeftY, float? overrideWindCycle = null, float windPushPowerY = -4f, int rowsToIgnore = 0, float totalWindMultiplier = 0.15f, Asset<Texture2D> customTexture = null, Color? drawColorOverride = null, bool perTileLighting = true, Vector2 drawOffset = default, bool applyPaint = false)
         {
             Tile sourceTile = Main.tile[topLeftX, topLeftY];
             TileObjectData data = TileObjectData.GetTileData(sourceTile);
@@ -328,13 +252,9 @@ namespace Macrocosm.Common.Drawing
 
             Vector2 screenPosition = Main.Camera.UnscaledPosition;
             Vector2 zero = Vector2.Zero;
-            float windCycle = TileRenderer.GetWindCycle(topLeftX, topLeftY, SunflowerWindCounter);
-
-            float windCycleCache = windCycle;
-            int totalPushTime = 60;
-            float pushForcePerFrame = 1.26f;
-            float highestWindGridPushComplex = GetHighestWindGridPushComplex(topLeftX, topLeftY, sizeX, sizeY, totalPushTime, pushForcePerFrame, 3, swapLoopDir: true);
-            windCycle += highestWindGridPushComplex;
+            float windCycle = WorldGen.InAPlaceWithWind(topLeftX, topLeftY, sizeX, sizeY) ? TileRenderer.GetWindCycle(topLeftX, topLeftY, SunflowerWindCounter) : 0;
+            float highestWindGridPush = GetHighestWindGridPushComplex(topLeftX, topLeftY, sizeX, sizeY, totalPushTime: 60, pushForcePerFrame: 1.26f, loops: 3, swapLoopDir: true);
+            windCycle += highestWindGridPush;
 
             Vector2 position = new Vector2((float)(topLeftX * 16 - (int)screenPosition.X) + (float)sizeX * 16f * 0.5f, topLeftY * 16 - (int)screenPosition.Y) + zero;
             Vector2 verticalDrawOffset = new(0f, -2f);
@@ -359,9 +279,7 @@ namespace Macrocosm.Common.Drawing
             if (rowsToIgnore > 0)
                 position += new Vector2(0f, rowsToIgnore * 16f);
 
-            windSensitivity *= -1f;
-            if (!WorldGen.InAPlaceWithWind(topLeftX, topLeftY, sizeX, sizeY))
-                windCycle -= windCycleCache;
+            totalWindMultiplier *= -1f;
 
             for (int i = topLeftX; i < topLeftX + sizeX; i++)
             {
@@ -379,29 +297,29 @@ namespace Macrocosm.Common.Drawing
                     if (windHeightSensitivity == 0f)
                         windHeightSensitivity = 0.1f;
 
-                    if (windHeightSensitivityOverride.HasValue)
-                        windHeightSensitivity = windHeightSensitivityOverride.Value;
+                    if (overrideWindCycle.HasValue)
+                        windHeightSensitivity = overrideWindCycle.Value;
 
                     if (j < topLeftY + rowsToIgnore)
                         windHeightSensitivity = 0f;
 
                     TileRenderer.GetTileDrawData(i, j, tile, type, ref tileFrameX, ref tileFrameY, out var tileWidth, out var tileHeight, out var tileTop, out var halfBrickHeight, out var addFrX, out var addFrY, out var tileSpriteEffect, out var _, out var _, out var _);
-                    
+
                     bool canDoDust = TileRendererRandom.NextBool(4);
-                    Color tileLight = drawColor ?? Lighting.GetColor(i, j);
+                    Color tileLight = drawColorOverride ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
                     AdjustForVisionChangers(i, j, tile, type, tileFrameX, tileFrameY, ref tileLight, canDoDust);
                     tileLight = GetLightOverride(j, i, tile, type, tileFrameX, tileFrameY, tileLight);
 
                     Vector2 tilePos = new Vector2(i * 16 - (int)screenPosition.X, j * 16 - (int)screenPosition.Y + tileTop) + zero;
                     tilePos += verticalDrawOffset;
                     Vector2 origin = position - tilePos;
-                    Vector2 drawPos = position + new Vector2(0f, Math.Abs(windCycle) * windOffsetFactorY * windHeightSensitivity) + drawOffset;
+                    Vector2 drawPos = position + new Vector2(0f, Math.Abs(windCycle) * windPushPowerY * windHeightSensitivity) + drawOffset;
                     Rectangle frame = new(tileFrameX + addFrX, tileFrameY + addFrY, tileWidth, tileHeight - halfBrickHeight);
-                    float rotation = windCycle * windSensitivity * windHeightSensitivity;
+                    float rotation = windCycle * totalWindMultiplier * windHeightSensitivity;
 
                     Texture2D tileDrawTexture;
-                    if (textureOverride != null)
-                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, textureOverride) : textureOverride.Value;
+                    if (customTexture != null)
+                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, customTexture) : customTexture.Value;
                     else
                         tileDrawTexture = TileRenderer.GetTileDrawTexture(tile, i, j);
 
@@ -412,29 +330,22 @@ namespace Macrocosm.Common.Drawing
             }
         }
 
+        /// <summary> Submit a tile paint request </summary>
         public static void AddTilePaintRequest(TilePaintSystemV2.ARenderTargetHolder renderTargetHolder)
-        {
-            ((List<TilePaintSystemV2.ARenderTargetHolder>)tilePaintSystemV2_requests_fieldInfo.GetValue(Main.instance.TilePaintSystem)).Add(renderTargetHolder);
-        }
+            => ((List<TilePaintSystemV2.ARenderTargetHolder>)typeof(TilePaintSystemV2).GetFieldValue("_requests", Main.instance.TilePaintSystem)).Add(renderTargetHolder);
 
         public static void AdjustForVisionChangers(int i, int j, Tile tileCache, ushort typeCache, short tileFrameX, short tileFrameY, ref Color tileLight, bool canDoDust)
-        {
-            tileDrawing_DrawAnimatedTile_AdjustForVisionChangers_methodInfo.Invoke(TileRenderer, [i, j, tileCache, typeCache, tileFrameX, tileFrameY, tileLight, canDoDust]);
-        }
+            => typeof(TileDrawing).InvokeMethod("DrawAnimatedTile_AdjustForVisionChangers", TileRenderer, parameters: [i, j, tileCache, typeCache, tileFrameX, tileFrameY, tileLight, canDoDust]);
 
         public static Color GetLightOverride(int j, int i, Tile tileCache, ushort typeCache, short tileFrameX, short tileFrameY, Color tileLight)
-        {
-            return (Color)tileDrawing_DrawTiles_GetLightOverride_methodInfo.Invoke(TileRenderer, [i, j, tileCache, typeCache, tileFrameX, tileFrameY, tileLight]);
-        }
+            => typeof(TileDrawing).InvokeMethod<Color>("DrawTiles_GetLightOverride", TileRenderer, parameters: [i, j, tileCache, typeCache, tileFrameX, tileFrameY, tileLight]);
 
         public static float GetHighestWindGridPushComplex(int topLeftX, int topLeftY, int sizeX, int sizeY, int totalPushTime, float pushForcePerFrame, int loops, bool swapLoopDir)
-        {
-            return (float)tileDrawing_GetHighestWindGridPushComplex_methodInfo.Invoke(TileRenderer, [topLeftX, topLeftY, sizeX, sizeY, totalPushTime, pushForcePerFrame, loops, swapLoopDir]);
-        }
+            => typeof(TileDrawing).InvokeMethod<float>("GetHighestWindGridPushComplex", TileRenderer, parameters: [topLeftX, topLeftY, sizeX, sizeY, totalPushTime, pushForcePerFrame, loops, swapLoopDir]);
 
         public static Point[] GetVanillaSpecialPoints(TileDrawing.TileCounterType type)
         {
-            Point[][] specialPositions = (Point[][])tileDrawing_specialPositions_fieldInfo.GetValue(TileRenderer);
+            Point[][] specialPositions = typeof(TileDrawing).GetFieldValue<Point[][]>("_specialPositions", TileRenderer);
 
             if (specialPositions == null || type >= TileDrawing.TileCounterType.Count)
                 return Array.Empty<Point>();
@@ -444,8 +355,8 @@ namespace Macrocosm.Common.Drawing
 
         public static Point[] GetVanillaSpecialLegacyPoints()
         {
-            int[] specialTileX = (int[])tileDrawing_specialTileX_fieldInfo.GetValue(TileRenderer);
-            int[] specialTileY = (int[])tileDrawing_specialTileY_fieldInfo.GetValue(TileRenderer);
+            int[] specialTileX = typeof(TileDrawing).GetFieldValue<int[]>("_specialTileX", TileRenderer);
+            int[] specialTileY = typeof(TileDrawing).GetFieldValue<int[]>("_specialTileY", TileRenderer);
 
             if (specialTileX == null || specialTileY == null)
                 return Array.Empty<Point>();
@@ -456,6 +367,7 @@ namespace Macrocosm.Common.Drawing
 
             return points;
         }
+
 
         /// <summary>
         /// Checks if the given (i, j) coordinate is a special point for a specific <see cref="TileCounterType"/>.

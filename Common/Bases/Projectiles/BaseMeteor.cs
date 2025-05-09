@@ -53,8 +53,8 @@ namespace Macrocosm.Common.Bases.Projectiles
             {
                 // Can't use info.DamageSource = PlayerDeathReason.ByCustomReason(...) here:
                 // HurtInfo is a value type and a DamageSource reassignment won't be reflected outside this method
-                // Called on the hit player client, will be synced and message will be broadcasted by the server 
-                info.DamageSource.SourceCustomReason = DeathMessages.GetRandom().Format(target.name);
+                // Called on the hit player client, will be synced and message will be broadcast by the server 
+                info.DamageSource.CustomReason = DeathMessages.GetRandom().ToNetworkText(target.name);
             }
         }
 

@@ -1,7 +1,7 @@
+using Macrocosm.Common.Sets;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Sets;
 
 namespace Macrocosm.Content.Items.Armor.Vanity.Dev.Clyder
 {

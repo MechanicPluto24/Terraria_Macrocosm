@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
@@ -37,8 +38,6 @@ namespace Macrocosm.Common.Bases.Projectiles
         bool scheduleOnHitEffect = false;
 
         private int newTarget = -1;
-        private bool HasNewTarget => newTarget != -1;
-
         public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.Bullet);
@@ -54,20 +53,19 @@ namespace Macrocosm.Common.Bases.Projectiles
         // Only called on the owner 
         public sealed override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            hitList[target.whoAmI] = true; //Make sure the projectile won't aim directly for this NPC
-            newTarget = GetTarget(600, Projectile.Center); //Keeps track of the current target, set to -1 to ensure no NPC by default
-
-            bool didRicochet = HasNewTarget && CanRicochet();
+            hitList[target.whoAmI] = true; 
+            int targetId = Utility.FindNPC(Projectile.Center, 600f, hitList);
+            bool didRicochet = targetId != -1 && CanRicochet();
 
             OnHitNPC(didRicochet, target, hit, damageDone);
 
             if (didRicochet)
             {
-                Vector2 shootVel = Main.npc[newTarget].Center - Projectile.Center;
+                Vector2 shootVel = Main.npc[targetId].Center - Projectile.Center;
                 shootVel.Normalize();
                 shootVel *= RicochetSpeed;
                 Projectile.velocity = shootVel;
-                Projectile.rotation = Main.npc[newTarget].Center.ToRotation();
+                Projectile.rotation = Main.npc[targetId].Center.ToRotation();
 
                 if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
@@ -81,26 +79,6 @@ namespace Macrocosm.Common.Bases.Projectiles
                 OnHitNPCEffect(didRicochet, target, hit, damageDone);
                 scheduleOnHitEffect = false;
             }
-        }
-
-        private int GetTarget(float maxRange, Vector2 shootingSpot) //Function to find a NPC to target
-        {
-            int first = -1; //Used to keep track of the closest NPC, rather than the first one based on NPC whoAmI
-            for (int j = 0; j < Main.maxNPCs; j++)
-            {
-                NPC npc = Main.npc[j];
-                if (npc.CanBeChasedBy(this, false) && !hitList[j])
-                {
-                    float distance = Vector2.Distance(shootingSpot, npc.Center);
-                    if (distance <= maxRange)
-                    {
-                        if ((first == -1 || distance < Vector2.Distance(shootingSpot, Main.npc[first].Center)) && Collision.CanHitLine(shootingSpot, 0, 0, npc.Center, 0, 0))
-                            first = j;
-                    }
-                }
-            }
-
-            return first;
         }
 
         public override void SendExtraAI(BinaryWriter writer)

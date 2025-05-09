@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Accessories
             Item.width = 32;
             Item.height = 30;
             Item.value = Item.sellPrice(gold: 5);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.accessory = true;
         }
 

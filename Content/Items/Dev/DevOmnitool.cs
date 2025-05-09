@@ -1,14 +1,13 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
-using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Tiles.Trees;
-using SubworldLibrary;
+using Macrocosm.Content.Tiles.Blocks.Bricks;
+using Macrocosm.Content.Tiles.Furniture.Regolith;
 using Terraria;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Items.Dev
 {
@@ -63,11 +62,25 @@ namespace Macrocosm.Content.Items.Dev
 
             //WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), Player.tileTargetX, Player.tileTargetY);
 
+            //var data = TileObjectData.GetTileData(type, 0);
+
+            //WorldData.DemonSun = !WorldData.DemonSun;
+
             bool message = true;
             foreach (var subworld in OrbitSubworld.GetOrbitSubworlds(Earth.ID))
             {
-                bool value = WorldFlags.SubworldUnlocked.GetValue(subworld.ID);
-                WorldFlags.SubworldUnlocked.SetValue(subworld.ID, !value);
+                bool value = WorldData.GetSubworldData(subworld.ID).Unlocked;
+                WorldData.GetSubworldData(subworld.ID).Unlocked = !value;
+                if (message)
+                {
+                    Main.NewText(value ? "Orbit locked" : "Orbit unlocked");
+                    message = false;
+                }
+            }
+            foreach (var subworld in OrbitSubworld.GetOrbitSubworlds(ModContent.GetInstance<Moon>().ID))
+            {
+                bool value = WorldData.GetSubworldData(subworld.ID).Unlocked;
+                WorldData.GetSubworldData(subworld.ID).Unlocked = !value;
                 if (message)
                 {
                     Main.NewText(value ? "Orbit locked" : "Orbit unlocked");

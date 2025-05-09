@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Microsoft.Xna.Framework;
@@ -9,7 +10,7 @@ namespace Macrocosm.Content.Subworlds
     /// <summary> Not a subworld, used for fetching the main world defaults of subworld-dependent values </summary>
     public static class Earth
     {
-        public const string ID = "Macrocosm/Earth";
+        public const string ID = $"{nameof(Macrocosm)}/{nameof(Earth)}";
 
         public const double TimeRate = 1.0;
         public const double DayLength = Main.dayLength;
@@ -22,7 +23,7 @@ namespace Macrocosm.Content.Subworlds
         public const float GravityMultiplier = 1f;
         public const float ItemGravity = 0.1f;
         public const float ItemMaxFallSpeed = 7;
-        public static WorldSize WorldSize { get; set; } = WorldSize.Medium;
+        public static WorldSize WorldSize => new(MacrocosmSubworld.MainWorldFileData);
         public static ChecklistConditionCollection LaunchConditions { get; } = [];
 
         /// <summary> The ambient temperature, expressed in °C. Pass position only when you need temperature at a position different than the local player's </summary>

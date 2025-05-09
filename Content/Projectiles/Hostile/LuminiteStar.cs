@@ -73,27 +73,34 @@ namespace Macrocosm.Content.Projectiles.Hostile
             float shootDeviation = 0.5f;
 
             AI_Timer++;
-            if (AI_Timer == timeToShoot)
-            {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    float aimAngle = (Main.player[TargetPlayer].Center - Projectile.Center).ToRotation();
-                    float shootSpeed = baseShootSpeed + Main.rand.NextFloat(-shootDeviation, shootDeviation);
-                    Projectile.velocity = Utility.PolarVector(shootSpeed, aimAngle);
 
-                    Projectile.netUpdate = true;
-                }
-            }
-            else if (AI_Timer > timeToShoot)
+            bool hasTarget = TargetPlayer >= 0 && TargetPlayer < Main.maxPlayers;
+            if (hasTarget)
             {
-                Vector2 direction = (Main.player[TargetPlayer].Center - Projectile.Center).SafeNormalize(Vector2.Zero);
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * baseShootSpeed, 0.005f);
-
-                if (!Fall && AI_Timer > timeToShoot * Main.rand.NextFloat(2.5f, 4f) && Main.netMode != NetmodeID.MultiplayerClient)
+                Player player = Main.player[TargetPlayer];
+                if (AI_Timer == timeToShoot)
                 {
-                    Fall = true;
-                    Projectile.netUpdate = true;
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        float aimAngle = (player.Center - Projectile.Center).ToRotation();
+                        float shootSpeed = baseShootSpeed + Main.rand.NextFloat(-shootDeviation, shootDeviation);
+                        Projectile.velocity = Utility.PolarVector(shootSpeed, aimAngle);
+
+                        Projectile.netUpdate = true;
+                    }
                 }
+                else if (AI_Timer > timeToShoot)
+                {
+                    Vector2 direction = (player.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * baseShootSpeed, 0.005f);
+
+                    if (!Fall && AI_Timer > timeToShoot * Main.rand.NextFloat(2.5f, 4f) && Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Fall = true;
+                        Projectile.netUpdate = true;
+                    }
+                }
+
             }
 
             if (Fall)

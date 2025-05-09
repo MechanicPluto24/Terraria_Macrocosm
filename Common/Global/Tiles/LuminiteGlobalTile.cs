@@ -17,10 +17,10 @@ namespace Macrocosm.Common.Global.Tiles
 
         public override bool CanExplode(int i, int j, int type)
         {
-            if(type==TileID.LunarOre)
+            if (type == TileID.LunarOre)
                 return false;
             else
-                return base.CanExplode(i,j,type);
+                return base.CanExplode(i, j, type);
         }
 
         /*

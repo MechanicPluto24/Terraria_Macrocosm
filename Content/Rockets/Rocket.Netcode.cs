@@ -1,7 +1,4 @@
 ﻿using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Subworlds;
-using Macrocosm.Content.Subworlds;
-using SubworldLibrary;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -29,10 +26,10 @@ namespace Macrocosm.Content.Rockets
             ModPacket packet = Macrocosm.Instance.GetPacket();
             packet.Write((byte)MessageType.SyncRocketCommonData);
 
-            packet.Write((short)NetHelper.GetServerIndex()); 
+            packet.Write((short)NetHelper.GetServerIndex());
             packet.Write((byte)WhoAmI);
 
-            if (this.NetWriteFields(packet))
+            if (this.NetWrite(packet))
             {
                 packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
                 packet.Send(toClient, ignoreClient);
@@ -53,7 +50,7 @@ namespace Macrocosm.Content.Rockets
             Rocket rocket = RocketManager.Rockets[rocketIndex];
             rocket.WhoAmI = rocketIndex;
 
-            rocket.NetReadFields(reader);
+            rocket.NetRead(reader);
 
             if (Main.netMode == NetmodeID.Server)
                 rocket.SyncCommonData(ignoreClient: sender, ignoreSubserver: senderSubserver);

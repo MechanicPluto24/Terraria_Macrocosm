@@ -40,7 +40,6 @@ namespace Macrocosm.Content.Menus
         private Asset<Texture2D> flare;
         private Asset<Texture2D> scorch1;
         private Asset<Texture2D> scorch2;
-        private Asset<Effect> radialSaturation;
 
         private CelestialBody vulcan;
 
@@ -399,9 +398,9 @@ namespace Macrocosm.Content.Menus
         {
             spriteBatch.End();
             spriteBatch.Begin(BlendState.Additive, state1);
-            flare ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3");
-            scorch1 ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1");
-            scorch2 ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2");
+            flare ??= ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Flare3");
+            scorch1 ??= ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch1");
+            scorch2 ??= ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch2");
             spriteBatch.Draw(flare.Value, sun.Center, null, new Color(255, 96, 4) * (0.9f + 0.1f * SolarFlareProgress), 0f, flare.Size() / 2f, 2.2f + 0.2f * SolarFlareProgress, SpriteEffects.None, 0);
             spriteBatch.Draw(scorch1.Value, sun.Center, null, new Color(255, 193, 0) * (0.25f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
             spriteBatch.Draw(scorch2.Value, sun.Center, null, new Color(255, 193, 0) * (0.2f + 0.01f * SolarFlareProgress), MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, 2.5f + 0.01f * SolarFlareProgress, SpriteEffects.None, 0);
@@ -430,8 +429,7 @@ namespace Macrocosm.Content.Menus
 
         private Effect Sun_GetShader()
         {
-            radialSaturation ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "RadialSaturation", immediate);
-            Effect effect = radialSaturation.Value;
+            Effect effect = Macrocosm.GetShader("RadialSaturation");
             effect.Parameters["uCenter"].SetValue(Vector2.One * 0.5f);
             effect.Parameters["uRadius"].SetValue(0.2f + 0.1f * SolarFlareProgress);
             effect.Parameters["uIntensity"].SetValue(0.2f + 0.1f * SolarFlareProgress);

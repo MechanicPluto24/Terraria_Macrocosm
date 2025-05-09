@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria;
-using Terraria.ModLoader;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using Terraria.GameContent.UI.Elements;
-using Macrocosm.Common.Utils;
+using Terraria;
 using Terraria.Audio;
-using SubworldLibrary;
+using Terraria.GameContent.UI.Elements;
+using Terraria.ID;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Subworlds
 {
@@ -32,18 +26,17 @@ namespace Macrocosm.Common.Subworlds
         {
             orig(self, data, orderInList, canBePlayed);
 
-            UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", obj: self);
+            UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", self);
 
             var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
             string subworld = "Earth";
-            bool isSpaceStation = false; 
+            bool isSpaceStation = false;
 
             if (player.TryGetReturnSubworld(self.Data.UniqueId, out string id))
             {
                 isSpaceStation = OrbitSubworld.IsOrbitSubworld(id);
                 subworld = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(id), out _);
             }
-
 
             bool exists = ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + subworld, out Asset<Texture2D> texture, AssetRequestMode.ImmediateLoad);
             UIImage icon = new(exists ? texture : Macrocosm.EmptyTex)

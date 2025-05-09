@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseDeskClock")]
     public class IndustrialDeskClock : ModItem
     {
         public override void SetStaticDefaults()

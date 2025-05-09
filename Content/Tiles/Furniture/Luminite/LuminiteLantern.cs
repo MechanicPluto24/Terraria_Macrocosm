@@ -82,9 +82,9 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         // Workaround for platform hanging, alternates don't work currently
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
+            Point16 topLeft = TileObjectData.TopLeft(i, j);
             if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
-                offsetY -= 8;
+                offsetY -= 4;
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
@@ -98,12 +98,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
         {
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-
-            int offsetY = 8;
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
-            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
-                offsetY -= 8;
-
             TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true, Color.White);
         }
     }

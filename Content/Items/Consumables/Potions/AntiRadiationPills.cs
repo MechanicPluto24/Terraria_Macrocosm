@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Consumables.Potions
             Item.useAnimation = 17;
             Item.useStyle = ItemUseStyleID.DrinkLong;
             Item.UseSound = SoundID.Item3;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.value = Item.buyPrice(silver: 50);
             Item.buffType = ModContent.BuffType<Buffs.Potions.AntiRadiationPills>();
             Item.buffTime = 1 * 60 * 60;

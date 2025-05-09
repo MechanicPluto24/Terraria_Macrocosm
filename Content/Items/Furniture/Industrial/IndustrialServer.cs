@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseServer")]
     public class IndustrialServer : ModItem
     {
         public override void SetStaticDefaults()

@@ -8,6 +8,7 @@ namespace Macrocosm.Content.Sounds
 
         // Common
         public static SoundStyle BigExplosion { get; } = new(SFXPath + "BigExplosion_", 3);
+        public static SoundStyle EnergyShot { get; } = new SoundStyle(SFXPath + "EnergyShot") with { Volume = 0.5f };
 
         // Rocket
         public static SoundStyle RocketLandingLeg { get; } = new(SFXPath + "RocketLandingLeg");
@@ -22,6 +23,8 @@ namespace Macrocosm.Content.Sounds
         public static SoundStyle ZombieEngineerSprint { get; } = new(SFXPath + "ZombieEngineerSprint");
 
         // Ranged Weapons
+        public static SoundStyle LaserShoot { get; } = new(SFXPath + "LaserShoot");
+        public static SoundStyle LaserHit { get; } = new(SFXPath + "LaserHit");
         public static SoundStyle AssaultRifle { get; } = new(SFXPath + "AssaultRifle_", 4);
         public static SoundStyle DesertEagleShot { get; } = new(SFXPath + "DesertEagleShot");
         public static SoundStyle Ricochet { get; } = new(SFXPath + "Ricochet_", 6);

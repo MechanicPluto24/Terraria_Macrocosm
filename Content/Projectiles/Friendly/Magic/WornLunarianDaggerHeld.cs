@@ -1,5 +1,4 @@
 using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -53,7 +52,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
                 int damage = Player.GetWeaponDamage(currentItem);
                 float knockback = currentItem.knockBack;
-                float speed;
 
                 if (Main.mouseRight && !altAttackActive)
                 {
@@ -144,7 +142,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private ref float EffectTimer => ref Projectile.localAI[0];
         private ref float Opacity => ref Projectile.localAI[1];
 
-        SpriteBatchState state;
         public override void PostDraw(Color lightColor)
         {
             var spriteBatch = Main.spriteBatch;
@@ -158,10 +155,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             if (AI_Charge > 0 || altAttackActive)
             {
-                //state.SaveState(spriteBatch);
-                //spriteBatch.End();
-                //spriteBatch.Begin(BlendState.AlphaBlend, state);
-
                 float progress = MathHelper.Clamp(AI_Charge / MaxCharge, 0f, 1f);
                 if (altAttackActive)
                     progress = (1f - AI_Timer / 50f) * (altAttackCount / 10f);
@@ -191,8 +184,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 Vector2 rotPoint = Utility.RotatingPoint(Projectile.Center, new Vector2(8, -8 * Projectile.direction), Projectile.rotation) + glowOffset;
                 Utility.DrawStar(rotPoint - Main.screenPosition, 2, new Color(44, 209, 147, glowAlpha), new Vector2(0.5f, 1.5f) * scale, glowRotation);
 
-                //spriteBatch.End();
-                //spriteBatch.Begin(BlendState.AlphaBlend, state);
             }
         }
 

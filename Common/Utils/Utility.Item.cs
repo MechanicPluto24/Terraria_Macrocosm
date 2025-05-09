@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.GameContent.Achievements;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 
@@ -11,10 +12,8 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static CustomDrawGlobalItem CustomDrawData(this Item item)
-        {
-            return item.GetGlobalItem<CustomDrawGlobalItem>();
-        }
+        public static CustomDrawGlobalItem CustomDrawData(this Item item) => item.GetGlobalItem<CustomDrawGlobalItem>();
+        public static bool IsChest(this Item item) => TileID.Sets.BasicChest[item.createTile];
 
         /// <summary>
         /// Helper method that converts the first rocket ammo found in the inventory 
@@ -26,22 +25,6 @@ namespace Macrocosm.Common.Utils
         /// <returns> The projectile ID, defaults to Rocket I </returns>
         public static int GetRocketAmmoProjectileID(Player player, int copyWeaponType)
         {
-            static bool TryFindingSpecificMatches(int launcher, int ammo, out int pickedProjectileId)
-            {
-                pickedProjectileId = 0;
-                if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var value) && value.TryGetValue(ammo, out pickedProjectileId))
-                    return true;
-
-                launcher = AmmoID.Sets.SpecificLauncherAmmoProjectileFallback[launcher];
-                if (launcher != -1)
-                {
-                    if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var fallbackValue) && fallbackValue.TryGetValue(ammo, out pickedProjectileId))
-                        return true;
-                }
-
-                return false;
-            }
-
             if (copyWeaponType != ItemID.GrenadeLauncher && copyWeaponType != ItemID.RocketLauncher && copyWeaponType != ItemID.ProximityMineLauncher)
                 return ProjectileID.RocketI;
 
@@ -53,20 +36,20 @@ namespace Macrocosm.Common.Utils
 
             int type;
 
-            // for mini nukes, liquid rockets
-            if (TryFindingSpecificMatches(copyWeaponType, ammo.type, out int pickedProjectileId))
+            static bool TryFindingSpecificMatches(int launcher, int ammo, out int pickedProjectileId)
             {
+                pickedProjectileId = 0;
+                if (AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var value) && value.TryGetValue(ammo, out pickedProjectileId)) return true;
+                launcher = AmmoID.Sets.SpecificLauncherAmmoProjectileFallback[launcher];
+                return launcher != -1 && AmmoID.Sets.SpecificLauncherAmmoProjectileMatches.TryGetValue(launcher, out var fallbackValue) && fallbackValue.TryGetValue(ammo, out pickedProjectileId);
+            }
+
+            if (TryFindingSpecificMatches(copyWeaponType, ammo.type, out int pickedProjectileId)) // for mini nukes, liquid rockets
                 type = pickedProjectileId;
-            }
-            // for rockets I to IV
-            else if (ammo.ammo == AmmoID.Rocket)
-            {
+            else if (ammo.ammo == AmmoID.Rocket) // for rockets I to IV
                 type = launcher.shoot + ammo.shoot;
-            }
             else
-            {
                 type = ProjectileID.RocketI;
-            }
 
             return type;
         }
@@ -74,7 +57,7 @@ namespace Macrocosm.Common.Utils
         public static void DecreaseStack(this Item item, int amount = 1)
         {
             item.stack -= amount;
-            if(item.stack < 1 || item.type == 0)
+            if (item.stack < 1 || item.type == ItemID.None)
                 item.TurnToAir(fullReset: true);
         }
 
@@ -167,13 +150,45 @@ namespace Macrocosm.Common.Utils
             FlexibleTileWand.RubblePlacementLarge.AddVariations(itemType, tileType, tileStyles);
         }
 
+        public static void Shimmer(this Item item, int targetType)
+        {
+            int originalStack = item.stack;
+
+            item.SetDefaults(targetType);
+            item.shimmered = true;
+            item.stack = originalStack;
+            item.shimmerTime = item.stack > 0 ? 1f : 0f;
+            item.shimmerWet = true;
+            item.wet = true;
+            item.velocity *= 0.1f;
+
+            if (Main.netMode == NetmodeID.SinglePlayer)
+            {
+                Item.ShimmerEffect(item.Center);
+            }
+            else
+            {
+                NetMessage.SendData(MessageID.ShimmerActions, -1, -1, null, 0, (int)item.Center.X, (int)item.Center.Y);
+                NetMessage.SendData(MessageID.SyncItemsWithShimmer, -1, -1, null, item.whoAmI, 1f);
+            }
+
+            AchievementsHelper.NotifyProgressionEvent(AchievementHelperID.Events.TransmuteItem);
+
+            if (item.stack == 0)
+            {
+                item.makeNPC = -1;
+                item.active = false;
+            }
+        }
+
+
         public static void DrawBossBagEffect(this Item item, SpriteBatch spriteBatch, Color colorFront, Color colorBack, float rotation, float scale)
         {
             Texture2D texture = TextureAssets.Item[item.type].Value;
             Rectangle frame = texture.Frame();
 
             Vector2 frameOrigin = frame.Size() / 2f;
-            Vector2 offset = new Vector2(item.width / 2 - frameOrigin.X, item.height - frame.Height);
+            Vector2 offset = new(item.width / 2 - frameOrigin.X, item.height - frame.Height);
             Vector2 drawPos = item.position - Main.screenPosition + frameOrigin + offset;
 
             float time = Main.GlobalTimeWrappedHourly;
@@ -248,8 +263,8 @@ namespace Macrocosm.Common.Utils
 
         public static void SimulateGuideVoodooDollBurn(Vector2 position)
         {
-            int i = Item.NewItem(Item.GetSource_None(), new Rectangle((int)position.X, (int)position.Y, 1, 1), ItemID.GuideVoodooDoll, Stack: 1, noBroadcast: true);
-            InvokeMethod(Main.item[i], "CheckLavaDeath", i);
+            int index = Item.NewItem(Item.GetSource_None(), new Rectangle((int)position.X, (int)position.Y, 1, 1), ItemID.GuideVoodooDoll, Stack: 1, noBroadcast: true);
+            typeof(Item).InvokeMethod("CheckLavaDeath", Main.item[index], parameters: [index]);
         }
     }
 }

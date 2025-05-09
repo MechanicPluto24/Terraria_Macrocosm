@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Particles
 {
     public class ImbriumStar : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public float Opacity { get; set; }
 
         public override void SetDefaults()

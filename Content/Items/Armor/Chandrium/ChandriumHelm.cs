@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Armor.Chandrium
             Item.width = 18;
             Item.height = 18;
             Item.value = Item.sellPrice(gold: 10);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.defense = 4;
         }
 

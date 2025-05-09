@@ -47,7 +47,7 @@ namespace Macrocosm.Content.Items.Accessories
         public override void UpdateAccessory(Player player, bool hideVisual)
         {
             DashPlayer dashPlayer = player.GetModPlayer<DashPlayer>();
-            player.dashType=0;    
+            player.dashType = 0;
             dashPlayer.AccDashHorizontal = true;
             dashPlayer.AccDashVertical = true;
 
@@ -200,7 +200,6 @@ namespace Macrocosm.Content.Items.Accessories
         }
 
         public static bool GetEffectColor(Player player, out Color primaryColor) => GetEffectColor(player, out primaryColor, out _, out _, out _, out _);
-
         public static bool GetEffectColor(Player player, out Color primaryColor, out Color? secondaryColor, out BlendState blendStateOverride, out bool bypassShader, out bool rainbow)
         {
             int dyeItemType = -1;

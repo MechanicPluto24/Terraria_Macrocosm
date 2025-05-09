@@ -1,9 +1,7 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
@@ -101,7 +99,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                         Projectile.Center = Player.MountedCenter + Utility.PolarVector(50, cursorRotation);
                         Projectile.rotation += (Projectile.Center - Player.MountedCenter - new Vector2(-4 * Player.direction, 6 * Player.gravDir)).ToRotation();
 
-                        float stageProgress = (float)currentChargeTick / TICKS_PER_STAGE; 
+                        float stageProgress = (float)currentChargeTick / TICKS_PER_STAGE;
                         float targetAlpha = 255f * (1f - (currentChargeStage + stageProgress) / 3f);
                         Projectile.alpha = (int)MathHelper.Lerp(Projectile.alpha, targetAlpha, 0.1f);
 
@@ -161,7 +159,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             if (Projectile.ai[0] != 1)
             {
-                if (currentChargeStage > 0) 
+                if (currentChargeStage > 0)
                     SoundEngine.PlaySound(SoundID.Thunder with { Volume = 0.1f * currentChargeStage }, Projectile.position);
 
                 chargeState = ProcellarumState.End;

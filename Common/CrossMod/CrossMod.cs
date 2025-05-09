@@ -62,7 +62,7 @@ namespace Macrocosm.Common.Crossmod
             #region CraterDemon
             if (ModLoader.TryGetMod("BossChecklist", out Mod bossChecklist))
             {
-                bossChecklist.Call("LogBoss", Mod, nameof(CraterDemon), 20f, () => WorldFlags.DownedCraterDemon, ModContent.NPCType<CraterDemon>(), new Dictionary<string, object>()
+                bossChecklist.Call("LogBoss", Mod, nameof(CraterDemon), 20f, () => WorldData.DownedCraterDemon, ModContent.NPCType<CraterDemon>(), new Dictionary<string, object>()
                 {
                     ["spawnItems"] = ModContent.ItemType<CraterDemonSummon>(),
                     ["collectibles"] = new List<int>
@@ -91,7 +91,7 @@ namespace Macrocosm.Common.Crossmod
         {
             if (ModLoader.TryGetMod("Fargowiltas", out Mod fargos))
             {
-                fargos.Call("AddSummon", 19.0f, "Macrocosm", "CraterDemonSummon", () => WorldFlags.DownedCraterDemon, Item.buyPrice(gold: 15));
+                fargos.Call("AddSummon", 19.0f, "Macrocosm", "CraterDemonSummon", () => WorldData.DownedCraterDemon, Item.buyPrice(gold: 15));
             }
         }
 

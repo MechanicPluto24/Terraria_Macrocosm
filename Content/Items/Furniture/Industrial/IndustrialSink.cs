@@ -6,7 +6,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseSink")]
     public class IndustrialSink : ModItem
     {
         public override void SetStaticDefaults()

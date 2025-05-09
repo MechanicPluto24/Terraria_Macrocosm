@@ -5,8 +5,6 @@ using Macrocosm.Content.LoadingScreens;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using SubworldLibrary;
 using System;
 using System.Collections.Generic;
@@ -94,7 +92,7 @@ namespace Macrocosm.Common.Subworlds
                         }
                     }
                 }
-                else 
+                else
                 {
                     if (SubworldSystem.AnyActive<Macrocosm>())
                     {
@@ -111,7 +109,7 @@ namespace Macrocosm.Common.Subworlds
                 }
 
                 enteredWorld = false;
-            } 
+            }
         }
 
         public override void OnEnterWorld()
@@ -124,7 +122,7 @@ namespace Macrocosm.Common.Subworlds
         {
             if (!triggeredSubworldTravel && Main.netMode == NetmodeID.SinglePlayer)
             {
-                MacrocosmSubworld.SetupLoadingScreen(null, MacrocosmSubworld.Hacks.SubworldSystem_CacheID());
+                MacrocosmSubworld.SetupLoadingScreen(null, MacrocosmSubworld.CacheID);
                 exitedBySaveAndExit = true;
             }
         }

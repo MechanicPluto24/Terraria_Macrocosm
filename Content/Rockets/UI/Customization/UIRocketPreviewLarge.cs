@@ -6,7 +6,6 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
@@ -18,13 +17,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         public Rocket Rocket { get; set; } = new();
         public Rocket RocketDummy { get; set; }
 
-        public string CurrentModuleName { get; private set; } = "CommandPod";
-
-        public int CurrentModuleIndex
-        {
-            get => Rocket.ModuleNames.IndexOf(CurrentModuleName);
-            private set => CurrentModuleName = Rocket.ModuleNames[value];
-        }
+        public string CurrentModuleName => Rocket.Modules[CurrentModuleIndex].Name;
+        public int CurrentModuleIndex { get; set; } = 0;
 
         private bool animationActive = false;
         public bool AnimationActive
@@ -59,7 +53,7 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             }
         }
 
-        public Action<string, int> OnModuleChange { get; set; } = (_, _) => { };
+        public Action<int> OnModuleChange { get; set; } = (_) => { };
         public Action OnZoomedIn { get; set; } = () => { };
         public Action OnZoomedOut { get; set; } = () => { };
 
@@ -69,39 +63,45 @@ namespace Macrocosm.Content.Rockets.UI.Customization
         private float moduleOffsetY;
         private float zoom;
 
-        private float zoomedOutModuleOffsetX = 30f;
+        private float zoomedOutModuleOffsetX = 80f;
         private float zoomedOutModuleOffsetY = 15f;
         private float zoomedOutZoom = 1f;
 
         private Vector2 GetModuleOffset(string moduleName)
         {
-            return moduleName switch
-            {
-                "CommandPod" => new Vector2(-220f, 140f),
-                "PayloadPod" => new Vector2(-220f, 140f),
-                "ServiceModule" => new Vector2(-220f, -40f),
-                "UnmannedTug" => new Vector2(-220f, -40f),
-                "ReactorModule" => new Vector2(-220f, -320f),
-                "EngineModule" => new Vector2(-80f, -460f),
-                "BoosterLeft" => new Vector2(40f, -520f),
-                "BoosterRight" => new Vector2(-250f, -520f),
-                _ => new Vector2(0f, 0f)
-            };
+            return default;
         }
 
         private float GetModuleZoom(string moduleName)
         {
-            return moduleName switch
+            return 0;
+        }
+
+        private Vector2 GetModuleOffset(int slot)
+        {
+            return slot switch
             {
-                "CommandPod" => 0.35f,
-                "PayloadPod" => 0.35f,
-                "ServiceModule" => 0.35f,
-                "UnmannedTug" => 0.35f,
-                "ReactorModule" => 0.35f,
-                "EngineModule" => 0.55f,
-                "BoosterLeft" => 0.52f,
-                "BoosterRight" => 0.52f,
-                _ => 0.35f 
+                0 => new Vector2(-60, 140f),
+                1 => new Vector2(-60, -40f),
+                2 => new Vector2(-60, -320f),
+                3 => new Vector2(20, -460f),
+                4 => new Vector2(140, -520f),
+                5 => new Vector2(-134, -520f),
+                _ => new Vector2(0f, 0f)
+            };
+        }
+
+        private float GetModuleZoom(int slot)
+        {
+            return slot switch
+            {
+                0 => 0.35f,
+                1 => 0.35f,
+                2 => 0.35f,
+                3 => 0.55f,
+                4 => 0.52f,
+                5 => 0.52f,
+                _ => 0f
             };
         }
 
@@ -117,69 +117,47 @@ namespace Macrocosm.Content.Rockets.UI.Customization
             BorderColor = Color.Transparent;
         }
 
-        private List<int> GetActiveModuleIndices()
-        {
-            return Rocket.AvailableModules
-                         .Select((module, index) => module.Active ? index : -1)
-                         .Where(index => index != -1)
-                         .ToList();
-        }
-
         public void SetModule(string moduleName)
         {
-            var activeIndices = GetActiveModuleIndices();
-            var index = Rocket.AvailableModules.FindIndex(m => m.Name == moduleName && m.Active);
-
-            if (index != -1 && activeIndices.Contains(index))
+            var index = Rocket.Modules.ToList().FindIndex(m => m.Name == moduleName);
+            if (index != -1)
             {
+                CurrentModuleIndex = index;
                 bool changed = CurrentModuleName != moduleName;
-
-                CurrentModuleName = moduleName;
                 AnimationActive = !ZoomedOut;
 
                 if (changed)
-                    OnModuleChange(CurrentModuleName, CurrentModuleIndex);
+                    OnModuleChange(CurrentModuleIndex);
             }
         }
 
         public void SetModule(int moduleIndex)
         {
-            var activeIndices = GetActiveModuleIndices();
+            bool changed = CurrentModuleIndex != moduleIndex;
 
-            if (activeIndices.Contains(moduleIndex))
-            {
-                bool changed = CurrentModuleIndex != moduleIndex;
+            CurrentModuleIndex = moduleIndex;
+            AnimationActive = !ZoomedOut;
 
-                CurrentModuleIndex = moduleIndex;
-                AnimationActive = !ZoomedOut;
-
-                if (changed)
-                    OnModuleChange(CurrentModuleName, CurrentModuleIndex);
-            }
+            if (changed)
+                OnModuleChange(CurrentModuleIndex);
         }
 
         public void NextModule()
         {
-            var activeIndices = GetActiveModuleIndices();
-            if (activeIndices.Count == 0) return;
-
-            int currentIndex = activeIndices.IndexOf(CurrentModuleIndex);
-            if (currentIndex == -1 || currentIndex == activeIndices.Count - 1)
-                SetModule(activeIndices[0]);
+            int currentIndex = CurrentModuleIndex;
+            if (currentIndex == -1 || currentIndex == Rocket.Modules.Length - 1)
+                SetModule(0);
             else
-                SetModule(activeIndices[currentIndex + 1]);
+                SetModule(currentIndex + 1);
         }
 
         public void PreviousModule()
         {
-            var activeIndices = GetActiveModuleIndices();
-            if (activeIndices.Count == 0) return;
-
-            int currentIndex = activeIndices.IndexOf(CurrentModuleIndex);
+            int currentIndex = CurrentModuleIndex;
             if (currentIndex == -1 || currentIndex == 0)
-                SetModule(activeIndices[^1]);
+                SetModule(Rocket.Modules.Length - 1);
             else
-                SetModule(activeIndices[currentIndex - 1]);
+                SetModule(currentIndex - 1);
         }
 
         // Use for animation
@@ -194,8 +172,8 @@ namespace Macrocosm.Content.Rockets.UI.Customization
 
                 float animation = Utility.QuadraticEaseInOut(animationCounter);
 
-                Vector2 targetOffset = GetModuleOffset(CurrentModuleName);
-                float targetZoom = GetModuleZoom(CurrentModuleName);
+                Vector2 targetOffset = GetModuleOffset(CurrentModuleIndex);
+                float targetZoom = GetModuleZoom(CurrentModuleIndex);
                 if (ZoomedOut)
                 {
                     moduleOffsetX = MathHelper.Lerp(targetOffset.X, zoomedOutModuleOffsetX, animation);

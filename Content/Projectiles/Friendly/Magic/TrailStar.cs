@@ -99,8 +99,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             for (int i = 0; i < 12; i++)
             {
-                float opacityMultiplier = 0.05f * (i + 1); 
-                float scaleMultiplier = 1.2f - (0.1f * i);  
+                float opacityMultiplier = 0.05f * (i + 1);
+                float scaleMultiplier = 1.2f - (0.1f * i);
 
                 Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, Projectile.Center - Main.screenPosition, sourceRect, (new Color(0, 217, 102, 0)) * opacityMultiplier * Projectile.Opacity, Projectile.rotation, origin, Projectile.scale * scaleMultiplier, SpriteEffects.None, 0);
             }

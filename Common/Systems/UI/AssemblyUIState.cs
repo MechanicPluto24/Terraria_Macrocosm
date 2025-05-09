@@ -14,14 +14,15 @@ namespace Macrocosm.Common.Systems.UI
 {
     public class AssemblyUIState : UIState
     {
-        public LaunchPad LaunchPad { get; set; }
+        public LaunchPad LaunchPad { get; }
 
         private UIText title;
         private UIDragablePanel window;
         private UIAssemblyTab assemblyTab;
 
-        public AssemblyUIState()
+        public AssemblyUIState(LaunchPad launchPad)
         {
+            LaunchPad = launchPad;
         }
 
         public override void OnInitialize()
@@ -49,35 +50,17 @@ namespace Macrocosm.Common.Systems.UI
             };
             window.Append(title);
 
-            assemblyTab = new();
+            assemblyTab = new(LaunchPad);
+            assemblyTab.Activate();
             window.Append(assemblyTab);
         }
 
         public void OnShow()
         {
-            assemblyTab.LaunchPad = LaunchPad;
-
-            window.ExecuteRecursively((uIElement) =>
-            {
-                if (uIElement is IRocketUIDataConsumer rocketDataConsumer)
-                {
-                    rocketDataConsumer.Rocket = LaunchPad.Rocket;
-                    rocketDataConsumer.OnRocketChanged();
-                }
-
-                if (uIElement is ITabUIElement tab)
-                    tab.OnTabOpen();
-            });
         }
 
         public void OnHide()
         {
-            window.ExecuteRecursively((uIElement) =>
-            {
-                if (uIElement is ITabUIElement tab)
-                    tab.OnTabClose();
-            });
-
             if (LaunchPad is not null)
                 LaunchPad.Inventory.InteractingPlayer = 255;
         }

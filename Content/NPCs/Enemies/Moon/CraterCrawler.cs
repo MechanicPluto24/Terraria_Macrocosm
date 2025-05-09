@@ -3,7 +3,6 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Common.Systems;
 using Macrocosm.Content.Items.Drops;
 using Macrocosm.Content.Items.Food;
 using Microsoft.Xna.Framework;
@@ -54,10 +53,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.aiStyle = -1;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return spawnInfo.Player.InModBiome<MoonBiome>() && !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? (RoomOxygenSystem.IsRoomPressurized((int)(spawnInfo.Player.Center.X/16f), (int)(spawnInfo.Player.Center.Y/16f)) ? 0f: .1f) : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.1f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {

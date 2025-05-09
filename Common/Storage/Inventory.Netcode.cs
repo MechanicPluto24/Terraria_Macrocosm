@@ -62,7 +62,7 @@ namespace Macrocosm.Common.Storage
             foreach (var item in items)
                 ItemIO.Send(item, packet, writeStack: true, writeFavorite: true);
 
-            if(toSubservers)
+            if (toSubservers)
                 packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
 
             packet.Send(toClient, ignoreClient);

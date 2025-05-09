@@ -8,7 +8,7 @@ namespace Macrocosm.Content.Tiles.Relics
     {
         public override string RelicTextureName => "Macrocosm/Content/Tiles/Relics/CraterDemonRelic";
 
-        public override bool RightPlaceStyle => false;
+        public override bool ShouldFlip => false;
 
         public override void KillMultiTile(int i, int j, int frameX, int frameY)
         {

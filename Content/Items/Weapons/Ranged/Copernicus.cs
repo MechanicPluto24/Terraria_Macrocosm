@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.channel = true;
             Item.knockBack = 8f;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
             Item.autoReuse = true;
             Item.shootSpeed = 20f;
@@ -45,6 +45,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             GunBarrelPosition = new Vector2(26f, 7f),
             CenterYOffset = 9f,
             MuzzleOffset = 45f,
+            Recoil = (6, 0.1f),
             RecoilDiminish = 0.9f
         };
 
@@ -74,7 +75,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {
-            position -= new Vector2(4 * player.direction, 2); // so bullets line up with the muzzle
+            position -= new Vector2(8 * player.direction, -2); // so bullets line up with the muzzle
         }
     }
 }

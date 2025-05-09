@@ -29,8 +29,8 @@ namespace Macrocosm.Common.Bases.Projectiles
         {
             Item.damage = 99;
             Item.DamageType = DamageClass.Melee;
-            Item.width = 0;
-            Item.height = 0;
+            Item.width = 16;
+            Item.height = 16;
             Item.useTime = Item.useAnimation = 1;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.shoot = ProjectileType<T>();
@@ -39,7 +39,6 @@ namespace Macrocosm.Common.Bases.Projectiles
             Item.autoReuse = true;
             Item.noUseGraphic = true;
             Item.noMelee = true;
-
             if (GetInstance<T>().KillMode == HeldProjectile.HeldProjectileKillMode.Manual)
             {
                 Item.channel = true;
@@ -164,8 +163,6 @@ namespace Macrocosm.Common.Bases.Projectiles
             }
 
             Player.heldProj = Projectile.whoAmI;
-
-
             return true;
         }
 
@@ -174,7 +171,7 @@ namespace Macrocosm.Common.Bases.Projectiles
         /// <summary>
         /// Kills the <see cref="HeldProjectile"/> properly.
         /// </summary>
-        public void UnAlive()
+        public void Despawn()
         {
             shouldDie = true;
         }

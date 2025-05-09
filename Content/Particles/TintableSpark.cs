@@ -11,8 +11,7 @@ namespace Macrocosm.Content.Particles
 {
     public class TintableSpark : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
+        public override string Texture => Macrocosm.EmptyTexPath;
 
         private float origScale;
 

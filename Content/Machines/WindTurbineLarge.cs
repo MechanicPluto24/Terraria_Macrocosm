@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
@@ -10,6 +9,7 @@ using System;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
+using Terraria.GameContent.Drawing;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -35,19 +35,18 @@ namespace Macrocosm.Content.Machines
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
             TileObjectData.newTile.Width = Width;
             TileObjectData.newTile.Height = Height;
+            TileObjectData.newTile.Origin = new Point16(1, Height - 1);
 
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16];
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.LavaDeath = true;
 
-            TileObjectData.newTile.Origin = new Point16(1, Height - 1);
-            TileObjectData.newTile.AnchorTop = new AnchorData();
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, Width, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
 
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
             TileObjectData.newTile.UsesCustomCanPlace = true;
@@ -69,19 +68,16 @@ namespace Macrocosm.Content.Machines
 
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Tile tile = Main.tile[i, j];
+            if (TileObjectData.IsTopLeft(i, j))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
 
-            if (TileObjectData.IsTopLeft(tile))
-                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
-
-            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+            return false;
         }
 
         private SpriteBatchState state;
-
-        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, windSensitivity: 0.02f, rowsToIgnore: 2);
+            TileRendering.DrawMultiTileGrass(i, j, totalWindMultiplier: 0.02f, rowsToIgnore: 2);
 
             turbineTexture ??= ModContent.Request<Texture2D>(Texture + "_Turbine");
             bladesTexture ??= ModContent.Request<Texture2D>(Texture + "_Blades");
@@ -91,20 +87,30 @@ namespace Macrocosm.Content.Machines
 
             Vector2 zero = Vector2.Zero;
             Vector2 tileDrawPosition = new Vector2(i, j) * 16f + zero - Main.screenPosition;
-
             Color drawColor = Lighting.GetColor(i, j);
 
-            float windCycle = TileRendering.TileRenderer.GetWindCycle(i, j, TileRendering.SunflowerWindCounter); // Assuming SunflowerWindCounter is a global timer
+            float windCycle = TileRendering.TileRenderer.GetWindCycle(i, j, TileRendering.SunflowerWindCounter);
+            float windSpeed = Utility.WindSpeedScaled;
+            float rotation = rotationCounter;
+
+            // Disable sway if pole is in a place with no wind
+            if (!WorldGen.InAPlaceWithWind(i, j, Width, Height - 2))
+                windCycle = 0;
+
+            // Disable rotation and sway if turbine and blades are in a place with no wind
+            if (!WorldGen.InAPlaceWithWind(i, j - 1, Width, 3))
+                rotation = windSpeed = 0;
+
             float windSwayX = windCycle * 3.3f;
 
             float turbineScale = 1f;
             Vector2 turbineOffset = new(16 + 8 + windSwayX, 11);
-            Matrix turbineMatrix = GetTurbineMatrix(tileDrawPosition + turbineOffset, state.Matrix);
-            SpriteEffects turbineEffects = Utility.WindSpeedScaled > 0f ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            Matrix turbineMatrix = GetTurbineMatrix(tileDrawPosition + turbineOffset, windSpeed, state.Matrix);
+            SpriteEffects turbineEffects = windSpeed > 0f ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-            Vector2 bladeOffset = new(16 + windSwayX + (Utility.WindSpeedScaled < 0f ? (6 + 9.6f * -Utility.WindSpeedScaled) : (6f * (1f - Utility.WindSpeedScaled))), y: 11);
-            Matrix bladeMatrix = GetBladesMatrix(tileDrawPosition + bladeOffset, state.Matrix);
-            float bladeRotation = rotationCounter - (MathHelper.Pi / 32 * (i / 4));
+            Vector2 bladeOffset = new(16 + windSwayX + (windSpeed < 0f ? (6 + 9.6f * -windSpeed) : (6f * (1f - windSpeed))), y: 11);
+            Matrix bladeMatrix = GetBladesMatrix(tileDrawPosition + bladeOffset, windSpeed, state.Matrix);
+            float bladeRotation = rotation - (MathHelper.Pi / 32 * (i / 4));
 
             state.SaveState(spriteBatch);
             spriteBatch.End();
@@ -122,9 +128,9 @@ namespace Macrocosm.Content.Machines
         }
 
 
-        private static Matrix GetTurbineMatrix(Vector2 drawPosition, Matrix baseMatrix)
+        private static Matrix GetTurbineMatrix(Vector2 drawPosition, float windSpeed, Matrix baseMatrix)
         {
-            float radians = MathHelper.Clamp(MathHelper.PiOver2 * (1f - Math.Abs(Utility.WindSpeedScaled)), 0f, 1f);
+            float radians = MathHelper.Clamp(MathHelper.PiOver2 * (1f - Math.Abs(windSpeed)), 0f, 1f);
 
             // Apply the transformations relative to the world position
             Matrix transformationMatrix =
@@ -135,9 +141,9 @@ namespace Macrocosm.Content.Machines
             return transformationMatrix * baseMatrix;
         }
 
-        private static Matrix GetBladesMatrix(Vector2 drawPosition, Matrix baseMatrix)
+        private static Matrix GetBladesMatrix(Vector2 drawPosition, float windSpeed, Matrix baseMatrix)
         {
-            float radians = MathHelper.PiOver2 * Utility.WindSpeedScaled * 0.66f;
+            float radians = MathHelper.PiOver2 * windSpeed * 0.66f;
 
             // Apply the transformations relative to the world position
             Matrix transformationMatrix =

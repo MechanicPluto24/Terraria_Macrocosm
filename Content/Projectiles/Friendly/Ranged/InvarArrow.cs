@@ -1,12 +1,15 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
@@ -30,7 +33,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
 
-            Projectile.extraUpdates = 4;
+            Projectile.extraUpdates = 3;
         }
 
         public override void AI()
@@ -68,7 +71,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         public override void OnKill(int timeLeft)
         {
             for (int i = 0; i < 40; i++)
-                Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<InvarBits>(), Projectile.oldVelocity.RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(0.1f, 0.4f), Scale: 3f);
+                Dust.NewDustPerfect(Projectile.Center + Projectile.oldVelocity * 0.5f, ModContent.DustType<InvarBits>(), new Vector2(10, 0).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat(), Scale: 3f);
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.5f);
+                p.ScaleVelocity = new(0.01f);
+                p.Color = new Color(157, 125, 36).WithOpacity(0.5f);
+            });
         }
 
         private SpriteBatchState state;
@@ -79,12 +90,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
-            int trailCount = 80;
-            float distanceMult = 0.25f;
-            for (int n = 1; n < trailCount; n++)
+            int trailCount = 60;
+            float distanceMult = 0.4f;
+            for (int n = 5; n < trailCount; n++)
             {
-                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * distanceMult;
-                Main.EntitySpriteDraw(TextureAssets.Projectile[Type].Value, trailPosition - Main.screenPosition, null, Color.White * (0.55f - (float)n / trailCount), Projectile.rotation, TextureAssets.Projectile[Type].Value.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+                Vector2 trailPosition = Projectile.Center - new Vector2(10, 0).RotatedBy(Projectile.velocity.ToRotation()) * n * distanceMult + Main.rand.NextVector2Circular(5, 5);
+                Color glowColor = new Color(165, 146, 90, 255) * (((float)trailCount - n) / trailCount) * 0.45f * (1f - Projectile.alpha / 255f);
+                Main.EntitySpriteDraw(TextureAssets.Extra[ExtrasID.SharpTears].Value, trailPosition - Main.screenPosition, null, glowColor, Projectile.rotation, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, Projectile.scale * 1.2f, SpriteEffects.None, 0f);
+
             }
 
             Main.spriteBatch.End();
@@ -94,10 +107,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         }
 
         public override void PostDraw(Color lightColor)
-        {
+        { 
         }
 
         public override Color? GetAlpha(Color lightColor)
-            => new Color(255, 255, 255, 200);
+            => new Color(255, 255, 255, 127);
     }
 }

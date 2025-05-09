@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Items.Tools.Axes
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 6;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.tileBoost = 5;

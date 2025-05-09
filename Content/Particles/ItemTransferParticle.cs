@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Particles
     // but this one actually applies light color!
     public class ItemTransferParticle : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public override bool ShouldUpdatePosition => false;
 
         public Vector2 StartPosition;

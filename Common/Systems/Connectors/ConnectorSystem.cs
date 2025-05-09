@@ -1,6 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Netcode;
-using Macrocosm.Common.Storage;
+﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Connectors;
 using Microsoft.Xna.Framework;
@@ -9,7 +7,6 @@ using ReLogic.Content;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -146,11 +143,11 @@ namespace Macrocosm.Common.Systems.Connectors
                         if (data.AnyConveyor)
                         {
                             // Type frame
-                            int frameY = 0;
+                            int frameY = 18 * 0;
                             if (data.ConveyorInlet)
-                                frameY = 18;
+                                frameY = 18 * 4;
                             else if (data.ConveyorOutlet)
-                                frameY = 36;
+                                frameY = 18 * 5;
 
                             // Connection frame
                             int frameX = 0;

@@ -13,7 +13,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseBulkheadClosed")]
     public class IndustrialBulkheadClosed : ModTile, IDoorTile
     {
         public int Height => 5;
@@ -68,7 +67,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            if (TileAnimation.GetTemporaryFrame(Utility.GetMultitileTopLeft(i, j), out int frame))
+            if (TileAnimation.GetTemporaryFrame(TileObjectData.TopLeft(i, j), out int frame))
                 frameYOffset = (short)(18 * Height * frame);
         }
 

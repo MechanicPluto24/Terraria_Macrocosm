@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Tiles.Tech
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.CoordinatePadding = 2;
             TileObjectData.newTile.StyleHorizontal = false;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.Table, 2, 0);
             TileObjectData.addTile(Type);
 
             HitSound = SoundID.Dig;
@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Tiles.Tech
 
         public override ushort GetMapOption(int i, int j)
         {
-            return (ushort)(Main.tile[i, j].TileFrameY / 18); 
+            return (ushort)(Main.tile[i, j].TileFrameY / 18);
         }
     }
 }

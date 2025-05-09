@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.Bases.Tiles;
-using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems;
@@ -11,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
@@ -33,16 +33,21 @@ namespace Macrocosm.Content.Machines
 
             SceneData.Hooks[Type] = NearbyEffects;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style5x4);
+
             TileObjectData.newTile.Width = 4;
             TileObjectData.newTile.Height = 4;
+            TileObjectData.newTile.Origin = new Point16(2, 3);
+
             TileObjectData.newTile.CoordinateWidth = 16;
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
             TileObjectData.newTile.CoordinatePadding = 2;
 
             TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.StyleLineSkip = 5;
-            TileObjectData.newTile.StyleWrapLimit = 5;
+
+            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.LavaDeath = true;
+
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
 
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
             TileObjectData.newTile.UsesCustomCanPlace = true;
@@ -57,7 +62,7 @@ namespace Macrocosm.Content.Machines
 
         public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            Point16 origin = TileObjectData.TopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
             {
                 for (int y = origin.Y; y < origin.Y + Height; y++)
@@ -79,7 +84,7 @@ namespace Macrocosm.Content.Machines
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
-            if (Utility.TryGetTileEntityAs(i, j, out OilRefineryTE refinery))
+            if (TileEntity.TryGet(i, j, out OilRefineryTE refinery))
             {
                 UISystem.ShowMachineUI(refinery, new OilRefineryUI());
             }
@@ -132,14 +137,13 @@ namespace Macrocosm.Content.Machines
             }
         }
 
-        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
+        public override void EmitParticles(int i, int j, Tile tile, short tileFrameX, short tileFrameY, Color tileLight, bool visible)
         {
-            if (Main.gamePaused)
+            if (!visible)
                 return;
 
-            Tile tile = Main.tile[i, j];
-            int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
-            int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
+            int tileOffsetX = tileFrameX % (Width * 18) / 18;
+            int tileOffsetY = tileFrameY % (Height * 18) / 18;
 
             if (IsPoweredOnFrame(i, j))
             {
@@ -159,7 +163,7 @@ namespace Macrocosm.Content.Machines
                                 p.Scale = new(0.3f);
                                 p.Rotation = 0f;
                                 p.Color = (new Color(80, 80, 80) * Main.rand.NextFloat(0.75f, 1f)).WithAlpha(215);
-                                p.FadeIn = true;
+                                p.VanillaUpdate = true;
                                 p.Opacity = 0f;
                                 p.ScaleVelocity = new(0.0075f);
                                 p.WindFactor = 0.01f;

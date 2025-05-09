@@ -1,14 +1,6 @@
-﻿using Macrocosm.Common.Config;
-using Macrocosm.Common.Players;
+﻿using Macrocosm.Common.Players;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.Localization;
 using Terraria;
 using Terraria.ModLoader;
 

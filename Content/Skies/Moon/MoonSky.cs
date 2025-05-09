@@ -160,7 +160,7 @@ namespace Macrocosm.Content.Skies.Moon
 
             if (Main.dayTime)
             {
-                if (WorldFlags.DemonSun)
+                if (WorldData.DemonSun)
                     return GetDemonSunDayColour();
 
                 if (Main.time < MacrocosmSubworld.GetDayLength() * 0.1)
@@ -173,7 +173,7 @@ namespace Macrocosm.Content.Skies.Moon
             }
             else
             {
-                if (WorldFlags.DemonSun)
+                if (WorldData.DemonSun)
                     return GetDemonSunNightColour();
 
                 if (Main.time < MacrocosmSubworld.GetNightLength() * 0.2)
@@ -185,7 +185,6 @@ namespace Macrocosm.Content.Skies.Moon
             }
         }
 
-        private SpriteBatchState state1, state2;
         public override void Draw(SpriteBatch spriteBatch, float minDepth, float maxDepth)
         {
             if (SubworldSystem.IsActive<Subworlds.Moon>() && maxDepth >= float.MaxValue && minDepth < float.MaxValue)
@@ -207,7 +206,7 @@ namespace Macrocosm.Content.Skies.Moon
 
                 sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
 
-                if (WorldFlags.DemonSun && Main.dayTime)
+                if (WorldData.DemonSun && Main.dayTime)
                     DrawDemonSunEffects(spriteBatch, sun);
 
                 sun.Draw(spriteBatch);
@@ -221,8 +220,8 @@ namespace Macrocosm.Content.Skies.Moon
                 rift ??= new Rift(
                         Main.graphics.GraphicsDevice,  
                         new Vector2(Main.screenWidth / 2, Main.screenHeight / 2), 
-                        400f, 
-                        200f,  
+                        800f, 
+                        400f,  
                         Color.Purple,  
                         Color.Red,  
                         128
@@ -231,17 +230,16 @@ namespace Macrocosm.Content.Skies.Moon
                 state1.SaveState(spriteBatch);
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, RasterizerState.CullNone, null, Matrix.Identity * Matrix.CreateScale(Main.BackgroundViewMatrix.Zoom.X));
-                rift.Draw(Main.Assets.Request<Texture2D>("Images/Misc/noise").Value, GraphicsSystem.BackgroundViewProjection);
+                rift.Draw(Main.Assets.Request<Texture2D>("Images/Misc/noise").Value, state1.Matrix);
                 spriteBatch.End();
                 spriteBatch.Begin(state1);
                 */
             }
         }
 
-        //Rift rift;
         private void UpdateNebulaStars()
         {
-            if(lastMoonType != Main.moonType)
+            if (lastMoonType != Main.moonType)
                 shouldRefreshNebulaStars = true;
 
             lastMoonType = Main.moonType;
@@ -267,11 +265,11 @@ namespace Macrocosm.Content.Skies.Moon
         private void DrawDemonSunEffects(SpriteBatch spriteBatch, CelestialBody Sun)
         {
             float intensity = Subworlds.Moon.Instance.DemonSunVisualIntensity;
-            var flare = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Flare3").Value;
-            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch1").Value;
-            var scorch2 = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scorch2").Value;
+            var flare = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Flare3").Value;
+            var scorch1 = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch1").Value;
+            var scorch2 = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch2").Value;
             var sun = ModContent.Request<Texture2D>(Path + "DemonSunBack").Value;
-            var beam = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HighRes/Scratch2").Value;
+            var beam = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scratch2").Value;
             float pulse = Utility.PositiveSineWave(450, MathF.PI / 2);
             spriteBatch.Draw(sun, Sun.Center, null, new Color(255, 255, 255, 0) * intensity, MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), sun.Size() / 2f, (1f) * intensity, SpriteEffects.None, 0);
 
@@ -306,7 +304,7 @@ namespace Macrocosm.Content.Skies.Moon
 
             sun.Color = new Color(255, 255, 255) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
 
-            earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));  
+            earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));
             intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
             UpdateTextures();
 
@@ -317,7 +315,7 @@ namespace Macrocosm.Content.Skies.Moon
 
         private void UpdateTextures()
         {
-            if (Utility.IsAprilFools())
+            if (Utility.IsAprilFools)
             {
                 earth.SetLighting(null);
                 earth.SetTextures(earthBodyFlat);

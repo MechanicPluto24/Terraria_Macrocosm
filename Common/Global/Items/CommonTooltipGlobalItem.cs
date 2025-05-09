@@ -22,10 +22,10 @@ namespace Macrocosm.Common.Global.Items
         public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
         {
             if (ItemSets.DeveloperItem[item.type])
-                tooltips.Add(new TooltipLine(Mod, "DeveloperItem", Language.GetText("Mods.Macrocosm.Common.Tooltips.DeveloperItem").Value) { OverrideColor = CelestialDisco.CelestialColor });
+                tooltips.Add(new TooltipLine(Mod, "DeveloperItem", Language.GetText("Mods.Macrocosm.Tooltips.DeveloperItem").Value) { OverrideColor = CelestialDisco.CelestialColor });
 
             if (ItemSets.UnobtainableItem[item.type])
-                tooltips.Add(new TooltipLine(Mod, "UnobtainableItem", Language.GetText("Mods.Macrocosm.Common.Tooltips.UnobtainableItem").Value) { OverrideColor = Color.Red });
+                tooltips.Add(new TooltipLine(Mod, "UnobtainableItem", Language.GetText("Mods.Macrocosm.Tooltips.UnobtainableItem").Value) { OverrideColor = Color.Red });
         }
     }
 }

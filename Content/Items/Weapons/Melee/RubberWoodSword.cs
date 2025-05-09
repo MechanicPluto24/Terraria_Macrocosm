@@ -1,4 +1,3 @@
-using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.Plants;
 using Terraria;
 using Terraria.ID;

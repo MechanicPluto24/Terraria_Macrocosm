@@ -56,7 +56,7 @@ namespace Macrocosm.Content.Rockets.UI.Navigation
         }
 
         public UILaunchDestinationInfoElement(OrbitSubworld orbitSubworld) : base(
-            $"Space station #{orbitSubworld.Index + 1}",
+            $"Space station #{orbitSubworld.InstanceIndex + 1}",
             ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "SpaceStation", AssetRequestMode.ImmediateLoad),
             null,
             null

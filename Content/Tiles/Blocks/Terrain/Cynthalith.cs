@@ -1,11 +1,11 @@
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Subworlds;
 
 namespace Macrocosm.Content.Tiles.Blocks.Terrain
 {
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             DustType = ModContent.DustType<CynthalithDust>();
         }
 
-        public override bool HasWalkDust() => Main.rand.NextBool(3)&&MacrocosmSubworld.GetGravityMultiplier()!=0f;
+        public override bool HasWalkDust() => Main.rand.NextBool(3) && MacrocosmSubworld.GetGravityMultiplier() != 0f;
 
         public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
         {

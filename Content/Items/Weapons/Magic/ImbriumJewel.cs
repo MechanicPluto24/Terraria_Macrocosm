@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.noMelee = true;
             Item.knockBack = 8;
             Item.value = Item.sellPrice(0, 20, 0, 0);
-            Item.rare = ModContent.RarityType<MoonRarityT2>();
+            Item.rare = ModContent.RarityType<MoonRarity2>();
             Item.UseSound = SoundID.Item8;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<ImbriumJewelMeteor>();

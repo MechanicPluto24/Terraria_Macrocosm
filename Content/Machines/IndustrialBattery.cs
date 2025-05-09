@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -28,9 +27,17 @@ namespace Macrocosm.Content.Machines
             Main.tileFrameImportant[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3);
+            TileObjectData.newTile.Width = Width;
+            TileObjectData.newTile.Height = Height;
+            TileObjectData.newTile.Origin = new Point16(1, 2);
+
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.StyleLineSkip = 2;
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.Table | AnchorType.SolidSide, Width, 0);
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
             TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.addTile(Type);
@@ -45,7 +52,7 @@ namespace Macrocosm.Content.Machines
 
         public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            Point16 origin = TileObjectData.TopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
             {
                 for (int y = origin.Y; y < origin.Y + Height; y++)
@@ -75,7 +82,7 @@ namespace Macrocosm.Content.Machines
         public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
         {
             Tile tile = Main.tile[i, j];
-            if (tile.TileFrameX == 0 && tile.TileFrameY == 18 * 3)
+            if (TileObjectData.IsTopLeft(i, j) && tile.TileFrameY == 18 * 3)
                 Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
         }
 

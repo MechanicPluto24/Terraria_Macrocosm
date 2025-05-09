@@ -17,6 +17,8 @@ LuminiteChest: {
 	MapEntry15: Cryocore Chest (Locked)
 	MapEntry16: Cosmic Ember Chest
 	MapEntry17: Cosmic Ember Chest (Locked)
+	MapEntry18: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry18
+	MapEntry19: Mods.Macrocosm.Tiles.LuminiteChest.MapEntry19
 }
 
 IndustrialChest: {
@@ -97,3 +99,8 @@ IndustrialBattery.MapEntry: Industrial Battery
 KeroseneGenerator.MapEntry: Kerosene Generator
 SolarPanelTile.MapEntry: Solar Panel Tile
 Flag.MapEntry: Flag
+ApolloLander.MapEntry: Apollo Lander
+ACUnit.MapEntry: A C Unit
+AirVent.MapEntry: Air Vent
+LuminiteCrystal.MapEntry: Luminite Crystal
+RegolithChest.MapEntry: Regolith Chest

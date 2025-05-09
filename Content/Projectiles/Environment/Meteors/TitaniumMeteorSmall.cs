@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.GrabBags;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Environment.Debris;

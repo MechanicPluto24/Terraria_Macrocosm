@@ -52,10 +52,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         protected readonly float attackTime = 280f;
         public float AI_AttackTimer;
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        {
-            return (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>()) ? 0.1f : 0f;
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? 0.1f : 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {

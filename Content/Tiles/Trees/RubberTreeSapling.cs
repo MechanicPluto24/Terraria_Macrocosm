@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Tiles.Trees
             TileObjectData.newTile.StyleMultiplier = 3;
             TileObjectData.addTile(Type);
 
-            TileID.Sets.TreeSapling[Type] = false; // Do not run regular tree sapling
+            TileID.Sets.TreeSapling[Type] = false; // Do not run regular tree sapling logic
             TileID.Sets.CommonSapling[Type] = true;
             TileSets.SaplingTreeGrowthType[Type] = ModContent.TileType<RubberTree>();
 
@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Tiles.Trees
 
         public override void RandomUpdate(int i, int j)
         {
-            if(WorldGen.genRand.NextBool(20))
+            if (WorldGen.genRand.NextBool(20))
                 WorldGen.AttemptToGrowTreeFromSapling(i, j, j > (int)Main.worldSurface - 1);
         }
 

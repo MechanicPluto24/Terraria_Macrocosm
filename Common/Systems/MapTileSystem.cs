@@ -101,10 +101,10 @@ namespace Macrocosm.Common.Systems
             Color[] subworldMapTileColorLookup = new Color[defaultColorLookup.Length];
             Array.Copy(defaultColorLookup, subworldMapTileColorLookup, defaultColorLookup.Length);
 
-            ushort skyPosition = (ushort)typeof(MapHelper).GetFieldValue("skyPosition");
-            ushort dirtPosition = (ushort)typeof(MapHelper).GetFieldValue("dirtPosition");
-            ushort rockPosition = (ushort)typeof(MapHelper).GetFieldValue("rockPosition");
-            ushort hellPosition = (ushort)typeof(MapHelper).GetFieldValue("hellPosition");
+            ushort skyPosition = typeof(MapHelper).GetFieldValue<ushort>("skyPosition");
+            ushort dirtPosition = typeof(MapHelper).GetFieldValue<ushort>("dirtPosition");
+            ushort rockPosition = typeof(MapHelper).GetFieldValue<ushort>("rockPosition");
+            ushort hellPosition = typeof(MapHelper).GetFieldValue<ushort>("hellPosition");
 
             for (int i = 0; i < 256; i++)
             {

@@ -46,35 +46,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public ref float Timer => ref Projectile.localAI[0];
         public float MaxTime => Player.itemTimeMax;
 
-        // Client side only.
-        private ChampionsBlade blade;
-
+        private ChampionsBlade blade; // Client side only.
         private int shots;
         private int hitStacks;
-
-        // So that the weapon doesn't "blink" during continuous use.
-        private bool despawn;
-
+        private bool despawn; // So that the weapon doesn't "blink" during continuous use.
         private OldPositionCache? tipOldPositions;
+        private bool spawned;
 
         public override void OnSpawn(IEntitySource source)
         {
-            blade = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as ChampionsBlade;
+            if(source != null)
+                blade = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as ChampionsBlade;
 
-            hitStacks = blade.HitStacks;
-            SwingDirection = blade.SwingDirection;
-            Arc = Main.rand.NextFloat(MathHelper.PiOver2, MathHelper.TwoPi * 0.85f);
+            hitStacks = blade?.HitStacks ?? 5;
+            SwingDirection = blade?.SwingDirection ?? 1;
+            Arc = MathHelper.Pi + MathHelper.PiOver2 * ((float)hitStacks / ChampionsBlade.MaxStacks);
 
             Projectile.netUpdate = true;
         }
 
-        public override bool ShouldUpdatePosition()
-        {
-            return false;
-        }
+        public override bool ShouldUpdatePosition() => false;
 
         public override void AI()
         {
+            if (!spawned)
+            {
+                Projectile.velocity = Projectile.Center.DirectionTo(Main.MouseWorld);
+                Projectile.netUpdate = true;
+                spawned = true;
+            }
+
             if (!despawn)
             {
                 Projectile.timeLeft = 2;
@@ -97,18 +98,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 return;
             }
 
-            if (Main.myPlayer == Player.whoAmI)
-            {
-                Projectile.velocity = Projectile.Center.DirectionTo(Main.MouseWorld);
-                Projectile.netUpdate = true;
-            }
-
             var progress = 1f - (float)Player.itemAnimation / Player.itemAnimationMax;
             var x = progress - 1f;
-            Projectile.rotation = Projectile.velocity.ToRotation()
-                + (0.5f * Arc - Arc * (MathF.Sin((x * x * x - 0.5f) * MathHelper.Pi) + 1f) / 2f) * SwingDirection
-                + Main.rand.NextFloat(0.1f);
-
+            Projectile.rotation = Projectile.velocity.ToRotation() + (0.5f * Arc - Arc * (MathF.Sin((x * x * x - 0.5f) * MathHelper.Pi) + 1f) / 2f) * SwingDirection;
+               
             float maxShots = 2 + 5 * ((float)hitStacks / ChampionsBlade.MaxStacks);
             if (shots < maxShots && Main.netMode != NetmodeID.MultiplayerClient && progress > 0.3f && progress < 0.5f && Main.rand.NextBool(2))
             {

@@ -23,17 +23,13 @@ namespace Macrocosm.Common.Utils
         #endregion
 
         #region Hex format conversion
-        public static string GetHex(this Color color)
-        {
-            return "#" + color.Hex3().ToUpper();
-        }
+        public static string GetHex(this Color color) => "#" + color.Hex3().ToUpper();
 
+        public static Color GetColorFromHex(string hexString) => TryGetColorFromHex(hexString, out Color color) ? color : default;
         public static bool TryGetColorFromHex(string hexString, out Color color)
         {
-            if (hexString.StartsWith("#"))
-            {
+            if (hexString.StartsWith('#'))
                 hexString = hexString[1..];
-            }
 
             if (hexString.Length <= 6 && uint.TryParse(hexString, NumberStyles.HexNumber, CultureInfo.CurrentCulture, out uint result))
             {
@@ -44,9 +40,10 @@ namespace Macrocosm.Common.Utils
                 return true;
             }
 
-            color = Color.White;
+            color = Color.Transparent;
             return false;
         }
+
         public static bool TryGetColorFromHex(string hexString, out Vector3 hsl, float luminanceFactor = 1f)
         {
             if (TryGetColorFromHex(hexString, out Color rgb))
@@ -64,72 +61,40 @@ namespace Macrocosm.Common.Utils
 
         #region HSL conversion
 
-        public static Color WithHue(this Color color, float hue)
-        {
-            return HSLToRGB(ToHSL(color) with { X = hue });
-        }
+        public static float GetHue(this Color color) => color.ToHSL().X;
+        public static float GetSaturation(this Color color) => color.ToHSL().Y;
+        public static float GetLuminance(this Color color) => color.ToHSL().Z;
 
-        public static Color WithSaturation(this Color color, float saturation)
-        {
-            return HSLToRGB(ToHSL(color) with { Y = saturation });
-        }
+        public static Color WithHue(this Color color, float hue) => HSLToRGB(ToHSL(color) with { X = hue });
+        public static Color WithSaturation(this Color color, float saturation) => HSLToRGB(ToHSL(color) with { Y = saturation });
+        public static Color WithLuminance(this Color color, float luminance) => HSLToRGB(ToHSL(color) with { Z = luminance });
 
-        public static Color WithLuminance(this Color color, float luminance)
-        {
-            return HSLToRGB(ToHSL(color) with { Z = luminance });
-        }
+        public static Vector3 RGBToHSL(Color color) => color.ToHSL();
+        public static Vector3 ToHSL(this Color color) => Main.rgbToHsl(color);
 
-        public static Vector3 RGBToHSL(Color color)
-        {
-            return color.ToHSL();
-        }
+        public static Color HSLToRGB(Vector3 hsl) => Main.hslToRgb(hsl);
+        public static Color HSLToRGB(float hue, float saturation, float luminance) => Main.hslToRgb(hue, saturation, luminance);
 
-        public static Vector3 ToHSL(this Color color)
-        {
-            return Main.rgbToHsl(color);
-        }
+        public static Color ScaledHSLToRGB(Vector3 hsl, float luminanceFactor) => ScaledHSLToRGB(hsl.X, hsl.Y, hsl.Z, luminanceFactor);
+        public static Color ScaledHSLToRGB(float hue, float saturation, float luminance, float luminanceFactor) => HSLToRGB(hue, saturation, (luminance * luminanceFactor) + (1f - luminanceFactor));
 
-        public static Color HSLToRGB(Vector3 hsl)
-        {
-            return Main.hslToRgb(hsl);
-        }
-
-        public static Color HSLToRGB(float hue, float saturation, float luminance)
-        {
-            return Main.hslToRgb(hue, saturation, luminance);
-        }
+        public static Vector3 ScaleHSL(float hue, float saturation, float luminance, float luminanceFactor) => new Vector3(hue, saturation, (luminance * luminanceFactor) + (1f - luminanceFactor));
+        public static Vector3 ScaleHSL(Vector3 hsl, float luminanceFactor) => ScaleHSL(hsl.X, hsl.Y, hsl.Z, luminanceFactor);
 
         public static Vector3 ToScaledHSL(this Color color, float luminanceFactor)
         {
-            float invFactor = 1f - luminanceFactor;
             Vector3 value = color.ToHSL();
-            value.Z = (value.Z - invFactor) / luminanceFactor;
+            value.Z = (value.Z - (1f - luminanceFactor)) / luminanceFactor;
             return Vector3.Clamp(value, Vector3.Zero, Vector3.One);
         }
 
-        public static Color ScaledHSLToRGB(Vector3 hsl, float luminanceFactor)
-        {
-            return ScaledHSLToRGB(hsl.X, hsl.Y, hsl.Z, luminanceFactor);
-        }
-
-        public static Color ScaledHSLToRGB(float hue, float saturation, float luminance, float luminanceFactor)
-        {
-            float invFactor = 1f - luminanceFactor;
-            return HSLToRGB(hue, saturation, (luminance * luminanceFactor) + invFactor);
-        }
-
-        public static Vector3 ScaleHSL(float hue, float saturation, float luminance, float luminanceFactor)
-        {
-            float invFactor = 1f - luminanceFactor;
-            return new Vector3(hue, saturation, (luminance * luminanceFactor) + invFactor);
-        }
-
-        public static Vector3 ScaleHSL(Vector3 hsl, float luminanceFactor)
-        {
-            return ScaleHSL(hsl.X, hsl.Y, hsl.Z, luminanceFactor);
-        }
-
         #endregion
+
+        public static float ColorDistance(Color color1, Color color2)
+        {
+            Vector3 dist = color1.ToVector3() - color2.ToVector3();
+            return dist.Length();
+        }
 
         public static void ManipulateColor(ref Color color, byte amount)
         {
@@ -327,6 +292,7 @@ namespace Macrocosm.Common.Utils
                 LuminiteStyle.StarRoyale => new Color(21, 13, 77),
                 LuminiteStyle.Cryocore => new Color(11, 67, 80),
                 LuminiteStyle.CosmicEmber => new Color(53, 133, 103),
+                LuminiteStyle.Haemonova => new Color(233, 27, 68),
                 _ => Color.Transparent,
             };
         }
@@ -344,6 +310,7 @@ namespace Macrocosm.Common.Utils
                 LuminiteStyle.StarRoyale => new Color(131, 198, 255),
                 LuminiteStyle.Cryocore => new Color(121, 245, 231),
                 LuminiteStyle.CosmicEmber => new Color(255, 180, 131),
+                LuminiteStyle.Haemonova => new Color(233, 27, 68),
                 _ => Color.Transparent,
             };
         }

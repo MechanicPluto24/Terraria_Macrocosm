@@ -10,6 +10,7 @@
         Mercury,
         StarRoyale,
         Cryocore,
-        CosmicEmber
+        CosmicEmber,
+        Haemonova
     }
 }

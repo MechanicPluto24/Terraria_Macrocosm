@@ -10,9 +10,7 @@ namespace Macrocosm.Content.Particles
 {
     public class EngineSpark : Particle
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
-
+        public override string Texture => Macrocosm.EmptyTexPath;
         public Color ColorOnSpawn { get; set; }
         public Color ColorOnDespawn { get; set; }
 
@@ -35,7 +33,7 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
+            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle6").Value;
             Color color = Color.Lerp(ColorOnSpawn, ColorOnDespawn, (float)TimeLeft / TimeToLive);
             spriteBatch.Draw(glow, Center - screenPosition, null, color.WithOpacity(Opacity), Rotation, glow.Size() / 2, 0.0375f * Scale, SpriteEffects.None, 0f);
             return false;

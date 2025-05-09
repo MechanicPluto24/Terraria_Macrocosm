@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.knockBack = 5;
             Item.channel = true;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.UseSound = SoundID.Item78;
             Item.shoot = ModContent.ProjectileType<DianitePortal>();
 

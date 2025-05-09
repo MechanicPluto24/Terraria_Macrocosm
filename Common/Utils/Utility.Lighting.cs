@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ID;
 using Terraria.Utilities;
-using Terraria;
-using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Common.Utils
 {
@@ -16,11 +11,11 @@ namespace Macrocosm.Common.Utils
         public static Color GetLightColor(Vector2 position) => Lighting.GetColor((int)(position.X / 16f), (int)(position.Y / 16f));
 
         /// <summary> Convenience method for adding lighting using an npc or projectile position, using a Color instance for color. </summary>
-        public static void AddLight(Vector2 position, Color color, float brightnessDivider = 1F) 
+        public static void AddLight(Vector2 position, Color color, float brightnessDivider = 1F)
             => AddLight(position, color.R / 255F, color.G / 255F, color.B / 255F, brightnessDivider);
 
         /// <summary> Convenience method for adding lighting using an npc or projectile position with 0f - 1f color values. </summary>
-        public static void AddLight(Vector2 position, float colorR, float colorG, float colorB, float brightnessDivider = 1f) 
+        public static void AddLight(Vector2 position, float colorR, float colorG, float colorB, float brightnessDivider = 1f)
             => Lighting.AddLight((int)(position.X / 16f), (int)(position.Y / 16f), colorR / brightnessDivider, colorG / brightnessDivider, colorB / brightnessDivider);
 
         public static void ApplySurfaceLight(Tile tile, int x, int y, ref Vector3 lightColor)

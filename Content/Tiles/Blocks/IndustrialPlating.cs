@@ -9,7 +9,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks
 {
-    [LegacyName("MoonBasePlating")]
     public class IndustrialPlating : ModTile
     {
         public override void SetStaticDefaults()

@@ -29,7 +29,7 @@ namespace Macrocosm.Common.Graphics
             AlphaBlendFunction = BlendFunction.ReverseSubtract,
         };
 
-        public static BlendState AlphaSubtractive => _subtractive ??= new BlendState
+        public static BlendState AlphaSubtractive => _alphaSubtractive ??= new BlendState
         {
             ColorSourceBlend = Blend.SourceAlpha,
             AlphaSourceBlend = Blend.SourceAlpha,

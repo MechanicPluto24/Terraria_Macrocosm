@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Items.Armor.Vanity.Employee
             Item.width = 22;
             Item.height = 20;
             Item.value = Item.sellPrice(silver: 200);
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.vanity = true;
         }
 

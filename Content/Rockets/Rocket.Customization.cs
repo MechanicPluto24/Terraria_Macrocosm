@@ -1,6 +1,6 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Consumables.Unlockables;
-using Macrocosm.Content.Rockets.Customization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Rockets
     {
         public Rocket VisualClone()
         {
-            Rocket visualClone = new(ActiveModuleNames);
+            Rocket visualClone = new(Modules);
             visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
             return visualClone;
         }
@@ -23,11 +23,8 @@ namespace Macrocosm.Content.Rockets
         {
             if (item.ModItem is PatternDesign patternDesign)
             {
-                foreach (var (moduleName, patternName) in patternDesign.Patterns)
-                {
-                    if (CustomizationStorage.GetPatternUnlockedStatus(moduleName, patternName))
-                        return true;
-                }
+                if (PatternManager.IsUnlocked(patternDesign.PatternName))
+                    return true;
             }
 
             return false;
@@ -40,15 +37,22 @@ namespace Macrocosm.Content.Rockets
             Nameplate.HAlign = source.Nameplate.HAlign;
             Nameplate.VAlign = source.Nameplate.VAlign;
 
-            foreach (var module in AvailableModules)
+            foreach (var module in Modules)
             {
-                module.Detail = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Detail;
-                module.Pattern = source.AvailableModules.FirstOrDefault((m) => m.Name == module.Name).Pattern;
-
-                foreach (PatternColorData data in module.Pattern.ColorData)
+                module.Decal = source.Modules.FirstOrDefault((m) => m.Name == module.Name).Decal;
+                module.Pattern = source.Modules.FirstOrDefault((m) => m.Name == module.Name).Pattern.Clone();
+                foreach (var data in module.Pattern.ColorData.Values)
+                {
                     if (data.Color.A > 0)
+                    {
                         for (int i = 0; i < 20; i++)
-                            Dust.NewDustDirect(module.Position, module.Width, module.Height, DustID.TintablePaint, newColor: data.Color.WithAlpha(220), Scale: Main.rand.NextFloat(0.2f, 1f));
+                        {
+                            Dust.NewDustDirect(module.Position, module.Width, module.Height, DustID.TintablePaint,
+                                newColor: data.Color.WithAlpha(220),
+                                Scale: Main.rand.NextFloat(0.2f, 1f));
+                        }
+                    }
+                }
             }
 
             if (sync)
@@ -62,10 +66,10 @@ namespace Macrocosm.Content.Rockets
         {
             Nameplate = new();
 
-            foreach (var module in AvailableModules)
+            foreach (var module in Modules)
             {
-                module.Detail = default;
-                module.Pattern = CustomizationStorage.GetDefaultPattern(module.Name);
+                module.Decal = default;
+                module.Pattern = PatternManager.Get("Basic", module.Name);
             }
 
             SyncCustomizationData();
@@ -79,12 +83,12 @@ namespace Macrocosm.Content.Rockets
             };
 
             var modulesArray = new JArray();
-            foreach (var module in AvailableModules)
+            foreach (var module in Modules)
             {
                 modulesArray.Add(new JObject
                 {
                     ["moduleName"] = module.Name,
-                    ["detail"] = module.Detail.Name,
+                    ["decal"] = module.Decal.Name,
                     ["pattern"] = module.Pattern.ToJObject()
                 });
             }
@@ -108,12 +112,12 @@ namespace Macrocosm.Content.Rockets
                 foreach (var moduleJObject in modulesArray.Children<JObject>())
                 {
                     string moduleName = moduleJObject["moduleName"].Value<string>();
-                    var module = AvailableModules.FirstOrDefault((m) => m.Name == moduleName);
+                    var module = Modules.FirstOrDefault((m) => m.Name == moduleName);
                     if (module != null)
                     {
                         try
                         {
-                            module.Detail = CustomizationStorage.TryGetDetail(moduleName, moduleJObject["detail"].Value<string>(), out Detail detail) ? detail : new Detail();
+                            module.Decal = DecalManager.TryGetDecal(moduleJObject["decal"].Value<string>(), moduleName, out Decal decal) ? decal : new Decal();
                             module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
                         }
                         catch (Exception ex)

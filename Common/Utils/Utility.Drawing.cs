@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Microsoft.Xna.Framework;
@@ -86,6 +85,7 @@ namespace Macrocosm.Common.Utils
         /// </summary>
         public static void DrawBeam(Texture2D texture, Vector2 startPosition, Vector2 endPosition, Vector2 drawScale, Color beamColor, Terraria.Utils.LaserLineFraming lineFraming)
         {
+            DelegateMethods.f_1 = 1f; // f_1 is an unnamed decompiled variable whose function is unknown. Leave it at 1.
             DelegateMethods.c_1 = beamColor; // c_1 is an unnamed decompiled variable which is the render color of the beam drawn by the lineFraming delegate.
             Terraria.Utils.DrawLaser(Main.spriteBatch, texture, startPosition, endPosition, drawScale, lineFraming);
         }
@@ -98,15 +98,10 @@ namespace Macrocosm.Common.Utils
             for (int i = 0; i < points; i++)
             {
                 float angle = rotationStep * i;
-
                 if (entity)
-                {
                     Main.EntitySpriteDraw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
                 else
-                {
                     Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
             }
         }
 
@@ -117,13 +112,9 @@ namespace Macrocosm.Common.Utils
             foreach (float rotation in rotations)
             {
                 if (entity)
-                {
                     Main.EntitySpriteDraw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
                 else
-                {
                     Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
             }
         }
 
@@ -137,13 +128,9 @@ namespace Macrocosm.Common.Utils
                 float angle = rotationStep * i;
 
                 if (entity)
-                {
                     Main.EntitySpriteDraw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
                 else
-                {
                     Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
             }
         }
 
@@ -154,13 +141,9 @@ namespace Macrocosm.Common.Utils
             foreach (float rotation in rotations)
             {
                 if (entity)
-                {
                     Main.EntitySpriteDraw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
                 else
-                {
                     Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
             }
         }
 
@@ -381,7 +364,7 @@ namespace Macrocosm.Common.Utils
             return ChatManager.DrawColorCodedString(spriteBatch, font, snippets, position, Color.White.WithAlpha(baseColor.A), rotation, origin, baseScale, out _, maxWidth);
         }
 
- 
+
         #region BaseMod BaseDrawing
 
         //public static ShaderContext shaderContext = new ShaderContext();
@@ -598,7 +581,7 @@ namespace Macrocosm.Common.Utils
             }
             if (returnColor != null && brightness != 1f)
             {
-                returnColor = Utility.ColorMult((Color)returnColor, brightness);
+                returnColor = ColorMult((Color)returnColor, brightness);
             }
 
             return returnColor;
@@ -609,20 +592,17 @@ namespace Macrocosm.Common.Utils
         ///</summary>
         public static Color GetGemColor(int type)
         {
-            if (type == 181) { return Color.MediumOrchid; }
-            else //Amethyst
-            if (type == 180) { return Color.Gold; }
-            else //Topaz
-            if (type == 177) { return Color.DeepSkyBlue; }
-            else //Sapphire
-            if (type == 178) { return Color.Crimson; }
-            else //Ruby
-            if (type == 179) { return Color.LimeGreen; }
-            else //Emerald
-            if (type == 182) { return Color.GhostWhite; }
-            else //Diamond
-            if (type == 999) { return Color.Orange; } //Amber
-            return Color.Black;
+            return type switch
+            {
+                181 => Color.MediumOrchid,
+                180 => Color.Gold,
+                177 => Color.DeepSkyBlue,
+                178 => Color.Crimson,
+                179 => Color.LimeGreen,
+                182 => Color.GhostWhite,
+                999 => Color.Orange,
+                _ => Color.Black,
+            };
         }
 
         ///<summary>

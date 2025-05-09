@@ -4,7 +4,6 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    [LegacyName("MoonBaseTable")]
     public class IndustrialTable : ModItem
     {
         public override void SetStaticDefaults()

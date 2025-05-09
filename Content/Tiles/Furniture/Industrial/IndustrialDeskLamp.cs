@@ -12,7 +12,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseDeskLamp")]
     public class IndustrialDeskLamp : ModTile, IToggleableTile
     {
         public override void SetStaticDefaults()
@@ -27,7 +26,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
             TileObjectData.newTile.StyleHorizontal = true;
 
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.Table, 2, 0);
 
             TileObjectData.newTile.DrawYOffset = 2;
 

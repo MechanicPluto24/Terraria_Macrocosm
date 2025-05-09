@@ -13,7 +13,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseDresser")]
     public class IndustrialDresser : ModTile
     {
         public override void SetStaticDefaults()

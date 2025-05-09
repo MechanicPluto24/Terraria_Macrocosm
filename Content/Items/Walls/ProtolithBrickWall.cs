@@ -1,3 +1,6 @@
+using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks.Bricks;
 using Terraria;
 using Terraria.ID;
@@ -7,8 +10,6 @@ namespace Macrocosm.Content.Items.Walls
 {
     public class ProtolithBrickWall : ModItem
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
-
         public override void SetStaticDefaults()
         {
             Item.ResearchUnlockCount = 400;
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Items.Walls
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableWall(ModContent.WallType<Tiles.Walls.ProtolithBrickWall>());
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.ProtolithBrickWall>());
             Item.width = 24;
             Item.height = 24;
         }
@@ -45,7 +46,7 @@ namespace Macrocosm.Content.Items.Walls
         public override void SetDefaults()
         {
             base.SetDefaults();
-            Item.createWall = ModContent.WallType<Tiles.Walls.ProtolithBrickWallUnsafe>();
+            Item.createWall = VariantWall.WallType<Content.Walls.ProtolithBrickWall>(WallSafetyType.Unsafe);
         }
     }
 }

@@ -209,7 +209,7 @@ namespace Macrocosm.Common.Global.Tiles
         {
             if (SubworldSystem.AnyActive<Macrocosm>()
                 && IsTileLightSourceDisabled(i, j, type)
-                && !RoomOxygenSystem.IsRoomPressurized(i, j))
+                && !RoomOxygenSystem.CheckRoomOxygen(i, j))
             {
                 WorldGen.TryToggleLight(i, j, false, skipWires: false);
             }
@@ -223,7 +223,7 @@ namespace Macrocosm.Common.Global.Tiles
         {
             return !(SubworldSystem.AnyActive<Macrocosm>()
                      && IsTileLightSourceDisabled(i, j, type)
-                     && !RoomOxygenSystem.IsRoomPressurized(i, j));
+                     && !RoomOxygenSystem.CheckRoomOxygen(i, j));
         }
 
 
@@ -232,7 +232,7 @@ namespace Macrocosm.Common.Global.Tiles
         /// </summary>
         public override void RightClick(int i, int j, int type)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && type == TileID.Campfire && !RoomOxygenSystem.IsRoomPressurized(i, j))
+            if (SubworldSystem.AnyActive<Macrocosm>() && type == TileID.Campfire && !RoomOxygenSystem.CheckRoomOxygen(i, j))
             {
                 WorldGen.TryToggleLight(i, j, false, skipWires: false);
             }

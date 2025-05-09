@@ -25,12 +25,12 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.DamageType = DamageClass.Melee;
             Item.width = 40;
             Item.height = 40;
-            Item.useTime = 18;
-            Item.useAnimation = 18;
+            Item.useTime = 40;
+            Item.useAnimation = 40;
             Item.useStyle = ItemUseStyleID.Swing;
             Item.knockBack = 5;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.UseSound = SoundID.Item1;
             Item.autoReuse = true;
             Item.shoot = ModContent.ProjectileType<SeleniteSwordSwing>();

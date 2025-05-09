@@ -2,7 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.DataStructures
@@ -21,6 +24,10 @@ namespace Macrocosm.Common.DataStructures
 
         public int Length => Data.Length;
 
+        /// <summary>
+        /// Example: Macrocosm.Instance.GetFileStream(path/to/file)
+        /// <br/> The path should exclude the mod name, and have a .rawimg extension
+        /// </summary>
         public static RawTexture FromStream(Stream stream)
         {
             byte[] colorBytes = ImageIO.ReadRaw(stream, out int width, out int height);
@@ -37,12 +44,33 @@ namespace Macrocosm.Common.DataStructures
         public static RawTexture FromAsset(Asset<Texture2D> asset) => FromTexture2D(asset.Value);
         public static RawTexture FromTexture2D(Texture2D texture)
         {
-            if(texture == null) 
+            if (texture == null)
                 return new();
 
             Color[] data = new Color[texture.Width * texture.Height];
             Utility.InvokeOnMainThread(() => texture.GetData(0, texture.Bounds, data, 0, texture.Width * texture.Height));
             return new(data, texture.Width, texture.Height);
+        }
+
+        public IEnumerable<Color> GetUniqueColors(int maxColors, float maxDistance = 0.1f, bool alphaSensitive = true, Func<Color, bool> validColor = null)
+        {
+            var uniqueColors = new HashSet<Color>();
+            for (int i = 0; i < Data.Length; i++)
+            {
+                Color pixel = Data[i];
+                if (!alphaSensitive)
+                    pixel.A = 255;
+
+                if ((validColor?.Invoke(pixel) ?? true) && !uniqueColors.Any(k => Utility.ColorDistance(k, pixel) < maxDistance))
+                {
+                    uniqueColors.Add(pixel);
+
+                    if (uniqueColors.Count >= maxColors)
+                        break;
+                }
+            }
+
+            return uniqueColors;
         }
     }
 }

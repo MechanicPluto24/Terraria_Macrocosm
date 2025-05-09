@@ -1,9 +1,9 @@
-﻿using Macrocosm.Common.Enums;
-using Macrocosm.Common.Systems.Power;
+﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines
@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Machines
     public class WindTurbineLargeTE : GeneratorTE
     {
         public override MachineTile MachineTile => ModContent.GetInstance<WindTurbineLarge>();
-        public override bool PoweredOn => Math.Abs(Utility.WindSpeedScaled) > 0.1f;
+        public override bool PoweredOn => Math.Abs(Utility.WindSpeedScaled) > 0.1f && WorldGen.InAPlaceWithWind(Position.X, Position.Y, MachineTile.Width, 3);
 
         public override void OnFirstUpdate()
         {

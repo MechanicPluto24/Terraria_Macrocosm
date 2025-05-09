@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Rockets.Modules
 {
@@ -43,6 +42,9 @@ namespace Macrocosm.Content.Rockets.Modules
         // TODO: add check regardless of order
         public bool Check(bool consume, params Item[] items)
         {
+            if (Linked)
+                return LinkedResult.Recipe.Check(consume, items);
+
             int count = Math.Min(entries.Count, items.Length);
             bool met = true;
             for (int i = 0; i < count; i++)
@@ -58,7 +60,7 @@ namespace Macrocosm.Content.Rockets.Modules
 
         public AssemblyRecipe LinkWith<T>() where T : RocketModule
         {
-            foreach (var template in ModContent.GetContent<RocketModule>())
+            foreach (var template in RocketModule.Templates)
             {
                 if (typeof(T) == template.GetType())
                 {

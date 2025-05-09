@@ -31,7 +31,7 @@ namespace Macrocosm.Common.Hooks
             if (SubworldSystem.AnyActive<Macrocosm>()
                 && ItemID.Sets.Torches[item.type]
                 && !ItemSets.AllowedTorches[item.type]
-                && !RoomOxygenSystem.IsRoomPressurized(item.Center))
+                && !RoomOxygenSystem.CheckRoomOxygen(item.Center))
                 return;
 
             orig(item);
@@ -42,7 +42,7 @@ namespace Macrocosm.Common.Hooks
             if (SubworldSystem.AnyActive<Macrocosm>()
                 && ItemID.Sets.Torches[item.type]
                 && !ItemSets.AllowedTorches[item.type]
-                && !RoomOxygenSystem.IsRoomPressurized(item.Center))
+                && !RoomOxygenSystem.CheckRoomOxygen(item.Center))
                 return false;
 
             return orig(self, item);
@@ -53,7 +53,7 @@ namespace Macrocosm.Common.Hooks
             if (SubworldSystem.AnyActive<Macrocosm>()
                 && ItemID.Sets.Torches[item.type]
                 && !ItemSets.AllowedTorches[item.type]
-                && !RoomOxygenSystem.IsRoomPressurized(item.Center))
+                && !RoomOxygenSystem.CheckRoomOxygen(item.Center))
                 return;
 
             orig(self, item);
@@ -63,7 +63,7 @@ namespace Macrocosm.Common.Hooks
         {
             if (SubworldSystem.AnyActive<Macrocosm>()
                 && LightSourceGlobalTile.IsTileLightSourceDisabled(i, j, tileCache.TileType)
-                && !RoomOxygenSystem.IsRoomPressurized(i, j))
+                && !RoomOxygenSystem.CheckRoomOxygen(i, j))
                 return -1;
 
             return orig(i, j, tileCache);

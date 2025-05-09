@@ -96,6 +96,8 @@ Rocket: {
 		Special: {
 			TidallyLocked: Tidally Locked
 			Unstable: Unstable
+			Negligible: Negligible
+			Retrograde: Retrograde
 		}
 
 		ThreatLevel: {
@@ -181,7 +183,10 @@ Rocket: {
 		}
 	}
 
-	Special.TidallyLocked: Tidally Locked
+	Special: {
+		TidallyLocked: Tidally Locked
+		Retrograde: Retrograde
+	}
 }
 
 LoadingScreenTips: {

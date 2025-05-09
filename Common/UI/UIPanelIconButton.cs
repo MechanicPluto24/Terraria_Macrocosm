@@ -148,10 +148,10 @@ namespace Macrocosm.Common.UI
         {
             if (GrayscaleIconIfNotInteractible && !interactible)
             {
-                Effect grayscaleEffect = ModContent.Request<Effect>("Macrocosm/Assets/Effects/Grayscale").Value;
+                Effect effect = Macrocosm.GetShader("Grayscale");
                 state.SaveState(spriteBatch);
                 spriteBatch.End();
-                spriteBatch.Begin(grayscaleEffect, state);
+                spriteBatch.Begin(effect, state);
             }
 
             spriteBatch.Draw(texture.Value, position, null, IconColor, 0f, texture.Size() / 2f, 1f, SpriteEffects.None, 0f);

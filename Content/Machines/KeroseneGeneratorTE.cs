@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Content.Items.LiquidContainers;

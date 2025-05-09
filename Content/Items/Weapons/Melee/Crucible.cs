@@ -36,7 +36,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.useStyle = ItemUseStyleID.Swing; // 1 = sword
             Item.knockBack = 6f;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT3>();
+            Item.rare = ModContent.RarityType<MoonRarity3>();
             Item.UseSound = SoundID.Item20;
             Item.autoReuse = true; // Lets you use the item without clicking the mouse repeatedly (i.e. swinging swords)
             Item.CustomDrawData().Glowmask = glow;

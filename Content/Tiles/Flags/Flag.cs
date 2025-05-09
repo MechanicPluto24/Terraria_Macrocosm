@@ -1,8 +1,11 @@
-﻿using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -15,6 +18,8 @@ namespace Macrocosm.Content.Tiles.Flags
 {
     public class Flag : ModTile
     {
+        private static int testing_globalFlagStyle;
+
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
@@ -24,20 +29,31 @@ namespace Macrocosm.Content.Tiles.Flags
             TileID.Sets.MultiTileSway[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
             TileObjectData.newTile.Width = 3;
             TileObjectData.newTile.Height = 5;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, 1, 0);
-            TileObjectData.newTile.Origin = new(0, TileObjectData.newTile.Height - 1);
+
             TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+
             TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleWrapLimit = 2;
             TileObjectData.newTile.StyleMultiplier = 2;
+
+            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.LavaDeath = true;
+
+            TileObjectData.newTile.Origin = new(0, TileObjectData.newTile.Height - 1);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
+
+            TileObjectData.newTile.UsesCustomCanPlace = true;
+
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop, 1, 2);
+            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 1, TileObjectData.newTile.Width - 1);
             TileObjectData.addAlternate(1);
+
             TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
@@ -49,8 +65,12 @@ namespace Macrocosm.Content.Tiles.Flags
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
-            // Open UI
+            Point16 origin = TileObjectData.TopLeft(i, j);
+            // TOOD: Open UI
+
+            testing_globalFlagStyle++;
+            testing_globalFlagStyle %= PatternManager.GetAll(context: "FlagTile").Count();
+
             return true;
         }
 
@@ -69,8 +89,10 @@ namespace Macrocosm.Content.Tiles.Flags
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             int frame = Main.tileFrame[type];
-            if (frame > 0)
+            var topLeft = TileObjectData.TopLeft(i, j);
+            if (frame > 0 && WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, 3, 2))
             {
+                frame = 1 + (topLeft.X + frame) % 4;
                 bool direction = Main.tile[i, j].TileFrameX / (18 * 3) > 0;
                 frameYOffset = 18 * 5 * (direction ? frame : 5 - frame);
             }
@@ -107,17 +129,30 @@ namespace Macrocosm.Content.Tiles.Flags
 
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Tile tile = Main.tile[i, j];
+            if (TileObjectData.IsTopLeft(i, j))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
 
-            if (TileObjectData.IsTopLeft(tile))
-                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
-
-            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+            return false;
         }
 
-        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        private SpriteBatchState state;
+        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, windSensitivity: 0.07f);
+            state.SaveState(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
+
+            Pattern[] patterns = PatternManager.GetAll(context: "FlagTile").ToArray();
+            if (patterns.Length > 0)
+            {
+                var pattern = patterns[testing_globalFlagStyle];
+                pattern.Apply();
+            }
+
+            TileRendering.DrawMultiTileGrass(i, j, totalWindMultiplier: 0.07f, perTileLighting: false);
+
+            spriteBatch.End();
+            spriteBatch.Begin(state);
         }
     }
 }

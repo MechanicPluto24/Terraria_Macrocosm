@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.ItemCreationContexts;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
@@ -59,6 +60,7 @@ namespace Macrocosm.Common.Loot.DropRules
                 if (MachineTE is IInventoryOwner inventoryOwner && inventoryOwner.Inventory is not null)
                 {
                     Item item = new(itemId, stack);
+                    item.OnCreated(new MachineItemCreationContext(item, MachineTE));
                     inventoryOwner.Inventory.TryPlacingItem(ref item, sound: false);
 
                     Particle.Create<ItemTransferParticle>((p) =>

@@ -1,15 +1,17 @@
 ﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
     public class TintableFire : Particle
     {
+        private static Asset<Texture2D> flare;
         public override int TrailCacheLength => 15;
-
-        public override string TexturePath => Macrocosm.EmptyTexPath;
+        public override string Texture => Macrocosm.EmptyTexPath;
         public bool FadeIn { get; set; }
         public bool FadeOut { get; set; }
 
@@ -17,6 +19,7 @@ namespace Macrocosm.Content.Particles
         {
             FadeIn = false;
             FadeOut = true;
+            DrawLayer = ParticleDrawLayer.BeforeNPCs;
         }
 
         public override void OnSpawn()
@@ -30,15 +33,15 @@ namespace Macrocosm.Content.Particles
 
         public int FadeInSpeed = 1;
         public int FadeOutSpeed = 7;
-        private float alpha = 255;
-        private bool fadedIn = false;
         public int TargetAlpha = 255;
 
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.BeforeNPCs;
+        private float alpha = 255;
+        private bool fadedIn = false;
+
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            Texture2D Texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flame4").Value;
-            spriteBatch.Draw(Texture, Position - screenPosition, GetFrame(), Color * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+            flare ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flame4");
+            spriteBatch.Draw(flare.Value, Position - screenPosition, GetFrame(), Color * ((float)alpha / 255f), Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
         }
 
         public override void AI()
@@ -68,6 +71,7 @@ namespace Macrocosm.Content.Particles
                 if (FadeOut && alpha > 0)
                     alpha -= FadeOutSpeed;
             }
+
             alpha = (int)MathHelper.Clamp(alpha, 0, 255);
             if ((fadedIn && alpha <= 0))
                 Kill();

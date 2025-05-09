@@ -4,15 +4,12 @@ using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
     public class Ilmenite : ModItem
     {
-        private int currentAttack = 0;
-        private bool stillInUse = false;
         public override void SetStaticDefaults()
         {
 
@@ -20,13 +17,13 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetDefaults()
         {
-            Item.DefaultToBow(7, 30, true);
-            Item.damage = 170;
+            Item.DefaultToBow(30, 30, true);
+            Item.damage = 450;
             Item.knockBack = 4;
             Item.width = 32;
             Item.height = 74;
             Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
+            Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.channel = true;
             Item.UseSound = null;
             Item.noUseGraphic = true;

@@ -1,20 +1,15 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Utils;
-using System;
+using Macrocosm.Content.Particles;
+using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria.DataStructures;
 using Terraria;
-using Terraria.ModLoader;
-using Macrocosm.Common.Drawing.Particles;
-using Microsoft.Xna.Framework;
-using Macrocosm.Content.Particles;
-using Terraria.ID;
-using Terraria.Graphics.Shaders;
-using Macrocosm.Common.Config;
-using Terraria.UI;
-using Macrocosm.Common.Systems.Power;
+using Terraria.DataStructures;
+using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Systems.Connectors
 {
@@ -90,7 +85,7 @@ namespace Macrocosm.Common.Systems.Connectors
                             continue;
 
                         Item sourceClone = sourceItem.Clone();
-                        sourceClone.stack = transferAmount; 
+                        sourceClone.stack = transferAmount;
                         Item visualClone = sourceClone.Clone();
 
                         if (inletNode.Storage is Chest inletChest)
@@ -273,12 +268,12 @@ namespace Macrocosm.Common.Systems.Connectors
 
         private static object TryGetStorageObject(int x, int y)
         {
-            Point16 position = Utility.GetMultitileTopLeft(x, y);
+            Point16 position = TileObjectData.TopLeft(x, y);
             int chestIndex = Chest.FindChest(position.X, position.Y);
             if (chestIndex >= 0 && Main.chest[chestIndex] is Chest chest)
                 return chest;
 
-            if (Utility.TryGetTileEntityAs(new Point16(x, y), out TileEntity te) && te is IInventoryOwner inventoryOwner)
+            if (TileEntity.TryGet(new Point16(x, y), out TileEntity te) && te is IInventoryOwner inventoryOwner)
                 return inventoryOwner;
 
             return null;

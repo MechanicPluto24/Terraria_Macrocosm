@@ -1,12 +1,12 @@
 ﻿
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Tiles.Furniture;
+using Macrocosm.Content.Tiles.Ores;
 using System.Collections.Generic;
+using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria;
-using Macrocosm.Content.Tiles.Ores;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Tiles.Furniture;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
 {

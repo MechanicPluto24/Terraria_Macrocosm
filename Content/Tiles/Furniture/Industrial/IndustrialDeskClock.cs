@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.Bases.Tiles;
 using Macrocosm.Common.Drawing;
-using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -15,7 +14,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseDeskClock")]
     public class IndustrialDeskClock : ModTile, IToggleableTile
     {
         private static Asset<Texture2D> glowmask;
@@ -32,7 +30,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x1);
             TileObjectData.newTile.StyleHorizontal = false;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.Table, 2, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide | AnchorType.Table, 2, 0);
             TileObjectData.addTile(Type);
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();

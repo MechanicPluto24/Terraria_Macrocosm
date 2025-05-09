@@ -16,7 +16,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    [LegacyName("MoonBaseLantern")]
     public class IndustrialLantern : ModTile, IToggleableTile
     {
         public override void SetStaticDefaults()
@@ -65,7 +64,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
             if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendTileSquare(-1, i, topY, 1, 2);
-        }   
+        }
 
         public override void HitWire(int i, int j)
         {
@@ -75,9 +74,6 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
         // Workaround for platform hanging, alternates don't work currently
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
-            Point16 topLeft = Utility.GetMultitileTopLeft(i, j);
-            if (WorldGen.IsBelowANonHammeredPlatform(topLeft.X, topLeft.Y))
-                offsetY -= 8;
         }
 
         public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
@@ -89,17 +85,16 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            Tile tile = Main.tile[i, j];
+            if (TileObjectData.IsTopLeft(i, j))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
 
-            if (TileObjectData.IsTopLeft(tile))
-                TileRendering.AddCustomSpecialPoint(i, j, CustomSpecialDraw);
-
-            return false; // We must return false here to prevent the normal tile drawing code from drawing the default static tile. Without this a duplicate tile will be drawn.
+            return false;
         }
 
-        public void CustomSpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void AdjustMultiTileVineParameters(int i, int j, ref float? overrideWindCycle, ref float windPushPowerX, ref float windPushPowerY, ref bool dontRotateTopTiles, ref float totalWindMultiplier, ref Texture2D glowTexture, ref Color glowColor)
         {
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
+            overrideWindCycle = 1f;
+            windPushPowerY = 0f;
         }
     }
 }

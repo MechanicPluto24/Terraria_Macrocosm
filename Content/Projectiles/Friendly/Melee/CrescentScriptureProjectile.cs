@@ -1,4 +1,3 @@
-using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
@@ -45,14 +44,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         private Player Player => Main.player[Projectile.owner];
         private ref float SwingDirection => ref Projectile.ai[0];
         private ref float Arc => ref Projectile.ai[1];
+
         private CrescentScripture blade;
         private bool despawn;
-        private int runeTimer;
         private bool shot;
         float transparency = 0f;
-        private Vector2 aim;
         private bool spawned = false;
-        private int shootTimer = 0;
+
         public override void OnSpawn(IEntitySource source)
         {
             blade = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as CrescentScripture;
@@ -63,15 +61,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.netUpdate = true;
         }
 
-        public override bool ShouldUpdatePosition()
-        {
-            return false;
-        }
+        public override bool ShouldUpdatePosition() => false;
         public override void AI()
         {
             if (!spawned)
             {
                 Projectile.velocity = Projectile.Center.DirectionTo(Main.MouseWorld);
+                Projectile.netUpdate = true;
                 spawned = true;
             }
 
@@ -94,7 +90,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             if (Main.myPlayer == Player.whoAmI)
             {
-                Projectile.netUpdate = true;
             }
 
             var progress = 1f - (float)Player.itemAnimation / Player.itemAnimationMax;
@@ -112,13 +107,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 for (int i = 0; i < 3; i++)
                 {
                     Projectile.NewProjectile(Projectile.GetSource_FromAI(), Projectile.Center, Projectile.velocity.SafeNormalize(Vector2.UnitY).RotatedByRandom(MathHelper.PiOver4) * Main.rand.NextFloat(9f, 12f), ModContent.ProjectileType<LuminiteRune>(), (int)(Projectile.damage / 4), 1f, Main.myPlayer, 1f);
-
                 }
                 shot = true;
             }
         }
-
-        private SpriteBatchState state;
 
         public override bool PreDraw(ref Color lightColor)
         {

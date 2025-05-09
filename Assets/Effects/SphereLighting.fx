@@ -32,7 +32,7 @@ float4 SphereLighting(float2 uv : TEXCOORD0) : COLOR0
 
 technique
 {
-    pass p0
+    pass SphereLighting
     {
         PixelShader = compile ps_3_0 SphereLighting();
     }

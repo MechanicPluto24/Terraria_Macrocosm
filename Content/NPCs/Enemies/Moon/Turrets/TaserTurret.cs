@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,16 +14,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
 {
     public class TaserTurret : ModNPC
     {
-        private static Asset<Texture2D> turretTexture;
-        public override string Texture => "Macrocosm/Content/NPCs/Enemies/Moon/Turrets/Turret_Base";
-
-        public int AI_Timer
-        {
-            get => (int)NPC.ai[0];
-            set => NPC.ai[0] = value;
-        }
-
-        public Vector2 turretHeight = new(0, -22);
+        public override string Texture => base.Texture.Replace(Name, "TurretBase");
+        public string GunTexture => base.Texture;
+        private static Asset<Texture2D> gunTexture;
 
         public override void SetStaticDefaults()
         {
@@ -46,17 +40,34 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             NPC.aiStyle = -1;
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => 0f;
+        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
+        {
+        }
+
+        public bool ShotTaser
+        {
+            get => NPC.ai[0] > 0;
+            set => NPC.ai[0] = value ? 1 : 0;
+        }
+
+        public int AI_Timer
+        {
+            get => (int)NPC.ai[1];
+            set => NPC.ai[1] = value;
+        }
+
+        public Vector2 TurretHeight { get; } = new(0, -22);
+        public float TurretRotation { get; set; } = 0f;
 
         public override void AI()
         {
             NPC.TargetClosest(faceTarget: true);
             Player player = Main.player[NPC.target];
 
-            if (NPC.ai[0] == 0f)
+            if (!ShotTaser)
             {
                 Vector2 turningVector = (player.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
-                NPC.rotation = (new Vector2(5, 0).RotatedBy(NPC.rotation) + (turningVector * 0.3f)).ToRotation();
+                TurretRotation = (new Vector2(5, 0).RotatedBy(TurretRotation) + (turningVector * 0.3f)).ToRotation();
 
                 bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, player.position, player.width, player.height);
                 if (NPC.HasPlayerTarget && clearLineOfSight)
@@ -66,8 +77,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
 
                     if (AI_Timer == 120)
                     {
-                        Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + turretHeight + new Vector2(15, 0).RotatedBy(NPC.rotation), new Vector2(15f, 0).RotatedBy(NPC.rotation), ModContent.ProjectileType<TurretTaserProjectile>(), 50, 1f, Main.myPlayer, ai1: NPC.whoAmI);
-                        NPC.ai[0] = 1f;
+                        Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center + TurretHeight + new Vector2(15, 0).RotatedBy(TurretRotation), new Vector2(15f, 0).RotatedBy(TurretRotation), ModContent.ProjectileType<TurretTaserProjectile>(), 50, 1f, Main.myPlayer, ai1: NPC.whoAmI);
+                        ShotTaser = true;
                         AI_Timer = 0;
                     }
                 }
@@ -78,23 +89,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             }
         }
 
-        public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
-        {
-        }
-
-        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
-        {
-            turretTexture ??= ModContent.Request<Texture2D>("Macrocosm/Content/NPCs/Enemies/Moon/Turrets/Turret_Taser_Top");
-            Rectangle frameOfGun = turretTexture.Frame(1, 2, 0, NPC.ai[0] == 0f ? 0 : 1);
-            spriteBatch.Draw(turretTexture.Value, NPC.Center + turretHeight - Main.screenPosition, frameOfGun, drawColor, NPC.rotation, frameOfGun.Size() / 2, NPC.scale, NPC.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
-        }
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => 0f;
 
         public override void ModifyNPCLoot(NPCLoot loot)
         {
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<PrintedCircuitBoard>(), 5));
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<Motor>(), 5));
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<Gear>(), 5));
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<Battery>(), 5));
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<PrintedCircuitBoard>(), 2));
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<Motor>(), 2));
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<Gear>(), 2));
+            loot.Add(ItemDropRule.Common(ModContent.ItemType<Battery>(), 2));
         }
 
         public override void HitEffect(NPC.HitInfo hit)
@@ -107,6 +109,14 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
                 dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
             }
+        }
+
+        public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        {
+            gunTexture ??= ModContent.Request<Texture2D>(GunTexture);
+            Rectangle frame = gunTexture.Frame(1, 2, 0, ShotTaser ? 0 : 1);
+            Vector2 position = NPC.Center + TurretHeight + new Vector2(10, 0).RotatedBy(TurretRotation) - Main.screenPosition;
+            spriteBatch.Draw(gunTexture.Value, position, frame, drawColor, TurretRotation, frame.Size() / 2, NPC.scale, NPC.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
         }
     }
 }

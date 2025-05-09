@@ -3,7 +3,6 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Achievements;
@@ -12,13 +11,11 @@ using Macrocosm.Content.Rockets.UI.Navigation.Checklist;
 using Macrocosm.Content.Skies.Ambience.Moon;
 using Macrocosm.Content.Skies.Moon;
 using Microsoft.Xna.Framework;
-using SubworldLibrary;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.Graphics.Effects;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -78,15 +75,11 @@ namespace Macrocosm.Content.Subworlds
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
 
-            DemonSunIntensity = 0f;
-            WorldFlags.DemonSun = false;
-
             CustomAchievement.Unlock<TravelToMoon>();
         }
 
         public override void OnExitSubworld()
         {
-            DemonSunIntensity = 0f;
         }
 
         public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
@@ -146,26 +139,26 @@ namespace Macrocosm.Content.Subworlds
                     lastMoonPhase = moonPhase;
 
                     if (Main.netMode != NetmodeID.SinglePlayer)
-                        NetMessage.SendData(MessageID.WorldData); 
+                        NetMessage.SendData(MessageID.WorldData);
                 }
             }
         }
 
         public void SetTimeFromMoonPhase()
-        { 
-            Main.dayTime = Main.GetMoonPhase() 
-                is not MoonPhase.HalfAtLeft 
-                and not MoonPhase.QuarterAtLeft 
-                and not MoonPhase.Empty; 
+        {
+            Main.dayTime = Main.GetMoonPhase()
+                is not MoonPhase.HalfAtLeft
+                and not MoonPhase.QuarterAtLeft
+                and not MoonPhase.Empty;
 
             // Set time as the middle of the phases
             Main.time = Main.GetMoonPhase() switch
             {
-                MoonPhase.QuarterAtRight => DayLength * 0.1, 
-                MoonPhase.HalfAtRight => DayLength * 0.3, 
-                MoonPhase.ThreeQuartersAtRight => DayLength * 0.5, 
-                MoonPhase.Full => DayLength * 0.7, 
-                MoonPhase.ThreeQuartersAtLeft => DayLength * 0.9, 
+                MoonPhase.QuarterAtRight => DayLength * 0.1,
+                MoonPhase.HalfAtRight => DayLength * 0.3,
+                MoonPhase.ThreeQuartersAtRight => DayLength * 0.5,
+                MoonPhase.Full => DayLength * 0.7,
+                MoonPhase.ThreeQuartersAtLeft => DayLength * 0.9,
 
                 MoonPhase.HalfAtLeft => NightLength * (1.0 / 6.0),
                 MoonPhase.QuarterAtLeft => NightLength * (3.0 / 6.0),
@@ -174,7 +167,7 @@ namespace Macrocosm.Content.Subworlds
                 _ => 0,
             };
 
-            if(Main.netMode != NetmodeID.SinglePlayer)
+            if (Main.netMode != NetmodeID.SinglePlayer)
                 NetMessage.SendData(MessageID.WorldData);
         }
 
@@ -194,6 +187,11 @@ namespace Macrocosm.Content.Subworlds
 
         private void UpdateDemonSun()
         {
+            if (WorldData.DemonSun)
+                DemonSunIntensity = 1f;
+            else
+                DemonSunIntensity = 0f;
+
             if (DemonSunVisualIntensity < DemonSunIntensity)
                 DemonSunVisualIntensity += 0.005f;
 
@@ -207,24 +205,24 @@ namespace Macrocosm.Content.Subworlds
         {
             meteorStormCounter += Main.worldEventUpdates;
 
-            if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldFlags.MoonMeteorStorm)
+            if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldData.Current.MeteorStorm)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.Start"), Color.Gray);
-                WorldFlags.MoonMeteorStorm = true;
+                WorldData.Current.MeteorStorm = true;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             }
 
-            if (WorldFlags.MoonMeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
+            if (WorldData.Current.MeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
             {
                 Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.End"), Color.Gray);
-                WorldFlags.MoonMeteorStorm = false;
+                WorldData.Current.MeteorStorm = false;
                 meteorStormCounter = 0;
                 meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
             }
 
-            if (WorldFlags.MoonMeteorStorm)
-                MeteorBoost = 1000f;
+            if (WorldData.Current.MeteorStorm)
+                MeteorBoost = 300f;
             else
                 MeteorBoost = 1f;
         }
@@ -232,11 +230,10 @@ namespace Macrocosm.Content.Subworlds
         private void UpdateMeteorSpawn()
         {
             meteorTimePass += Main.desiredWorldEventsUpdateRate;
-
             for (int l = 1; l <= (int)meteorTimePass; l++)
             {
                 int closestPlayer;
-                int chance = 6000;
+                int chance = 10000;
                 float baseFrequency = 1f;
                 float frequency = baseFrequency * MeteorBoost;
 
@@ -244,7 +241,7 @@ namespace Macrocosm.Content.Subworlds
                 {
                     Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)(Main.maxTilesY * 0.05)) * 16);
 
-                    // 3/4 chance to spawn close to a an active (not afk) player on the surface.
+                    // 3/4 chance to spawn close to an active (not afk) player on the surface.
                     // In vanilla, this only happens with a 1/15 chance, only in expert mode
                     if (!Main.rand.NextBool(4))
                     {
