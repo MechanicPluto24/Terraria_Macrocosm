@@ -93,23 +93,7 @@ public static partial class Utility
         return true;
     }
 
-    public static void PlaceLiquid<T>(int x, int y) where T : ModLiquid => PlaceLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>());
-    public static void PlaceLiquid(int x, int y, int type)
-    {
-        Tile tile = Main.tile[x, y];
-        if (tile.LiquidAmount >= 200 || (tile.HasUnactuatedTile && Main.tileSolid[tile.TileType] && !Main.tileSolidTop[tile.TileType] && tile.TileType != TileID.Grate))
-        {
-            tile.LiquidType = type;
-            tile.LiquidAmount = 255;
-
-            WorldGen.SquareTileFrame(x, y);
-
-            SoundEngine.PlaySound(SoundID.Splash, new Vector2(x, y) * 16f);
-
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                NetMessage.sendWater(x, y);
-        }
-    }
+    public static void PlaceLiquid<T>(int x, int y, byte amount = 255) where T : ModLiquid => WorldGen.PlaceLiquid(x, y, (byte)ModLiquidLib.ModLiquidLib.LiquidType<T>(), amount);
 
     public static void RemoveLiquid<T>(int x, int y, bool sponge = false) where T : ModLiquid => RemoveLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>(), sponge);
     public static void RemoveLiquid(int x, int y, int type, bool sponge = false)
