@@ -22,6 +22,13 @@
 	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Assets\Textures\UI\ScrollbarBorder.png" />
+    <None Remove="Assets\Textures\UI\ScrollbarFill1.png" />
+    <None Remove="Assets\Textures\UI\ScrollbarFill2.png" />
+    <None Remove="Assets\Textures\UI\ScrollbarInner.png" />
+    <None Remove="Assets\Textures\UI\ScrollbarInnerBorder.png" />
+  </ItemGroup>
    <ItemGroup>
     <Reference Include="SubworldLibrary">
       <HintPath>References\SubworldLibrary.dll</HintPath>

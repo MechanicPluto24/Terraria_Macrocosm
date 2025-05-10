@@ -13,7 +13,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI.Rockets.Navigation.Checklist
 {
-    public class UIFlightChecklist : UIListScrollablePanel, IRocketUIDataConsumer
+    public class UIFlightChecklist : UIScrollableListPanel, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
         public UINavigationTarget MapTarget { get; set; }

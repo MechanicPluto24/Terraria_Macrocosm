@@ -32,8 +32,8 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
 
         private UIFlightChecklist flightChecklist;
         private UICommanderPanel commanderPanel;
-        private UIListScrollablePanel worldInfoPanel;
-        private UIListScrollablePanel launchLocationsList;
+        private UIScrollableListPanel worldInfoPanel;
+        private UIScrollableListPanel launchLocationsList;
 
         private UINavigationTarget lastTarget;
         private UINavigationTarget target;
@@ -248,7 +248,7 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
             return commanderPanel;
         }
 
-        private UIListScrollablePanel CreateWorldInfoPanel(string subworldId)
+        private UIScrollableListPanel CreateWorldInfoPanel(string subworldId)
         {
             subworldId = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(subworldId), out string modName);
 
@@ -298,7 +298,7 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
             return worldInfoPanel;
         }
 
-        private UIListScrollablePanel CreateLaunchLocationPanel(string subworldId)
+        private UIScrollableListPanel CreateLaunchLocationPanel(string subworldId)
         {
             if (launchLocationsList is null)
             {

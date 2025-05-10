@@ -11,7 +11,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI
 {
-    public class UIListScrollablePanel : UIPanel, IEnumerable<UIElement>
+    public class UIScrollableListPanel : UIPanel, IEnumerable<UIElement>
     {
         public bool HideScrollbarIfNotScrollable { get; set; } = true;
         public float ListPadding { get; set; } = 3f;
@@ -32,29 +32,29 @@ namespace Macrocosm.Common.UI
         public bool HasTitle => title is not null;
 
         private UIText title;
-        private UIList list;
-        private UIScrollbar scrollbar;
+        private UIScrollableList list;
+        private UICustomScrollbar scrollbar;
         private bool hasTitle = false;
 
-        public UIListScrollablePanel()
+        public UIScrollableListPanel()
         {
             list = new();
         }
 
-        public UIListScrollablePanel(string titleKey) : this(Language.GetText(titleKey))
+        public UIScrollableListPanel(string titleKey) : this(Language.GetText(titleKey))
         {
         }
 
-        public UIListScrollablePanel(LocalizedText title) : this(new LocalizedColorScaleText(title))
+        public UIScrollableListPanel(LocalizedText title) : this(new LocalizedColorScaleText(title))
         {
         }
 
-        public UIListScrollablePanel(LocalizedColorScaleText title) : this()
+        public UIScrollableListPanel(LocalizedColorScaleText title) : this()
         {
             this.title = title.ProvideUIText();
         }
 
-        public UIListScrollablePanel(List<UIElement> list, LocalizedColorScaleText title = null)
+        public UIScrollableListPanel(List<UIElement> list, LocalizedColorScaleText title = null)
         {
             this.title = title?.ProvideUIText();
 
@@ -62,7 +62,7 @@ namespace Macrocosm.Common.UI
             list.AddRange(list);
         }
 
-        public UIListScrollablePanel(UIList list, LocalizedColorScaleText title = null)
+        public UIScrollableListPanel(UIScrollableList list, LocalizedColorScaleText title = null)
         {
             this.title = title?.ProvideUIText();
             this.list = list;

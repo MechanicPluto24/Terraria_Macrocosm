@@ -17,7 +17,7 @@ namespace Macrocosm.Common.UI.Machines
         public AutocrafterTEBase AutocrafterTE => MachineTE as AutocrafterTEBase;
 
         private UIPanel topPanel;
-        private UIListScrollablePanel craftingSlotsPanel;
+        private UIScrollableListPanel craftingSlotsPanel;
         private UIPanel bottomPanel;
         private UIPanel recipeBrowserPanel;
         private UIAutocrafterRecipeBrowser recipeBrowser;
@@ -111,9 +111,9 @@ namespace Macrocosm.Common.UI.Machines
             PopulateSlots();
         }
 
-        private UIListScrollablePanel CreateSlotsPanel()
+        private UIScrollableListPanel CreateSlotsPanel()
         {
-            craftingSlotsPanel = new UIListScrollablePanel()
+            craftingSlotsPanel = new UIScrollableListPanel()
             {
                 Width = new(0f, 1f),
                 Height = new(0f, 1f),

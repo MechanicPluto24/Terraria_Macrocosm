@@ -29,7 +29,7 @@ namespace Macrocosm.Common.Storage
 
         public UIPanel ProvideUI
         (
-            out UIListScrollablePanel inventorySlots,
+            out UIScrollableListPanel inventorySlots,
             int start = 0,
             int? end = null,
             int iconsPerRow = 10,
@@ -69,7 +69,7 @@ namespace Macrocosm.Common.Storage
 
         public UIPanel ProvideUIWithInteractionButtons
         (
-            out UIListScrollablePanel inventorySlots,
+            out UIScrollableListPanel inventorySlots,
             out UIPanelIconButton lootAllButton,
             out UIPanelIconButton depositAllButton,
             out UIPanelIconButton quickStackButton,
@@ -199,9 +199,9 @@ namespace Macrocosm.Common.Storage
             return inventoryPanel;
         }
 
-        private UIListScrollablePanel CreateInventorySlotsList(int start = 0, int? end = null, int iconsPerRow = 10, int rowsWithoutScrollbar = 5, float iconSize = 48f)
+        private UIScrollableListPanel CreateInventorySlotsList(int start = 0, int? end = null, int iconsPerRow = 10, int rowsWithoutScrollbar = 5, float iconSize = 48f)
         {
-            UIListScrollablePanel inventorySlots = new()
+            UIScrollableListPanel inventorySlots = new()
             {
                 Width = new(0, 1f),
                 Height = new(0, 0.7f),

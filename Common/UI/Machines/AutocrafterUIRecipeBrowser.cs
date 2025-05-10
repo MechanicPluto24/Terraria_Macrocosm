@@ -17,17 +17,15 @@ namespace Macrocosm.Common.UI.Machines
     public class UIAutocrafterRecipeBrowser : UIElement
     {
         private UISearchBar searchBar;
-        private UIList recipeList;
-        private UIScrollbar scrollbar;
 
-        private EntryFilterer<Item, IItemEntryFilter> filterer;
-        private EntrySorter<int, ICreativeItemSortStep> sorter;
+        private EntryFilterer<Item, IItemEntryFilter> filterer; // TODO (create a filter by crafting station)
+        private EntrySorter<int, ICreativeItemSortStep> sorter; // TODO 
 
         private readonly List<Recipe> availableRecipes = new();
         private List<Recipe> filteredRecipes = new();
 
         private readonly AutocrafterTEBase autocrafter;
-        private UIListScrollablePanel recipeListPanel;
+        private UIScrollableListPanel recipeListPanel;
         private UIElement recipeGridRoot;
 
         public Action<Recipe> OnRecipeClicked { get; set; }
@@ -78,7 +76,7 @@ namespace Macrocosm.Common.UI.Machines
             searchBar.OnContentsChanged += OnSearchChanged;
             searchPanel.Append(searchBar);
 
-            recipeListPanel = new UIListScrollablePanel()
+            recipeListPanel = new UIScrollableListPanel()
             {
                 Width = new(0f, 1f),
                 Height = new(-40f, 1f),

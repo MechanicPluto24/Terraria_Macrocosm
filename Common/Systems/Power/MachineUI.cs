@@ -24,7 +24,7 @@ namespace Macrocosm.Common.Systems.Power
             Height = new(480, 0);
             HAlign = 0.5f;
             VAlign = 0.5f;
-            BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
+            BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
             BorderColor = UITheme.Current.WindowStyle.BorderColor;
             SetPadding(6f);
             PaddingTop = 42f;

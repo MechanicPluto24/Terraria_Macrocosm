@@ -20,7 +20,7 @@ namespace Macrocosm.Common.UI.Machines
         public OreExcavatorTE OreExcavator => MachineTE as OreExcavatorTE;
 
         private UIPanel inventoryPanel;
-        private UIListScrollablePanel dropRateList;
+        private UIScrollableListPanel dropRateList;
 
         public OreExcavatorUI()
         {
@@ -49,7 +49,7 @@ namespace Macrocosm.Common.UI.Machines
             Append(dropRateList);
         }
 
-        private UIListScrollablePanel CreateDroprateList()
+        private UIScrollableListPanel CreateDroprateList()
         {
             dropRateList = new("Loot")
             {
