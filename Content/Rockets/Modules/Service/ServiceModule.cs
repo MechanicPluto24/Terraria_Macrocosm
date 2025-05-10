@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Machines;
+using Macrocosm.Content.Items.Machines.Consumers.Oxygen;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using System.Linq;

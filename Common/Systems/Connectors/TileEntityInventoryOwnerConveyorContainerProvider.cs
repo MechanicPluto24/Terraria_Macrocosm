@@ -17,7 +17,7 @@ namespace Macrocosm.Common.Systems.Connectors
     {
         public IEnumerable<TileEntity> EnumerateContainers() => TileEntity.ByID.Values.Where(te => te is IInventoryOwner);
 
-        public bool TryGetContainer(Point16 tilePos, out TileEntity te) => Utility.TryGetTileEntityAs(tilePos, out te);
+        public bool TryGetContainer(Point16 tilePos, out TileEntity te) => TileEntity.TryGet(tilePos, out te);
 
         public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
         {

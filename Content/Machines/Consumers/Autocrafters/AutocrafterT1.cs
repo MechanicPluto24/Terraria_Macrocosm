@@ -73,7 +73,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= Height * 18 * 1;
         public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            Point16 origin = TileObjectData.TopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
             {
                 for (int y = origin.Y; y < origin.Y + Height; y++)
@@ -99,7 +99,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             Player player = Main.LocalPlayer;
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
-            if (Utility.TryGetTileEntityAs(i, j, out MachineTE te))
+            if (TileEntity.TryGet(i, j, out MachineTE te))
                 UISystem.ShowMachineUI(te, new AutocrafterUI());
 
             return true;

@@ -114,7 +114,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                 if (requiredItem.type <= ItemID.None)
                     continue;
 
-                while (inputIndex < Inventory.Size && Inventory[inputIndex].type != 0)
+                while (inputIndex < Inventory.Size && Inventory[inputIndex].type != ItemID.None)
                     inputIndex++;
 
                 if (inputIndex >= Inventory.Size)
