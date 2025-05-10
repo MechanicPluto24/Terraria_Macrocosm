@@ -85,7 +85,7 @@ namespace Macrocosm.Content.Machines.Consumers
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
-            if (TileEntity.TryGet(i, j, out OilRefineryTE refinery))
+            if (TileEntity.TryGet(i, j, out MachineTE te))
             {
                 UISystem.ShowMachineUI(te, new OilRefineryUI());
             }

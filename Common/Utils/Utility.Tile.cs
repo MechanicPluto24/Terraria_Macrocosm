@@ -60,6 +60,24 @@ namespace Macrocosm.Common.Utils
             };
         }
 
+        public static IEnumerable<Point16> GetMultitilePositions(Point16 position)
+        {
+            Tile tile = Main.tile[position];
+            Point16 topLeft = TileObjectData.TopLeft(position);
+            TileObjectData data = TileObjectData.GetTileData(tile);
+            int width = data?.Width ?? 1;
+            int height = data?.Height ?? 1;
+            for (int x = topLeft.X; x < topLeft.X + width; x++)
+            {
+                for (int y = topLeft.Y; y < topLeft.Y + height; y++)
+                {
+                    yield return new Point16(x, y);
+                }
+            }
+
+        }
+        public static IEnumerable<Point16> GetTilePositions(this TileEntity te) => GetMultitilePositions(te.Position);
+
         public static ulong GetTileFrameSeed(int i, int j) => Main.TileFrameSeed ^ (ulong)((long)j << 32 | (long)(uint)i); // Don't remove any casts.
 
         /// <summary> Extension method to set the tile frame values </summary>

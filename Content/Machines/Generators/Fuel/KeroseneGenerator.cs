@@ -131,7 +131,7 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
 
             int tileOffsetX = tileFrameX % (Width * 18) / 18;
             int tileOffsetY = tileFrameY % (Height * 18) / 18;
-            if (TileEntity.TryGet(i, j, out KeroseneGeneratorTE keroseneGenerator))
+            if (TileEntity.TryGet(i, j, out MachineTE te))
             {
                 if (te.PoweredOn)
                 {
