@@ -125,11 +125,11 @@ namespace Macrocosm.Common.UI.Rockets.Customization
         private UIPanelIconButton alignCenterVertical;
         private UIPanelIconButton alignBottom;
 
-        private UIListScrollablePanel decalConfigPanel;
+        private UIScrollableListPanel decalConfigPanel;
         private UIDecalIcon currentDecalIcon;
 
         private UIPanel patternConfigPanel;
-        private UIListScrollablePanel patternSelector;
+        private UIScrollableListPanel patternSelector;
         private UIPatternIcon currentPatternIcon;
 
         private UIPanelIconButton resetPatternButton;
@@ -1200,7 +1200,7 @@ namespace Macrocosm.Common.UI.Rockets.Customization
 
         private bool AlignButtonInteractible() => !string.IsNullOrEmpty(CustomizationDummy.Nameplate.Text);
 
-        private UIListScrollablePanel CreateDecalConfigPanel()
+        private UIScrollableListPanel CreateDecalConfigPanel()
         {
             decalConfigPanel = new()
             {
@@ -1293,9 +1293,9 @@ namespace Macrocosm.Common.UI.Rockets.Customization
             }
         }
 
-        public static UIListScrollablePanel CreatePatternSelector(RocketModule module)
+        public static UIScrollableListPanel CreatePatternSelector(RocketModule module)
         {
-            UIListScrollablePanel listPanel = new()
+            UIScrollableListPanel listPanel = new()
             {
                 Width = new(0, 1f),
                 Height = new(0, 0.8f),

@@ -223,10 +223,6 @@ namespace Macrocosm.Common.Systems.UI
                 Main.keyState.IsKeyDown(Keys.LeftShift) &&
                 Main.keyState.IsKeyDown(Keys.E) && !Main.oldKeyState.IsKeyDown(Keys.E))
             {
-                //if(DebugModeActive) {
-                UITheme.Reload();
-                // }
-
                 ResetUI();
                 Utility.Chat("Reset UI", Color.Lime);
             }

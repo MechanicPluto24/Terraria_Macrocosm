@@ -9,7 +9,7 @@ using Terraria.Localization;
 
 namespace Macrocosm.Common.UI.Rockets.Navigation
 {
-    public class UICommanderPanel : UIListScrollablePanel, IRocketUIDataConsumer
+    public class UICommanderPanel : UIScrollableListPanel, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; }
 

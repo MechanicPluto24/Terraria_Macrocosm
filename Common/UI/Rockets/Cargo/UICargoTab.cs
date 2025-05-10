@@ -29,7 +29,7 @@ namespace Macrocosm.Common.UI.Rockets.Cargo
         private UIPanel inventoryPanel;
         private UIPanelIconButton requestAccessButton;
 
-        private UIListScrollablePanel crewPanel;
+        private UIScrollableListPanel crewPanel;
 
         private UIFuelPanel fuelPanel;
 
@@ -222,7 +222,7 @@ namespace Macrocosm.Common.UI.Rockets.Cargo
             return inventoryPanel;
         }
 
-        private UIListScrollablePanel CreateCrewPanel()
+        private UIScrollableListPanel CreateCrewPanel()
         {
             crew = new();
             prevCrew = new();

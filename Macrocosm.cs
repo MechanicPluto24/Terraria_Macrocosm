@@ -22,6 +22,7 @@ namespace Macrocosm
         public const string FancyTexturesPath = TexturesPath + "LowRes/";
         public const string FancyHighResTexturesPath = TexturesPath + "HighRes/";
         public const string EmptyTexPath = TexturesPath + "Empty";
+        public const string UITexturesPath = TexturesPath + "UI/";
         public const string SymbolsPath = TexturesPath + "UI/Symbols/";
         public const string ButtonsPath = TexturesPath + "UI/Buttons/";
 
