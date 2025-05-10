@@ -61,7 +61,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare3").Value;
+            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare3").Value;
             float progress = MathHelper.Clamp(AI_Timer / 25f, 0f, 1f);
 
             state.SaveState(Main.spriteBatch);

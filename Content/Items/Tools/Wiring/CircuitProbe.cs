@@ -2,6 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Refined;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -29,7 +30,7 @@ namespace Macrocosm.Content.Items.Tools.Wiring
 
         public override bool? UseItem(Player player)
         {
-            if (player.whoAmI == Main.myPlayer && Utility.TryGetTileEntityAs(Player.tileTargetX, Player.tileTargetY, out MachineTE machine))
+            if (player.whoAmI == Main.myPlayer && TileEntity.TryGet(Player.tileTargetX, Player.tileTargetY, out MachineTE machine))
             {
                 machine.PrintPowerInfo();
                 return true;

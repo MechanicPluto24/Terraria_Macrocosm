@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,16 +17,26 @@ namespace Macrocosm.Common.Netcode
         /// <summary>
         /// Returns the <see cref="MemberInfo"/> of every field or property of <c>this</c> that has the <see cref="NetSyncAttribute"/>.
         /// </summary>
-        public static MemberInfo[] GetNetSyncMembers(this object obj)
+        public static IEnumerable<MemberInfo> GetNetSyncMembers(this object obj)
         {
             Type type = obj.GetType();
-            var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                             .Where(f => f.GetCustomAttribute<NetSyncAttribute>() is not null);
+            var members = new List<MemberInfo>();
 
-            var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                                 .Where(p => p.GetCustomAttribute<NetSyncAttribute>() is not null && p.CanRead && p.CanWrite);
+            while (type is not null && type != typeof(object))
+            {
+                var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                                 .Where(f => f.GetCustomAttribute<NetSyncAttribute>() is not null);
 
-            return fields.Concat<MemberInfo>(properties).OrderBy(m => m.Name).ToArray();
+                var properties = type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                                     .Where(p => p.GetCustomAttribute<NetSyncAttribute>() is not null && p.CanRead && p.CanWrite);
+
+                members.AddRange(fields);
+                members.AddRange(properties);
+
+                type = type.BaseType;
+            }
+
+            return members.OrderBy(m => m.Name);
         }
 
         /// <summary>
@@ -35,11 +46,9 @@ namespace Macrocosm.Common.Netcode
         /// <returns><c>true</c> if all fields were written succesfully else <c>false</c>.</returns>
         public static bool NetWrite(this object obj, BinaryWriter binaryWriter, BitWriter bitWriter = null)
         {
-            MemberInfo[] netSyncMembers = obj.GetNetSyncMembers();
-            if (netSyncMembers.Length == 0)
-            {
+            IEnumerable<MemberInfo> netSyncMembers = obj.GetNetSyncMembers();
+            if (!netSyncMembers.Any())
                 return false;
-            }
 
             foreach (var member in netSyncMembers)
             {

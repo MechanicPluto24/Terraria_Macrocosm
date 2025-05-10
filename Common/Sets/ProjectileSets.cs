@@ -1,19 +1,18 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Sets
 {
-    /// <summary>
-    /// Projectile Sets for special behavior of some Projectiles, useful for crossmod.
-    /// Note: Only initalize sets with vanilla content here, add modded content to sets in SetStaticDefaults.
-    /// </summary>
+    /// <summary> Projectile Sets for special behavior of some Projectiles, useful for crossmod. </summary>
+    [ReinitializeDuringResizeArrays]
     public class ProjectileSets
     {
-        /// <summary> Projectiles that spawn dusts on tile collision </summary>
-        public static bool[] HitsTiles { get; } = ProjectileID.Sets.Factory.CreateBoolSet();
+        /// <summary> Projectiles types that spawn tile dust on collision. </summary>
+        public static bool[] HitsTiles { get; } = ProjectileID.Sets.Factory.CreateNamedSet(nameof(HitsTiles)).Description("Projectiles types that spawn tile dust on collision.").RegisterBoolSet();
 
-        /// <summary> Damage adjustment for Macrocosm subworlds </summary>
-        public static float[] DamageAdjustment { get; } = ProjectileID.Sets.Factory.CreateFloatSet(defaultState: 1f,
+        /// <summary> Damage adjustment for projectiles while in a Macrocosm subworld. </summary>
+        public static float[] DamageAdjustment { get; } = ProjectileID.Sets.Factory.CreateNamedSet(nameof(DamageAdjustment)).Description("Damage adjustment for projectiles while in a Macrocosm subworld.").RegisterFloatSet(defaultState: 1f,
             ProjectileID.StardustDragon1, 0.6f,
             ProjectileID.StardustDragon2, 0.6f,
             ProjectileID.StardustDragon3, 0.6f,

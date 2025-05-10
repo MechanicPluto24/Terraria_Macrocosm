@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Trails
             .UseProjectionMatrix(doUse: true)
             .UseImage0("Images/Extra_195")
             .UseImage1("Images/Extra_195")
-            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeInTrail"));
+            .UseImage2(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeInTrail"));
 
         public override MiscShaderData TrailShader => shader;
 

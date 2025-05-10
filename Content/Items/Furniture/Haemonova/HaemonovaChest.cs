@@ -11,7 +11,7 @@ namespace Macrocosm.Content.Items.Furniture.Haemonova
     {
         public override void SetStaticDefaults()
         {
-            ItemSets.Chest[Type] = true;
+            
         }
 
         public override void SetDefaults()

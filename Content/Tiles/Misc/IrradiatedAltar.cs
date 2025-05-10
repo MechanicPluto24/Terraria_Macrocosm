@@ -18,6 +18,7 @@ namespace Macrocosm.Content.Tiles.Misc
 
             TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
             TileID.Sets.PreventsTileReplaceIfOnTopOfIt[Type] = true;
+            TileID.Sets.PreventsTileHammeringIfOnTopOfIt[Type] = true;
 
             Main.tileNoAttach[Type] = true;
             DustType = ModContent.DustType<IrradiatedDust>();

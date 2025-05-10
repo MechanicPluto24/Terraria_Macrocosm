@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class PhantasmalSkullHitEffect : Particle
     {
-        public override string Texture => Macrocosm.TextureEffectsPath + "Star6";
+        public override string Texture => Macrocosm.FancyTexturesPath + "Star6";
         public override int MaxPoolCount => 100;
 
         public int StarPointCount { get; set; }

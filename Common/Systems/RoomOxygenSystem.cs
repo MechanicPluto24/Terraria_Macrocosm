@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -141,7 +142,7 @@ namespace Macrocosm.Common.Systems
             if (WorldGen.SolidTile(tile))
                 return;
 
-            if (Utility.TryGetTileEntityAs<MachineTE>(x, y, out var te) && te is IOxygenSource oxySrc)
+            if (TileEntity.TryGet<MachineTE>(x, y, out var te) && te is IOxygenSource oxySrc)
             {
                 if (oxySrc is IOxygenPassiveSource oxyPassive)
                     oxyPassive.TryActivateOxygen();

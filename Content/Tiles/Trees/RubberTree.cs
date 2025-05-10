@@ -11,6 +11,7 @@ using Terraria.Enums;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 
 namespace Macrocosm.Content.Tiles.Trees
 {
@@ -272,39 +273,50 @@ namespace Macrocosm.Content.Tiles.Trees
         }
 
         public override int TreeLeaf => ModContent.GoreType<RubberTreeLeaf>();
-
-        public override void CustomPostDrawTree(int x, int y, Tile tile, SpriteBatch spriteBatch, double treeWindCounter, Vector2 unscaledPosition, Vector2 zero, float topsWindFactor, float branchWindFactor)
+        public override bool ShouldTileDrawFoliage(int i, int j, short tileFrameX, short tileFrameY) => tileFrameX == 110 && tileFrameY == 0;
+        public override void DrawTreeFoliage(int i, int j, SpriteBatch spriteBatch, double treeWindCounter, Vector2 unscaledPosition, float topsWindFactor = 0.08F, float branchWindFactor = 0.06F)
         {
-            if (tile.TileFrameX == 110 && tile.TileFrameY == 0)
-            {
-                int variant = GetVariant(x, y);
-                int treeFrame = 0;
-                int xOffset = 0;
+            Tile tile = Main.tile[i, j];
+            int variant = GetVariant(i, j);
+            int treeFrame = 0;
 
-                if (!GetTreeFoliageData(x, y, xOffset, ref treeFrame, out int floorY, out int topTextureFrameWidth, out int topTextureFrameHeight))
-                    return;
+            GetFoliageData(i, j, ref treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight);
 
-                byte tileColor = tile.TileColor;
-                Texture2D treeTopTexture = TryGetTreeTopAndRequestIfNotReady(Type, variant, tileColor);
-                Vector2 position = new Vector2(x * 16 - (int)unscaledPosition.X - 44 + Main.tile[x, y].TileFrameY + topTextureFrameWidth / 2, y * 16 - (int)unscaledPosition.Y) + zero;
+            byte tileColor = tile.TileColor;
+            Texture2D treeTopTexture = TryGetTreeTopAndRequestIfNotReady(Type, variant, tileColor);
+            Vector2 position = new(i * 16 - (int)unscaledPosition.X - 44 + tile.TileFrameY + topTextureFrameWidth / 2, j * 16 - (int)unscaledPosition.Y);
 
-                float windCycle = tile.WallType == 0 ? Main.instance.TilesRenderer.GetWindCycle(x, y, treeWindCounter) : 0f;
-                position.X += windCycle * 2f;
-                position.Y += Math.Abs(windCycle) * 2f;
+            float windCycle = tile.WallType == 0 ? Main.instance.TilesRenderer.GetWindCycle(i, j, treeWindCounter) : 0f;
+            position.X += windCycle * 2f;
+            position.Y += Math.Abs(windCycle) * 2f;
 
-                Color color = Lighting.GetColor(x, y);
-                if (tile.IsTileFullbright)
-                    color = Color.White;
+            Color color = Lighting.GetColor(i, j);
+            if (tile.IsTileFullbright)
+                color = Color.White;
 
-                Rectangle frame = new(treeFrame * (topTextureFrameWidth + 2), 0, topTextureFrameWidth, topTextureFrameHeight);
-                spriteBatch.Draw(treeTopTexture, position, frame, color, windCycle * topsWindFactor, new Vector2(topTextureFrameWidth / 2, topTextureFrameHeight), 1f, SpriteEffects.None, 0f);
-            }
+            Rectangle frame = new(treeFrame * (topTextureFrameWidth + 2), 0, topTextureFrameWidth, topTextureFrameHeight);
+            spriteBatch.Draw(treeTopTexture, position, frame, color, windCycle * topsWindFactor, new Vector2(topTextureFrameWidth / 2, topTextureFrameHeight), 1f, SpriteEffects.None, 0f);
         }
 
-        public override void GetTopTextureFrame(int i, int j, ref int treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight)
+        public override void GetFoliageData(int i, int j, ref int treeFrame, out int topTextureFrameWidth, out int topTextureFrameHeight)
         {
             topTextureFrameWidth = 104;
             topTextureFrameHeight = 92;
+        }
+
+        public override bool CanEmitLeaves(int i, int j, Tile tile, short tileFrameX, short tileFrameY, Color tileLight, bool visible, int leafFrequency, UnifiedRandom rand, out Vector2 offset, out Vector2? velocityOverride, out float? scaleOverride)
+        {
+            velocityOverride = null;
+            scaleOverride = null;
+            offset = default;
+
+            if(IsTileALeafyTreeTop(i, j) && rand.NextBool(leafFrequency) && visible)
+            {
+                offset = new Vector2(rand.NextFloat(-32f, 32f), -rand.NextFloat(32f, 32f * 3f));
+                return true;
+            }
+
+            return false;
         }
     }
 }

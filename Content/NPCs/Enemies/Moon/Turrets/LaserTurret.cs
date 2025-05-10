@@ -103,7 +103,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
 
         private void DrawBeam(SpriteBatch spriteBatch)
         {
-            beamTexture ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Beam4");
+            beamTexture ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Beam4");
 
             Vector2 beamStart = NPC.Center + TurretHeight;
             Vector2 beamEnd = NPC.Center + TurretHeight + (new Vector2(1, 0).RotatedBy(TurretRotation) * Utility.CastLength(NPC.Center + TurretHeight, new Vector2(1, 0).RotatedBy(TurretRotation), 2000f, false));

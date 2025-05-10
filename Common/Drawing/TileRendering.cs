@@ -105,7 +105,7 @@ namespace Macrocosm.Common.Drawing
             spriteBatch.Draw(texture, position, frame, tileLight, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
         }
 
-        public static void DrawMultiTileInWindBottomAnchor(int topLeftX, int topLeftY, Asset<Texture2D> textureOverride = null, Color? colorOverride = null, bool perTileLighting = true, Vector2 drawOffset = default, bool applyPaint = false, float windSensitivity = 0.15f, int rowsToIgnore = 0)
+        public static void DrawMultiTileGrass(int topLeftX, int topLeftY, float totalWindMultiplier = 0.15f, int rowsToIgnore = 0, Asset<Texture2D> customTexture = null, Color? drawColorOverride = null, bool perTileLighting = true, Vector2 drawOffset = default, bool applyPaint = false)
         {
             Tile sourceTile = Main.tile[topLeftX, topLeftY];
             TileObjectData data = TileObjectData.GetTileData(sourceTile);
@@ -147,7 +147,7 @@ namespace Macrocosm.Common.Drawing
                     TileRenderer.GetTileDrawData(i, j, tile, type, ref tileFrameX, ref tileFrameY, out var tileWidth, out var tileHeight, out var tileTop, out var halfBrickHeight, out var addFrX, out var addFrY, out var tileSpriteEffect, out _, out _, out _);
 
                     bool canDoDust = TileRendererRandom.NextBool(4);
-                    Color tileLight = colorOverride ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
+                    Color tileLight = drawColorOverride ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
                     AdjustForVisionChangers(i, j, tile, type, tileFrameX, tileFrameY, ref tileLight, canDoDust);
                     tileLight = GetLightOverride(j, i, tile, type, tileFrameX, tileFrameY, tileLight);
 
@@ -156,11 +156,11 @@ namespace Macrocosm.Common.Drawing
                     Vector2 origin = position - tilePos;
                     Rectangle frame = new(tileFrameX + addFrX, tileFrameY + addFrY, tileWidth, tileHeight - halfBrickHeight);
                     Vector2 drawPos = position + new Vector2(0f, windMod.Y) + drawOffset;
-                    float rotation = windCycle * windSensitivity * heightModifier;
+                    float rotation = windCycle * totalWindMultiplier * heightModifier;
 
                     Texture2D tileDrawTexture;
-                    if (textureOverride != null)
-                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, textureOverride) : textureOverride.Value;
+                    if (customTexture != null)
+                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, customTexture) : customTexture.Value;
                     else
                         tileDrawTexture = TileRenderer.GetTileDrawTexture(tile, i, j);
 
@@ -172,76 +172,75 @@ namespace Macrocosm.Common.Drawing
 
         /*
         Chandeliers
-		    windHeightSensitivityOverride = 1f
-		    windOffsetFactorY = 0f
+		    overrideWindCycle = 1f
+		    windPushPowerY = 0f
 		        Flesh
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
 			        windRotationFactor *= 0.3f
 		        Frozen
 			        windRotationFactor *= 0.5f
 		        Rich Mahogany, Living Wood, Bone
-        	        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
+        	        overrideWindCycle = null
+			        windPushPowerY = -1f
 		        Palm Wood
-			        windHeightSensitivityOverride = 0f
+			        overrideWindCycle = 0f
 		        Mushroom
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
 		        Obsidian, Martian
 			        windRotationFactor *= 0.5f
 		        Granite
-			        windHeightSensitivityOverride = 0f
+			        overrideWindCycle = 0f
 		        Marble
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
 		        Crystal
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
 			        windRotationFactor *= 0.5f
 		        Lesion
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -1f
-			        firstRowSolid = true
+			        overrideWindCycle = null
+			        windPushPowerY = -1f
+			        dontRotateTopTiles = true
                 Solar, Vortex, Nebula, Stardust
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -2f
-			        firstRowSolid = true;
+			        overrideWindCycle = null
+			        windPushPowerY = -2f
+			        dontRotateTopTiles = true;
 			        windRotationFactor *= 0.5f
 		        Sandstone
-			        windHeightSensitivityOverride = null
-			        windOffsetFactorY = -3f
+			        overrideWindCycle = null
+			        windPushPowerY = -3f
 		Lanterns
-			windHeightSensitivityOverride = 1f
-			windOffsetFactorY = 0f
+			overrideWindCycle = 1f
+			windPushPowerY = 0f
 				Chain, Meteorite, Flesh, Steampunk, Mushroom, Meteorite, Spider
-					windHeightSensitivityOverride = null
-					windOffsetFactorY = -1f
+					overrideWindCycle = null
+					windPushPowerY = -1f
 				Heart, Slime, Obsidian, Martian, Granite
-					windHeightSensitivityOverride = 0f
+					overrideWindCycle = 0f
 				Lesion
-					windHeightSensitivityOverride = null
-					windOffsetFactorY = -1f
-					firstRowSolid = true
+					overrideWindCycle = null
+					windPushPowerY = -1f
+					dontRotateTopTiles = true
 				Solar, Vortex, Nebula, Stardust
-					windHeightSensitivityOverride = null
-					windOffsetFactorY = -1f
-					firstRowSolid = true
+					overrideWindCycle = null
+					windPushPowerY = -1f
+					dontRotateTopTiles = true
 
 		ChineseLanterns, FireflyinaBottle, LightningBuginaBottle, BeeHive, Pigronata, SoulBottles, LavaflyinaBottle, ShimmerflyinaBottle, DiscoGlobe
-			windHeightSensitivityOverride = 1f
-			windOffsetFactorY = 0f
+			overrideWindCycle = 1f
+			windPushPowerY = 0f
 
 		PotsSuspended, BrazierSuspended
-			windOffsetFactorY = -2f
+			windPushPowerY = -2f
 
         */
-
-        public static void DrawMultiTileInWindTopAnchor(int topLeftX, int topLeftY, Asset<Texture2D> texture = null, Color? color = null, bool perTileLighting = true, Vector2 offset = default, bool applyPaint = false, float windSensitivity = 0.15f, float windOffsetFactorY = -4f, int rowsToIgnore = 0, float? windHeightSensitivityOverride = null)
+        public static void DrawMultiTileVine(int topLeftX, int topLeftY, float? overrideWindCycle = null, float windPushPowerY = -4f, int rowsToIgnore = 0, float totalWindMultiplier = 0.15f, Asset<Texture2D> customTexture = null, Color? drawColorOverride = null, bool perTileLighting = true, Vector2 drawOffset = default, bool applyPaint = false)
         {
             Tile sourceTile = Main.tile[topLeftX, topLeftY];
             TileObjectData data = TileObjectData.GetTileData(sourceTile);
@@ -280,8 +279,7 @@ namespace Macrocosm.Common.Drawing
             if (rowsToIgnore > 0)
                 position += new Vector2(0f, rowsToIgnore * 16f);
 
-            windSensitivity *= -1f;
-
+            totalWindMultiplier *= -1f;
 
             for (int i = topLeftX; i < topLeftX + sizeX; i++)
             {
@@ -299,8 +297,8 @@ namespace Macrocosm.Common.Drawing
                     if (windHeightSensitivity == 0f)
                         windHeightSensitivity = 0.1f;
 
-                    if (windHeightSensitivityOverride.HasValue)
-                        windHeightSensitivity = windHeightSensitivityOverride.Value;
+                    if (overrideWindCycle.HasValue)
+                        windHeightSensitivity = overrideWindCycle.Value;
 
                     if (j < topLeftY + rowsToIgnore)
                         windHeightSensitivity = 0f;
@@ -308,20 +306,20 @@ namespace Macrocosm.Common.Drawing
                     TileRenderer.GetTileDrawData(i, j, tile, type, ref tileFrameX, ref tileFrameY, out var tileWidth, out var tileHeight, out var tileTop, out var halfBrickHeight, out var addFrX, out var addFrY, out var tileSpriteEffect, out var _, out var _, out var _);
 
                     bool canDoDust = TileRendererRandom.NextBool(4);
-                    Color tileLight = color ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
+                    Color tileLight = drawColorOverride ?? (perTileLighting ? Lighting.GetColor(i, j) : Lighting.GetColor(topLeftX, topLeftY));
                     AdjustForVisionChangers(i, j, tile, type, tileFrameX, tileFrameY, ref tileLight, canDoDust);
                     tileLight = GetLightOverride(j, i, tile, type, tileFrameX, tileFrameY, tileLight);
 
                     Vector2 tilePos = new Vector2(i * 16 - (int)screenPosition.X, j * 16 - (int)screenPosition.Y + tileTop) + zero;
                     tilePos += verticalDrawOffset;
                     Vector2 origin = position - tilePos;
-                    Vector2 drawPos = position + new Vector2(0f, Math.Abs(windCycle) * windOffsetFactorY * windHeightSensitivity) + offset;
+                    Vector2 drawPos = position + new Vector2(0f, Math.Abs(windCycle) * windPushPowerY * windHeightSensitivity) + drawOffset;
                     Rectangle frame = new(tileFrameX + addFrX, tileFrameY + addFrY, tileWidth, tileHeight - halfBrickHeight);
-                    float rotation = windCycle * windSensitivity * windHeightSensitivity;
+                    float rotation = windCycle * totalWindMultiplier * windHeightSensitivity;
 
                     Texture2D tileDrawTexture;
-                    if (texture != null)
-                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, texture) : texture.Value;
+                    if (customTexture != null)
+                        tileDrawTexture = applyPaint ? GetOrPreparePaintedExtraTexture(tile, customTexture) : customTexture.Value;
                     else
                         tileDrawTexture = TileRenderer.GetTileDrawTexture(tile, i, j);
 

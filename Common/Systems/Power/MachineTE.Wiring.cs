@@ -38,7 +38,7 @@ namespace Macrocosm.Common.Systems.Power
 
                             ConnectionSearch<MachineTE> connectionSearch = new(
                                 connectionCheck: position => Main.tile[position].HasWire(wireType),
-                                retrieveNode: position => Utility.TryGetTileEntityAs<MachineTE>(position.X, position.Y, out var m) ? m : null
+                                retrieveNode: position => TileEntity.TryGet<MachineTE>(position.X, position.Y, out var m) ? m : null
                             );
 
                             HashSet<MachineTE> connectedNodes = connectionSearch.FindConnectedNodes(machine.GetConnectionPositions());

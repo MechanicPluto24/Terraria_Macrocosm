@@ -19,6 +19,8 @@ namespace Macrocosm.Content.MapLayers
             texture = ModContent.Request<Texture2D>(GetType().Namespace.Replace(".", "/") + "/LaunchPadMap");
         }
 
+        public override Position GetDefaultPosition() => new Before(IMapLayer.Pings);
+
         public override void Draw(ref MapOverlayDrawContext context, ref string text)
         {
             foreach (LaunchPad launchPad in LaunchPadManager.GetLaunchPads(MacrocosmSubworld.CurrentID))

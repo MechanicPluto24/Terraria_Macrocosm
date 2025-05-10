@@ -23,15 +23,15 @@ namespace Macrocosm.Common.Utils
             projectile.netUpdate = true;
         }
 
-        public static Projectile FindClosestProjectileOfType(Vector2 Position, int Type)
+        public static Projectile FindClosestProjectile(Vector2 position, int type)
         {
             Projectile bestProj = null;
             float bestDistance = float.MaxValue;
             foreach (Projectile projectile in Main.ActiveProjectiles)
             {
-                if (projectile.type == Type && Vector2.Distance(projectile.Center, Position) < bestDistance)
+                if (projectile.type == type && Vector2.Distance(projectile.Center, position) < bestDistance)
                 {
-                    bestDistance = Vector2.Distance(projectile.Center, Position);
+                    bestDistance = Vector2.Distance(projectile.Center, position);
                     bestProj = projectile;
                 }
             }
@@ -54,7 +54,142 @@ namespace Macrocosm.Common.Utils
             return damage;
         }
 
-        public static Rectangle GetDamageHitbox(this Projectile proj) => typeof(Projectile).InvokeMethod<Rectangle>("Damage_GetHitbox", proj);
+        public static Rectangle GetDamageHitbox(this Projectile projectile) => typeof(Projectile).InvokeMethod<Rectangle>("Damage_GetHitbox", projectile);
+
+        public static void UpdateTrail(this Projectile projectile, bool updatePos = true, bool updateRot = true, bool updateDir = true, float smoothAmount = 0.65f, bool playerFollow = false)
+        {
+            var oldPos = projectile.oldPos;
+            var oldRot = projectile.oldRot;
+            var oldDir = projectile.oldSpriteDirection;
+
+            if (oldPos is null || oldPos.Length == 0)
+                return;
+
+
+            for (int i = oldPos.Length - 1; i > 0; i--)
+            {
+                if (updatePos) oldPos[i] = oldPos[i - 1];
+                if (updateRot) oldRot[i] = oldRot[i - 1];
+                if (updateDir) oldDir[i] = oldDir[i - 1];
+            }
+
+            if (updatePos) oldPos[0] = projectile.position;
+            if (updateRot) oldRot[0] = projectile.rotation;
+            if (updateDir) oldDir[0] = projectile.spriteDirection;
+
+            Vector2 offset = playerFollow && projectile.owner >= 0 && projectile.owner < Main.maxPlayers ? Main.player[projectile.owner].position - Main.player[projectile.owner].oldPosition : Vector2.Zero;
+            if (playerFollow && updatePos && projectile.numUpdates == 0)
+            {
+                for (int i = 0; i < oldPos.Length; i++)
+                {
+                    if (oldPos[i] != Vector2.Zero)
+                        oldPos[i] += offset;
+                }
+            }
+
+            if (smoothAmount > 0f && updatePos)
+            {
+                for (int i = oldPos.Length - 1; i > 0; i--)
+                {
+                    if (oldPos[i] == Vector2.Zero) continue;
+
+                    if (oldPos[i].Distance(oldPos[i - 1]) > 2f)
+                        oldPos[i] = Vector2.Lerp(oldPos[i], oldPos[i - 1], smoothAmount);
+
+                    if (updateRot)
+                        oldRot[i] = (oldPos[i - 1] - oldPos[i]).SafeNormalize(Vector2.Zero).ToRotation();
+                }
+            }
+        }
+
+
+        /// <summary> Clone of vanilla trail update logic, for extra control </summary>
+        public static void UpdateTrail(this Projectile projectile, int trailingMode = 3)
+        {
+            if (trailingMode == 0)
+            {
+                for (int i = projectile.oldPos.Length - 1; i > 0; i--)
+                    projectile.oldPos[i] = projectile.oldPos[i - 1];
+
+                projectile.oldPos[0] = projectile.position;
+            }
+            else if (trailingMode == 1)
+            {
+                if (projectile.frameCounter == 0 || projectile.oldPos[0] == Vector2.Zero)
+                {
+                    for (int i = projectile.oldPos.Length - 1; i > 0; i--)
+                        projectile.oldPos[i] = projectile.oldPos[i - 1];
+
+                    projectile.oldPos[0] = projectile.position;
+                }
+            }
+            else if (trailingMode == 2)
+            {
+                for (int i = projectile.oldPos.Length - 1; i > 0; i--)
+                {
+                    projectile.oldPos[i] = projectile.oldPos[i - 1];
+                    projectile.oldRot[i] = projectile.oldRot[i - 1];
+                    projectile.oldSpriteDirection[i] = projectile.oldSpriteDirection[i - 1];
+                }
+
+                projectile.oldPos[0] = projectile.position;
+                projectile.oldRot[0] = projectile.rotation;
+                projectile.oldSpriteDirection[0] = projectile.spriteDirection;
+            }
+            else if (trailingMode == 3)
+            {
+                for (int i = projectile.oldPos.Length - 1; i > 0; i--)
+                {
+                    projectile.oldPos[i] = projectile.oldPos[i - 1];
+                    projectile.oldRot[i] = projectile.oldRot[i - 1];
+                    projectile.oldSpriteDirection[i] = projectile.oldSpriteDirection[i - 1];
+                }
+
+                projectile.oldPos[0] = projectile.position;
+                projectile.oldRot[0] = projectile.rotation;
+                projectile.oldSpriteDirection[0] = projectile.spriteDirection;
+
+                float amount = 0.65f;
+                for (int i = projectile.oldPos.Length - 1; i > 0; i--)
+                {
+                    if (projectile.oldPos[i] == Vector2.Zero) continue;
+
+                    if (projectile.oldPos[i].Distance(projectile.oldPos[i - 1]) > 2f)
+                        projectile.oldPos[i] = Vector2.Lerp(projectile.oldPos[i], projectile.oldPos[i - 1], amount);
+
+                    projectile.oldRot[i] = (projectile.oldPos[i - 1] - projectile.oldPos[i]).SafeNormalize(Vector2.Zero).ToRotation();
+                }
+            }
+            else if (trailingMode == 4)
+            {
+                Vector2 playerOffset = Main.player[projectile.owner].position - Main.player[projectile.owner].oldPosition;
+                for (int i = projectile.oldPos.Length - 1; i > 0; i--)
+                {
+                    projectile.oldPos[i] = projectile.oldPos[i - 1];
+                    projectile.oldRot[i] = projectile.oldRot[i - 1];
+                    projectile.oldSpriteDirection[i] = projectile.oldSpriteDirection[i - 1];
+                    if (projectile.numUpdates == 0 && projectile.oldPos[i] != Vector2.Zero)
+                        projectile.oldPos[i] += playerOffset;
+                }
+
+                projectile.oldPos[0] = projectile.position;
+                projectile.oldRot[0] = projectile.rotation;
+                projectile.oldSpriteDirection[0] = projectile.spriteDirection;
+            }
+            else if (trailingMode == 5)
+            {
+                for (int i = projectile.oldPos.Length - 1; i > 0; i--)
+                {
+                    projectile.oldPos[i] = projectile.oldPos[i - 1];
+                    projectile.oldRot[i] = projectile.oldRot[i - 1];
+                    projectile.oldSpriteDirection[i] = projectile.oldSpriteDirection[i - 1];
+                }
+
+                projectile.oldPos[0] = projectile.position;
+                projectile.oldRot[0] = projectile.velocity.ToRotation();
+                projectile.oldSpriteDirection[0] = projectile.spriteDirection;
+            }
+        }
 
         /// <summary>
         /// Draws an animated projectile, leave texture null to draw as entity with the loaded texture
@@ -64,7 +199,7 @@ namespace Macrocosm.Common.Utils
         /// <param name="lightColor"> Computed environment color </param>
         /// <param name="drawOffset"> Offset to draw from texture center at 0 rotation </param>
         /// <param name="texture"> Leave null to draw as entity with the loaded texture </param>
-        public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, Rectangle? frame = null, Effect shader = null)
+        public static void DrawAnimated(this Projectile proj, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Texture2D texture = null, float? scale = null, Rectangle? frame = null, Effect shader = null)
         {
             texture ??= TextureAssets.Projectile[proj.type].Value;
 
@@ -83,7 +218,7 @@ namespace Macrocosm.Common.Utils
                 Main.spriteBatch.Begin(shader, state);
             }
 
-            Main.EntitySpriteDraw(texture, position, sourceRect, lightColor, proj.rotation, origin, proj.scale, effect, 0);
+            Main.EntitySpriteDraw(texture, position, sourceRect, proj.GetAlpha(lightColor), proj.rotation, origin, scale ?? proj.scale, effect, 0);
 
             if (shader is not null)
             {
@@ -95,8 +230,8 @@ namespace Macrocosm.Common.Utils
         /// <summary>
         /// Helper to draw an animated projectile extra, such as a glowmask
         /// </summary>
-        public static void DrawAnimatedExtra(this Projectile proj, Texture2D texture, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, Rectangle? frame = null)
-            => proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), texture, frame);
+        public static void DrawAnimatedExtra(this Projectile proj, Texture2D texture, Color lightColor, SpriteEffects effect, Vector2 drawOffset = default, float? scale = null, Rectangle? frame = null)
+            => proj.DrawAnimated(lightColor, effect, drawOffset + new Vector2(0, -2), texture, scale, frame);
 
 
         public static void DrawWhipLine(List<Vector2> list, Color color)

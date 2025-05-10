@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Items.Furniture.DarkCelestial
     {
         public override void SetStaticDefaults()
         {
-            ItemSets.Chest[Type] = true;
+            
         }
 
         public override void SetDefaults()

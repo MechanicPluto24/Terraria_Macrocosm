@@ -33,8 +33,11 @@ namespace Macrocosm.Content.Tiles.Special
             Main.tileLighted[Type] = true;
 
             TileID.Sets.AvoidedByMeteorLanding[Type] = true;
+
             TileID.Sets.PreventsSandfall[Type] = true;
+
             TileID.Sets.PreventsTileRemovalIfOnTopOfIt[Type] = true;
+            TileID.Sets.PreventsTileHammeringIfOnTopOfIt[Type] = true;
 
             DustType = -1;
             HitSound = SoundID.Mech;

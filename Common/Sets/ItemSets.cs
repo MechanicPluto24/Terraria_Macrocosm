@@ -1,26 +1,28 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
+using static AssGen.Assets;
 
 namespace Macrocosm.Common.Sets
 {
-    /// <summary>
-    /// Item Sets for special behavior of some Items, useful for crossmod.
-    /// Note: Only initalize sets with vanilla content here, add modded content to sets in SetStaticDefaults.
-    /// </summary>
+    /// <summary> Item Sets for special behavior of some Items, useful for crossmod. </summary>
+    [ReinitializeDuringResizeArrays]
     public class ItemSets
     {
-        /// <summary> Uned for unobtainable testing items and other developer items. Items in this set have a "Developer" tooltip and rarity </summary>
-        public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
+        /// <summary> Items in this set have a "Developer" tooltip and rarity. Used for developer items or other testing items. </summary>
+        public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(DeveloperItem)).Description("Items in this set have a \"Developer\" tooltip and rarity. Used for developer items or other testing items.").RegisterBoolSet();
 
-        /// <summary> Unobtainable items, other than Developer Items meant for testing. Items in this set have an "Unobtainable" tooltip </summary>
-        public static bool[] UnobtainableItem { get; } = ItemID.Sets.Factory.CreateBoolSet();
+        /// <summary> Items in this set have an "Unobtainable" tooltip. Used for items that can't yet be obtained legitimately. </summary>
+        public static bool[] UnobtainableItem { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(UnobtainableItem)).Description(" Items in this set have an \"Unobtainable\" tooltip. Used for items that can't yet be obtained legitimately.").RegisterBoolSet();
 
-        /// <summary> Items that can't be used on Macrocosm subworlds. Items in this set also have a tooltip to tell the player they can't the item </summary>
-        public static bool[] UnusableItems { get; } = ItemID.Sets.Factory.CreateBoolSet(
+        /// <summary> Items that can't be used on Macrocosm subworlds. Items in this set also have a "This item can not be used on {SubworldName}" tooltip. </summary>
+        public static bool[] UnusableItem { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(UnusableItem)).Description("Items that can't be used on Macrocosm subworlds. Items in this set also have a \"This item can not be used on <SubworldName>\" tooltip.").RegisterBoolSet(
             ItemID.BloodMoonStarter,
             ItemID.GoblinBattleStandard,
             ItemID.SnowGlobe,
@@ -31,23 +33,121 @@ namespace Macrocosm.Common.Sets
             ItemID.CelestialSigil
         );
 
-        /// <summary> Set of torches that work in a Macrocosm subworld </summary>
-        public static bool[] AllowedTorches { get; } = ItemID.Sets.Factory.CreateBoolSet();
+        /// <summary> Torch item types that work in a Macrocosm subworld. </summary>
+        public static bool[] AllowedTorches { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(AllowedTorches)).Description("Torch item types that work in a Macrocosm subworld.").RegisterBoolSet();
 
-        /// <summary> Set of items wiith custom potion sickness duration </summary>
-        public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateIntSet(defaultState: 0);
+        /// <summary> The Potion Sickness duration (in ticks) applied when consuming this item. </summary>
+        public static int[] PotionDelay { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(PotionDelay)).Description("The Potion Sickness duration (in ticks) applied when consuming this item.").RegisterIntSet(defaultState: 0);
 
         /// <summary> 
-        /// If true, explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
+        /// Explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
         /// <br/> Set to false to disable self damage for explosives shot by this weapon in regular gameplay (not FTW).
         /// </summary>
-        public static bool[] ExplosivesShotDealDamageToOwner { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
+        public static bool[] ExplosivesShotDealDamageToOwner { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(ExplosivesShotDealDamageToOwner)).Description("Explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. Set to false to disable self damage for explosives shot by this weapon in regular gameplay (not FTW).").RegisterBoolSet(defaultState: true);
 
         /// <summary> 
-        /// If true, explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
+        /// Explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. 
         /// <br/> Set to false to disable self damage for explosives shot by this weapon in For The Worthy worlds.
         /// </summary>
-        public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateBoolSet(true);
+        public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(ExplosivesShotDealDamageToOwner_GetGoodWorld)).Description("Explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. Set to false to disable self damage for explosives shot by this weapon in For The Worthy worlds.").RegisterBoolSet(defaultState: true);
+
+        /// <summary> Damage adjustment for items while in a Macrocosm subworld. Applies a tooltip indicating if the item is stronger or weaker. </summary>
+        public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(DamageAdjustment)).Description("Damage adjustment for items while in a Macrocosm subworld. Applies a tooltip indicating if the item is stronger or weaker.").RegisterFloatSet(defaultState: 1f,
+            ItemID.Zenith, 0.28f,
+            ItemID.LastPrism, 0.36f,
+            ItemID.StarWrath, 0.63f,
+            ItemID.StardustDragonStaff, 0.25f,
+            ItemID.Terrarian, 0.45f,
+            ItemID.NebulaBlaze, 0.6f,
+            ItemID.Meowmere, 0.5f,
+            ItemID.Celeb2, 0.28f,
+            ItemID.LunarFlareBook, 1.05f,
+            ItemID.EmpressBlade, 0.5f,
+            ItemID.MoonlordArrow, 0.88f,
+            ItemID.RainbowCrystalStaff, 0.3f,
+            ItemID.MoonlordTurretStaff, 0.2f,
+            ItemID.SDMG, 0.8f,
+            ItemID.MiniNukeI, 0.4f,
+            ItemID.MiniNukeII, 0.4f,
+            ItemID.SolarEruption, 0.78f,
+            ItemID.DayBreak, 0.67f,
+            ItemID.VortexBeater, 0.9f,
+            ItemID.Phantasm, 0.9f,
+            ItemID.StardustCellStaff, 0.9f
+        );
+
+        /// <summary> Whether this Wing accessory's flight time is affected by the Macrocosm subworld Atmospheric Density. </summary>
+        public static bool[] WingTimeDependsOnAtmosphericDensity { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(WingTimeDependsOnAtmosphericDensity)).Description("Whether this Wing accessory's flight time is affected by the Macrocosm subworld Atmospheric Density.").RegisterBoolSet(
+            ItemID.CreativeWings,
+            ItemID.AngelWings,
+            ItemID.DemonWings,
+            ItemID.FairyWings,
+            ItemID.FinWings,
+            ItemID.FrozenWings,
+            ItemID.HarpyWings,
+            ItemID.RedsWings,
+            ItemID.DTownsWings,
+            ItemID.WillsWings,
+            ItemID.CrownosWings,
+            ItemID.CenxsWings,
+            ItemID.BejeweledValkyrieWing,
+            ItemID.Yoraiz0rWings,
+            ItemID.JimsWings,
+            ItemID.SkiphsWings,
+            ItemID.LokisWings,
+            ItemID.ArkhalisWings,
+            ItemID.LeinforsWings,
+            ItemID.GhostarsWings,
+            ItemID.SafemanWings,
+            ItemID.FoodBarbarianWings,
+            ItemID.GroxTheGreatWings,
+            ItemID.LeafWings,
+            ItemID.BatWings,
+            ItemID.BeeWings,
+            ItemID.ButterflyWings,
+            ItemID.FlameWings,
+            ItemID.GhostWings,
+            ItemID.BoneWings,
+            ItemID.MothronWings,
+            ItemID.GhostWings,
+            ItemID.BeetleWings,
+            ItemID.FestiveWings,
+            ItemID.TatteredFairyWings,
+            ItemID.SteampunkWings,
+            ItemID.BetsyWings,
+            ItemID.RainbowWings,
+            ItemID.FishronWings,
+            ItemID.WingsNebula,
+            ItemID.WingsVortex,
+            ItemID.WingsSolar,
+            ItemID.WingsStardust
+        );
+
+        /// <summary> The flight time multiplier of this Wing accesory on Macrocosm subworlds. </summary>
+        public static float[] WingTimeMultiplier { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(WingTimeMultiplier)).Description("The flight time multiplier of this Wing accesory on Macrocosm subworlds.").RegisterFloatSet(defaultState: 1f,
+            ItemID.LongRainbowTrailWings, 0.5f,
+            ItemID.Hoverboard, 0.3f,
+            ItemID.Jetpack, 0.3f
+        );
+
+        /// <summary> Items that are seeds that place alchemy or similar plants. </summary>
+        public static bool[] PlantSeed { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(PlantSeed)).Description("Items that are seeds that place alchemy or similar plants.").RegisterBoolSet(
+           ItemID.DaybloomSeeds,
+           ItemID.BlinkrootSeeds,
+           ItemID.MoonglowSeeds,
+           ItemID.WaterleafSeeds,
+           ItemID.ShiverthornSeeds,
+           ItemID.DeathweedSeeds,
+           ItemID.FireblossomSeeds,
+           ItemID.PumpkinSeed
+        );
+
+        /// <summary> Items that place saplings (acorns, vanity tree saplings). </summary>
+        public static bool[] TreeSeed { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(TreeSeed)).Description("Items that place saplings (acorns, vanity tree saplings).").RegisterBoolSet(
+            ItemID.Acorn,
+            ItemID.VanityTreeSakuraSeed,
+            ItemID.VanityTreeYellowWillowSeed
+        );
 
         public static TrashData[] TrashData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new TrashData(),
             ItemID.Wood, new TrashData(ItemID.Wood, 7),
@@ -558,167 +658,6 @@ namespace Macrocosm.Common.Sets
             ItemID.GreenJellyfish, new FuelData(FuelPotency.Low, 100),
             ItemID.PinkJellyfish, new FuelData(FuelPotency.Low, 100),
             ItemID.BlueJellyfish, new FuelData(FuelPotency.Low, 100)
-        );
-
-
-        /// <summary> 
-        /// Damage adjustment for items while in a Macrocosm subworld. 
-        /// Applies a tooltip indicating if the item is stronger or weaker.
-        /// </summary>
-        public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f,
-            ItemID.Zenith, 0.28f,
-            ItemID.LastPrism, 0.36f,
-            ItemID.StarWrath, 0.63f,
-            ItemID.StardustDragonStaff, 0.25f,
-            ItemID.Terrarian, 0.45f,
-            ItemID.NebulaBlaze, 0.6f,
-            ItemID.Meowmere, 0.5f,
-            ItemID.Celeb2, 0.28f,
-            ItemID.LunarFlareBook, 1.05f,
-            ItemID.EmpressBlade, 0.5f,
-            ItemID.MoonlordArrow, 0.88f,
-            ItemID.RainbowCrystalStaff, 0.3f,
-            ItemID.MoonlordTurretStaff, 0.2f,
-            ItemID.SDMG, 0.8f,
-            ItemID.MiniNukeI, 0.4f,
-            ItemID.MiniNukeII, 0.4f,
-            ItemID.SolarEruption, 0.78f,
-            ItemID.DayBreak, 0.67f,
-            ItemID.VortexBeater, 0.9f,
-            ItemID.Phantasm, 0.9f,
-            ItemID.StardustCellStaff, 0.9f
-        );
-
-        public static bool[] WingTimeDependsOnAtmosphericDensity { get; } = ItemID.Sets.Factory.CreateBoolSet(
-            ItemID.CreativeWings,
-            ItemID.AngelWings,
-            ItemID.DemonWings,
-            ItemID.FairyWings,
-            ItemID.FinWings,
-            ItemID.FrozenWings,
-            ItemID.HarpyWings,
-            ItemID.RedsWings,
-            ItemID.DTownsWings,
-            ItemID.WillsWings,
-            ItemID.CrownosWings,
-            ItemID.CenxsWings,
-            ItemID.BejeweledValkyrieWing,
-            ItemID.Yoraiz0rWings,
-            ItemID.JimsWings,
-            ItemID.SkiphsWings,
-            ItemID.LokisWings,
-            ItemID.ArkhalisWings,
-            ItemID.LeinforsWings,
-            ItemID.GhostarsWings,
-            ItemID.SafemanWings,
-            ItemID.FoodBarbarianWings,
-            ItemID.GroxTheGreatWings,
-            ItemID.LeafWings,
-            ItemID.BatWings,
-            ItemID.BeeWings,
-            ItemID.ButterflyWings,
-            ItemID.FlameWings,
-            ItemID.GhostWings,
-            ItemID.BoneWings,
-            ItemID.MothronWings,
-            ItemID.GhostWings,
-            ItemID.BeetleWings,
-            ItemID.FestiveWings,
-            ItemID.TatteredFairyWings,
-            ItemID.SteampunkWings,
-            ItemID.BetsyWings,
-            ItemID.RainbowWings,
-            ItemID.FishronWings,
-            ItemID.WingsNebula,
-            ItemID.WingsVortex,
-            ItemID.WingsSolar,
-            ItemID.WingsStardust
-        );
-
-        public static float[] WingTimeMultiplier_Moon { get; } = ItemID.Sets.Factory.CreateFloatSet(defaultState: 1f,
-            ItemID.LongRainbowTrailWings, 0.5f,
-            ItemID.Hoverboard, 0.3f,
-            ItemID.Jetpack, 0.3f
-        );
-
-        /// <summary> Set of seeds for alchemy or similar plants </summary>
-        public static bool[] PlantSeed { get; } = ItemID.Sets.Factory.CreateBoolSet
-        (
-           ItemID.DaybloomSeeds,
-           ItemID.BlinkrootSeeds,
-           ItemID.MoonglowSeeds,
-           ItemID.WaterleafSeeds,
-           ItemID.ShiverthornSeeds,
-           ItemID.DeathweedSeeds,
-           ItemID.FireblossomSeeds,
-           ItemID.PumpkinSeed
-        );
-
-        /// <summary> Set of tree "seeds" (acorns and vanity saplings) </summary>
-        public static bool[] TreeSeed { get; } = ItemID.Sets.Factory.CreateBoolSet
-        (
-            ItemID.Acorn,
-            ItemID.VanityTreeSakuraSeed,
-            ItemID.VanityTreeYellowWillowSeed
-        );
-
-        /// <summary> Chests. Used for the assembly recipe of the Service Module. </summary>
-        public static bool[] Chest { get; } = ItemID.Sets.Factory.CreateBoolSet
-        (
-            ItemID.Chest,
-            ItemID.GoldChest,
-            ItemID.FrozenChest,
-            ItemID.IvyChest,
-            ItemID.LihzahrdChest,
-            ItemID.LivingWoodChest,
-            ItemID.MushroomChest,
-            ItemID.RichMahoganyChest,
-            ItemID.DesertChest,
-            ItemID.SkywareChest,
-            ItemID.WaterChest,
-            ItemID.WebCoveredChest,
-            ItemID.GraniteChest,
-            ItemID.MarbleChest,
-            ItemID.ShadowChest,
-            ItemID.GoldenChest,
-            ItemID.CorruptionChest,
-            ItemID.CrimsonChest,
-            ItemID.HallowedChest,
-            ItemID.IceChest,
-            ItemID.JungleChest,
-            ItemID.DungeonDesertChest,
-            ItemID.GolfChest,
-            ItemID.NebulaChest,
-            ItemID.SolarChest,
-            ItemID.StardustChest,
-            ItemID.VortexChest,
-            ItemID.BoneChest,
-            ItemID.LesionChest,
-            ItemID.FleshChest,
-            ItemID.GlassChest,
-            ItemID.HoneyChest,
-            ItemID.SlimeChest,
-            ItemID.SteampunkChest,
-            ItemID.AshWoodChest,
-            ItemID.BalloonChest,
-            ItemID.BambooChest,
-            ItemID.BlueDungeonChest,
-            ItemID.BorealWoodChest,
-            ItemID.CactusChest,
-            ItemID.CrystalChest,
-            ItemID.DynastyChest,
-            ItemID.EbonwoodChest,
-            ItemID.GreenDungeonChest,
-            ItemID.MartianChest,
-            ItemID.MeteoriteChest,
-            ItemID.ObsidianChest,
-            ItemID.PalmWoodChest,
-            ItemID.PinkDungeonChest,
-            ItemID.PumpkinChest,
-            ItemID.CoralChest,
-            ItemID.ShadewoodChest,
-            ItemID.SpiderChest,
-            ItemID.SpookyChest
         );
     }
 }

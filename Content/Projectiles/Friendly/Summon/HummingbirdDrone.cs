@@ -448,7 +448,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon
             beamEnd -= Main.screenPosition;
 
             float rotation = (beamEnd - beamStart).ToRotation() + MathHelper.PiOver2;
-            beam ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Beam4");
+            beam ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Beam4");
             Vector2 scale = new Vector2(45f, Vector2.Distance(beamStart, beamEnd)) / beam.Size();
             Vector2 origin = new(beam.Width() * 0.5f, beam.Height());
 

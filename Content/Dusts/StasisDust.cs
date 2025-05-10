@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Dusts
 {
-    public class InhibitorFieldDust : ModDust
+    public class StasisDust : ModDust
     {
         private float scaleDownSpeed;
 

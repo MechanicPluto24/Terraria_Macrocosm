@@ -145,17 +145,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     }.GetRandom();
                 });
             }
-
-            float count = 80 * trailMultiplier;
-            for (int i = 1; i < count; i++)
-            {
-                Vector2 trailPosition = Projectile.oldPosition + Projectile.Size / 2f - Projectile.oldVelocity * i;
-                for (int j = 0; j < 4; j++)
-                {
-                    Dust dust = Dust.NewDustDirect(trailPosition, 1, 1, ModContent.DustType<LuminiteBrightDust>(), 0, 0, Scale: Main.rand.NextFloat(0.5f, 1.5f) * (1f - i / count), Alpha: 127);
-                    dust.noGravity = true;
-                }
-            }
         }
 
         SpriteBatchState state;
@@ -171,7 +160,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             for (int n = 1; n < count; n++)
             {
-                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * 0.4f;
+                Vector2 trailPosition = Projectile.Center - Projectile.oldVelocity * n * 0.8f;
                 Color color = new Color(44, 209, 147) * (0.8f - n / count);
                 Utility.DrawStar(trailPosition - Main.screenPosition, 1, color, Projectile.scale * 0.65f, Projectile.rotation, entity: true);
             }

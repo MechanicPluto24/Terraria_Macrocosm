@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                             knockback *= 2f;
 
                             int extra = ContentSamples.ProjectilesByType[projToShoot].extraUpdates;
-                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<IlmeniteAltProjectile>(), damage, knockback, Projectile.owner, strength, extra);
+                            Projectile.NewProjectile(new EntitySource_ItemUse_WithAmmo(Player, currentItem, usedAmmoItemId), Projectile.Center, Vector2.Normalize(Projectile.velocity) * speed, ModContent.ProjectileType<IlmeniteProjectileDouble>(), damage, knockback, Projectile.owner, strength, extra);
                             SoundEngine.PlaySound(SoundID.Item72 with { Pitch = -0.5f, Volume = 0.4f });
                             AI_Charge = 0;
                         }
@@ -113,7 +113,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                                 Projectile.GetSource_FromAI(),
                                 Projectile.Center,
                                 Vector2.Normalize(Projectile.velocity) * speed / 3,
-                                ModContent.ProjectileType<IlmeniteRegularProjectile>(),
+                                ModContent.ProjectileType<IlmeniteProjectile>(),
                                 (int)(damage * Math.Pow(1.25f, currentAttack)),
                                 knockback,
                                 Projectile.owner,

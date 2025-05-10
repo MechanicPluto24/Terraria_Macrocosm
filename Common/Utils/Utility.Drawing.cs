@@ -98,15 +98,10 @@ namespace Macrocosm.Common.Utils
             for (int i = 0; i < points; i++)
             {
                 float angle = rotationStep * i;
-
                 if (entity)
-                {
                     Main.EntitySpriteDraw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
                 else
-                {
                     Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
             }
         }
 
@@ -117,13 +112,9 @@ namespace Macrocosm.Common.Utils
             foreach (float rotation in rotations)
             {
                 if (entity)
-                {
                     Main.EntitySpriteDraw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
                 else
-                {
                     Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
             }
         }
 
@@ -137,13 +128,9 @@ namespace Macrocosm.Common.Utils
                 float angle = rotationStep * i;
 
                 if (entity)
-                {
                     Main.EntitySpriteDraw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
                 else
-                {
                     Main.spriteBatch.Draw(tex, position, null, color, angle + rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
             }
         }
 
@@ -154,13 +141,9 @@ namespace Macrocosm.Common.Utils
             foreach (float rotation in rotations)
             {
                 if (entity)
-                {
                     Main.EntitySpriteDraw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
                 else
-                {
                     Main.spriteBatch.Draw(tex, position, null, color, rotation, tex.Size() / 2f, scale, spriteEffects, 0f);
-                }
             }
         }
 

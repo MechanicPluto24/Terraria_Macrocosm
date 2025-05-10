@@ -2,6 +2,7 @@ using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -24,7 +25,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.height = 30;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarity3>();
-            Item.UseSound = SoundID.Item9;
+            Item.UseSound = SFX.LaserShoot;
             Item.useAnimation = 10;
             Item.useTime = 10;
             Item.DamageType = DamageClass.Ranged;

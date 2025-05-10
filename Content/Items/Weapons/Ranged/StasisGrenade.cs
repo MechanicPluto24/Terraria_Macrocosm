@@ -9,7 +9,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged
 {
-    public class InhibitorFieldGrenade : ModItem
+    [LegacyName("InhibitorFieldGrenade")]
+    public class StasisGrenade : ModItem
     {
         public override void SetStaticDefaults()
         {
@@ -33,7 +34,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.DamageType = DamageClass.Ranged;
             Item.noMelee = true;
             Item.shootSpeed = 15f;
-            Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Ranged.InhibitorFieldGrenade>();
+            Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Ranged.StasisGrenade>();
             Item.maxStack = 9999;
         }
 

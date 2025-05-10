@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Utils;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
@@ -32,13 +33,13 @@ namespace Macrocosm.Common.Systems.Power
 
         public void Toggle(int i, int j, bool automatic, bool skipWire = false)
         {
-            if (Utility.TryGetTileEntityAs(i, j, out MachineTE machineTE))
+            if (TileEntity.TryGet(i, j, out MachineTE machineTE))
                 machineTE.Toggle(automatic, skipWire);
         }
 
         public override void HitWire(int i, int j)
         {
-            if (Utility.TryGetTileEntityAs(i, j, out MachineTE machineTE) && machineTE.CanToggleWithWire)
+            if (TileEntity.TryGet(i, j, out MachineTE machineTE) && machineTE.CanToggleWithWire)
                 machineTE.Toggle(automatic: false, skipWire: true);
         }
 

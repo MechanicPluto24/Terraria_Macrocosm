@@ -111,8 +111,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             GameShaders.Misc["MagicMissile"]
                 .UseProjectionMatrix(true)
                 .UseImage0(TextureAssets.MagicPixel)
-                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark7"))
-                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Spark6"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Spark7"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Spark6"))
                 .Apply();
 
             var positions = (Vector2[])Projectile.oldPos.Clone();

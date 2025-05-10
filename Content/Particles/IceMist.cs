@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class IceMist : Particle
     {
-        public override string Texture => Macrocosm.TextureEffectsPath + "Smoke1";
+        public override string Texture => Macrocosm.FancyTexturesPath + "Smoke1";
 
         public float Opacity { get; set; }
         public float ExpansionRate { get; set; }

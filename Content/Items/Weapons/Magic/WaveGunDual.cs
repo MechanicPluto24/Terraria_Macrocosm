@@ -59,12 +59,12 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.noUseGraphic = true;
             Item.channel = true;
             Item.shoot = ModContent.ProjectileType<WaveGunDualHeld>();
-            Item.shootSpeed = 28f;
+            Item.shootSpeed = 36f;
         }
 
         public override bool AltFunctionUse(Player player) => true;
         public override bool CanConsumeAmmo(Item ammo, Player player) => false;
-        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<WaveGunRifleHeld>()] < 1 && player.ownedProjectileCounts[ModContent.ProjectileType<WaveGunDualHeld>()] < 1;
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[ModContent.ProjectileType<WaveRifleHeld>()] < 1 && player.ownedProjectileCounts[ModContent.ProjectileType<WaveGunDualHeld>()] < 1;
 
         public override void ModifyManaCost(Player player, ref float reduce, ref float mult)
         {
@@ -91,7 +91,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
                 if (RifleMode)
                 {
                     Item.useTime = Item.useAnimation = 40;
-                    Item.shootSpeed = 40f;
+                    Item.shootSpeed = 42f;
                     Item.knockBack = 4f;
                 }
                 else
@@ -117,7 +117,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             }
 
             if (RifleMode)
-                Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunRifleHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer);
+                Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveRifleHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer);
             else
                 Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<WaveGunDualHeld>(), damage, knockback, player.whoAmI, ai0: fireRate, ai1: timer, ai2: player.ItemUseCount(Type));
 

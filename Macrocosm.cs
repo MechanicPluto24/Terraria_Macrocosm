@@ -19,11 +19,11 @@ namespace Macrocosm
         public static Mod Instance => ModContent.GetInstance<Macrocosm>();
 
         public const string TexturesPath = "Macrocosm/Assets/Textures/";
+        public const string FancyTexturesPath = TexturesPath + "LowRes/";
+        public const string FancyHighResTexturesPath = TexturesPath + "HighRes/";
         public const string EmptyTexPath = TexturesPath + "Empty";
         public const string SymbolsPath = TexturesPath + "UI/Symbols/";
         public const string ButtonsPath = TexturesPath + "UI/Buttons/";
-
-        public static string TextureEffectsPath => TexturesPath + "LowRes/";
 
         public const string ShadersPath = "Macrocosm/Assets/Effects/";
         public const string MusicPath = "Macrocosm/Assets/Music/";

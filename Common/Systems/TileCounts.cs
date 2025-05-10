@@ -57,7 +57,7 @@ namespace Macrocosm.Common.Systems
 
             for (int type = 0; type < TileLoader.TileCount; type++)
             {
-                if (TileSets.GraveyardTile[type])
+                if (TileSets.CountsForGraveyard[type])
                     GraveyardTileCount += tileCounts[type];
             }
         }

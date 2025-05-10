@@ -200,7 +200,6 @@ namespace Macrocosm.Content.Items.Accessories
         }
 
         public static bool GetEffectColor(Player player, out Color primaryColor) => GetEffectColor(player, out primaryColor, out _, out _, out _, out _);
-
         public static bool GetEffectColor(Player player, out Color primaryColor, out Color? secondaryColor, out BlendState blendStateOverride, out bool bypassShader, out bool rainbow)
         {
             int dyeItemType = -1;

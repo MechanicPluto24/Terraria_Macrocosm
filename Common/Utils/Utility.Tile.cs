@@ -70,87 +70,6 @@ namespace Macrocosm.Common.Utils
         }
 
         /// <summary>
-        /// Gets the top-left tile coordinates of a multitile
-        /// </summary>
-        /// <param name="i">The tile X-coordinate</param>
-        /// <param name="j">The tile Y-coordinate</param>
-        public static Point16 GetMultitileTopLeft(int i, int j)
-        {
-            if (!WorldGen.InWorld(i, j))
-                return new Point16(0, 0);
-
-            Tile tile = Main.tile[i, j];
-
-            int frameX = 0;
-            int frameY = 0;
-
-            if (tile.HasTile)
-            {
-                int style = 0, alt = 0;
-                TileObjectData.GetTileInfo(tile, ref style, ref alt);
-                TileObjectData data = TileObjectData.GetTileData(tile.TileType, style, alt);
-
-                if (data != null)
-                {
-                    int padding = 16 + data.CoordinatePadding;
-
-                    frameX = tile.TileFrameX % (padding * data.Width) / padding;
-                    frameY = tile.TileFrameY % (padding * data.Height) / padding;
-                }
-            }
-
-            return new Point16(i - frameX, j - frameY);
-        }
-
-        /// <summary>
-        /// Uses <seealso cref="GetMultitileTopLeft(int, int)"/> to try to get the entity bound to the multitile at (<paramref name="i"/>, <paramref name="j"/>).
-        /// </summary>
-        /// <typeparam name="T">The type to get the entity as</typeparam>
-        /// <param name="i">The tile X-coordinate</param>
-        /// <param name="j">The tile Y-coordinate</param>
-        /// <param name="entity">The found <typeparamref name="T"/> instance, if there was one.</param>
-        /// <returns><see langword="true"/> if there was a <typeparamref name="T"/> instance, or <see langword="false"/> if there was no entity present OR the entity was not a <typeparamref name="T"/> instance.</returns>
-        public static bool TryGetTileEntityAs<T>(int i, int j, out T entity) where T : TileEntity
-        {
-            Point16 origin = GetMultitileTopLeft(i, j);
-
-            //TileEntity.ByPosition is a Dictionary<Point16, TileEntity> which contains all placed TileEntity instances in the world
-            //TryGetValue is used to both check if the dictionary has the key, origin, and get the value from that key if it's there
-            if (TileEntity.ByPosition.TryGetValue(origin, out TileEntity existing) && existing is T existingAsT)
-            {
-                entity = existingAsT;
-                return true;
-            }
-
-            entity = null;
-            return false;
-        }
-
-
-        /// <inheritdoc cref="TryGetTileEntityAs{T}(int, int, out T)"/>
-        public static bool TryGetTileEntityAs<T>(Point position, out T entity) where T : TileEntity
-            => TryGetTileEntityAs(position.X, position.Y, out entity);
-
-        /// <inheritdoc cref="TryGetTileEntityAs{T}(int, int, out T)"/>
-        public static bool TryGetTileEntityAs<T>(Point16 position, out T entity) where T : TileEntity
-            => TryGetTileEntityAs(position.X, position.Y, out entity);
-
-        public static IEnumerable<Point16> GetTilePositions(this TileEntity te)
-        {
-            Tile tile = Main.tile[te.Position];
-            TileObjectData data = TileObjectData.GetTileData(tile);
-            int width = data?.Width ?? 1;
-            int height = data?.Height ?? 1;
-            for (int x = te.Position.X; x < te.Position.X + width; x++)
-            {
-                for (int y = te.Position.Y; y < te.Position.Y + height; y++)
-                {
-                    yield return new Point16(x, y);
-                }
-            }
-        }
-
-        /// <summary>
         /// Sets the tile <paramref name="style"/> and <paramref name="alternate"/> placement at the specified <paramref name="x"/> and <paramref name="y"/> coordinates.
         /// Uses <see cref="WorldGen.PlaceObject"/> to set the tile, ensuring multi-tile structures are placed at their origin.
         /// </summary>
@@ -171,7 +90,7 @@ namespace Macrocosm.Common.Utils
             // Get the top-left corner of the multi-tile 
             Point16 topLeft = new(x, y);
             if (data.Width > 1 || data.Height > 1)
-                topLeft = GetMultitileTopLeft(x, y);
+                topLeft = TileObjectData.TopLeft(x, y);
 
             WorldGen.KillTile(topLeft.X, topLeft.Y, noItem: true);
 
@@ -287,7 +206,7 @@ namespace Macrocosm.Common.Utils
                             }
                             else
                             {
-                                Vector2 top = GetMultitileTopLeft(x2, y2).ToVector2();
+                                Vector2 top = TileObjectData.TopLeft(x2, y2).ToVector2();
                                 x2 = (int)top.X;
                                 y2 = (int)top.Y;
                             }
@@ -336,7 +255,7 @@ namespace Macrocosm.Common.Utils
                             }
                             else
                             {
-                                Point p = GetMultitileTopLeft(x2, y2).ToPoint();
+                                Point p = TileObjectData.TopLeft(x2, y2).ToPoint();
                                 x2 = p.X;
                                 y2 = p.Y;
                             }

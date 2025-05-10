@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Sets;
-using Macrocosm.Content.Items.Machines.Consumers.Oxygen;
+using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Machines;
 using Macrocosm.Content.Items.Tech;
 using Microsoft.Xna.Framework;
 using System.Linq;
@@ -33,7 +34,7 @@ namespace Macrocosm.Content.Rockets.Modules.Service
             new(ModContent.ItemType<RocketPlating>(), 25),
             new(ModContent.ItemType<PowerJunction>(), 3),
             new(ModContent.ItemType<OxygenSystem>(), 3),
-            new((item) => ItemSets.Chest[item.type], Language.GetText("Mods.Macrocosm.UI.LaunchPad.AnyChest"), 1)
+            new((item) => item.IsChest(), Language.GetText("Mods.Macrocosm.UI.LaunchPad.AnyChest"), 1)
         };
     }
 }

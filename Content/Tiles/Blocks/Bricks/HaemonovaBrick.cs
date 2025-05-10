@@ -13,8 +13,6 @@ namespace Macrocosm.Content.Tiles.Blocks.Bricks
             Main.tileBrick[Type] = true;
             Main.tileBlockLight[Type] = true;
 
-            TileID.Sets.ChecksForMerge[Type] = true;
-
             AddMapEntry(new Color(78, 25, 25));
 
             //DustType = ModContent.DustType<HaemonovaDust>();

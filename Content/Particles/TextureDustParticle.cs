@@ -11,7 +11,7 @@ using Terraria.GameContent;
 
 namespace Macrocosm.Content.Particles
 {
-    /// <summary> Create pixel box dusts randomly picked from a texture. Blatantly inefficient, avoid </summary>
+    /// <summary> Create pixel box dusts randomly picked from a texture. Extremely inefficient, avoid </summary>
     public class TextureDustParticle : Particle
     {
         public override string Texture => Macrocosm.EmptyTexPath;
@@ -24,6 +24,7 @@ namespace Macrocosm.Content.Particles
         {
             TimeToLive = 60;
             Scale = new(1);
+            Color = Color.White;
         }
 
         public override void OnSpawn()
@@ -38,12 +39,11 @@ namespace Macrocosm.Content.Particles
                     Main.NewText(SourceTexture.Name);
                 }
             }
-
-            Velocity.Y += 1f;
         }
 
         public override void AI()
         {
+            Velocity.Y += 1f;
         }
 
         public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)

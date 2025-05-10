@@ -50,14 +50,14 @@ namespace Macrocosm.Content.Tiles.Banners
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
             if (TileObjectData.IsTopLeft(i, j))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
 
             return false;
         }
 
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void AdjustMultiTileVineParameters(int i, int j, ref float? overrideWindCycle, ref float windPushPowerX, ref float windPushPowerY, ref bool dontRotateTopTiles, ref float totalWindMultiplier, ref Texture2D glowTexture, ref Color glowColor)
         {
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j);
+            totalWindMultiplier = 0.1f;
         }
     }
 }

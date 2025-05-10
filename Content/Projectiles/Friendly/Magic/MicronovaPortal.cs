@@ -138,9 +138,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Main.spriteBatch.End();
             Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, effect, state);
 
-            twirl ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl3");
-            twirl2 ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Twirl1");
-            glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle5");
+            twirl ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Twirl3");
+            twirl2 ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Twirl1");
+            glow ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle5");
 
             Main.EntitySpriteDraw(twirl.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(100, 170, 200).WithOpacity(1f), shootAim.ToRotation() + MathHelper.PiOver2, twirl.Size() / 2f, Projectile.scale * 0.305f, SpriteEffects.None, 0f);
             Main.EntitySpriteDraw(glow.Value, Projectile.position - Main.screenPosition + Projectile.Size / 2f, null, new Color(0, 170, 200).WithOpacity(0.8f), shootAim.ToRotation() + MathHelper.PiOver2, glow.Size() / 2f, Projectile.scale * 0.785f, SpriteEffects.None, 0f);

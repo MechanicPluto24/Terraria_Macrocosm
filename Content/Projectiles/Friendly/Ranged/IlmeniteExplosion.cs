@@ -98,7 +98,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                     Projectile.GetSource_FromAI(),
                     Projectile.Center,
                     hitVelocity,
-                    ModContent.ProjectileType<IlmeniteDeflectedProjectile>(),
+                    ModContent.ProjectileType<IlmeniteProjectileDeflected>(),
                     Projectile.damage / 3,
                     knockback: 2f,
                     owner: Main.myPlayer,

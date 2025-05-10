@@ -67,7 +67,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            if (TileAnimation.GetTemporaryFrame(Utility.GetMultitileTopLeft(i, j), out int frame))
+            if (TileAnimation.GetTemporaryFrame(TileObjectData.TopLeft(i, j), out int frame))
                 frameYOffset = (short)(18 * Height * frame);
         }
 

@@ -103,7 +103,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         private SpriteBatchState state;
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
-            glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle7");
+            glow = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle7");
             spriteBatch.Draw(glow.Value, NPC.Center - Main.screenPosition, null, new Color(48, 237, 74, 0), 0f, glow.Size() / 2, 0.2f, SpriteEffects.None, 0f);
             state.SaveState(spriteBatch);
             spriteBatch.End();

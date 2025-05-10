@@ -17,6 +17,15 @@ namespace Macrocosm.Common.Global.NPCs
         {
         }
 
+        public override void AI(NPC npc)
+        {
+            if (npc.HasBuff<Stasis>())
+            {
+                npc.velocity.X = MathHelper.Lerp(npc.velocity.X * 0.5f, npc.velocity.X, 0.01f);
+                npc.velocity.Y = MathHelper.Lerp(0f, npc.velocity.Y, 0.01f);
+            }
+        }
+
         public override void ModifyHitByProjectile(NPC npc, Projectile projectile, ref NPC.HitModifiers modifiers)
         {
             if (npc.HasBuff<ProcellarumLightningMark>() && projectile.type == ModContent.ProjectileType<ProcellarumHalberdProjectile>())
@@ -82,5 +91,12 @@ namespace Macrocosm.Common.Global.NPCs
                 npc.RemoveBuff<TotalityTag>();
             }
         }
+
+        public override void DrawEffects(NPC npc, ref Color drawColor)
+        {
+            if (npc.HasBuff<Stasis>())
+                drawColor = new Color(104, 245, 220, 220);
+        }
+
     }
 }

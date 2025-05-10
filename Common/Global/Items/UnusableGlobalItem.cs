@@ -13,7 +13,7 @@ namespace Macrocosm.Common.Global.Items
     {
         public override bool CanUseItem(Item item, Player player)
         {
-            if (SubworldSystem.AnyActive<Macrocosm>() && ItemSets.UnusableItems[item.type])
+            if (SubworldSystem.AnyActive<Macrocosm>() && ItemSets.UnusableItem[item.type])
                 return false;
 
             return true;
@@ -23,8 +23,8 @@ namespace Macrocosm.Common.Global.Items
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                if (ItemSets.UnusableItems[item.type])
-                    tooltips.Add(new TooltipLine(Macrocosm.Instance, "Unusable", Language.GetText("Mods.Macrocosm.Common.Tooltips.Unusable").Format(MacrocosmSubworld.Current.DisplayName.Value))
+                if (ItemSets.UnusableItem[item.type])
+                    tooltips.Add(new TooltipLine(Macrocosm.Instance, "Unusable", Language.GetText("Mods.Macrocosm.Common.Unusable").Format(MacrocosmSubworld.Current.DisplayName.Value))
                     {
                         OverrideColor = Color.Orange
                     });

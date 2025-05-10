@@ -161,7 +161,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             bool flip = (NPC.rotation > MathHelper.PiOver2 && NPC.rotation < 3 * MathHelper.PiOver2) || (NPC.rotation < -MathHelper.PiOver2 && NPC.rotation > -3 * MathHelper.PiOver2);
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
             spriteBatch.Draw(glowmask.Value, NPC.Center - Main.screenPosition, NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, NPC.Size / 2f, NPC.scale, effect, 0f);
-            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare2").Value;
+            Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare2").Value;
             float yOffset = 8f;
             spriteBatch.Draw(flare, NPC.Center - Main.screenPosition + new Vector2(-2f, yOffset).RotatedBy(NPC.rotation), null, new Color(157, 255, 156) * Main.rand.NextFloat(0.5f, 0.8f) * eyeOpacity * 1.25f, NPC.rotation + MathHelper.PiOver2, flare.Size() / 2, NPC.scale * 0.125f, SpriteEffects.None, 0f);
             spriteBatch.Draw(flare, NPC.Center - Main.screenPosition + new Vector2(18f, yOffset).RotatedBy(NPC.rotation), null, new Color(157, 255, 156) * Main.rand.NextFloat(0.5f, 0.8f) * eyeOpacity * 1.25f, NPC.rotation + MathHelper.PiOver2, flare.Size() / 2, NPC.scale * 0.125f, SpriteEffects.None, 0f);
