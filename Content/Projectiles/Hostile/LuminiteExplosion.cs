@@ -40,7 +40,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
         private SpriteBatchState state;
         public override bool PreDraw(ref Color lightColor)
         {
-            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Flare3").Value;
+            Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare3").Value;
             float progress = Utility.BounceEaseInOut(MathHelper.Clamp(AI_Timer / 10f, 0f, 1f));
 
             state.SaveState(Main.spriteBatch);
@@ -48,7 +48,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Main.spriteBatch.Begin(BlendState.Additive, state);
 
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, LuminiteSlime.EffectColor, 0f, texture.Size() / 2f, progress, SpriteEffects.None, 0f);
-            texture = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Star8").Value;
+            texture = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Star8").Value;
             Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, new Color(213, 155, 148, 80), 0f, texture.Size() / 2f, progress * 0.4f, SpriteEffects.None, 0f);
 
             Main.spriteBatch.End();

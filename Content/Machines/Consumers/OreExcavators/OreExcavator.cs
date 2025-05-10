@@ -77,7 +77,7 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
 
         public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
+            Point16 origin = TileObjectData.TopLeft(i, j);
             for (int x = origin.X; x < origin.X + Width; x++)
             {
                 for (int y = origin.Y; y < origin.Y + Height; y++)
@@ -104,15 +104,15 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
-            Point16 origin = Utility.GetMultitileTopLeft(i, j);
-            if (i >= origin.X + 0 && i <= origin.X + 1 && j >= origin.Y + 7 && j <= origin.Y + 8)
+            Point16 origin = TileObjectData.TopLeft(i, j);
+            if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
             {
                 Toggle(i, j, automatic: false, skipWire: false);
             }
             else
             {
-                if (Utility.TryGetTileEntityAs(i, j, out MachineTE te))
-                    UISystem.ShowMachineUI(te, new OreExcavatorUI());
+                if (TileEntity.TryGet(i, j, out OreExcavatorTE oreExcavator))
+                    UISystem.ShowMachineUI(oreExcavator, new OreExcavatorUI());
             }
 
             return true;
@@ -126,8 +126,8 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
             {
                 player.noThrow = 2;
 
-                Point16 origin = Utility.GetMultitileTopLeft(i, j);
-                if (i >= origin.X + 0 && i <= origin.X + 1 && j >= origin.Y + 7 && j <= origin.Y + 8)
+                Point16 origin = TileObjectData.TopLeft(i, j);
+                if ((i >= origin.X + 0 && i <= origin.X + 1) && (j >= origin.Y + 7 && j <= origin.Y + 8))
                 {
                     if (IsPoweredOnFrame(origin.X, origin.Y))
                         CursorIcon.Current = CursorIcon.MachineTurnOff;
@@ -180,14 +180,13 @@ namespace Macrocosm.Content.Machines.Consumers.OreExcavators
             TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
         }
 
-        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
+        public override void EmitParticles(int i, int j, Tile tile, short tileFrameX, short tileFrameY, Color tileLight, bool visible)
         {
-            if (Main.gamePaused)
+            if (!visible)
                 return;
 
-            Tile tile = Main.tile[i, j];
-            int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
-            int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
+            int tileOffsetX = tileFrameX % (Width * 18) / 18;
+            int tileOffsetY = tileFrameY % (Height * 18) / 18;
 
             if (IsPoweredOnFrame(i, j))
             {

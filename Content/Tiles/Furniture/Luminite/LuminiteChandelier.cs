@@ -26,6 +26,8 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
+            TileID.Sets.MultiTileSway[Type] = true;
+
             TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Chandeliers, 0));
             TileObjectData.newTile.Height = 2;
             TileObjectData.newTile.CoordinateHeights = [16, 16];
@@ -85,17 +87,19 @@ namespace Macrocosm.Content.Tiles.Furniture.Luminite
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
             if (TileObjectData.IsTopLeft(i, j))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
 
             return false;
         }
 
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        public override void AdjustMultiTileVineParameters(int i, int j, ref float? overrideWindCycle, ref float windPushPowerX, ref float windPushPowerY, ref bool dontRotateTopTiles, ref float totalWindMultiplier, ref Texture2D glowTexture, ref Color glowColor)
         {
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
+            overrideWindCycle = 1f;
+            windPushPowerY = 0f;
 
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j, glowmask, Color.White, applyPaint: true, windHeightSensitivityOverride: 1f, windOffsetFactorY: 0f);
+            glowTexture = TileRendering.GetOrPreparePaintedExtraTexture(Main.tile[i, j], glowmask);
+            glowColor = Color.White;
         }
     }
 }

@@ -108,9 +108,9 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
             var shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
                 .UseProjectionMatrix(doUse: false)
                 .UseSaturation(-2.2f)
-                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"))
-                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "RocketExhaustTrail2"));
+                .UseImage0(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutMask"))
+                .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "RocketExhaustTrail2"))
+                .UseImage2(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "RocketExhaustTrail2"));
 
             shader.Apply();
 

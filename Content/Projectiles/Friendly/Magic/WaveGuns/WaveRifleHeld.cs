@@ -10,7 +10,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 {
-    public class WaveGunRifleHeld : ChargedHeldProjectile
+    public class WaveRifleHeld : ChargedHeldProjectile
     {
         public override string Texture => base.Texture;
 
@@ -52,9 +52,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
 
                 if (AI_Timer % AI_FireRate == 0)
                 {
+                    float spreadAngle = MathHelper.Pi / 64f;
+                    Vector2 velocity = Vector2.Normalize(Projectile.velocity.RotatedBy(spreadAngle)) * (currentItem.shootSpeed / ContentSamples.ProjectilesByType[ModContent.ProjectileType<WaveGunBlueBolt>()].extraUpdates);
                     Vector2 position = Projectile.Center - Projectile.velocity * 5;
-                    Vector2 velocity = Vector2.Normalize(Projectile.velocity) * (currentItem.shootSpeed / ContentSamples.ProjectilesByType[ModContent.ProjectileType<WaveGunEnergyBolt>()].extraUpdates);
-                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveGunEnergyBolt>(), (int)(damage * 1.4), knockback, Projectile.owner, ai0: (float)WaveGunEnergyBolt.BeamVariant.Purple);
+                    Projectile.NewProjectile(Projectile.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<WaveRiflePurpleBolt>(), (int)(damage * 1.4), knockback, Projectile.owner);
 
                     if (!Player.CheckMana(currentItem.mana, pay: true))
                         Projectile.Kill();

@@ -16,11 +16,6 @@ ClientConfig: {
 		Tooltip: Whether guns have recoil effects.
 	}
 
-	HighResolutionEffects: {
-		Label: High Resolution Effects
-		Tooltip: Use high resolution visual effects.
-	}
-
 	UnitSystem: {
 		Label: Unit system
 		Tooltip: The unit system used to display numeric values.

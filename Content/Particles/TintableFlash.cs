@@ -7,7 +7,7 @@ namespace Macrocosm.Content.Particles
 {
     public class TintableFlash : Particle
     {
-        public override string Texture => Macrocosm.TextureEffectsPath + "Flare2";
+        public override string Texture => Macrocosm.FancyTexturesPath + "Flare2";
 
         public override void SetDefaults()
         {

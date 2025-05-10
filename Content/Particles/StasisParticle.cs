@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Particles
 {
-    public class InhibitorFieldParticle : Particle
+    public class StasisParticle : Particle
     {
         private static Asset<Texture2D> glow;
         public override int TrailCacheLength => 7;
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Particles
 
         public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
         {
-            glow ??= ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6");
+            glow ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle6");
             spriteBatch.Draw(glow.Value, Center - screenPosition, null, new Color(89, 151, 193, 127) * FadeFactor, 0f, glow.Size() / 2f, 0.0425f * Scale, SpriteEffects.None, 0f);
             return true;
         }

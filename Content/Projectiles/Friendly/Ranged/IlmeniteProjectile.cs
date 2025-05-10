@@ -14,7 +14,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class IlmeniteRegularProjectile : ModProjectile
+    public class IlmeniteProjectile : ModProjectile
     {
         public override string Texture => Macrocosm.EmptyTexPath;
 
@@ -74,7 +74,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             if (!HitExplosion)
             {
-                Projectile proj = Utility.FindClosestProjectileOfType(Projectile.Center, ModContent.ProjectileType<IlmeniteExplosion>());
+                Projectile proj = Utility.FindClosestProjectile(Projectile.Center, ModContent.ProjectileType<IlmeniteExplosion>());
                 if (proj is not null && proj.ModProjectile is IlmeniteExplosion explosion)
                 {
                     if (Vector2.Distance(Projectile.Center, proj.Center) < 50f)

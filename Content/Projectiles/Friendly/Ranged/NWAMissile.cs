@@ -266,7 +266,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
                 Vector2 velocity = Main.rand.NextVector2CircularEdge(3, 3) * (i == 1 ? 0.8f : 0.4f);
                 Particle.Create<Smoke>(Projectile.Center, velocity, scale: new(1.2f));
             }
-
         }
 
         public override bool PreDraw(ref Color lightColor)

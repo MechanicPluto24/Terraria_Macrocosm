@@ -2053,11 +2053,6 @@ NickelOre: {
 	Tooltip: ""
 }
 
-InhibitorFieldGrenade: {
-	DisplayName: Stasis Grenade
-	Tooltip: ""
-}
-
 QuartzFragment: {
 	DisplayName: Quartz Fragment
 	Tooltip: ""
@@ -3114,6 +3109,26 @@ RegolithWorkbench: {
 
 Thermometer: {
 	DisplayName: Thermometer
+	Tooltip: ""
+}
+
+CorrugatedSteelBrick: {
+	DisplayName: Corrugated Steel Brick
+	Tooltip: ""
+}
+
+SteelCage: {
+	DisplayName: Steel Cage
+	Tooltip: ""
+}
+
+BLPAsterix: {
+	DisplayName: BLP Asterix
+	Tooltip: ""
+}
+
+StasisGrenade: {
+	DisplayName: Stasis Grenade
 	Tooltip: ""
 }
 

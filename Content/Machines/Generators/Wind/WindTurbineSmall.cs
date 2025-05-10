@@ -54,7 +54,7 @@ namespace Macrocosm.Content.Machines.Generators.Wind
 
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            var topLeft = Utility.GetMultitileTopLeft(i, j);
+            var topLeft = TileObjectData.TopLeft(i, j);
             if (WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, Width, Height))
                 frameYOffset = 18 * Height * Main.tileFrame[type];
         }
@@ -95,7 +95,7 @@ namespace Macrocosm.Content.Machines.Generators.Wind
 
         public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
         {
-            TileRendering.DrawMultiTileInWindBottomAnchor(i, j, perTileLighting: false, windSensitivity: 0.04f, rowsToIgnore: 1);
+            TileRendering.DrawMultiTileGrass(i, j, totalWindMultiplier: 0.04f, rowsToIgnore: 1, perTileLighting: false);
         }
     }
 }

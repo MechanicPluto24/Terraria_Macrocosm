@@ -19,7 +19,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         private static Asset<Texture2D> aura;
         public override void Load()
         {
-            aura = ModContent.Request<Texture2D>(Texture + "Aura");
+            aura = ModContent.Request<Texture2D>(Texture + "_Aura");
         }
 
         public override void SetStaticDefaults()

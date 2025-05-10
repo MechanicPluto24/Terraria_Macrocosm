@@ -39,6 +39,26 @@ namespace Macrocosm.Content.Tiles.Blocks.Sands
             AddMapEntry(new Color(202, 188, 198));
         }
 
+        public override void Convert(int i, int j, int conversionType)
+        {
+            switch (conversionType)
+            {
+                case BiomeConversionID.Purity:
+                case BiomeConversionID.PurificationPowder:
+                case BiomeConversionID.Sand:
+                    WorldGen.ConvertTile(i, j, ModContent.TileType<SilicaSand>());
+                    return;
+
+                case BiomeConversionID.Corruption:
+                    WorldGen.ConvertTile(i, j, ModContent.TileType<SilicaEbonsand>());
+                    return;
+
+                case BiomeConversionID.Crimson:
+                    WorldGen.ConvertTile(i, j, ModContent.TileType<SilicaCrimsand>());
+                    return;
+            }
+        }
+
         public override bool HasWalkDust() => true;
 
         public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)

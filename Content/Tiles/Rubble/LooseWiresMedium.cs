@@ -54,18 +54,12 @@ namespace Macrocosm.Content.Tiles.Rubble
             return true;
         }
 
-
         public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
         {
             if (TileObjectData.IsTopLeft(i, j))
-                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.MultiTileVine);
 
             return false;
-        }
-
-        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
-        {
-            TileRendering.DrawMultiTileInWindTopAnchor(i, j);
         }
     }
 

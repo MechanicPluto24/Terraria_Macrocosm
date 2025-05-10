@@ -87,19 +87,18 @@ namespace Macrocosm.Content.Items.Accessories
 
             // TODO: use these for the rocket trail, cool af
             /*
-            
-                        for(int i = 0; i < 2; i ++)
-                Particle.Create<Smoke>((p) =>
-                {
-                    p.Position = player.Center + Main.rand.NextVector2Circular(10, 10);
-                    p.Velocity = velocity;
-                    p.Scale = new Vector2(Main.rand.NextFloat(0.2f, 0.3f));
-                    p.Rotation = Utility.RandomRotation();
-                    p.FadeInNormalizedTime = 0.2f;
-                    p.FadeOutNormalizedTime = 0.3f;
-                    p.ScaleVelocity = new Vector2(Main.rand.NextFloat(0.015f, 0.025f));
-                    p.Opacity = Main.rand.NextFloat(0.1f, 0.2f);
-                });
+                for(int i = 0; i < 2; i ++)
+                    Particle.Create<Smoke>((p) =>
+                    {
+                        p.Position = player.Center + Main.rand.NextVector2Circular(10, 10);
+                        p.Velocity = velocity;
+                        p.Scale = new Vector2(Main.rand.NextFloat(0.2f, 0.3f));
+                        p.Rotation = Utility.RandomRotation();
+                        p.FadeInNormalizedTime = 0.2f;
+                        p.FadeOutNormalizedTime = 0.3f;
+                        p.ScaleVelocity = new Vector2(Main.rand.NextFloat(0.015f, 0.025f));
+                        p.Opacity = Main.rand.NextFloat(0.1f, 0.2f);
+                    });
             */
             return false;
         }

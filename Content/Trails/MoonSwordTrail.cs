@@ -12,8 +12,8 @@ namespace Macrocosm.Content.Trails
     {
         private static readonly MiscShaderData shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
                         .UseProjectionMatrix(doUse: true)
-                        .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                        .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
+                        .UseImage0(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutMask"))
+                        .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutMask"))
                         .UseImage2("Images/Extra_193");
 
         public override MiscShaderData TrailShader => shader;

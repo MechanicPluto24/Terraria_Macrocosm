@@ -173,7 +173,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             {
                 SoundEngine.PlaySound(SFX.MinigunFire with
                 {
-                    Volume = 0.15f,
+                    Volume = 0.2f,
                     MaxInstances = 1,
                     SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
                 },
