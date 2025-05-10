@@ -1,12 +1,14 @@
 ﻿using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Content.Machines.Consumers.Autocrafters;
 using Microsoft.Xna.Framework;
-using System.Linq;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using System.Collections.Generic;
+using Terraria;
 using Terraria.GameContent.UI.Elements;
-using Terraria.UI;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.UI.Machines
 {
@@ -21,48 +23,47 @@ namespace Macrocosm.Common.UI.Machines
         private UIAutocrafterRecipeBrowser recipeBrowser;
         private UIPanel infoPanel;
 
+        List<UIPanel> outputSlotPanels = new();
+        private int selectedOutputSlot = -1;
+
         public override void OnInitialize()
         {
             base.OnInitialize();
 
             Width.Set(850f, 0f);
+            Height.Set(700f, 0f);
+            title.Top.Pixels -= 6f;
             HAlign = 0.5f;
             VAlign = 0.5f;
-            switch (AutocrafterTE.OutputSlots)
+
+            float topHeightPercent = AutocrafterTE.OutputSlots switch
             {
-                case 1: Height.Set(300f + 400f * 0.25f, 0f); break;
-                case 2: Height.Set(300f + 400f * 0.4f, 0f); break;
-                case 3: Height.Set(300f + 400f * 0.6f, 0f);  break;
-                case 4: Height.Set(300f + 400f * 0.8f, 0f);  break;
-                default: Height.Set(700f, 0f); break;
-            }
+                1 => 0.16f,
+                2 => 0.2585f,
+                3 => 0.44f,
+                4 => 0.442f,
+                _ => 0.42f
+            };
+            float bottomHeightPercent = 1f - topHeightPercent;
 
             topPanel = new UIPanel()
             {
                 Width = new(0f, 1f),
-                Height = new(0f, 0.4f),
+                Height = new(0f, topHeightPercent),
                 Top = new(0f, 0f),
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             Append(topPanel);
 
-            craftingSlotsPanel = new UIListScrollablePanel()
-            {
-                Width = new(0f, 1f),
-                Height = new(0f, 1f),
-                ListPadding = 8f,
-                ListOuterPadding = 8f,
-                ScrollbarHeight = new(0f, 0.9f),
-                ScrollbarHAlign = 0.98f
-            };
+            craftingSlotsPanel = CreateSlotsPanel();
             topPanel.Append(craftingSlotsPanel);
 
             bottomPanel = new UIPanel()
             {
                 Width = new(0f, 1f),
-                Height = new(0f, 0.6f),
-                Top = new(0f, 0.4f),
+                Height = new(0f, bottomHeightPercent),
+                Top = new(4f, topHeightPercent),
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
@@ -82,11 +83,7 @@ namespace Macrocosm.Common.UI.Machines
             {
                 Width = new(0f, 1f),
                 Height = new(0f, 1f),
-                OnRecipeClicked = (recipe) =>
-                {
-                    AutocrafterTE.SelectRecipe(0, recipe);
-                    PopulateSlots();
-                }
+                OnRecipeClicked = OnRecipeClicked
             };
             recipeBrowserPanel.Append(recipeBrowser);
 
@@ -103,11 +100,43 @@ namespace Macrocosm.Common.UI.Machines
             PopulateSlots();
         }
 
+        private void OnRecipeClicked(Recipe recipe)
+        {
+            if (!AutocrafterTE.SelectRecipeInFreeSlot(recipe))
+            {
+                if (selectedOutputSlot != -1 && selectedOutputSlot < outputSlotPanels.Count)
+                    AutocrafterTE.SelectRecipeInSlot(selectedOutputSlot, recipe);
+            }
+
+            PopulateSlots();
+        }
+
+        private UIListScrollablePanel CreateSlotsPanel()
+        {
+            craftingSlotsPanel = new UIListScrollablePanel()
+            {
+                Width = new(0f, 1f),
+                Height = new(0f, 1f),
+                ListPadding = 4f,
+                ListOuterPadding = 0f,
+                ListWidthWithScrollbar = new(0, 0.96f),
+                ListWidthWithoutScrollbar = new(0, 1f),
+                ScrollbarHeight = new(0f, 0.9f),
+                ScrollbarHAlign = 1f,
+                HideScrollbarIfNotScrollable = true,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
+            };
+            PopulateSlots();
+            return craftingSlotsPanel;
+        }
+
         private void PopulateSlots()
         {
             if (AutocrafterTE?.Inventory is null)
                 return;
 
+            outputSlotPanels = new();
             craftingSlotsPanel.ClearList();
 
             int outputs = AutocrafterTE.OutputSlots;
@@ -122,43 +151,79 @@ namespace Macrocosm.Common.UI.Machines
 
                 int inputs = inputSlots.Count;
                 int totalSlots = inputs + 1;
-                float slotSize = 48f;
+                float slotSize = 42f;
                 float slotSpacing = 6f;
 
-                UIElement slotRow = new()
+                UIPanel rowPanel = new()
                 {
                     Width = new(0f, 1f),
-                    Height = new(slotSize, 0f)
+                    HAlign = 0.5f,
+                    Height = new(slotSize + 14f, 0f),
+                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                    BorderColor = UITheme.Current.PanelStyle.BorderColor * 0.5f
                 };
-                slotRow.SetPadding(0f);
+                rowPanel.OnMouseOut += (_, element) => (element as UIPanel).BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                rowPanel.OnMouseOver += (_, element) => (element as UIPanel).BorderColor = UITheme.Current.PanelStyle.BorderColor * 0.5f;
+                rowPanel.OnLeftClick += (_, element) => selectedOutputSlot = outputSlotPanels.IndexOf(element as UIPanel);
+                rowPanel.SetPadding(2f);
+                rowPanel.PaddingTop = 4f;
+                outputSlotPanels.Add(rowPanel);
 
                 float totalRowWidth = (slotSize + slotSpacing) * totalSlots - slotSpacing;
                 float startX = (Width.Pixels - totalRowWidth) / 2f;
-
                 for (int inputIndex = 0; inputIndex < inputs; inputIndex++)
                 {
                     int inventoryIndex = inputSlots[inputIndex];
                     var inputSlot = AutocrafterTE.Inventory.ProvideItemSlot(inventoryIndex);
 
+                    inputSlot.SetPadding(0f);
                     inputSlot.Top.Set(0f, 0f);
                     inputSlot.Left.Set(startX + (slotSize + slotSpacing) * inputIndex, 0f);
 
-                    slotRow.Append(inputSlot);
+                    rowPanel.Append(inputSlot);
                 }
 
+                UITextureProgressBar extractArrowProgressBar = new(
+                      ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBorder", AssetRequestMode.ImmediateLoad),
+                      ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad),
+                      ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad)
+                )
+                {
+                    BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                    FillColors = [Color.Black],
+                    Left = new(startX + (slotSize + slotSpacing) * inputs, 0f),
+                    VAlign = 0.52f
+                };
+
+                rowPanel.Append(extractArrowProgressBar);
+
                 var outputSlot = AutocrafterTE.Inventory.ProvideItemSlot(outputIndex);
+                outputSlot.SetPadding(0f);
                 outputSlot.Top.Set(0f, 0f);
-                outputSlot.Left.Set(startX + (slotSize + slotSpacing) * inputs, 0f);
+                outputSlot.Left.Set(startX + 60 + (slotSize + slotSpacing) * inputs, 0f);
 
-                slotRow.Append(outputSlot);
+                rowPanel.Append(outputSlot);
 
-                craftingSlotsPanel.Add(slotRow);
+                craftingSlotsPanel.Add(rowPanel);
             }
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            for (int outputIndex = 0; outputIndex < (outputSlotPanels?.Count ?? 0); outputIndex++)
+            {
+                UIPanel panel = outputSlotPanels[outputIndex];
+                if (outputIndex == selectedOutputSlot)
+                    panel.BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                else if (panel.IsMouseHovering)
+                    panel.BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor * 0.8f;
+                else
+                    panel.BorderColor = UITheme.Current.PanelStyle.BorderColor * 0.5f;
+            }
+
             Inventory.ActiveInventory = AutocrafterTE.Inventory;
         }
     }
