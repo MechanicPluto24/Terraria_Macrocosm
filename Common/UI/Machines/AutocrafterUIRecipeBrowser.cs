@@ -10,6 +10,7 @@ using Terraria.DataStructures;
 using System;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
+using Macrocosm.Common.UI.Themes;
 
 namespace Macrocosm.Common.UI.Machines
 {
@@ -56,13 +57,15 @@ namespace Macrocosm.Common.UI.Machines
         {
             Width.Set(0f, 1f);
             Height.Set(0f, 1f);
-            SetPadding(6f);
+            SetPadding(2f);
 
             var searchPanel = new UIPanel()
             {
                 Width = new(0f, 1f),
                 Height = new(32f, 0f),
-                Top = new(0f, 0f)
+                Top = new(0f, 0f),
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
             searchPanel.SetPadding(4f);
             Append(searchPanel);
@@ -70,7 +73,7 @@ namespace Macrocosm.Common.UI.Machines
             searchBar = new UISearchBar(Language.GetText("UI.Search"), 0.8f)
             {
                 Width = new(0f, 1f),
-                Height = new(0f, 1f)
+                Height = new(0f, 1f),
             };
             searchBar.OnContentsChanged += OnSearchChanged;
             searchPanel.Append(searchBar);
@@ -82,8 +85,12 @@ namespace Macrocosm.Common.UI.Machines
                 Top = new(40f, 0f),
                 ListPadding = 0f,
                 ListOuterPadding = 0f,
-                HideScrollbarIfNotScrollable = false,
-                ScrollbarHAlign = 0.98f
+                HideScrollbarIfNotScrollable = true,
+                ScrollbarHAlign = 0.98f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                PaddingLeft = 12f,
+                PaddingRight = 2f,
             };
             Append(recipeListPanel);
             recipeGridRoot = new UIElement()
@@ -114,7 +121,7 @@ namespace Macrocosm.Common.UI.Machines
             filteredRecipes = availableRecipes.Where(r => filterer.FitsFilter(r.createItem)).ToList();
             filteredRecipes.Sort((a, b) => sorter.Compare(a.createItem.type, b.createItem.type));
 
-            int itemsPerRow = 8;
+            int itemsPerRow = 9;
             float slotSize = 48;
             float slotPadding = 2;
             for (int i = 0; i < filteredRecipes.Count; i++)

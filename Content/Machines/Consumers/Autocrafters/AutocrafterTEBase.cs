@@ -46,13 +46,48 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             return recipe.requiredTile.Where(tile => tile != -1).All(tile => AvailableCraftingStations.Contains(tile));
         }
 
-        public void SelectRecipe(int outputSlot, Recipe recipe)
+        public bool CanOverwriteRecipeAt(int outputSlot)
+        {
+            if (!InputSlotAllocation.TryGetValue(outputSlot, out var slots))
+                return true;
+
+            return slots.All(i => Inventory[i].IsAir);
+        }
+
+        public bool SelectRecipeInFreeSlot(Recipe recipe)
+        {
+            if (recipe is null)
+                return false;
+
+            if (SelectedRecipes == null || SelectedRecipes.Length != OutputSlots)
+                SelectedRecipes = new Recipe[OutputSlots];
+
+            int outputSlot = -1;
+            for (int i = 0; i < OutputSlots; i++)
+            {
+                if (SelectedRecipes[i] == null)
+                {
+                    outputSlot = i;
+                    break;
+                }
+            }
+
+            if (outputSlot == -1)
+                return false;
+
+            return SelectRecipeInSlot(outputSlot, recipe);
+        }
+
+        public bool SelectRecipeInSlot(int outputSlot, Recipe recipe)
         {
             if (SelectedRecipes == null || SelectedRecipes.Length != OutputSlots)
                 SelectedRecipes = new Recipe[OutputSlots];
 
+            if (!CanOverwriteRecipeAt(outputSlot))
+                return false;
+
             if (outputSlot < 0 || outputSlot >= OutputSlots)
-                return;
+                return false;
 
             Inventory.ClearReserved(outputSlot);
             if (InputSlotAllocation.TryGetValue(outputSlot, out var oldInputSlots))
@@ -63,7 +98,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             InputSlotAllocation[outputSlot] = new List<int>();
 
             if (recipe is null)
-                return;
+                return false;
 
             Inventory.SetReserved(
                 outputSlot,
@@ -96,6 +131,8 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                 );
                 inputIndex++;
             }
+
+            return true;
         }
 
         public override void MachineUpdate()
@@ -242,7 +279,7 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                     });
 
                     if (matchingRecipe != null && RecipeAllowed(matchingRecipe))
-                        SelectRecipe(i, matchingRecipe);
+                        SelectRecipeInSlot(i, matchingRecipe);
                 }
             }
         }
