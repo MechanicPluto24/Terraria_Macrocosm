@@ -79,18 +79,50 @@ namespace Macrocosm.Common.Utils
         public static Tile TargetTile() => Main.tile[Player.tileTargetX, Player.tileTargetY];
         public static Tile TargetTile(this Player _) => Main.tile[Player.tileTargetX, Player.tileTargetY];
 
-        public static bool ItemInTileReach(this Player player, Item item) => player.position.X / 16f - Player.tileRangeX - item.tileBoost - player.blockRange <= Player.tileTargetX && (player.position.X + player.width) / 16f + Player.tileRangeX + item.tileBoost - 1f + player.blockRange >= Player.tileTargetX && player.position.Y / 16f - Player.tileRangeY - item.tileBoost - player.blockRange <= Player.tileTargetY && (player.position.Y + player.height) / 16f + Player.tileRangeY + item.tileBoost - 2f + player.blockRange >= Player.tileTargetY;
+        public static bool ItemInTileReach(this Player player, Item item, bool checkNoBuilding = true)
+        {
+            return player.position.X / 16f - Player.tileRangeX - item.tileBoost - player.blockRange <= Player.tileTargetX
+                    && (player.position.X + player.width) / 16f + Player.tileRangeX + item.tileBoost - 1f + player.blockRange >= Player.tileTargetX
+                    && player.position.Y / 16f - Player.tileRangeY - item.tileBoost - player.blockRange <= Player.tileTargetY
+                    && (player.position.Y + player.height) / 16f + Player.tileRangeY + item.tileBoost - 2f + player.blockRange >= Player.tileTargetY
+                    && !(checkNoBuilding && player.noBuilding);
+        }
 
-        public static void PlaceLiquid<T>(int x, int y, byte amount = 255) where T : ModLiquid => WorldGen.PlaceLiquid(x, y, (byte)ModLiquidLib.ModLiquidLib.LiquidType<T>(), amount);
-        public static void RemoveLiquid<T>(int x, int y, bool sponge = false) where T : ModLiquid => RemoveLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>(), sponge);
-        public static void RemoveLiquid(int x, int y, int type, bool sponge = false)
+        public static bool PlaceLiquid<T>(int x, int y, byte amount = 255) where T : ModLiquid => PlaceLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>(), amount);
+        public static bool PlaceLiquid(int x, int y, int type, byte amount = 255)
+        {
+            if (!WorldGen.InWorld(x, y))
+                return false;
+
+            Tile tile = Main.tile[x, y];
+            ushort tileType = tile.TileType;
+            if (tile.LiquidAmount >= 200 || tile.HasUnactuatedTile && Main.tileSolid[tileType] && !Main.tileSolidTop[tileType] && tileType != TileID.Grate)
+                return false;
+
+            if (tile.LiquidAmount != 0 && type != tile.LiquidType)
+                return false;
+
+            tile.LiquidType = type;
+            if (amount + tile.LiquidAmount > 255)
+                amount = (byte)(255 - tile.LiquidAmount);
+
+            tile.LiquidAmount += amount;
+            WorldGen.SquareTileFrame(x, y);
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.sendWater(x, y);
+
+            return true;
+        }
+
+        public static bool RemoveLiquid<T>(int x, int y, bool sponge = false) where T : ModLiquid => RemoveLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>(), sponge);
+        public static bool RemoveLiquid(int x, int y, int type, bool sponge = false)
         {
             Tile tile = Main.tile[x, y];
             int liquidType = tile.LiquidType;
             int liquidAmount = tile.LiquidAmount;
 
             if (type != liquidType)
-                return;
+                return false;
 
             int nearbyAmount = 0;
             for (int i = x - 1; i <= x + 1; i++)
@@ -103,7 +135,7 @@ namespace Macrocosm.Common.Utils
             }
 
             if (tile.LiquidAmount <= 0 || (nearbyAmount <= 100 && !sponge))
-                return;
+                return false;
 
             SoundEngine.PlaySound(SoundID.Splash, new Vector2(x, y) * 16f);
 
@@ -143,6 +175,8 @@ namespace Macrocosm.Common.Utils
                     }
                 }
             }
+
+            return true;
         }
 
         public static void TransformItemAndPutInInventory(this Player player, Item selecteditem, int targetType)
@@ -150,7 +184,7 @@ namespace Macrocosm.Common.Utils
             if (player.whoAmI != Main.myPlayer)
                 return;
 
-            selecteditem.stack--;
+            selecteditem.DecreaseStack();
             player.PutItemInInventoryFromItemUsage(targetType, player.selectedItem);
         }
 
