@@ -422,6 +422,16 @@ WhenDayBreaks: {
 	Tooltip: "'L. Reda'"
 }
 
+InANutshell: {
+	DisplayName: In A Nutshell
+	Tooltip: "'L. Reda'"
+}
+
+Apollo115: {
+	DisplayName: Apollo 115
+	Tooltip: "'N. Cauvin'"
+}
+
 Freedomfaller: {
 	DisplayName: Freedomfaller
 	Tooltip: "'T. Williams'"
@@ -430,6 +440,11 @@ Freedomfaller: {
 ShoresOfOblivion: {
 	DisplayName: Shores Of Oblivion
 	Tooltip: "'E. Bracht'"
+}
+
+SakuraRuckenfigur: {
+	DisplayName: Sakura Rückenfigur
+	Tooltip: "'U. C. Arts'"
 }
 
 CraterDemonRelic: {
@@ -1084,18 +1099,12 @@ Motor: {
 	Tooltip: ""
 }
 
-Apollo115: {
-	DisplayName: Apollo115
-	Tooltip: ""
-}
-
 CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip:
 		'''
 		Summons a Crater Imp
 		'Fly me to the Moon!'
-		       
 		'''
 }
 
@@ -1507,11 +1516,6 @@ BurnerGenerator: {
 
 IndustrialServer: {
 	DisplayName: Industrial Server
-	Tooltip: ""
-}
-
-InANutshell: {
-	DisplayName: In A Nutshell
 	Tooltip: ""
 }
 
