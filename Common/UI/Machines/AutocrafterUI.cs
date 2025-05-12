@@ -162,7 +162,7 @@ namespace Macrocosm.Common.UI.Machines
                     BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                     BorderColor = UITheme.Current.PanelStyle.BorderColor * 0.5f
                 };
-                rowPanel.OnMouseOut += (_, element) => (element as UIPanel).BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                rowPanel.OnMouseOut += (_, element) => (element as UIPanel).BorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight;
                 rowPanel.OnMouseOver += (_, element) => (element as UIPanel).BorderColor = UITheme.Current.PanelStyle.BorderColor * 0.5f;
                 rowPanel.OnLeftClick += (_, element) => selectedOutputSlot = outputSlotPanels.IndexOf(element as UIPanel);
                 rowPanel.SetPadding(2f);
@@ -184,9 +184,9 @@ namespace Macrocosm.Common.UI.Machines
                 }
 
                 UITextureProgressBar extractArrowProgressBar = new(
-                      ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBorder", AssetRequestMode.ImmediateLoad),
-                      ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad),
-                      ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad)
+                   ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowBorder", AssetRequestMode.ImmediateLoad),
+                   ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad),
+                   ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad)
                 )
                 {
                     BorderColor = UITheme.Current.PanelStyle.BorderColor,
@@ -217,9 +217,9 @@ namespace Macrocosm.Common.UI.Machines
             {
                 UIPanel panel = outputSlotPanels[outputIndex];
                 if (outputIndex == selectedOutputSlot)
-                    panel.BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                    panel.BorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight;
                 else if (panel.IsMouseHovering)
-                    panel.BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor * 0.8f;
+                    panel.BorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight * 0.8f;
                 else
                     panel.BorderColor = UITheme.Current.PanelStyle.BorderColor * 0.5f;
             }

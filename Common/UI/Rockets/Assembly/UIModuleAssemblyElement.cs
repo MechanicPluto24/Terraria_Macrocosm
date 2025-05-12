@@ -44,7 +44,7 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
 
         public override void OnInitialize()
         {
-            Width.Set(0, 0.4f);
+            Width.Set(0, 0.8f);
             Height.Set(0, 0.17f);
             SetPadding(6f);
             BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
@@ -62,9 +62,11 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
             CreateSlots();
 
             leftArrow = new UIHoverImageButton(
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", AssetRequestMode.ImmediateLoad),
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
-                LocalizedText.Empty)
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrow", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
+                LocalizedText.Empty,
+                useThemeColors: true
+            )
             {
                 Left = new(-4, 0),
                 VAlign = 0.5f,
@@ -83,9 +85,11 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
             Append(leftArrow);
 
             rightArrow = new UIHoverImageButton(
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", AssetRequestMode.ImmediateLoad),
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
-                LocalizedText.Empty)
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrow", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
+                LocalizedText.Empty, 
+                useThemeColors: true
+            )
             {
                 Left = new(-32, 1f),
                 VAlign = 0.5f,
@@ -106,7 +110,7 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
         {
             int slotsPerRow = Math.Min(4, slots.Count);
             int rowCount = (int)Math.Ceiling(slots.Count / 4f);
-            float slotSpacing = 0.23f;
+            float slotSpacing = 0.25f;
             float rowSpacing = 0f;
             for (int i = 0; i < slots.Count; i++)
             {
@@ -117,7 +121,7 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
                     UIText amountRequiredText = new("x" + recipeEntry.RequiredAmount.ToString(), textScale: 0.8f)
                     {
                         Top = new(0, 0.98f),
-                        HAlign = 0.5f
+                        HAlign = 0.45f
                     };
                     slot.Append(amountRequiredText);
                 }

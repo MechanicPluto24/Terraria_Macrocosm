@@ -39,7 +39,7 @@ public class UIInventoryItemIcon : UIElement
 
         if (Blacklisted && DisplayCrossMarkWhenBlacklisted)
         {
-            crossmark ??= ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CrossmarkRed");
+            crossmark ??= ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "CrossmarkRed");
             spriteBatch.Draw(crossmark.Value, GetDimensions().Center() + new Vector2(6), null, Color.White, 0f, crossmark.Size() / 2f, 0.6f, SpriteEffects.None, 0);
         }
     }

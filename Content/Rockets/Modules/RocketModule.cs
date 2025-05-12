@@ -166,7 +166,7 @@ namespace Macrocosm.Content.Rockets.Modules
         {
             Pattern blueprint = new("Blueprint", Name, BlueprintPath, new Dictionary<Color, PatternColorData>
             {
-                { new Color(188, 188, 188), new PatternColorData( BlueprintHighlighted ? UITheme.Current.ButtonHighlightStyle.BorderColor : UITheme.Current.PanelStyle.BorderColor) },
+                { new Color(188, 188, 188), new PatternColorData( BlueprintHighlighted ? UITheme.Current.PanelButtonStyle.BorderColorHighlight : UITheme.Current.PanelStyle.BorderColor) },
                 { new Color(119, 119, 119), new PatternColorData( UITheme.Current.PanelStyle.BackgroundColor ) }
             });
 

@@ -72,11 +72,10 @@ namespace Macrocosm.Common.UI.Rockets.Cargo
         {
             base.Update(gameTime);
 
-
             if (IsMouseHovering)
             {
-                BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
-                BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+                BorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight;
+                BackgroundColor = UITheme.Current.PanelButtonStyle.BackgroundColorHighlight;
             }
             else
             {

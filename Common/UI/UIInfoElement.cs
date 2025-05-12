@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
@@ -19,6 +20,7 @@ namespace Macrocosm.Common.UI
         protected UISnippetText uIDisplayText;
 
         public float IconHAlign { get; set; } = 0.1f;
+        public float IconScale { get; set; } = 1f;
 
         public UIInfoElement(LocalizedColorScaleText displayText, Asset<Texture2D> icon = null, Asset<Texture2D> iconSymbol = null, LocalizedText hoverText = null)
         {
@@ -43,13 +45,20 @@ namespace Macrocosm.Common.UI
         public override void OnInitialize()
         {
             uIDisplayText = displayText.ProvideUISnippetText();
-            uIDisplayText.Left = new StyleDimension(40, 0);
+            uIDisplayText.Left = new(40, 0);
             uIDisplayText.VAlign = 0.5f;
-
             Append(uIDisplayText);
         }
 
-        public void SetTextLeft(float pixels, float percent)
+        public void SetText(LocalizedText text)
+        {
+            displayText.LocalizedText = text;
+            this.ReplaceChildWith(uIDisplayText, uIDisplayText = displayText.ProvideUISnippetText());
+            uIDisplayText.Left = new StyleDimension(40, 0);
+            uIDisplayText.VAlign = 0.5f;
+        }
+
+        public void SetTextDimensionLeft(float pixels, float percent)
         {
             uIDisplayText.Left = new StyleDimension(pixels, percent);
         }
@@ -69,8 +78,8 @@ namespace Macrocosm.Common.UI
             Recalculate();
             CalculatedStyle dimensions = GetDimensions();
             Vector2 iconPosition = dimensions.Position() + new Vector2(dimensions.Width * IconHAlign, dimensions.Height / 2f);
-            spriteBatch.Draw(icon.Value, iconPosition, null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
-            spriteBatch.Draw(iconSymbol.Value, iconPosition + new Vector2(6f, 0f), null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), 1f, SpriteEffects.None, 0);
+            spriteBatch.Draw(icon.Value, iconPosition, null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), IconScale, SpriteEffects.None, 0);
+            spriteBatch.Draw(iconSymbol.Value, iconPosition + new Vector2(6f, 0f), null, Color.White, 0f, new Vector2(icon.Width() * 0.5f, icon.Height() * 0.5f), IconScale, SpriteEffects.None, 0);
         }
     }
 }

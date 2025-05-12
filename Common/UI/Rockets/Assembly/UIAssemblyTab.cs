@@ -17,10 +17,11 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace Macrocosm.Common.UI.Rockets.Assembly
 {
-    public class UIAssemblyTab : UIPanel, ITabUIElement
+    public class UIAssemblyTab : UIElement, ITabUIElement
     {
         public LaunchPad LaunchPad { get; init; } = new();
         public Rocket Rocket => LaunchPad.Rocket;
@@ -29,6 +30,8 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
         private Dictionary<string, UIModuleAssemblyElement> assemblyElements;
         private UIRocketBlueprint uIRocketBlueprint;
 
+        private UIPanel uiAssemblyPanel;
+
         private UIPanelIconButton assembleButton;
         private UIPanelIconButton dissasembleButton;
 
@@ -36,8 +39,7 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
         private UIInputTextBox nameTextBox;
         private UIPanelIconButton nameAcceptResetButton;
 
-        private UIPanel configurationSelector;
-        private UIText configurationText;
+        private UIInfoElement configurationSelector;
         private UIHoverImageButton configurationLeftArrow;
         private UIHoverImageButton configurationRightArrow;
 
@@ -56,25 +58,52 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
             Height.Set(0, 1f);
             HAlign = 0.5f;
             VAlign = 0.5f;
-
-            SetPadding(4f);
-
-            BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
-            BorderColor = UITheme.Current.TabStyle.BorderColor;
+            SetPadding(0f);
 
             uIRocketBlueprint = new()
             {
-                Rocket = LaunchPad.Rocket
+                Rocket = LaunchPad.Rocket,
+
+                Width = new(0, 0.5f),
+                Height = new(0, 1f),
+                Left = new(0, 0.5f),
+                HAlign = 0f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
             };
             Append(uIRocketBlueprint);
 
+            uiAssemblyPanel = new()
+            {
+                Width = new(0, 0.5f),
+                Height = new(0, 1f),
+                Left = new(0, 0f),
+                HAlign = 0f,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+            };
+            Append(uiAssemblyPanel);
+
             nameTextBox = CreateNameTextBox();
+            uiAssemblyPanel.Append(nameTextBox);
+
+            nameAcceptResetButton = CreateNameAcceptResetButton();
+            uiAssemblyPanel.Append(nameAcceptResetButton);
+
             compass = CreateCompassCoordinatesInfo();
+            uiAssemblyPanel.Append(compass);
+            compass.Activate();
 
             configurationSelector = CreateConfigurationSelector();
+            uiAssemblyPanel.Append(configurationSelector);
+
+            configurationLeftArrow = CreateLeftArrow();
+            uiAssemblyPanel.Append(configurationLeftArrow);
+            configurationRightArrow = CreateRightArrow();
+            uiAssemblyPanel.Append(configurationRightArrow);
 
             assembleButton = CreateAssembleButton();
-            Append(assembleButton);
+            uiAssemblyPanel.Append(assembleButton);
             dissasembleButton = CreateDissasembleButton();
 
             assemblyElements = CreateAssemblyElements();
@@ -97,7 +126,7 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
             UpdateTextbox();
             UpdateBlueprint();
             UpdateAssembleButton();
-            configurationText.SetText(LaunchPad.CurrentConfiguration.ToString());
+            configurationSelector.SetText(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Configurations." + LaunchPad.CurrentConfiguration.ToString()));
 
             Inventory.ActiveInventory = LaunchPad.Inventory;
         }
@@ -106,13 +135,13 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
         {
             if (LaunchPad.HasActiveRocket)
             {
-                if (HasChild(assembleButton))
-                    this.ReplaceChildWith(assembleButton, dissasembleButton = CreateDissasembleButton());
+                if (uiAssemblyPanel.HasChild(assembleButton))
+                    uiAssemblyPanel.ReplaceChildWith(assembleButton, dissasembleButton = CreateDissasembleButton());
             }
             else
             {
-                if (HasChild(dissasembleButton))
-                    this.ReplaceChildWith(dissasembleButton, assembleButton = CreateAssembleButton());
+                if (uiAssemblyPanel.HasChild(dissasembleButton))
+                    uiAssemblyPanel.ReplaceChildWith(dissasembleButton, assembleButton = CreateAssembleButton());
             }
         }
 
@@ -136,47 +165,51 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
         {
             nameTextBox = new(Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad"))
             {
-                Width = new(0f, 0.3f),
+                Width = new(0f, 0.8f),
                 Height = new(0f, 0.05f),
-                Top = new(0, 0.065f),
-                Left = new(0, 0.1f),
+                Top = new(0, 0.0115f),
+                HAlign = 0.5f,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
-                HoverBorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor,
+                HoverBorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight,
                 TextMaxLength = 18,
-                TextScale = 0.8f,
+                TextScale = 0.9f,
                 FocusContext = "TextBox",
                 OnFocusGain = () =>
                 {
                     nameAcceptResetButton.SetPanelTextures(
-                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkWhite", AssetRequestMode.ImmediateLoad),
-                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkBorderHighlight", AssetRequestMode.ImmediateLoad),
-                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "CheckmarkBorderHighlight", AssetRequestMode.ImmediateLoad)
+                        ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "CheckmarkWhite", AssetRequestMode.ImmediateLoad),
+                        ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "CheckmarkBorderHighlight", AssetRequestMode.ImmediateLoad),
+                        ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "CheckmarkBorderHighlight", AssetRequestMode.ImmediateLoad)
                     );
                 },
                 OnFocusLost = () =>
                 {
                     nameAcceptResetButton.SetPanelTextures(
-                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetWhite", AssetRequestMode.ImmediateLoad),
-                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight", AssetRequestMode.ImmediateLoad),
-                        ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight", AssetRequestMode.ImmediateLoad)
+                        ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "ResetWhite", AssetRequestMode.ImmediateLoad),
+                        ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "ResetBorderHighlight", AssetRequestMode.ImmediateLoad),
+                        ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "ResetBorderHighlight", AssetRequestMode.ImmediateLoad)
                     );
                 }
             };
-            Append(nameTextBox);
 
+            return nameTextBox;
+        }
+
+        private UIPanelIconButton CreateNameAcceptResetButton()
+        {
             nameAcceptResetButton = new
             (
                 Macrocosm.EmptyTex,
-                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetWhite", AssetRequestMode.ImmediateLoad),
-                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight", AssetRequestMode.ImmediateLoad),
-                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "ResetBorderHighlight", AssetRequestMode.ImmediateLoad)
+                ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "ResetWhite", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "ResetBorderHighlight", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "ResetBorderHighlight", AssetRequestMode.ImmediateLoad)
             )
             {
                 Width = new(20, 0),
                 Height = new(20, 0),
-                Top = new(0, 0.075f),
-                Left = new(0, 0.36f),
+                Top = new(0, 0.02f),
+                Left = new(0, 0.8f),
                 BackPanelColor = Color.White,
                 FocusedBackPanelColor = Color.White,
                 BackPanelBorderColor = Color.Transparent,
@@ -196,57 +229,56 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
                 }
 
             };
-            Append(nameAcceptResetButton);
 
-            return nameTextBox;
+            return nameAcceptResetButton;
         }
 
         private UIInfoElement CreateCompassCoordinatesInfo()
         {
-            compass = new(Language.GetTextValue(LaunchPad.CompassCoordinates), TextureAssets.Item[ItemID.Compass])
+            compass = new(new LocalizedColorScaleText(Language.GetText(LaunchPad.CompassCoordinates), scale: 0.9f), TextureAssets.Item[ItemID.Compass])
             {
-                Width = new(160, 0),
-                Height = new(30, 0),
-                Top = new(0, 0.016f),
-                Left = new(0, 0.13f),
+                Width = new(180, 0),
+                Height = new(34, 0),
+                Top = new(0, 0.065f),
+                HAlign = 0.5f,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
-            Append(compass);
-            compass.Activate();
 
             return compass;
         }
 
-        private UIPanel CreateConfigurationSelector()
+        private UIInfoElement CreateConfigurationSelector()
         {
-            configurationSelector = new()
+            configurationSelector = new UIInfoElement(LocalizedText.Empty, ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "Wrench", AssetRequestMode.ImmediateLoad))
             {
-                Width = new(160, 0),
-                Height = new(40, 0),
-                Top = new(0, 0.121f),
-                Left = new(0, 0.13f),
+                Width = new(180, 0),
+                Height = new(30, 0),
+                Top = new(0, 0.125f),
+                HAlign = 0.5f,
+                IconHAlign = 0.15f,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor
             };
 
-            configurationText = new UIText("AAAA", 0.8f)
-            {
-                HAlign = 0.5f,
-                VAlign = 0.5f,
-                TextColor = Color.White
-            };
-            configurationSelector.Append(configurationText);
+            return configurationSelector;
+        }
 
+        private UIHoverImageButton CreateLeftArrow()
+        {
             configurationLeftArrow = new(
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", AssetRequestMode.ImmediateLoad),
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
-                LocalizedText.Empty
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrowPlain", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
+                LocalizedText.Empty,
+                useThemeColors: true
             )
             {
-                Left = new(-8, 0f),
-                VAlign = 0.5f,
-                SpriteEffects = SpriteEffects.FlipHorizontally
+                Top = new(0, 0.1175f),
+                HAlign = 0.1675f,
+                SpriteEffects = SpriteEffects.FlipHorizontally,
+                Color = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                ColorHighlight = UITheme.Current.PanelStyle.BackgroundColor
             };
 
             configurationLeftArrow.OnLeftClick += (_, _) =>
@@ -256,16 +288,23 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
             };
             configurationLeftArrow.CheckInteractible = () => LaunchPad.SwitchAssemblyModulesConfiguration(-1, justCheck: true);
             configurationLeftArrow.SetVisibility(1f, 0f, 1f);
-            configurationSelector.Append(configurationLeftArrow);
+            return configurationLeftArrow;
+        }
 
+        private UIHoverImageButton CreateRightArrow()
+        {
             configurationRightArrow = new(
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", AssetRequestMode.ImmediateLoad),
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
-                LocalizedText.Empty
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrowPlain", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrowBorder", AssetRequestMode.ImmediateLoad),
+                LocalizedText.Empty,
+                useThemeColors: true
             )
             {
-                Left = new(0, 0.8f),
-                VAlign = 0.5f
+                Top = new(0, 0.1175f),
+                HAlign = 0.8325f,
+                Color = UITheme.Current.PanelStyle.BackgroundColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                ColorHighlight = UITheme.Current.PanelStyle.BackgroundColor
             };
 
             configurationRightArrow.OnLeftClick += (_, _) =>
@@ -275,24 +314,21 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
             };
             configurationRightArrow.CheckInteractible = () => LaunchPad.SwitchAssemblyModulesConfiguration(1, justCheck: true);
             configurationRightArrow.SetVisibility(1f, 0f, 1f);
-            configurationSelector.Append(configurationRightArrow);
-
-            Append(configurationSelector);
-            return configurationSelector;
+            return configurationRightArrow;
         }
 
         private UIPanelIconButton CreateAssembleButton()
         {
             assembleButton = new
             (
-                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Wrench"),
+                ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "Wrench"),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanel", AssetRequestMode.ImmediateLoad),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
             )
             {
                 Top = new(0, 0.91f),
-                Left = new(0, 0.14f),
+                HAlign = 0.5f,
                 CheckInteractible = LaunchPad.CanAssemble,
                 GrayscaleIconIfNotInteractible = true,
                 GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
@@ -307,14 +343,14 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
         {
             dissasembleButton = new
             (
-                ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "Wrench"),
+                ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "Wrench"),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanel", AssetRequestMode.ImmediateLoad),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelBorder", AssetRequestMode.ImmediateLoad),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/WidePanelHoverBorder", AssetRequestMode.ImmediateLoad)
             )
             {
                 Top = new(0, 0.91f),
-                Left = new(0, 0.14f),
+                HAlign = 0.5f,
                 CheckInteractible = LaunchPad.CanDisassemble,
                 GrayscaleIconIfNotInteractible = true,
                 GetIconPosition = (dimensions) => dimensions.Position() + new Vector2(dimensions.Width * 0.2f, dimensions.Height * 0.5f)
@@ -337,13 +373,13 @@ namespace Macrocosm.Common.UI.Rockets.Assembly
                     UIModuleAssemblyElement assemblyElement = new(module, LaunchPad)
                     {
                         Top = new(0, 0.19f + 0.175f * (int)module.Slot),
-                        Left = new(0, 0.0485f)
+                        HAlign = 0.5f,
                     };
 
                     assemblyElements[module.Name] = assemblyElement;
                     if (Rocket.Modules.Select(m => m.Name).Contains(module.Name))
                     {
-                        Append(assemblyElement);
+                        uiAssemblyPanel.Append(assemblyElement);
                         assemblyElement.Activate();
                     }
                 }

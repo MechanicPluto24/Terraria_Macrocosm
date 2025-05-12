@@ -19,7 +19,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI.Rockets.Cargo
 {
-    public class UICargoTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+    public class UICargoTab : UIElement, ITabUIElement, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; } = new();
 
@@ -48,11 +48,7 @@ namespace Macrocosm.Common.UI.Rockets.Cargo
             Height.Set(0, 1f);
             HAlign = 0.5f;
             VAlign = 0.5f;
-
-            SetPadding(6f);
-
-            BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
-            BorderColor = UITheme.Current.TabStyle.BorderColor;
+            SetPadding(0f);
 
             fuelPanel = new();
             Append(fuelPanel);

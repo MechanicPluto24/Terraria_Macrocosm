@@ -62,8 +62,8 @@ namespace Macrocosm.Common.UI.Rockets.Customization
 
             if (IsMouseHovering)
             {
-                BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
-                BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
+                BorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight;
+                BackgroundColor = UITheme.Current.PanelButtonStyle.BackgroundColorHighlight;
             }
             else
             {

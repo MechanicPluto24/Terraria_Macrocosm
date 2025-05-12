@@ -14,7 +14,7 @@ namespace Macrocosm.Common.Utils
     public static partial class Utility
     {
         public static CustomDrawGlobalItem CustomDrawData(this Item item) => item.GetGlobalItem<CustomDrawGlobalItem>();
-        public static bool IsChest(this Item item) => TileID.Sets.BasicChest[item.createTile];
+        public static bool IsChest(this Item item) => item.createTile != -1 && TileID.Sets.BasicChest[item.createTile];
 
         /// <summary>
         /// Helper method that converts the first rocket ammo found in the inventory 

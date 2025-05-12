@@ -20,6 +20,11 @@ LaunchPad: {
 	Disassemble: Disassemble
 	AnyChest: Any Chest
 	UnknownLocation: Unknown
+
+	Configurations: {
+		Manned: Manned
+		Unmanned: Unmanned
+	}
 }
 
 Rocket: {

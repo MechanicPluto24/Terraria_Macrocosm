@@ -5,6 +5,7 @@ using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.UI;
+using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Particles;
@@ -242,9 +243,9 @@ namespace Macrocosm.Content.Rockets.LaunchPads
                     foreach (AssemblyRecipeEntry recipeEntry in module.Recipe)
                     {
                         if (recipeEntry.ItemType.HasValue)
-                            Inventory.SetReserved(slotIndex++, recipeEntry.ItemType.Value, recipeEntry.Description, GetBlueprintTexture(recipeEntry.ItemType.Value));
+                            Inventory.SetReserved(slotIndex++, recipeEntry.ItemType.Value, recipeEntry.Description, GetBlueprintTexture(recipeEntry.ItemType.Value), UITheme.Current.InventorySlotStyle.BorderColor);
                         else
-                            Inventory.SetReserved(slotIndex++, recipeEntry.ItemCheck, recipeEntry.Description, GetBlueprintTexture(recipeEntry.Description.Key));
+                            Inventory.SetReserved(slotIndex++, recipeEntry.ItemCheck, recipeEntry.Description, GetBlueprintTexture(recipeEntry.Description.Key), UITheme.Current.InventorySlotStyle.BorderColor);
                     }
                 }
             }

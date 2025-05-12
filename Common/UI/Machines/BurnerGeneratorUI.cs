@@ -49,7 +49,7 @@ namespace Macrocosm.Common.UI.Machines
             {
                 Width = new(0, 1),
                 Height = new(0, 1),
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             Append(backgroundPanel);
@@ -59,7 +59,7 @@ namespace Macrocosm.Common.UI.Machines
                 HAlign = 1f,
                 VAlign = 0.04f,
                 Width = new(0, 0.6f - 0.01f),
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             backgroundPanel.Append(powerStatusText);
@@ -69,7 +69,7 @@ namespace Macrocosm.Common.UI.Machines
                 HAlign = 0f,
                 VAlign = 0.04f,
                 Width = new(0, 0.4f - 0.01f),
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             backgroundPanel.Append(hullHeatText);
@@ -83,7 +83,7 @@ namespace Macrocosm.Common.UI.Machines
                 FillColor = new Color(255, 255, 0),
                 FillColorEnd = new Color(255, 0, 0),
                 IsVertical = false,
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             backgroundPanel.Append(hullHeatProgressBar);
@@ -96,7 +96,7 @@ namespace Macrocosm.Common.UI.Machines
                 VAlign = 1f,
                 PaddingLeft = PaddingRight = 20,
                 PaddingTop = PaddingBottom = 10,
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             backgroundPanel.Append(inventoryPanel);
@@ -114,7 +114,11 @@ namespace Macrocosm.Common.UI.Machines
                 }
             }
 
-            arrow = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Buttons/LongArrow", AssetRequestMode.ImmediateLoad))
+            arrow = new(
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrow", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowBorder"),
+                useThemeColors: true
+            )
             {
                 Left = new(0, 0.71f),
                 VAlign = 0.5f
@@ -128,7 +132,7 @@ namespace Macrocosm.Common.UI.Machines
                 Height = new(46, 0),
                 Left = new(0, 0.85f),
                 VAlign = 0.95f,
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 FillColor = new Color(255, 255, 0),
                 FillColorEnd = new Color(255, 0, 0),

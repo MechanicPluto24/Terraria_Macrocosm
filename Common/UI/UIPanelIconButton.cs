@@ -24,12 +24,11 @@ namespace Macrocosm.Common.UI
         public bool GrayscaleIconIfNotInteractible { get; set; } = false;
         public bool OverrideBackgroundColor { get; set; } = false;
 
-        public Color BackPanelColor { get; set; } = UITheme.Current.ButtonStyle.BackgroundColor;
-        public Color FocusedBackPanelColor { get; set; } = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
-        public Color NotInteractibleBackPanelColor { get; set; } = UITheme.Current.ButtonStyle.BackgroundColor.WithSaturation(0.5f);
-
-        public Color BackPanelBorderColor { get; set; } = UITheme.Current.ButtonStyle.BorderColor;
-        public Color BackPanelHoverBorderColor { get; set; } = UITheme.Current.ButtonHighlightStyle.BorderColor;
+        public Color BackPanelColor { get; set; }
+        public Color FocusedBackPanelColor { get; set; }
+        public Color NotInteractibleBackPanelColor { get; set; }
+        public Color BackPanelBorderColor { get; set; }
+        public Color BackPanelHoverBorderColor { get; set; }
 
         private Asset<Texture2D> backPanelTexture;
         private Asset<Texture2D> backPanelBorderTexture;
@@ -37,17 +36,6 @@ namespace Macrocosm.Common.UI
         private UIText uIText;
         private Color baseTextColor;
         private bool darkenTextIfNotInteractible;
-
-        public UIPanelIconButton() : this(Macrocosm.EmptyTex) { }
-
-        public UIPanelIconButton(Asset<Texture2D> texture) :
-            this(texture,
-                 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanel", AssetRequestMode.ImmediateLoad),
-                 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanelBorder", AssetRequestMode.ImmediateLoad),
-                 ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/SmallPanelHoverBorder", AssetRequestMode.ImmediateLoad)
-            )
-        { }
-
         public UIPanelIconButton(
             Asset<Texture2D> texture,
             Asset<Texture2D> backPanelTexture,
@@ -55,7 +43,24 @@ namespace Macrocosm.Common.UI
             Asset<Texture2D> backPanelHoverBorderTexture)
             : base(texture, backPanelHoverBorderTexture)
         {
+            BackPanelColor = UITheme.Current.PanelButtonStyle.BackgroundColor;
+            FocusedBackPanelColor = UITheme.Current.PanelButtonStyle.BackgroundColorHighlight;
+            NotInteractibleBackPanelColor = UITheme.Current.PanelButtonStyle.BackgroundColor.WithSaturation(0.5f);
+            BackPanelBorderColor = UITheme.Current.PanelButtonStyle.BorderColor;
+            BackPanelHoverBorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight;
+
             SetPanelTextures(backPanelTexture, backPanelBorderTexture);
+        }
+
+        public UIPanelIconButton() : this(Macrocosm.EmptyTex) { }
+
+        public UIPanelIconButton(Asset<Texture2D> texture) :
+            this(texture,
+                 ModContent.Request<Texture2D>(Macrocosm.UITexturesPath + "SmallPanel", AssetRequestMode.ImmediateLoad),
+                 ModContent.Request<Texture2D>(Macrocosm.UITexturesPath + "SmallPanelBorder", AssetRequestMode.ImmediateLoad),
+                 ModContent.Request<Texture2D>(Macrocosm.UITexturesPath + "SmallPanelHoverBorder", AssetRequestMode.ImmediateLoad)
+            )
+        {
         }
 
         public void SetPanelTextures(Asset<Texture2D> backPanelTexture, Asset<Texture2D> backPanelBorderTexture, Asset<Texture2D> backPanelHoverBorderTexture = null)
@@ -70,7 +75,7 @@ namespace Macrocosm.Common.UI
                 SetBorderTexture(backPanelHoverBorderTexture);
         }
 
-        public new void SetImage(Asset<Texture2D> texture)
+        public void SetImage(Asset<Texture2D> texture)
         {
             var width = Width;
             var height = Height;

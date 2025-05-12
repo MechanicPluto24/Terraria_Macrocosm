@@ -41,7 +41,7 @@ namespace Macrocosm.Common.UI
 
         public override void OnInitialize()
         {
-            BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor;
+            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
             BorderColor = UITheme.Current.PanelStyle.BorderColor;
             OverflowHidden = true;
             SetPadding(2f);

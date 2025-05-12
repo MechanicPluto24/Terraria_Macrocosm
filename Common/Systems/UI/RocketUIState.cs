@@ -78,9 +78,11 @@ namespace Macrocosm.Common.Systems.UI
 
             tabLeftButton = new
             (
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", mode),
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", mode),
-                Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"))
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrow", mode),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrowBorder", mode),
+                Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Customization"),
+                useThemeColors: true
+            )
             {
                 Top = new(-38, 0f),
                 Left = new(0, 0.005f),
@@ -93,9 +95,11 @@ namespace Macrocosm.Common.Systems.UI
 
             tabRightButton = new
             (
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrow", mode),
-                ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ShortArrowBorder", mode),
-                Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload"))
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrow", mode),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ShortArrowBorder", mode),
+                Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Payload"),
+                useThemeColors: true
+            )
             {
                 Top = new(-38, 0f),
                 Left = new(0, 0.955f),
