@@ -16,7 +16,7 @@ namespace Macrocosm.Content.Walls
             if (variant == WallSafetyType.Unsafe)
                 RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialSquarePaneledWallUnsafe>());
             else
-                RegisterItemDrop(ModContent.ItemType<Items.Walls.IrradiatedRockWall>());
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialSquarePaneledWall>());
         }
     }
 }

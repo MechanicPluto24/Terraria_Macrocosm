@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-    public class Overlord : ModTile
+    public class ElegyForTheRings : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -20,11 +20,11 @@ namespace Macrocosm.Content.Tiles.Paintings
             Main.tileTable[Type] = false;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.DefaultToPainting(6, 6);
+            TileObjectData.newTile.DefaultToPainting(6, 4);
             TileObjectData.addTile(Type);
 
             TileID.Sets.DisableSmartCursor[Type] = true;
-            AddMapEntry(new Color(99, 50, 30), Language.GetText("Painting"));
+            AddMapEntry(new Color(13, 51, 41), Language.GetText("Painting"));
 
             DustType = -1;
         }
