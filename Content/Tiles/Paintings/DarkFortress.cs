@@ -1,3 +1,4 @@
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -19,15 +20,13 @@ namespace Macrocosm.Content.Tiles.Paintings
             Main.tileTable[Type] = false;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
-            TileObjectData.newTile.Width = 6;
-            TileObjectData.newTile.Height = 6;
-            TileObjectData.newTile.Origin = new Point16(3, 3);
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16];
+            TileObjectData.newTile.DefaultToPainting(6, 6);
             TileObjectData.addTile(Type);
 
             TileID.Sets.DisableSmartCursor[Type] = true;
             AddMapEntry(new Color(200, 200, 200), Language.GetText("Painting"));
+
+            DustType = -1;
         }
     }
 }
