@@ -30,7 +30,7 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
 
         public UILaunchDestinationInfoElement() : base(
             Language.GetText("Mods.Macrocosm.UI.LaunchPad.UnknownLocation"),
-            ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "QuestionMark", AssetRequestMode.ImmediateLoad),
+            ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "QuestionMark", AssetRequestMode.ImmediateLoad),
             null,
             null
         )
@@ -43,7 +43,7 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
 
         public UILaunchDestinationInfoElement(LaunchPad launchPad) : base(
             $"{launchPad.DisplayName} ({launchPad.CompassCoordinates})",
-            ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "LaunchPad", AssetRequestMode.ImmediateLoad),
+            ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "LaunchPad", AssetRequestMode.ImmediateLoad),
             null,
             null
         )
@@ -57,7 +57,7 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
 
         public UILaunchDestinationInfoElement(OrbitSubworld orbitSubworld) : base(
             $"Space station #{orbitSubworld.InstanceIndex + 1}",
-            ModContent.Request<Texture2D>(Macrocosm.SymbolsPath + "SpaceStation", AssetRequestMode.ImmediateLoad),
+            ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "SpaceStation", AssetRequestMode.ImmediateLoad),
             null,
             null
         )
@@ -81,14 +81,14 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
 
             if (IsMouseHovering)
             {
-                BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
-                BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                BackgroundColor = UITheme.Current.PanelButtonStyle.BackgroundColorHighlight;
+                BorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight;
             }
 
             if (HasFocus)
             {
-                BackgroundColor = UITheme.Current.ButtonStyle.BackgroundColor;
-                BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                BackgroundColor = UITheme.Current.PanelButtonStyle.BackgroundColor;
+                BorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight;
             }
 
             if (!IsReachable || IsCurrent)

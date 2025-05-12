@@ -49,7 +49,7 @@ namespace Macrocosm.Common.UI.Machines
 
             //Recalculate();
 
-            Asset<Texture2D> arrow = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Buttons/LongArrow", AssetRequestMode.ImmediateLoad);
+            Asset<Texture2D> arrow = ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrow", AssetRequestMode.ImmediateLoad);
 
             backgroundPanel = new()
             {
@@ -84,9 +84,9 @@ namespace Macrocosm.Common.UI.Machines
             }
 
             extractArrowProgressBar = new(
-                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBorder", AssetRequestMode.ImmediateLoad),
-                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad),
-                  ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad)
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowBorder", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad)
             )
             {
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
@@ -117,9 +117,9 @@ namespace Macrocosm.Common.UI.Machines
             backgroundPanel.Append(inputTankLiquidName);
 
             refineArrowProgressBar = new(
-               ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBorder", AssetRequestMode.ImmediateLoad),
-               ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad),
-               ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/ProgressArrowBackground", AssetRequestMode.ImmediateLoad)
+               ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowBorder", AssetRequestMode.ImmediateLoad),
+               ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad),
+               ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad)
             )
             {
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
@@ -149,7 +149,7 @@ namespace Macrocosm.Common.UI.Machines
             };
             backgroundPanel.Append(outputTankLiquidName);
 
-            containerArrow1 = new(arrow)
+            containerArrow1 = new(arrow, useThemeColors: true)
             {
                 HAlign = 0.82f,
                 VAlign = 0.32f
@@ -165,7 +165,7 @@ namespace Macrocosm.Common.UI.Machines
                 backgroundPanel.Append(containerSlot);
             }
 
-            containerArrow2 = new(arrow)
+            containerArrow2 = new(arrow, useThemeColors: true)
             {
                 HAlign = 0.935f,
                 VAlign = 0.54f,

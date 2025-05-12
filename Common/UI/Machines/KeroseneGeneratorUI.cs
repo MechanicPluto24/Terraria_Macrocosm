@@ -46,7 +46,7 @@ namespace Macrocosm.Common.UI.Machines
             {
                 Width = new(0, 1),
                 Height = new(0, 1),
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             Append(backgroundPanel);
@@ -56,7 +56,7 @@ namespace Macrocosm.Common.UI.Machines
                 HAlign = 1f,
                 VAlign = 0.04f,
                 Width = new(0, 0.6f - 0.01f),
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             backgroundPanel.Append(powerStatusText);
@@ -70,7 +70,7 @@ namespace Macrocosm.Common.UI.Machines
                 FillColor = new Color(0, 255, 0),
                 FillColorEnd = new Color(255, 0, 0),
                 IsVertical = false,
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             backgroundPanel.Append(rpmProgressBar);
@@ -89,7 +89,7 @@ namespace Macrocosm.Common.UI.Machines
                 Top = new(0, 0.27f),
                 Height = new(0, 0.72f),
                 Width = new(0, 1f),
-                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             backgroundPanel.Append(fuelPanel);
@@ -103,7 +103,7 @@ namespace Macrocosm.Common.UI.Machines
                     Top = new(-6, 0.5f),
                     Width = new(60, 0f),
                     Height = new(0, 0.4f),
-                    BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                    BorderColor = UITheme.Current.PanelStyle.BorderColor,
                     BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
                 };
                 pistons.Add(piston);

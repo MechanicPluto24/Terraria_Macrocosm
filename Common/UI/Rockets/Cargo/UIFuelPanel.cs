@@ -1,6 +1,5 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
@@ -128,9 +127,10 @@ namespace Macrocosm.Common.UI.Rockets.Cargo
             dumpFuelButton = new
             (
                //ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<FuelCanister>()].ModItem.Texture),
-               ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Buttons/LongArrow", AssetRequestMode.ImmediateLoad),
-               ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Buttons/LongArrowBorder", AssetRequestMode.ImmediateLoad),
-               Language.GetText("Mods.Macrocosm.UI.Rocket.Cargo.DumpFuel")
+               ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrow", AssetRequestMode.ImmediateLoad),
+               ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowBorder", AssetRequestMode.ImmediateLoad),
+               Language.GetText("Mods.Macrocosm.UI.Rocket.Cargo.DumpFuel"),
+               useThemeColors: true
             )
             {
                 VAlign = 0.955f,
@@ -269,7 +269,7 @@ namespace Macrocosm.Common.UI.Rockets.Cargo
                     x: (int)(fuelPlacementDimensions.Center().X - 10f),
                     y: (int)(fuelPlacementDimensions.Center().Y + fuelPlacementDimensions.Height / 2f),
                     width: 24,
-                    height: 261
+                    height: 266
                 ),
                 UITheme.Current.PanelStyle.BackgroundColor,
                 UITheme.Current.PanelStyle.BorderColor,
@@ -295,7 +295,7 @@ namespace Macrocosm.Common.UI.Rockets.Cargo
                 new Rectangle
                 (
                     x: (int)fuelTankDimensions.Center().X,
-                    y: (int)(dimensions.Y + dimensions.Height * 0.925f),
+                    y: (int)(dimensions.Y + dimensions.Height * 0.9255f),
                     width: (int)(fuelPlacementDimensions.Center().X - fuelTankDimensions.Center().X),
                     height: 24
                 ),

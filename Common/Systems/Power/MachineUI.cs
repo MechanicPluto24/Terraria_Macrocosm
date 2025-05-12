@@ -24,8 +24,10 @@ namespace Macrocosm.Common.Systems.Power
             Height = new(480, 0);
             HAlign = 0.5f;
             VAlign = 0.5f;
+
             BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
             BorderColor = UITheme.Current.WindowStyle.BorderColor;
+
             SetPadding(6f);
             PaddingTop = 42f;
 
@@ -48,13 +50,13 @@ namespace Macrocosm.Common.Systems.Power
 
             if (MachineTE is ConsumerTE)
             {
-                powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/LightningGreen", AssetRequestMode.ImmediateLoad))
+                powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "LightningGreen", AssetRequestMode.ImmediateLoad))
                 {
                     Left = new(-36, 1f),
                     Top = new(-34, 0f)
                 };
 
-                powerOffIcon = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/LightningRed", AssetRequestMode.ImmediateLoad))
+                powerOffIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "LightningRed", AssetRequestMode.ImmediateLoad))
                 {
                     Left = new(-36, 1f),
                     Top = new(-34, 0f)
@@ -62,13 +64,13 @@ namespace Macrocosm.Common.Systems.Power
             }
             else if (MachineTE is GeneratorTE or BatteryTE)
             {
-                powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/BatteryFull", AssetRequestMode.ImmediateLoad))
+                powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "BatteryFull", AssetRequestMode.ImmediateLoad))
                 {
                     Left = new(-50, 1f),
                     Top = new(-34, 0f)
                 };
 
-                powerOffIcon = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/BatteryLow", AssetRequestMode.ImmediateLoad))
+                powerOffIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "BatteryLow", AssetRequestMode.ImmediateLoad))
                 {
                     Left = new(-50, 1f),
                     Top = new(-34, 0f)

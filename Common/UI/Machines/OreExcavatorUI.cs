@@ -39,7 +39,7 @@ namespace Macrocosm.Common.UI.Machines
             {
                 inventoryPanel = OreExcavator.Inventory.ProvideUIWithInteractionButtons(iconsPerRow: 10, rowsWithoutScrollbar: 5, buttonMenuTopPercent: 0.765f);
                 inventoryPanel.Width = new(0, 0.69f);
-                inventoryPanel.BorderColor = UITheme.Current.ButtonStyle.BorderColor;
+                inventoryPanel.BorderColor = UITheme.Current.PanelStyle.BorderColor;
                 inventoryPanel.BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
                 inventoryPanel.Activate();
                 Append(inventoryPanel);

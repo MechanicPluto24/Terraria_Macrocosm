@@ -157,18 +157,19 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
         {
             AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
 
-            Asset<Texture2D> zoomInTexture = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ZoomInButton", mode);
-            Asset<Texture2D> zoomOutTexture = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ZoomOutButton", mode);
-            Asset<Texture2D> zoomButtonBorder = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "ZoomButtonBorder", mode);
+            Asset<Texture2D> zoomInTexture = ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ZoomInButton", mode);
+            Asset<Texture2D> zoomOutTexture = ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ZoomOutButton", mode);
+            Asset<Texture2D> zoomButtonBorder = ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "ZoomButtonBorder", mode);
 
-            Asset<Texture2D> outlineSmall = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "SelectionOutlineSmall", mode);
-            Asset<Texture2D> outlineMedium = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "SelectionOutlineMedium", mode);
-            Asset<Texture2D> outlineLarge = ModContent.Request<Texture2D>(Macrocosm.ButtonsPath + "SelectionOutlineLarge", mode);
+            Asset<Texture2D> outlineSmall = ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "SelectionOutlineSmall", mode);
+            Asset<Texture2D> outlineMedium = ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "SelectionOutlineMedium", mode);
+            Asset<Texture2D> outlineLarge = ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "SelectionOutlineLarge", mode);
 
             zoomInButton = new(zoomInTexture, zoomButtonBorder, Language.GetText("Mods.Macrocosm.UI.Common.ZoomIn"))
             {
                 Top = new(0, 0.37f),
                 Left = new(0, 0.011f),
+                BorderColorHighlight = Color.White
             };
             zoomInButton.OnLeftClick += (_, _) => ZoomIn();
             zoomInButton.CheckInteractible = () => CurrentMap.HasNext || CurrentMap.HasDefaultNext;
@@ -177,6 +178,7 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
             {
                 Top = new(0, 0.52f),
                 Left = new(0, 0.011f),
+                BorderColorHighlight = Color.White
             };
             zoomOutButton.OnLeftClick += (_, _) => ZoomOut();
             zoomOutButton.CheckInteractible = () => CurrentMap.HasPrev;

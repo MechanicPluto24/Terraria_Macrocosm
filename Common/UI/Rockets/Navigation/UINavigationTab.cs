@@ -20,7 +20,7 @@ using Terraria.UI;
 
 namespace Macrocosm.Common.UI.Rockets.Navigation
 {
-    public class UINavigationTab : UIPanel, ITabUIElement, IRocketUIDataConsumer
+    public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
     {
         public Rocket Rocket { get; set; } = new();
 
@@ -54,11 +54,7 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
             Height.Set(0, 1f);
             HAlign = 0.5f;
             VAlign = 0.5f;
-
-            SetPadding(3f);
-
-            BackgroundColor = UITheme.Current.TabStyle.BackgroundColor;
-            BorderColor = UITheme.Current.TabStyle.BorderColor;
+            SetPadding(0f);
 
             navigationPanel = new();
             Append(navigationPanel);

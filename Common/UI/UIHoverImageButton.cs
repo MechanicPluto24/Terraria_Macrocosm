@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.UI.Themes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -31,16 +32,20 @@ namespace Macrocosm.Common.UI
         public Action OnFocusLost { get; set; } = () => { };
 
         public Color Color { get; set; } = Color.White;
-        public Color BorderColor { get; set; } = Color.White;
+        public Color ColorHighlight { get; set; } = Color.White;
+        public Color BorderColor { get; set; } = Color.Transparent;
+        public Color BorderColorHighlight { get; set; } = Color.Gold;
 
         public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
+
+        private bool HighlightMode => borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0 || HasFocus;
+
         public float Rotation
         {
             get => rotation;
             set
             {
                 rotation = value;
-
                 if (rotation >= MathHelper.PiOver2 && rotation <= MathHelper.Pi - MathHelper.PiOver4 ||
                     rotation >= MathHelper.Pi + MathHelper.PiOver4 && rotation <= MathHelper.TwoPi - MathHelper.PiOver4)
                     Terraria.Utils.Swap(ref Width, ref Height);
@@ -50,12 +55,16 @@ namespace Macrocosm.Common.UI
         protected Asset<Texture2D> texture;
         protected Asset<Texture2D> borderTexture;
         protected int remoteInteractionFeedbackTicks = 0;
+
+        // TODO: remove these, replace with bool flag InvisibleIfNotInteractible, and use the color properties for transparency control
         protected float visibilityInteractible = 1f;
-        protected float visibilityHover = 0.8f;
+        protected float visibilityHover = 1f;
         protected float visibilityNotInteractible = 0.4f;
+        protected float borderVisibilityNotInteractible = 0f; 
+
         private float rotation;
 
-        public UIHoverImageButton(Asset<Texture2D> texture, Asset<Texture2D> borderTexture = null, LocalizedText hoverText = null)
+        public UIHoverImageButton(Asset<Texture2D> texture, Asset<Texture2D> borderTexture = null, LocalizedText hoverText = null, bool useThemeColors = false)
         {
             if (hoverText is not null)
                 HoverText = hoverText;
@@ -64,19 +73,57 @@ namespace Macrocosm.Common.UI
             this.borderTexture = borderTexture;
             Width.Set(texture.Width(), 0f);
             Height.Set(texture.Height(), 0f);
+
+            if (useThemeColors)
+            {
+                Color = UITheme.Current.IconButtonStyle.BackgroundColor;
+                BorderColor = UITheme.Current.IconButtonStyle.BorderColor;
+                ColorHighlight = UITheme.Current.IconButtonStyle.BackgroundColorHighlight;
+                BorderColorHighlight = UITheme.Current.IconButtonStyle.BorderColorHighlight;
+            }
+            else
+            {
+                Color = Color.White;
+                ColorHighlight = Color.White;
+                BorderColor = Color.Transparent;
+                BorderColorHighlight = Color.Gold;
+            }
         }
 
-        public void SetImage(Asset<Texture2D> texture)
+        public void SetImage(Asset<Texture2D> texture, bool useThemeColors = false)
         {
             this.texture = texture;
             Width.Set(this.texture.Width(), 0f);
             Height.Set(this.texture.Height(), 0f);
+
+            if (useThemeColors)
+            {
+                Color = UITheme.Current.IconButtonStyle.BackgroundColor;
+                ColorHighlight = UITheme.Current.IconButtonStyle.BackgroundColorHighlight ;
+            }
+            else
+            {
+                Color = Color.White;
+                ColorHighlight = Color.White;
+            }
         }
 
-        public void SetBorderTexture(Asset<Texture2D> borderTexture)
+        public void SetBorderTexture(Asset<Texture2D> borderTexture, bool useThemeColors = false)
         {
             this.borderTexture = borderTexture;
+
+            if (useThemeColors)
+            {
+                BorderColor = UITheme.Current.IconButtonStyle.BorderColor;
+                BorderColorHighlight = UITheme.Current.IconButtonStyle.BorderColorHighlight;
+            }
+            else
+            {
+                BorderColor = Color.White;
+                BorderColorHighlight = Color.Gold;
+            }
         }
+
         public void SetVisibility(float visibility)
         {
             visibilityInteractible = MathHelper.Clamp(visibility, 0f, 1f);
@@ -118,10 +165,19 @@ namespace Macrocosm.Common.UI
             CalculatedStyle dimensions = GetDimensions();
 
             float visibility = CheckInteractible() ? (IsMouseHovering ? visibilityHover : visibilityInteractible) : visibilityNotInteractible;
-            spriteBatch.Draw(texture.Value, dimensions.Center(), null, Color * visibility, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
 
-            if (borderTexture != null && (IsMouseHovering && CheckInteractible()) || remoteInteractionFeedbackTicks > 0 || HasFocus)
-                spriteBatch.Draw(borderTexture.Value, dimensions.Center(), null, BorderColor, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
+            if (HighlightMode)
+            {
+                if (borderTexture != null)
+                    spriteBatch.Draw(borderTexture.Value, dimensions.Center(), null, BorderColorHighlight * visibility, Rotation, borderTexture.Size() / 2f, 1f, SpriteEffects, 0);
+                spriteBatch.Draw(texture.Value, dimensions.Center(), null, ColorHighlight * visibility, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
+            }
+            else
+            {
+                if (borderTexture != null)
+                    spriteBatch.Draw(borderTexture.Value, dimensions.Center(), null, BorderColor * visibility, Rotation, borderTexture.Size() / 2f, 1f, SpriteEffects, 0);
+                spriteBatch.Draw(texture.Value, dimensions.Center(), null, Color * visibility, Rotation, texture.Size() / 2f, 1f, SpriteEffects, 0);
+            }
         }
 
         public override void LeftClick(UIMouseEvent evt)

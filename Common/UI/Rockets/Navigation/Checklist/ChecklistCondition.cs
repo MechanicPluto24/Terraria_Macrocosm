@@ -72,7 +72,7 @@ namespace Macrocosm.Common.UI.Rockets.Navigation.Checklist
             checklistInfoElement.MetState = cachedMet;
             UIInfoElement infoElement = checklistInfoElement.ProvideUI();
             infoElement.Activate();
-            infoElement.SetTextLeft(50, 0);
+            infoElement.SetTextDimensionLeft(50, 0);
             infoElement.Height = new(52f, 0f);
             infoElement.IconHAlign = 0.12f;
             return infoElement;

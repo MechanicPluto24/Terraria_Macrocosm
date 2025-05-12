@@ -126,8 +126,8 @@ namespace Macrocosm.Common.UI.Rockets.Navigation
             }
             else if (IsMouseHovering)
             {
-                BackgroundColor = UITheme.Current.ButtonHighlightStyle.BackgroundColor;
-                BorderColor = UITheme.Current.ButtonHighlightStyle.BorderColor;
+                BorderColor = UITheme.Current.PanelButtonStyle.BorderColorHighlight;
+                BackgroundColor = UITheme.Current.PanelButtonStyle.BackgroundColorHighlight;
             }
             else
             {
