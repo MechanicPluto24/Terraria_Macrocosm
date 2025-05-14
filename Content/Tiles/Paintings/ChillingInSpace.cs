@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-    public class LeVoyageDansLaMort : ModTile
+    public class ChillingInSpace : ModTile
     {
         public override void SetStaticDefaults()
         {
@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Tiles.Paintings
             TileObjectData.addTile(Type);
 
             TileID.Sets.DisableSmartCursor[Type] = true;
-            AddMapEntry(new Color(48, 36, 1), Language.GetText("Painting"));
+            AddMapEntry(new Color(60, 64, 64), Language.GetText("Painting"));
 
             DustType = -1;
         }

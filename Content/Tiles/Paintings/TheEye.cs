@@ -24,7 +24,7 @@ namespace Macrocosm.Content.Tiles.Paintings
             TileObjectData.addTile(Type);
 
             TileID.Sets.DisableSmartCursor[Type] = true;
-            AddMapEntry(new Color(17, 0, 116), Language.GetText("Painting"));
+            AddMapEntry(new Color(11, 4, 28), Language.GetText("Painting"));
 
             DustType = -1;
         }
