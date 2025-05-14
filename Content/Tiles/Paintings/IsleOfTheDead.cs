@@ -9,7 +9,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Paintings
 {
-    public class LeVoyageDansLaMort : ModTile
+    public class IsleOfTheDead : ModTile
     {
         public override void SetStaticDefaults()
         {
