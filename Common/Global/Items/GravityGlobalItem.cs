@@ -15,8 +15,9 @@ namespace Macrocosm.Common.Global.Items
             // - check for our subworlds in order to minimize the impact of this^ on other mods
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                gravity = Earth.ItemGravity * 2f * MacrocosmSubworld.GetGravityMultiplier();
-                maxFallSpeed = Earth.ItemMaxFallSpeed * 2f * MacrocosmSubworld.GetGravityMultiplier();
+                float multiplier = MacrocosmSubworld.GetGravityMultiplier(item.Center);
+                gravity = Earth.ItemGravity * 2f * multiplier;
+                maxFallSpeed = Earth.ItemMaxFallSpeed * 2f * multiplier;
             }
         }
     }

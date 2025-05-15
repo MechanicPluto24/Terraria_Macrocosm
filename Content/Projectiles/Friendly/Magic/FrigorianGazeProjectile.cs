@@ -105,7 +105,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 spawned = true;
             }
 
-            Projectile.velocity.Y += 0.6f * (0.3f + 0.7f * MacrocosmSubworld.GetGravityMultiplier()) * (0.6f + ((IceShardCounter + 1) / 9));
+            Projectile.velocity.Y += 0.6f * (0.3f + 0.7f * MacrocosmSubworld.GetGravityMultiplier(Projectile.Center)) * (0.6f + ((IceShardCounter + 1) / 9));
 
             if (Projectile.timeLeft < timeUntilMandatoryBreak)
             {

@@ -3135,3 +3135,63 @@ StasisGrenade: {
 	DisplayName: Stasis Grenade
 	Tooltip: ""
 }
+
+Astrolith: {
+	DisplayName: Astrolith
+	Tooltip: ""
+}
+
+BrittleHollow: {
+	DisplayName: Brittle Hollow
+	Tooltip: ""
+}
+
+CacoLisa: {
+	DisplayName: Caco Lisa
+	Tooltip: ""
+}
+
+ChillingInSpace: {
+	DisplayName: Chilling In Space
+	Tooltip: ""
+}
+
+ElegyForTheRings: {
+	DisplayName: Elegy For The Rings
+	Tooltip: ""
+}
+
+GiantsDeep: {
+	DisplayName: Giants Deep
+	Tooltip: ""
+}
+
+HourglassTwins: {
+	DisplayName: Hourglass Twins
+	Tooltip: ""
+}
+
+IsleOfTheDead: {
+	DisplayName: Isle Of The Dead
+	Tooltip: ""
+}
+
+PaleBluePixel: {
+	DisplayName: Pale Blue Pixel
+	Tooltip: ""
+}
+
+TheEye: {
+	DisplayName: The Eye
+	Tooltip: ""
+}
+
+TheInterloper: {
+	DisplayName: The Interloper
+	Tooltip: ""
+}
+
+TimberHearth: {
+	DisplayName: Timber Hearth
+	Tooltip: ""
+}

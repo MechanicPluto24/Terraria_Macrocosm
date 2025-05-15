@@ -37,7 +37,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
                 spawned = true;
             }
 
-            Projectile.velocity.Y += MacrocosmSubworld.GetGravityMultiplier() / 4;
+            Projectile.velocity.Y += MacrocosmSubworld.GetGravityMultiplier(Projectile.Center) / 4;
             Projectile.rotation = Projectile.velocity.ToRotation();
         }
 

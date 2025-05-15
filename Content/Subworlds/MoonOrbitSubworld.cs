@@ -25,7 +25,12 @@ namespace Macrocosm.Content.Subworlds
         public override bool PeacefulWorld => true;
 
         public override string CustomSky => nameof(MoonOrbitSky);
-        protected override float GravityMultiplier => 0f;
+
+        protected override float GravityMultiplier(Vector2 position)
+        {
+            return 0f;
+        }
+
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
         protected override float AtmosphericDensity(Vector2 position) => 0.1f;

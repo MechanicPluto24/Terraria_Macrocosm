@@ -250,7 +250,7 @@ namespace Macrocosm.Content.Rockets
             Effects();
             PlaySound();
 
-            float gravity = MacrocosmSubworld.GetGravityMultiplier();
+            float gravity = MacrocosmSubworld.GetGravityMultiplier(Center);
             float gravityFactor = 0.7f + 0.3f * gravity;
 
             switch (State)
@@ -879,7 +879,7 @@ namespace Macrocosm.Content.Rockets
             if (State == ActionState.Idle)
                 return;
 
-            float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.GetGravityMultiplier();
+            float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.GetGravityMultiplier(Center);
             float atmoDesityFactor = 0.5f + 0.5f * MacrocosmSubworld.GetAtmosphericDensity(Center);
 
             Point tilePos = (Position + new Vector2(Width / 2f, Height)).ToTileCoordinates();
