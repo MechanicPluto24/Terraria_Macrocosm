@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Thrown
         public override void AI()
         {
             Lighting.AddLight(Projectile.Center, new Color(0, 255, 180).ToVector3() * 2f);
-            Projectile.velocity.Y += 1f * (0.1f + 0.9f * MacrocosmSubworld.GetGravityMultiplier());
+            Projectile.velocity.Y += 1f * (0.1f + 0.9f * MacrocosmSubworld.GetGravityMultiplier(Projectile.Center));
             Projectile.oldVelocity = Projectile.velocity * -1f;
             if (BounceCounter < numBounces)
                 Projectile.rotation += 0.05f * Projectile.velocity.Length() * Math.Sign(Projectile.velocity.X);

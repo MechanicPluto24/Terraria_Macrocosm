@@ -1,5 +1,6 @@
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Subworlds;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Terraria;
 using Terraria.ModLoader;
@@ -40,10 +41,12 @@ namespace Macrocosm.Common.Hooks
             };
 
             c.Remove();
+
+            c.Emit(OpCodes.Ldarg_0);
             c.EmitDelegate(GetGoreGravity);
         }
 
         // replace gravity increment with desired value 
-        private static float GetGoreGravity() => Earth.GoreGravity * MacrocosmSubworld.GetGravityMultiplier();
+        private static float GetGoreGravity(Gore gore) => Earth.GoreGravity * MacrocosmSubworld.GetGravityMultiplier(gore.position);
     }
 }

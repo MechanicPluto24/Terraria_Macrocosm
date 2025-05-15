@@ -73,24 +73,33 @@ namespace Macrocosm.Common.Subworlds
 
         public static double GetNightLength() => Current is not null ? Current.NightLength : Earth.NightLength;
 
-        public static float GetGravityMultiplier() => Current is not null ? Current.GravityMultiplier : Earth.GravityMultiplier;
+        public static float GetGravityMultiplier(Vector2? position = null)
+        {
+            Vector2 worldPosition = position ?? Main.LocalPlayer.position;
+            return Current?.GravityMultiplier(worldPosition) ?? Earth.GravityMultiplier;
+        }
 
-        public static float GetAtmosphericDensity(Vector2 position, bool checkRooms = false)
+        public static float GetAmbientTemperature(Vector2? position = null)
+        {
+            Vector2 worldPosition = position ?? Main.LocalPlayer.position;
+            return Current?.AmbientTemperature(worldPosition) ?? Earth.AmbientTemperature(worldPosition);
+        }
+
+        public static float GetAtmosphericDensity(Vector2? position = null, bool checkRooms = false)
         {
             if (Current is not null)
             {
-                float density = Current.AtmosphericDensity(position);
-                if (checkRooms && RoomOxygenSystem.CheckRoomOxygen(position))
-                    density = Earth.AtmosphericDensity;
-                return density;
+                Vector2 worldPosition = position ?? Main.LocalPlayer.position;
+                if (checkRooms && RoomOxygenSystem.CheckRoomOxygen(worldPosition))
+                    return Earth.AtmosphericDensity;
+
+                return Current.AtmosphericDensity(worldPosition);
             }
             else
             {
                 return Earth.AtmosphericDensity;
             }
         }
-
-        public static float GetAmbientTemperature(Vector2? position = null) => Current is not null ? Current.AmbientTemperature(position) : Earth.AmbientTemperature(position);
 
         /// <summary> The loading screen. </summary>
         public static LoadingScreen LoadingScreen { get; set; }
