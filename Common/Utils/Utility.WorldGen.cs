@@ -17,15 +17,13 @@ namespace Macrocosm.Common.Utils
 {
     public static partial class Utility
     {
-        public static bool CoordinatesOutOfBounds(int i, int j) => !InWorld(i, j);
-
         public static void ForEachInRectangle(Rectangle rectangle, Action<int, int> action, int addI = 1, int addJ = 1, bool boundsCheck = true)
         {
             for (int i = rectangle.X; i < rectangle.X + rectangle.Width; i += addI)
             {
                 for (int j = rectangle.Y; j < rectangle.Y + rectangle.Height; j += addJ)
                 {
-                    if (!(boundsCheck && CoordinatesOutOfBounds(i, j)))
+                    if (!boundsCheck || InWorld(i, j))
                         action(i, j);
                 }
             }
@@ -38,10 +36,8 @@ namespace Macrocosm.Common.Utils
 
         public static void FastPlaceTile(int i, int j, ushort tileType)
         {
-            if (CoordinatesOutOfBounds(i, j))
-            {
+            if (!InWorld(i, j))
                 return;
-            }
 
             Tile tile = Main.tile[i, j];
             tile.TileType = tileType;
@@ -50,30 +46,24 @@ namespace Macrocosm.Common.Utils
 
         public static void FastRemoveTile(int i, int j)
         {
-            if (CoordinatesOutOfBounds(i, j))
-            {
+            if (!InWorld(i, j))
                 return;
-            }
 
             Main.tile[i, j].Get<TileWallWireStateData>().HasTile = false;
         }
 
         public static void FastRemoveWall(int i, int j)
         {
-            if (CoordinatesOutOfBounds(i, j))
-            {
+            if (!InWorld(i, j))
                 return;
-            }
 
             Main.tile[i, j].WallType = WallID.None;
         }
 
         public static void FastPlaceWall(int i, int j, int wallType)
         {
-            if (CoordinatesOutOfBounds(i, j))
-            {
+            if (!InWorld(i, j))
                 return;
-            }
 
             Main.tile[i, j].WallType = (ushort)wallType;
         }
@@ -272,10 +262,8 @@ namespace Macrocosm.Common.Utils
                     radius,
                     (i, j) =>
                     {
-                        if (CoordinatesOutOfBounds(i, j) || genRand.NextFloat() > densityClamped)
-                        {
+                        if (!InWorld(i, j) || genRand.NextFloat() > densityClamped)
                             return;
-                        }
 
                         if (perTileCheck is null || perTileCheck(i, j))
                         {
@@ -345,6 +333,7 @@ namespace Macrocosm.Common.Utils
                 }
             }
         }
+
         //Why wasn't this a thing already
         public static void BlobLiquidTileRunner(int i, int j, int liquidType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null)
         {
@@ -368,10 +357,8 @@ namespace Macrocosm.Common.Utils
                     radius,
                     (i, j) =>
                     {
-                        if (CoordinatesOutOfBounds(i, j) || genRand.NextFloat() > densityClamped)
-                        {
+                        if (!InWorld(i, j) || genRand.NextFloat() > densityClamped)
                             return;
-                        }
 
                         if (perTileCheck is null || perTileCheck(i, j))
                         {
@@ -448,7 +435,7 @@ namespace Macrocosm.Common.Utils
         {
             Tile tile = Main.tile[i, j];
 
-            if (CoordinatesOutOfBounds(i, j) || !tile.HasTile)
+            if (!InWorld(i, j) || !tile.HasTile)
                 return;
 
             var info = new TileNeighbourInfo(i, j).HasTile;
@@ -469,7 +456,7 @@ namespace Macrocosm.Common.Utils
         {
             Tile tile = Main.tile[i, j];
 
-            if (CoordinatesOutOfBounds(i, j) || !tile.HasTile)
+            if (!InWorld(i, j) || !tile.HasTile)
                 return;
 
             var info = new TileNeighbourInfo(i, j).HasTile;
@@ -592,7 +579,7 @@ namespace Macrocosm.Common.Utils
                     return;
                 }
 
-                if (!CoordinatesOutOfBounds(i, j) && !coordinates.Contains((i, j)) && predicate.Invoke(Main.tile[i, j]))
+                if (InWorld(i, j) && !coordinates.Contains((i, j)) && predicate.Invoke(Main.tile[i, j]))
                 {
                     coordinates.Add((i, j));
                     ConnectedTilesRecursive(i, j, predicate, coordinates, maxCount);

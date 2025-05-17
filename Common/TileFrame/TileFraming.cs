@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Humanizer;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
@@ -310,11 +311,12 @@ namespace Macrocosm.Common.TileFrame
             Tile tileLeft = Main.tile[i - 1, j];
 
             int top = -1, right = -1, bottom = -1, left = -1;
-            if (tileTop.HasTile && !tileTop.IsHalfBlock)
+
+            if (tileTop.HasTile) // half blocks allowed
             {
                 if (tileTop.Slope == SlopeType.Solid ||
-                    (slope == SlopeType.SlopeUpLeft && tileTop.Slope == SlopeType.SlopeDownLeft) ||
-                    (slope == SlopeType.SlopeUpRight && tileTop.Slope == SlopeType.SlopeDownRight))
+                    ((slope == SlopeType.SlopeUpLeft || slope == SlopeType.SlopeUpRight) &&
+                     (tileTop.Slope == SlopeType.SlopeDownLeft || tileTop.Slope == SlopeType.SlopeDownRight)))
                 {
                     top = tileTop.TileType;
                 }
@@ -323,8 +325,8 @@ namespace Macrocosm.Common.TileFrame
             if (tileRight.HasTile && !tileRight.IsHalfBlock)
             {
                 if (tileRight.Slope == SlopeType.Solid ||
-                    (slope == SlopeType.SlopeUpRight && tileRight.Slope == SlopeType.SlopeUpLeft) ||
-                    (slope == SlopeType.SlopeDownRight && tileRight.Slope == SlopeType.SlopeDownLeft))
+                    ((slope == SlopeType.SlopeUpRight || slope == SlopeType.SlopeDownRight) &&
+                     (tileRight.Slope == SlopeType.SlopeDownLeft || tileRight.Slope == SlopeType.SlopeUpLeft)))
                 {
                     right = tileRight.TileType;
                 }
@@ -333,8 +335,8 @@ namespace Macrocosm.Common.TileFrame
             if (tileBottom.HasTile && !tileBottom.IsHalfBlock)
             {
                 if (tileBottom.Slope == SlopeType.Solid ||
-                    (slope == SlopeType.SlopeDownLeft && tileBottom.Slope == SlopeType.SlopeUpLeft) ||
-                    (slope == SlopeType.SlopeDownRight && tileBottom.Slope == SlopeType.SlopeUpRight))
+                    ((slope == SlopeType.SlopeDownLeft || slope == SlopeType.SlopeDownRight) &&
+                     (tileBottom.Slope == SlopeType.SlopeUpLeft || tileBottom.Slope == SlopeType.SlopeUpRight)))
                 {
                     bottom = tileBottom.TileType;
                 }
@@ -343,8 +345,8 @@ namespace Macrocosm.Common.TileFrame
             if (tileLeft.HasTile && !tileLeft.IsHalfBlock)
             {
                 if (tileLeft.Slope == SlopeType.Solid ||
-                    (slope == SlopeType.SlopeUpLeft && tileLeft.Slope == SlopeType.SlopeUpRight) ||
-                    (slope == SlopeType.SlopeDownLeft && tileLeft.Slope == SlopeType.SlopeDownRight))
+                    ((slope == SlopeType.SlopeUpLeft || slope == SlopeType.SlopeDownLeft) &&
+                     (tileLeft.Slope == SlopeType.SlopeDownRight || tileLeft.Slope == SlopeType.SlopeUpRight)))
                 {
                     left = tileLeft.TileType;
                 }

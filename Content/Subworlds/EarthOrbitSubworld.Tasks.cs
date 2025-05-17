@@ -1,13 +1,9 @@
-﻿using Macrocosm.Common.Bases.Walls;
-using Macrocosm.Common.Enums;
-using Macrocosm.Common.Utils;
-using Macrocosm.Common.WorldGeneration;
+﻿using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Items.Refined;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
-using Macrocosm.Content.Walls;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth;
 using Microsoft.Xna.Framework;
@@ -16,6 +12,7 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
@@ -24,34 +21,43 @@ namespace Macrocosm.Content.Subworlds
 {
     public partial class EarthOrbitSubworld
     {
-        public StructureMap gen_StructureMap;
+        private StructureMap gen_StructureMap;
+        private int gen_spawnExclusionRadius;
 
         [Task]
         private void PrepareTask(GenerationProgress progress)
         {
             gen_StructureMap = new();
+            gen_spawnExclusionRadius = 200;
         }
 
         [Task]
-        private void PlaceSpawn(GenerationProgress progress)
+        private void SpawnTask(GenerationProgress progress)
         {
-            Structure module = Structure.Get<BaseSpaceStationModule>();
-            Point16 origin = new(Main.spawnTileX + module.Size.X / 2, Main.spawnTileY);
-            module.Place(origin, null);
+            Main.spawnTileX = Main.maxTilesX / 2;
+            Main.spawnTileY = Main.maxTilesY / 2;
         }
 
         [Task]
-        private void Asteroids(GenerationProgress progress)
+        private void AsteroidTask(GenerationProgress progress)
         {
-            //I really do not care if they overlap eachother. BUT they do need to protect the area they spawn in
+            // I really do not care if they overlap eachother. BUT they do need to protect the area they spawn in -- Clyder
             for (int x = 50; x < Main.maxTilesX - 50; x++)
             {
                 for (int y = 50; y < Main.maxTilesY - 50; y++)
                 {
-                    if (WorldGen.genRand.NextBool(80000) && Math.Abs(Main.spawnTileX - x) > 200)
+                    // Don't spawn asteroids too close to the spawn area
+                    if (Math.Abs(x - Main.spawnTileX) < gen_spawnExclusionRadius &&
+                        Math.Abs(y - Main.spawnTileY) < gen_spawnExclusionRadius)
+                        continue;
+
+                    if (WorldGen.genRand.NextBool(80000))
                     {
-                        Utility.BlobTileRunner(x, y, (ushort)TileType<Protolith>(), 0..3, 1..4, 4..6, 1f, 4, wallType: (ushort)VariantWall.WallType<ProtolithWall>(WallSafetyType.Natural));
-                        //very small chance to create a flesh meteor
+                        //int wallType = VariantWall.WallType<AstrolithWall>(WallSafetyType.Natural);
+                        int wallType = 0;
+                        BlobTileRunner(x, y, (ushort)TileType<Astrolith>(), 0..8, 1..4, 4..6, 1f, 4, wallType: (ushort)wallType);
+
+                        // Very small chance to create a flesh meteor
                         if (WorldGen.genRand.NextBool(20))
                         {
                             ForEachInCircle(
@@ -60,22 +66,16 @@ namespace Macrocosm.Content.Subworlds
                                 radius: 3,
                                 (i1, j1) =>
                                 {
-                                    if (CoordinatesOutOfBounds(i1, j1))
-                                    {
+                                    if (!WorldGen.InWorld(i1, j1))
                                         return;
-                                    }
 
                                     float iDistance = Math.Abs(x - i1) / (3 * 0.5f);
                                     float jDistance = Math.Abs(y - j1) / (3 * 0.5f);
                                     if (WorldGen.genRand.NextFloat() < iDistance * 0.2f || WorldGen.genRand.NextFloat() < jDistance * 0.2f)
-                                    {
                                         return;
-                                    }
 
                                     if (Main.tile[i1, j1].HasTile)
-                                    {
                                         FastPlaceTile(i1, j1, TileID.FleshBlock);
-                                    }
                                 }
                             );
                         }
@@ -84,54 +84,76 @@ namespace Macrocosm.Content.Subworlds
                     }
                 }
             }
-
-            //Let there be ores
-            int protolithType = TileType<Protolith>();
-            GenerateOre(TileType<Tiles.Ores.LithiumOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
-            GenerateOre(TileType<Tiles.Ores.AluminumOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
-            GenerateOre(TileID.Iron, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
-            GenerateOre(TileID.Gold, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
-            GenerateOre(TileID.Cobalt, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
-            GenerateOre(TileID.Titanium, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
-            GenerateOre(TileID.Meteorite, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), protolithType);
-        }
-
-        private Structure GetACommonStructure()
-        {
-            int random = WorldGen.genRand.Next(0, 7);
-            Structure structure = random switch
-            {
-                1 => Structure.Get<SpaceJunk1>(),
-                2 => Structure.Get<SpaceJunk2>(),
-                3 => Structure.Get<SpaceJunk3>(),
-                4 => Structure.Get<SpaceJunk4>(),
-                5 => Structure.Get<SpaceLoot1>(),
-                6 => Structure.Get<SpaceLoot2>(),
-                _ => Structure.Get<SpaceLoot3>(),
-            };
-            return structure;
-        }
-
-        private Structure GetARareStructure()
-        {
-            int random = WorldGen.genRand.Next(0, 1); // We'll add more to this list
-            Structure structure = random switch
-            {
-                _ => Structure.Get<RareStructure1>(),
-            };
-            return structure;
         }
 
         [Task]
-        private void Structures(GenerationProgress progress)
+        private void OreTask(GenerationProgress progress)
         {
+            GenerateOre(TileType<Tiles.Ores.LithiumOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
+            GenerateOre(TileType<Tiles.Ores.AluminumOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
+            GenerateOre(TileID.Iron, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
+            GenerateOre(TileID.Gold, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
+            GenerateOre(TileID.Cobalt, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
+            GenerateOre(TileID.Titanium, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
+            GenerateOre(TileID.Meteorite, 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
+        }
+
+        [Task(weight: 12.0)]
+        private void SmoothTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothTask");
+            SmoothWorld(progress);
+        }
+
+        [Task]
+        private void WallCleanupTask(GenerationProgress progress)
+        {
+            for (int x = 1; x < Main.maxTilesX; x++)
+            {
+                for (int y = 1; y < Main.maxTilesY; y++)
+                {
+                    Tile tile = Main.tile[x, y];
+
+                    if (!tile.HasTile || tile.BlockType != BlockType.Solid)
+                    {
+                        //if (tile.WallType == VariantWall.WallType<AstrolithWall>())
+                        //    tile.WallType = 0;
+                    }
+
+                }
+            }
+        }
+
+        [Task]
+        private void SpaceStationTask(GenerationProgress progress)
+        {
+            Structure module = Structure.Get<BaseSpaceStationModule>();
+            Point16 origin = new(Main.spawnTileX + module.Size.X / 2, Main.spawnTileY);
+            module.Place(origin, gen_StructureMap, padding: gen_spawnExclusionRadius);
+        }
+
+        [Task]
+        private void StructureTask(GenerationProgress progress)
+        {
+            // Common structures
             for (int x = 50; x < Main.maxTilesX - 50; x++)
             {
                 for (int y = 50; y < Main.maxTilesY - 50; y++)
                 {
-                    if (WorldGen.genRand.NextBool(50000) && Math.Abs(Main.spawnTileX - x) > 200)
+                    if (WorldGen.genRand.NextBool(50000))
                     {
-                        Structure structure = GetACommonStructure();
+                        int random = WorldGen.genRand.Next(7);
+                        Structure structure = random switch
+                        {
+                            1 => Structure.Get<SpaceJunk1>(),
+                            2 => Structure.Get<SpaceJunk2>(),
+                            3 => Structure.Get<SpaceJunk3>(),
+                            4 => Structure.Get<SpaceJunk4>(),
+                            5 => Structure.Get<SpaceLoot1>(),
+                            6 => Structure.Get<SpaceLoot2>(),
+                            _ => Structure.Get<SpaceLoot3>(),
+                        };
+
                         if (gen_StructureMap.CanPlace(new Rectangle(x - 10, y - 10, structure.Size.X + 10, structure.Size.Y + 10)))
                         {
                             structure.Place(new(x, y), gen_StructureMap);
@@ -141,7 +163,8 @@ namespace Macrocosm.Content.Subworlds
 
             }
 
-            int maximumRares = WorldGen.genRand.Next(0, 3);
+            // Rare structures
+            int maximumRares = WorldGen.genRand.Next(3);
             int placed = 0;
             for (int x = 50; x < Main.maxTilesX * 0.4f; x++)
             {
@@ -151,7 +174,14 @@ namespace Macrocosm.Content.Subworlds
                     {
                         if (WorldGen.genRand.NextBool(3))
                         {
-                            Structure structure = GetARareStructure();
+                            int random = WorldGen.genRand.Next(3); // We'll add more to this list
+                            Structure structure = random switch
+                            {
+                                0 => Structure.Get<RareStructure1>(),
+                                1 => Structure.Get<LCShip1>(),
+                                _ => Structure.Get<LCShip2>(),
+                            };
+
                             if (gen_StructureMap.CanPlace(new Rectangle(x - 10, y - 10, structure.Size.X + 10, structure.Size.Y + 10)))
                             {
                                 structure.Place(new(x, y), gen_StructureMap);
@@ -160,74 +190,61 @@ namespace Macrocosm.Content.Subworlds
                         }
                         else
                         {
-                            if (WorldGen.genRand.NextBool(2))
+                            if (gen_StructureMap.CanPlace(new Rectangle(x - 40, y - 40, 40, 40)))
                             {
-                                if (gen_StructureMap.CanPlace(new Rectangle(x - 40, y - 40, 40, 40)))
-                                {
-                                    gen_StructureMap.AddProtectedStructure(new Rectangle(x - 40, y - 40, x + 40, y + 40), padding: 5);
-                                    Utility.BlobTileRunner(x, y, TileType<Protolith>(), 5..12, 6..15, 20..30, 1f, 4, wallType: (ushort)WallType<ProtolithWall>());
-                                    Utility.BlobTileRunner(x, y, TileType<Protolith>(), 3..6, 1..5, 30..35, 1f, 4, wallType: (ushort)WallType<ProtolithWall>());
-                                    Utility.BlobTileRunner(x, y, TileID.ShimmerBlock, 3..5, 1..2, 17..20, 1f, 4);
-                                    Utility.BlobLiquidTileRunner(x, y, 3, 1..2, 0..1, 10..15, 1f, 4);
-                                    ForEachInCircle(
-                                        x,
-                                        y,
-                                        15,
-                                        (i1, j1) =>
+                                //int wallType = VariantWall.WallType<AstrolithWall>(WallSafetyType.Natural);
+                                int wallType = 0;
+
+                                gen_StructureMap.AddProtectedStructure(new Rectangle(x - 40, y - 40, x + 40, y + 40), padding: 5);
+                                BlobTileRunner(x, y, TileType<Astrolith>(), 5..12, 6..15, 20..30, 1f, 4, wallType: (ushort)wallType);
+                                BlobTileRunner(x, y, TileType<Astrolith>(), 3..6, 1..5, 30..35, 1f, 4, wallType: (ushort)wallType);
+
+                                BlobTileRunner(x, y, TileID.ShimmerBlock, 3..5, 1..2, 17..20, 1f, 4);
+                                BlobLiquidTileRunner(x, y, 3, 1..2, 0..1, 10..15, 1f, 4);
+
+                                ForEachInCircle(
+                                    x,
+                                    y,
+                                    15,
+                                    (i1, j1) =>
+                                    {
+                                        if (!WorldGen.InWorld(i1, j1))
+                                            return;
+
+                                        float iDistance = Math.Abs(x - i1) / (15 * 0.5f);
+                                        float jDistance = Math.Abs(y - j1) / (15 * 0.5f);
+                                        if (WorldGen.genRand.NextFloat() < iDistance * 0.2f || WorldGen.genRand.NextFloat() < jDistance * 0.2f)
                                         {
-                                            if (CoordinatesOutOfBounds(i1, j1))
-                                            {
-                                                return;
-                                            }
-
-                                            float iDistance = Math.Abs(x - i1) / (15 * 0.5f);
-                                            float jDistance = Math.Abs(y - j1) / (15 * 0.5f);
-                                            if (WorldGen.genRand.NextFloat() < iDistance * 0.2f || WorldGen.genRand.NextFloat() < jDistance * 0.2f)
-                                            {
-                                                return;
-                                            }
-
-                                            if (Main.tile[i1, j1].HasTile)
-                                            {
-                                                FastPlaceTile(i1, j1, TileID.ShimmerBlock);
-                                            }
+                                            return;
                                         }
-                                    );
-                                    ForEachInCircle(
-                                        x,
-                                        y,
-                                        35,
-                                        (i1, j1) =>
+
+                                        if (Main.tile[i1, j1].HasTile)
                                         {
-                                            if (CoordinatesOutOfBounds(i1, j1))
-                                            {
-                                                return;
-                                            }
-                                            if (WorldGen.genRand.NextFloat() > 0.06f)
-                                            {
-                                                return;
-                                            }
-
-                                            if (Main.tile[i1, j1].HasTile)
-                                            {
-                                                FastPlaceTile(i1, j1, TileID.ShimmerBlock);
-                                            }
+                                            FastPlaceTile(i1, j1, TileID.ShimmerBlock);
                                         }
-                                    );
+                                    }
+                                );
 
-                                    placed++;
-                                }
-                            }
-                            else
-                            {
-                                if (gen_StructureMap.CanPlace(new Rectangle(x - 40, y - 40, x + 40, y + 40)))
-                                {
-                                    gen_StructureMap.AddProtectedStructure(new Rectangle(x - 40, y - 40, x + 40, y + 40), padding: 5);
-                                    Utility.BlobTileRunner(x, y, TileType<Cynthalith>(), 1..8, 1..5, 20..25, 1f, 4, wallType: (ushort)WallType<RegolithWall>());
-                                    Utility.BlobTileRunner(x, y, TileType<Regolith>(), 1..8, 1..53, 20..25, 1f, 4);
+                                ForEachInCircle(
+                                    x,
+                                    y,
+                                    35,
+                                    (i1, j1) =>
+                                    {
+                                        if (!WorldGen.InWorld(i1, j1))
+                                            return;
 
-                                    placed++;
-                                }
+                                        if (WorldGen.genRand.NextFloat() > 0.06f)
+                                            return;
+
+                                        if (Main.tile[i1, j1].HasTile)
+                                        {
+                                            FastPlaceTile(i1, j1, TileID.ShimmerBlock);
+                                        }
+                                    }
+                                );
+
+                                placed++;
                             }
                         }
                     }
@@ -237,7 +254,7 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
-        private void Loot(GenerationProgress progress)
+        private void LootTask(GenerationProgress progress)
         {
             for (int i = 0; i < Main.maxChests; i++)
             {
@@ -248,21 +265,6 @@ namespace Macrocosm.Content.Subworlds
                     {
                         ManageIndustrialChest(chest, i);
                     }
-                }
-            }
-            for (int x = 1; x < Main.maxTilesX; x++)
-            {
-                for (int y = 1; y < Main.maxTilesY; y++)
-                {
-                    if (!Main.tile[x, y].HasTile)
-                    {
-                        if (Main.tile[x, y].WallType == VariantWall.WallType<ProtolithWall>() || Main.tile[x, y].WallType == VariantWall.WallType<RegolithWall>())
-                        {
-                            Tile tile = Main.tile[x, y];
-                            tile.WallType = 0;
-                        }
-                    }
-
                 }
             }
         }

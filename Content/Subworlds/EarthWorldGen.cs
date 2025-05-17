@@ -25,6 +25,7 @@ namespace Macrocosm.Content.Subworlds
             int oceanIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Sand Patches"));
             if (oceanIndex != -1)
                 tasks.Insert(oceanIndex + 1, new PassLegacy("Macrocosm: Silica", GenerateSilicaSand_Ocean));
+
             int flowerIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Sunflowers"));
             if (oceanIndex != -1)
                 tasks.Insert(flowerIndex + 1, new PassLegacy("Macrocosm: Rubber", GenerateRubberTrees));
@@ -127,10 +128,10 @@ namespace Macrocosm.Content.Subworlds
             {
                 for (int Y = 0; Y < (int)Main.worldSurface; Y++)
                 {
-                    if (Main.tile[X, Y].TileType == (ushort)TileID.JungleGrass)
+                    if (Main.tile[X, Y].TileType == TileID.JungleGrass)
                     {
                         if (WorldGen.genRand.NextBool(20))
-                            WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), X, Y);
+                            WorldGen.TryGrowingTreeByType(TileType<RubberTree>(), X, Y);
                     }
                 }
 

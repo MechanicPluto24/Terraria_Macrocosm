@@ -3,19 +3,19 @@ using Macrocosm.Common.Bases.Walls;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.WorldGeneration;
-using Macrocosm.Content.Tiles.Blocks;
 using Macrocosm.Content.Tiles.Rubble;
-using Macrocosm.Content.Walls;
-using Microsoft.Xna.Framework;
-using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Terraria;
+using Macrocosm.Common.WorldGeneration;
+using Macrocosm.Content.Tiles.Blocks;
+using Macrocosm.Content.Walls;
+using Microsoft.Xna.Framework;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
 {
-    public abstract class SpaceLoot : Structure
+    public class SpaceLoot1 : Structure
     {
         public sealed override void PostPlace(Point16 origin)
         {
@@ -86,17 +86,6 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
                 }
             }
         }
-    }
-    public class SpaceLoot1 : SpaceLoot
-    {
-
-    }
-    public class SpaceLoot2 : SpaceLoot
-    {
-
-    }
-    public class SpaceLoot3 : SpaceLoot
-    {
 
     }
 }

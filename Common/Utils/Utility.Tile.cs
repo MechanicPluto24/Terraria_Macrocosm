@@ -110,7 +110,7 @@ namespace Macrocosm.Common.Utils
         public static Color GetTileColor(Point coords) => GetTileColor(coords.X, coords.Y);
         public static Color GetTileColor(int i, int j)
         {
-            if (CoordinatesOutOfBounds(i, j))
+            if (!WorldGen.InWorld(i, j))
                 return default;
 
             if (!Main.tile[i, j].HasTile)
