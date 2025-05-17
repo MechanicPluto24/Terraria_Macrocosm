@@ -26,7 +26,9 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
 
             TileID.Sets.ChecksForMerge[Type] = true;
             TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
+
             TileID.Sets.AllBlocksWithSmoothBordersToResolveHalfBlockIssue[Type] = true;
+            TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
 
             MineResist = 1f;
 
@@ -38,6 +40,7 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
 
         public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
         {
+
             if (Main.tile[i, j].IsSloped())
                 TileFraming.OutlineSlopeFraming(i, j, resetFrame);
             else

@@ -24,7 +24,8 @@ namespace Macrocosm.Common.Commands
 #endif
 
             bool doRegen = args.Length == 0 || args.Contains("gen");
-            bool doReframe = args.Length == 0 || args.Contains("frame");
+            bool doReframe = args.Contains("frame") || args.Contains("reframe");
+            bool doSmooth = args.Contains("smooth");
 
             if (doRegen)
             {
@@ -46,6 +47,13 @@ namespace Macrocosm.Common.Commands
 
                 stopwatch.Stop();
                 Utility.LogChatMessage($"World regeneration complete in {stopwatch.Elapsed}");
+
+                doReframe = true;
+            }
+
+            if (doSmooth)
+            {
+                Utility.SmoothWorld(new GenerationProgress());
             }
 
             if (doReframe)

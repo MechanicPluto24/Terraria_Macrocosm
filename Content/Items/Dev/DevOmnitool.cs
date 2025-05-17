@@ -1,13 +1,15 @@
-﻿using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.Bases.Walls;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Subworlds;
-using Macrocosm.Content.Tiles.Blocks.Bricks;
-using Macrocosm.Content.Tiles.Furniture.Regolith;
+using Macrocosm.Content.Tiles.Blocks.Terrain;
+using Macrocosm.Content.Walls;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Items.Dev
 {

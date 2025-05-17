@@ -3,6 +3,7 @@ using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Walls
@@ -22,7 +23,7 @@ namespace Macrocosm.Content.Walls
 
         public override bool WallFrame(int i, int j, bool randomizeFrame, ref int style, ref int frameNumber)
         {
-            if (Utility.CoordinatesOutOfBounds(i, j))
+            if (!WorldGen.InWorld(i, j))
                 return false;
 
             int[][] wallFrameNumberLookup = [

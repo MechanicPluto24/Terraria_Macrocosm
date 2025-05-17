@@ -373,7 +373,7 @@ namespace Macrocosm.Content.Rockets
 
                     if (TargetTravelPosition == default && DockingProgress < float.Epsilon)
                     {
-                        Structure module = new BaseSpaceStationModule();
+                        Structure module = Structure.Get<BaseSpaceStationModule>();
                         TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition) + new Vector2(0, Height + (int)(module.Size.Y * 16f));
                     }
 
@@ -1066,7 +1066,7 @@ namespace Macrocosm.Content.Rockets
         {
             for (int x = -8; x < 8; x++)
             {
-                if (x is < -6 or > -2 and < 2 or > 6 && !Utility.CoordinatesOutOfBounds(tileCoords.X - x, tileCoords.Y))
+                if (x is < -6 or > -2 and < 2 or > 6 && WorldGen.InWorld(tileCoords.X - x, tileCoords.Y))
                     WorldGen.KillTile_MakeTileDust(tileCoords.X - x, tileCoords.Y, Main.tile[tileCoords.X - x, tileCoords.Y]);
             }
         }

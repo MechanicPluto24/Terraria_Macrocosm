@@ -75,7 +75,7 @@ namespace Macrocosm.Content.Tiles.Special
 
         public override bool RightClick(int i, int j)
         {
-            if (Utility.CoordinatesOutOfBounds(i + LaunchPad.MaxWidth, j) || Utility.CoordinatesOutOfBounds(i - LaunchPad.MaxWidth, j))
+            if (!WorldGen.InWorld(i + LaunchPad.MaxWidth, j) || !WorldGen.InWorld(i - LaunchPad.MaxWidth, j))
                 return false;
 
             if (LaunchPadManager.TryGetLaunchPadAtTileCoordinates(MacrocosmSubworld.CurrentID, new(i, j), out _))

@@ -37,7 +37,6 @@ namespace Macrocosm.Common.Bases.Projectiles
         // Needed since OnHitEffect is only called on the owner
         bool scheduleOnHitEffect = false;
 
-        private int newTarget = -1;
         public override void SetDefaults()
         {
             Projectile.CloneDefaults(ProjectileID.Bullet);
