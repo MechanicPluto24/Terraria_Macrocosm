@@ -52,7 +52,6 @@ namespace Macrocosm.Common.DataStructures
                                         + (Right ? 1 : 0)
                                         + (Left ? 1 : 0);
         }
-
         public record PredicateNeighbourInfo(int I, int J, Func<Tile, bool> Predicate) : CountableNeighbourInfo(I, J)
         {
             protected override bool ShouldCount(Tile tile) => Predicate.Invoke(tile);
@@ -62,7 +61,7 @@ namespace Macrocosm.Common.DataStructures
         public PredicateNeighbourInfo HasTile => hasTile ??= new(I, J, tile => tile.HasTile);
 
         private PredicateNeighbourInfo solid;
-        public PredicateNeighbourInfo Solid => solid ??= new(I, J, tile => tile.HasTile && tile.BlockType == BlockType.Solid);
+        public PredicateNeighbourInfo Solid => solid ??= new(I, J, tile => tile.HasTile && tile.HasUnactuatedTile && Main.tileSolid[tile.TileType] && tile.BlockType == BlockType.Solid);
 
         private PredicateNeighbourInfo sloped;
         public PredicateNeighbourInfo Sloped => sloped ??= new(I, J, tile => tile.HasTile && tile.BlockType != BlockType.Solid);
@@ -70,8 +69,8 @@ namespace Macrocosm.Common.DataStructures
         private PredicateNeighbourInfo wall;
         public PredicateNeighbourInfo Wall => wall ??= new(I, J, tile => tile.WallType != WallID.None);
 
-        public PredicateNeighbourInfo TypedSolid(ushort type) => new(I, J, tile => tile.HasTile && tile.TileType == type);
-        public PredicateNeighbourInfo TypedSolid(params ushort[] types) => new(I, J, tile => tile.HasTile && types.Contains(tile.TileType));
+        public PredicateNeighbourInfo IsType(ushort type) => new(I, J, tile => tile.HasTile && tile.TileType == type);
+        public PredicateNeighbourInfo IsTypes(params ushort[] types) => new(I, J, tile => tile.HasTile && types.Contains(tile.TileType));
 
         public PredicateNeighbourInfo GetPredicateNeighbourInfo(Func<Tile, bool> predicate) => new(I, J, predicate);
     }

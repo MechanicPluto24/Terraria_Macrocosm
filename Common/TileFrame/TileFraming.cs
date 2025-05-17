@@ -297,6 +297,417 @@ namespace Macrocosm.Common.TileFrame
             }
         }
 
+        public static void OutlineSlopeFraming(int i, int j, bool resetFrame = false, int? customVariation = null)
+        {
+            Tile tile = Main.tile[i, j];
+            int type = tile.TileType;
+            SlopeType slope = tile.Slope;
+
+            // Neighbour references 
+            Tile tileTop = Main.tile[i, j - 1];
+            Tile tileRight = Main.tile[i + 1, j];
+            Tile tileBottom = Main.tile[i, j + 1];
+            Tile tileLeft = Main.tile[i - 1, j];
+
+            int top = -1, right = -1, bottom = -1, left = -1;
+            if (tileTop.HasTile && !tileTop.IsHalfBlock)
+            {
+                if (tileTop.Slope == SlopeType.Solid ||
+                    (slope == SlopeType.SlopeUpLeft && tileTop.Slope == SlopeType.SlopeDownLeft) ||
+                    (slope == SlopeType.SlopeUpRight && tileTop.Slope == SlopeType.SlopeDownRight))
+                {
+                    top = tileTop.TileType;
+                }
+            }
+
+            if (tileRight.HasTile && !tileRight.IsHalfBlock)
+            {
+                if (tileRight.Slope == SlopeType.Solid ||
+                    (slope == SlopeType.SlopeUpRight && tileRight.Slope == SlopeType.SlopeUpLeft) ||
+                    (slope == SlopeType.SlopeDownRight && tileRight.Slope == SlopeType.SlopeDownLeft))
+                {
+                    right = tileRight.TileType;
+                }
+            }
+
+            if (tileBottom.HasTile && !tileBottom.IsHalfBlock)
+            {
+                if (tileBottom.Slope == SlopeType.Solid ||
+                    (slope == SlopeType.SlopeDownLeft && tileBottom.Slope == SlopeType.SlopeUpLeft) ||
+                    (slope == SlopeType.SlopeDownRight && tileBottom.Slope == SlopeType.SlopeUpRight))
+                {
+                    bottom = tileBottom.TileType;
+                }
+            }
+
+            if (tileLeft.HasTile && !tileLeft.IsHalfBlock)
+            {
+                if (tileLeft.Slope == SlopeType.Solid ||
+                    (slope == SlopeType.SlopeUpLeft && tileLeft.Slope == SlopeType.SlopeUpRight) ||
+                    (slope == SlopeType.SlopeDownLeft && tileLeft.Slope == SlopeType.SlopeDownRight))
+                {
+                    left = tileLeft.TileType;
+                }
+            }
+
+            int variation;
+            if (customVariation.HasValue)
+            {
+                variation = customVariation.Value;
+            }
+            else if (!resetFrame)
+            {
+                variation = tile.TileFrameNumber;
+            }
+            else
+            {
+                variation = WorldGen.genRand.Next(3);
+                tile.TileFrameNumber = variation;
+            }
+
+            Point frame = new(-1, -1);
+            switch (slope)
+            {
+                case SlopeType.SlopeDownRight:
+                    if(right == type && bottom == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 234;
+                                frame.Y = 0;
+                                break;
+
+                            case 1:
+                                frame.X = 270;
+                                frame.Y = 0;
+                                break;
+
+                            case 2:
+                                frame.X = 306;
+                                frame.Y = 0;
+                                break;
+                        }
+                    }
+                    else if (right == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 342;
+                                frame.Y = 0;
+                                break;
+
+                            case 1:
+                                frame.X = 378;
+                                frame.Y = 0;
+                                break;
+
+                            case 2:
+                                frame.X = 414;
+                                frame.Y = 0;
+                                break;
+                        }
+                    }
+                    else if(bottom == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 234;
+                                frame.Y = 36;
+                                break;
+
+                            case 1:
+                                frame.X = 270;
+                                frame.Y = 36;
+                                break;
+
+                            case 2:
+                                frame.X = 306;
+                                frame.Y = 36;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 342;
+                                frame.Y = 36;
+                                break;
+
+                            case 1:
+                                frame.X = 378;
+                                frame.Y = 36;
+                                break;
+
+                            case 2:
+                                frame.X = 414;
+                                frame.Y = 36;
+                                break;
+                        }
+                    }
+                    break;
+
+                case SlopeType.SlopeDownLeft:
+                    if (left == type && bottom == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 252;
+                                frame.Y = 0;
+                                break;
+
+                            case 1:
+                                frame.X = 288;
+                                frame.Y = 0;
+                                break;
+
+                            case 2:
+                                frame.X = 324;
+                                frame.Y = 0;
+                                break;
+                        }
+                    }
+                    else if (left == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 360;
+                                frame.Y = 0;
+                                break;
+
+                            case 1:
+                                frame.X = 396;
+                                frame.Y = 0;
+                                break;
+
+                            case 2:
+                                frame.X = 432;
+                                frame.Y = 0;
+                                break;
+                        }
+                    }
+                    else if (bottom == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 252;
+                                frame.Y = 36;
+                                break;
+
+                            case 1:
+                                frame.X = 288;
+                                frame.Y = 36;
+                                break;
+
+                            case 2:
+                                frame.X = 324;
+                                frame.Y = 36;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 360;
+                                frame.Y = 36;
+                                break;
+
+                            case 1:
+                                frame.X = 396;
+                                frame.Y = 36;
+                                break;
+
+                            case 2:
+                                frame.X = 432;
+                                frame.Y = 36;
+                                break;
+                        }
+                    }
+                    break;
+
+                case SlopeType.SlopeUpRight:
+                    if (right == type && top == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 234;
+                                frame.Y = 18;
+                                break;
+
+                            case 1:
+                                frame.X = 270;
+                                frame.Y = 18;
+                                break;
+
+                            case 2:
+                                frame.X = 306;
+                                frame.Y = 18;
+                                break;
+                        }
+                    }
+                    else if (right == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 342;
+                                frame.Y = 18;
+                                break;
+
+                            case 1:
+                                frame.X = 378;
+                                frame.Y = 18;
+                                break;
+
+                            case 2:
+                                frame.X = 414;
+                                frame.Y = 18;
+                                break;
+                        }
+                    }
+                    else if (top == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 234;
+                                frame.Y = 54;
+                                break;
+
+                            case 1:
+                                frame.X = 270;
+                                frame.Y = 54;
+                                break;
+
+                            case 2:
+                                frame.X = 306;
+                                frame.Y = 54;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 342;
+                                frame.Y = 54;
+                                break;
+
+                            case 1:
+                                frame.X = 378;
+                                frame.Y = 54;
+                                break;
+
+                            case 2:
+                                frame.X = 414;
+                                frame.Y = 54;
+                                break;
+                        }
+                    }
+                    break;
+
+                case SlopeType.SlopeUpLeft:
+                    if (left == type && top == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 252;
+                                frame.Y = 18;
+                                break;
+
+                            case 1:
+                                frame.X = 288;
+                                frame.Y = 18;
+                                break;
+
+                            case 2:
+                                frame.X = 324;
+                                frame.Y = 18;
+                                break;
+                        }
+                    }
+                    else if (left == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 360;
+                                frame.Y = 18;
+                                break;
+
+                            case 1:
+                                frame.X = 396;
+                                frame.Y = 18;
+                                break;
+
+                            case 2:
+                                frame.X = 432;
+                                frame.Y = 18;
+                                break;
+                        }
+                    }
+                    else if(top == type)
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 252;
+                                frame.Y = 54;
+                                break;
+
+                            case 1:
+                                frame.X = 288;
+                                frame.Y = 54;
+                                break;
+
+                            case 2:
+                                frame.X = 324;
+                                frame.Y = 54;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (variation)
+                        {
+                            case 0:
+                                frame.X = 360;
+                                frame.Y = 54;
+                                break;
+
+                            case 1:
+                                frame.X = 396;
+                                frame.Y = 54;
+                                break;
+
+                            case 2:
+                                frame.X = 432;
+                                frame.Y = 54;
+                                break;
+                        }
+                    }
+                    break;
+            }
+
+            if(frame.X >= 0 && frame.Y >= 0)
+            {
+                tile.TileFrameX = (short)frame.X;
+                tile.TileFrameY = (short)frame.Y;
+            }
+        }
+
         /// <summary>
         /// Copy of the common framing all blocks in Terraria use, with some extra settings
         /// </summary>

@@ -140,7 +140,7 @@ namespace Macrocosm.Content.Rockets
         public int PreLaunchDuration = 160;
 
         public int StaticFireDuration = 60;
-        /// <summary> The progress of the <see cref="StaticFire"/> </summary>
+        /// <summary> The progress of <see cref="ActionState.StaticFire"/> </summary>
         public float StaticFireProgress => Utility.InverseLerp(0, StaticFireDuration, FlightTime, clamped: true);
 
         /// <summary> The flight sequence progress </summary>

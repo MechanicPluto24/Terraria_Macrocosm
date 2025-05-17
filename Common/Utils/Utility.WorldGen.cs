@@ -324,7 +324,7 @@ namespace Macrocosm.Common.Utils
                                 return;
                             }
 
-                            int solidCount = new TileNeighbourInfo(i, j).TypedSolid((ushort)tileType).Count;
+                            int solidCount = new TileNeighbourInfo(i, j).IsType((ushort)tileType).Count;
                             if (solidCount > 4)
                             {
                                 FastPlaceTile(i, j, (ushort)tileType);
