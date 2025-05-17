@@ -1,5 +1,6 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.TileFrame;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
@@ -20,8 +21,12 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             Main.tileMerge[Type][TileID.Meteorite] = true;
             Main.tileMerge[TileID.Meteorite][Type] = true;
 
+            // Only to avoid slope slicing, TileFrame code is different
+            TileID.Sets.HasSlopeFrames[Type] = true;
+
             TileID.Sets.ChecksForMerge[Type] = true;
             TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
+            TileID.Sets.AllBlocksWithSmoothBordersToResolveHalfBlockIssue[Type] = true;
 
             MineResist = 1f;
 
@@ -31,13 +36,20 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             DustType = ModContent.DustType<AstrolithDust>();
         }
 
-        public override bool HasWalkDust() => Main.rand.NextBool(3) && MacrocosmSubworld.GetGravityMultiplier() != 0f;
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            if (Main.tile[i, j].IsSloped())
+                TileFraming.OutlineSlopeFraming(i, j, resetFrame);
+            else
+                TileFraming.CommonFraming(i, j, resetFrame);
 
+            return false;
+        }
+
+        public override bool HasWalkDust() => Main.rand.NextBool(3) && MacrocosmSubworld.GetGravityMultiplier() != 0f;
         public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
         {
             dustType = ModContent.DustType<AstrolithDust>();
         }
-
-        public override bool CanExplode(int i, int j) => true;
     }
 }
