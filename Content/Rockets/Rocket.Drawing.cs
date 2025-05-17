@@ -143,7 +143,11 @@ namespace Macrocosm.Content.Rockets
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, sbState.DepthStencilState, sbState.RasterizerState, sbState.Effect, Matrix.CreateScale(1f));
 
             float rotation = Rotation;
+            float transparency = Transparency;
+
             Rotation = 0f;
+            Transparency = 1f;
+
             switch (drawMode)
             {
                 case DrawMode.World:
@@ -158,14 +162,16 @@ namespace Macrocosm.Content.Rockets
                     DrawBlueprint(spriteBatch, drawOffset);
                     break;
             }
+
             Rotation = rotation;
+            Transparency = transparency;
 
             spriteBatch.End();
             spriteBatch.GraphicsDevice.SetRenderTarget(null);
             return target;
         }
 
-        // Draw types
+
         private void DrawWorld(SpriteBatch spriteBatch, Vector2 position)
         {
             foreach (RocketModule module in ModulesByDrawPriority)
@@ -223,23 +229,21 @@ namespace Macrocosm.Content.Rockets
 
         public void DrawOverlay(SpriteBatch spriteBatch, Vector2 position)
         {
-            if (ForcedFlightAppearance || (State != ActionState.Idle && State != ActionState.PreLaunch))
+            if (ForcedFlightAppearance || (State == ActionState.AutoFlight && FlightState != AutoFlightState.PreLaunch))
             {
                 float scale = 1.2f * Main.rand.NextFloat(0.85f, 1f);
+
                 if (ForcedFlightAppearance)
                     scale *= 1.25f;
 
-                if (State == ActionState.StaticFire)
-                    scale *= Utility.QuadraticEaseOut(StaticFireProgress);
+                if (FlightState == AutoFlightState.StaticFire)
+                    scale *= Utility.QuadraticEaseOut(StateProgress);
 
-                if (State == ActionState.Landing && LandingProgress > 0.9f)
-                    scale *= Utility.QuadraticEaseOut((1f - LandingProgress) * 10f);
+                if ((FlightState is AutoFlightState.Landing or AutoFlightState.Docking) && StateProgress > 0.9f)
+                    scale *= Utility.QuadraticEaseOut((1f - StateProgress) * 10f);
 
-                if (State == ActionState.Docking && DockingProgress > 0.9f)
-                    scale *= Utility.QuadraticEaseOut((1f - DockingProgress) * 10f);
-
-                if (State == ActionState.Undocking && UndockingProgress < 0.1f)
-                    scale *= Utility.QuadraticEaseOut((UndockingProgress) * 10f);
+                if (FlightState == AutoFlightState.Undocking && StateProgress < 0.1f)
+                    scale *= Utility.QuadraticEaseOut((StateProgress) * 10f);
 
                 var flare = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare2").Value;
 

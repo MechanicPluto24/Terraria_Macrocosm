@@ -15,6 +15,9 @@ namespace Macrocosm.Common.DataStructures
         public int Height { get; }
         public float Rotation { get; private set; }
 
+        public float X => Position.X;
+        public float Y => Position.Y;
+
         public Vector2 Center => Position + Origin;
         public Vector2[] Corners { get; private set; }
         public Vector2 Size => new(Width, Height);
@@ -81,10 +84,11 @@ namespace Macrocosm.Common.DataStructures
 
         public bool Contains(Vector2 point)
         {
-            Vector2 localPoint = RotateVector(point - Position, -Rotation);
-            localPoint += Origin;
-            return localPoint.X >= 0 && localPoint.X <= Width &&
-                   localPoint.Y >= 0 && localPoint.Y <= Height;
+            Vector2 local = point - (Position + Origin);
+            local = RotateVector(local, -Rotation);
+            local += Origin;
+            return local.X >= 0 && local.X <= Width &&
+                   local.Y >= 0 && local.Y <= Height;
         }
 
         public bool InPlayerInteractionRange(TileReachCheckSettings settings)

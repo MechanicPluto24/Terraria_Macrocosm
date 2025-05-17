@@ -37,25 +37,19 @@ namespace Macrocosm.Content.Rockets.Modules.Boosters
 
             state2.SaveState(spriteBatch, true);
 
-            if (Rocket.ForcedFlightAppearance || Rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch)
+            if (Rocket.ForcedFlightAppearance || Rocket.State == Rocket.ActionState.AutoFlight && Rocket.FlightState != Rocket.AutoFlightState.PreLaunch)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state2);
 
-                if (Rocket.State is Rocket.ActionState.StaticFire)
-                    DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(Rocket.StaticFireProgress));
+                if (Rocket.FlightState == Rocket.AutoFlightState.StaticFire)
+                    DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(Rocket.StateProgress));
 
-                if (Rocket.State is Rocket.ActionState.Flight || Rocket.ForcedFlightAppearance)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.FlightProgress, 0f, 0.1f) * 10f));
+                if ((Rocket.FlightState is Rocket.AutoFlightState.Launch or Rocket.AutoFlightState.Landing or Rocket.AutoFlightState.Docking or Rocket.AutoFlightState.Undocking))
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.StateProgress, 0f, 0.1f) * 10f));
 
-                if (Rocket.State is Rocket.ActionState.Landing)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.LandingProgress, 0f, 0.1f) * 10f));
-
-                if (Rocket.State is Rocket.ActionState.Docking)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.DockingProgress, 0f, 0.1f) * 10f));
-
-                if (Rocket.State is Rocket.ActionState.Undocking)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.UndockingProgress, 0f, 0.1f) * 10f));
+                if(Rocket.ForcedFlightAppearance)
+                    DrawTrail(position, 1f);
 
                 spriteBatch.End();
                 spriteBatch.Begin(state2);

@@ -27,29 +27,20 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
         public override void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
         {
             // Draw the exhaust trail 
-            if (Rocket.ForcedFlightAppearance || Rocket.State is not Rocket.ActionState.Idle and not Rocket.ActionState.PreLaunch)
+            if (Rocket.ForcedFlightAppearance || Rocket.State == Rocket.ActionState.AutoFlight && Rocket.FlightState != Rocket.AutoFlightState.PreLaunch)
             {
                 state1.SaveState(spriteBatch, true);
                 spriteBatch.End();
-                spriteBatch.Begin(BlendState.Additive, state1);
+                spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, state1);;
+
+                if (Rocket.FlightState == Rocket.AutoFlightState.StaticFire)
+                    DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(Rocket.StateProgress));
+
+                if ((Rocket.FlightState is Rocket.AutoFlightState.Launch or Rocket.AutoFlightState.Landing or Rocket.AutoFlightState.Docking or Rocket.AutoFlightState.Undocking))
+                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.StateProgress, 0f, 0.1f) * 10f));
 
                 if (Rocket.ForcedFlightAppearance)
                     DrawTrail(position, 1.1f);
-
-                if (Rocket.State is Rocket.ActionState.StaticFire)
-                    DrawTrail(position, 0.5f + 0.3f * Utility.QuadraticEaseIn(Rocket.StaticFireProgress));
-
-                if (Rocket.State is Rocket.ActionState.Flight)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.FlightProgress, 0f, 0.1f) * 10f));
-
-                if (Rocket.State is Rocket.ActionState.Landing)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.LandingProgress, 0f, 0.1f) * 10f));
-
-                if (Rocket.State is Rocket.ActionState.Docking)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.DockingProgress, 0f, 0.1f) * 10f));
-
-                if (Rocket.State is Rocket.ActionState.Undocking)
-                    DrawTrail(position, MathHelper.Lerp(0.8f, 1f, MathHelper.Clamp(Rocket.UndockingProgress, 0f, 0.1f) * 10f));
 
                 spriteBatch.End();
                 spriteBatch.Begin(state1);
@@ -60,7 +51,7 @@ namespace Macrocosm.Content.Rockets.Modules.Engine
         {
             state2.SaveState(spriteBatch, true);
             spriteBatch.End();
-            spriteBatch.Begin(state2);
+            spriteBatch.Begin(SamplerState.PointClamp, state2);
 
             // Draw the rear landing behind the rear booster 
             if (LandingLegDrawOffset.HasValue)

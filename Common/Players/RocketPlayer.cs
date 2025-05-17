@@ -38,7 +38,7 @@ namespace Macrocosm.Common.Players
 
         public override void ResetEffects()
         {
-            if (RocketID < 0 || RocketID >= RocketManager.ActiveRocketCount)
+            if (RocketID < 0 || RocketID >= RocketManager.MaxRockets)
                 InRocket = false;
             else if (!RocketManager.Rockets[RocketID].Active)
                 InRocket = false;
@@ -95,10 +95,15 @@ namespace Macrocosm.Common.Players
                     return;
                 }
 
-                if (rocket.State is Rocket.ActionState.Flight or Rocket.ActionState.Landing)
-                    Player.velocity = rocket.Velocity;
-                else
-                    Player.velocity = Vector2.Zero;
+                switch (rocket.State)
+                {
+                    case Rocket.ActionState.AutoFlight:
+                        Player.velocity = rocket.Velocity;
+                        break;
+                    default:
+                        Player.velocity = Vector2.Zero;
+                        break;
+                }
 
                 Player.direction = 1;
                 Player.Center = new Vector2(rocket.Center.X + Player.direction * 5, rocket.Position.Y + 110) - (IsCommander ? new Vector2(0, 50) : Vector2.Zero);
