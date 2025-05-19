@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
@@ -28,6 +29,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.scale = 0.95f;
 
             Projectile.usesOwnerMeleeHitCD = true;
+
+            MoRHelper.SetSpearBonus(Projectile);
         }
 
         public override bool PreAI()

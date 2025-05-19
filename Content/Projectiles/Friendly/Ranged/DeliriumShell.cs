@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
@@ -27,6 +28,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             ProjectileID.Sets.Explosive[Type] = true;
             ProjectileID.Sets.RocketsSkipDamageForPlayers[Type] = true;
             ProjectileSets.HitsTiles[Type] = true;
+
+            MoRHelper.AddElement(Projectile, MoRHelper.Explosive, true);
         }
 
         public override void SetDefaults()

@@ -11,6 +11,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
 using ReLogic.Content;
+using Macrocosm.Common.CrossMod;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 {
@@ -26,6 +27,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
+
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
         }
         public override void SetDefaults()
         {

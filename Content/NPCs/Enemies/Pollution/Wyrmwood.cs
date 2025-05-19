@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -33,6 +34,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             (
                 BuffID.Confused
             );
+
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Shadow);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Dark);
         }
         public override float FallSpeed => 0f;
         public override void SetDefaults()

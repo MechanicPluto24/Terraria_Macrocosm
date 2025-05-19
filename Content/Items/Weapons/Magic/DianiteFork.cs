@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
@@ -13,9 +14,10 @@ namespace Macrocosm.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-
-
             Item.staff[Type] = true;
+
+            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane, true);
         }
 
         public override void SetDefaults()

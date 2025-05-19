@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
@@ -110,6 +111,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
                 }
                 shot = true;
             }
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            MoRHelper.Decapitation(target, ref damageDone, ref hit.Crit);
         }
 
         public override bool PreDraw(ref Color lightColor)

@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
@@ -28,6 +29,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
+
+            MoRHelper.AddElement(NPC, MoRHelper.Fire);
+            MoRHelper.AddElement(NPC, MoRHelper.Earth);
+            MoRHelper.AddElement(NPC, MoRHelper.Shadow);
+            MoRHelper.AddElement(NPC, MoRHelper.Celestial);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Hot);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
         }
 
         public override void SetDefaults()

@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -45,6 +46,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
+
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Blood);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Blood);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Humanoid);
         }
 
         public override void SetDefaults()

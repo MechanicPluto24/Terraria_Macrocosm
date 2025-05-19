@@ -1,13 +1,11 @@
-﻿using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.GrabBags;
+﻿using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System;
+using Macrocosm.Common.CrossMod;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
@@ -15,6 +13,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     {
         public override string Texture => "Macrocosm/Content/Projectiles/Environment/Meteors/SolarMeteor";
 
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Explosive);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Fire);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
+        }
         public override void SetDefaults()
         {
             Projectile.aiStyle = -1;
@@ -88,6 +92,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     {
         public override string Texture => "Macrocosm/Content/Projectiles/Environment/Meteors/VortexMeteor";
 
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Explosive);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Thunder);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
+        }
         public override void SetDefaults()
         {
             Projectile.aiStyle = -1;
@@ -155,6 +165,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     public class CelestialMeteorStaffProjectileNebula : ModProjectile
     {
         public override string Texture => "Macrocosm/Content/Projectiles/Environment/Meteors/NebulaMeteor";
+
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToItem(Type, MoRHelper.Explosive);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial);
+        }
 
         public override void SetDefaults()
         {
@@ -233,6 +250,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     public class CelestialMeteorStaffProjectileStardust : ModProjectile
     {
         public override string Texture => "Macrocosm/Content/Projectiles/Environment/Meteors/StardustMeteor";
+
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToItem(Type, MoRHelper.Explosive);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial);
+        }
 
         public override void SetDefaults()
         {

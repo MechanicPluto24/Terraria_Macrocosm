@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rarities;
@@ -22,6 +23,9 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             ItemSets.UnobtainableItem[Type] = true;
+
+            MoRHelper.AddElement(Item, MoRHelper.Shadow);
+            MoRHelper.AddElement(Item, MoRHelper.Celestial, true);
         }
 
         public override void SetDefaults()

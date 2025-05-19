@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -11,6 +12,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class ChampionsBlade : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial, true);
+        }
         public override void SetDefaults()
         {
             Item.damage = 185;
@@ -30,6 +35,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.noMelee = true; // This is set the sword itself doesn't deal damage (only the projectile does).
             Item.shootsEveryUse = true; // This makes sure Player.ItemAnimationJustStarted is set when swinging.
             Item.noUseGraphic = true;
+
+            MoRHelper.SetSlashBonus(Item);
         }
 
         public const int MaxStacks = 6;
