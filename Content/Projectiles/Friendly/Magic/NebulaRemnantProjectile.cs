@@ -10,12 +10,17 @@ using Terraria.ModLoader;
 using System;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
+using Macrocosm.Common.CrossMod;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class NebulaRemnantProjectile : ModProjectile
     {
-       
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Arcane);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
+        }
         public override void SetDefaults()
         {
             Projectile.width = 14;
@@ -30,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void AI()
         {
-            Projectile.velocity *=0.9f;
+            Projectile.velocity *= 0.9f;
             Projectile.rotation = 0f;
 
             if (Projectile.timeLeft < 50)
@@ -45,11 +50,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White*Projectile.Opacity, Projectile.rotation, texture.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None);
-            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White*0.5f*Projectile.Opacity, Projectile.rotation, texture.Size() / 2f, (float)(Projectile.scale*((Math.Sin(Main.time*3f)*0.2f)+1.2f)), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White * Projectile.Opacity, Projectile.rotation, texture.Size() / 2f, Projectile.scale, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None);
+            Main.EntitySpriteDraw(texture, Projectile.Center - Main.screenPosition, null, Color.White * 0.5f * Projectile.Opacity, Projectile.rotation, texture.Size() / 2f, (float)(Projectile.scale * ((Math.Sin(Main.time * 3f) * 0.2f) + 1.2f)), Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None);
 
             return false;
         }
-       
+
     }
 }

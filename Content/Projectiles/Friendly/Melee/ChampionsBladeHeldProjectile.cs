@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Microsoft.Xna.Framework;
@@ -123,6 +124,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            MoRHelper.Decapitation(target, ref damageDone, ref hit.Crit);
+
             hitStacks = Math.Min(hitStacks + 1, ChampionsBlade.MaxStacks);
             blade.ResetTimer = 0;
 

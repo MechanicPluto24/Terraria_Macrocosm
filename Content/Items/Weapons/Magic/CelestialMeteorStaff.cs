@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
@@ -14,6 +15,13 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             Item.staff[Type] = true;
+
+            // These just add all the element icons in the tooltips
+            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Explosive);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Thunder);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial);
         }
 
         public override void SetDefaults()

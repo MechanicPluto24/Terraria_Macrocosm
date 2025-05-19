@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -16,6 +17,9 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         {
             ItemID.Sets.SkipsInitialUseSound[Type] = true;
             ItemSets.UnobtainableItem[Type] = true;
+
+            MoRHelper.AddElement(Item, MoRHelper.Thunder);
+            MoRHelper.AddElement(Item, MoRHelper.Explosive, true);
         }
 
         public override void SetDefaults()

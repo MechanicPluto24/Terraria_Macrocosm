@@ -10,12 +10,18 @@ using Terraria.ModLoader;
 using System;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
+using Macrocosm.Common.CrossMod;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
     public class SolarGlob : ModProjectile
     {
-       
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Fire);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
+
+        }
 
         public override void SetDefaults()
         {

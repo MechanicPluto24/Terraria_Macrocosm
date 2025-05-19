@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Terraria;
@@ -10,6 +11,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
+            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial, true);
         }
 
         public override void SetDefaults()

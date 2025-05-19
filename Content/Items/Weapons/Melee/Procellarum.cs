@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,9 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             Item.ResearchUnlockCount = 1;
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+            ItemID.Sets.Spears[Type] = true;
+
+            MoRHelper.AddElement(Item, MoRHelper.Thunder, true);
         }
         public override void SetDefaults()
         {

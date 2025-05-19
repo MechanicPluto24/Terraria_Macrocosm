@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -26,6 +27,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 BuffID.Poisoned,
                 BuffID.Venom
             );
+
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Arcane);
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Wind);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Spirit);
         }
 
         public override void SetDefaults()

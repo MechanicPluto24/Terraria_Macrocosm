@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Terraria;
@@ -7,6 +8,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 {
     public class CrescentScripture : ModItem
     {
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial, true);
+        }
         public override void SetDefaults()
         {
             Item.damage = 390;
@@ -26,6 +31,8 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.noUseGraphic = true;
             Item.shoot = ModContent.ProjectileType<CrescentScriptureProjectile>();
             Item.channel = true;
+
+            MoRHelper.SetSlashBonus(Item);
         }
 
         public override bool AltFunctionUse(Player player) => false;

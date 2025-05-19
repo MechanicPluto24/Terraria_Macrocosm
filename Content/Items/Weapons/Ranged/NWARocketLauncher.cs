@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
@@ -29,6 +30,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         {
             ItemID.Sets.SkipsInitialUseSound[Item.type] = true;
             ItemSets.UnobtainableItem[Type] = true;
+
+            MoRHelper.AddElement(Item, MoRHelper.Explosive, true);
         }
 
         public override void SetDefaultsHeldProjectile()

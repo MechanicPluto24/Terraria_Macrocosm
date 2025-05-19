@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Summon;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ModLoader;
@@ -10,7 +11,9 @@ namespace Macrocosm.Content.Items.Weapons.Summon
         public override bool MeleePrefix() { return true; }
         public override void SetStaticDefaults()
         {
-
+            MoRHelper.AddElement(Item, MoRHelper.Arcane);
+            MoRHelper.AddElement(Item, MoRHelper.Shadow);
+            MoRHelper.AddElement(Item, MoRHelper.Celestial, true);
         }
 
         public override void SetDefaults()
