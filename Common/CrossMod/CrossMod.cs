@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Crossmod
+namespace Macrocosm.Common.CrossMod
 {
     public class CrossMod : ModSystem
     {

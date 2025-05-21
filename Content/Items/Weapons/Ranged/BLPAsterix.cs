@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
@@ -17,6 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
+            MoRHelper.AddElement(Item, MoRHelper.Thunder, true);
         }
 
         public override void SetDefaultsHeldProjectile()

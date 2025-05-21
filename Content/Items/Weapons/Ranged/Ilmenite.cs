@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,9 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-
+            MoRHelper.AddElement(Item, MoRHelper.Arcane);
+            MoRHelper.AddElement(Item, MoRHelper.Holy);
+            MoRHelper.AddElement(Item, MoRHelper.Celestial, true);
         }
 
         public override void SetDefaults()

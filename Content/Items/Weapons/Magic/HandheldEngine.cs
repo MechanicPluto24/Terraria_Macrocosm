@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Debuffs.Weapons;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
@@ -15,6 +16,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             ItemSets.UnobtainableItem[Type] = true;
+
+            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
         }
 
         public override void SetDefaults()

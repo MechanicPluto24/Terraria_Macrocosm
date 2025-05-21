@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -39,6 +40,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
+
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Earth);
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Celestial);
         }
         public override float FallSpeed => 0.4f;
         public override void SetDefaults()

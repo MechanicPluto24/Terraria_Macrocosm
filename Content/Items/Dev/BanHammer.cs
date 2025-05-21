@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ID;
@@ -10,6 +11,8 @@ namespace Macrocosm.Content.Items.Dev
         public override void SetStaticDefaults()
         {
             ItemSets.DeveloperItem[Type] = true;
+
+            MoRHelper.AddItemToBluntSwing(Type);
         }
 
         public override void SetDefaults()

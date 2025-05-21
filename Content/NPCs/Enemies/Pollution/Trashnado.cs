@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
@@ -38,6 +39,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
+
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Wind);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
         }
 
         public override void SetDefaults()

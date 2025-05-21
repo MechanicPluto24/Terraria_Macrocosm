@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -31,6 +32,10 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         {
             ProjectileID.Sets.TrailCacheLength[Type] = 20;
             ProjectileID.Sets.TrailingMode[Type] = 3;
+
+            MoRHelper.AddElement(Projectile, MoRHelper.Arcane);
+            MoRHelper.AddElement(Projectile, MoRHelper.Shadow);
+            MoRHelper.AddElement(Projectile, MoRHelper.Celestial);
         }
 
         public override void SetDefaults()

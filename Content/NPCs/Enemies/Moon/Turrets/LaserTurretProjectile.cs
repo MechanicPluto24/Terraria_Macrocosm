@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 1;
+
+            MoRHelper.AddElement(Projectile, MoRHelper.Fire);
+            MoRHelper.AddElement(Projectile, MoRHelper.Thunder);
         }
 
         public int AITimer = 0;

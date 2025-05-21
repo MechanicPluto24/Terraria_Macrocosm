@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Debuffs;
 using Macrocosm.Content.Particles;
@@ -18,6 +19,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 5;
+
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Fire);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Explosive);
         }
 
         public override void SetDefaults()

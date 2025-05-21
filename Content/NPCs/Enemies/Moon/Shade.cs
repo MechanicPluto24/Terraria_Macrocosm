@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Drops;
@@ -49,6 +50,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.DropsMoonstone[Type] = true;
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
+
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Arcane);
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Shadow);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Spirit);
         }
 
         public override void SetDefaults()

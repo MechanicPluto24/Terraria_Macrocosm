@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
@@ -40,6 +41,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void SetStaticDefaults()
         {
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Thunder);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
         }
         public override void SetDefaults()
         {

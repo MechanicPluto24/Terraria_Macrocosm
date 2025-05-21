@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -72,6 +73,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = false;
+
+            MoRHelper.AddElement(NPC, MoRHelper.Earth);
+            MoRHelper.AddElement(NPC, MoRHelper.Shadow);
+            MoRHelper.AddElement(NPC, MoRHelper.Celestial);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Demon);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Skeleton);
         }
 
         public override void SetDefaults()

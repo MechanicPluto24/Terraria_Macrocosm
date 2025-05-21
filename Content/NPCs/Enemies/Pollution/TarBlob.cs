@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -20,6 +21,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 BuffID.Poisoned,
                 BuffID.Venom
             );
+
+            MoRHelper.AddElementToNPC(Type, MoRHelper.Water);
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Slime);
         }
 
         public override void SetDefaults()
