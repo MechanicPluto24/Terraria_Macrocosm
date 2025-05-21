@@ -39,9 +39,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
 
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Earth);
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Celestial);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Earth);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
 
         public override void SetDefaults2()

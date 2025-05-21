@@ -19,7 +19,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
 
-            MoRHelper.AddElement(NPC, MoRHelper.Celestial);
+            Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
         }
 
         /* 

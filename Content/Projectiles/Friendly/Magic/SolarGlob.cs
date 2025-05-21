@@ -18,8 +18,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     {
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Fire);
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Celestial);
 
         }
 

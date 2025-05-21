@@ -64,8 +64,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
 
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Undead);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Humanoid);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Undead);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
         }
 
         public override void SetDefaults()

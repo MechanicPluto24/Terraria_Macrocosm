@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             ProjectileID.Sets.RocketsSkipDamageForPlayers[Type] = true;
             ProjectileSets.HitsTiles[Type] = true;
 
-            MoRHelper.AddElement(Projectile, MoRHelper.Explosive, true);
+            Redemption.AddElement(Projectile, Redemption.ElementID.Explosive, true);
         }
 
         public override void SetDefaults()

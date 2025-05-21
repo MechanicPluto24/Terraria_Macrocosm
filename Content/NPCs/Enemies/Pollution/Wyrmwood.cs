@@ -35,8 +35,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 BuffID.Confused
             );
 
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Shadow);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Dark);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Dark);
         }
         public override float FallSpeed => 0f;
         public override void SetDefaults()

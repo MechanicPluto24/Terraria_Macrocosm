@@ -41,8 +41,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
 
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Earth);
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Celestial);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Earth);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
         }
         public override float FallSpeed => 0.4f;
         public override void SetDefaults()

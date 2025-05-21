@@ -4,7 +4,7 @@ using Terraria.Achievements;
 
 namespace Macrocosm.Content.Achievements
 {
-    public class SurviveMoon : CustomAchievement
+    public class SurviveMoon : TMLAchievement
     {
         public override float Order => 40f;
         public override AchievementCategory Category => AchievementCategory.Explorer;

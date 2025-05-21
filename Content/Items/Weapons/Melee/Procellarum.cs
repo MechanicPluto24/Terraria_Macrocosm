@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
             ItemID.Sets.Spears[Type] = true;
 
-            MoRHelper.AddElement(Item, MoRHelper.Thunder, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Thunder, true);
         }
         public override void SetDefaults()
         {

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Achievements
 {
-    public class DefeatCraterDemon : CustomAchievement
+    public class DefeatCraterDemon : TMLAchievement
     {
         public override float Order => 40;
         public override AchievementCategory Category => AchievementCategory.Slayer;

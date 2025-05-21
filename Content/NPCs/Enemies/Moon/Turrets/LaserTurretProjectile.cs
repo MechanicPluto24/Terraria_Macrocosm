@@ -17,8 +17,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
         {
             Main.projFrames[Type] = 1;
 
-            MoRHelper.AddElement(Projectile, MoRHelper.Fire);
-            MoRHelper.AddElement(Projectile, MoRHelper.Thunder);
+            Redemption.AddElement(Projectile, Redemption.ElementID.Fire);
+            Redemption.AddElement(Projectile, Redemption.ElementID.Thunder);
         }
 
         public int AITimer = 0;

@@ -30,7 +30,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             Projectile.usesOwnerMeleeHitCD = true;
 
-            MoRHelper.SetSpearBonus(Projectile);
+            Redemption.SetSpearBonus(Projectile);
         }
 
         public override bool PreAI()

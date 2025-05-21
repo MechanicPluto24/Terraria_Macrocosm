@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Items.Dev
         {
             ItemSets.DeveloperItem[Type] = true;
 
-            MoRHelper.AddItemToBluntSwing(Type);
+            Redemption.AddItemToBluntSwing(Type);
         }
 
         public override void SetDefaults()

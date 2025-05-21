@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElement(Item, MoRHelper.Thunder, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Thunder, true);
         }
 
         public override void SetDefaultsHeldProjectile()

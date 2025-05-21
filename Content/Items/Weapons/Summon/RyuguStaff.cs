@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;
             ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 
-            MoRHelper.AddElement(Item, MoRHelper.Explosive, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Explosive, true);
         }
 
         public override void SetDefaults()

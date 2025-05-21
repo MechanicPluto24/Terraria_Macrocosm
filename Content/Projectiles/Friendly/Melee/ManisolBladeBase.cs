@@ -35,7 +35,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
             ProjectileID.Sets.TrailingMode[Type] = 3;
 
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Celestial);
         }
 
         public override void SetDefaults()

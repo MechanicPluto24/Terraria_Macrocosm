@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Achievements
 {
-    internal class CraftSpaceSuit : CustomAchievement
+    internal class CraftSpaceSuit : TMLAchievement
     {
         public override float Order => 32f;
         public override AchievementCategory Category => AchievementCategory.Collector;

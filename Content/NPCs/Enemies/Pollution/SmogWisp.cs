@@ -28,9 +28,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 BuffID.Venom
             );
 
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Arcane);
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Wind);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Spirit);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Spirit);
         }
 
         public override void SetDefaults()

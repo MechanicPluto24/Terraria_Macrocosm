@@ -28,7 +28,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
 
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
         public override void SetDefaults()
         {

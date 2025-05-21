@@ -13,8 +13,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Ice, true);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Ice, true);
         }
 
         public override void SetDefaults()

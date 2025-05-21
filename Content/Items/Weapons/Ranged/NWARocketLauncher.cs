@@ -31,7 +31,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             ItemID.Sets.SkipsInitialUseSound[Item.type] = true;
             ItemSets.UnobtainableItem[Type] = true;
 
-            MoRHelper.AddElement(Item, MoRHelper.Explosive, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Explosive, true);
         }
 
         public override void SetDefaultsHeldProjectile()

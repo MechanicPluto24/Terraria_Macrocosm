@@ -40,8 +40,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElement(Projectile, MoRHelper.Shadow);
-            MoRHelper.AddElement(Projectile, MoRHelper.Celestial);
+            Redemption.AddElement(Projectile, Redemption.ElementID.Shadow);
+            Redemption.AddElement(Projectile, Redemption.ElementID.Celestial);
         }
         public override void SetDefaults()
         {

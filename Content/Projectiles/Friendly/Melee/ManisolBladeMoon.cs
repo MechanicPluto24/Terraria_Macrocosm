@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             base.SetStaticDefaults();
 
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Arcane);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Arcane);
         }
 
         public override void SetDefaults()

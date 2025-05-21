@@ -27,7 +27,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
 
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElement(Item, MoRHelper.Celestial, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
         }
 
         public override void SetDefaultsHeldProjectile()
@@ -43,12 +43,12 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.UseSound = SoundID.Item1;
 
-            MoRHelper.SetSlashBonus(Item);
+            Redemption.SetSlashBonus(Item);
         }
 
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            MoRHelper.Decapitation(target, ref damageDone, ref hit.Crit);
+            Redemption.Decapitation(target, ref damageDone, ref hit.Crit);
 
             Particle.Create<SeleniteStar>((p) =>
             {

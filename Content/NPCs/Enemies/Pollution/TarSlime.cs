@@ -22,8 +22,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 BuffID.Venom
             );
 
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Water);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Slime);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);
         }
 
         public override void SetDefaults()

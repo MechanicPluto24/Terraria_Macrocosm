@@ -51,9 +51,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
 
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Arcane);
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Shadow);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Spirit);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Spirit);
         }
 
         public override void SetDefaults()

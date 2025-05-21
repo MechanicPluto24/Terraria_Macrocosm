@@ -24,10 +24,10 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Earth);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Explosive, true);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Earth);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Explosive, true);
         }
 
         public override void SetDefaults()

@@ -30,12 +30,12 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.rare = ItemRarityID.Orange;
             Item.UseSound = SoundID.Item1;
 
-            MoRHelper.SetSlashBonus(Item);
+            Redemption.SetSlashBonus(Item);
         }
 
         public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
         {
-            MoRHelper.Decapitation(target, ref damageDone, ref hit.Crit);
+            Redemption.Decapitation(target, ref damageDone, ref hit.Crit);
         }
 
         public override void AddRecipes()

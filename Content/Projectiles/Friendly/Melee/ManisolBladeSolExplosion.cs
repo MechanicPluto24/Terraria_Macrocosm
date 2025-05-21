@@ -20,8 +20,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             Main.projFrames[Type] = 5;
 
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Fire);
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Explosive);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Explosive);
         }
 
         public override void SetDefaults()
