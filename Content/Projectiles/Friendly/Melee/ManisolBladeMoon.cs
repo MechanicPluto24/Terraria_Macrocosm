@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
@@ -14,6 +15,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
     {
         private int recallPierceLimit = 3;
         private HashSet<int> hitList = new();
+
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Arcane);
+        }
 
         public override void SetDefaults()
         {

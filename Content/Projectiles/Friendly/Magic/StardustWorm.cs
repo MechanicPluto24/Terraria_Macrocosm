@@ -13,6 +13,7 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
+using Macrocosm.Common.CrossMod;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
@@ -23,6 +24,11 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
     public class StardustWormProjectile : ModProjectile
     {
         public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Magic/StardustWormHead";
+        public override void SetStaticDefaults()
+        {
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Arcane);
+            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
+        }
         public override void SetDefaults()
         {
             Projectile.aiStyle = -1;

@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
@@ -22,6 +23,9 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetStaticDefaults()
         {
+            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Shadow);
+            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial, true);
         }
 
         public override void SetDefaults()

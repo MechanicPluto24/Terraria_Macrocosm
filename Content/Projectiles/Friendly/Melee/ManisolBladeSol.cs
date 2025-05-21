@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Debuffs;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Content.Debuffs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -10,6 +11,12 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
     public class ManisolBladeSol : ManisolBladeBase
     {
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+
+            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
+        }
         public override void SetDefaults()
         {
             base.SetDefaults();

@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -17,6 +18,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
+
+            MoRHelper.AddElement(NPC, MoRHelper.Celestial);
         }
 
         public override void SetDefaults()

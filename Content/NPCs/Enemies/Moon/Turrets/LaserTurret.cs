@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -25,6 +26,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
 
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = false;
+
+            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Robotic);
         }
 
 
