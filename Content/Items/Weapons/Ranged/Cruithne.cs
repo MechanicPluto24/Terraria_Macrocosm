@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElement(Item, MoRHelper.Explosive);
+            Redemption.AddElement(Item, Redemption.ElementID.Explosive);
         }
 
         public override void SetDefaultsHeldProjectile()

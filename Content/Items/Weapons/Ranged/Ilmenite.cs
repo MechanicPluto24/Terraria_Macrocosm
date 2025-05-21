@@ -13,9 +13,9 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElement(Item, MoRHelper.Arcane);
-            MoRHelper.AddElement(Item, MoRHelper.Holy);
-            MoRHelper.AddElement(Item, MoRHelper.Celestial, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Arcane);
+            Redemption.AddElement(Item, Redemption.ElementID.Holy);
+            Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
         }
 
         public override void SetDefaults()

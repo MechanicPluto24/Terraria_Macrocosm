@@ -16,10 +16,10 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         {
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
 
-            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Explosive);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Celestial);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Explosive);
         }
 
         public override void SetDefaults()

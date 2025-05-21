@@ -18,9 +18,9 @@ namespace Macrocosm.Content.Items.Weapons.Summon
             ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;
             ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
 
-            MoRHelper.AddElement(Item, MoRHelper.Arcane);
-            MoRHelper.AddElement(Item, MoRHelper.Shadow);
-            MoRHelper.AddElement(Item, MoRHelper.Celestial, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Arcane);
+            Redemption.AddElement(Item, Redemption.ElementID.Shadow);
+            Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
         }
 
         public override void SetDefaults()

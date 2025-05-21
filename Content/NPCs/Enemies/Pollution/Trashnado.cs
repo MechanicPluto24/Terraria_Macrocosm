@@ -40,8 +40,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
 
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Wind);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
 
         public override void SetDefaults()

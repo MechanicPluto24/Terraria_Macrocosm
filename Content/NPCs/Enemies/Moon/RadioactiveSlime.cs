@@ -32,9 +32,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = true;
 
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Water);
-            MoRHelper.AddElementToNPC(Type, MoRHelper.Poison);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Slime);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Poison);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);
         }
 
         public override void SetDefaults()

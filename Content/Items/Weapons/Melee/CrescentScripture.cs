@@ -10,7 +10,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial, true);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Celestial, true);
         }
         public override void SetDefaults()
         {
@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
             Item.shoot = ModContent.ProjectileType<CrescentScriptureProjectile>();
             Item.channel = true;
 
-            MoRHelper.SetSlashBonus(Item);
+            Redemption.SetSlashBonus(Item);
         }
 
         public override bool AltFunctionUse(Player player) => false;

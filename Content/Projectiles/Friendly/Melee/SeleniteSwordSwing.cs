@@ -149,7 +149,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            MoRHelper.Decapitation(target, ref damageDone, ref hit.Crit);
+            Redemption.Decapitation(target, ref damageDone, ref hit.Crit);
 
             hit.HitDirection = (Main.player[Projectile.owner].Center.X < target.Center.X) ? 1 : (-1);
 

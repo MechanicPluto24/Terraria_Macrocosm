@@ -80,7 +80,7 @@ namespace Macrocosm.Common.Bases.Projectiles
 
             Projectile.DamageType = DamageClass.Melee;
 
-            MoRHelper.SetSpearBonus(Projectile);
+            Redemption.SetSpearBonus(Projectile);
         }
 
         public override void OnSpawn(IEntitySource source)

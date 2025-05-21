@@ -11,9 +11,9 @@ namespace Macrocosm.Content.Items.Weapons.Summon
         public override bool MeleePrefix() { return true; }
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElement(Item, MoRHelper.Arcane);
-            MoRHelper.AddElement(Item, MoRHelper.Shadow);
-            MoRHelper.AddElement(Item, MoRHelper.Celestial, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Arcane);
+            Redemption.AddElement(Item, Redemption.ElementID.Shadow);
+            Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
         }
 
         public override void SetDefaults()

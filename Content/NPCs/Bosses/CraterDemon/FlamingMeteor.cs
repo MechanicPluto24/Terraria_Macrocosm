@@ -30,12 +30,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, value);
 
-            MoRHelper.AddElement(NPC, MoRHelper.Fire);
-            MoRHelper.AddElement(NPC, MoRHelper.Earth);
-            MoRHelper.AddElement(NPC, MoRHelper.Shadow);
-            MoRHelper.AddElement(NPC, MoRHelper.Celestial);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Hot);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
+            Redemption.AddElement(NPC, Redemption.ElementID.Fire);
+            Redemption.AddElement(NPC, Redemption.ElementID.Earth);
+            Redemption.AddElement(NPC, Redemption.ElementID.Shadow);
+            Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Hot);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
 
         public override void SetDefaults()

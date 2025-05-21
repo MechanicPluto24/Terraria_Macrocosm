@@ -8,7 +8,7 @@ namespace Macrocosm.Common.CrossMod
     /// Achievement for the TMLAchievements mod. Autoloads texture, which should be 128x64. 
     /// <br/> Use <see cref="SetupConditions"/> to add conditions, optional, defaults to unique condition identified by the achievement name.
     /// </summary>
-    public abstract class CustomAchievement : ModTexturedType
+    public abstract class TMLAchievement : ModTexturedType
     {
         /// <summary>
         /// Order of the achievement
@@ -39,13 +39,13 @@ namespace Macrocosm.Common.CrossMod
         public sealed override void SetStaticDefaults() { }
         protected sealed override void Register()
         {
-            ModTypeLookup<CustomAchievement>.Register(this);
+            ModTypeLookup<TMLAchievement>.Register(this);
         }
 
         // After setting up content, the achievement is registered to TMLAchievements
         public void PostSetupContent()
         {
-            if (ModLoader.TryGetMod("TMLAchievements", out Mod mod))
+            if (CrossMod.TMLAchievements.Enabled)
             {
                 SetupConditions();
 
@@ -53,7 +53,7 @@ namespace Macrocosm.Common.CrossMod
                 if (conditions.Count == 0)
                     AddEvent(Name);
 
-                mod.Call("AddAchievement", Mod, Name, Category, Texture, BorderTexture, ShowProgressBar, ShowCard, Order, conditions.ToArray());
+                CrossMod.TMLAchievements.Instance.Call("AddAchievement", Mod, Name, Category, Texture, BorderTexture, ShowProgressBar, ShowCard, Order, conditions.ToArray());
             }
         }
 
@@ -105,7 +105,7 @@ namespace Macrocosm.Common.CrossMod
         }
 
         /// <inheritdoc cref="TriggerEvent(string)"/>
-        public static void TriggerEvent<T>(string eventName) where T : CustomAchievement => ModContent.GetInstance<T>().TriggerEvent(eventName);
+        public static void TriggerEvent<T>(string eventName) where T : TMLAchievement => ModContent.GetInstance<T>().TriggerEvent(eventName);
 
         /// <summary>
         /// Increase progress on a custom value event condition that was previously added
@@ -127,7 +127,7 @@ namespace Macrocosm.Common.CrossMod
         }
 
         /// <inheritdoc cref="IncreaseEventValue(string)"/>
-        public static void IncreaseEventValue<T>(string eventName, float amount) where T : CustomAchievement => ModContent.GetInstance<T>().IncreaseEventValue(eventName, amount);
+        public static void IncreaseEventValue<T>(string eventName, float amount) where T : TMLAchievement => ModContent.GetInstance<T>().IncreaseEventValue(eventName, amount);
 
         /// <summary> Unlock achievement directly by triggering all its events </summary>
         public void Unlock()
@@ -139,6 +139,6 @@ namespace Macrocosm.Common.CrossMod
                 IncreaseEventValue(eventName, float.MaxValue);
         }
 
-        public static void Unlock<T>() where T : CustomAchievement => ModContent.GetInstance<T>().Unlock();
+        public static void Unlock<T>() where T : TMLAchievement => ModContent.GetInstance<T>().Unlock();
     }
 }

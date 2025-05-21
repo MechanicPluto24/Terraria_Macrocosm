@@ -78,7 +78,7 @@ namespace Macrocosm.Content.Subworlds
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
 
-            CustomAchievement.Unlock<TravelToMoon>();
+            TMLAchievement.Unlock<TravelToMoon>();
         }
 
         public override void OnExitSubworld()

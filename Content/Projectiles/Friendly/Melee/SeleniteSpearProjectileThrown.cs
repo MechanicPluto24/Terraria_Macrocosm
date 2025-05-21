@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             ProjectileID.Sets.TrailCacheLength[Type] = 3;
             ProjectileID.Sets.TrailingMode[Type] = 2;
 
-            MoRHelper.SetSpearBonus(Projectile);
+            Redemption.SetSpearBonus(Projectile);
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)

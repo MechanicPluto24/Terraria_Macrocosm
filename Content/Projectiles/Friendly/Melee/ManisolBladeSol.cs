@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         {
             base.SetStaticDefaults();
 
-            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
         }
         public override void SetDefaults()
         {

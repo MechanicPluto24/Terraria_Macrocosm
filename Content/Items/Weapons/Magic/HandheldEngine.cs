@@ -17,7 +17,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         {
             ItemSets.UnobtainableItem[Type] = true;
 
-            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
         }
 
         public override void SetDefaults()

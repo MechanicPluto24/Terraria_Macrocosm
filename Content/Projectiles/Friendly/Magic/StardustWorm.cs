@@ -26,8 +26,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Magic/StardustWormHead";
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Arcane);
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Celestial);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Celestial);
         }
         public override void SetDefaults()
         {

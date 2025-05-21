@@ -26,7 +26,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = false;
 
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Robotic);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Robotic);
         }
 
         public override void SetDefaults()

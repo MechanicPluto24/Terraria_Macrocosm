@@ -23,9 +23,9 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Shadow);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Celestial, true);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Shadow);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Celestial, true);
         }
 
         public override void SetDefaults()

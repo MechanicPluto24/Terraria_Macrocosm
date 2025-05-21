@@ -18,7 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-            MoRHelper.AddElement(Item, MoRHelper.Celestial, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
         }
         public override void SetDefaults()
         {

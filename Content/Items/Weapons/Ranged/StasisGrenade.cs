@@ -18,8 +18,8 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             ItemID.Sets.SkipsInitialUseSound[Type] = true;
             ItemSets.UnobtainableItem[Type] = true;
 
-            MoRHelper.AddElement(Item, MoRHelper.Thunder);
-            MoRHelper.AddElement(Item, MoRHelper.Explosive, true);
+            Redemption.AddElement(Item, Redemption.ElementID.Thunder);
+            Redemption.AddElement(Item, Redemption.ElementID.Explosive, true);
         }
 
         public override void SetDefaults()

@@ -16,8 +16,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         {
             Item.staff[Type] = true;
 
-            MoRHelper.AddElementToItem(Type, MoRHelper.Fire);
-            MoRHelper.AddElementToItem(Type, MoRHelper.Arcane, true);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane, true);
         }
 
         public override void SetDefaults()

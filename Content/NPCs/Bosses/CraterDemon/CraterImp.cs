@@ -74,12 +74,12 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCSets.MoonNPC[Type] = true;
             NPCSets.DropsMoonstone[Type] = false;
 
-            MoRHelper.AddElement(NPC, MoRHelper.Earth);
-            MoRHelper.AddElement(NPC, MoRHelper.Shadow);
-            MoRHelper.AddElement(NPC, MoRHelper.Celestial);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Demon);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Inorganic);
-            MoRHelper.AddNPCToElementList(Type, MoRHelper.NPCType_Skeleton);
+            Redemption.AddElement(NPC, Redemption.ElementID.Earth);
+            Redemption.AddElement(NPC, Redemption.ElementID.Shadow);
+            Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Demon);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Skeleton);
         }
 
         public override void SetDefaults()

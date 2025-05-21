@@ -201,7 +201,7 @@ namespace Macrocosm.Common.Players
         public void HandleAchievements()
         {
             if (SubworldSystem.IsActive<Moon>())
-                CustomAchievement.IncreaseEventValue<SurviveMoon>(nameof(SurviveMoon), 1f);
+                TMLAchievement.IncreaseEventValue<SurviveMoon>(nameof(SurviveMoon), 1f);
         }
 
         private void HandleZeroGravity()

@@ -16,7 +16,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
         {
             ProjectileID.Sets.DontAttachHideToAlpha[Type] = true;
 
-            MoRHelper.AddElementToProjectile(Type, MoRHelper.Thunder);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Thunder);
         }
 
         private static Asset<Texture2D> chainTexture;
