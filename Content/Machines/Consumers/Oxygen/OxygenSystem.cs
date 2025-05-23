@@ -31,22 +31,11 @@ namespace Macrocosm.Content.Machines.Consumers.Oxygen
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.Width = Width;
-            TileObjectData.newTile.Height = Height;
-
-            TileObjectData.newTile.StyleHorizontal = false;
-
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;
-
-            TileObjectData.newTile.LavaDeath = true;
-
+            TileObjectData.newTile.DefaultToMachine(this);
             TileObjectData.newTile.Origin = new Point16(1, 0);
+            TileObjectData.newTile.StyleHorizontal = false;
+            TileObjectData.newTile.LavaDeath = true;
             TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, Width, 0);
-
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.addTile(Type);
 
             DustType = ModContent.DustType<IndustrialPlatingDust>();

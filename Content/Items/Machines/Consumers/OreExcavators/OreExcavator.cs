@@ -13,10 +13,10 @@ namespace Macrocosm.Content.Items.Machines.Consumers.OreExcavators
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Consumers.OreExcavators.OreExcavator>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Consumers.Drills.OreExcavator>());
             Item.width = 60;
             Item.height = 84;
-            Item.value = Item.sellPrice(gold: 2);
+            Item.value = Item.sellPrice(gold: 10);
             Item.mech = true;
         }
 

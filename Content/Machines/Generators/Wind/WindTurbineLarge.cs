@@ -35,22 +35,10 @@ namespace Macrocosm.Content.Machines.Generators.Wind
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.Width = Width;
-            TileObjectData.newTile.Height = Height;
-            TileObjectData.newTile.Origin = new Point16(1, Height - 1);
-
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16];
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;
-
+            TileObjectData.newTile.DefaultToMachine(this);
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.LavaDeath = true;
-
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
-
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
-
             TileObjectData.addTile(Type);
 
             AddMapEntry(new Color(134, 137, 139), CreateMapEntryName());

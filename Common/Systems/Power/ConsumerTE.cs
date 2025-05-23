@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Systems.Power
 
         public float MinPower { get; set; } = 0f;
         public float MaxPower { get; set; }
-        public float PowerProgress => MathHelper.Clamp(MinPower / MaxPower, 0f, 1f);
+        public float PowerProgress => MathHelper.Clamp(InputPower / MaxPower, 0f, 1f);
 
         public override void UpdatePowerState()
         {

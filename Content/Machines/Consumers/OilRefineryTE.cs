@@ -138,8 +138,8 @@ namespace Macrocosm.Content.Machines.Consumers
 
         private void FillContainers()
         {
-            LiquidContainerData containerData = ItemSets.LiquidContainerData[ContainerSlot.type];
-            if (containerData.Valid && containerData.Empty && OutputTankAmount > 0f && !ContainerSlot.IsAir)
+            LiquidContainerData data = ItemSets.LiquidContainerData[ContainerSlot.type];
+            if (data.Valid && data.Empty && OutputTankAmount > 0f && !ContainerSlot.IsAir)
             {
                 fillTimer += 1f * PowerProgress;
                 if (fillTimer >= FillRate)
@@ -163,26 +163,20 @@ namespace Macrocosm.Content.Machines.Consumers
         }
 
 
-        public override void NetSend(BinaryWriter writer)
+        public override void MachineNetSend(BinaryWriter writer)
         {
-            base.NetSend(writer);
-
             writer.Write(InputTankAmount);
             writer.Write(OutputTankAmount);
         }
 
-        public override void NetReceive(BinaryReader reader)
+        public override void MachineNetReceive(BinaryReader reader)
         {
-            base.NetReceive(reader);
-
             InputTankAmount = reader.ReadSingle();
             OutputTankAmount = reader.ReadSingle();
         }
 
-        public override void SaveData(TagCompound tag)
+        public override void MachineSaveData(TagCompound tag)
         {
-            base.SaveData(tag);
-
             if (InputTankAmount != default)
                 tag[nameof(InputTankAmount)] = InputTankAmount;
 
@@ -190,10 +184,8 @@ namespace Macrocosm.Content.Machines.Consumers
                 tag[nameof(OutputTankAmount)] = OutputTankAmount;
         }
 
-        public override void LoadData(TagCompound tag)
+        public override void MachineLoadData(TagCompound tag)
         {
-            base.LoadData(tag);
-
             if (tag.ContainsKey(nameof(InputTankAmount)))
                 InputTankAmount = tag.GetFloat(nameof(InputTankAmount));
 

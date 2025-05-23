@@ -24,35 +24,18 @@ namespace Macrocosm.Content.Machines.Consumers
         public override short Height => 4;
         public override MachineTE MachineTE => ModContent.GetInstance<OilRefineryTE>();
 
-        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= Height * 18;
-
         public override void SetStaticDefaults()
         {
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
-            Main.tileLavaDeath[Type] = true;
 
             SceneData.Hooks[Type] = NearbyEffects;
 
-
-            TileObjectData.newTile.Width = 4;
-            TileObjectData.newTile.Height = 4;
+            TileObjectData.newTile.DefaultToMachine(this);
             TileObjectData.newTile.Origin = new Point16(2, 3);
-
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
-            TileObjectData.newTile.CoordinatePadding = 2;
-
             TileObjectData.newTile.StyleHorizontal = true;
-
             TileObjectData.newTile.DrawYOffset = 2;
-            TileObjectData.newTile.LavaDeath = true;
-
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
-
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
-
             TileObjectData.addTile(Type);
 
             HitSound = SoundID.Dig;
@@ -60,6 +43,8 @@ namespace Macrocosm.Content.Machines.Consumers
 
             AddMapEntry(new Color(121, 107, 91), CreateMapEntryName());
         }
+
+        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= Height * 18;
 
         public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
@@ -84,11 +69,8 @@ namespace Macrocosm.Content.Machines.Consumers
         {
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
-
             if (TileEntity.TryGet(i, j, out MachineTE te))
-            {
                 UISystem.ShowMachineUI(te, new OilRefineryUI());
-            }
 
             return true;
         }

@@ -121,35 +121,27 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
             GeneratedPower = RPMProgress * MaxGeneratedPower;
         }
 
-        public override void NetSend(BinaryWriter writer)
+        public override void MachineNetSend(BinaryWriter writer)
         {
-            base.NetSend(writer);
-
             ItemIO.Send(ConsumedItem, writer);
             writer.Write(rpmProgress);
         }
 
-        public override void NetReceive(BinaryReader reader)
+        public override void MachineNetReceive(BinaryReader reader)
         {
-            base.NetReceive(reader);
-
             ConsumedItem = ItemIO.Receive(reader);
             rpmProgress = reader.ReadSingle();
         }
 
-        public override void SaveData(TagCompound tag)
+        public override void MachineSaveData(TagCompound tag)
         {
-            base.SaveData(tag);
-
             tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
             if (rpmProgress > 0f)
                 tag[nameof(rpmProgress)] = rpmProgress;
         }
 
-        public override void LoadData(TagCompound tag)
+        public override void MachineLoadData(TagCompound tag)
         {
-            base.LoadData(tag);
-
             if (tag.ContainsKey(nameof(ConsumedItem)))
                 ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));
 

@@ -30,7 +30,7 @@ namespace Macrocosm.Common.Systems.UI
 
         public static void ShowRocketUI(Rocket rocket) => Instance.ShowRocketUI_Internal(rocket);
         public static void ShowAssemblyUI(LaunchPad launchPad) => Instance.ShowAssemblyUI_Internal(launchPad);
-        public static void ShowMachineUI(MachineTE machineTileEntity, MachineUI machineUI) => Instance.ShowMachineUI_Internal(machineTileEntity, machineUI);
+        public static void ShowMachineUI(MachineTE machineTE, MachineUI machineUI) => Instance.ShowMachineUI_Internal(machineTE, machineUI);
         public static void Hide() => Instance.HideUI();
         public static bool Active => Instance.UserInterface?.CurrentState is not null;
         public static bool RocketUIActive => Instance.UserInterface?.CurrentState is RocketUIState;

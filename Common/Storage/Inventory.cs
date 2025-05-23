@@ -224,7 +224,7 @@ namespace Macrocosm.Common.Storage
             reservedChecks[index] = checkReserved;
             reservedTooltips[index] = tooltip;
             reservedTextures[index] = texture;
-            reservedColors[index] = color ?? Color.White;
+            reservedColors[index] = color;
         }
 
         public void SetReserved(int index, int itemType, LocalizedText tooltip = null, Asset<Texture2D> texture = null, Color? color = null)
@@ -237,7 +237,7 @@ namespace Macrocosm.Common.Storage
             reservedChecks[index] = (item) => item.type == itemType;
             reservedTooltips[index] = tooltip;
             reservedTextures[index] = texture;
-            reservedColors[index] = color ?? Color.White;
+            reservedColors[index] = color;
         }
 
         public void SetReserved(Func<Item, bool> checkReserved, LocalizedText tooltip = null, Asset<Texture2D> texture = null, Color? color = null)
@@ -249,7 +249,7 @@ namespace Macrocosm.Common.Storage
                 reservedChecks[i] = checkReserved;
                 reservedTooltips[i] = tooltip;
                 reservedTextures[i] = texture;
-                reservedColors[i] = color ?? Color.White;
+                reservedColors[i] = color;
             }
         }
 
@@ -262,7 +262,7 @@ namespace Macrocosm.Common.Storage
                 reservedChecks[i] = (item) => item.type == itemType;
                 reservedTooltips[i] = tooltip;
                 reservedTextures[i] = texture;
-                reservedColors[i] = color ?? Color.White;
+                reservedColors[i] = color;
             }
         }
 
@@ -356,6 +356,8 @@ namespace Macrocosm.Common.Storage
                         break;
                     }
 
+                    result = true;
+
                     ItemLoader.StackItems(items[i], item, out _);
 
                     if (sound)
@@ -381,8 +383,6 @@ namespace Macrocosm.Common.Storage
 
                     if (shouldSync)
                         SyncItem(i);
-
-                    result = true;
                 }
             }
 

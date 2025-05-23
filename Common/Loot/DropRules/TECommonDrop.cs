@@ -25,8 +25,8 @@ namespace Macrocosm.Common.Loot.DropRules
         /// <br/> 1.0f => chanceDenominator increases directly with the number of machines; returns per unit decrease; total returns are unchanged regardless of number of machines.
         /// <br/> 0.Xf => chanceDenominator increases by specified factor; returns per unit decrease by number of machines, depending on factor; total returns increase amount depends on factor (closer to 0 => high, closer to 1 => low).   
         /// </summary>
-        public TECommonDrop(MachineTE machine, int itemId, int chanceDenominator, int amountDroppedMinimum = 1, int amountDroppedMaximum = 1, int chanceNumerator = 1, float multipleEntityFactor = 0.5f, int? multipleEntityMaxDistance = null)
-            : base(itemId, chanceDenominator, amountDroppedMinimum, amountDroppedMaximum, chanceNumerator)
+        public TECommonDrop(MachineTE machine, int itemId, int chanceDenominator, int minAmt = 1, int maxAmt = 1, int chanceNumerator = 1, float multipleEntityFactor = 0.5f, int? multipleEntityMaxDistance = null)
+            : base(itemId, chanceDenominator, minAmt, maxAmt, chanceNumerator)
         {
             MachineTE = machine;
             this.multipleEntityFactor = multipleEntityFactor;
@@ -57,18 +57,19 @@ namespace Macrocosm.Common.Loot.DropRules
                 if (data is not null) position = new(position.X + data.Width * 16 / 2, position.Y + (data.Height + 3) * 16);
 
                 Item item = new(itemId, stack);
+                Item clone = item.Clone();
                 item.OnCreated(new MachineItemCreationContext(item, MachineTE));
                 bool placed = false;
-                if (MachineTE is IInventoryOwner inventoryOwner && inventoryOwner.Inventory is not null)
-                    placed = inventoryOwner.Inventory.TryPlacingItem(ref item, sound: false);
+                if (MachineTE.InventorySize > 0)
+                    placed = MachineTE.Inventory.TryPlacingItem(ref item, sound: false);
 
-                if (placed && item.stack > 0)
+                if (placed)
                 {
                     Particle.Create<ItemTransferParticle>((p) =>
                     {
                         p.StartPosition = position + Main.rand.NextVector2Circular(32, 16);
                         p.EndPosition = position + new Vector2(0, -96) + Main.rand.NextVector2Circular(16, 16);
-                        p.ItemType = item.type;
+                        p.ItemType = clone.type;
                         p.TimeToLive = Main.rand.Next(60, 80);
                     });
                 }

@@ -75,7 +75,7 @@ namespace Macrocosm.Common.Loot
                 return fail;
             }
 
-            ItemDropAttemptResult result = (rule is not INestedItemDropRule nestedItemDropRule) ? rule.TryDroppingItem(info) : nestedItemDropRule.TryDroppingItem(info, ResolveRule);
+            ItemDropAttemptResult result = rule is INestedItemDropRule nestedItemDropRule ? nestedItemDropRule.TryDroppingItem(info, ResolveRule) : rule.TryDroppingItem(info);
             ResolveRuleChains(rule, info, result);
             return result;
         }

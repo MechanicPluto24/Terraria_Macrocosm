@@ -36,32 +36,10 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             Main.tileWaterDeath[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
-            TileObjectData.newTile.Width = Width;
-            TileObjectData.newTile.Height = Height;
-
-            TileObjectData.newTile.CoordinateHeights = [16, 16];
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;
-
+            TileObjectData.newTile.DefaultToMachine(this);
             TileObjectData.newTile.StyleHorizontal = true;
             TileObjectData.newTile.DrawYOffset = 2;
-
-            TileObjectData.newTile.Origin = new Point16(0, Height - 1);
-            TileObjectData.newTile.AnchorTop = new AnchorData();
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
-            TileObjectData.newTile.AnchorInvalidTiles =
-            [
-                TileID.MagicalIceBlock,
-                TileID.Boulder,
-                TileID.BouncyBoulder,
-                TileID.LifeCrystalBoulder,
-                TileID.RollingCactus
-            ];
-
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
-
             TileObjectData.addTile(Type);
 
             AdjTiles = [TileID.Containers];
