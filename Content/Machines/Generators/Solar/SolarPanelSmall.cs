@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -21,23 +22,12 @@ namespace Macrocosm.Content.Machines.Generators.Solar
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.Width = 3;
-            TileObjectData.newTile.Height = 2;
+            TileObjectData.newTile.DefaultToMachine(this);
             TileObjectData.newTile.Origin = new Point16(0, 1);
-
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinateHeights = [16, 16];
-            TileObjectData.newTile.CoordinatePadding = 2;
-
             TileObjectData.newTile.DrawYOffset = 2;
             TileObjectData.newTile.LavaDeath = true;
-
             TileObjectData.newTile.StyleHorizontal = false;
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 1, 1);
-
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
-
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
             TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
             TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;

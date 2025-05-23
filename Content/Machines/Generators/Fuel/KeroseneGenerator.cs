@@ -34,36 +34,13 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
             Main.tileWaterDeath[Type] = true;
-            Main.tileLavaDeath[Type] = true;
 
             SceneData.Hooks[Type] = NearbyEffects;
 
-
-            TileObjectData.newTile.Width = Width;
-            TileObjectData.newTile.Height = Height;
-            TileObjectData.newTile.Origin = new Point16(0, Height - 1);
-
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16];
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;
-
+            TileObjectData.newTile.DefaultToMachine(this);;
             TileObjectData.newTile.StyleHorizontal = true;
-
             TileObjectData.newTile.DrawYOffset = 2;
-            TileObjectData.newTile.LavaDeath = true;
-
             TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
-            TileObjectData.newTile.AnchorInvalidTiles =
-            [
-                TileID.MagicalIceBlock,
-                TileID.Boulder,
-                TileID.BouncyBoulder,
-                TileID.LifeCrystalBoulder,
-                TileID.RollingCactus
-            ];
-
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-            TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.addTile(Type);
 
             DustType = -1;
@@ -178,8 +155,8 @@ namespace Macrocosm.Content.Machines.Generators.Fuel
             Main.mouseRightRelease = false;
             Utility.UICloseOthers();
 
-            if (TileEntity.TryGet(i, j, out KeroseneGeneratorTE keroseneGenerator))
-                UISystem.ShowMachineUI(keroseneGenerator, new KeroseneGeneratorUI());
+            if (TileEntity.TryGet(i, j, out MachineTE te))
+                UISystem.ShowMachineUI(te, new KeroseneGeneratorUI());
 
             return true;
         }

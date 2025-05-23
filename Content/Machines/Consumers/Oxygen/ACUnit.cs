@@ -29,20 +29,10 @@ namespace Macrocosm.Content.Machines.Consumers.Oxygen
             Main.tileTable[Type] = false;
             Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.Width = Width;
-            TileObjectData.newTile.Height = Height;
+            TileObjectData.newTile.DefaultToMachine(this);
             TileObjectData.newTile.Origin = new Point16(0, 0);
-
-            TileObjectData.newTile.CoordinateHeights = [16];
-            TileObjectData.newTile.CoordinateWidth = 16;
-            TileObjectData.newTile.CoordinatePadding = 2;
-
             TileObjectData.newTile.AnchorWall = true;
             TileObjectData.newTile.LavaDeath = true;
-
-            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-
-            TileObjectData.newTile.UsesCustomCanPlace = true;
             TileObjectData.addTile(Type);
 
             TileID.Sets.DisableSmartCursor[Type] = true;

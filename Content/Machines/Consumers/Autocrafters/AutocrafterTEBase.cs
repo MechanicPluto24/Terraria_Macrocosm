@@ -211,24 +211,16 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             }
         }
 
-        public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
+        public override void MachineNetSend(BinaryWriter writer)
         {
-            base.DrawMachinePowerInfo(spriteBatch, basePosition, lightColor);
         }
 
-        public override void NetSend(BinaryWriter writer)
+        public override void MachineNetReceive(BinaryReader reader)
         {
-            base.NetSend(writer);
         }
 
-        public override void NetReceive(BinaryReader reader)
+        public override void MachineSaveData(TagCompound tag)
         {
-            base.NetReceive(reader);
-        }
-
-        public override void SaveData(TagCompound tag)
-        {
-            base.SaveData(tag);
             if (SelectedRecipes is not null)
             {
                 TagCompound[] recipeTags = new TagCompound[SelectedRecipes.Length];
@@ -255,9 +247,8 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             }
         }
 
-        public override void LoadData(TagCompound tag)
+        public override void MachineLoadData(TagCompound tag)
         {
-            base.LoadData(tag);
             if (tag.TryGet(nameof(SelectedRecipes), out TagCompound[] recipeTags))
             {
                 SelectedRecipes = new Recipe[OutputSlots];

@@ -5,7 +5,7 @@ using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Machines.Consumers.OreExcavators;
+using Macrocosm.Content.Machines.Consumers.Drills;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,14 +15,14 @@ using Terraria.GameContent.UI.Elements;
 
 namespace Macrocosm.Common.UI.Machines
 {
-    public class OreExcavatorUI : MachineUI
+    public class DrillUI : MachineUI
     {
-        public OreExcavatorTE OreExcavator => MachineTE as OreExcavatorTE;
+        public BaseDrillTE Drill => MachineTE as BaseDrillTE;
 
         private UIPanel inventoryPanel;
         private UIScrollableListPanel dropRateList;
 
-        public OreExcavatorUI()
+        public DrillUI()
         {
         }
 
@@ -31,13 +31,13 @@ namespace Macrocosm.Common.UI.Machines
             base.OnInitialize();
 
             Width.Set(745f, 0f);
-            Height.Set(394f, 0f);
+            Height.Set(154 + 48 * (MachineTE?.InventorySize ?? 0) / 10 , 0f);
 
             Recalculate();
 
-            if (OreExcavator.Inventory is not null)
+            if (Drill.Inventory is not null)
             {
-                inventoryPanel = OreExcavator.Inventory.ProvideUIWithInteractionButtons(iconsPerRow: 10, rowsWithoutScrollbar: 5, buttonMenuTopPercent: 0.765f);
+                inventoryPanel = Drill.Inventory.ProvideUIWithInteractionButtons(iconsPerRow: 10, rowsWithoutScrollbar: 5, buttonMenuTopPercent: 0.765f);
                 inventoryPanel.Width = new(0, 0.69f);
                 inventoryPanel.BorderColor = UITheme.Current.PanelStyle.BorderColor;
                 inventoryPanel.BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
@@ -65,7 +65,7 @@ namespace Macrocosm.Common.UI.Machines
 
             List<DropRateInfo> dropRates = new();
             DropRateInfoChainFeed ratesInfo = new(1f);
-            foreach (var drop in OreExcavator.Loot.Entries)
+            foreach (var drop in Drill.LootTable.Entries)
                 if (drop.CanDrop(LootTable.CommonDropAttemptInfo) || drop is IBlacklistable blacklistable && blacklistable.Blacklisted)
                     drop.ReportDroprates(dropRates, ratesInfo);
 
@@ -90,7 +90,7 @@ namespace Macrocosm.Common.UI.Machines
 
         private void BlacklistItem(DropRateInfo dropRateInfo)
         {
-            foreach (var entry in OreExcavator.Loot.Entries)
+            foreach (var entry in Drill.LootTable.Entries)
             {
                 if (entry is IBlacklistable blacklistable)
                 {
@@ -99,14 +99,14 @@ namespace Macrocosm.Common.UI.Machines
                         blacklistable.Blacklisted = !blacklistable.Blacklisted;
 
                         if (blacklistable.Blacklisted)
-                            OreExcavator.BlacklistedItems.Add(blacklistable.ItemID);
+                            Drill.BlacklistedItems.Add(blacklistable.ItemID);
                         else
-                            OreExcavator.BlacklistedItems.Remove(blacklistable.ItemID);
+                            Drill.BlacklistedItems.Remove(blacklistable.ItemID);
                     }
                 }
             }
 
-            NetHelper.SyncTEFromClient(OreExcavator.ID);
+            Drill.NetSync();
         }
 
         public override void Update(GameTime gameTime)
@@ -114,9 +114,9 @@ namespace Macrocosm.Common.UI.Machines
             base.Update(gameTime);
 
             foreach (var dropInfo in dropRateList.Where(child => child is UIItemDropInfo).Cast<UIItemDropInfo>())
-                dropInfo.Blacklisted = OreExcavator.BlacklistedItems.Contains(dropInfo.Item.type);
+                dropInfo.Blacklisted = Drill.BlacklistedItems.Contains(dropInfo.Item.type);
 
-            Inventory.ActiveInventory = OreExcavator.Inventory;
+            Inventory.ActiveInventory = Drill.Inventory;
         }
     }
 }

@@ -443,7 +443,7 @@ ShoresOfOblivion: {
 }
 
 SakuraRuckenfigur: {
-	DisplayName: Sakura Rückenfigur
+	DisplayName: Sakura Rï¿½ckenfigur
 	Tooltip: "'U. C. Arts'"
 }
 
@@ -3153,5 +3153,15 @@ AutocrafterT2Palladium: {
 
 AutocrafterT3: {
 	DisplayName: Advanced Autocrafter
+	Tooltip: ""
+}
+
+OreDrill: {
+	DisplayName: Ore Drill
+	Tooltip: ""
+}
+
+Pumpjack: {
+	DisplayName: Pumpjack
 	Tooltip: ""
 }

@@ -165,8 +165,8 @@ namespace Macrocosm.Common.Systems.Power
             Place(i, j);
         }
 
-        public override void OnNetPlace() => Sync();
-        public void Sync()
+        public override void OnNetPlace() => NetSync();
+        public void NetSync()
         {
             if(Main.netMode == NetmodeID.Server)
             {
@@ -178,33 +178,45 @@ namespace Macrocosm.Common.Systems.Power
             }
         }
 
-        /// <summary> Net send data. Always call base if overriding </summary>
-        public override void NetSend(BinaryWriter writer)
+        /// <summary> Net send data. </summary>
+        public virtual void MachineNetSend(BinaryWriter writer) { }
+        public sealed override void NetSend(BinaryWriter writer)
         {
             writer.Write(ManuallyTurnedOff);
             TagIO.ToStream(Inventory.SerializeData(), writer.BaseStream, compress: true);
+
+            MachineNetSend(writer);
         }
 
-        /// <summary> Net receive data. Always call base if overriding </summary>
-        public override void NetReceive(BinaryReader reader)
+        /// <summary> Net receive data. </summary>
+        public virtual void MachineNetReceive(BinaryReader reader) { }
+        public sealed override void NetReceive(BinaryReader reader)
         {
             ManuallyTurnedOff = reader.ReadBoolean();
             Inventory = Inventory.DeserializeData(TagIO.FromStream(reader.BaseStream, compressed: true));
+
+            MachineNetReceive(reader);
         }
 
-        /// <summary> Save TE data. Always call base if overriding </summary>
-        public override void SaveData(TagCompound tag)
+        /// <summary> Save TE data. </summary>
+        public virtual void MachineSaveData(TagCompound tag) { }
+        public sealed override void SaveData(TagCompound tag)
         {
             if (ManuallyTurnedOff) tag[nameof(ManuallyTurnedOff)] = true;
             if (Inventory.Size > 0) tag[nameof(Inventory)] = Inventory;
+
+            MachineSaveData(tag);
         }
 
-        /// <summary> Load TE data. Always call base if overriding </summary>
-        public override void LoadData(TagCompound tag)
+        /// <summary> Load TE data. </summary>
+        public virtual void MachineLoadData(TagCompound tag) { }
+        public sealed override void LoadData(TagCompound tag)
         {
             ManuallyTurnedOff = tag.ContainsKey(nameof(ManuallyTurnedOff));
             Inventory = tag.TryGet(nameof(Inventory), out Inventory inventory) ? inventory : new(InventorySize, this);
             Inventory.Owner = this;
+
+            MachineLoadData(tag);
         }
     }
 }
