@@ -42,7 +42,7 @@ namespace Macrocosm.Content.Machines.Consumers
             AddMapEntry(new Color(121, 107, 91), CreateMapEntryName());
         }
 
-        // Frame 0 => idle, Frame 1 => active
+        // FrameY == 0 => idle; FrameY >= 18 => active
         public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= Height * 18 * 1;
 
         public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
@@ -81,13 +81,13 @@ namespace Macrocosm.Content.Machines.Consumers
         public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
             if (IsPoweredOnFrame(i, j))
-                frameYOffset = 18 * Height * Main.tileFrame[type] * -1; // Negative because "idle" frame is also an animation frame
+                frameYOffset = 18 * Height * (Main.tileFrame[type] - 1); // Negative frame offset allowed for frame 0 
         }
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
             int ticksPerFrame = 12;
-            int frameCount = 2;
+            int frameCount = 10;
             if (++frameCounter >= ticksPerFrame)
             {
                 frameCounter = 0;
