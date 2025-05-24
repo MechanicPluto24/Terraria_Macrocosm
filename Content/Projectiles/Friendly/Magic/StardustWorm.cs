@@ -17,10 +17,7 @@ using Macrocosm.Common.CrossMod;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class StardustWormPlayer : ModPlayer
-    {
-        public List<Projectile> StardustWorms = new();
-    }
+   
     public class StardustWormProjectile : ModProjectile
     {
         public override string Texture => "Macrocosm/Content/Projectiles/Friendly/Magic/StardustWormHead";
@@ -33,7 +30,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             Projectile.aiStyle = -1;
 
-            Projectile.width = 20;
+            Projectile.width = 16;
             Projectile.height = 18;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
@@ -45,11 +42,20 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public override void OnKill(int timeLeft)
         { 
-            Player player = Main.player[Projectile.owner];//uh so idk
-            player.GetModPlayer<StardustWormPlayer>().StardustWorms.Remove(Projectile);
-            foreach(Projectile p in player.GetModPlayer<StardustWormPlayer>().StardustWorms)
-            {
-                p.ai[0]-=1f;
+            Player player = Main.player[Projectile.owner];
+            if(player.active){
+                List<Projectile> StardustWorms = new();
+
+                for(int i =0; i <Main.maxProjectiles; i++)
+                {
+                    Projectile p = Main.projectile[i];
+                    if(p.owner==Projectile.owner && p.type== ModContent.ProjectileType<StardustWormProjectile>() && p.active)
+                        StardustWorms.Add(p);
+                }
+                foreach(Projectile p in StardustWorms)
+                {
+                    p.ai[0]-=1f;
+                }
             }
         }
 
@@ -57,25 +63,36 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         {
             //Determine the type
             int numberLessThanMe=0;
-            Player player = Main.LocalPlayer;
+            
+            Player player =Main.player[Projectile.owner];
+            if(player.active){
+            List<Projectile> StardustWorms = new();
 
-            foreach(Projectile p in player.GetModPlayer<StardustWormPlayer>().StardustWorms)
+            for(int i =0; i <Main.maxProjectiles; i++)
+                {
+                    Projectile p = Main.projectile[i];
+                    if(p.owner==Projectile.owner && p.type== ModContent.ProjectileType<StardustWormProjectile>() && p.active)
+                        StardustWorms.Add(p);
+                }
+
+            foreach(Projectile p in StardustWorms)
             {
                 if(p.ai[0]<Projectile.ai[0])
                     numberLessThanMe++;
             }
+            
             if(numberLessThanMe==0)//Head
                 segmentType=0;
-            if(numberLessThanMe==player.GetModPlayer<StardustWormPlayer>().StardustWorms.Capacity)//tail
+            else if(numberLessThanMe==StardustWorms.Count-1)//tail
                 segmentType=2;
             else//segment
                 segmentType=1;
             
-            if(player.GetModPlayer<StardustWormPlayer>().StardustWorms.Capacity==1)
+            if(StardustWorms.Count==1)
             {
                 Projectile.Kill();
             }
-            
+            }
             if(segmentType==0)
             {
                 Projectile.friendly = true;
@@ -106,18 +123,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     }
                 }
                 float speed = 30f;
-                float inertia = 40f;
+                float inertia = 20f;
                 Vector2 direction = targetCenter - Projectile.Center;
                 direction.Normalize();
                 direction *= speed;
-
+                
                 Projectile.velocity = (Projectile.velocity * (inertia - 1) + direction) / inertia;
-                Projectile.rotation = Projectile.velocity.ToRotation();
+                Projectile.rotation = Projectile.velocity.ToRotation()+ MathHelper.PiOver2;
+                
+            
             }
             else
             {
-              
-                Projectile following = player.GetModPlayer<StardustWormPlayer>().StardustWorms[(int)(Projectile.ai[0]-1f)];
+                List<Projectile> StardustWorms = new();
+
+                for(int i =0; i <Main.maxProjectiles; i++)
+                    {
+                        Projectile p = Main.projectile[i];
+                        if(p.owner==Projectile.owner && p.type== ModContent.ProjectileType<StardustWormProjectile>() && p.active)
+                            StardustWorms.Add(p);
+                    }
+                Projectile following=null;
+                if((int)(Projectile.ai[0]-1f)>-1 && (int)(Projectile.ai[0]-1f) <StardustWorms.Count)
+                    following = StardustWorms[(int)(Projectile.ai[0]-1f)];
 
                 if (following is not null)
                 {
