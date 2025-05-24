@@ -19,6 +19,7 @@ using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Global.NPCs;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
@@ -183,11 +184,13 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {
                     NPC npc = Main.npc[i];
-                    if (npc.GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile == true)
-                    {
-                        int proj = Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center + new Vector2(-12 + (i * 8), 0), new Microsoft.Xna.Framework.Vector2(0, -16), ModContent.ProjectileType<LockOnStaffBolt>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI, i);
-                        Main.projectile[proj].localAI[0] = i;
-                        Player.CheckMana(Player.HeldItem.mana, true, false);
+                    if(npc.active){
+                        if (npc.GetGlobalNPC<MacrocosmNPC>().TargetedByHomingProjectile == true)
+                        {
+                            int proj = Projectile.NewProjectile(Projectile.InheritSource(Projectile), Projectile.Center + new Vector2(-12 + (i * 8), 0), new Microsoft.Xna.Framework.Vector2(0, -16), ModContent.ProjectileType<LockOnStaffBolt>(), (int)(Projectile.damage), Projectile.knockBack, Main.player[Projectile.owner].whoAmI, i);
+                            Main.projectile[proj].localAI[0] = i;
+                            Player.CheckMana(Player.HeldItem.mana, true, false);
+                        }
                     }
                 }
             }
