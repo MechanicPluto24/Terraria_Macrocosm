@@ -178,3 +178,15 @@ MoonChampionSentry.DisplayName: Moon Champion Sentry
 LightningBolt.DisplayName: Lightning Bolt
 BLPShot.DisplayName: BLP Asterix
 StasisGrenade.DisplayName: Stasis Grenade
+CelestialMeteorStaffProjectileNebula.DisplayName: Celestial Meteor Staff Projectile Nebula
+CelestialMeteorStaffProjectileSolar.DisplayName: Celestial Meteor Staff Projectile Solar
+CelestialMeteorStaffProjectileStardust.DisplayName: Celestial Meteor Staff Projectile Stardust
+CelestialMeteorStaffProjectileVortex.DisplayName: Celestial Meteor Staff Projectile Vortex
+EMGunBolt.DisplayName: E M Gun Bolt
+LockOnStaffBolt.DisplayName: Lock On Staff Bolt
+LockOnStaffProjectile.DisplayName: Lock On Staff Projectile
+NebulaRemnantProjectile.DisplayName: Nebula Remnant Projectile
+SolarGlob.DisplayName: Solar Glob
+StardustWormProjectile.DisplayName: Stardust Worm Projectile
+VortexPortal.DisplayName: Vortex Portal
+MegaBladeProjectile.DisplayName: Mega Blade Projectile
