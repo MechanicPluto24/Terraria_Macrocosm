@@ -12,7 +12,7 @@ namespace Macrocosm.Content.Particles
     public class DustParticle : Particle
     {
         public override string Texture => Macrocosm.EmptyTexPath;
-        public override int MaxPoolCount => 1000;
+        public override int MaxPoolCount => 2000;
 
         /// <summary> The type of Dust to use for this particle. </summary>
         public int DustType { get; set; } = -1;
@@ -24,6 +24,8 @@ namespace Macrocosm.Content.Particles
         public bool NoGravity { get; set; } = false;
         public bool NoLight { get; set; } = false;
         public bool NoLightEmittence { get; set; } = false;
+        public int lifeTime { get; set; } = 300;
+
         public object CustomData { get; set; } = null;
 
 
@@ -31,7 +33,7 @@ namespace Macrocosm.Content.Particles
 
         public override void SetDefaults()
         {
-            TimeToLive = 3600;
+            TimeToLive = 300;///If the dusts stick around too long they clog up the max amount
         }
 
         public override void OnSpawn()
@@ -41,7 +43,7 @@ namespace Macrocosm.Content.Particles
                 Kill();
                 return;
             }
-
+            TimeToLive=lifeTime;
             dust = Dust.NewDustPerfect(Position, DustType, Velocity, Color.A, Color, Scale.X);
             dust.rotation = Rotation;
             dust.fadeIn = FadeIn;
