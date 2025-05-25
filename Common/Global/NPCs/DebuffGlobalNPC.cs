@@ -21,8 +21,11 @@ namespace Macrocosm.Common.Global.NPCs
         {
             if (npc.HasBuff<Stasis>())
             {
-                npc.velocity.X = MathHelper.Lerp(npc.velocity.X * 0.5f, npc.velocity.X, 0.01f);
-                npc.velocity.Y = MathHelper.Lerp(0f, npc.velocity.Y, 0.01f);
+                if(npc.velocity.LengthSquared() > 2 * 2)
+                {
+                    npc.velocity.X = MathHelper.Lerp(npc.velocity.X * 0.5f, npc.velocity.X, 0.01f);
+                    npc.velocity.Y = MathHelper.Lerp(0f, npc.velocity.Y, 0.01f);
+                }
             }
         }
 
@@ -95,7 +98,7 @@ namespace Macrocosm.Common.Global.NPCs
         public override void DrawEffects(NPC npc, ref Color drawColor)
         {
             if (npc.HasBuff<Stasis>())
-                drawColor = new Color(104, 245, 220, 220);
+                drawColor = Color.Cyan;
         }
 
     }

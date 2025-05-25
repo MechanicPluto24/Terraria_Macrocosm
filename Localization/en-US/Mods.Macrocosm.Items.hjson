@@ -3195,3 +3195,23 @@ TimberHearth: {
 	DisplayName: Timber Hearth
 	Tooltip: ""
 }
+
+CelestialMeteorStaff: {
+	DisplayName: Celestial Meteor Staff
+	Tooltip: ""
+}
+
+LockOnStaff: {
+	DisplayName: Lock On Staff
+	Tooltip: ""
+}
+
+MegaBlade: {
+	DisplayName: Mega Blade
+	Tooltip: ""
+}
+
+Choronzon: {
+	DisplayName: Choronzon
+	Tooltip: ""
+}
