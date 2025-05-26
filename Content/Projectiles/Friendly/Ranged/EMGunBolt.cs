@@ -11,7 +11,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Magic
+namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
     public class EMGunBolt : ModProjectile
     {

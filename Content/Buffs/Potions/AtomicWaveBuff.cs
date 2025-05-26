@@ -1,11 +1,10 @@
 using Macrocosm.Common.Players;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Players;
 
 namespace Macrocosm.Content.Buffs.Potions
 {
-    public class DensityPotionBuff : ModBuff
+    public class AtomicWaveBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -15,7 +14,7 @@ namespace Macrocosm.Content.Buffs.Potions
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.gravity *= 2f;
+            player.GetModPlayer<AtomicWavePlayer>().AtomicWave = true;
         }
     }
 }

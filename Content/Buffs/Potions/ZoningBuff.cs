@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Potions
 {
-    public class AntiRadiationPills : ModBuff
+    public class ZoningBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Buffs.Potions
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<IrradiationPlayer>().IrradiationReduction += 0.003f;
+            player.GetModPlayer<ProjectileDistancePlayer>().Zoning = true;
         }
     }
 }

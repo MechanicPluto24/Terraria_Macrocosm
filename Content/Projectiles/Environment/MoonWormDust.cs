@@ -1,7 +1,7 @@
 ﻿using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
-namespace Macrocosm.Content.Dusts
+namespace Macrocosm.Content.Projectiles.Environment
 {
     public class MoonWormDust : ModProjectile
     {

@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Consumables.Potions
             Item.UseSound = SoundID.Item3;
             Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.value = Item.buyPrice(silver: 50);
-            Item.buffType = ModContent.BuffType<Buffs.Potions.LifelinePotionBuff>();
+            Item.buffType = ModContent.BuffType<Buffs.Potions.LifelineBuff>();
             Item.buffTime = 5 * 60 * 60;
         }
     }

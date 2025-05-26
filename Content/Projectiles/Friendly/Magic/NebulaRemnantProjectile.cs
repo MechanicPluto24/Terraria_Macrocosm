@@ -1,16 +1,10 @@
-﻿using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
+﻿using Macrocosm.Common.CrossMod;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using Terraria;
 using Terraria.GameContent;
-using Terraria.ID;
 using Terraria.ModLoader;
-using System;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
-using Macrocosm.Common.CrossMod;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
@@ -31,6 +25,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.penetrate = -1;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 10;
+            Projectile.tileCollide = false;
         }
 
         public override void AI()
@@ -42,10 +37,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 Projectile.Opacity -= 0.02f;
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            return false;
-        }
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D texture = TextureAssets.Projectile[Type].Value;
@@ -55,6 +46,5 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
             return false;
         }
-
     }
 }

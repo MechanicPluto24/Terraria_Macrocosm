@@ -3,11 +3,9 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Players
 {
-    public class SafeguardPotionPlayer : ModPlayer
+    public class SafeguardPlayer : ModPlayer
     {
         public bool Safeguard { get; set; }
-
-
 
         public override void ResetEffects()
         {
@@ -19,8 +17,8 @@ namespace Macrocosm.Common.Players
             if (Safeguard)
             {
                 modifiers.Cancel();
-                Player.ClearBuff(ModContent.BuffType<Content.Buffs.Potions.SafeguardPotionBuff>());
-                Player.immuneTime=60;
+                Player.ClearBuff(ModContent.BuffType<Content.Buffs.Potions.SafeguardBuff>());
+                Player.immuneTime = 60;
             }
         }
     }

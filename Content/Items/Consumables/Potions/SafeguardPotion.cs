@@ -28,12 +28,12 @@ namespace Macrocosm.Content.Items.Consumables.Potions
             Item.buffTime = 3 * 60 * 60;
         }
 
-        public override bool CanUseItem(Player player) => !player.HasBuff(ModContent.BuffType<Buffs.Potions.SafeguardPotionCooldown>());
+        public override bool CanUseItem(Player player) => !player.HasBuff(ModContent.BuffType<Buffs.Potions.SafeguardCooldown>());
 
         public sealed override bool? UseItem(Player player)
         {
-            player.AddBuff(ModContent.BuffType<Buffs.Potions.SafeguardPotionBuff>(), Item.buffTime);
-            player.AddBuff(ModContent.BuffType<Buffs.Potions.SafeguardPotionCooldown>(), 5 * 60 * 60);
+            player.AddBuff(ModContent.BuffType<Buffs.Potions.SafeguardBuff>(), Item.buffTime);
+            player.AddBuff(ModContent.BuffType<Buffs.Potions.SafeguardCooldown>(), 5 * 60 * 60);
             return true;
         }
     }

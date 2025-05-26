@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using System;
@@ -9,10 +10,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class CelestialMeteorStaffProjectileNebula : ModProjectile
+    public class NebulaStaffMeteor : ModProjectile
     {
-        public override string Texture => "Macrocosm/Content/Projectiles/Environment/Meteors/NebulaMeteor";
-
         public override void SetStaticDefaults()
         {
             Redemption.AddElementToItem(Type, Redemption.ElementID.Explosive);
@@ -26,7 +25,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.tileCollide = true;
-            Projectile.scale = 0.5f;
             Projectile.width = 64;
             Projectile.height = 64;
         }
@@ -74,23 +72,42 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public void ImpactEffects()
         {
-            int impactDustCount = Main.rand.Next(200, 300);
+            int impactDustCount = Main.rand.Next(450, 480);
             for (int i = 0; i < impactDustCount; i++)
             {
-                int dist = 160;
-                Vector2 dustPosition = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
-                float distFactor = (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
-                Vector2 velocity = (Projectile.Center - dustPosition).SafeNormalize(default) * -14f;
+                int dist = 250;
+                Vector2 offset = Main.rand.NextVector2Circular(dist, dist);
+                Vector2 dustPosition = Projectile.Center + offset;
+                float distFactor = 0.2f + 0.8f * (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
+                Vector2 velocity = -offset * 0.04f * distFactor;
                 Particle.Create<DustParticle>((p =>
                 {
                     p.DustType = DustID.UndergroundHallowedEnemies;
                     p.Position = dustPosition;
                     p.Velocity = velocity;
-                    p.Scale = new Vector2(Main.rand.NextFloat(1.2f, 2f));
+                    p.Acceleration = velocity * 0.2f;
+                    p.Scale = new(Main.rand.NextFloat(0.6f, 1.8f));
                     p.NoGravity = true;
                     p.NormalUpdate = true;
                 }));
             }
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.2f);
+                p.ScaleVelocity = new(0.3f);
+                p.Color = new Color(255, 72, 255);
+            });
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(255, 72, 255).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 2.6f;
+            });
         }
     }
 }

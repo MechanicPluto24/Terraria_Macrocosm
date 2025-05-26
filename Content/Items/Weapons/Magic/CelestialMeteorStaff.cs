@@ -39,7 +39,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             Item.rare = ModContent.RarityType<MoonRarity1>();
             Item.UseSound = SoundID.Item20;
             Item.autoReuse = true;
-            Item.shoot = ModContent.ProjectileType<CelestialMeteorStaffProjectileSolar>();
+            Item.shoot = ModContent.ProjectileType<SolarStaffMeteor>();
             Item.shootSpeed = 10f;
             Item.tileBoost = 50;
         }
@@ -55,10 +55,10 @@ namespace Macrocosm.Content.Items.Weapons.Magic
             int integer = Main.rand.Next(0, 4);
             return integer switch
             {
-                0 => ModContent.ProjectileType<CelestialMeteorStaffProjectileSolar>(),
-                1 => ModContent.ProjectileType<CelestialMeteorStaffProjectileVortex>(),
-                2 => ModContent.ProjectileType<CelestialMeteorStaffProjectileNebula>(),
-                3 => ModContent.ProjectileType<CelestialMeteorStaffProjectileStardust>(),
+                0 => ModContent.ProjectileType<SolarStaffMeteor>(),
+                1 => ModContent.ProjectileType<VortexStaffMeteor>(),
+                2 => ModContent.ProjectileType<NebulaStaffMeteor>(),
+                3 => ModContent.ProjectileType<StardustStaffMeteor>(),
                 _ => 0,
             };
         }

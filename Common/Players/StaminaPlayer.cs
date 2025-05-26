@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Players
 {
     public class StaminaPlayer : ModPlayer
     {
+        public override bool IsLoadingEnabled(Mod mod) => false;
+
         private float staminaRegenCooldown = 90f;
         private float staminaRegenPeriod = 60f;
         public void ResetStaminaCooldown(float value) => staminaRegenCooldown = value;
