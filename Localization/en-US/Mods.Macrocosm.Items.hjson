@@ -3215,3 +3215,43 @@ Choronzon: {
 	DisplayName: Choronzon
 	Tooltip: ""
 }
+
+AtomicWavePotion: {
+	DisplayName: Atomic Wave Potion
+	Tooltip: ""
+}
+
+BoosterPotion: {
+	DisplayName: Booster Potion
+	Tooltip: ""
+}
+
+DensityPotion: {
+	DisplayName: Density Potion
+	Tooltip: ""
+}
+
+LifelinePotion: {
+	DisplayName: Lifeline Potion
+	Tooltip: ""
+}
+
+ManiaPotion: {
+	DisplayName: Mania Potion
+	Tooltip: ""
+}
+
+PointBlankPotion: {
+	DisplayName: Point Blank Potion
+	Tooltip: ""
+}
+
+SafeguardPotion: {
+	DisplayName: Safeguard Potion
+	Tooltip: ""
+}
+
+ZoningPotion: {
+	DisplayName: Zoning Potion
+	Tooltip: ""
+}

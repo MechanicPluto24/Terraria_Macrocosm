@@ -33,6 +33,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             get => (int)Projectile.ai[0];
             set => Projectile.ai[0] = value;
         }
+
         public override void OnSpawn(IEntitySource source)
         {
             blade = (source as EntitySource_ItemUse_WithAmmo).Item.ModItem as Schroteri;

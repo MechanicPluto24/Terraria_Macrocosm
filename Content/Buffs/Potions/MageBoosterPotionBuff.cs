@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Potions
 {
-    public class BoosterPotionBuff : ModBuff
+    public class MageBoosterPotionBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Buffs.Potions
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<BoosterPotionPlayer>().Booster = true;
+            player.GetModPlayer<BoosterPlayer>().Booster = true;
         }
     }
 }

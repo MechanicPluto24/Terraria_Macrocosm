@@ -46,7 +46,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Pets
 
             Projectile.frame = MathF.Sign(Projectile.velocity.X) > 0 ? 1 : 0;
 
-            if (!player.dead && player.HasBuff(ModContent.BuffType<Buffs.Pets.CraterDemonPet>()))
+            if (!player.dead && player.HasBuff(ModContent.BuffType<Content.Buffs.Pets.CraterDemonPet>()))
                 Projectile.timeLeft = 2;
         }
 

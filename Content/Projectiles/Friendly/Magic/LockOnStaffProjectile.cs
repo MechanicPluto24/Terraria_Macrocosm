@@ -8,18 +8,12 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using ReLogic.Utilities;
-using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.GameContent;
-using Terraria.Graphics;
-using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Common.Global.NPCs;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
@@ -30,7 +24,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         private const int windupFrames = 5; // number of windup animaton frames
         private const int shootFrames = 1;  // number of shooting animaton frames
 
-        private readonly int ManaUseRate = 10;
         private readonly int ManaUseAmount = 5;
         public int lockOnMax = 4;
 
@@ -137,10 +130,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         private bool OwnerHasMana => Player.CheckMana(ManaUseAmount);
 
-        private SpriteBatchState state1, state2;
-
-        private SlotId playingSoundId_1 = SlotId.Invalid;
-        private SlotId playingSoundId_2 = SlotId.Invalid;
         private ProjectileAudioTracker tracker;
         private void PlaySounds()
         {

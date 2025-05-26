@@ -190,3 +190,9 @@ SolarGlob.DisplayName: Solar Glob
 StardustWormProjectile.DisplayName: Stardust Worm Projectile
 VortexPortal.DisplayName: Vortex Portal
 MegaBladeProjectile.DisplayName: Mega Blade Projectile
+AtomicWaveProjectile.DisplayName: Atomic Wave Projectile
+MageBoosterProjectile.DisplayName: Mage Booster Projectile
+NebulaStaffMeteor.DisplayName: Nebula Staff Meteor
+SolarStaffMeteor.DisplayName: Solar Staff Meteor
+StardustStaffMeteor.DisplayName: Stardust Staff Meteor
+VortexStaffMeteor.DisplayName: Vortex Staff Meteor

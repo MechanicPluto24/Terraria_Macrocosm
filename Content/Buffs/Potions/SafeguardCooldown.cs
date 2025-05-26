@@ -1,20 +1,20 @@
-using Macrocosm.Common.Players;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
+using Terraria.ID;
 
 namespace Macrocosm.Content.Buffs.Potions
 {
-    public class ManiaPotionBuff : ModBuff
+    public class SafeguardCooldown : ModBuff
     {
         public override void SetStaticDefaults()
         {
-            Main.buffNoSave[Type] = false;
-            Main.buffNoTimeDisplay[Type] = false;
+            Main.debuff[Type] = true;
+            Main.buffNoSave[Type] = true;
+            BuffID.Sets.NurseCannotRemoveDebuff[Type] = true;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
-			player.GetAttackSpeed(DamageClass.Melee) +=0.15f;
         }
     }
 }

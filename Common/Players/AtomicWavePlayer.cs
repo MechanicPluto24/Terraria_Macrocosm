@@ -1,16 +1,16 @@
-﻿using Terraria;
-using Terraria.ModLoader;
+﻿using Macrocosm.Content.Projectiles.Friendly.Buff;
 using Microsoft.Xna.Framework;
-using Macrocosm.Content.Projectiles.Friendly.Misc;
+using Terraria;
 using Terraria.DataStructures;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Players
 {
-    public class AtomicWavePotionPlayer : ModPlayer
+    public class AtomicWavePlayer : ModPlayer
     {
         public bool AtomicWave { get; set; }
 
-        private int Cooldown;
+        private int cooldown;
 
         public override void ResetEffects()
         {
@@ -21,21 +21,21 @@ namespace Macrocosm.Common.Players
         {
             if (AtomicWave)
             {
-                if (Cooldown >= 1)
-                {
-                    Cooldown--;
-                }
-                bool close =false;
+                if (cooldown >= 1)
+                    cooldown--;
+
+                bool close = false;
                 for (int i = 0; i < Main.maxNPCs; i++)
                 {
                     NPC npc = Main.npc[i];
-                    if (npc.active && !npc.friendly && Vector2.Distance(Player.Center,npc.Center) < 200f)
-                        close=true;
+                    if (npc.active && !npc.friendly && Vector2.Distance(Player.Center, npc.Center) < 200f)
+                        close = true;
                 }
-                if(close&&Cooldown<1)
+
+                if (close && cooldown < 1)
                 {
                     Projectile.NewProjectile(new EntitySource_Misc("AtomicWave"), Player.Center, Vector2.Zero, ModContent.ProjectileType<AtomicWaveProjectile>(), 700, 10f, Main.myPlayer);
-                    Cooldown=300;
+                    cooldown = 300;
                 }
             }
         }

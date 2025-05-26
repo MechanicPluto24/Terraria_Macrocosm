@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Potions
 {
-    public class ZoningPotionBuff : ModBuff
+    public class ManiaBuff : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Buffs.Potions
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.GetModPlayer<ZoningPotionPlayer>().Zoning = true;
+			player.GetAttackSpeed(DamageClass.Melee) +=0.15f;
         }
     }
 }

@@ -1,18 +1,18 @@
 ﻿using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class CelestialMeteorStaffProjectileSolar : ModProjectile
+    public class SolarStaffMeteor : ModProjectile
     {
-        public override string Texture => "Macrocosm/Content/Projectiles/Environment/Meteors/SolarMeteor";
-
         public override void SetStaticDefaults()
         {
             Redemption.AddElementToProjectile(Type, Redemption.ElementID.Explosive);
@@ -25,7 +25,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.tileCollide = true;
-            Projectile.scale = 0.5f;
             Projectile.width = 64;
             Projectile.height = 64;
         }
@@ -64,10 +63,10 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
         }
         public void ImpactEffects()
         {
-            int impactDustCount = Main.rand.Next(200, 300);
+            int impactDustCount = Main.rand.Next(550, 580);
             for (int i = 0; i < impactDustCount; i++)
             {
-                int dist = 160;
+                int dist = 80;
                 Vector2 dustPosition = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
                 float distFactor = (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
                 Vector2 velocity = (Projectile.Center - dustPosition).SafeNormalize(default) * -14f;
@@ -81,6 +80,42 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                     p.NormalUpdate = true;
                 }));
             }
+
+            int flameParticleCount = Main.rand.Next(20, 30);
+            for (int i = 0; i < flameParticleCount; i++)
+            {
+                int dist = 224;
+                Vector2 position = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
+                float distFactor = (Vector2.DistanceSquared(Projectile.Center, position) / (dist * dist));
+                Vector2 velocity = (Projectile.Center - position).SafeNormalize(default) * -140f;
+                Particle.Create(ParticleOrchestraType.AshTreeShake, position, velocity);
+            }
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center + Projectile.oldVelocity * 0.5f;
+                p.Scale = new(0.8f);
+                p.ScaleVelocity = new(0.2f);
+                p.Color = new Color(255, 164, 57);
+            });
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(255, 164, 57).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 2.6f;
+            });
+
+            Particle.Create<SolarExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = Color.White.WithAlpha(127);
+                p.Scale = new(1.2f);
+                p.ScaleVelocity = new(0.1f);
+                p.FrameSpeed = 3;
+            });
         }
     }
 }

@@ -7,13 +7,13 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
+using Macrocosm.Common.Utils;
+using Terraria.GameContent.Drawing;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public class CelestialMeteorStaffProjectileStardust : ModProjectile
+    public class StardustStaffMeteor : ModProjectile
     {
-        public override string Texture => "Macrocosm/Content/Projectiles/Environment/Meteors/StardustMeteor";
-
         public override void SetStaticDefaults()
         {
             Redemption.AddElementToItem(Type, Redemption.ElementID.Explosive);
@@ -27,7 +27,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             Projectile.friendly = true;
             Projectile.hostile = false;
             Projectile.tileCollide = true;
-            Projectile.scale = 0.5f;
             Projectile.width = 64;
             Projectile.height = 64;
         }
@@ -91,22 +90,57 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
 
         public void ImpactEffects()
         {
-            int impactDustCount = Main.rand.Next(200, 300);
+            int impactDustCount = Main.rand.Next(450, 480);
             for (int i = 0; i < impactDustCount; i++)
             {
-                int dist = 160;
+                int dist = 80;
                 Vector2 dustPosition = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
                 float distFactor = (Vector2.DistanceSquared(Projectile.Center, dustPosition) / (dist * dist));
-                Vector2 velocity = (Projectile.Center - dustPosition).SafeNormalize(default) * -14f;
+                Vector2 velocity = (Projectile.Center - dustPosition).SafeNormalize(default) * -8f;
                 Particle.Create<DustParticle>((p =>
                 {
                     p.DustType = Main.rand.NextBool() ? DustID.YellowStarDust : DustID.DungeonWater;
                     p.Position = dustPosition;
                     p.Velocity = velocity;
-                    p.Scale = new Vector2(Main.rand.NextFloat(1.2f, 2f));
+                    p.Scale = new Vector2(Main.rand.NextFloat(1.8f, 2f)) * (1f - distFactor);
                     p.NoGravity = true;
                     p.NormalUpdate = true;
                 }));
+            }
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center;
+                p.Scale = new(0.8f);
+                p.ScaleVelocity = new(0.2f);
+                p.Color = new Color(116, 164, 255).WithOpacity(1f);
+            });
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(116, 164, 255).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1.5f);
+                p.NumberOfInnerReplicas = 8;
+                p.ReplicaScalingFactor = 1.4f;
+            });
+
+
+            Particle.Create<TintableExplosion>(p =>
+            {
+                p.Position = Projectile.Center;
+                p.Color = new Color(252, 241, 69).WithOpacity(0.1f) * 0.4f;
+                p.Scale = new(1.2f);
+                p.NumberOfInnerReplicas = 6;
+                p.ReplicaScalingFactor = 1.2f;
+                p.Rotation = MathHelper.PiOver2;
+            });
+
+            for (int i = 0; i < 45; i++)
+            {
+                Vector2 position = Projectile.Center + new Vector2(120).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+                Vector2 velocity = -new Vector2(10).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+                Particle.Create(ParticleOrchestraType.StardustPunch, position, velocity);
             }
         }
     }
