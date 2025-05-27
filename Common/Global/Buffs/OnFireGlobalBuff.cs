@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Debuffs;
+﻿using Macrocosm.Content.Buffs;
 using SubworldLibrary;
 using Terraria;
 using Terraria.ID;

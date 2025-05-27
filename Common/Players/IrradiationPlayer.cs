@@ -1,7 +1,7 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs.Radiation;
+using Macrocosm.Content.Buffs.Radiation;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;

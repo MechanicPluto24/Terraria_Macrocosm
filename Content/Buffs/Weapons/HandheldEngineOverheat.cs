@@ -2,7 +2,7 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs.Weapons
+namespace Macrocosm.Content.Buffs.Weapons
 {
     public class HandheldEngineOverheat : ModBuff
     {

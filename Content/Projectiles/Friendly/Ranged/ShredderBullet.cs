@@ -1,15 +1,13 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class CruithneGreenSlug : ModProjectile
+    public class ShredderBullet : ModProjectile
     {
         public override void SetStaticDefaults()
         {
@@ -37,8 +35,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
-            Lighting.AddLight(Projectile.position, new Color(30, 255, 105).ToVector3() * 0.6f);
-
             if (Projectile.alpha > 0)
                 Projectile.alpha -= 15;
 
@@ -52,6 +48,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 178, 115), new Color(0, 178, 115, 0));
             return true;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            target.AddBuff(BuffID.Bleeding, 60);
+        }
+
+        public override void OnHitPlayer(Player target, Player.HurtInfo info)
+        {
+            target.AddBuff(BuffID.Bleeding, 60);
         }
 
         //public override Color? GetAlpha(Color lightColor) => Color.White;

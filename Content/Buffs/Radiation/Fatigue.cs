@@ -3,9 +3,9 @@ using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs.Radiation
+namespace Macrocosm.Content.Buffs.Radiation
 {
-    public class Paralysis : ModBuff
+    public class Fatigue : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -13,27 +13,23 @@ namespace Macrocosm.Content.Debuffs.Radiation
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
 
-            BuffSets.RadiationBuffSeverity[Type] = RadiationSeverity.Moderate;
-            BuffSets.TypicalDuration[Type] = 60 * 2;
+            BuffSets.RadiationBuffSeverity[Type] = RadiationSeverity.Mild;
+            BuffSets.TypicalDuration[Type] = 60 * 20;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.webbed = true;
-
-            /*
-            // No hp regen
-            player.bleed = true;
+            // Reduced mana regen
+            player.manaRegen = (int)(player.manaRegen * 0.6f);
 
             // No infinite flight
             player.empressBrooch = false;
 
             // Slow
-            player.moveSpeed *= 0.4f;
+            player.moveSpeed *= 0.75f;
 
             // Reduced flight time
-            player.wingTimeMax *= (int)(player.wingTimeMax * 0.5f);
-            */
+            player.wingTimeMax = (int)(player.wingTimeMax * 0.75f);
         }
     }
 }

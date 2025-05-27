@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs.Environment
+namespace Macrocosm.Content.Buffs.Environment
 {
     public class Depressurized : ModBuff
     {

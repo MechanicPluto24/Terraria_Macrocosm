@@ -3,9 +3,9 @@ using Macrocosm.Common.Players;
 using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ModLoader;
-namespace Macrocosm.Content.Debuffs.Radiation
+namespace Macrocosm.Content.Buffs.Radiation
 {
-    public class MildNecrosis : ModBuff
+    public class WeakBones : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -14,13 +14,12 @@ namespace Macrocosm.Content.Debuffs.Radiation
             Main.buffNoTimeDisplay[Type] = false;
 
             BuffSets.RadiationBuffSeverity[Type] = RadiationSeverity.Mild;
-            BuffSets.TypicalDuration[Type] = 60 * 25;
+            BuffSets.TypicalDuration[Type] = 60 * 4;
         }
-
         public override void Update(Player player, ref int buffIndex)
         {
-            // Reduced damage
-            player.GetDamage<GenericDamageClass>() *= 1f * (1 / (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel + 1f));
+            // Reduced defense
+            player.statDefense *= 1f * (1 / (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel + 1f));
         }
     }
 }

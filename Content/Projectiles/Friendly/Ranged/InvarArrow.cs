@@ -26,7 +26,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.width = 14;
             Projectile.height = 14;
             Projectile.timeLeft = 270;
-            Projectile.light = 0f;
             Projectile.friendly = true;
 
             Projectile.penetrate = 3;
