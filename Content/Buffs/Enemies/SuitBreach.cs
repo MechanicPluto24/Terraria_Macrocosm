@@ -1,7 +1,7 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs.Enemies
+namespace Macrocosm.Content.Buffs.Enemies
 {
     public class SuitBreach : ModBuff
     {

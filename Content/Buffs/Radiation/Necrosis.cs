@@ -3,7 +3,7 @@ using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs.Radiation
+namespace Macrocosm.Content.Buffs.Radiation
 {
     public class Necrosis : ModBuff
     {
@@ -20,7 +20,7 @@ namespace Macrocosm.Content.Debuffs.Radiation
         public override void Update(Player player, ref int buffIndex)
         {
             // DoT
-            player.lifeRegen = -10;
+            player.lifeRegen -= 10;
 
             // Slow
             player.moveSpeed *= 0.3f;

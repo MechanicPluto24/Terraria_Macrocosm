@@ -1,22 +1,26 @@
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs.Enemies
+namespace Macrocosm.Content.Buffs.Radiation
 {
-    public class Fear : ModBuff
+    public class OrganFailure : ModBuff
     {
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
-            Main.pvpBuff[Type] = true;
+
+            BuffSets.RadiationBuffSeverity[Type] = RadiationSeverity.Severe;
+            BuffSets.TypicalDuration[Type] = 60 * 2;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.cursed = true;
-            player.moveSpeed /= 4;
+            // Heavy DoT
+            player.lifeRegen -= 30;
         }
     }
 }

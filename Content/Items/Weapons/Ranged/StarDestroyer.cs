@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             Item.height = 30;
             Item.value = 10000;
             Item.rare = ModContent.RarityType<MoonRarity3>();
-            Item.UseSound = SFX.LaserShoot;
+            Item.UseSound = SFX.LaserShot;
             Item.useAnimation = 10;
             Item.useTime = 10;
             Item.DamageType = DamageClass.Ranged;

@@ -22,7 +22,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetStaticDefaults()
         {
-            Main.projFrames[Type] = 2;
             ProjectileID.Sets.TrailCacheLength[Type] = 15;
             ProjectileID.Sets.TrailingMode[Type] = 2;
             ProjectileSets.HitsTiles[Type] = true;

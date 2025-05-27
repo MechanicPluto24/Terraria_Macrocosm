@@ -1,11 +1,11 @@
 using Macrocosm.Common.Enums;
-using Macrocosm.Common.Players;
 using Macrocosm.Common.Sets;
 using Terraria;
 using Terraria.ModLoader;
-namespace Macrocosm.Content.Debuffs.Radiation
+
+namespace Macrocosm.Content.Buffs.Radiation
 {
-    public class WeakBones : ModBuff
+    public class Blindness : ModBuff
     {
         public override void SetStaticDefaults()
         {
@@ -13,13 +13,18 @@ namespace Macrocosm.Content.Debuffs.Radiation
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
 
-            BuffSets.RadiationBuffSeverity[Type] = RadiationSeverity.Mild;
-            BuffSets.TypicalDuration[Type] = 60 * 4;
+            BuffSets.RadiationBuffSeverity[Type] = RadiationSeverity.Moderate;
+            BuffSets.TypicalDuration[Type] = 60 * 15;
         }
+
         public override void Update(Player player, ref int buffIndex)
         {
-            // Reduced defense
-            player.statDefense *= 1f * (1 / (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel + 1f));
+            // No hp regen
+            player.bleed = true;
+
+            // Blacken the screen
+            player.blackout = true;
+            player.blind = true;
         }
     }
 }

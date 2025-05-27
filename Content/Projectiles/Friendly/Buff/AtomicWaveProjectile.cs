@@ -2,7 +2,7 @@ using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs.Radiation;
+using Macrocosm.Content.Buffs.Radiation;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;

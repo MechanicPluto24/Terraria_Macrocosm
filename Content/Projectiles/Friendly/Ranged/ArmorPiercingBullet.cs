@@ -8,9 +8,9 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    public class ZombieSecurityBullet : ModProjectile
+    public class ArmorPiercingBullet : ModProjectile
     {
         public override void SetStaticDefaults()
         {
@@ -25,7 +25,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
             Projectile.width = 4;
             Projectile.height = 4;
             Projectile.aiStyle = 1;
-            Projectile.hostile = true;
+            Projectile.friendly = true;
             Projectile.penetrate = -1;
             Projectile.light = 0.5f;
             Projectile.alpha = 255;
@@ -38,20 +38,19 @@ namespace Macrocosm.Content.Projectiles.Hostile
             AIType = ProjectileID.Bullet;
         }
 
-        bool spawned = false;
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            modifiers.ScalingArmorPenetration += 0.3f;
+        }
+
+        public override void ModifyHitPlayer(Player target, ref Player.HurtModifiers modifiers)
+        {
+            modifiers.ScalingArmorPenetration += 0.3f;
+        }
+
         public override bool PreAI()
         {
-            if (!spawned)
-            {
-                if (!Main.dedServ)
-                    SoundEngine.PlaySound(SFX.DesertEagleShot with { Volume = 0.3f }, Projectile.position);
-
-                Projectile.alpha = 0;
-                spawned = true;
-            }
-
             Lighting.AddLight(Projectile.position, new Color(255, 202, 141).ToVector3() * 0.6f);
-
             return true;
         }
 

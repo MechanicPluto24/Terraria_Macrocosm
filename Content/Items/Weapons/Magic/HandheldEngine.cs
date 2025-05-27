@@ -1,6 +1,6 @@
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Debuffs.Weapons;
+using Macrocosm.Content.Buffs.Weapons;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;

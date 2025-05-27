@@ -1,12 +1,15 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Bases.Buffs;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Debuffs.Weapons
+namespace Macrocosm.Content.Buffs.Weapons
 {
-    public class ProcellarumLightningMark : ModBuff
+    public class ProcellarumLightningMark : ComplexBuff
     {
         public override void SetStaticDefaults()
         {
@@ -25,6 +28,31 @@ namespace Macrocosm.Content.Debuffs.Weapons
         {
             if (!npc.dontTakeDamage)
                 DustEffects(npc);
+        }
+
+        public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
+        {
+            if (projectile.type == ModContent.ProjectileType<ProcellarumHalberdProjectile>() && projectile.ai[0] == 1)
+            {
+                int damage = (int)(hit.Damage * 0.5f);
+                Vector2 position = new(Main.screenPosition.X + 0.5f * Main.screenWidth + Main.rand.Next(-128, 128), Main.screenPosition.Y);
+                float angle = (npc.position - position).ToRotation();
+
+                for (int i = 0; i < 1; i++)
+                {
+                    Projectile.NewProjectile(
+                        projectile.GetSource_FromAI(),
+                        position,
+                        Utility.PolarVector(40 + i * 4, angle),
+                        ModContent.ProjectileType<ProcellarumLightBolt>(),
+                        damage,
+                        0,
+                        projectile.owner,
+                        ai0: npc.whoAmI + 1,
+                        ai1: i
+                    );
+                }
+            }
         }
 
         private void DustEffects(Entity entity)

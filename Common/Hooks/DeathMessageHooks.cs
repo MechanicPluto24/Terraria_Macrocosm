@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Players;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs.Environment;
+using Macrocosm.Content.Buffs.Environment;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Localization;

@@ -23,10 +23,26 @@
 	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Buffs\Enemies\Fear.png" />
+    <None Remove="Content\Buffs\Enemies\SuitBreach.png" />
+    <None Remove="Content\Buffs\Environment\Biohazard.png" />
+    <None Remove="Content\Buffs\Environment\Depressurized.png" />
+    <None Remove="Content\Buffs\Melting.png" />
+    <None Remove="Content\Buffs\Radiation\Blindness.png" />
+    <None Remove="Content\Buffs\Radiation\Fatigue.png" />
+    <None Remove="Content\Buffs\Radiation\Irradiated.png" />
+    <None Remove="Content\Buffs\Radiation\MildNecrosis.png" />
+    <None Remove="Content\Buffs\Radiation\Necrosis.png" />
+    <None Remove="Content\Buffs\Radiation\OrganFailure.png" />
+    <None Remove="Content\Buffs\Radiation\Paralysis.png" />
+    <None Remove="Content\Buffs\Radiation\WeakBones.png" />
     <None Remove="Content\Projectiles\Friendly\Magic\WaveGuns\NebulaMeteor.png" />
     <None Remove="Content\Projectiles\Friendly\Magic\WaveGuns\SolarMeteor.png" />
     <None Remove="Content\Projectiles\Friendly\Magic\WaveGuns\StardustMeteor.png" />
     <None Remove="Content\Projectiles\Friendly\Magic\WaveGuns\VortexMeteor.png" />
+    <None Remove="Content\Projectiles\Friendly\Ranged\ArmorPiercingBullet.png" />
+    <None Remove="Content\Projectiles\Friendly\Ranged\RailgunBolt.png" />
+    <None Remove="Content\Projectiles\Friendly\Ranged\ShredderBullet.png" />
   </ItemGroup>
    <ItemGroup>
     <Reference Include="SubworldLibrary">
