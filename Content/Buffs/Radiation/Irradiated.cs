@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -5,8 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Radiation
 {
-    // Used only for letting the player that they are in an irradiated environment
-    public class Irradiated : ModBuff
+    public class Irradiated : ComplexBuff
     {
         public override void SetStaticDefaults()
         {
@@ -15,13 +15,13 @@ namespace Macrocosm.Content.Buffs.Radiation
             Main.buffNoTimeDisplay[Type] = true;
         }
 
-        public override void Update(Player player, ref int buffIndex)
+        public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
+            npc.lifeRegen -= 30;
         }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.lifeRegen -= 30;
             npc.defense = (int)(npc.defense * 0.9f);
             npc.damage = (int)(npc.damage * 0.9f);
             DustEffects(npc);

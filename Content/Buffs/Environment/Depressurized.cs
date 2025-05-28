@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Macrocosm.Common.Utils;
 using System.Collections.Generic;
 using Terraria;
@@ -6,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Environment
 {
-    public class Depressurized : ModBuff
+    public class Depressurized : ComplexBuff
     {
         public static List<LocalizedText> DeathMessages { get; } = [];
 
@@ -16,6 +17,8 @@ namespace Macrocosm.Content.Buffs.Environment
                 DeathMessages.Add(Language.GetOrRegister($"Mods.Macrocosm.DeathMessages.Depressurized.Message{i}"));
         }
 
+        public override LocalizedText GetCustomDeathMessage(Player player) => DeathMessages.Count > 0 ? DeathMessages.GetRandom() : null;
+
         public override void SetStaticDefaults()
         {
             Main.debuff[Type] = true;
@@ -23,7 +26,8 @@ namespace Macrocosm.Content.Buffs.Environment
             Main.buffNoTimeDisplay[Type] = false;
             Main.pvpBuff[Type] = true;
         }
-        public override void Update(Player player, ref int buffIndex)
+
+        public override void UpdateBadLifeRegen(Player player)
         {
             player.lifeRegen -= (int)(0.2f * player.statLifeMax2);
         }

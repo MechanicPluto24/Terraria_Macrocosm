@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Sets;
@@ -16,6 +17,7 @@ namespace Macrocosm.Content.Buffs.Radiation
             BuffSets.RadiationBuffSeverity[Type] = RadiationSeverity.Mild;
             BuffSets.TypicalDuration[Type] = 60 * 4;
         }
+
         public override void Update(Player player, ref int buffIndex)
         {
             // Reduced defense

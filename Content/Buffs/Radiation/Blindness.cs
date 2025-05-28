@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Terraria;
@@ -5,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Radiation
 {
-    public class Blindness : ModBuff
+    public class Blindness : ComplexBuff
     {
         public override void SetStaticDefaults()
         {
@@ -17,11 +18,14 @@ namespace Macrocosm.Content.Buffs.Radiation
             BuffSets.TypicalDuration[Type] = 60 * 15;
         }
 
-        public override void Update(Player player, ref int buffIndex)
+        public override void UpdateLifeRegen(Player player)
         {
             // No hp regen
-            player.bleed = true;
+            player.lifeRegenTime = 0;
+        }
 
+        public override void Update(Player player, ref int buffIndex)
+        {
             // Blacken the screen
             player.blackout = true;
             player.blind = true;

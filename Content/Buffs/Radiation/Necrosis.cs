@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Terraria;
@@ -5,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Radiation
 {
-    public class Necrosis : ModBuff
+    public class Necrosis : ComplexBuff
     {
         public override void SetStaticDefaults()
         {
@@ -17,11 +18,14 @@ namespace Macrocosm.Content.Buffs.Radiation
             BuffSets.TypicalDuration[Type] = 60 * 25;
         }
 
-        public override void Update(Player player, ref int buffIndex)
+        public override void UpdateBadLifeRegen(Player player)
         {
             // DoT
             player.lifeRegen -= 10;
+        }
 
+        public override void Update(Player player, ref int buffIndex)
+        {
             // Slow
             player.moveSpeed *= 0.3f;
 

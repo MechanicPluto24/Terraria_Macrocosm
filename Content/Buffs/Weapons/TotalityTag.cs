@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Buffs.Weapons
                     dust.alpha = 15;
                 }
 
-                npc.RemoveBuff<TotalityTag>();
+                npc.RemoveBuff(Type);
             }
         }
 

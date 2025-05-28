@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Players;
+﻿using Macrocosm.Common.Bases.Buffs;
+using Macrocosm.Common.Players;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;

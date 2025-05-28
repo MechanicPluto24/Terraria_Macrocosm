@@ -3,6 +3,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Weapons
@@ -20,6 +21,7 @@ namespace Macrocosm.Content.Buffs.Weapons
         public override void Update(Player player, ref int buffIndex)
         {
             DustEffects(player);
+            player.moveSpeed *= 0.3f;
         }
 
         public override void Update(NPC npc, ref int buffIndex)
@@ -34,17 +36,23 @@ namespace Macrocosm.Content.Buffs.Weapons
             }
         }
 
+        private void DustEffects(Entity entity)
+        {
+            if (Main.rand.NextBool())
+                Dust.NewDustDirect(entity.Center, 1, 1, ModContent.DustType<Dusts.StasisDust>(), Main.rand.NextFloat(-entity.width, entity.width), Main.rand.NextFloat(-entity.height, entity.height), Scale: Main.rand.NextFloat(0.8f, 1.2f));
+        }
+
         public override void DrawEffects(NPC npc, ref Color drawColor)
         {
             drawColor = Color.Lerp(drawColor, Color.Cyan, 0.5f);
         }
 
-        private void DustEffects(Entity entity)
+        public override void DrawEffects(Player player, PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
-            if (Main.rand.NextBool())
-            {
-                Dust.NewDustDirect(entity.Center, 1, 1, ModContent.DustType<Dusts.StasisDust>(), Main.rand.NextFloat(-entity.width, entity.width), Main.rand.NextFloat(-entity.height, entity.height), Scale: Main.rand.NextFloat(0.8f, 1.2f));
-            }
+            Vector3 cyan = Color.Cyan.ToVector3();
+            r = MathHelper.Lerp(r, cyan.X, 0.5f);
+            g = MathHelper.Lerp(r, cyan.Y, 0.5f);
+            b = MathHelper.Lerp(r, cyan.Z, 0.5f);
         }
     }
 }

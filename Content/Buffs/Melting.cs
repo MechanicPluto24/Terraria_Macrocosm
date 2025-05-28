@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -5,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs
 {
-    public class Melting : ModBuff
+    public class Melting : ComplexBuff
     {
         public override void SetStaticDefaults()
         {
@@ -18,15 +19,23 @@ namespace Macrocosm.Content.Buffs
             BuffID.Sets.GrantImmunityWith[Type].Add(BuffID.OnFire3);
         }
 
-        public override void Update(Player player, ref int buffIndex)
+        public override void UpdateBadLifeRegen(Player player)
         {
             player.lifeRegen -= 30;
+        }
+
+        public override void UpdateLifeRegen(NPC npc, ref int damage)
+        {
+            npc.lifeRegen -= 30;
+        }
+
+        public override void Update(Player player, ref int buffIndex)
+        {
             DustEffects(player);
         }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.lifeRegen -= 30;
             DustEffects(npc);
         }
 

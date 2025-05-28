@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Players;
+﻿using Macrocosm.Common.Bases.Buffs;
+using Macrocosm.Common.Players;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Environment;
 using Terraria;
@@ -29,9 +30,25 @@ namespace Macrocosm.Common.Hooks
             if (damageSource.SourceOtherIndex == 8 && player.whoAmI == Main.myPlayer)
             {
                 if (player.GetModPlayer<IrradiationPlayer>().IrradiationLevel > 0f)
+                {
                     damageSource.CustomReason = IrradiationPlayer.DeathMessages.GetRandom().ToNetworkText(player.name);
-                else if (player.HasBuff(ModContent.BuffType<Depressurized>()))
-                    damageSource.CustomReason =Depressurized.DeathMessages.GetRandom().ToNetworkText(player.name);
+                }
+                else 
+                {
+                    foreach (var buff in ComplexBuff.Buffs)
+                    {
+                        if (player.HasBuff(buff.Type))
+                        {
+                            var customMessage = buff.GetCustomDeathMessage(player);
+                            if (customMessage != null)
+                            {
+                                damageSource.CustomReason = customMessage.ToNetworkText(player.name);
+                                break;
+                            }
+                        }
+                    }
+
+                }
             }
 
             orig(player, damageSource, dmg, hitDirection, pvp);
