@@ -1,14 +1,14 @@
 ﻿using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
-using System.Collections.Generic;
-using Macrocosm.Common.Utils;
-using Terraria.GameContent.Drawing;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
@@ -65,15 +65,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
             if (Projectile.owner == Main.myPlayer)
             {
                 Player player = Main.player[Projectile.owner];
-                List<Projectile> StardustWorms = new();
-                for(int i =0; i <Main.maxProjectiles; i++)
+                List<Projectile> worms = new();
+                for (int i = 0; i < Main.maxProjectiles; i++)
                 {
                     Projectile p = Main.projectile[i];
-                    if(p.owner==Projectile.owner && p.type== ModContent.ProjectileType<StardustWormProjectile>() && p.active)
-                        StardustWorms.Add(p);
+                    if (p.owner == Projectile.owner && p.type == ModContent.ProjectileType<StardustWormProjectile>() && p.active)
+                        worms.Add(p);
                 }
 
-                if (StardustWorms.Count == 0)
+                if (worms.Count == 0)
                 {
                     Projectile p1 = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<StardustWormProjectile>(), (int)(Projectile.damage / 8), 0, Main.myPlayer, 0f);
                     p1.timeLeft = 1000;
@@ -82,7 +82,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 }
                 else
                 {
-                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<StardustWormProjectile>(), (int)(Projectile.damage / 8), 0, Main.myPlayer, StardustWorms.Count);
+                    Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<StardustWormProjectile>(), (int)(Projectile.damage / 8), 0, Main.myPlayer, worms.Count);
                     p.timeLeft = 1000;
                 }
             }

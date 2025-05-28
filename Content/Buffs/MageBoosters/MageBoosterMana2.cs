@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Bases.Buffs;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;

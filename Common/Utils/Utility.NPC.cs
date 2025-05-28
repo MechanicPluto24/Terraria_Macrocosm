@@ -35,9 +35,10 @@ namespace Macrocosm.Common.Utils
             npc.AddBuff(ModContent.BuffType<T>(), time, quiet);
         }
 
-        public static void RemoveBuff<T>(this NPC npc) where T : ModBuff
+        public static void RemoveBuff<T>(this NPC npc) where T : ModBuff => npc.RemoveBuff(ModContent.BuffType<T>());
+        public static void RemoveBuff(this NPC npc, int type)
         {
-            int idx = npc.FindBuffIndex(ModContent.BuffType<T>());
+            int idx = npc.FindBuffIndex(type);
             if (idx > 0) npc.DelBuff(idx);
         }
 

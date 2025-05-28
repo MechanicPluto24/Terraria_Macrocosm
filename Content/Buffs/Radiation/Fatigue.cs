@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Terraria;

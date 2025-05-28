@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Terraria;
@@ -20,20 +21,6 @@ namespace Macrocosm.Content.Buffs.Radiation
         public override void Update(Player player, ref int buffIndex)
         {
             player.webbed = true;
-
-            /*
-            // No hp regen
-            player.bleed = true;
-
-            // No infinite flight
-            player.empressBrooch = false;
-
-            // Slow
-            player.moveSpeed *= 0.4f;
-
-            // Reduced flight time
-            player.wingTimeMax *= (int)(player.wingTimeMax * 0.5f);
-            */
         }
     }
 }

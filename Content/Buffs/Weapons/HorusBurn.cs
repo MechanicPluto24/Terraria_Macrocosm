@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -5,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Weapons
 {
-    public class HorusBurn : ModBuff
+    public class HorusBurn : ComplexBuff
     {
         public override void SetStaticDefaults()
         {
@@ -13,18 +14,25 @@ namespace Macrocosm.Content.Buffs.Weapons
             Main.buffNoSave[Type] = true;
             Main.buffNoTimeDisplay[Type] = false;
             Main.pvpBuff[Type] = true;
+        }
 
+        public override void UpdateBadLifeRegen(Player player)
+        {
+            player.lifeRegen -= player.statDefense;
+        }
+
+        public override void UpdateLifeRegen(NPC npc, ref int damage)
+        {
+            npc.lifeRegen -= npc.defense;
         }
 
         public override void Update(Player player, ref int buffIndex)
         {
-            player.lifeRegen -= player.statDefense;
             DustEffects(player);
         }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            npc.lifeRegen -= npc.defense;
 
             if (!npc.dontTakeDamage)
                 DustEffects(npc);

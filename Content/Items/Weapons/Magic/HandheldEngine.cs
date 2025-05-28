@@ -45,9 +45,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         {
         }
 
-        public override bool CanUseItem(Player player) =>
-            player.ownedProjectileCounts[Item.shoot] <= 0 &&
-            !player.HasBuff<HandheldEngineOverheat>();
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {

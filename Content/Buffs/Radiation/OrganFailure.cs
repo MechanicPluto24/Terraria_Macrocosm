@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Terraria;
@@ -5,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Radiation
 {
-    public class OrganFailure : ModBuff
+    public class OrganFailure : ComplexBuff
     {
         public override void SetStaticDefaults()
         {
@@ -17,10 +18,14 @@ namespace Macrocosm.Content.Buffs.Radiation
             BuffSets.TypicalDuration[Type] = 60 * 2;
         }
 
-        public override void Update(Player player, ref int buffIndex)
+        public override void UpdateBadLifeRegen(Player player)
         {
             // Heavy DoT
             player.lifeRegen -= 30;
+        }
+
+        public override void Update(Player player, ref int buffIndex)
+        {
         }
     }
 }
