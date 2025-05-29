@@ -24,10 +24,15 @@ namespace Macrocosm.Content.Buffs.Radiation
         {
             npc.defense = (int)(npc.defense * 0.9f);
             npc.damage = (int)(npc.damage * 0.9f);
-            DustEffects(npc);
         }
 
-        private void DustEffects(Entity entity)
+        public override void DrawEffects(NPC npc, ref Color drawColor)
+        {
+            if (!npc.dontTakeDamage)
+                DustEffects(npc);
+        }
+
+        private int DustEffects(Entity entity)
         {
             int type;
             float scale = Main.rand.NextFloat(2f, 3f);
@@ -42,6 +47,8 @@ namespace Macrocosm.Content.Buffs.Radiation
 
             if (Main.rand.NextBool(2))
                 dust.scale *= 0.1f;
+
+            return dust.dustIndex;
         }
     }
 }

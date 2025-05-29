@@ -3255,3 +3255,18 @@ ZoningPotion: {
 	DisplayName: Zoning Potion
 	Tooltip: ""
 }
+
+ArmorPiercingRound: {
+	DisplayName: Armor Piercing Round
+	Tooltip: ""
+}
+
+RailgunBolt: {
+	DisplayName: Railgun Bolt
+	Tooltip: ""
+}
+
+ShredderBullet: {
+	DisplayName: Shredder Bullet
+	Tooltip: ""
+}

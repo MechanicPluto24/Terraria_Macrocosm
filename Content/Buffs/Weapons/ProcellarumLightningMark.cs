@@ -5,6 +5,7 @@ using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Weapons
@@ -19,15 +20,17 @@ namespace Macrocosm.Content.Buffs.Weapons
             Main.pvpBuff[Type] = true;
         }
 
-        public override void Update(Player player, ref int buffIndex)
-        {
-            DustEffects(player);
-        }
-
-        public override void Update(NPC npc, ref int buffIndex)
+        public override void DrawEffects(NPC npc, ref Color drawColor)
         {
             if (!npc.dontTakeDamage)
                 DustEffects(npc);
+        }
+
+        public override void DrawEffects(Player player, PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+        {
+            int dustIndex = DustEffects(player);
+            if (dustIndex > 0)
+                drawInfo.DustCache.Add(dustIndex);
         }
 
         public override void OnHitByProjectile(NPC npc, Projectile projectile, NPC.HitInfo hit, int damageDone)
@@ -55,7 +58,7 @@ namespace Macrocosm.Content.Buffs.Weapons
             }
         }
 
-        private void DustEffects(Entity entity)
+        private int DustEffects(Entity entity)
         {
             for (int i = 0; i < 5; i++)
             {
@@ -75,6 +78,8 @@ namespace Macrocosm.Content.Buffs.Weapons
                     p.FadeOutNormalizedTime = 0.5f;
                 });
             }
+
+            return -1;
         }
     }
 }

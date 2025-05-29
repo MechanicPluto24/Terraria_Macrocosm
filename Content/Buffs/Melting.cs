@@ -1,6 +1,7 @@
 using Macrocosm.Common.Bases.Buffs;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -29,17 +30,20 @@ namespace Macrocosm.Content.Buffs
             npc.lifeRegen -= 30;
         }
 
-        public override void Update(Player player, ref int buffIndex)
+        public override void DrawEffects(NPC npc, ref Color drawColor)
         {
-            DustEffects(player);
+            if (!npc.dontTakeDamage)
+                DustEffects(npc);
         }
 
-        public override void Update(NPC npc, ref int buffIndex)
+        public override void DrawEffects(Player player, PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
         {
-            DustEffects(npc);
+            int dustIndex = DustEffects(player);
+            if (dustIndex > 0)
+                drawInfo.DustCache.Add(dustIndex);
         }
 
-        private void DustEffects(Entity entity)
+        private int DustEffects(Entity entity)
         {
             int type;
             float scale = Main.rand.NextFloat(2f, 3f);
@@ -59,7 +63,9 @@ namespace Macrocosm.Content.Buffs
                 dust.velocity.Y *= -1;
             dust.noGravity = true;
             if (Main.rand.NextBool(2))
-                dust.scale *= 0.1f;
+                dust.scale *= 0.1f;    
+            
+            return dust.dustIndex;
         }
     }
 }
