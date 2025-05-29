@@ -20,15 +20,11 @@ namespace Macrocosm.Content.Buffs.Weapons
 
         public override void Update(Player player, ref int buffIndex)
         {
-            DustEffects(player);
             player.moveSpeed *= 0.3f;
         }
 
         public override void Update(NPC npc, ref int buffIndex)
         {
-            if (!npc.dontTakeDamage)
-                DustEffects(npc);
-
             if (npc.velocity.LengthSquared() > 2 * 2)
             {
                 npc.velocity.X = MathHelper.Lerp(npc.velocity.X * 0.5f, npc.velocity.X, 0.01f);
@@ -36,15 +32,12 @@ namespace Macrocosm.Content.Buffs.Weapons
             }
         }
 
-        private void DustEffects(Entity entity)
-        {
-            if (Main.rand.NextBool())
-                Dust.NewDustDirect(entity.Center, 1, 1, ModContent.DustType<Dusts.StasisDust>(), Main.rand.NextFloat(-entity.width, entity.width), Main.rand.NextFloat(-entity.height, entity.height), Scale: Main.rand.NextFloat(0.8f, 1.2f));
-        }
-
         public override void DrawEffects(NPC npc, ref Color drawColor)
         {
             drawColor = Color.Lerp(drawColor, Color.Cyan, 0.5f);
+
+            if (!npc.dontTakeDamage)
+                DustEffects(npc);
         }
 
         public override void DrawEffects(Player player, PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
@@ -53,6 +46,18 @@ namespace Macrocosm.Content.Buffs.Weapons
             r = MathHelper.Lerp(r, cyan.X, 0.5f);
             g = MathHelper.Lerp(r, cyan.Y, 0.5f);
             b = MathHelper.Lerp(r, cyan.Z, 0.5f);
+
+            int dustIndex = DustEffects(player);
+            if(dustIndex > 0)
+                drawInfo.DustCache.Add(dustIndex);
+        }
+
+        private int DustEffects(Entity entity)
+        {
+            if (Main.rand.NextBool())
+                return Dust.NewDust(entity.Center, 1, 1, ModContent.DustType<Dusts.StasisDust>(), Main.rand.NextFloat(-entity.width, entity.width), Main.rand.NextFloat(-entity.height, entity.height), Scale: Main.rand.NextFloat(0.8f, 1.2f));
+
+            return -1;
         }
     }
 }
