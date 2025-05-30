@@ -349,7 +349,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
         public override void SetStaticDefaults()
         {
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()

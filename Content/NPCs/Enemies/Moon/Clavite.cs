@@ -37,7 +37,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCID.Sets.TrailingMode[Type] = 1;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
 
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Earth);
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);

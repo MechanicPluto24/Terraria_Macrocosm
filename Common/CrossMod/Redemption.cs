@@ -73,6 +73,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
+
 		Mod.Call("addElementItem", elementID, type, projsInheritElements);
 	}
 
@@ -80,6 +81,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
+
 		Mod.Call("addElementNPC", elementID, type);
 	}
 
@@ -87,6 +89,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
+
 		Mod.Call("addElementProj", elementID, type, projsInheritElements);
 	}
 
@@ -94,6 +97,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
+
 		Mod.Call("addNPCToElementTypeList", typeString, npcType);
 	}
 
@@ -104,6 +108,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
+
 		if (entity is Item item)
 			Mod.Call("elementOverrideItem", item, elementID, overrideID);
 		else if (entity is NPC npc)
@@ -116,6 +121,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
+
 		Mod.Call("elementMultiplier", npc, elementID, value, dontSetMultipliers);
 	}
 
@@ -123,6 +129,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
+
 		Mod.Call("uncapBossElementMultiplier", npc, uncap);
 	}
 
@@ -130,6 +137,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
+
 		Mod.Call("hideElementIcon", item, elementID, hidden);
 	}
 
@@ -137,6 +145,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
+
 		return (bool)Mod.Call("decapitation", target, damageDone, crit, chance);
 	}
 
@@ -144,6 +153,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
+
 		return (bool)Mod.Call("setSlashBonus", item, setBonus);
 	}
 
@@ -151,6 +161,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
+
 		return (bool)Mod.Call("setAxeBonus", item, setBonus);
 	}
 
@@ -158,6 +169,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
+
 		return (bool)Mod.Call("setAxeProj", proj, setBonus);
 	}
 
@@ -165,6 +177,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
+
 		return (bool)Mod.Call("setHammerBonus", item, setBonus);
 	}
 
@@ -172,6 +185,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
+
 		return (bool)Mod.Call("setHammerProj", proj, setBonus);
 	}
 
@@ -180,6 +194,7 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
+
 		return (bool)Mod.Call("setSpearProj", proj, setBonus);
 	}
 
@@ -188,24 +203,29 @@ public class Redemption
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
+
 		if (entity is Item item)
 			return (bool)Mod.Call("hasElementItem", item, elementID);
 		else if (entity is NPC npc)
 			return (bool)Mod.Call("elementOverrideNPC", npc, elementID);
 		else if (entity is Projectile proj)
 			return (bool)Mod.Call("elementOverrideProj", proj, elementID);
+
 		return false;
 	}
+
 	public static int GetFirstElement(Entity entity, bool ignoreExplosive = false)
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return 0;
+
 		if (entity is Item item)
 			return (int)Mod.Call("getFirstElementItem", item, ignoreExplosive);
 		else if (entity is NPC npc)
 			return (int)Mod.Call("getFirstElementNPC", npc, ignoreExplosive);
 		else if (entity is Projectile proj)
 			return (int)Mod.Call("getFirstElementProj", proj, ignoreExplosive);
+
 		return 0;
 	}
 }
