@@ -19,7 +19,6 @@ namespace Macrocosm.Content.NPCs.Critters
             NPCID.Sets.TownCritter[Type] = true;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = false;
         }
 
         public override bool CanBeHitByNPC(NPC attacker)

@@ -18,8 +18,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Main.npcFrameCount[Type] = 9;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
-
+            
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Undead);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
         }

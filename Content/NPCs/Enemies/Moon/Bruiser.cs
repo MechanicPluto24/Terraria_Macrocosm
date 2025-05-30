@@ -39,13 +39,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             SpawnModBiomes = [ModContent.GetInstance<DemonSunBiome>().Type];
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
 
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Blood);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Blood);

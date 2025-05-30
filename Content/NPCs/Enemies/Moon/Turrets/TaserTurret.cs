@@ -24,7 +24,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             Main.npcFrameCount[NPC.type] = 1;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = false;
+            
 
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Robotic);
         }

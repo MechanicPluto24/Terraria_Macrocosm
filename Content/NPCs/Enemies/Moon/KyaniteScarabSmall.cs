@@ -18,7 +18,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Main.npcFrameCount[NPC.type] = 7;
 
             NPCSets.MoonNPC[NPC.type] = true;
-            NPCSets.DropsMoonstone[NPC.type] = true;
         }
 
         public override void SetDefaults()

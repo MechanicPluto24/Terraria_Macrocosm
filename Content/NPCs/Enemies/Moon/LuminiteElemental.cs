@@ -62,7 +62,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Main.npcFrameCount[NPC.type] = 1;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
@@ -71,8 +71,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
-
+            
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);

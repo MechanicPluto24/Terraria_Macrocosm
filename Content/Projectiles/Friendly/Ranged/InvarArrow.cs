@@ -28,6 +28,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.timeLeft = 270;
             Projectile.friendly = true;
 
+            Projectile.arrow = true;
+
             Projectile.penetrate = 3;
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
