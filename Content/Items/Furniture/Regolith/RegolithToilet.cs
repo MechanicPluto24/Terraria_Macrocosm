@@ -1,9 +1,8 @@
-﻿using Macrocosm.Content.Items.Blocks;
+﻿using Macrocosm.Content.Items.Blocks.Bricks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-/*
 namespace Macrocosm.Content.Items.Furniture.Regolith
 {
     public class RegolithToilet : ModItem
@@ -15,9 +14,9 @@ namespace Macrocosm.Content.Items.Furniture.Regolith
         public override void SetDefaults()
         {
             Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Regolith.RegolithToilet>());
-            Item.width = 32;
+            Item.width = 16;
             Item.height = 30;
-            Item.value = 150;
+            Item.value = 34;
         }
 
         public override void AddRecipes()
@@ -29,4 +28,3 @@ namespace Macrocosm.Content.Items.Furniture.Regolith
         }
     }
 }
-*/
