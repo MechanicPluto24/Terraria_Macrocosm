@@ -62,15 +62,15 @@ namespace Macrocosm.Common.DataStructures
         {
             _trashEntityPool = new();
             for (int type = 0; type < ItemLoader.ItemCount; type++)
-                if (ItemSets.TrashData[type].Valid)
+                if (ItemSets.TrashData.IndexInRange(type) && ItemSets.TrashData[type].Valid)
                     _trashEntityPool.Add(ItemSets.TrashData[type] with { Category = TrashCategory.Item });
 
             for (int type = 0; type < ProjectileLoader.ProjectileCount; type++)
-                if (ProjectileSets.TrashData[type].Valid)
+                if (ProjectileSets.TrashData.IndexInRange(type) && ProjectileSets.TrashData[type].Valid)
                     _trashEntityPool.Add(ProjectileSets.TrashData[type] with { Category = TrashCategory.Projectile });
 
             for (int type = 0; type < GoreLoader.GoreCount; type++)
-                if (GoreSets.TrashData[type].Valid)
+                if (GoreSets.TrashData.IndexInRange(type) && GoreSets.TrashData[type].Valid)
                     _trashEntityPool.Add(GoreSets.TrashData[type] with { Category = TrashCategory.Gore });
 
             return _trashEntityPool;
