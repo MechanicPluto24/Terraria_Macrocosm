@@ -42,6 +42,9 @@ namespace Macrocosm.Common.Bases.Buffs
 
         // --- NPC hooks ---
 
+        /// <summary> Lets you modify the AI of this npc </summary>
+        public virtual void AI(NPC npc) { }
+
         /// <inheritdoc cref="GlobalNPC.UpdateLifeRegen(NPC, ref int)"></inheritdoc>
         public virtual void UpdateLifeRegen(NPC npc, ref int damage) { }
 

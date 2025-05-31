@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Buffs.Weapons
             player.moveSpeed *= 0.3f;
         }
 
-        public override void Update(NPC npc, ref int buffIndex)
+        public override void AI(NPC npc)
         {
             if (npc.velocity.LengthSquared() > 2 * 2)
             {
@@ -55,7 +55,7 @@ namespace Macrocosm.Content.Buffs.Weapons
         private int DustEffects(Entity entity)
         {
             if (Main.rand.NextBool())
-                return Dust.NewDust(entity.Center, 1, 1, ModContent.DustType<Dusts.StasisDust>(), Main.rand.NextFloat(-entity.width, entity.width), Main.rand.NextFloat(-entity.height, entity.height), Scale: Main.rand.NextFloat(0.8f, 1.2f));
+                return Dust.NewDust(entity.position, entity.width, entity.height, ModContent.DustType<Dusts.StasisDust>(), Scale: Main.rand.NextFloat(0.6f, 0.8f));
 
             return -1;
         }

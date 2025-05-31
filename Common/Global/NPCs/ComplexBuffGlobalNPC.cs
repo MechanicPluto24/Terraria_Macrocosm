@@ -6,11 +6,18 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Macrocosm.Common.Global.NPCs
 {
     public class ComplexBuffGlobalNPC : GlobalNPC
     {
+        public override void AI(NPC npc)
+        {
+            foreach (var buff in ComplexBuff.GetActive(npc))
+                buff.AI(npc);
+        }
+
         public override void UpdateLifeRegen(NPC npc, ref int damage)
         {
             foreach (var buff in ComplexBuff.GetActive(npc))
