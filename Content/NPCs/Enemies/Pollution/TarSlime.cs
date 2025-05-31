@@ -14,7 +14,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         {
             Main.npcFrameCount[NPC.type] = 6;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,

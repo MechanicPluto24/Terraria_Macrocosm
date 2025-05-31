@@ -2,7 +2,7 @@ using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs.Weapons;
+using Macrocosm.Content.Buffs.Weapons;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;

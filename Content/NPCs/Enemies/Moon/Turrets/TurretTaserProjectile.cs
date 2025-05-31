@@ -1,5 +1,5 @@
 using Macrocosm.Common.CrossMod;
-using Macrocosm.Content.Debuffs.Radiation;
+using Macrocosm.Content.Buffs.Radiation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

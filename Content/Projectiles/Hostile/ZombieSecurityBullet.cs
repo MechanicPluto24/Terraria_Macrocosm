@@ -2,6 +2,7 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -21,11 +22,20 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void SetDefaults()
         {
-            Projectile.CloneDefaults(ProjectileID.BulletDeadeye);
-            AIType = ProjectileID.Bullet;
+            Projectile.width = 4;
+            Projectile.height = 4;
+            Projectile.aiStyle = 1;
+            Projectile.hostile = true;
+            Projectile.penetrate = -1;
+            Projectile.light = 0.5f;
+            Projectile.alpha = 255;
+            Projectile.scale = 1.2f;
+            Projectile.timeLeft = 600;
+            Projectile.extraUpdates = 1;
             Projectile.width = 4;
             Projectile.height = 4;
             Projectile.alpha = 0;
+            AIType = ProjectileID.Bullet;
         }
 
         bool spawned = false;

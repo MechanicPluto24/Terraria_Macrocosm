@@ -38,7 +38,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Main.npcFrameCount[Type] = 1;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
@@ -47,7 +47,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+            
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
 

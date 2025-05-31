@@ -29,7 +29,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         {
             Main.npcFrameCount[NPC.type] = 4;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
@@ -38,8 +38,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
-
+            
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }

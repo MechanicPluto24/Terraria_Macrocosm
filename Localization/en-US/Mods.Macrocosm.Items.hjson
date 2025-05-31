@@ -3260,3 +3260,18 @@ RegolithToilet: {
 	DisplayName: Regolith Toilet
 	Tooltip: ""
 }
+
+ArmorPiercingRound: {
+	DisplayName: Armor Piercing Round
+	Tooltip: ""
+}
+
+RailgunBolt: {
+	DisplayName: Railgun Bolt
+	Tooltip: ""
+}
+
+ShredderBullet: {
+	DisplayName: Shredder Bullet
+	Tooltip: ""
+}

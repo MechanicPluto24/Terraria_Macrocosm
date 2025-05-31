@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Minions
 {
+    // TODO: SummonBuff
     public class RyuguSummonBuff : ModBuff
     {
         public override void SetStaticDefaults()

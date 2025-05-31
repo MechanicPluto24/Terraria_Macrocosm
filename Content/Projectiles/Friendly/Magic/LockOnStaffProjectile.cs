@@ -1,14 +1,9 @@
 using Macrocosm.Common.Bases.Projectiles;
-using Macrocosm.Common.DataStructures;
-using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Global.NPCs;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs.Weapons;
-using Macrocosm.Content.Particles;
 using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Utilities;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;

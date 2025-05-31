@@ -30,7 +30,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
@@ -126,7 +126,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
     {
         public override void SetStaticDefaults()
         {
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
@@ -204,7 +204,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
     {
         public override void SetStaticDefaults()
         {
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );

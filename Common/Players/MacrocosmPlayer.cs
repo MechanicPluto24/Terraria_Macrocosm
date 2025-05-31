@@ -2,7 +2,7 @@
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Achievements;
-using Macrocosm.Content.Debuffs.Environment;
+using Macrocosm.Content.Buffs.Environment;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using SubworldLibrary;

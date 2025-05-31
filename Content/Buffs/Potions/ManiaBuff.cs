@@ -1,4 +1,4 @@
-using Macrocosm.Common.Players;
+using Macrocosm.Common.Bases.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Buffs.Potions
 
         public override void Update(Player player, ref int buffIndex)
         {
-			player.GetAttackSpeed(DamageClass.Melee) +=0.15f;
+            player.GetAttackSpeed(DamageClass.Melee) += 0.15f;
         }
     }
 }

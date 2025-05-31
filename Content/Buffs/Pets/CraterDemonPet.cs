@@ -3,6 +3,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.Pets
 {
+    // TODO: PetBuff
     public class CraterDemonPet : ModBuff
     {
         public override void SetStaticDefaults()

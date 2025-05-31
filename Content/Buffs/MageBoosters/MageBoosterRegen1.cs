@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.Bases.Buffs;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -6,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Buffs.MageBoosters
 {
-    public class MageBoosterRegen1 : ModBuff
+    public class MageBoosterRegen1 : ComplexBuff
     {
         public override void SetStaticDefaults()
         {
@@ -14,10 +15,13 @@ namespace Macrocosm.Content.Buffs.MageBoosters
             Main.buffNoTimeDisplay[Type] = false;
         }
 
-        public override void Update(Player player, ref int buffIndex)
+        public override void UpdateLifeRegen(Player player)
         {
             player.lifeRegen += 5;
+        }
 
+        public override void Update(Player player, ref int buffIndex)
+        {
             int dist = 50;
             Vector2 dustPosition = player.Center + new Vector2(dist, 0).RotatedBy((float)(Main.time / 100 + 2.094f));
             float distFactor = Vector2.DistanceSquared(player.Center, dustPosition) / (dist * dist);

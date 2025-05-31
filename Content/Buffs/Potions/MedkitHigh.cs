@@ -1,3 +1,4 @@
+using Macrocosm.Common.Bases.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 
