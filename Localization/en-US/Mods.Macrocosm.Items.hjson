@@ -3255,3 +3255,8 @@ ZoningPotion: {
 	DisplayName: Zoning Potion
 	Tooltip: ""
 }
+
+RegolithToilet: {
+	DisplayName: Regolith Toilet
+	Tooltip: ""
+}

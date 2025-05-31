@@ -164,6 +164,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
         private void DrawTrash(SpriteBatch spriteBatch, Color drawColor, bool isFront)
         {
+            if (NPC.IsABestiaryIconDummy)
+                return;
+
             if (trashEntities is null)
                 GetTrash();
 
