@@ -187,7 +187,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Magic
                 }
 
                 int trailLength = TrailLength;
-                if (AI_Timer < 8)
+                if (AI_Timer < 12)
                     trailLength = 2;
 
                 trail?.Draw(positions[..trailLength], Projectile.oldRot[..trailLength], Projectile.Size / 2f);

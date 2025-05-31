@@ -1,5 +1,5 @@
 ﻿using Macrocosm.Common.CrossMod;
-using Macrocosm.Content.Debuffs;
+using Macrocosm.Content.Buffs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;

@@ -1,8 +1,8 @@
 ﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Buffs.Environment;
 using Macrocosm.Content.CameraModifiers;
-using Macrocosm.Content.Debuffs.Environment;
 using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;

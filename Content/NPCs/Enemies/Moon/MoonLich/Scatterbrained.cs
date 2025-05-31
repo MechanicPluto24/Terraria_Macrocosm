@@ -58,8 +58,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             Main.npcFrameCount[Type] = 2;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
-
+            
             Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
         }
 
