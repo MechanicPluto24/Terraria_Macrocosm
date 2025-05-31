@@ -29,7 +29,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.alpha = 255;
             Projectile.scale = 1.2f;
             Projectile.DamageType = DamageClass.Ranged;
-            Projectile.extraUpdates = 3;
+            Projectile.extraUpdates = 2;
             Projectile.timeLeft = 270;
         }
 
@@ -50,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 178, 115), new Color(0, 178, 115, 0));
+            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 244, 71), new Color(0, 244, 71, 0));
             return true;
         }
 

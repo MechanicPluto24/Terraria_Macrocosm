@@ -59,7 +59,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
                 if (type == ProjectileID.Bullet)
                     type = ModContent.ProjectileType<CruithneGreenSlug>();
 
-                Vector2 perturbedSpeed = velocity.RotatedByRandom(MathHelper.ToRadians(12)) * Main.rand.NextFloat(0.7f, 100f);
+                Vector2 perturbedSpeed = velocity.RotatedByRandom(MathHelper.ToRadians(12)) * Main.rand.NextFloat(0.5f, 1f);
                 Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
             }
 
