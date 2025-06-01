@@ -360,7 +360,7 @@ namespace Macrocosm.Common.Utils
 
                 int x = c.x;
                 int y = c.y;
-                if (CoordinatesOutOfBounds(x, y))
+                if (!WorldGen.InWorld(x, y))
                     continue;
 
                 Tile tile = Main.tile[x, y];

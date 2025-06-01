@@ -26,8 +26,6 @@ namespace Macrocosm.Common.Systems.Connectors
     public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
     {
         private static Asset<Texture2D> conveyorTexture;
-        private static Asset<Texture2D> inletTexture;
-        private static Asset<Texture2D> outletTexture;
 
         private static Dictionary<Point16, ConveyorNode> nodeLookup = new();
         private static readonly List<ConveyorCircuit> circuits = new();
@@ -38,8 +36,6 @@ namespace Macrocosm.Common.Systems.Connectors
         public override void Load()
         {
             conveyorTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Conveyors");
-            inletTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "ConveyorInlet");
-            outletTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "ConveyorOutlet");
         }
 
         public override void Unload()
@@ -307,7 +303,6 @@ namespace Macrocosm.Common.Systems.Connectors
             SpriteBatch spriteBatch = Main.spriteBatch;
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.ZoomMatrix);
 
-            Rectangle frame = new(0, 0, 16, 16);
             Vector2 zero = Vector2.Zero;
             Point screenOverdrawOffset = Main.GetScreenOverdrawOffset();
 
@@ -337,6 +332,7 @@ namespace Macrocosm.Common.Systems.Connectors
                     float visiblePipeCount = 0f;
                     for (int t = 0; t < (int)ConveyorPipeType.Count; t++)
                     {
+                        Rectangle frame = new(0, 0, 16, 16);
                         ConveyorPipeType type = (ConveyorPipeType)t;
                         Color color = GetColor(i, j, Visibility[t]);
                         if (data.HasPipe(type) && color != Color.Transparent)
@@ -346,35 +342,38 @@ namespace Macrocosm.Common.Systems.Connectors
                             color *= alphaFactor;
 
                             // Type frame
-                            int frameY = 18 * t;
+                            frame.Y = 18 * t;
 
                             // Connection frame
-                            int frameX = 0;
                             if (Main.tile[i, j - 1].Get<ConveyorData>().HasPipe(type))
-                                frameX += 18;
+                                frame.X += 18;
 
                             if (Main.tile[i + 1, j].Get<ConveyorData>().HasPipe(type))
-                                frameX += 36;
+                                frame.X += 36;
 
                             if (Main.tile[i, j + 1].Get<ConveyorData>().HasPipe(type))
-                                frameX += 72;
+                                frame.X += 72;
 
                             if (Main.tile[i - 1, j].Get<ConveyorData>().HasPipe(type))
-                                frameX += 144;
-
-                            frame.Y = frameY;
-                            frame.X = frameX;
+                                frame.X += 144;
 
                             spriteBatch.Draw(conveyorTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
-                        }
-                    }
 
-                    if(InletOutletVisibility != ConveyorVisibility.Hidden && visiblePipeCount > 0)
-                    {
-                        if (data.Inlet)
-                            spriteBatch.Draw(inletTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, null, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
-                        else if (data.Outlet)
-                            spriteBatch.Draw(outletTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, null, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
+                            if (InletOutletVisibility != ConveyorVisibility.Hidden && visiblePipeCount > 0)
+                            {
+                                int blinkFrame = (int)((Main.timeForVisualEffects % 60.0) / 30.0);
+                                if (data.Inlet)
+                                {
+                                    frame.Y = ((int)ConveyorPipeType.Count + blinkFrame) * 18;
+                                    spriteBatch.Draw(conveyorTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
+                                }
+                                else if (data.Outlet)
+                                {
+                                    frame.Y = ((int)ConveyorPipeType.Count + 2 + blinkFrame) * 18;
+                                    spriteBatch.Draw(conveyorTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
+                                }
+                            }
+                        }
                     }
                 }
             }

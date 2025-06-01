@@ -29,7 +29,7 @@ namespace Macrocosm.Common.Systems.Connectors
 
         public IEnumerable<Point16> GetConnectionPositions(Chest chest)
         {
-            if (Utility.CoordinatesOutOfBounds(chest.x, chest.y))
+            if (!WorldGen.InWorld(chest.x, chest.y))
                 yield break;
 
             Tile tile = Main.tile[chest.x, chest.y];
