@@ -17,10 +17,22 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Crossmod
+namespace Macrocosm.Common.CrossMod
 {
-    public class CrossMod : ModSystem
+    public partial class CrossMod : ModSystem
     {
+        public static ModEntry Redemption { get; } = new("Redemption");
+        public static ModEntry BossChecklist { get; } = new("BossChecklist");
+        public static ModEntry Fargowiltas { get; } = new("Fargowiltas");
+        public static ModEntry MusicDisplay { get; } = new("MusicDisplay");
+        public static ModEntry TerrariaAmbience { get; } = new("TerrariaAmbience");
+        public static ModEntry TerrariaAmbienceAPI { get; } = new("TerrariaAmbienceAPI");
+        public static ModEntry Wikithis { get; } = new("Wikithis");
+        public static ModEntry TMLAchievements { get; } = new("TMLAchievements");
+
+        /// <summary> The names and instances of loaded crossmod mods per <see cref="ModEntry"/>. </summary>
+        public static Dictionary<string, Mod> LoadedMods { get; } = [];
+
         public override void PostSetupContent()
         {
             Call_BossChecklist();
@@ -29,7 +41,7 @@ namespace Macrocosm.Common.Crossmod
             Call_Wikithis();
             Call_TerrariaAmbience();
 
-            foreach (var achievement in Mod.GetContent<CustomAchievement>())
+            foreach (var achievement in Mod.GetContent<TMLAchievement>())
                 achievement.PostSetupContent();
         }
 
@@ -59,10 +71,10 @@ namespace Macrocosm.Common.Crossmod
             */
             #endregion
 
-            #region CraterDemon
-            if (ModLoader.TryGetMod("BossChecklist", out Mod bossChecklist))
+            if (BossChecklist.Enabled)
             {
-                bossChecklist.Call("LogBoss", Mod, nameof(CraterDemon), 20f, () => WorldData.DownedCraterDemon, ModContent.NPCType<CraterDemon>(), new Dictionary<string, object>()
+                #region CraterDemon
+                BossChecklist.Instance.Call("LogBoss", Mod, nameof(CraterDemon), 20f, () => WorldData.DownedCraterDemon, ModContent.NPCType<CraterDemon>(), new Dictionary<string, object>()
                 {
                     ["spawnItems"] = ModContent.ItemType<CraterDemonSummon>(),
                     ["collectibles"] = new List<int>
@@ -83,23 +95,23 @@ namespace Macrocosm.Common.Crossmod
                         spriteBatch.Draw(texture, centered, color);
                     }
                 });
+                #endregion
             }
-            #endregion
         }
 
         private void Call_Fargowiltas()
         {
-            if (ModLoader.TryGetMod("Fargowiltas", out Mod fargos))
+            if (Fargowiltas.Enabled)
             {
-                fargos.Call("AddSummon", 19.0f, "Macrocosm", "CraterDemonSummon", () => WorldData.DownedCraterDemon, Item.buyPrice(gold: 15));
+                Fargowiltas.Instance.Call("AddSummon", 19.0f, "Macrocosm", "CraterDemonSummon", () => WorldData.DownedCraterDemon, Item.buyPrice(gold: 15));
             }
         }
 
         private void Call_MusicDisplay()
         {
-            if (ModLoader.TryGetMod("MusicDisplay", out Mod musicDisplay))
+            if (MusicDisplay.Enabled)
             {
-                void AddMusic(string file, string name, string author) => musicDisplay.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/" + file), name, "by " + author, nameof(Macrocosm));
+                void AddMusic(string file, string name, string author) => MusicDisplay.Instance.Call("AddMusic", (short)MusicLoader.GetMusicSlot(Mod, "Assets/Music/" + file), name, "by " + author, nameof(Macrocosm));
 
                 AddMusic("Deadworld", "\"Deadworld\" - Theme of the Moon (Day)", "Lincoln Ennis");
                 AddMusic("Requiem", "\"Requiem\" - Theme of the Moon (Night)", "Lincoln Ennis");
@@ -111,28 +123,29 @@ namespace Macrocosm.Common.Crossmod
 
         private void Call_TerrariaAmbience()
         {
-            if (ModLoader.TryGetMod("TerrariaAmbience", out Mod ta))
+            if (TerrariaAmbience.Enabled)
             {
-                ta.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[]
+                TerrariaAmbience.Instance.Call("AddTilesToList", null, "Stone", Array.Empty<string>(), new int[]
                 {
                     ModContent.TileType<Regolith>(),
                     ModContent.TileType<Protolith>(),
                     ModContent.TileType<Cynthalith>(),
-                    ModContent.TileType<IrradiatedRock>()
+                    ModContent.TileType<IrradiatedRock>(),
+                    ModContent.TileType<Astrolith>()
                 });
             }
 
-            if (ModLoader.TryGetMod("TerrariaAmbienceAPI", out Mod taAPI))
+            if (TerrariaAmbienceAPI.Enabled)
             {
-                taAPI.Call("Ambience", Mod, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
+                TerrariaAmbienceAPI.Instance.Call("Ambience", Mod, "MoonAmbience", "Assets/Sounds/Ambient/Moon", 1f, 0.0075f, new Func<bool>(SubworldSystem.IsActive<Moon>));
             }
         }
 
         private void Call_Wikithis()
         {
-            if (ModLoader.TryGetMod("Wikithis", out Mod wikithis) && !Main.dedServ)
+            if (Wikithis.Enabled && !Main.dedServ)
             {
-                wikithis.Call("AddModURL", Mod, "https://terrariamods.wiki.gg/wiki/Macrocosm/{}");
+                Wikithis.Instance.Call("AddModURL", Mod, "https://terrariamods.wiki.gg/wiki/Macrocosm/{}");
             }
         }
     }

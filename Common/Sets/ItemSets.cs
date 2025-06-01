@@ -1,13 +1,11 @@
-﻿using Macrocosm.Common.Bases.NPCs;
-using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.Players;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
-using SubworldLibrary;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using static AssGen.Assets;
 
 namespace Macrocosm.Common.Sets
 {
@@ -50,6 +48,9 @@ namespace Macrocosm.Common.Sets
         /// <br/> Set to false to disable self damage for explosives shot by this weapon in For The Worthy worlds.
         /// </summary>
         public static bool[] ExplosivesShotDealDamageToOwner_GetGoodWorld { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(ExplosivesShotDealDamageToOwner_GetGoodWorld)).Description("Explosives shot by this item deal damage to the owner. Defaults to true, letting the vanilla player hurt code run. Set to false to disable self damage for explosives shot by this weapon in For The Worthy worlds.").RegisterBoolSet(defaultState: true);
+
+        /// <summary> Weapon item types that ignore the <see cref="MacrocosmPlayer.ShootSpreadReduction"> mechanics. </summary>
+        public static bool[] IgnoresShootSpreadReduction { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(IgnoresShootSpreadReduction)).Description("Weapon item types that ignore the mod's ShootSpreadReduction mechanics.").RegisterBoolSet(defaultState: false);
 
         /// <summary> Damage adjustment for items while in a Macrocosm subworld. Applies a tooltip indicating if the item is stronger or weaker. </summary>
         public static float[] DamageAdjustment { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(DamageAdjustment)).Description("Damage adjustment for items while in a Macrocosm subworld. Applies a tooltip indicating if the item is stronger or weaker.").RegisterFloatSet(defaultState: 1f,

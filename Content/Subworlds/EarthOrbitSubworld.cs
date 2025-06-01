@@ -24,11 +24,12 @@ namespace Macrocosm.Content.Subworlds
         public override bool PeacefulWorld => true;
 
         public override string CustomSky => nameof(EarthOrbitSky);
-        protected override float GravityMultiplier => 0f;
-        public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
 
+        public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
+        protected override float GravityMultiplier(Vector2 position) => 0f;
         protected override float AtmosphericDensity(Vector2 position) => 0.1f;
-        //public override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-65f, 125f); why is this not working
+        protected override float AmbientTemperature(Vector2 position) => base.AmbientTemperature(position);
+
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => new(1600, 1200);
 
         public override bool NoBackground => true;

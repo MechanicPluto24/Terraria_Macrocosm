@@ -1,32 +1,34 @@
-using Terraria.DataStructures;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent;
-using ReLogic.Content;
 
 namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 {
     public class Hermite : ModNPC
     {
-
-        private  float alert = 0f;
-        private bool hasEmerged =true;
-        private bool isCrawling=false;
+        private float alert = 0f;
+        private bool hasEmerged = true;
+        private bool isCrawling = false;
         public override void SetStaticDefaults()
         {
             Main.npcFrameCount[NPC.type] = 14;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
+
         public override void SetDefaults()
         {
             NPC.width = 48;
@@ -39,23 +41,23 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
             NPC.value = 60f;
             NPC.knockBackResist = 0f;
         }
-        public override void OnSpawn (IEntitySource source)
+        public override void OnSpawn(IEntitySource source)
         {
-            if(source is EntitySource_SpawnNPC)
-                hasEmerged=false;
+            if (source is EntitySource_SpawnNPC)
+                hasEmerged = false;
         }
         public override void AI()
         {
             NPC.TargetClosest(faceTarget: true);
             Player player = Main.player[NPC.target];
-            if(!isCrawling)
+            if (!isCrawling)
             {
                 NPC.noGravity = false;
 
                 if (Vector2.Distance(NPC.Center, player.Center) < 200f)
                     alert += 0.01f;
 
-                if (alert > 0.6f&&hasEmerged)
+                if (alert > 0.6f && hasEmerged)
                 {
                     Utility.AIZombie(NPC, ref NPC.ai, fleeWhenDay: false, allowBoredom: false, velMax: 5, maxJumpTilesX: 1, maxJumpTilesY: 1, moveInterval: 0.15f);
                     NPC.dontTakeDamage = false;
@@ -70,9 +72,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
                             for (int j = num2 - 1; j <= num2 + 1; j++)
                                 if (Main.tile[i, j] != null && Main.tile[i, j].WallType > 0)
                                     flag = true;
-                        
+
                         if (flag)
-                            isCrawling=true;
+                            isCrawling = true;
                     }
                 }
                 else
@@ -110,7 +112,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
                     vector.Y = -MaxSpeed / 2f;
                 }
 
-                if (!Collision.CanHit(NPC.position, NPC.width, NPC.height, Main.player[NPC.target].position, 
+                if (!Collision.CanHit(NPC.position, NPC.width, NPC.height, Main.player[NPC.target].position,
                     Main.player[NPC.target].width, Main.player[NPC.target].height))
                 {
                     NPC.ai[0] += 1f;
@@ -125,7 +127,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
                         NPC.velocity.X -= 0.023f;
                     if (NPC.ai[0] > 200f)
                         NPC.ai[0] = -200f;
-                    
+
                     NPC.velocity.X += vector.X * 0.007f;
                     NPC.velocity.Y += vector.Y * 0.007f;
 
@@ -158,7 +160,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
                         NPC.velocity.Y += Acceleration;
                         if (NPC.velocity.Y < 0f && vector.Y > 0f)
                             NPC.velocity.Y += Acceleration;
-                        
+
                     }
                     else if (NPC.velocity.Y > vector.Y)
                     {
@@ -191,15 +193,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 
                     if (NPC.velocity.Y > 0f && NPC.velocity.Y < 1.5f)
                         NPC.velocity.Y = 2f;
-                    
+
                     if (NPC.velocity.Y < 0f && NPC.velocity.Y > -1.5f)
                         NPC.velocity.Y = -2f;
                 }
 
-                if ((NPC.velocity.X > 0f && NPC.oldVelocity.X < 0f) || (NPC.velocity.X < 0f && NPC.oldVelocity.X > 0f) || (NPC.velocity.Y > 0f && 
+                if ((NPC.velocity.X > 0f && NPC.oldVelocity.X < 0f) || (NPC.velocity.X < 0f && NPC.oldVelocity.X > 0f) || (NPC.velocity.Y > 0f &&
                     NPC.oldVelocity.Y < 0f || NPC.velocity.Y < 0f && NPC.oldVelocity.Y > 0f) && !NPC.justHit)
                     NPC.netUpdate = true;
-                
+
                 if (Main.netMode != NetmodeID.MultiplayerClient)
                 {
                     int npcX = (int)NPC.Center.X / 16;
@@ -211,48 +213,49 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
                         {
                             if (Main.tile[i, j] == null)
                                 break;
-                            
+
                             if (Main.tile[i, j].WallType > 0)
                                 flag = true;
                         }
-                    
+
                     if (!flag)
-                        isCrawling=false;
+                        isCrawling = false;
                 }
             }
 
         }
-        int frameCounter=0;
+        int frameCounter = 0;
         int frameTimer;
         Rectangle altFrame;
-        int altFrameCounter=0;
+        int altFrameCounter = 0;
         public override void FindFrame(int frameHeight)
         {
             if (alert <= 0.6f)
-                frameCounter=0;
-            else if (alert > 0.6f&& !hasEmerged){
+                frameCounter = 0;
+            else if (alert > 0.6f && !hasEmerged)
+            {
                 frameTimer++;
-                if(frameTimer>10)
+                if (frameTimer > 10)
                 {
                     frameCounter++;
-                    frameTimer=0;
+                    frameTimer = 0;
                 }
-                if(frameCounter>2)
-                    hasEmerged=true;
+                if (frameCounter > 2)
+                    hasEmerged = true;
             }
             else
             {
                 frameTimer++;
-                if(frameTimer>7)
+                if (frameTimer > 7)
                 {
                     frameCounter++;
-                    frameTimer=0;
+                    frameTimer = 0;
                     altFrameCounter++;
-                } 
-                if(frameCounter>13)
-                    frameCounter=3;
-                if(altFrameCounter>3)
-                    altFrameCounter=0;
+                }
+                if (frameCounter > 13)
+                    frameCounter = 3;
+                if (altFrameCounter > 3)
+                    altFrameCounter = 0;
             }
             Asset<Texture2D> frametexture = ModContent.Request<Texture2D>(NPC.ModNPC.Texture + "Wall");
             NPC.frame.Y = frameCounter * frameHeight;
@@ -260,15 +263,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 
             altFrame.Y = frametexture.Height() / 4 * altFrameCounter;
         }
-        
+
         public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
         {
             SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             Texture2D texture = ModContent.Request<Texture2D>(NPC.ModNPC.Texture + "Wall").Value;
 
-            if(!isCrawling)
-                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - screenPos, NPC.frame, drawColor,0f, NPC.frame.Size() / 2, NPC.scale, effects, 0);
-            if(isCrawling)
+            if (!isCrawling)
+                spriteBatch.Draw(TextureAssets.Npc[NPC.type].Value, NPC.Center - screenPos, NPC.frame, drawColor, 0f, NPC.frame.Size() / 2, NPC.scale, effects, 0);
+            if (isCrawling)
                 spriteBatch.Draw(texture, NPC.Center - screenPos, altFrame, drawColor, NPC.rotation, altFrame.Size() / 2, NPC.scale, SpriteEffects.None, 0);
 
             return false;

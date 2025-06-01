@@ -1,6 +1,8 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics.PackedVector;
+using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,13 +21,16 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetDefaults()
         {
-            Projectile.CloneDefaults(14);
-            AIType = -1;
             Projectile.width = 4;
             Projectile.height = 4;
-            Projectile.extraUpdates = 3;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = 1;
+            Projectile.alpha = 255;
+            Projectile.scale = 1.2f;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.extraUpdates = 2;
             Projectile.timeLeft = 270;
-            Projectile.light = 0f;
         }
 
         public override bool PreAI()
@@ -45,7 +50,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 178, 115), new Color(0, 178, 115, 0));
+            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 244, 71), new Color(0, 244, 71, 0));
             return true;
         }
 

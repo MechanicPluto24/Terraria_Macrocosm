@@ -140,7 +140,7 @@ namespace Macrocosm.Content.Rockets
         public int PreLaunchDuration = 160;
 
         public int StaticFireDuration = 60;
-        /// <summary> The progress of the <see cref="StaticFire"/> </summary>
+        /// <summary> The progress of <see cref="ActionState.StaticFire"/> </summary>
         public float StaticFireProgress => Utility.InverseLerp(0, StaticFireDuration, FlightTime, clamped: true);
 
         /// <summary> The flight sequence progress </summary>
@@ -250,7 +250,7 @@ namespace Macrocosm.Content.Rockets
             Effects();
             PlaySound();
 
-            float gravity = MacrocosmSubworld.GetGravityMultiplier();
+            float gravity = MacrocosmSubworld.GetGravityMultiplier(Center);
             float gravityFactor = 0.7f + 0.3f * gravity;
 
             switch (State)
@@ -373,7 +373,7 @@ namespace Macrocosm.Content.Rockets
 
                     if (TargetTravelPosition == default && DockingProgress < float.Epsilon)
                     {
-                        Structure module = new BaseSpaceStationModule();
+                        Structure module = Structure.Get<BaseSpaceStationModule>();
                         TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition) + new Vector2(0, Height + (int)(module.Size.Y * 16f));
                     }
 
@@ -879,7 +879,7 @@ namespace Macrocosm.Content.Rockets
             if (State == ActionState.Idle)
                 return;
 
-            float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.GetGravityMultiplier();
+            float gravityFactor = 0.7f + 0.3f * MacrocosmSubworld.GetGravityMultiplier(Center);
             float atmoDesityFactor = 0.5f + 0.5f * MacrocosmSubworld.GetAtmosphericDensity(Center);
 
             Point tilePos = (Position + new Vector2(Width / 2f, Height)).ToTileCoordinates();
@@ -1066,7 +1066,7 @@ namespace Macrocosm.Content.Rockets
         {
             for (int x = -8; x < 8; x++)
             {
-                if (x is < -6 or > -2 and < 2 or > 6 && !Utility.CoordinatesOutOfBounds(tileCoords.X - x, tileCoords.Y))
+                if (x is < -6 or > -2 and < 2 or > 6 && WorldGen.InWorld(tileCoords.X - x, tileCoords.Y))
                     WorldGen.KillTile_MakeTileDust(tileCoords.X - x, tileCoords.Y, Main.tile[tileCoords.X - x, tileCoords.Y]);
             }
         }

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,8 @@ namespace Macrocosm.Common.Bases.Projectiles
             Projectile.hostile = false;
 
             Projectile.DamageType = DamageClass.Melee;
+
+            Redemption.SetSpearBonus(Projectile);
         }
 
         public override void OnSpawn(IEntitySource source)

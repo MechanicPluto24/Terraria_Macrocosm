@@ -36,7 +36,10 @@ namespace Macrocosm.Content.Subworlds
         protected override double TimeRate => 0.125;
 
         // About 6 times lower than default (1, as on Earth)
-        protected override float GravityMultiplier => 0.166f;
+        protected override float GravityMultiplier(Vector2 position)
+        {
+            return 0.166f;
+        }
 
         protected override float AtmosphericDensity(Vector2 position) => 0.1f;
         public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
@@ -57,7 +60,7 @@ namespace Macrocosm.Content.Subworlds
         };
         public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
-        public override float AmbientTemperature(Vector2? position = null) => Utility.ScaleNoonToMidnight(-183f, 106f);
+        protected override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-183f, 106f);
 
         public override Dictionary<MapColorType, Color> MapColors => new()
         {
@@ -75,7 +78,7 @@ namespace Macrocosm.Content.Subworlds
             meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
             meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
 
-            CustomAchievement.Unlock<TravelToMoon>();
+            TMLAchievement.Unlock<TravelToMoon>();
         }
 
         public override void OnExitSubworld()

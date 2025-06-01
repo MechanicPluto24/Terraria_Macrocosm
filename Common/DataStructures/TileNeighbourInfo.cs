@@ -13,28 +13,28 @@ namespace Macrocosm.Common.DataStructures
             protected abstract bool ShouldCount(Tile tile);
 
             private bool? top;
-            public bool Top => top ??= (CoordinatesOutOfBounds(I, J - 1) || ShouldCount(Main.tile[I, J - 1]));
+            public bool Top => top ??= (!WorldGen.InWorld(I, J - 1) || ShouldCount(Main.tile[I, J - 1]));
 
             private bool? topRight;
-            public bool TopRight => topRight ??= (CoordinatesOutOfBounds(I + 1, J - 1) || ShouldCount(Main.tile[I + 1, J - 1]));
+            public bool TopRight => topRight ??= (!WorldGen.InWorld(I + 1, J - 1) || ShouldCount(Main.tile[I + 1, J - 1]));
 
             private bool? topleft;
-            public bool TopLeft => topleft ??= (CoordinatesOutOfBounds(I - 1, J - 1) || ShouldCount(Main.tile[I - 1, J - 1]));
+            public bool TopLeft => topleft ??= (!WorldGen.InWorld(I - 1, J - 1) || ShouldCount(Main.tile[I - 1, J - 1]));
 
             private bool? bottom;
-            public bool Bottom => bottom ??= (CoordinatesOutOfBounds(I, J + 1) || ShouldCount(Main.tile[I, J + 1]));
+            public bool Bottom => bottom ??= (!WorldGen.InWorld(I, J + 1) || ShouldCount(Main.tile[I, J + 1]));
 
             private bool? bottomRight;
-            public bool BottomRight => bottomRight ??= (CoordinatesOutOfBounds(I + 1, J + 1) || ShouldCount(Main.tile[I + 1, J + 1]));
+            public bool BottomRight => bottomRight ??= (!WorldGen.InWorld(I + 1, J + 1) || ShouldCount(Main.tile[I + 1, J + 1]));
 
             private bool? bottomLeft;
-            public bool BottomLeft => bottomLeft ??= (CoordinatesOutOfBounds(I - 1, J + 1) || ShouldCount(Main.tile[I - 1, J + 1]));
+            public bool BottomLeft => bottomLeft ??= (!WorldGen.InWorld(I - 1, J + 1) || ShouldCount(Main.tile[I - 1, J + 1]));
 
             private bool? right;
-            public bool Right => right ??= (CoordinatesOutOfBounds(I + 1, J) || ShouldCount(Main.tile[I + 1, J]));
+            public bool Right => right ??= (!WorldGen.InWorld(I + 1, J) || ShouldCount(Main.tile[I + 1, J]));
 
             private bool? left;
-            public bool Left => left ??= (CoordinatesOutOfBounds(I - 1, J) || ShouldCount(Main.tile[I - 1, J]));
+            public bool Left => left ??= (!WorldGen.InWorld(I - 1, J) || ShouldCount(Main.tile[I - 1, J]));
 
             private int? count;
             public int Count => count ??= (Top ? 1 : 0)
@@ -52,7 +52,6 @@ namespace Macrocosm.Common.DataStructures
                                         + (Right ? 1 : 0)
                                         + (Left ? 1 : 0);
         }
-
         public record PredicateNeighbourInfo(int I, int J, Func<Tile, bool> Predicate) : CountableNeighbourInfo(I, J)
         {
             protected override bool ShouldCount(Tile tile) => Predicate.Invoke(tile);
@@ -62,7 +61,7 @@ namespace Macrocosm.Common.DataStructures
         public PredicateNeighbourInfo HasTile => hasTile ??= new(I, J, tile => tile.HasTile);
 
         private PredicateNeighbourInfo solid;
-        public PredicateNeighbourInfo Solid => solid ??= new(I, J, tile => tile.HasTile && tile.BlockType == BlockType.Solid);
+        public PredicateNeighbourInfo Solid => solid ??= new(I, J, tile => tile.HasTile && tile.HasUnactuatedTile && Main.tileSolid[tile.TileType] && tile.BlockType == BlockType.Solid);
 
         private PredicateNeighbourInfo sloped;
         public PredicateNeighbourInfo Sloped => sloped ??= new(I, J, tile => tile.HasTile && tile.BlockType != BlockType.Solid);
@@ -70,8 +69,8 @@ namespace Macrocosm.Common.DataStructures
         private PredicateNeighbourInfo wall;
         public PredicateNeighbourInfo Wall => wall ??= new(I, J, tile => tile.WallType != WallID.None);
 
-        public PredicateNeighbourInfo TypedSolid(ushort type) => new(I, J, tile => tile.HasTile && tile.TileType == type);
-        public PredicateNeighbourInfo TypedSolid(params ushort[] types) => new(I, J, tile => tile.HasTile && types.Contains(tile.TileType));
+        public PredicateNeighbourInfo IsType(ushort type) => new(I, J, tile => tile.HasTile && tile.TileType == type);
+        public PredicateNeighbourInfo IsTypes(params ushort[] types) => new(I, J, tile => tile.HasTile && types.Contains(tile.TileType));
 
         public PredicateNeighbourInfo GetPredicateNeighbourInfo(Func<Tile, bool> predicate) => new(I, J, predicate);
     }

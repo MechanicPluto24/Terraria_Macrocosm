@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -22,7 +23,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Main.npcFrameCount[Type] = 39;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+            
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Dark);
         }
 
         public override void SetDefaults()

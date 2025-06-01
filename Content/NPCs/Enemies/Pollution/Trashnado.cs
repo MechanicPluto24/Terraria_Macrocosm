@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
@@ -28,7 +29,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         {
             Main.npcFrameCount[NPC.type] = 4;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
@@ -37,7 +38,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+            
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
 
         public override void SetDefaults()
@@ -160,6 +163,9 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
 
         private void DrawTrash(SpriteBatch spriteBatch, Color drawColor, bool isFront)
         {
+            if (NPC.IsABestiaryIconDummy)
+                return;
+
             if (trashEntities is null)
                 GetTrash();
 

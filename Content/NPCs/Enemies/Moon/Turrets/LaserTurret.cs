@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -24,7 +25,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             Main.npcFrameCount[NPC.type] = 1;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = false;
+            
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Robotic);
         }
 
 

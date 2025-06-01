@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
@@ -17,6 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
     {
         public override void SetStaticDefaults()
         {
+            Redemption.AddElement(Item, Redemption.ElementID.Thunder, true);
         }
 
         public override void SetDefaultsHeldProjectile()
@@ -50,19 +52,6 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         };
 
         public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
-
-        public override bool? UseItem(Player player)
-        {
-            if (!Main.dedServ)
-                SoundEngine.PlaySound(SoundID.Item75 with { Volume = 0.7f }, player.position);
-
-            return true;
-        }
-
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
-        {
-            return true;
-        }
 
         public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
         {

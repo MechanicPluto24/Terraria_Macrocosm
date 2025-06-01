@@ -5,12 +5,10 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Loot.DropConditions
 {
-    public class SubworldDropCondition<T>(bool canShowInBestiary) : IItemDropRuleCondition where T : Subworld
+    /// <summary> Condtion for a specific subworld </summary>
+    public class SubworldDropCondition<T> : BaseCondition where T : Subworld
     {
-        public bool CanDrop(DropAttemptInfo info) => SubworldSystem.AnyActive() && ModContent.GetInstance<T>().Name == MacrocosmSubworld.Current.Name;
-
-        public bool CanShowItemDropInUI() => canShowInBestiary;
-
-        public string GetConditionDescription() => "";
+        public override bool CanDrop(DropAttemptInfo info) => SubworldSystem.AnyActive() && ModContent.GetInstance<T>().Name == MacrocosmSubworld.Current.Name;
+        public override string GetConditionDescription() => "";
     }
 }

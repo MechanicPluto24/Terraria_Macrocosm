@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Sets;
@@ -20,7 +21,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
@@ -29,7 +30,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+            
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Poison);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);
         }
 
         public override void SetDefaults()

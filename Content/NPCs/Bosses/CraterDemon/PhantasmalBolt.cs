@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,6 +14,9 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 5;
+
+            Redemption.AddElement(Projectile, Redemption.ElementID.Shadow);
+            Redemption.AddElement(Projectile, Redemption.ElementID.Celestial);
         }
 
         public override void SetDefaults()

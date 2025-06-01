@@ -397,10 +397,8 @@ namespace Macrocosm.Content.Subworlds
                                 (float)jOffset / veinLength > 0.6f ? 1 : 2,
                                 (i1, j1) =>
                                 {
-                                    if (CoordinatesOutOfBounds(i1, j1) || !Main.tile[i1, j1].HasTile)
-                                    {
+                                    if (!WorldGen.InWorld(i1, j1) || !Main.tile[i1, j1].HasTile)
                                         return;
-                                    }
 
                                     FastPlaceTile(i1, j1, regolithType);
                                 }
@@ -536,10 +534,8 @@ namespace Macrocosm.Content.Subworlds
                     radius,
                     (i1, j1) =>
                     {
-                        if (CoordinatesOutOfBounds(i1, j1))
-                        {
+                        if (!WorldGen.InWorld(i1, j1))
                             return;
-                        }
 
                         float iDistance = Math.Abs(iOffset - i1) / (radius * 0.5f);
                         float jDistance = Math.Abs(jOffset - j1) / (radius * 0.5f);
@@ -573,11 +569,8 @@ namespace Macrocosm.Content.Subworlds
                     radius,
                     (i1, j1) =>
                     {
-                        if (CoordinatesOutOfBounds(i1, j1))
-                        {
+                        if (!WorldGen.InWorld(i1, j1))
                             return;
-                        }
-
 
                         if (Main.tile[i1, j1].WallType != WallID.None || j1 > CynthalithlithLayerHeight + GetSurfaceHeight(i1))
                         {
@@ -646,10 +639,8 @@ namespace Macrocosm.Content.Subworlds
                             radius2,
                             (i1, j1) =>
                             {
-                                if (CoordinatesOutOfBounds(i1, j1))
-                                {
+                                if (!WorldGen.InWorld(i1, j1))
                                     return;
-                                }
 
                                 float iDistance = Math.Abs(iOffset2 - i) / (radius2 * 0.5f);
                                 float jDistance = Math.Abs(jOffset2 - j) / (radius2 * 0.5f);
@@ -668,10 +659,8 @@ namespace Macrocosm.Content.Subworlds
                             radius,
                             (i1, j1) =>
                             {
-                                if (CoordinatesOutOfBounds(i1, j1))
-                                {
+                                if (!WorldGen.InWorld(i1, j1))
                                     return;
-                                }
 
                                 float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
                                 float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
@@ -694,10 +683,8 @@ namespace Macrocosm.Content.Subworlds
                             radius,
                             (i1, j1) =>
                             {
-                                if (CoordinatesOutOfBounds(i1, j1))
-                                {
+                                if (!WorldGen.InWorld(i1, j1))
                                     return;
-                                }
 
                                 float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
                                 float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
@@ -724,12 +711,14 @@ namespace Macrocosm.Content.Subworlds
 
             }
         }
+
         [Task(weight: 12.0)]
         private void SmoothTask(GenerationProgress progress)
         {
             progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothTask");
             SmoothWorld(progress);
         }
+
         [Task(weight: 0.1)]
         private void PlaceLuminiteShrine(GenerationProgress progress)
         {
@@ -1138,26 +1127,19 @@ namespace Macrocosm.Content.Subworlds
                                     (i1, j1) =>
                                     {
                                         if (Main.tile[i, j - 1].TileType != TileType<IrradiatedAltar>())
-                                        {
                                             return;
-                                        }
-                                        if (CoordinatesOutOfBounds(i1, j1))
-                                        {
+
+                                        if (!WorldGen.InWorld(i1, j1))
                                             return;
-                                        }
 
                                         float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
                                         float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
 
                                         if (WorldGen.genRand.NextFloat() < 0.5f)
-                                        {
                                             return;
-                                        }
 
                                         if (Main.tile[i1, j1].HasTile && TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[i1, j1].TileType] && !(Main.tile[i1, j1].TileType == TileType<IrradiatedAltar>()))
-                                        {
                                             FastPlaceTile(i1, j1, (ushort)TileType<IrradiatedRock>());
-                                        }
                                     }
                                 );
                         }

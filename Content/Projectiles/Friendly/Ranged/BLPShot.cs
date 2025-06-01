@@ -32,7 +32,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.tileCollide = true;
             Projectile.ignoreWater = true;
-            Projectile.penetrate = 4;
+            Projectile.penetrate = 1;
             Projectile.timeLeft = 600;
             Projectile.scale = 1f;
             Projectile.alpha = 165;

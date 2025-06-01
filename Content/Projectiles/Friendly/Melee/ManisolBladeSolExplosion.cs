@@ -1,6 +1,7 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs;
+using Macrocosm.Content.Buffs;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -18,6 +19,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
         public override void SetStaticDefaults()
         {
             Main.projFrames[Type] = 5;
+
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Explosive);
         }
 
         public override void SetDefaults()

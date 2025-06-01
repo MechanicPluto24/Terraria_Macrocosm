@@ -33,7 +33,7 @@ namespace Macrocosm.Content.Projectiles.Hostile
 
         public override void AI()
         {
-            Projectile.velocity.Y += MacrocosmSubworld.GetGravityMultiplier() / 4;
+            Projectile.velocity.Y += MacrocosmSubworld.GetGravityMultiplier(Projectile.Center) / 4;
             Projectile.rotation = Projectile.velocity.ToRotation();
 
             int frameSpeed = 6;

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Projectiles.Friendly.Magic;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -10,6 +11,9 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             Item.staff[Item.type] = true;
+
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Celestial, true);
         }
 
         public override void SetDefaults()

@@ -284,7 +284,7 @@ namespace Macrocosm.Content.Rockets.LaunchPads
             internalRocket = rocket.VisualClone();
 
             NetSync(MacrocosmSubworld.CurrentID);
-            CustomAchievement.Unlock<BuildRocket>();
+            TMLAchievement.Unlock<BuildRocket>();
         }
 
         private void Assemble_CreateParticles()

@@ -15,7 +15,7 @@ namespace Macrocosm.Common.Sets
 
         // ...
 
-        /// <summary> NPC types that drop Moonstone if killed on the Moon. </summary>
-        public static bool[] DropsMoonstone { get; } = NPCID.Sets.Factory.CreateNamedSet(nameof(DropsMoonstone)).Description("NPC types that drop Moonstone if killed on the Moon.").RegisterBoolSet();
+        /// <summary> NPC types that don't drop Moonstone if killed on the Moon. </summary>
+        public static bool[] NoMoonstoneDrop { get; } = NPCID.Sets.Factory.CreateNamedSet(nameof(NoMoonstoneDrop)).Description("NPC types that don't drop Moonstone if killed on the Moon.").RegisterBoolSet();
     }
 }

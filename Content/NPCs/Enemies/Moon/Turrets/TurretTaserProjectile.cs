@@ -1,4 +1,5 @@
-using Macrocosm.Content.Debuffs.Radiation;
+using Macrocosm.Common.CrossMod;
+using Macrocosm.Content.Buffs.Radiation;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -14,6 +15,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
         public override void SetStaticDefaults()
         {
             ProjectileID.Sets.DontAttachHideToAlpha[Type] = true;
+
+            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Thunder);
         }
 
         private static Asset<Texture2D> chainTexture;

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -39,6 +40,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         public override void SetStaticDefaults()
         {
+            Redemption.AddElement(Projectile, Redemption.ElementID.Shadow);
+            Redemption.AddElement(Projectile, Redemption.ElementID.Celestial);
         }
         public override void SetDefaults()
         {

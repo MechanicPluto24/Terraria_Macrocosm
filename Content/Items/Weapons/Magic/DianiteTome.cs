@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
@@ -23,6 +24,10 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetStaticDefaults()
         {
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Earth);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Explosive, true);
         }
 
         public override void SetDefaults()

@@ -1,5 +1,6 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Debuffs.Weapons;
+using Macrocosm.Content.Buffs.Weapons;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         public override void SetStaticDefaults()
         {
             ItemSets.UnobtainableItem[Type] = true;
+
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
         }
 
         public override void SetDefaults()
@@ -42,9 +45,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
         {
         }
 
-        public override bool CanUseItem(Player player) =>
-            player.ownedProjectileCounts[Item.shoot] <= 0 &&
-            !player.HasBuff<HandheldEngineOverheat>();
+        public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] <= 0;
 
         public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
         {

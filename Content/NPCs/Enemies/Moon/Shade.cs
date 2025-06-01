@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Drops;
@@ -37,7 +38,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Main.npcFrameCount[Type] = 1;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
@@ -46,9 +47,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+            
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
+
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Spirit);
         }
 
         public override void SetDefaults()

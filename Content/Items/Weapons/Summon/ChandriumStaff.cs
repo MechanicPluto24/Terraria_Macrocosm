@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Buffs.Minions;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
@@ -14,9 +15,12 @@ namespace Macrocosm.Content.Items.Weapons.Summon
     {
         public override void SetStaticDefaults()
         {
-
             ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;
             ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
+
+            Redemption.AddElement(Item, Redemption.ElementID.Arcane);
+            Redemption.AddElement(Item, Redemption.ElementID.Shadow);
+            Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
         }
 
         public override void SetDefaults()

@@ -1,7 +1,7 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Debuffs.Weapons;
+using Macrocosm.Content.Buffs.Weapons;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -68,7 +68,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
             if (Projectile.timeLeft > 3)
             {
-                float gravity = 0.6f * (0.5f + 0.5f * MacrocosmSubworld.GetGravityMultiplier());
+                float gravity = 0.6f * (0.5f + 0.5f * MacrocosmSubworld.GetGravityMultiplier(Projectile.Center));
 
                 if (Projectile.velocity.Y == 0f && Projectile.velocity.X != 0f)
                 {

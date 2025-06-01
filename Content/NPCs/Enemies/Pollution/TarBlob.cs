@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -13,13 +14,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         {
             Main.npcFrameCount[NPC.type] = 4;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
                 BuffID.Poisoned,
                 BuffID.Venom
             );
+
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);
         }
 
         public override void SetDefaults()

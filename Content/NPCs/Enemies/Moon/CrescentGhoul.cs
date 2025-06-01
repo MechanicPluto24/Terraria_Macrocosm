@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -43,7 +44,11 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCID.Sets.TrailingMode[NPC.type] = 0;
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
 
         public override void SetDefaults()

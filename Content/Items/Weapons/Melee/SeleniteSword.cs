@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Bars;
@@ -17,7 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Melee
     {
         public override void SetStaticDefaults()
         {
-
+            Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
         }
         public override void SetDefaults()
         {

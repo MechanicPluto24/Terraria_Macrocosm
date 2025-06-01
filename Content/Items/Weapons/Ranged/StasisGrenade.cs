@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -16,6 +17,9 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
         {
             ItemID.Sets.SkipsInitialUseSound[Type] = true;
             ItemSets.UnobtainableItem[Type] = true;
+
+            Redemption.AddElement(Item, Redemption.ElementID.Thunder);
+            Redemption.AddElement(Item, Redemption.ElementID.Explosive, true);
         }
 
         public override void SetDefaults()

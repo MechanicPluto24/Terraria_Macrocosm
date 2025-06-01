@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
@@ -14,6 +15,11 @@ namespace Macrocosm.Content.Items.Weapons.Melee
         public override void SetStaticDefaults()
         {
             ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Celestial);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Explosive);
         }
 
         public override void SetDefaults()

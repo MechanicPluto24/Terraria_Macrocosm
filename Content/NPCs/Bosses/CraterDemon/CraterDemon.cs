@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Systems.Flags;
@@ -408,7 +409,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             // For the meteors
             NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type] = true;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
@@ -426,7 +427,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = false;
+            
+            Redemption.AddElement(NPC, Redemption.ElementID.Earth);
+            Redemption.AddElement(NPC, Redemption.ElementID.Shadow);
+            Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Demon);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Skeleton);
         }
 
         public override void SetDefaults()

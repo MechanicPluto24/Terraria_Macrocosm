@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Enums;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Dusts;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -13,7 +14,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Regolith
 {
-    /*
     public class RegolithToilet : ModTile
     {
         public override void SetStaticDefaults()
@@ -33,8 +33,7 @@ namespace Macrocosm.Content.Tiles.Furniture.Regolith
 
             // Placement
             TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 16];
-            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.CoordinateHeights = [16, 18];
             TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
 
             TileObjectData.newTile.StyleWrapLimit = 2;
@@ -144,5 +143,4 @@ namespace Macrocosm.Content.Tiles.Furniture.Regolith
             }
         }
     }
-    */
 }

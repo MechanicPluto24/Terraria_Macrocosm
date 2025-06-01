@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Sets;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework;
@@ -348,7 +349,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
         public override void SetStaticDefaults()
         {
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
         }
 
         public override void SetDefaults()

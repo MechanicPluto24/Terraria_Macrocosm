@@ -20,7 +20,7 @@ namespace Macrocosm.Common.Global.NPCs
         {
             if (SubworldSystem.AnyActive<Macrocosm>())
             {
-                npc.GravityMultiplier *= MacrocosmSubworld.GetGravityMultiplier();
+                npc.GravityMultiplier *= MacrocosmSubworld.GetGravityMultiplier(npc.Center);
                 npc.GravityIgnoresSpace = true;
             }
         }

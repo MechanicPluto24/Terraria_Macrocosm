@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -54,7 +55,7 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.TrailCacheLength[Type] = 5;
             NPCID.Sets.TrailingMode[Type] = 3;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
@@ -71,7 +72,13 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = false;
+            
+            Redemption.AddElement(NPC, Redemption.ElementID.Earth);
+            Redemption.AddElement(NPC, Redemption.ElementID.Shadow);
+            Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Demon);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Skeleton);
         }
 
         public override void SetDefaults()

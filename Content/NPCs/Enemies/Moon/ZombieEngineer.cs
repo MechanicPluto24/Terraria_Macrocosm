@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -33,13 +34,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Main.npcFrameCount[Type] = 25;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+            
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Undead);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
         }
 
         private ActiveSound sound1;

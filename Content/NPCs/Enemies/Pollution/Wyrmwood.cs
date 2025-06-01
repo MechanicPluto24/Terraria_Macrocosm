@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -29,10 +30,13 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
+
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Dark);
         }
         public override float FallSpeed => 0f;
         public override void SetDefaults()
@@ -122,7 +126,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
     {
         public override void SetStaticDefaults()
         {
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
@@ -200,7 +204,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
     {
         public override void SetStaticDefaults()
         {
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );

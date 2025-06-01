@@ -22,7 +22,7 @@ namespace Macrocosm.Content.Rockets.Modules.Top
             return new
             (
                 x: ((widths[0..4].Max() - Width) / 2) + globalOffsetAggregate.X,
-                y: 0
+                y: 2
             );
         }
 

@@ -58,19 +58,14 @@ namespace Macrocosm.Content.Tiles.Blocks
         public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
         {
             Tile tile = Main.tile[i, j];
-
-            var info = new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo
-            (
-                (neighbour) =>
-                    WorldGen.SolidTile(neighbour) && neighbour.TileType != Type ||
-                    Utility.IsPlatform(neighbour.TileType) ||
-                    TileID.Sets.CloseDoorID[neighbour.TileType] > 0 ||
-                    neighbour.TileType == TileID.TallGateOpen
-
-            );
-
-            if (tile.IsSloped() || info.Count4Way > 0)
+            if (tile.IsSloped())
+            {
                 tileFrameY += 90;
+            }
+            else if (new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((t) => WorldGen.SolidTile(t) && t.TileType != Type || TileID.Sets.NotReallySolid[t.TileType] || Utility.IsPlatform(t.TileType)).Count4Way > 0)
+            { 
+                tileFrameY += 90;
+            }
         }
     }
 }

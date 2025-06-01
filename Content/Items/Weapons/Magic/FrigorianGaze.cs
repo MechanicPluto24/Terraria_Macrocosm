@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -12,7 +13,8 @@ namespace Macrocosm.Content.Items.Weapons.Magic
     {
         public override void SetStaticDefaults()
         {
-
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Ice, true);
         }
 
         public override void SetDefaults()

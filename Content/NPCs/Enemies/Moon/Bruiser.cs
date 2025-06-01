@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -38,13 +39,16 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             SpawnModBiomes = [ModContent.GetInstance<DemonSunBiome>().Type];
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Blood);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Blood);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
         }
 
         public override void SetDefaults()

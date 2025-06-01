@@ -1,4 +1,5 @@
-﻿using Macrocosm.Content.Buffs.Minions;
+﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Content.Buffs.Minions;
 using Macrocosm.Content.Projectiles.Friendly.Summon;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -15,6 +16,8 @@ namespace Macrocosm.Content.Items.Weapons.Summon
         {
             ItemID.Sets.GamepadWholeScreenUseRange[Item.type] = true;
             ItemID.Sets.LockOnIgnoresCollision[Item.type] = true;
+
+            Redemption.AddElement(Item, Redemption.ElementID.Explosive, true);
         }
 
         public override void SetDefaults()

@@ -1,4 +1,5 @@
 using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Content.Projectiles.Friendly.Ranged;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -22,6 +23,7 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
 
         public override void SetStaticDefaults()
         {
+            Redemption.AddElement(Item, Redemption.ElementID.Explosive);
         }
 
         public override void SetDefaultsHeldProjectile()
@@ -54,9 +56,10 @@ namespace Macrocosm.Content.Items.Weapons.Ranged
             for (int i = 0; i < 6; i++)
             {
                 // Shoot green slugs instead of musket balls
-                type = type == ProjectileID.Bullet ? ModContent.ProjectileType<CruithneGreenSlug>() : type;
+                if (type == ProjectileID.Bullet)
+                    type = ModContent.ProjectileType<CruithneGreenSlug>();
 
-                Vector2 perturbedSpeed = velocity.RotatedByRandom(MathHelper.ToRadians(12)) * Main.rand.NextFloat(0.7f, 100f);
+                Vector2 perturbedSpeed = velocity.RotatedByRandom(MathHelper.ToRadians(12)) * Main.rand.NextFloat(0.5f, 1f);
                 Projectile.NewProjectile(source, position.X, position.Y, perturbedSpeed.X, perturbedSpeed.Y, type, damage, knockBack, player.whoAmI);
             }
 

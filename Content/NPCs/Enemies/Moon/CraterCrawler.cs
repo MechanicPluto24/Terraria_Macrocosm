@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -32,13 +33,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             };
             NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
 
             NPCSets.MoonNPC[Type] = true;
-            NPCSets.DropsMoonstone[Type] = true;
+
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Earth);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
         }
         public override float FallSpeed => 0.4f;
         public override void SetDefaults()
@@ -141,7 +144,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );
@@ -206,7 +209,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
     {
         public override void SetStaticDefaults()
         {
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Confused
             );

@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -19,13 +20,17 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
         {
             Main.npcFrameCount[Type] = 4;
 
-            NPC.ApplyImmunity
+            NPC.ApplyBuffImmunity
             (
                 BuffID.Bleeding,
                 BuffID.BloodButcherer,
                 BuffID.Poisoned,
                 BuffID.Venom
             );
+
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
+            Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Spirit);
         }
 
         public override void SetDefaults()
