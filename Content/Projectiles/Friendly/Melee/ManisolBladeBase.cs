@@ -71,7 +71,6 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
             Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed, 0.1f);
         }
 
-
         public virtual void OnReturnToPlayer()
         {
         }

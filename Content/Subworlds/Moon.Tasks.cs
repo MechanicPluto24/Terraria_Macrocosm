@@ -1024,12 +1024,12 @@ namespace Macrocosm.Content.Subworlds
                     1 => Structure.Get<StorageOutpostSmall>(),
                     2 => Structure.Get<StorageOutpostLarge>(),
                     3 => Structure.Get<LabOutpost>(),
-                    4 => Structure.Get<LabOutpost2>(),
+                    4 => Structure.Get<LabOutpostF>(),
                     5 => Structure.Get<MedicOutpost>(),
-                    6 => Structure.Get<MedicOutpost2>(),
+                    6 => Structure.Get<MedicOutpostF>(),
                     7 => Structure.Get<ServerOutpost>(),
                     8 => Structure.Get<MiningOutpost>(),
-                    _ => Structure.Get<MiningOutpost2>(),
+                    _ => Structure.Get<MiningOutpostF>(),
                 };
 
                 bool solidDown = WorldUtils.Find(new Point(tileX, tileY), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);

@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
     {
         public override void SetStaticDefaults()
         {
-            ProjectileID.Sets.TrailCacheLength[Type] = 10;
+            ProjectileID.Sets.TrailCacheLength[Type] = 20;
             ProjectileID.Sets.TrailingMode[Type] = 0;
 
             ProjectileSets.HitsTiles[Type] = true;
@@ -22,20 +22,21 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override void SetDefaults()
         {
-            Projectile.width = 4;
-            Projectile.height = 4;
+            Projectile.width = 6;
+            Projectile.height = 6;
             Projectile.aiStyle = 1;
             Projectile.friendly = true;
             Projectile.penetrate = -1;
             Projectile.light = 0.5f;
             Projectile.alpha = 255;
-            Projectile.scale = 1.2f;
+            Projectile.scale = 1f;
             Projectile.timeLeft = 600;
             Projectile.extraUpdates = 1;
             Projectile.width = 4;
             Projectile.height = 4;
             Projectile.alpha = 0;
             AIType = ProjectileID.Bullet;
+            ProjectileID.Sets.TrailCacheLength[Type] = 20;
         }
 
         public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
@@ -56,7 +57,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetBrightness() * Projectile.Opacity, new Color(184, 58, 24, 0) * lightColor.GetBrightness() * Projectile.Opacity);
+            //Projectile.DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(255, 162, 141) * lightColor.GetBrightness() * Projectile.Opacity, new Color(184, 58, 24, 0) * lightColor.GetBrightness() * Projectile.Opacity);
             return true;
         }
     }

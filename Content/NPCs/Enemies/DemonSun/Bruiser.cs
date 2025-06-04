@@ -9,7 +9,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.DemonSun
 {
     public class Bruiser : ModNPC
     {

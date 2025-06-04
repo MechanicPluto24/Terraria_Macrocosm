@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -21,6 +22,9 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             ProjectileSets.HitsTiles[Type] = true;
         }
 
+        private bool killed;
+        private int stickTime;
+
         public override void SetDefaults()
         {
             Projectile.width = 14;
@@ -32,12 +36,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.usesLocalNPCImmunity = true;
             Projectile.localNPCHitCooldown = 15;
 
-            Projectile.extraUpdates = 1;
+            Projectile.extraUpdates = 2;
+            Projectile.tileCollide = false;
+            stickTime = 60;
         }
 
         public override bool ShouldUpdatePosition() => true;
 
-        private bool killed;
+
         public override void AI()
         {
             if (!killed)
@@ -47,30 +53,31 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             }
             else
             {
-                Projectile.Opacity -= 0.025f;
-                Projectile.velocity *= 0.2f;
-                float wiggle = MathHelper.Lerp(0.06f, 0f, 1f - Projectile.timeLeft / 60f);
+                Projectile.Opacity = (Projectile.timeLeft / (float)stickTime);
+                //Projectile.velocity *= 0.2f;
+                float wiggle = MathHelper.Lerp(0.06f, 0f, 1f - Projectile.timeLeft / (float)stickTime);
                 Projectile.rotation += (float)Math.Sin(Projectile.timeLeft) * wiggle;
+            }
+
+            if (!killed && !Collision.IsClearSpotTest(Projectile.Center, 16f, Projectile.width / 2, Projectile.height / 2, checkCardinals: true, checkSlopes: true))
+            {
+                Projectile.velocity = Vector2.Zero;
+                Collision.HitTiles(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
+                SoundEngine.PlaySound(SoundID.Dig, Projectile.Center);
+                Projectile.friendly = false;
+                Projectile.damage = 0;
+                Projectile.extraUpdates = 0;
+                Projectile.velocity = default;
+                Projectile.timeLeft = stickTime;
+                killed = true;
             }
         }
 
-        public override bool OnTileCollide(Vector2 oldVelocity)
-        {
-            if (!killed)
-                FalseKill();
-
-            return false;
-        }
+        public override bool OnTileCollide(Vector2 oldVelocity) => false;
+        public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac) => false;
 
         private void FalseKill()
         {
-            Projectile.friendly = false;
-            Projectile.timeLeft = 60;
-            Projectile.damage = 0;
-            Projectile.extraUpdates = 0;
-            Projectile.tileCollide = false;
-            Projectile.velocity = Projectile.oldVelocity;
-            killed = true;
         }
 
         public override Color? GetAlpha(Color lightColor) => lightColor * Projectile.Opacity;
@@ -78,7 +85,7 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
         {
             if (!killed)
             {
-                int trailCount = 12;
+                int trailCount = 16;
                 float distanceMult = 0.4f;
                 for (int n = 0; n < trailCount; n++)
                 {
