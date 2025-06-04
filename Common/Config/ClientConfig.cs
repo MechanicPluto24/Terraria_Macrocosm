@@ -33,7 +33,7 @@ namespace Macrocosm.Common.Config
         [DefaultValue(UnitSystemType.Metric)]
         public UnitSystemType UnitSystem { get; set; }
 
-        /// <summary> Whether to display gravity in Gs or as gravtiational acceleration </summary>
+        /// <summary> Whether to display gravity in Gs or as gravitational acceleration </summary>
         [DefaultValue(true)]
         public bool DisplayGravityInGs { get; set; }
 

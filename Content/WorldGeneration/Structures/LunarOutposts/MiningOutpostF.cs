@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
 {
-    public class MiningOutpost2 : BaseLunarOutpost
+    public class MiningOutpostF : BaseLunarOutpost
     {
         public override void PreAgeRoom(Point16 origin)
         {

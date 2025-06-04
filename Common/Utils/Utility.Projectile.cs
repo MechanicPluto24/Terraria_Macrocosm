@@ -56,7 +56,7 @@ namespace Macrocosm.Common.Utils
 
         public static Rectangle GetDamageHitbox(this Projectile projectile) => typeof(Projectile).InvokeMethod<Rectangle>("Damage_GetHitbox", projectile);
 
-        public static void UpdateTrail(this Projectile projectile, bool updatePos = true, bool updateRot = true, bool updateDir = true, float smoothAmount = 0.65f, bool playerFollow = false)
+        public static void UpdateTrail(this Projectile projectile, bool updatePos = true, bool updateRot = true, bool updateDir = true, float smoothAmount = 0.65f, bool playerFollow = false, Vector2 globalTrailOffset = default)
         {
             var oldPos = projectile.oldPos;
             var oldRot = projectile.oldRot;
@@ -65,7 +65,6 @@ namespace Macrocosm.Common.Utils
             if (oldPos is null || oldPos.Length == 0)
                 return;
 
-
             for (int i = oldPos.Length - 1; i > 0; i--)
             {
                 if (updatePos) oldPos[i] = oldPos[i - 1];
@@ -73,17 +72,20 @@ namespace Macrocosm.Common.Utils
                 if (updateDir) oldDir[i] = oldDir[i - 1];
             }
 
-            if (updatePos) oldPos[0] = projectile.position;
+            if (updatePos) oldPos[0] = projectile.position + globalTrailOffset;
             if (updateRot) oldRot[0] = projectile.rotation;
             if (updateDir) oldDir[0] = projectile.spriteDirection;
 
-            Vector2 offset = playerFollow && projectile.owner >= 0 && projectile.owner < Main.maxPlayers ? Main.player[projectile.owner].position - Main.player[projectile.owner].oldPosition : Vector2.Zero;
             if (playerFollow && updatePos && projectile.numUpdates == 0)
             {
+                Vector2 playerOffset = Vector2.Zero;
+                if (projectile.owner >= 0 && projectile.owner < Main.maxPlayers)
+                    playerOffset = Main.player[projectile.owner].position - Main.player[projectile.owner].oldPosition;
+
                 for (int i = 0; i < oldPos.Length; i++)
                 {
                     if (oldPos[i] != Vector2.Zero)
-                        oldPos[i] += offset;
+                        oldPos[i] += playerOffset;
                 }
             }
 
@@ -93,8 +95,12 @@ namespace Macrocosm.Common.Utils
                 {
                     if (oldPos[i] == Vector2.Zero) continue;
 
+                    Vector2 target = oldPos[i - 1];
+                    if (globalTrailOffset != Vector2.Zero)
+                        target += globalTrailOffset;
+
                     if (oldPos[i].Distance(oldPos[i - 1]) > 2f)
-                        oldPos[i] = Vector2.Lerp(oldPos[i], oldPos[i - 1], smoothAmount);
+                        oldPos[i] = Vector2.Lerp(oldPos[i], target, smoothAmount);
 
                     if (updateRot)
                         oldRot[i] = (oldPos[i - 1] - oldPos[i]).SafeNormalize(Vector2.Zero).ToRotation();
@@ -102,9 +108,8 @@ namespace Macrocosm.Common.Utils
             }
         }
 
-
         /// <summary> Clone of vanilla trail update logic, for extra control </summary>
-        public static void UpdateTrail(this Projectile projectile, int trailingMode = 3)
+        public static void UpdateTrail(this Projectile projectile, int trailingMode)
         {
             if (trailingMode == 0)
             {
