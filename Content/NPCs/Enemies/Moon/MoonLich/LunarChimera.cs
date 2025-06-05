@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -17,7 +18,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.MoonLich
             Main.npcFrameCount[Type] = 1;
 
             NPCSets.MoonNPC[Type] = true;
-            
+
+            NPCSets.Material[Type] = NPCMaterial.Organic;
             Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
         }
 

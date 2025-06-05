@@ -1,3 +1,4 @@
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -18,6 +19,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Main.npcFrameCount[NPC.type] = 7;
 
             NPCSets.MoonNPC[NPC.type] = true;
+
+            NPCSets.Material[Type] = NPCMaterial.Organic;
         }
 
         public override void SetDefaults()

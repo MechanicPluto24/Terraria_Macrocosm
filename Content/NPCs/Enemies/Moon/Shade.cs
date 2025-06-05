@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -51,6 +52,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPCID.Sets.TrailCacheLength[NPC.type] = 8;
             NPCID.Sets.TrailingMode[NPC.type] = 0;
 
+            NPCSets.Material[Type] = NPCMaterial.Supernatural;
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Spirit);

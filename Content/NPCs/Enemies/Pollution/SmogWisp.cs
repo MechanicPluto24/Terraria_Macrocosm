@@ -1,5 +1,7 @@
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -28,6 +30,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 BuffID.Venom
             );
 
+            NPCSets.Material[Type] = NPCMaterial.Supernatural;
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Spirit);

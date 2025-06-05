@@ -6,7 +6,7 @@ namespace Macrocosm.Common.Sets
     public partial class NPCSets
     {
         /// <summary> Describes what the NPC is made of (Organic, Machine, Slime, etc.). Used for some weapon interactions. See <see cref="NPCMaterial"/>. </summary>
-        public static NPCMaterial[] NPCMaterials { get; } = NPCID.Sets.Factory.CreateNamedSet(nameof(NPCMaterial)).Description("Describes what the NPC is made of (Organic, Machine, Slime, etc.). Used for some weapon interactions.").RegisterCustomSet(defaultState: NPCMaterial.None,
+        public static NPCMaterial[] Material { get; } = NPCID.Sets.Factory.CreateNamedSet(nameof(Material)).Description("Describes what the NPC is made of (Organic, Machine, Slime, etc.). Used for some weapon interactions.").RegisterCustomSet(defaultState: NPCMaterial.None,
             NPCID.BlueSlime, NPCMaterial.Slime,
             NPCID.DemonEye, NPCMaterial.Organic,
             NPCID.Zombie, NPCMaterial.Organic,
@@ -357,7 +357,7 @@ namespace Macrocosm.Common.Sets
             NPCID.Nutcracker, NPCMaterial.Earth,
             NPCID.NutcrackerSpinning, NPCMaterial.Earth,
             NPCID.ElfArcher, NPCMaterial.Organic,
-            NPCID.Krampus, NPCMaterial.Organic,
+            NPCID.Krampus, NPCMaterial.Demon,
             NPCID.Flocko, NPCMaterial.Supernatural,
             NPCID.Stylist, NPCMaterial.Organic,
             NPCID.WebbedStylist, NPCMaterial.Organic,

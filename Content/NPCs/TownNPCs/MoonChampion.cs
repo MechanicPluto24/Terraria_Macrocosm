@@ -1,3 +1,5 @@
+using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
@@ -41,12 +43,14 @@ namespace Macrocosm.Content.NPCs.TownNPCs
 
             NPCSets.MoonNPC[NPC.type] = true;
 
+            NPCSets.Material[Type] = NPCMaterial.Supernatural;
+
             NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new()
             {
                 Velocity = 1f // Draws the NPC in the bestiary as if its walking +1 tiles in the x direction
             };
-
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
+
         }
 
         public override void SetDefaults()

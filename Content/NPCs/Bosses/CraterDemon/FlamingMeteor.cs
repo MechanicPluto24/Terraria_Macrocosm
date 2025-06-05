@@ -1,6 +1,8 @@
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Trails;
@@ -55,11 +57,14 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 
         private float flashTimer;
         private float maxFlashTimer = 5;
+
         private bool spawned;
-        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => false;
         private Vector2 spawnPosition;
+
         private FlamingMeteorTrail trail;
         private FlamingMeteorTrail trail2;
+
+        public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position) => false;
 
         public override void AI()
         {

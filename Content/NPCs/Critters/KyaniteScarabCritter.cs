@@ -1,3 +1,4 @@
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.NPCs.Enemies.Moon;
@@ -19,6 +20,8 @@ namespace Macrocosm.Content.NPCs.Critters
             NPCID.Sets.TownCritter[Type] = true;
 
             NPCSets.MoonNPC[Type] = true;
+
+            NPCSets.Material[Type] = NPCMaterial.Organic;
         }
 
         public override bool CanBeHitByNPC(NPC attacker)

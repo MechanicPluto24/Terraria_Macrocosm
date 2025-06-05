@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -40,8 +41,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             NPCSets.MoonNPC[Type] = true;
 
+            NPCSets.Material[Type] = NPCMaterial.Earth;
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Earth);
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
+            Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
         public override float FallSpeed => 0.4f;
         public override void SetDefaults()

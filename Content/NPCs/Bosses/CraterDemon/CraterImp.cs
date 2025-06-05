@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -72,7 +73,8 @@ namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
             NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
 
             NPCSets.MoonNPC[Type] = true;
-            
+
+            NPCSets.Material[Type] = NPCMaterial.Earth;
             Redemption.AddElement(NPC, Redemption.ElementID.Earth);
             Redemption.AddElement(NPC, Redemption.ElementID.Shadow);
             Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
