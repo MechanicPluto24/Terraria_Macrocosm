@@ -20,6 +20,15 @@ namespace Macrocosm.Content.Tiles.Trees
             Main.tileNoAttach[Type] = true;
             Main.tileLavaDeath[Type] = true;
 
+            TileID.Sets.SwaysInWindBasic[Type] = true;
+
+            TileID.Sets.TreeSapling[Type] = false; // Do not run regular tree sapling logic
+            TileID.Sets.CommonSapling[Type] = true;
+            TileSets.SaplingTreeGrowthType[Type] = ModContent.TileType<RubberTree>();
+
+            // Make this tile interact with golf balls in the same way other plants do
+            TileMaterials.SetForTileId(Type, TileMaterials._materialsByName["Plant"]);
+
             TileObjectData.newTile.Width = 1;
             TileObjectData.newTile.Height = 2;
             TileObjectData.newTile.Origin = new Point16(0, 1);
@@ -36,14 +45,6 @@ namespace Macrocosm.Content.Tiles.Trees
             TileObjectData.newTile.RandomStyleRange = 3;
             TileObjectData.newTile.StyleMultiplier = 3;
             TileObjectData.addTile(Type);
-
-            TileID.Sets.TreeSapling[Type] = false; // Do not run regular tree sapling logic
-            TileID.Sets.CommonSapling[Type] = true;
-            TileSets.SaplingTreeGrowthType[Type] = ModContent.TileType<RubberTree>();
-
-            TileID.Sets.SwaysInWindBasic[Type] = true;
-
-            TileMaterials.SetForTileId(Type, TileMaterials._materialsByName["Plant"]); // Make this tile interact with golf balls in the same way other plants do
 
             AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Sapling"));
             DustType = DustID.JungleGrass;
