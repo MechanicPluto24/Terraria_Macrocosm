@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Blocks
+namespace Macrocosm.Content.Items.Blocks.Beams
 {
     public class IndustrialBeam : ModItem
     {
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Blocks
 
         public override void SetDefaults()
         {
-            //Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.IndustrialBeam>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Beams.IndustrialBeam>());
         }
 
         public override void AddRecipes()
