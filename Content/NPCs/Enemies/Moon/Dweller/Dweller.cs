@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -349,6 +350,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller
         public override void SetStaticDefaults()
         {
             NPCSets.MoonNPC[Type] = true;
+            NPCSets.Material[Type] = NPCMaterial.Earth;
         }
 
         public override void SetDefaults()

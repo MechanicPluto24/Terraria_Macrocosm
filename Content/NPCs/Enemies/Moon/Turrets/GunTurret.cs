@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Tech;
@@ -24,8 +25,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Turrets
             Main.npcFrameCount[NPC.type] = 1;
 
             NPCSets.MoonNPC[Type] = true;
-            
 
+            NPCSets.Material[Type] = NPCMaterial.Machine;
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Robotic);
         }
 

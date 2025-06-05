@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -24,6 +25,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
 
             NPCSets.MoonNPC[Type] = true;
             
+            NPCSets.Material[Type] = NPCMaterial.Supernatural;
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Dark);

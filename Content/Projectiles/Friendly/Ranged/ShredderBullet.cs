@@ -1,3 +1,4 @@
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -23,12 +24,15 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
             Projectile.height = 4;
             Projectile.aiStyle = -1;
             Projectile.friendly = true;
-            Projectile.penetrate = 1;
             Projectile.alpha = 255;
             Projectile.scale = 1.2f;
             Projectile.DamageType = DamageClass.Ranged;
             Projectile.extraUpdates = 3;
             Projectile.timeLeft = 270;
+
+            Projectile.usesIDStaticNPCImmunity = true;
+            Projectile.idStaticNPCHitCooldown = 15;
+            Projectile.penetrate = -1;
         }
 
         public override bool PreAI()
@@ -46,18 +50,29 @@ namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 
         public override bool PreDraw(ref Color lightColor)
         {
-            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 178, 115), new Color(0, 178, 115, 0));
+            Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(197, 85, 110), new Color(255, 171, 208, 255));
             return true;
+        }
+
+        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+        {
+            // Enemies tagged as Slime take guaranteed critical hits. 
+            if (NPCSets.Material[target.type] is NPCMaterial.Slime)
+            {
+                modifiers.SetCrit();
+            }
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            target.AddBuff(BuffID.Bleeding, 60);
-        }
+            // Damages enemies tagged as Organic and Demon three times per hit.
+            if (NPCSets.Material[target.type] is NPCMaterial.Organic or NPCMaterial.Demon)
+            {
+                for (int i = 0; i < 2; i++)
+                    target.StrikeNPC(hit);
 
-        public override void OnHitPlayer(Player target, Player.HurtInfo info)
-        {
-            target.AddBuff(BuffID.Bleeding, 60);
+                target.AddBuff(BuffID.Bleeding, 120);
+            }
         }
 
         //public override Color? GetAlpha(Color lightColor) => Color.White;

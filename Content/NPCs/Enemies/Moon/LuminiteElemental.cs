@@ -1,5 +1,6 @@
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -71,7 +72,8 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             );
 
             NPCSets.MoonNPC[Type] = true;
-            
+
+            NPCSets.Material[Type] = NPCMaterial.Metal;
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);

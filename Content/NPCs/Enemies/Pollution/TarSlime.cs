@@ -1,4 +1,6 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -22,6 +24,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution
                 BuffID.Venom
             );
 
+            NPCSets.Material[Type] = NPCMaterial.Slime;
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);
         }

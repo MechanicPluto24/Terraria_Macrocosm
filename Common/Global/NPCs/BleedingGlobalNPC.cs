@@ -12,9 +12,7 @@ namespace Macrocosm.Common.Global.NPCs
             {
                 if (Main.rand.NextBool(30) && npc.Opacity > 0.1f)
                 {
-                    Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, DustID.Blood);
-                    dust.velocity.Y += 0.5f;
-                    dust.velocity *= 0.25f;
+                    npc.HitEffect();
                 }
             }
         }

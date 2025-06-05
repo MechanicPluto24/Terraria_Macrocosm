@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -26,6 +27,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Hermites
 
             NPCSets.MoonNPC[Type] = true;
 
+            NPCSets.Material[Type] = NPCMaterial.Earth;
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
         }
 

@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -46,6 +47,7 @@ namespace Macrocosm.Content.NPCs.Enemies.DemonSun
 
             NPCSets.MoonNPC[Type] = true;
 
+            NPCSets.Material[Type] = NPCMaterial.Organic;
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Blood);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Blood);
             Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
