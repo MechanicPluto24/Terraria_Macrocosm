@@ -16,7 +16,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Machines.Consumers
+namespace Macrocosm.Content.Machines.Consumers.Oil
 {
     public class PumpjackTE : ConsumerTE
     {
@@ -25,8 +25,10 @@ namespace Macrocosm.Content.Machines.Consumers
         public float TankAmount { get; private set; }
         public virtual float TankCapacity => 100f;
 
-        public Item OutputSlot => Inventory[0];
-        public override int InventorySize => 1;
+        public Item ContainerSlot => Inventory[0];
+        public Item OutputSlot => Inventory[1];
+
+        public override int InventorySize => 2;
 
         private float extractTimer;
         private float ExtractRate => 60;
@@ -39,12 +41,16 @@ namespace Macrocosm.Content.Machines.Consumers
 
         public override void OnFirstUpdate()
         {
-            Inventory.SetReserved(
-                0,
-                (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
-                Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
-                ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
-            );
+            for (int i = 0; i < InventorySize; i++)
+            {
+                Inventory.SetReserved(
+                    i,
+                    (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
+                    Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
+                    ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
+                );
+            }
+
         }
 
         public override void MachineUpdate()
@@ -76,24 +82,37 @@ namespace Macrocosm.Content.Machines.Consumers
 
         private void FillContainers()
         {
-            LiquidContainerData data = ItemSets.LiquidContainerData[OutputSlot.type];
-            if (data.Valid && data.Empty && TankAmount > 0f && !OutputSlot.IsAir)
+            LiquidContainerData containerData = ItemSets.LiquidContainerData[ContainerSlot.type];
+            if (!containerData.Valid || !containerData.Empty)
+                return;
+
+            if (TankAmount <= 0f)
+                return;
+
+            if (ContainerSlot.IsAir)
+                return;
+
+            if (OutputSlot.stack > OutputSlot.maxStack)
+                return;
+
+            int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.Oil, ContainerSlot.type);
+            if (fillType > 0)
+                return;
+
+            fillTimer += 1f * PowerProgress;
+            if (fillTimer >= FillRate)
             {
-                fillTimer += 1f * PowerProgress;
-                if (fillTimer >= FillRate)
-                {
-                    fillTimer -= FillRate;
+                fillTimer -= FillRate;
 
-                    int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.Oil, OutputSlot.type);
-                    if (fillType > 0)
-                    {
-                        Item filledItem = new(fillType);
-                        filledItem.OnCreated(new MachineItemCreationContext(filledItem, this));
+                Item filledItem = new(fillType);
+                filledItem.OnCreated(new MachineItemCreationContext(filledItem, this));
 
-                        if (!Inventory.TryPlacingItem(ref filledItem, sound: false, serverSync: true, startIndex: 1, endIndex: 1) && filledItem.stack > 0)
-                            Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, filledItem);
-                    }
-                }
+                // Place result in OutputSlot
+                if (!Inventory.TryPlacingItem(ref filledItem, sound: false, serverSync: true, startIndex: 1, endIndex: 1) && filledItem.stack > 0)
+                    Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, filledItem);
+
+                ContainerSlot.DecreaseStack();
+                TankAmount -= ItemSets.LiquidContainerData[fillType].Capacity;
             }
         }
 

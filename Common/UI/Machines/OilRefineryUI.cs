@@ -3,7 +3,7 @@ using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Content.Liquids;
-using Macrocosm.Content.Machines.Consumers;
+using Macrocosm.Content.Machines.Consumers.Oil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

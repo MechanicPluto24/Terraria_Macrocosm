@@ -16,7 +16,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Machines.Consumers
+namespace Macrocosm.Content.Machines.Consumers.Oil
 {
     public class Pumpjack : MachineTile
     {
@@ -86,7 +86,7 @@ namespace Macrocosm.Content.Machines.Consumers
 
         public override void AnimateTile(ref int frame, ref int frameCounter)
         {
-            int ticksPerFrame = 12;
+            int ticksPerFrame = 4;
             int frameCount = 10;
             if (++frameCounter >= ticksPerFrame)
             {

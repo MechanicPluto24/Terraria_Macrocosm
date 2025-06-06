@@ -8,7 +8,6 @@ using Macrocosm.Common.UI.Machines;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -16,7 +15,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Machines.Consumers
+namespace Macrocosm.Content.Machines.Consumers.Oil
 {
     public class OilRefinery : MachineTile
     {

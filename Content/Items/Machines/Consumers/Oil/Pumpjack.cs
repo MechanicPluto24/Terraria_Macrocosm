@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Machines.Consumers
+namespace Macrocosm.Content.Items.Machines.Consumers.Oil
 {
     public class Pumpjack : ModItem
     {
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Machines.Consumers
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Consumers.Pumpjack>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Consumers.Oil.Pumpjack>());
             Item.width = 44;
             Item.height = 40;
             Item.value = Item.sellPrice(gold: 1);

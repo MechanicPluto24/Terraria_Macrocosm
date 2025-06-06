@@ -16,7 +16,7 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Machines.Consumers
+namespace Macrocosm.Content.Machines.Consumers.Oil
 {
     public class OilRefineryTE : ConsumerTE
     {
@@ -139,7 +139,7 @@ namespace Macrocosm.Content.Machines.Consumers
         private void FillContainers()
         {
             LiquidContainerData data = ItemSets.LiquidContainerData[ContainerSlot.type];
-            if (data.Valid && data.Empty && OutputTankAmount > 0f && !ContainerSlot.IsAir)
+            if (data.Valid && data.Empty && OutputTankAmount > 0f && !ContainerSlot.IsAir && OutputSlot.stack <= OutputSlot.maxStack)
             {
                 fillTimer += 1f * PowerProgress;
                 if (fillTimer >= FillRate)

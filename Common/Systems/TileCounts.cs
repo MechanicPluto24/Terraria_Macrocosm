@@ -24,7 +24,7 @@ namespace Macrocosm.Common.Systems
         }
 
         public int IrradiatedRockCount { get; private set; } = 0;
-        public int GraveyardTileCount { get; private set; } = 0;
+        public int GraveyardExtraTileCount { get; private set; } = 0;
         public int MonolithCount { get; private set; } = 0;
 
         public bool EnoughTilesForIrradiation => IrradiatedRockCount > 400;
@@ -45,7 +45,7 @@ namespace Macrocosm.Common.Systems
         {
             IrradiatedRockCount = 0;
             MonolithCount = 0;
-            GraveyardTileCount = 0;
+            GraveyardExtraTileCount = 0;
 
             PollutionLevel = 0f;
         }
@@ -58,7 +58,7 @@ namespace Macrocosm.Common.Systems
             for (int type = 0; type < TileLoader.TileCount; type++)
             {
                 if (TileSets.CountsForGraveyard[type])
-                    GraveyardTileCount += tileCounts[type];
+                    GraveyardExtraTileCount += tileCounts[type];
             }
         }
 
@@ -67,7 +67,8 @@ namespace Macrocosm.Common.Systems
             if (SubworldSystem.AnyActive<Macrocosm>())
                 return 0;
 
-            return graveyardTileCount + GraveyardTileCount;
+
+            return graveyardTileCount + GraveyardExtraTileCount;
         }
 
         private void On_SceneMetrics_ExportTileCountsToMain(On_SceneMetrics.orig_ExportTileCountsToMain orig, SceneMetrics self)

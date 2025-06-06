@@ -12,19 +12,19 @@ namespace Macrocosm.Common.DataStructures
     /// <summary>
     /// Data structure that lets you analyze Vanilla and Macrocosm SceneMetrics at any position, even on the server
     /// <br/> <b>Includes</b> Vanilla and Macrocosm biome-related (Tile counts) and proximity buff (Banners, Campfire, etc.) info 
-    /// <br/> <b>Excludes</b> modded tile NearbyEffects, use <see cref="Hooks"/> if your tile has custom logic that can modify this <see cref="SceneData"/> instance
-    /// <br/> <b>Excludes</b> visual data such as Monoliths or Music Boxes
+    /// <br/> <b>Excludes</b> Modded tile NearbyEffects, use <see cref="Hooks"/> if your tile has custom logic that can modify this <see cref="SceneData"/> instance
+    /// <br/> <b>Excludes</b> Visual data such as Monoliths or Music Boxes
     /// </summary>
+    // TODO (1.4.5): keep updated with any potential 1.4.5 SceneMetrics changes
     public class SceneData
     {
         /// <summary> Allows this tile to modify some of the properties of the SceneData instance </summary>
         public static Action<int, int, SceneData>[] Hooks { get; set; } = TileID.Sets.Factory.CreateCustomSet<Action<int, int, SceneData>>(null);
 
-        private Vector2 scanCenterWorldCoordinates;
-
         public TileCounts Macrocosm => macrocosmTileCounts;
         private readonly TileCounts macrocosmTileCounts;
 
+        private Vector2 scanCenterWorldCoordinates;
         public Vector2 Position => scanCenterWorldCoordinates;
         public Point TilePosition => scanCenterWorldCoordinates.ToTileCoordinates();
 
@@ -243,7 +243,7 @@ namespace Macrocosm.Common.DataStructures
                 JungleTileCount += tileCount * jungle;
             }
 
-            if (tileCounts[27] > 0)
+            if (tileCounts[TileID.Sunflower] > 0)
                 HasSunflower = true;
 
             if (GraveyardTileCount > GraveyardTileMin)

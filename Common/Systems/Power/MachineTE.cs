@@ -215,6 +215,8 @@ namespace Macrocosm.Common.Systems.Power
             ManuallyTurnedOff = tag.ContainsKey(nameof(ManuallyTurnedOff));
             Inventory = tag.TryGet(nameof(Inventory), out Inventory inventory) ? inventory : new(InventorySize, this);
             Inventory.Owner = this;
+            if(inventory.Size != InventorySize)
+                inventory.Size = InventorySize;
 
             MachineLoadData(tag);
         }

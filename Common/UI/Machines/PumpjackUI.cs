@@ -3,7 +3,7 @@ using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Content.Liquids;
-using Macrocosm.Content.Machines.Consumers;
+using Macrocosm.Content.Machines.Consumers.Oil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -19,9 +19,14 @@ namespace Macrocosm.Common.UI.Machines
         public PumpjackTE Pumpjack => MachineTE as PumpjackTE;
 
         private UIPanel backgroundPanel;
+
         private UILiquidTank oilTank;
         private UITextPanel<string> oilTankLiquidName;
+
         private UITextureProgressBar fillArrowProgressBar;
+        private UIHoverImageButton containerArrow;
+
+        private UIInventorySlot containerSlot;
         private UIInventorySlot outputSlot;
 
         public PumpjackUI()
@@ -50,14 +55,14 @@ namespace Macrocosm.Common.UI.Machines
             {
                 Width = new(64, 0),
                 Height = new(0, 0.7f),
-                HAlign = 0.335f,
+                HAlign = 0.225f,
                 VAlign = 0.65f
             };
             backgroundPanel.Append(oilTank);
 
             oilTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.Oil)}"))
             {
-                HAlign = 0.335f,
+                HAlign = 0.245f,
                 Top = new(0, 0.08f),
                 TextScale = 0.8f,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
@@ -74,15 +79,28 @@ namespace Macrocosm.Common.UI.Machines
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
                 FillColors = [Color.Black, new Color(157, 60, 0)],
-                HAlign = 0.5f,
+                HAlign = 0.415f,
                 VAlign = 0.52f
             };
             backgroundPanel.Append(fillArrowProgressBar);
 
+            containerArrow = new(ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrow", AssetRequestMode.ImmediateLoad), useThemeColors: true)
+            {
+                HAlign = 0.695f,
+                VAlign = 0.52f
+            };
+            containerArrow.SetVisibility(1f);
+            backgroundPanel.Append(containerArrow);
+
             if (Pumpjack.Inventory is not null)
             {
-                outputSlot = Pumpjack.Inventory.ProvideItemSlot(0);
-                outputSlot.HAlign = 0.65f;
+                containerSlot = Pumpjack.Inventory.ProvideItemSlot(0);
+                containerSlot.HAlign = 0.565f;
+                containerSlot.VAlign = 0.52f;
+                backgroundPanel.Append(containerSlot);
+
+                outputSlot = Pumpjack.Inventory.ProvideItemSlot(1);
+                outputSlot.HAlign = 0.825f;
                 outputSlot.VAlign = 0.52f;
                 backgroundPanel.Append(outputSlot);
             }

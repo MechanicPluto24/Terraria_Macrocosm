@@ -9,11 +9,11 @@ namespace Macrocosm.Common.Sets
     [ReinitializeDuringResizeArrays]
     internal class TileSets
     {
-        /// <summary> Tile types that count for the Graveyard biome. </summary>
-        public static bool[] CountsForGraveyard { get; } = TileID.Sets.Factory.CreateNamedSet(nameof(CountsForGraveyard)).Description("Tile types that count for the Graveyard biome.").RegisterBoolSet();
+        /// <summary> Tile types that count for the Graveyard biome, besides <see cref="TileID.Tombstones"/> </summary>
+        public static bool[] CountsForGraveyard { get; } = TileID.Sets.Factory.CreateNamedSet(nameof(CountsForGraveyard)).Description("Tile types that count for the Graveyard biome, besides TileID.Tombstones.").RegisterBoolSet();
 
-        /// <summary> The Tree Tile type, different from <see cref="TileID.Trees"/>, that this tile grows into. Used for custom saplings. </summary>
-        public static int[] SaplingTreeGrowthType { get; } = TileID.Sets.Factory.CreateNamedSet(nameof(SaplingTreeGrowthType)).Description("The Tree Tile type, different from TileID.Trees, that this tile grows into. Used for custom saplings.").RegisterIntSet(defaultState: -1);
+        /// <summary> The Tree Tile type, different from <see cref="TileID.Trees"/>, that this sapling tile grows into. Used only for custom tree saplings. </summary>
+        public static int[] SaplingTreeGrowthType { get; } = TileID.Sets.Factory.CreateNamedSet(nameof(SaplingTreeGrowthType)).Description("The Tree Tile type, different from TileID.Trees, that this sapling tile grows into. Used only for custom tree saplings.").RegisterIntSet(defaultState: -1);
 
         /// <summary> Tile types that are containers of Width and Height different from Chests or Dressers. </summary>
         // TODO: add support for net serializaton (and proper unloading but this needs to be in tML directly) 

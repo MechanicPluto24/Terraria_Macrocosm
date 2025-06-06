@@ -36,6 +36,8 @@ namespace Macrocosm.Common.Global.Projectiles
                                 WorldGen.AttemptToGrowTreeFromSapling(i, j, underground: false);
 
                             WorldGen.AttemptToGrowTreeFromSapling(i, j, j > (int)Main.worldSurface - 1);
+
+                            // TODO (1.4.5): Add super fertilizer support
                         }
                     }
                 }

@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Machines.Consumers.OreExcavators
+namespace Macrocosm.Content.Items.Machines.Consumers.Drills
 {
     public class OreExcavator : ModItem
     {

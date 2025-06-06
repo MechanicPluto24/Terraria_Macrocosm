@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Machines.Consumers
+namespace Macrocosm.Content.Items.Machines.Consumers.Oil
 {
     public class OilRefinery : ModItem
     {
@@ -14,7 +14,7 @@ namespace Macrocosm.Content.Items.Machines.Consumers
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Consumers.OilRefinery>());
+            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Consumers.Oil.OilRefinery>());
             Item.width = 42;
             Item.height = 32;
             Item.value = Item.sellPrice(gold: 1);

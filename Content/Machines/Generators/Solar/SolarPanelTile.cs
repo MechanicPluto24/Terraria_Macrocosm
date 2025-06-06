@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Systems.Power;
+using Macrocosm.Common.TileFrame;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -20,6 +21,12 @@ namespace Macrocosm.Content.Machines.Generators.Solar
             DustType = ModContent.DustType<IndustrialPlatingDust>();
 
             AddMapEntry(new Color(100, 100, 200), CreateMapEntryName());
+        }
+
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            TileFraming.PlatingStyle(i, j, resetFrame);
+            return false;
         }
     }
 }
