@@ -11,6 +11,7 @@ using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Systems.UI;
 
 namespace Macrocosm.Common.UI
 {
@@ -105,6 +106,9 @@ namespace Macrocosm.Common.UI
 
         protected override void DrawSelf(SpriteBatch spriteBatch)
         {
+            UserInterface temp = UserInterface.ActiveInstance;
+            UserInterface.ActiveInstance = UISystem.Instance.UserInterface;
+
             CalculatedStyle dimensions = GetDimensions();
             CalculatedStyle innerDimensions = GetInnerDimensions();
             if (isDragging)
@@ -125,10 +129,15 @@ namespace Macrocosm.Common.UI
             DrawBar(spriteBatch, borderTexture.Value, dimensions.ToRectangle(), BorderColor);
             DrawBar(spriteBatch, innerTexture.Value, handleRectangle, InnerColor * ((isDragging || this.isHoveringOverHandle) ? 1f : 0.85f));
             DrawBar(spriteBatch, innerBorderTexture.Value, handleRectangle, InnerBorderColor * ((isDragging || this.isHoveringOverHandle) ? 1f : 0.85f));
+
+            UserInterface.ActiveInstance = temp;
         }
 
         public override void LeftMouseDown(UIMouseEvent evt)
         {
+            UserInterface temp = UserInterface.ActiveInstance;
+            UserInterface.ActiveInstance = UISystem.Instance.UserInterface;
+
             base.LeftMouseDown(evt);
             if (evt.Target == this)
             {
@@ -145,6 +154,8 @@ namespace Macrocosm.Common.UI
                     viewPosition = MathHelper.Clamp(num / innerDimensions.Height * maxViewSize, 0f, maxViewSize - viewSize);
                 }
             }
+
+            UserInterface.ActiveInstance = temp;
         }
 
         public override void LeftMouseUp(UIMouseEvent evt)

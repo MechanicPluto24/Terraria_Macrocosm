@@ -25,6 +25,7 @@ namespace Macrocosm.Common.UI.Machines
 
         private UITextureProgressBar fillArrowProgressBar;
         private UIHoverImageButton containerArrow;
+        private UIHoverImageButton containerArrow1;
 
         private UIInventorySlot containerSlot;
         private UIInventorySlot outputSlot;
@@ -51,38 +52,38 @@ namespace Macrocosm.Common.UI.Machines
             backgroundPanel.SetPadding(0);
             Append(backgroundPanel);
 
+            fillArrowProgressBar = new(
+                  ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowBorder", AssetRequestMode.ImmediateLoad),
+                  ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad),
+                  ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad)
+            )
+            {
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                FillColors = [Color.Black, new Color(157, 60, 0)],
+                HAlign = 0.085f,
+                VAlign = 0.52f
+            };
+            backgroundPanel.Append(fillArrowProgressBar);
+
             oilTank = new(LiquidType.Oil)
             {
                 Width = new(64, 0),
                 Height = new(0, 0.7f),
-                HAlign = 0.225f,
+                HAlign = 0.265f,
                 VAlign = 0.65f
             };
             backgroundPanel.Append(oilTank);
 
             oilTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.Oil)}"))
             {
-                HAlign = 0.245f,
+                HAlign = 0.28f,
                 Top = new(0, 0.08f),
                 TextScale = 0.8f,
                 BorderColor = UITheme.Current.PanelStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
             backgroundPanel.Append(oilTankLiquidName);
-
-            fillArrowProgressBar = new(
-               ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowBorder", AssetRequestMode.ImmediateLoad),
-               ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad),
-               ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrowPlain", AssetRequestMode.ImmediateLoad)
-            )
-            {
-                BorderColor = UITheme.Current.PanelStyle.BorderColor,
-                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-                FillColors = [Color.Black, new Color(157, 60, 0)],
-                HAlign = 0.415f,
-                VAlign = 0.52f
-            };
-            backgroundPanel.Append(fillArrowProgressBar);
 
             containerArrow = new(ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrow", AssetRequestMode.ImmediateLoad), useThemeColors: true)
             {
@@ -91,6 +92,14 @@ namespace Macrocosm.Common.UI.Machines
             };
             containerArrow.SetVisibility(1f);
             backgroundPanel.Append(containerArrow);
+
+            containerArrow1 = new(ModContent.Request<Texture2D>(Macrocosm.UIButtonsPath + "LongArrow", AssetRequestMode.ImmediateLoad), useThemeColors: true)
+            {
+                HAlign = 0.415f,
+                VAlign = 0.52f
+            };
+            containerArrow1.SetVisibility(1f);
+            backgroundPanel.Append(containerArrow1);
 
             if (Pumpjack.Inventory is not null)
             {
@@ -113,9 +122,9 @@ namespace Macrocosm.Common.UI.Machines
             Inventory.ActiveInventory = Pumpjack.Inventory;
             outputSlot.CanInteractWithItem = true;
 
-            fillArrowProgressBar.Progress = Pumpjack.FillProgress;
+            fillArrowProgressBar.Progress = Pumpjack.ExtractProgress;
 
-            oilTank.LiquidLevel = MathHelper.Lerp(oilTank.LiquidLevel, Pumpjack.TankAmount / Pumpjack.TankCapacity, 0.025f);
+            oilTank.LiquidLevel = MathHelper.Lerp(oilTank.LiquidLevel, Pumpjack.TankAmount / Pumpjack.TankCapacity, 0.1f);
             oilTank.WaveAmplitude = 1f;
             oilTank.WaveFrequency = 1f;
         }

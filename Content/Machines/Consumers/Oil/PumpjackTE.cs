@@ -96,7 +96,7 @@ namespace Macrocosm.Content.Machines.Consumers.Oil
                 return;
 
             int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.Oil, ContainerSlot.type);
-            if (fillType > 0)
+            if (fillType <= 0)
                 return;
 
             fillTimer += 1f * PowerProgress;

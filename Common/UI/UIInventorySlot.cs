@@ -56,6 +56,9 @@ namespace Macrocosm.Common.UI
         public Color? HoverHighlightColor { get; set; } = null;
         public float SizeLimit { get; set; } = 32f;
 
+        public bool DrawIndexNumber { get; set; } = false;
+        public string CustomIndexLabel { get; set; } = null;
+
         public UIInventorySlot(ref Item item, int itemSlotContext = Context.ChestItem, float scale = default) : this(new Inventory(1), 0, itemSlotContext, scale)
         {
             inventory[0] = item;
@@ -350,6 +353,7 @@ namespace Macrocosm.Common.UI
             Vector2 position = GetDimensions().Center() + DrawOffset * Main.inventoryScale;
             DrawItemSlot(spriteBatch, ref inv, position);
             DrawItem(spriteBatch, ref inv, position);
+            DrawIndex(spriteBatch, ref inv, position);
 
             Main.inventoryScale = prevScale;
         }
@@ -470,6 +474,16 @@ namespace Macrocosm.Common.UI
 
                 spriteBatch.Draw(texture, position + offset + new Vector2(40f, 40f) * Main.inventoryScale, rectangle, color, 0f, rectangle.Size() / 2f, 1f, SpriteEffects.None, 0f);
             }
+        }
+
+        private void DrawIndex(SpriteBatch spriteBatch, ref Item item, Vector2 position)
+        {
+            if (!DrawIndexNumber)
+                return;
+
+            string label = CustomIndexLabel ?? (itemIndex + 1).ToString();
+            Vector2 indexPos = position + new Vector2(8f, 4f) * Main.inventoryScale;
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.ItemStack.Value, label, indexPos, Color.White, 0f, Vector2.Zero, new Vector2(Main.inventoryScale), -1f, Main.inventoryScale);
         }
     }
 }

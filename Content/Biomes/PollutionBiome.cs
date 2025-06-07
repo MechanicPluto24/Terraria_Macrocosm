@@ -40,6 +40,9 @@ namespace Macrocosm.Content.Biomes
                     visualIntensity = level;
             }
 
+            if (!isActive && visualIntensity > 0)
+                visualIntensity -= 0.1f;
+
             Main.numClouds = (int)(200f * visualIntensity);
 
             if (visualIntensity > 0f)

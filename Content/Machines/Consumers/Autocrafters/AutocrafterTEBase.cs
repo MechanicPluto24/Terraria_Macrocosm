@@ -54,6 +54,8 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
             return slots.All(i => Inventory[i].IsAir);
         }
 
+        public bool IsInputSlotReserved(int slot, int outputSlot) => InputSlotAllocation.Where(kv => kv.Key != outputSlot).SelectMany(kv => kv.Value).Contains(slot);
+
         public bool SelectRecipeInFreeSlot(Recipe recipe)
         {
             if (recipe is null)
@@ -95,33 +97,34 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                     Inventory.ClearReserved(slot);
 
             SelectedRecipes[outputSlot] = recipe;
-            InputSlotAllocation[outputSlot] = new List<int>();
-
             if (recipe is null)
+            {
+                InputSlotAllocation.Remove(outputSlot);
                 return false;
+            }
 
             Inventory.SetReserved(
                 outputSlot,
                 recipe.createItem.type,
                 tooltip: null,
                 texture: TextureAssets.Item[recipe.createItem.type],
-                color: Color.White * 0.8f 
+                color: Color.White * 0.8f
             );
 
-            int inputIndex = OutputSlots;
+            List<int> allocatedInputs = new();
+            int inputIndex = OutputSlots; // start after output slots
             foreach (var requiredItem in recipe.requiredItem)
             {
                 if (requiredItem.type <= ItemID.None)
                     continue;
 
-                while (inputIndex < Inventory.Size && Inventory[inputIndex].type != ItemID.None)
+                while (inputIndex < Inventory.Size && (!Inventory[inputIndex].IsAir || IsInputSlotReserved(inputIndex, outputSlot)))
                     inputIndex++;
 
                 if (inputIndex >= Inventory.Size)
                     break;
 
-                InputSlotAllocation[outputSlot].Add(inputIndex);
-
+                allocatedInputs.Add(inputIndex);
                 Inventory.SetReserved(
                     inputIndex,
                     requiredItem.type,
@@ -129,9 +132,11 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters
                     texture: TextureAssets.Item[requiredItem.type],
                     color: Color.White * 0.5f
                 );
+
                 inputIndex++;
             }
 
+            InputSlotAllocation[outputSlot] = allocatedInputs;
             return true;
         }
 

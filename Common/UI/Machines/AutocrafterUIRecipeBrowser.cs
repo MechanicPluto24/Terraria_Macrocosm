@@ -11,6 +11,7 @@ using System;
 using Terraria.ID;
 using Microsoft.Xna.Framework;
 using Macrocosm.Common.UI.Themes;
+using Macrocosm.Common.Storage;
 
 namespace Macrocosm.Common.UI.Machines
 {
@@ -26,7 +27,6 @@ namespace Macrocosm.Common.UI.Machines
 
         private readonly AutocrafterTEBase autocrafter;
         private UIScrollableListPanel recipeListPanel;
-        private UIElement recipeGridRoot;
 
         public Action<Recipe> OnRecipeClicked { get; set; }
 
@@ -91,13 +91,6 @@ namespace Macrocosm.Common.UI.Machines
                 PaddingRight = 2f,
             };
             Append(recipeListPanel);
-            recipeGridRoot = new UIElement()
-            {
-                Width = new(0f, 1f)
-            };
-            recipeGridRoot.SetPadding(0f);
-            recipeListPanel.Add(recipeGridRoot);
-
             PopulateAvailableRecipes();
             RefreshRecipeList();
         }
@@ -114,37 +107,48 @@ namespace Macrocosm.Common.UI.Machines
 
         private void RefreshRecipeList()
         {
-            recipeGridRoot.RemoveAllChildren();
+            recipeListPanel.ClearList();
 
-            filteredRecipes = availableRecipes.Where(r => filterer.FitsFilter(r.createItem)).ToList();
-            filteredRecipes.Sort((a, b) => sorter.Compare(a.createItem.type, b.createItem.type));
+            filteredRecipes = availableRecipes
+                .Where(r => filterer.FitsFilter(r.createItem))
+                .OrderBy(r => r.createItem.Name)
+                .ToList();
 
-            int itemsPerRow = 9;
-            float slotSize = 48;
-            float slotPadding = 2;
+            int iconsPerRow = 9;
+            float iconSize = 48f;
+            float iconOffsetTop = 0f;
+            float iconOffsetLeft = filteredRecipes.Count <= iconsPerRow * 5 ? 12f : 2f;
+
+            int rowCount = (filteredRecipes.Count + iconsPerRow - 1) / iconsPerRow;
+
+            UIElement itemSlotContainer = new()
+            {
+                Width = new(0f, 1f),
+                Height = new(iconSize * rowCount, 0f),
+            };
+            itemSlotContainer.SetPadding(0f);
+
             for (int i = 0; i < filteredRecipes.Count; i++)
             {
                 Recipe recipe = filteredRecipes[i];
-                Item resultItem = recipe.createItem.Clone();
+                Item item = recipe.createItem.Clone();
 
-                var slot = new UIInventorySlot(ref resultItem);
-                slot.Width.Set(slotSize, 0f);
-                slot.Height.Set(slotSize, 0f);
-                slot.CanInteractWithItem = false;
-                slot.HoverHighlightColor = Color.Gold;
-
-                int column = i % itemsPerRow;
-                int row = i / itemsPerRow;
-
-                slot.Left.Set(column * (slotSize + slotPadding), 0f);
-                slot.Top.Set(row * (slotSize + slotPadding), 0f);
+                UIInventorySlot slot = new(ref item)
+                {
+                    Width = new(iconSize, 0f),
+                    Height = new(iconSize, 0f),
+                    Left = new(i % iconsPerRow * iconSize + iconOffsetLeft, 0f),
+                    Top = new(i / iconsPerRow * iconSize + iconOffsetTop, 0f),
+                    CanInteractWithItem = false,
+                    HoverHighlightColor = Color.Gold
+                };
 
                 slot.OnLeftClick += (_, _) => OnRecipeClicked(recipe);
-                recipeGridRoot.Append(slot);
+                itemSlotContainer.Append(slot);
             }
 
-            int rows = (filteredRecipes.Count + itemsPerRow - 1) / itemsPerRow;
-            recipeGridRoot.Height.Set(rows * (slotSize + slotPadding), 0f);
+
+            recipeListPanel.Add(itemSlotContainer);
         }
 
         private void OnSearchChanged(string searchText)
