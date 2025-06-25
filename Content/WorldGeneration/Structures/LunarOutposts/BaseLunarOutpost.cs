@@ -12,6 +12,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Macrocosm.Content.Tiles.Furniture.Industrial;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
 {
