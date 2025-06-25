@@ -15,6 +15,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Macrocosm.Common.Sets;
 
 namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
@@ -50,44 +51,28 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
 
         public override void SetStaticDefaults()
         {
-            Main.tileSpelunker[Type] = true;
+
             Main.tileContainer[Type] = true;
-            Main.tileShine2[Type] = true;
-            Main.tileShine[Type] = 1000;
             Main.tileFrameImportant[Type] = true;
             Main.tileNoAttach[Type] = true;
+            Main.tileLavaDeath[Type] = true;
 
             TileID.Sets.HasOutlines[Type] = true;
-            TileID.Sets.BasicChest[Type] = true;
             TileID.Sets.DisableSmartCursor[Type] = true;
             TileID.Sets.AvoidedByNPCs[Type] = true;
             TileID.Sets.InteractibleByNPCs[Type] = true;
             TileID.Sets.IsAContainer[Type] = true;
-            TileID.Sets.FriendlyFairyCanLureTo[Type] = true;
-            TileID.Sets.GeneralPlacementTiles[Type] = false;
+            TileID.Sets.BasicChest[Type] = true;
 
-            Main.tileOreFinderPriority[Type] = 1050;
-
-            DustType = ModContent.DustType<IndustrialPlatingDust>();
-            AdjTiles = [TileID.Containers];
-
-            AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryNormal"), MapChestName);
-            AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryUnlocked"), MapChestName);
-            AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryLocked"), MapChestName);
-
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChest>(), 0);
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChestElectronic>(), 1, 2);
-
-            // Sometimes mods remove content, such as tile styles, or tiles accidentally get corrupted. We can, if desired, register a fallback item for any tile style that doesn't have an automatically determined item drop. This is done by omitting the tileStyles parameter.
-            RegisterItemDrop(ItemID.Chest);
+            TileSets.CustomContainer[Type] = true;
 
             TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-            TileObjectData.newTile.Origin = new Point16(0, 1);
-            TileObjectData.newTile.CoordinateHeights = [16, 16];
+        
             TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.StyleHorizontal = true;
+
             TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
             TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
-
             TileObjectData.newTile.AnchorInvalidTiles =
             [
                 TileID.MagicalIceBlock,
@@ -96,11 +81,21 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                 TileID.LifeCrystalBoulder,
                 TileID.RollingCactus
             ];
-
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.LavaDeath = false;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
             TileObjectData.addTile(Type);
+
+            HitSound = SoundID.Dig;
+
+            DustType = ModContent.DustType<IndustrialPlatingDust>();
+            AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryNormal"), MapChestName);
+            AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryUnlocked"), MapChestName);
+            AddMapEntry(new Color(200, 200, 200), this.GetLocalization("MapEntryLocked"), MapChestName);            
+            AdjTiles = [TileID.Containers];
+
+            TileSets.RandomStyles[Type] = 3;
+
+            // All styles
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChest>(), 0);
+            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialChestElectronic>(), 1, 2);
         }
 
         public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / 36);
@@ -201,10 +196,12 @@ namespace Macrocosm.Content.Tiles.Furniture.Industrial
                 if (isLocked)
                 {
                     int key = ModContent.ItemType<ZombieFinger>();
-                    if (Chest.Unlock(left, top) && player.ConsumeItem(key, includeVoidBag: true))
+                    if (player.ConsumeItem(key, includeVoidBag: true))
                     {
-                        if (Main.netMode == NetmodeID.MultiplayerClient)
-                            NetMessage.SendData(MessageID.LockAndUnlock, -1, -1, null, player.whoAmI, 1f, left, top);
+                        if(Chest.Unlock(left, top)){
+                            if (Main.netMode == NetmodeID.MultiplayerClient)
+                                NetMessage.SendData(MessageID.LockAndUnlock, -1, -1, null, player.whoAmI, 1f, left, top);
+                        }
                     }
                 }
                 else
