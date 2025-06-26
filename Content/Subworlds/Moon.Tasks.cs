@@ -41,6 +41,8 @@ using Terraria.Localization;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
+using Terraria.GameContent.Generation;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -711,6 +713,48 @@ namespace Macrocosm.Content.Subworlds
 
             }
         }
+        [Task]
+        private void LunarCrystalTask(GenerationProgress progress)
+        {
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OreTask");
+
+            int tries = 0;
+            int geodes = WorldGen.genRand.Next(20, 30);
+            int mineralType = TileType<MineralizedProtolith>();
+            while (geodes > 1 && tries < 100)
+            {
+                while (geodes > 1 && tries < 100)
+                {
+                    int i = WorldGen.genRand.Next(70, Main.maxTilesX - 70);
+                    int j = WorldGen.genRand.Next((int)(Main.maxTilesY / 3), Main.maxTilesY - 70);
+                    Tile tile = Main.tile[i, j];
+                    if (tile.HasTile)
+                    {
+                        int iOffset2 = i;
+                        int jOffset2 = j;
+                        int radius = WorldGen.genRand.Next(8, 10);
+
+                        int radius2 = WorldGen.genRand.Next(4, 7);
+                        WorldUtils.Gen(new Point(i,j), new Shapes.Circle( WorldGen.genRand.Next(10, 14)), Actions.Chain(new GenAction[]
+                        {
+                            new Modifiers.OnlyTiles(new ushort[]{(ushort)TileType<Protolith>()}),
+                            new Modifiers.RadialDither(WorldGen.genRand.Next(10, 14) - 2,  WorldGen.genRand.Next(10, 14)),
+                            new Actions.ClearTile(true),
+                            new Actions.PlaceTile((ushort)mineralType)
+                        }));
+                        BlobTileRunner(i, j, -1, 0..8, 1..4, 4..6, 1f, 4, wallType: (ushort)WallType<ProtolithWall>());
+
+
+                        geodes--;
+                    }
+                    else
+                    {
+                        tries++;
+                    }
+                }
+
+            }
+        }
 
         [Task(weight: 12.0)]
         private void SmoothTask(GenerationProgress progress)
@@ -1079,6 +1123,33 @@ namespace Macrocosm.Content.Subworlds
                 for (int j = 1; j < Main.maxTilesY; j++)
                 {
                     Tile tile = Main.tile[i, j];
+                    if (tile.HasTile && Main.tileSolid[tile.TileType] && !tile.IsActuated)
+                    {
+                        if (tile.TileType ==  (ushort)TileType<MineralizedProtolith>())
+                        {
+                            Point[] directions = [
+                            new Point(0, -1), // up
+                            new Point(0, 1),  // down
+                            new Point(-1, 0), // left
+                            new Point(1, 0),  // right
+                        ];
+                        Utility.Shuffle(WorldGen.genRand, directions);
+
+                        foreach (var offset in directions)
+                        {
+                            int x = i + offset.X;
+                            int y = j + offset.Y;
+                            Tile target = Main.tile[x, y];
+                            if (!target.HasTile && WorldGen.SolidTile(tile))
+                            {
+                                WorldGen.PlaceTile(x, y, ModContent.TileType<LuminiteCrystal>(), mute: true, forced: false);
+                                NetMessage.SendTileSquare(-1, x, y, 1, 1);
+                                break;
+                            }
+                            }
+                        }
+                    }
+
                     if (WorldGen.genRand.NextFloat() < chestChance && tile.HasTile && Main.tileSolid[tile.TileType] && !tile.IsActuated)
                     {
                         if (tile.TileType == protolithType)

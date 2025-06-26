@@ -18,6 +18,7 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 
         public override void SetDefaults()
         {
+            Item.DamageType = DamageClass.Magic;
             Item.damage = 220;
             Item.useStyle = ItemUseStyleID.Shoot;
             Item.autoReuse = true;
