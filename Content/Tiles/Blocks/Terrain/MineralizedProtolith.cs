@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Blocks.Terrain
 {
-    public class Protolith : ModTile
+    public class MineralizedProtolith : ModTile
     {
         /// <summary> Types that merge with this. Use instead of <c>Main.tileFrame[][]</c> </summary>
         public static bool[] TileMerge { get; set; } = TileID.Sets.Factory.CreateBoolSet();
@@ -23,9 +23,8 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
 
             TileID.Sets.ChecksForMerge[Type] = true;
             Regolith.TileMerge[Type] = true;
-
+			Main.tileMerge[Type][ModContent.TileType<Protolith>()] = true;
             TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
-			Main.tileMerge[Type][ModContent.TileType<MineralizedProtolith>()] = true;
 
             MinPick = 225;
             MineResist = 3f;
@@ -47,6 +46,42 @@ namespace Macrocosm.Content.Tiles.Blocks.Terrain
             WorldGen.TileMergeAttemptFrametest(i, j, Type, TileMerge, ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
         }
 
-        
+        public override void RandomUpdate(int i, int j)
+        {
+            if (!SubworldSystem.IsActive<Moon>())
+                return;
+
+            if (j <= Main.rockLayer)
+                return;
+
+            if (!WorldGen.genRand.NextBool(3))
+                return;
+
+            if (Utility.GetTileCount(new(i, j), [ModContent.TileType<LuminiteCrystal>()], distance: 2) >= 2)
+                return;
+
+            Point[] directions = [
+                new Point(0, -1), // up
+                new Point(0, 1),  // down
+                new Point(-1, 0), // left
+                new Point(1, 0),  // right
+            ];
+            Utility.Shuffle(WorldGen.genRand, directions);
+
+            Tile tile = Main.tile[i, j];
+            foreach (var offset in directions)
+            {
+                int x = i + offset.X;
+                int y = j + offset.Y;
+                Tile target = Main.tile[x, y];
+                if (!target.HasTile && WorldGen.SolidTile(tile))
+                {
+                    WorldGen.PlaceTile(x, y, ModContent.TileType<LuminiteCrystal>(), mute: true, forced: false);
+                    NetMessage.SendTileSquare(-1, x, y, 1, 1);
+                    break;
+                }
+            }
+
+        }
     }
 }
