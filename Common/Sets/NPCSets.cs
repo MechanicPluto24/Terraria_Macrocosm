@@ -10,6 +10,8 @@ namespace Macrocosm.Common.Sets
         /// <summary> NPC types that can spawn on the Moon. Also adds the Moon tag to the bestiary. </summary>
         public static bool[] MoonNPC { get; } = NPCID.Sets.Factory.CreateNamedSet(nameof(MoonNPC)).Description("NPC types that can spawn on the Moon. Also adds the Moon tag to the bestiary.").RegisterBoolSet();
 
+        public static bool[] DemonSunNPC { get; } = NPCID.Sets.Factory.CreateNamedSet(nameof(DemonSunNPC)).Description("NPC types that can spawn in the Demon Sun. Also adds the Demon Sun tag to the bestiary.").RegisterBoolSet();
+
         /// <summary> NPCs that spawn on the Mars. Also adds the Mars tag to the bestiary. </summary>
         // public static bool[] MarsNPC { get; } = NPCID.Sets.Factory.CreateBoolSet();
 

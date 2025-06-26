@@ -14,7 +14,6 @@ namespace Macrocosm.Content.NPCs.Enemies.DemonSun
 {
     public class Bruiser : ModNPC
     {
-        public override bool IsLoadingEnabled(Mod mod) => false;
 
         public enum ActionState
         {
@@ -46,6 +45,7 @@ namespace Macrocosm.Content.NPCs.Enemies.DemonSun
             );
 
             NPCSets.MoonNPC[Type] = true;
+            NPCSets.DemonSunNPC[Type] = true;
 
             NPCSets.Material[Type] = NPCMaterial.Organic;
             Redemption.AddElementToNPC(Type, Redemption.ElementID.Blood);
@@ -61,7 +61,7 @@ namespace Macrocosm.Content.NPCs.Enemies.DemonSun
             NPC.height = 70;
             NPC.damage = 150;
             NPC.defense = 80;
-            NPC.lifeMax = 10000;
+            NPC.lifeMax = 6000;
             NPC.HitSound = SoundID.NPCHit1;
             NPC.DeathSound = SoundID.NPCDeath2;
             NPC.knockBackResist = 0.0f;
@@ -77,7 +77,7 @@ namespace Macrocosm.Content.NPCs.Enemies.DemonSun
             });
         }
 
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.bloodMoon ? 0.1f : 0f;
+        public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<DemonSunBiome>() ? 0.7f : 0f;
 
         public override void AI()
         {

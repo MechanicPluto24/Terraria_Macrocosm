@@ -7,6 +7,7 @@ using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
+using Macrocosm.Common.Systems.Flags;
 
 namespace Macrocosm.Common.Global.NPCs
 {
@@ -20,6 +21,9 @@ namespace Macrocosm.Common.Global.NPCs
                 bool peaceful = MacrocosmSubworld.Current.PeacefulWorld;
                 for (int type = 0; type < NPCLoader.NPCCount; type++)
                 {
+                    if (WorldData.DemonSun&&!NPCSets.DemonSunNPC[type])
+                        pool.Remove(type);
+        
                     if (peaceful)
                         pool.Remove(type);
                     else if (SubworldSystem.IsActive<Moon>() && !NPCSets.MoonNPC[type])
@@ -69,6 +73,19 @@ namespace Macrocosm.Common.Global.NPCs
             {
                 spawnRate = (int)(spawnRate * 0.1f);
                 maxSpawns = (int)(maxSpawns * 0.6f);
+            }
+            if (player.InModBiome<DemonSunBiome>())
+            {
+                if(Main.dayTime){
+                    spawnRate = 180;
+                    maxSpawns = 20;
+                }
+                else
+                {
+                    spawnRate = 90;
+                    maxSpawns = 15;
+                }
+                
             }
         }
     }
