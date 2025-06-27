@@ -208,8 +208,7 @@ namespace Macrocosm.Content.Skies.Moon
                
                 //if (WorldData.DemonSun && Main.dayTime)
                //    DrawDemonSunEffects(spriteBatch, sun);
-                if (!WorldData.DemonSun)
-                    sun.Draw(spriteBatch);
+                sun.Draw(spriteBatch);
                 
                 if (WorldData.DemonSun && Main.dayTime)
                     DrawDemonSunFrontEffects(spriteBatch, sun);

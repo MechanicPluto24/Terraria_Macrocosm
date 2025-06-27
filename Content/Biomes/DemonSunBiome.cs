@@ -23,7 +23,7 @@ namespace Macrocosm.Content.Biomes
         {
         }
 
-        public override bool IsBiomeActive(Player player) => false; /* SubworldSystem.IsActive<Moon>() && WorldFlagSystem.DemonSunActive; */
+        public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<Moon>() && WorldData.DemonSun;
 
         public override void OnInBiome(Player player)
         {
