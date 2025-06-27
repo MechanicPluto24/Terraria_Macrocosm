@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using Macrocosm.Content.Subworlds;
+using Macrocosm.Common.Systems.Flags;
+using SubworldLibrary;
 
 namespace Macrocosm.Content.Biomes
 {
