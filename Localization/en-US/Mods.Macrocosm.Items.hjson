@@ -2806,3 +2806,8 @@ ConveyorOutlet: {
 	DisplayName: Conveyor Outlet
 	Tooltip: ""
 }
+
+ScrapshotBow: {
+	DisplayName: Scrapshot Bow
+	Tooltip: Prone to faulty firing
+}
