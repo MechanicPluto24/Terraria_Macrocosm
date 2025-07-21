@@ -11,9 +11,11 @@ namespace Macrocosm.Common.Global.Projectiles
         public override bool InstancePerEntity => true;
 
         private Vector2 initialPosition;
+        private int InitalDamage;
         public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
             initialPosition = projectile.Center;
+            InitalDamage=projectile.damage;
         }
 
         public override void PostAI(Projectile projectile)
@@ -24,19 +26,19 @@ namespace Macrocosm.Common.Global.Projectiles
                 bool pointBlank = player.GetModPlayer<ProjectileDistancePlayer>().PointBlank;
                 if (pointBlank)
                 {
-                    float mult = Vector2.Distance(initialPosition, projectile.Center) / 100f;
+                    float mult = Vector2.Distance(initialPosition, projectile.Center) / 300f;
                     if (mult > 1f)
                         mult = 1f;
-                    projectile.damage = (int)(projectile.damage * (1.5f - mult));
+                    projectile.damage = (int)(InitalDamage* (1.5f - mult));
                 }
 
                 bool zoning = player.GetModPlayer<ProjectileDistancePlayer>().Zoning;
                 if (zoning)
                 {
-                    float mult = Vector2.Distance(initialPosition, projectile.Center) / 200f;
+                    float mult = Vector2.Distance(initialPosition, projectile.Center) / 300f;
                     if (mult > 1f)
                         mult = 1f;
-                    projectile.damage = (int)(projectile.damage * (mult + 0.5f));
+                    projectile.damage = (int)(InitalDamage * (mult + 0.5f));
                 }
             }
         }
