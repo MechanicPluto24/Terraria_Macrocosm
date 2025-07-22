@@ -12,6 +12,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Macrocosm.Content.Tiles.Furniture.Industrial;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
 {
@@ -50,6 +51,9 @@ namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
                     Tile tile = Main.tile[i, j];
                     if (TileSets.RandomStyles[tile.TileType] > 1)
                         Utility.SetTileStyle(i, j, WorldGen.genRand.Next(TileSets.RandomStyles[tile.TileType]), WorldGen.genRand.Next(2));
+
+                    if(tile.TileType==ModContent.TileType<IndustrialChest>())
+                        Utility.SetTileStyle(i, j, 0, 0);
 
                     if (WorldGen.genRand.NextBool() && Main.tile[i, j].GetModTile() is IToggleableTile toggleable)
                         toggleable.ToggleTile(i, j);
