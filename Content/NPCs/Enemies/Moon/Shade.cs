@@ -78,7 +78,7 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             if (NPC.IsABestiaryIconDummy)
                 NPC.Opacity = 1f;
         }
-
+        bool HasFled=false;
         public override void AI()
         {
             if (Main.rand.NextBool(2))
@@ -94,19 +94,15 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             NPC.rotation = NPC.Center.DirectionTo(Main.player[NPC.target].Center).ToRotation();
 
             if (NPC.HasPlayerTarget && clearLineOfSight && AI_State == ActionState.Idle)
-                AI_State = ActionState.Attack;
+                AI_State = ActionState.Attack;//Slowly approach the player
             if (Main.netMode != NetmodeID.Server)
             {
-                if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() >= 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
-                    AI_Rage += 0.01f;
+                if (Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() >= 0.4f && Vector2.Distance(NPC.Center, player.Center) < 200f&&!HasFled)
+                    AI_State = ActionState.Flee;///Light so flee
             }
-            if (AI_Rage > 0.1f && Vector2.Distance(NPC.Center, player.Center) < 200f)
-                AI_State = ActionState.Flee;
-            else
-                AI_State = ActionState.Attack;
 
 
-            if (AI_Rage > 3f || NPC.life < (NPC.lifeMax / 2))
+            if (AI_Rage > 3f || NPC.life < (NPC.lifeMax / 2))//Attack the player
                 AI_State = ActionState.Enrage;
 
             switch (AI_State)
@@ -160,12 +156,12 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
         {
             Player player = Main.player[NPC.target];
             Vector2 direction = (player.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
-            AI_Speed -= 0.08f;
+            AI_Speed += 0.08f;
 
-            if (AI_Speed < -2f)
-                AI_Speed = -2f;
-
-            NPC.velocity = ((NPC.velocity + (direction * 0.8f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
+            if (AI_Speed > 4f)
+                AI_Speed = 4f;
+            AI_Rage+=0.03f;
+            NPC.velocity = ((NPC.velocity + (direction * -0.8f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
         }
 
         public void Enrage()
@@ -174,10 +170,10 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
             Vector2 direction = (player.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
             AI_Speed += 0.03f;
 
-            if (AI_Speed > 8f)
-                AI_Speed = 8f;
-            if (Vector2.Distance(player.Center, NPC.Center) > 50f)
-                NPC.velocity = ((NPC.velocity + (direction * 4f)).SafeNormalize(Vector2.UnitX)) * AI_Speed;
+            if (AI_Speed > 5f)
+                AI_Speed = 5f;
+            if (Vector2.Distance(player.Center, NPC.Center) > 100f)
+                NPC.velocity =(direction).SafeNormalize(Vector2.UnitX) * AI_Speed;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)

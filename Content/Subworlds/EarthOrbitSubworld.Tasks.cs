@@ -16,6 +16,8 @@ using Terraria.Localization;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
+using Terraria.ModLoader;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.Subworlds
 {
@@ -47,8 +49,7 @@ namespace Macrocosm.Content.Subworlds
                 for (int y = 50; y < Main.maxTilesY - 50; y++)
                 {
                     // Don't spawn asteroids too close to the spawn area
-                    if (Math.Abs(x - Main.spawnTileX) < gen_spawnExclusionRadius &&
-                        Math.Abs(y - Main.spawnTileY) < gen_spawnExclusionRadius)
+                    if (Math.Abs(x - Main.spawnTileX) < gen_spawnExclusionRadius)
                         continue;
 
                     if (WorldGen.genRand.NextBool(80000))
@@ -125,11 +126,13 @@ namespace Macrocosm.Content.Subworlds
         }
 
         [Task]
-        private void SpaceStationTask(GenerationProgress progress)
+        private void PlaceSpawn(GenerationProgress progress)
         {
-            Structure module = Structure.Get<BaseSpaceStationModule>();
-            Point16 origin = new(Main.spawnTileX + module.Size.X / 2, Main.spawnTileY);
-            module.Place(origin, gen_StructureMap, padding: gen_spawnExclusionRadius);
+
+            int x, y;
+            x = (int)(Main.maxTilesX / 2);
+            y = (int)(Main.maxTilesY / 2);
+            Structure.Get<BaseSpaceStationModule>().Place(new(x, y), null);
         }
 
         [Task]
@@ -140,6 +143,8 @@ namespace Macrocosm.Content.Subworlds
             {
                 for (int y = 50; y < Main.maxTilesY - 50; y++)
                 {
+                    if (Math.Abs(x - Main.spawnTileX) < gen_spawnExclusionRadius)
+                        continue;
                     if (WorldGen.genRand.NextBool(50000))
                     {
                         int random = WorldGen.genRand.Next(7);
@@ -170,6 +175,8 @@ namespace Macrocosm.Content.Subworlds
             {
                 for (int y = 50; y < Main.maxTilesY - 50; y++)
                 {
+                    if (Math.Abs(x - Main.spawnTileX) < gen_spawnExclusionRadius)
+                        continue;
                     if (WorldGen.genRand.NextBool(100000) && placed < maximumRares && Math.Abs(Main.spawnTileX - x) > 200)
                     {
                         if (WorldGen.genRand.NextBool(3))
@@ -256,6 +263,15 @@ namespace Macrocosm.Content.Subworlds
         [Task]
         private void LootTask(GenerationProgress progress)
         {
+            for (int i = 1; i < Main.maxTilesX ; i++)
+            {
+                for (int j = 1; j < Main.maxTilesY; j++)
+                {
+                    Tile tile = Main.tile[i, j];
+                    if(tile.TileType==ModContent.TileType<IndustrialChest>())
+                        Utility.SetTileStyle(i, j, 0, 0);
+                }
+            }
             for (int i = 0; i < Main.maxChests; i++)
             {
                 Chest chest = Main.chest[i];

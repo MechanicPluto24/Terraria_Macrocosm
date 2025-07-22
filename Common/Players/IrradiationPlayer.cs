@@ -79,10 +79,10 @@ namespace Macrocosm.Common.Players
         private void UpdateRadiation()
         {
             IrradiationLevel -= IrradiationReduction;
-            IrradiationLevel = MathHelper.Clamp(IrradiationLevel, 0, 6f);
+            IrradiationLevel = MathHelper.Clamp(IrradiationLevel, 0f, 6f);
 
             RadiationNoiseIntensity += 0.05f * IrradiationLevel;
-            RadiationNoiseIntensity = MathHelper.Clamp(RadiationNoiseIntensity, 0, 0.5f);
+            RadiationNoiseIntensity = MathHelper.Clamp(RadiationNoiseIntensity, 0f, 0.5f);
 
             //Main.NewText($"Irradiation: {IrradiationLevel}, RadNoise: {RadiationNoiseIntensity}");
 
