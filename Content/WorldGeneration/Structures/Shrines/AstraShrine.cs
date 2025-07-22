@@ -7,6 +7,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Macrocosm.Content.Tiles.Furniture.Luminite;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 {
@@ -19,6 +20,17 @@ namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 
         public override void PostPlace(Point16 origin)
         {
+            for (int i = origin.X; i < origin.X + Size.X; i++)
+            {
+                for (int j = origin.Y; j < origin.Y + Size.Y; j++)
+                {
+                    Tile tile = Main.tile[i, j];
+                    if (tile.TileType == ModContent.TileType<LuminiteChest>())
+                        Utility.SetTileStyle(i, j, 7);
+                }
+            }
+
+
             WorldUtils.Gen(new Point(origin.X + Size.X / 2, origin.Y + Size.Y / 4), new CustomShapes.ChasmSideways(24, 4, 90, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
             WorldUtils.Gen(new Point(origin.X + Size.X / 2, origin.Y + Size.Y / 4), new CustomShapes.ChasmSideways(24, 4, 90, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
             Utility.SafeTileRunner(origin.X + Size.X / 2, origin.Y, Size.X * 1.25f, 1, -1);

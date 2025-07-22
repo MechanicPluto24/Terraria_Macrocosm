@@ -15,7 +15,7 @@ namespace Macrocosm.Content.Items.Furniture.StarRoyale
 
         public override void SetDefaults()
         {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChest>(), (int)LuminiteStyle.StarRoyale);
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChest>(), (int)LuminiteStyle.StarRoyale*2);
             Item.width = 32;
             Item.height = 24;
             Item.value = 150;
