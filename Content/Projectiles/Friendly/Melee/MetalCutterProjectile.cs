@@ -13,6 +13,10 @@ using System.Collections.Generic;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Enums;
 using Macrocosm.Content.Buffs;
+using Terraria.Audio;
+using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Content.Particles;
+using Macrocosm.Content.Sounds;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Melee
 {
@@ -58,6 +62,8 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
         public override bool ShouldUpdatePosition() => false;
         int Timer=0;
+        private ProjectileAudioTracker tracker;
+
         public override void AI()
         {
             if(Main.MouseWorld.X>Player.Center.X)
@@ -101,9 +107,41 @@ namespace Macrocosm.Content.Projectiles.Friendly.Melee
 
             if (transparency < 1f)
                 transparency += 0.005f;
-        
-            Projectile.rotation = (Main.MouseWorld-Player.Center).ToRotation();
-        
+            
+            Projectile.velocity+=(Main.MouseWorld-Player.Center).SafeNormalize(Vector2.UnitX)*0.2f;
+            Projectile.velocity=Projectile.velocity.SafeNormalize(Vector2.UnitX);
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            
+
+            if(Timer>60){
+                float amp = Main.rand.NextFloat(0, 1f);
+                Vector2 position = Projectile.Center + Main.rand.NextVector2Circular(12, 20);
+                Vector2 velocity = (Utility.PolarVector(36 , MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4) + Player.velocity;
+
+                Particle.Create<EngineSpark>(p =>
+                {
+                    p.Position = position;
+                    p.Velocity = velocity;
+                    p.Scale = new(Main.rand.NextFloat(1.2f, 1.8f) );
+                    p.Rotation = Projectile.rotation;
+                    p.ColorOnSpawn = Color.White;
+                    p.ColorOnDespawn = new Color(89, 151, 193);
+                });
+                
+                tracker ??= new(Projectile);
+
+                SoundEngine.PlaySound(SFX.HandheldThrusterFlame with
+                {
+                    Volume = 0.3f,
+                    MaxInstances = 1,
+                    SoundLimitBehavior = SoundLimitBehavior.IgnoreNew
+                },
+                Projectile.position, updateCallback: (sound) =>
+                {
+                    sound.Position = Projectile.position;
+                    return tracker.IsActiveAndInGame();
+                });
+            }
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
