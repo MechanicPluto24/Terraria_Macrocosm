@@ -1,4 +1,4 @@
-﻿sampler uImage0 : register(S0);
+sampler uImage0 : register(S0);
 
 // Number of output pixels for each axis
 float2 uPixelCount;
