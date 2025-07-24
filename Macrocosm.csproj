@@ -1,37 +1,61 @@
-﻿
-<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\tModLoader.targets" />
-  <PropertyGroup>
-    <AssemblyName>Macrocosm</AssemblyName>
-    <LangVersion>latest</LangVersion>
-    <Platforms>AnyCPU;x86</Platforms>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Optimize>True</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
-    <Optimize>True</Optimize>
-  </PropertyGroup>
-  <PropertyGroup>
-	<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
-	<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
-  </PropertyGroup>
-   <ItemGroup>
-    <Reference Include="SubworldLibrary">
-      <HintPath>References\SubworldLibrary.dll</HintPath>
-    </Reference>
-	<Reference Include="StructureHelper">
-		<HintPath>References\StructureHelper.dll</HintPath>
-	</Reference>
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+	<Import Project="..\tModLoader.targets" />
+	
+	<PropertyGroup>
+		<AssemblyName>Macrocosm</AssemblyName>
+		<LangVersion>latest</LangVersion>
+		<Platforms>AnyCPU;x86</Platforms>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<Optimize>True</Optimize>
+	</PropertyGroup>
+	
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+		<Optimize>True</Optimize>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);IDE0051</NoWarn> <!-- Macrocosm uses reflection in some places, unused private methods are expected -->
+		<NoWarn>$(NoWarn);CA1822</NoWarn> <!-- Private methods that don't deal with instance data should sometimes be left instanced, not static, due to tML's nature -->
+	</PropertyGroup>
+	
+	<ItemGroup>
+		
+		<Reference Include="SubworldLibrary">
+			<HintPath>References\SubworldLibrary.dll</HintPath>
+		</Reference>
+		
+		<Reference Include="StructureHelper">
+			<HintPath>References\StructureHelper.dll</HintPath>
+		</Reference>
+	</ItemGroup>
+	
    <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
-  <!-- <Target BeforeTargets="Build" Name="BuildEffects" Inputs="Assets/Effects/*.fx" Outputs="Assets/Effects/*.fxc"> -->
-      <!-- <Exec Command="EasyXnb.exe" WorkingDirectory="Tools/EasyXnb" /> -->
-  <!-- </Target> -->
+	
+	<!-- Locate all effect files (For whatever reason this condition stops files from being automatically removed.) -->
+	<ItemGroup Condition="'$(DesignTimeBuild)' != 'true'">
+		<EffectFiles Include="**/*.fx" />
+	</ItemGroup>
+
+	<!-- Locate FXC (Shader compiler of choice) -->
+	<PropertyGroup>
+		<FxcCompilerPath>./Assets/Effects/Compiler/fxc.exe</FxcCompilerPath>
+	</PropertyGroup>
+
+	<!-- Effect File Compilation 
+		(TODO: Find ways of implementing this to work on other operating systems (e.g. linux), or create a BuildTask impl similar to that of DAYBREAK) -->
+	<Target Name="BuildEffects" BeforeTargets="BuildMod" Condition="$([MSBuild]::IsOSPlatform('Windows'))" Inputs="@(EffectFiles->'%(RecursiveDir)%(FileName)%(Extension)')" Outputs="@(EffectFiles->'%(RecursiveDir)%(FileName).fxc')">
+		<!-- Echo here so it logs which file is being compiled -->
+		<Exec Command="@(EffectFiles->'echo ----- Compiling effect: %(RecursiveDir)%(FileName)%(Extension) ----- &amp;&amp; &quot;$(FxcCompilerPath)&quot; &quot;%(RecursiveDir)%(FileName)%(Extension)&quot; /T fx_2_0 /nologo /O2 /Fo &quot;%(RecursiveDir)%(FileName).fxc&quot; &#xA;&#xD;')" IgnoreExitCode="true" />
+	</Target>
 </Project>
