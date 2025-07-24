@@ -10,68 +10,67 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.UI;
 
-namespace Macrocosm.Common.Systems.UI
+namespace Macrocosm.Common.Systems.UI;
+
+public class AssemblyUIState : UIState
 {
-    public class AssemblyUIState : UIState
+    public LaunchPad LaunchPad { get; }
+
+    private UIText title;
+    private UIDragablePanel window;
+    private UIAssemblyTab assemblyTab;
+
+    public AssemblyUIState(LaunchPad launchPad)
     {
-        public LaunchPad LaunchPad { get; }
+        LaunchPad = launchPad;
+    }
 
-        private UIText title;
-        private UIDragablePanel window;
-        private UIAssemblyTab assemblyTab;
+    public override void OnInitialize()
+    {
+        window = new();
+        window.Width.Set(675f, 0f);
+        window.Height.Set(720f, 0f);
+        window.HAlign = 0.5f;
+        window.VAlign = 0.5f;
+        window.SetPadding(6f);
+        window.PaddingTop = 40f;
 
-        public AssemblyUIState(LaunchPad launchPad)
+        window.BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
+        window.BorderColor = UITheme.Current.WindowStyle.BorderColor;
+
+        Append(window);
+
+        title = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Assembly"), 0.6f, true)
         {
-            LaunchPad = launchPad;
-        }
+            IsWrapped = false,
+            HAlign = 0.49f,
+            VAlign = 0.005f,
+            Top = new(-34, 0),
+            TextColor = Color.White
+        };
+        window.Append(title);
 
-        public override void OnInitialize()
-        {
-            window = new();
-            window.Width.Set(675f, 0f);
-            window.Height.Set(720f, 0f);
-            window.HAlign = 0.5f;
-            window.VAlign = 0.5f;
-            window.SetPadding(6f);
-            window.PaddingTop = 40f;
+        assemblyTab = new(LaunchPad);
+        assemblyTab.Activate();
+        window.Append(assemblyTab);
+    }
 
-            window.BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
-            window.BorderColor = UITheme.Current.WindowStyle.BorderColor;
+    public void OnShow()
+    {
+    }
 
-            Append(window);
+    public void OnHide()
+    {
+        if (LaunchPad is not null)
+            LaunchPad.Inventory.InteractingPlayer = 255;
+    }
 
-            title = new(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Assembly"), 0.6f, true)
-            {
-                IsWrapped = false,
-                HAlign = 0.49f,
-                VAlign = 0.005f,
-                Top = new(-34, 0),
-                TextColor = Color.White
-            };
-            window.Append(title);
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+        Player player = Main.LocalPlayer;
 
-            assemblyTab = new(LaunchPad);
-            assemblyTab.Activate();
-            window.Append(assemblyTab);
-        }
-
-        public void OnShow()
-        {
-        }
-
-        public void OnHide()
-        {
-            if (LaunchPad is not null)
-                LaunchPad.Inventory.InteractingPlayer = 255;
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-            Player player = Main.LocalPlayer;
-
-            if (LaunchPad is not null && (!LaunchPad.Hitbox.InPlayerInteractionRange(TileReachCheckSettings.Simple) || player.UICloseConditions()))
-                UISystem.Hide();
-        }
+        if (LaunchPad is not null && (!LaunchPad.Hitbox.InPlayerInteractionRange(TileReachCheckSettings.Simple) || player.UICloseConditions()))
+            UISystem.Hide();
     }
 }

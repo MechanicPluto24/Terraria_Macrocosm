@@ -2,29 +2,28 @@
 using Terraria;
 using Terraria.ID;
 
-namespace Macrocosm.Common.Utils
+namespace Macrocosm.Common.Utils;
+
+public static partial class Utility
 {
-    public static partial class Utility
+    public static Vector2 Cast(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
     {
-        public static Vector2 Cast(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
+        Vector2 output = start;
+        direction.Normalize();
+        for (int i = 0; i < length; i++)
         {
-            Vector2 output = start;
-            direction.Normalize();
-            for (int i = 0; i < length; i++)
-            {
-                if (Collision.CanHitLine(output, 0, 0, output + direction, 0, 0) && (platformCheck ? !Collision.SolidTiles(output, 1, 1, platformCheck) && Main.tile[(int)output.X / 16, (int)output.Y / 16].TileType != TileID.Platforms : true))
-                    output += direction;
-                else
-                    break;
-            }
-
-            return output;
+            if (Collision.CanHitLine(output, 0, 0, output + direction, 0, 0) && (platformCheck ? !Collision.SolidTiles(output, 1, 1, platformCheck) && Main.tile[(int)output.X / 16, (int)output.Y / 16].TileType != TileID.Platforms : true))
+                output += direction;
+            else
+                break;
         }
 
-        public static float CastLength(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
-        {
-            Vector2 end = Cast(start, direction, length, platformCheck);
-            return (end - start).Length();
-        }
+        return output;
+    }
+
+    public static float CastLength(Vector2 start, Vector2 direction, float length, bool platformCheck = false)
+    {
+        Vector2 end = Cast(start, direction, length, platformCheck);
+        return (end - start).Length();
     }
 }

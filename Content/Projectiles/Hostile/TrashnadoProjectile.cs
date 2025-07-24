@@ -5,54 +5,53 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.Projectiles.Hostile;
+
+public class TrashnadoProjectile : ModProjectile
 {
-    public class TrashnadoProjectile : ModProjectile
+    public override string Texture => Macrocosm.EmptyTexPath;
+
+    public override void SetStaticDefaults()
     {
-        public override string Texture => Macrocosm.EmptyTexPath;
+        Main.projFrames[Type] = 1;
+    }
 
-        public override void SetStaticDefaults()
+    public override void SetDefaults()
+    {
+        Projectile.width = 12;
+        Projectile.height = 12;
+        Projectile.hostile = true;
+        Projectile.friendly = false;
+        Projectile.timeLeft = 1200;
+        Projectile.penetrate = -1;
+        Projectile.tileCollide = true;
+    }
+
+    private bool spawned;
+    private TrashData trashData;
+    public override void AI()
+    {
+        if (!spawned)
         {
-            Main.projFrames[Type] = 1;
+            trashData = TrashData.RandomPool.Get();
+            spawned = true;
         }
 
-        public override void SetDefaults()
-        {
-            Projectile.width = 12;
-            Projectile.height = 12;
-            Projectile.hostile = true;
-            Projectile.friendly = false;
-            Projectile.timeLeft = 1200;
-            Projectile.penetrate = -1;
-            Projectile.tileCollide = true;
-        }
+        Projectile.velocity.Y += MacrocosmSubworld.GetGravityMultiplier(Projectile.Center) / 4;
+        Projectile.rotation = Projectile.velocity.ToRotation();
+    }
 
-        private bool spawned;
-        private TrashData trashData;
-        public override void AI()
+    public override void OnKill(int timeLeft)
+    {
+        for (int i = 0; i < Main.rand.Next(10, 16); i++)
         {
-            if (!spawned)
-            {
-                trashData = TrashData.RandomPool.Get();
-                spawned = true;
-            }
-
-            Projectile.velocity.Y += MacrocosmSubworld.GetGravityMultiplier(Projectile.Center) / 4;
-            Projectile.rotation = Projectile.velocity.ToRotation();
+            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, trashData.DustType, newColor: trashData.Color);
         }
+    }
 
-        public override void OnKill(int timeLeft)
-        {
-            for (int i = 0; i < Main.rand.Next(10, 16); i++)
-            {
-                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, trashData.DustType, newColor: trashData.Color);
-            }
-        }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Main.EntitySpriteDraw(trashData.Texture.Value, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.White, 1f - Projectile.alpha / 255f)), Projectile.rotation, trashData.Texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
-            return false;
-        }
+    public override bool PreDraw(ref Color lightColor)
+    {
+        Main.EntitySpriteDraw(trashData.Texture.Value, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.White, 1f - Projectile.alpha / 255f)), Projectile.rotation, trashData.Texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
+        return false;
     }
 }

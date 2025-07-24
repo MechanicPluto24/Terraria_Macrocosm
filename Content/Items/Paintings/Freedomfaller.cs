@@ -1,24 +1,23 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Paintings
+namespace Macrocosm.Content.Items.Paintings;
+
+public class Freedomfaller : ModItem
 {
-    public class Freedomfaller : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-        }
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.Freedomfaller>());
-            Item.width = 26;
-            Item.height = 26;
-        }
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.Freedomfaller>());
+        Item.width = 26;
+        Item.height = 26;
+    }
 
-        public override void AddRecipes()
-        {
+    public override void AddRecipes()
+    {
 
-        }
     }
 }

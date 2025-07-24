@@ -3,38 +3,37 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Biomes
+namespace Macrocosm.Content.Biomes;
+
+public class DemonSunBiome : ModBiome
 {
-    public class DemonSunBiome : ModBiome
+    public override SceneEffectPriority Priority => SceneEffectPriority.Event;
+
+    public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/BloodMoon";
+    public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
+    public override string MapBackground => BackgroundPath;
+
+    public override Color? BackgroundColor => base.BackgroundColor;
+    public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
+    public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUndergroundBackgroundStyle>();
+
+    //public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/DemonSunTheme");
+
+    public override void SetStaticDefaults()
     {
-        public override SceneEffectPriority Priority => SceneEffectPriority.Event;
+    }
 
-        public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/BloodMoon";
-        public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Moon";
-        public override string MapBackground => BackgroundPath;
+    public override bool IsBiomeActive(Player player) => false; /* SubworldSystem.IsActive<Moon>() && WorldFlagSystem.DemonSunActive; */
 
-        public override Color? BackgroundColor => base.BackgroundColor;
-        public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
-        public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUndergroundBackgroundStyle>();
+    public override void OnInBiome(Player player)
+    {
+    }
 
-        //public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/DemonSunTheme");
+    public override void OnEnter(Player player)
+    {
+    }
 
-        public override void SetStaticDefaults()
-        {
-        }
-
-        public override bool IsBiomeActive(Player player) => false; /* SubworldSystem.IsActive<Moon>() && WorldFlagSystem.DemonSunActive; */
-
-        public override void OnInBiome(Player player)
-        {
-        }
-
-        public override void OnEnter(Player player)
-        {
-        }
-
-        public override void OnLeave(Player player)
-        {
-        }
+    public override void OnLeave(Player player)
+    {
     }
 }

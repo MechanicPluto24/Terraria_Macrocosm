@@ -6,46 +6,45 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Tools.Wiring
+namespace Macrocosm.Content.Items.Tools.Wiring;
+
+[LegacyName("WiringKit")]
+public class CircuitProbe : ModItem
 {
-    [LegacyName("WiringKit")]
-    public class CircuitProbe : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
+    }
+
+    public override void SetDefaults()
+    {
+        Item.width = 20;
+        Item.height = 20;
+        Item.maxStack = 1;
+        Item.value = Item.buyPrice(gold: 1);
+        Item.useStyle = ItemUseStyleID.RaiseLamp;
+        Item.useTurn = true;
+        Item.useTime = 20;
+        Item.useAnimation = 20;
+        Item.mech = true;
+    }
+
+    public override bool? UseItem(Player player)
+    {
+        if (player.whoAmI == Main.myPlayer && TileEntity.TryGet(Player.tileTargetX, Player.tileTargetY, out MachineTE machine))
         {
+            machine.PrintPowerInfo();
+            return true;
         }
 
-        public override void SetDefaults()
-        {
-            Item.width = 20;
-            Item.height = 20;
-            Item.maxStack = 1;
-            Item.value = Item.buyPrice(gold: 1);
-            Item.useStyle = ItemUseStyleID.RaiseLamp;
-            Item.useTurn = true;
-            Item.useTime = 20;
-            Item.useAnimation = 20;
-            Item.mech = true;
-        }
+        return null;
+    }
 
-        public override bool? UseItem(Player player)
-        {
-            if (player.whoAmI == Main.myPlayer && TileEntity.TryGet(Player.tileTargetX, Player.tileTargetY, out MachineTE machine))
-            {
-                machine.PrintPowerInfo();
-                return true;
-            }
-
-            return null;
-        }
-
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.Wire, 50)
-                .AddIngredient<Plastic>(5)
-                .AddTile(TileID.TinkerersWorkbench)
-                .Register();
-        }
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient(ItemID.Wire, 50)
+            .AddIngredient<Plastic>(5)
+            .AddTile(TileID.TinkerersWorkbench)
+            .Register();
     }
 }

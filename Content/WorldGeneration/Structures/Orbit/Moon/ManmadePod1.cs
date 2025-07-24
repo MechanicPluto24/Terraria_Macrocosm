@@ -1,9 +1,8 @@
 ﻿using Macrocosm.Common.WorldGeneration;
 
 
-namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Moon
+namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Moon;
+
+public class ManmadePod1 : Structure
 {
-    public class ManmadePod1 : Structure
-    {
-    }
 }
