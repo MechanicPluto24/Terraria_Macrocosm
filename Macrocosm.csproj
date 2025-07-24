@@ -30,7 +30,6 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-		
 		<Reference Include="SubworldLibrary">
 			<HintPath>References\SubworldLibrary.dll</HintPath>
 		</Reference>
