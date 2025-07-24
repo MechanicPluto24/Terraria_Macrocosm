@@ -5,207 +5,206 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Melee
+namespace Macrocosm.Content.Projectiles.Friendly.Melee;
+
+public abstract class ManisolBladeBase : ModProjectile
 {
-    public abstract class ManisolBladeBase : ModProjectile
+    protected float returnSpeed = 20f;
+    protected int npcStick = -1;
+    protected bool tileStick = false;
+    protected Vector2 stickPosition = Vector2.Zero;
+    protected int penetrateCount = 0;
+    protected int maxPenetrateCount = 0;
+    protected int maxDropTime;
+
+    public float DropTimer
     {
-        protected float returnSpeed = 20f;
-        protected int npcStick = -1;
-        protected bool tileStick = false;
-        protected Vector2 stickPosition = Vector2.Zero;
-        protected int penetrateCount = 0;
-        protected int maxPenetrateCount = 0;
-        protected int maxDropTime;
+        get => Projectile.ai[0];
+        set => Projectile.ai[0] = value;
+    }
 
-        public float DropTimer
+    public enum ActionState { Thrown, Stick, Returning }
+    public ActionState AI_State
+    {
+        get => (ActionState)Projectile.ai[1];
+        set => Projectile.ai[1] = (float)value;
+    }
+
+    public override void SetStaticDefaults()
+    {
+        ProjectileID.Sets.TrailCacheLength[Type] = 15;
+        ProjectileID.Sets.TrailingMode[Type] = 3;
+
+        Redemption.AddElementToProjectile(Type, Redemption.ElementID.Celestial);
+    }
+
+    public override void SetDefaults()
+    {
+        Projectile.width = 18;
+        Projectile.height = 34;
+        Projectile.friendly = true;
+        Projectile.DamageType = DamageClass.Melee;
+        Projectile.ignoreWater = true;
+        Projectile.tileCollide = false;
+        Projectile.penetrate = -1;
+        Projectile.timeLeft = 240;
+        Projectile.usesLocalNPCImmunity = true;
+        Projectile.localNPCHitCooldown = 15;
+        maxPenetrateCount = 0;
+        maxDropTime = 20;
+    }
+
+    bool hasStartedToReturn = false;
+    public virtual void OnStick()
+    {
+    }
+
+    public virtual void OnRecalled()
+    {
+    }
+
+    public virtual void Returning()
+    {
+        Player player = Main.player[Projectile.owner];
+        Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+        Vector2 direction = Projectile.DirectionTo(player.Center).SafeNormalize(Vector2.Zero);
+        Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed, 0.1f);
+    }
+
+    public virtual void OnReturnToPlayer()
+    {
+    }
+
+    public void ForceRecall()
+    {
+        AI_State = ActionState.Returning;
+        Projectile.velocity = new Vector2(10, 10);
+        Projectile.timeLeft = 300;
+
+        if (!hasStartedToReturn)
+            OnRecalled();
+
+        hasStartedToReturn = true;
+        Projectile.netUpdate = true;
+    }
+
+    public override bool? CanHitNPC(NPC npc)
+    {
+        if ((npcStick > -1 && AI_State != ActionState.Returning) || (tileStick && AI_State != ActionState.Returning))
+            return false;
+
+        return null;
+    }
+
+    public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+    {
+        if (npcStick == -1 && AI_State == ActionState.Thrown)
         {
-            get => Projectile.ai[0];
-            set => Projectile.ai[0] = value;
-        }
-
-        public enum ActionState { Thrown, Stick, Returning }
-        public ActionState AI_State
-        {
-            get => (ActionState)Projectile.ai[1];
-            set => Projectile.ai[1] = (float)value;
-        }
-
-        public override void SetStaticDefaults()
-        {
-            ProjectileID.Sets.TrailCacheLength[Type] = 15;
-            ProjectileID.Sets.TrailingMode[Type] = 3;
-
-            Redemption.AddElementToProjectile(Type, Redemption.ElementID.Celestial);
-        }
-
-        public override void SetDefaults()
-        {
-            Projectile.width = 18;
-            Projectile.height = 34;
-            Projectile.friendly = true;
-            Projectile.DamageType = DamageClass.Melee;
-            Projectile.ignoreWater = true;
-            Projectile.tileCollide = false;
-            Projectile.penetrate = -1;
-            Projectile.timeLeft = 240;
-            Projectile.usesLocalNPCImmunity = true;
-            Projectile.localNPCHitCooldown = 15;
-            maxPenetrateCount = 0;
-            maxDropTime = 20;
-        }
-
-        bool hasStartedToReturn = false;
-        public virtual void OnStick()
-        {
-        }
-
-        public virtual void OnRecalled()
-        {
-        }
-
-        public virtual void Returning()
-        {
-            Player player = Main.player[Projectile.owner];
-            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            Vector2 direction = Projectile.DirectionTo(player.Center).SafeNormalize(Vector2.Zero);
-            Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed, 0.1f);
-        }
-
-        public virtual void OnReturnToPlayer()
-        {
-        }
-
-        public void ForceRecall()
-        {
-            AI_State = ActionState.Returning;
-            Projectile.velocity = new Vector2(10, 10);
-            Projectile.timeLeft = 300;
-
-            if (!hasStartedToReturn)
-                OnRecalled();
-
-            hasStartedToReturn = true;
-            Projectile.netUpdate = true;
-        }
-
-        public override bool? CanHitNPC(NPC npc)
-        {
-            if ((npcStick > -1 && AI_State != ActionState.Returning) || (tileStick && AI_State != ActionState.Returning))
-                return false;
-
-            return null;
-        }
-
-        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
-        {
-            if (npcStick == -1 && AI_State == ActionState.Thrown)
+            if (penetrateCount < maxPenetrateCount)
             {
-                if (penetrateCount < maxPenetrateCount)
+                penetrateCount++;
+            }
+            else
+            {
+                Projectile.velocity = Vector2.Zero;
+                Projectile.rotation = Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2;
+                npcStick = target.whoAmI;
+                stickPosition = Projectile.Center - target.position;
+                AI_State = ActionState.Stick;
+                OnStick();
+                Projectile.netUpdate = true;
+            }
+        }
+    }
+
+    public override bool PreAI()
+    {
+        if (Projectile.timeLeft <= 3)
+            ForceRecall();
+
+        Projectile.oldVelocity = Projectile.velocity;
+
+        Player player = Main.player[Projectile.owner];
+
+        switch (AI_State)
+        {
+            case ActionState.Thrown:
+
+                DropTimer++;
+
+                if (DropTimer > maxDropTime)
                 {
-                    penetrateCount++;
+                    Projectile.velocity.Y += 0.4f;
+                    if (Projectile.velocity.Y > 16f)
+                        Projectile.velocity.Y = 16f;
+
+                    Projectile.rotation += Projectile.velocity.X * 0.02f;
                 }
                 else
                 {
-                    Projectile.velocity = Vector2.Zero;
-                    Projectile.rotation = Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2;
-                    npcStick = target.whoAmI;
-                    stickPosition = Projectile.Center - target.position;
-                    AI_State = ActionState.Stick;
-                    OnStick();
-                    Projectile.netUpdate = true;
+                    Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
                 }
-            }
-        }
 
-        public override bool PreAI()
-        {
-            if (Projectile.timeLeft <= 3)
-                ForceRecall();
-
-            Projectile.oldVelocity = Projectile.velocity;
-
-            Player player = Main.player[Projectile.owner];
-
-            switch (AI_State)
-            {
-                case ActionState.Thrown:
-
-                    DropTimer++;
-
-                    if (DropTimer > maxDropTime)
+                if (npcStick == -1)
+                {
+                    if (Collision.SolidCollision(Projectile.Center, 8, 8))
                     {
-                        Projectile.velocity.Y += 0.4f;
-                        if (Projectile.velocity.Y > 16f)
-                            Projectile.velocity.Y = 16f;
-
-                        Projectile.rotation += Projectile.velocity.X * 0.02f;
+                        if (!tileStick)
+                        {
+                            DropTimer = 20;
+                            Projectile.velocity = Vector2.Zero;
+                            Collision.HitTiles(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
+                            Projectile.rotation = Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2;
+                            SoundEngine.PlaySound(SoundID.Dig, Projectile.Center);
+                            AI_State = ActionState.Stick;
+                            OnStick();
+                            tileStick = true;
+                        }
                     }
                     else
                     {
-                        Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+                        tileStick = false;
                     }
+                }
+                break;
 
-                    if (npcStick == -1)
+            case ActionState.Stick:
+
+                if (npcStick > -1)
+                {
+                    if (Main.npc[npcStick].active)
                     {
-                        if (Collision.SolidCollision(Projectile.Center, 8, 8))
-                        {
-                            if (!tileStick)
-                            {
-                                DropTimer = 20;
-                                Projectile.velocity = Vector2.Zero;
-                                Collision.HitTiles(Projectile.position, Projectile.velocity, Projectile.width, Projectile.height);
-                                Projectile.rotation = Projectile.oldVelocity.ToRotation() + MathHelper.PiOver2;
-                                SoundEngine.PlaySound(SoundID.Dig, Projectile.Center);
-                                AI_State = ActionState.Stick;
-                                OnStick();
-                                tileStick = true;
-                            }
-                        }
-                        else
-                        {
-                            tileStick = false;
-                        }
+                        Projectile.Center = Main.npc[npcStick].position + stickPosition;
                     }
-                    break;
-
-                case ActionState.Stick:
-
-                    if (npcStick > -1)
+                    else
                     {
-                        if (Main.npc[npcStick].active)
-                        {
-                            Projectile.Center = Main.npc[npcStick].position + stickPosition;
-                        }
-                        else
-                        {
-                            npcStick = -1;
-                            DropTimer = 11;
-                            Projectile.velocity = new Vector2(10, 10);
-                            Projectile.timeLeft = 300;
-                            AI_State = ActionState.Returning;
-                            OnRecalled();
-                        }
+                        npcStick = -1;
+                        DropTimer = 11;
+                        Projectile.velocity = new Vector2(10, 10);
+                        Projectile.timeLeft = 300;
+                        AI_State = ActionState.Returning;
+                        OnRecalled();
                     }
-                    break;
+                }
+                break;
 
-                case ActionState.Returning:
+            case ActionState.Returning:
 
-                    if (Main.myPlayer == Projectile.owner)
+                if (Main.myPlayer == Projectile.owner)
+                {
+                    Returning();
+
+                    Rectangle projectileHitbox = new((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
+                    Rectangle playerHitbox = new((int)player.position.X, (int)player.position.Y, player.width, player.height);
+                    if (projectileHitbox.Intersects(playerHitbox))
                     {
-                        Returning();
-
-                        Rectangle projectileHitbox = new((int)Projectile.position.X, (int)Projectile.position.Y, Projectile.width, Projectile.height);
-                        Rectangle playerHitbox = new((int)player.position.X, (int)player.position.Y, player.width, player.height);
-                        if (projectileHitbox.Intersects(playerHitbox))
-                        {
-                            OnReturnToPlayer();
-                            Projectile.Kill();
-                        }
+                        OnReturnToPlayer();
+                        Projectile.Kill();
                     }
-                    break;
-            }
-
-            return true;
+                }
+                break;
         }
+
+        return true;
     }
 }

@@ -1,9 +1,8 @@
 ﻿using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 
-namespace Macrocosm.Common.Utils
+namespace Macrocosm.Common.Utils;
+
+public partial class Utility
 {
-    public partial class Utility
-    {
-    }
 }

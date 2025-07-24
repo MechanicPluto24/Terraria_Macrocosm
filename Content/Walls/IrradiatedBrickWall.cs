@@ -4,19 +4,18 @@ using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Walls
-{
-    public class IrradiatedBrickWall : VariantWall
-    {
-        public override void SetVariantStaticDefaults(WallSafetyType variant)
-        {
-            AddMapEntry(new Color(199, 199, 184));
-            DustType = ModContent.DustType<IrradiatedRockDust>();
+namespace Macrocosm.Content.Walls;
 
-            if (variant == WallSafetyType.Unsafe)
-                RegisterItemDrop(ModContent.ItemType<Items.Walls.IrradiatedBrickWallUnsafe>());
-            else
-                RegisterItemDrop(ModContent.ItemType<Items.Walls.IrradiatedBrickWall>());
-        }
+public class IrradiatedBrickWall : VariantWall
+{
+    public override void SetVariantStaticDefaults(WallSafetyType variant)
+    {
+        AddMapEntry(new Color(199, 199, 184));
+        DustType = ModContent.DustType<IrradiatedRockDust>();
+
+        if (variant == WallSafetyType.Unsafe)
+            RegisterItemDrop(ModContent.ItemType<Items.Walls.IrradiatedBrickWallUnsafe>());
+        else
+            RegisterItemDrop(ModContent.ItemType<Items.Walls.IrradiatedBrickWall>());
     }
 }

@@ -5,23 +5,22 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Blocks.Bricks
+namespace Macrocosm.Content.Items.Blocks.Bricks;
+
+public class HaemonovaBrick : ModItem
 {
-    public class HaemonovaBrick : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Item.ResearchUnlockCount = 100;
-            ShimmerSystem.RegisterOverride(ItemID.LunarBrick, Type, CustomConditions.BloodMoonOrDemonSun);
-        }
+        Item.ResearchUnlockCount = 100;
+        ShimmerSystem.RegisterOverride(ItemID.LunarBrick, Type, CustomConditions.BloodMoonOrDemonSun);
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Bricks.HaemonovaBrick>());
-        }
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Bricks.HaemonovaBrick>());
+    }
 
-        public override void AddRecipes()
-        {
-        }
+    public override void AddRecipes()
+    {
     }
 }

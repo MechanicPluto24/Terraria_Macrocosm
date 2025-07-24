@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
+namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth;
+
+public class LCShip2 : LCShip1
 {
-    public class LCShip2 : LCShip1
-    {
-    }
 }

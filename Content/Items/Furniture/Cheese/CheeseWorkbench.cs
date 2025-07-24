@@ -3,27 +3,26 @@ using Terraria;
 using Terraria.ModLoader;
 
 
-namespace Macrocosm.Content.Items.Furniture.Cheese
+namespace Macrocosm.Content.Items.Furniture.Cheese;
+
+public class CheeseWorkbench : ModItem
 {
-    public class CheeseWorkbench : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-        }
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Cheese.CheeseWorkbench>());
-            Item.width = 28;
-            Item.height = 16;
-            Item.value = 150;
-        }
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Cheese.CheeseWorkbench>());
+        Item.width = 28;
+        Item.height = 16;
+        Item.value = 150;
+    }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient<CheeseBlock>(10)
-                .Register();
-        }
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient<CheeseBlock>(10)
+            .Register();
     }
 }

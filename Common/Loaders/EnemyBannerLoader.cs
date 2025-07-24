@@ -4,55 +4,54 @@ using System.IO;
 using System.Linq;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Loaders
+namespace Macrocosm.Common.Loaders;
+
+/// <summary>
+/// Automatically loads enemy banners from any "EnemyBanners/" directory.
+/// <br/> - Tile texture: "EnemyBanners/EnemyNameBanner.png"
+/// <br/> - Item texture: "EnemyBanners/EnemyNameBannerItem.png"
+/// <br/> Banners are automatically assigned to NPCs matching their name in <see cref="Global.NPCs.BannerGlobalNPC"/>.
+/// </summary>
+public class EnemyBannerLoader : ILoadable
 {
-    /// <summary>
-    /// Automatically loads enemy banners from any "EnemyBanners/" directory.
-    /// <br/> - Tile texture: "EnemyBanners/EnemyNameBanner.png"
-    /// <br/> - Item texture: "EnemyBanners/EnemyNameBannerItem.png"
-    /// <br/> Banners are automatically assigned to NPCs matching their name in <see cref="Global.NPCs.BannerGlobalNPC"/>.
-    /// </summary>
-    public class EnemyBannerLoader : ILoadable
+    public void Load(Mod mod)
     {
-        public void Load(Mod mod)
+        foreach (string fullTexturePath in mod.RootContentSource.EnumerateAssets().Where(t => t.Contains("EnemyBanners/")))
         {
-            foreach (string fullTexturePath in mod.RootContentSource.EnumerateAssets().Where(t => t.Contains("EnemyBanners/")))
+            string texturePath = Path.ChangeExtension(fullTexturePath, null);
+            string internalName = Path.GetFileName(texturePath);
+            string modTexturePath = $"{mod.Name}/{texturePath}";
+
+            // Load in pairs, to ensure the tile is loaded first
+            string itemSuffix = "Item";
+            if (!internalName.EndsWith(itemSuffix))
             {
-                string texturePath = Path.ChangeExtension(fullTexturePath, null);
-                string internalName = Path.GetFileName(texturePath);
-                string modTexturePath = $"{mod.Name}/{texturePath}";
-
-                // Load in pairs, to ensure the tile is loaded first
-                string itemSuffix = "Item";
-                if (!internalName.EndsWith(itemSuffix))
-                {
-                    var tile = new EnemyBannerTile(modTexturePath, internalName);
-                    mod.AddContent(tile); // tile.Type is assigned here
-                    if (mod.HasAsset(texturePath + itemSuffix))
-                        mod.AddContent(new EnemyBannerItem(modTexturePath + itemSuffix, internalName + itemSuffix, tile.Type));
-                }
-            }
-
-            foreach (string fullTexturePath in mod.RootContentSource.EnumerateAssets().Where(t => t.Contains("EnemyBannersLarge/")))
-            {
-                string texturePath = Path.ChangeExtension(fullTexturePath, null);
-                string internalName = Path.GetFileName(texturePath);
-                string modTexturePath = $"{mod.Name}/{texturePath}";
-
-                // Load in pairs, to ensure the tile is loaded first
-                string itemSuffix = "Item";
-                if (!internalName.EndsWith(itemSuffix))
-                {
-                    var tile = new EnemyBannerLargeTile(modTexturePath, internalName);
-                    mod.AddContent(tile); // tile.Type is assigned here
-                    if (mod.HasAsset(texturePath + itemSuffix))
-                        mod.AddContent(new EnemyBannerItem(modTexturePath + itemSuffix, internalName + itemSuffix, tile.Type));
-                }
+                var tile = new EnemyBannerTile(modTexturePath, internalName);
+                mod.AddContent(tile); // tile.Type is assigned here
+                if (mod.HasAsset(texturePath + itemSuffix))
+                    mod.AddContent(new EnemyBannerItem(modTexturePath + itemSuffix, internalName + itemSuffix, tile.Type));
             }
         }
 
-        public void Unload()
+        foreach (string fullTexturePath in mod.RootContentSource.EnumerateAssets().Where(t => t.Contains("EnemyBannersLarge/")))
         {
+            string texturePath = Path.ChangeExtension(fullTexturePath, null);
+            string internalName = Path.GetFileName(texturePath);
+            string modTexturePath = $"{mod.Name}/{texturePath}";
+
+            // Load in pairs, to ensure the tile is loaded first
+            string itemSuffix = "Item";
+            if (!internalName.EndsWith(itemSuffix))
+            {
+                var tile = new EnemyBannerLargeTile(modTexturePath, internalName);
+                mod.AddContent(tile); // tile.Type is assigned here
+                if (mod.HasAsset(texturePath + itemSuffix))
+                    mod.AddContent(new EnemyBannerItem(modTexturePath + itemSuffix, internalName + itemSuffix, tile.Type));
+            }
         }
+    }
+
+    public void Unload()
+    {
     }
 }

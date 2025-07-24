@@ -7,177 +7,176 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Common.Storage
+namespace Macrocosm.Common.Storage;
+
+public partial class Inventory
 {
-    public partial class Inventory
+    public enum InventoryMessageType
     {
-        public enum InventoryMessageType
+        SyncEverything,
+        SyncInteraction,
+        SyncItem
+    }
+
+    public static void HandlePacket(BinaryReader reader, int sender)
+    {
+        var type = (InventoryMessageType)reader.ReadByte();
+
+        switch (type)
         {
-            SyncEverything,
-            SyncInteraction,
-            SyncItem
+            case InventoryMessageType.SyncEverything:
+                ReceiveSyncEverything(reader, sender);
+                break;
+
+            case InventoryMessageType.SyncInteraction:
+                ReceiveSyncInteraction(reader, sender);
+                break;
+
+            case InventoryMessageType.SyncItem:
+                ReceiveSyncItem(reader, sender);
+                break;
         }
+    }
 
-        public static void HandlePacket(BinaryReader reader, int sender)
+    public void SyncEverything(int toClient = -1, int ignoreClient = -1, bool toSubservers = false, int ignoreSubserver = -1)
+    {
+        if (Main.netMode == NetmodeID.SinglePlayer)
+            return;
+
+        ModPacket packet = Macrocosm.Instance.GetPacket();
+
+        packet.Write((byte)MessageType.SyncInventory);
+        packet.Write((byte)InventoryMessageType.SyncEverything);
+
+
+        packet.Write(toSubservers);
+        packet.Write((short)NetHelper.GetServerIndex());
+
+
+        packet.Write(Owner.InventoryOwnerType);
+        packet.Write(Owner.InventorySerializationIndex);
+
+        packet.Write((ushort)Size);
+        packet.Write((byte)interactingPlayer);
+
+        foreach (var item in items)
+            ItemIO.Send(item, packet, writeStack: true, writeFavorite: true);
+
+        if (toSubservers)
+            packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
+
+        packet.Send(toClient, ignoreClient);
+    }
+
+    private static void ReceiveSyncEverything(BinaryReader reader, int sender)
+    {
+        bool toSubservers = reader.ReadBoolean();
+        int senderSubserver = reader.ReadInt16();
+
+        string ownerType = reader.ReadString();
+        int ownerSerializationIndex = reader.ReadInt32();
+
+        int newSize = reader.ReadUInt16();
+        int interactingPlayer = reader.ReadByte();
+
+        Item[] items = new Item[newSize];
+        for (int i = 0; i < newSize; i++)
+            items[i] = ItemIO.Receive(reader, readStack: true, readFavorite: true);
+
+        IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
+        if (owner is not null)
         {
-            var type = (InventoryMessageType)reader.ReadByte();
+            Inventory inventory;
 
-            switch (type)
-            {
-                case InventoryMessageType.SyncEverything:
-                    ReceiveSyncEverything(reader, sender);
-                    break;
+            //if (owner.Inventory is not null)
+            inventory = owner.Inventory;
+            //else
+            //    owner.Inventory = inventory = new(newSize, owner);
 
-                case InventoryMessageType.SyncInteraction:
-                    ReceiveSyncInteraction(reader, sender);
-                    break;
+            if (inventory.Size != newSize)
+                inventory.OnResize(inventory.Size, newSize);
 
-                case InventoryMessageType.SyncItem:
-                    ReceiveSyncItem(reader, sender);
-                    break;
-            }
+            inventory.interactingPlayer = interactingPlayer;
+
+            for (int i = 0; i < inventory.Size; i++)
+                inventory[i] = items[i].Clone();
+
+            if (Main.netMode == NetmodeID.Server)
+                inventory.SyncEverything(ignoreClient: sender, toSubservers: toSubservers, ignoreSubserver: senderSubserver);
         }
+    }
 
-        public void SyncEverything(int toClient = -1, int ignoreClient = -1, bool toSubservers = false, int ignoreSubserver = -1)
+    public void SyncItem(Item item, int toClient = -1, int ignoreClient = -1) => SyncItem(Array.IndexOf(items, item), toClient, ignoreClient);
+
+    public void SyncItem(int index, int toClient = -1, int ignoreClient = -1)
+    {
+        if (Main.netMode == NetmodeID.SinglePlayer)
+            return;
+
+        if (index < 0 || index > MaxInventorySize)
+            return;
+
+        ModPacket packet = Macrocosm.Instance.GetPacket();
+
+        packet.Write((byte)MessageType.SyncInventory);
+        packet.Write((byte)InventoryMessageType.SyncItem);
+        packet.Write(Owner.InventoryOwnerType);
+        packet.Write(Owner.InventorySerializationIndex);
+        packet.Write((ushort)index);
+
+        ItemIO.Send(items[index], packet, writeStack: true, writeFavorite: false);
+
+        packet.Send(toClient, ignoreClient);
+    }
+
+    private static void ReceiveSyncItem(BinaryReader reader, int sender)
+    {
+        string ownerType = reader.ReadString();
+        int ownerSerializationIndex = reader.ReadInt32();
+        int itemIndex = reader.ReadUInt16();
+        Item item = ItemIO.Receive(reader, readStack: true, readFavorite: false);
+
+        IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
+        if (owner is not null)
         {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-                return;
+            Inventory inventory = owner.Inventory;
+            inventory[itemIndex] = item;
 
-            ModPacket packet = Macrocosm.Instance.GetPacket();
-
-            packet.Write((byte)MessageType.SyncInventory);
-            packet.Write((byte)InventoryMessageType.SyncEverything);
-
-
-            packet.Write(toSubservers);
-            packet.Write((short)NetHelper.GetServerIndex());
-
-
-            packet.Write(Owner.InventoryOwnerType);
-            packet.Write(Owner.InventorySerializationIndex);
-
-            packet.Write((ushort)Size);
-            packet.Write((byte)interactingPlayer);
-
-            foreach (var item in items)
-                ItemIO.Send(item, packet, writeStack: true, writeFavorite: true);
-
-            if (toSubservers)
-                packet.RelayToServers(Macrocosm.Instance, ignoreSubserver);
-
-            packet.Send(toClient, ignoreClient);
+            if (Main.netMode == NetmodeID.Server)
+                inventory.SyncItem(itemIndex, ignoreClient: sender);
         }
+    }
 
-        private static void ReceiveSyncEverything(BinaryReader reader, int sender)
+    public void SyncInteraction(int toClient = -1, int ignoreClient = -1)
+    {
+        if (Main.netMode == NetmodeID.SinglePlayer)
+            return;
+
+        ModPacket packet = Macrocosm.Instance.GetPacket();
+
+        packet.Write((byte)MessageType.SyncInventory);
+        packet.Write((byte)InventoryMessageType.SyncInteraction);
+        packet.Write(Owner.InventoryOwnerType);
+        packet.Write(Owner.InventorySerializationIndex);
+        packet.Write((byte)interactingPlayer);
+
+        packet.Send(toClient, ignoreClient);
+    }
+
+    private static void ReceiveSyncInteraction(BinaryReader reader, int sender)
+    {
+        string ownerType = reader.ReadString();
+        int ownerSerializationIndex = reader.ReadInt32();
+        int interactingPlayer = reader.ReadByte();
+
+        IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
+        if (owner is not null)
         {
-            bool toSubservers = reader.ReadBoolean();
-            int senderSubserver = reader.ReadInt16();
+            Inventory inventory = owner.Inventory;
+            inventory.interactingPlayer = interactingPlayer;
 
-            string ownerType = reader.ReadString();
-            int ownerSerializationIndex = reader.ReadInt32();
-
-            int newSize = reader.ReadUInt16();
-            int interactingPlayer = reader.ReadByte();
-
-            Item[] items = new Item[newSize];
-            for (int i = 0; i < newSize; i++)
-                items[i] = ItemIO.Receive(reader, readStack: true, readFavorite: true);
-
-            IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-            if (owner is not null)
-            {
-                Inventory inventory;
-
-                //if (owner.Inventory is not null)
-                inventory = owner.Inventory;
-                //else
-                //    owner.Inventory = inventory = new(newSize, owner);
-
-                if (inventory.Size != newSize)
-                    inventory.OnResize(inventory.Size, newSize);
-
-                inventory.interactingPlayer = interactingPlayer;
-
-                for (int i = 0; i < inventory.Size; i++)
-                    inventory[i] = items[i].Clone();
-
-                if (Main.netMode == NetmodeID.Server)
-                    inventory.SyncEverything(ignoreClient: sender, toSubservers: toSubservers, ignoreSubserver: senderSubserver);
-            }
-        }
-
-        public void SyncItem(Item item, int toClient = -1, int ignoreClient = -1) => SyncItem(Array.IndexOf(items, item), toClient, ignoreClient);
-
-        public void SyncItem(int index, int toClient = -1, int ignoreClient = -1)
-        {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-                return;
-
-            if (index < 0 || index > MaxInventorySize)
-                return;
-
-            ModPacket packet = Macrocosm.Instance.GetPacket();
-
-            packet.Write((byte)MessageType.SyncInventory);
-            packet.Write((byte)InventoryMessageType.SyncItem);
-            packet.Write(Owner.InventoryOwnerType);
-            packet.Write(Owner.InventorySerializationIndex);
-            packet.Write((ushort)index);
-
-            ItemIO.Send(items[index], packet, writeStack: true, writeFavorite: false);
-
-            packet.Send(toClient, ignoreClient);
-        }
-
-        private static void ReceiveSyncItem(BinaryReader reader, int sender)
-        {
-            string ownerType = reader.ReadString();
-            int ownerSerializationIndex = reader.ReadInt32();
-            int itemIndex = reader.ReadUInt16();
-            Item item = ItemIO.Receive(reader, readStack: true, readFavorite: false);
-
-            IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-            if (owner is not null)
-            {
-                Inventory inventory = owner.Inventory;
-                inventory[itemIndex] = item;
-
-                if (Main.netMode == NetmodeID.Server)
-                    inventory.SyncItem(itemIndex, ignoreClient: sender);
-            }
-        }
-
-        public void SyncInteraction(int toClient = -1, int ignoreClient = -1)
-        {
-            if (Main.netMode == NetmodeID.SinglePlayer)
-                return;
-
-            ModPacket packet = Macrocosm.Instance.GetPacket();
-
-            packet.Write((byte)MessageType.SyncInventory);
-            packet.Write((byte)InventoryMessageType.SyncInteraction);
-            packet.Write(Owner.InventoryOwnerType);
-            packet.Write(Owner.InventorySerializationIndex);
-            packet.Write((byte)interactingPlayer);
-
-            packet.Send(toClient, ignoreClient);
-        }
-
-        private static void ReceiveSyncInteraction(BinaryReader reader, int sender)
-        {
-            string ownerType = reader.ReadString();
-            int ownerSerializationIndex = reader.ReadInt32();
-            int interactingPlayer = reader.ReadByte();
-
-            IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
-            if (owner is not null)
-            {
-                Inventory inventory = owner.Inventory;
-                inventory.interactingPlayer = interactingPlayer;
-
-                if (Main.netMode == NetmodeID.Server)
-                    inventory.SyncInteraction(ignoreClient: sender);
-            }
+            if (Main.netMode == NetmodeID.Server)
+                inventory.SyncInteraction(ignoreClient: sender);
         }
     }
 }

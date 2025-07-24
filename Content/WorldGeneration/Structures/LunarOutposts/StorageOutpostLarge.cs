@@ -1,6 +1,5 @@
-﻿namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts
+﻿namespace Macrocosm.Content.WorldGeneration.Structures.LunarOutposts;
+
+public class StorageOutpostLarge : BaseLunarOutpost
 {
-    public class StorageOutpostLarge : BaseLunarOutpost
-    {
-    }
 }

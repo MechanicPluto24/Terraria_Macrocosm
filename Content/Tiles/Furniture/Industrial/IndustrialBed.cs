@@ -11,126 +11,125 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Furniture.Industrial
+namespace Macrocosm.Content.Tiles.Furniture.Industrial;
+
+public class IndustrialBed : ModTile
 {
-    public class IndustrialBed : ModTile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
+        Main.tileFrameImportant[Type] = true;
+        Main.tileLavaDeath[Type] = true;
+        TileID.Sets.HasOutlines[Type] = true;
+        TileID.Sets.CanBeSleptIn[Type] = true; // Facilitates calling ModifySleepingTargetInfo
+        TileID.Sets.InteractibleByNPCs[Type] = true;
+        TileID.Sets.IsValidSpawnPoint[Type] = true;
+        TileID.Sets.DisableSmartCursor[Type] = true;
+
+        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+
+        DustType = ModContent.DustType<IndustrialPlatingDust>();
+        AdjTiles = [TileID.Beds];
+
+        TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
+        TileObjectData.newTile.Width = 4;
+        TileObjectData.newTile.Height = 3;
+        TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
+        TileObjectData.newTile.StyleWrapLimit = 2;
+        TileObjectData.newTile.StyleHorizontal = true;
+        TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+        TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+        TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
+        TileObjectData.addAlternate(1);
+        TileObjectData.addTile(Type);
+
+        AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Bed"));
+
+        TileSets.RandomStyles[Type] = 2;
+
+        // All styles
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialBed>());
+    }
+
+    public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
+    {
+        return true;
+    }
+
+    public override void ModifySmartInteractCoords(ref int width, ref int height, ref int frameWidth, ref int frameHeight, ref int extraY)
+    {
+        // Because beds have special smart interaction, this splits up the left and right side into 2x3 sections
+        width = 2;
+        height = 3;
+        //extraY = 0;  
+    }
+
+    public override void ModifySleepingTargetInfo(int i, int j, ref TileRestingInfo info)
+    {
+        info.VisualOffset.Y -= 3f;
+        info.AnchorTilePosition.Y += 1;
+    }
+
+    public override void NumDust(int i, int j, bool fail, ref int num)
+    {
+        num = 1;
+    }
+
+    public override bool RightClick(int i, int j)
+    {
+        Player player = Main.LocalPlayer;
+        Tile tile = Main.tile[i, j];
+        int frameX = tile.TileFrameX / 18;
+
+        // Adjust spawn point based on bed orientation
+        int spawnX = (i - frameX) + (frameX >= 4 ? 5 : 2);
+        int spawnY = j;
+
+        // Check if clicking on the pillow side of the bed
+        if (frameX >= 2 && frameX <= 5)
         {
-            Main.tileFrameImportant[Type] = true;
-            Main.tileLavaDeath[Type] = true;
-            TileID.Sets.HasOutlines[Type] = true;
-            TileID.Sets.CanBeSleptIn[Type] = true; // Facilitates calling ModifySleepingTargetInfo
-            TileID.Sets.InteractibleByNPCs[Type] = true;
-            TileID.Sets.IsValidSpawnPoint[Type] = true;
-            TileID.Sets.DisableSmartCursor[Type] = true;
-
-            AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
-
-            DustType = ModContent.DustType<IndustrialPlatingDust>();
-            AdjTiles = [TileID.Beds];
-
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style3x3Wall);
-            TileObjectData.newTile.Width = 4;
-            TileObjectData.newTile.Height = 3;
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.newTile.StyleWrapLimit = 2;
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.addAlternate(1);
-            TileObjectData.addTile(Type);
-
-            AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Bed"));
-
-            TileSets.RandomStyles[Type] = 2;
-
-            // All styles
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialBed>());
-        }
-
-        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
-        {
-            return true;
-        }
-
-        public override void ModifySmartInteractCoords(ref int width, ref int height, ref int frameWidth, ref int frameHeight, ref int extraY)
-        {
-            // Because beds have special smart interaction, this splits up the left and right side into 2x3 sections
-            width = 2;
-            height = 3;
-            //extraY = 0;  
-        }
-
-        public override void ModifySleepingTargetInfo(int i, int j, ref TileRestingInfo info)
-        {
-            info.VisualOffset.Y -= 3f;
-            info.AnchorTilePosition.Y += 1;
-        }
-
-        public override void NumDust(int i, int j, bool fail, ref int num)
-        {
-            num = 1;
-        }
-
-        public override bool RightClick(int i, int j)
-        {
-            Player player = Main.LocalPlayer;
-            Tile tile = Main.tile[i, j];
-            int frameX = tile.TileFrameX / 18;
-
-            // Adjust spawn point based on bed orientation
-            int spawnX = (i - frameX) + (frameX >= 4 ? 5 : 2);
-            int spawnY = j;
-
-            // Check if clicking on the pillow side of the bed
-            if (frameX >= 2 && frameX <= 5)
+            if (player.IsWithinSnappngRangeToTile(i, j, PlayerSleepingHelper.BedSleepingMaxDistance))
             {
-                if (player.IsWithinSnappngRangeToTile(i, j, PlayerSleepingHelper.BedSleepingMaxDistance))
-                {
-                    player.GamepadEnableGrappleCooldown();
-                    player.sleeping.StartSleeping(player, i, j);
-                }
+                player.GamepadEnableGrappleCooldown();
+                player.sleeping.StartSleeping(player, i, j);
             }
-            else
+        }
+        else
+        {
+            player.FindSpawn();
+
+            if (player.SpawnX == spawnX && player.SpawnY == spawnY)
             {
-                player.FindSpawn();
-
-                if (player.SpawnX == spawnX && player.SpawnY == spawnY)
-                {
-                    player.RemoveSpawn();
-                    Main.NewText(Language.GetTextValue("Game.SpawnPointRemoved"), byte.MaxValue, 240, 20);
-                }
-                else if (Player.CheckSpawn(spawnX, spawnY))
-                {
-                    player.ChangeSpawn(spawnX, spawnY);
-                    Main.NewText(Language.GetTextValue("Game.SpawnPointSet"), byte.MaxValue, 240, 20);
-                }
+                player.RemoveSpawn();
+                Main.NewText(Language.GetTextValue("Game.SpawnPointRemoved"), byte.MaxValue, 240, 20);
             }
-
-            return true;
+            else if (Player.CheckSpawn(spawnX, spawnY))
+            {
+                player.ChangeSpawn(spawnX, spawnY);
+                Main.NewText(Language.GetTextValue("Game.SpawnPointSet"), byte.MaxValue, 240, 20);
+            }
         }
 
-        public override void MouseOver(int i, int j)
-        {
-            Player player = Main.LocalPlayer;
+        return true;
+    }
 
-            if (!Player.IsHoveringOverABottomSideOfABed(i, j))
-            {
-                if (player.IsWithinSnappngRangeToTile(i, j, PlayerSleepingHelper.BedSleepingMaxDistance))
-                {
-                    player.noThrow = 2;
-                    player.cursorItemIconEnabled = true;
-                    player.cursorItemIconID = ItemID.SleepingIcon;
-                }
-            }
-            else
+    public override void MouseOver(int i, int j)
+    {
+        Player player = Main.LocalPlayer;
+
+        if (!Player.IsHoveringOverABottomSideOfABed(i, j))
+        {
+            if (player.IsWithinSnappngRangeToTile(i, j, PlayerSleepingHelper.BedSleepingMaxDistance))
             {
                 player.noThrow = 2;
                 player.cursorItemIconEnabled = true;
-                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
+                player.cursorItemIconID = ItemID.SleepingIcon;
             }
+        }
+        else
+        {
+            player.noThrow = 2;
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
     }
 }

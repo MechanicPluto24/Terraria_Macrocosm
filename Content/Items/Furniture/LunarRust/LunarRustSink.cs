@@ -4,29 +4,28 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 
-namespace Macrocosm.Content.Items.Furniture.LunarRust
+namespace Macrocosm.Content.Items.Furniture.LunarRust;
+
+public class LunarRustSink : ModItem
 {
-    public class LunarRustSink : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-        }
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteSink>(), (int)LuminiteStyle.LunarRust);
-            Item.width = 32;
-            Item.height = 28;
-            Item.value = 150;
-        }
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteSink>(), (int)LuminiteStyle.LunarRust);
+        Item.width = 32;
+        Item.height = 28;
+        Item.value = 150;
+    }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient(ItemID.LunarRustBrick, 6)
-                .AddIngredient(ItemID.WaterBucket, 1)
-                .AddTile(TileID.MythrilAnvil)
-                .Register();
-        }
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient(ItemID.LunarRustBrick, 6)
+            .AddIngredient(ItemID.WaterBucket, 1)
+            .AddTile(TileID.MythrilAnvil)
+            .Register();
     }
 }

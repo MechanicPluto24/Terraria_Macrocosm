@@ -1,7 +1,6 @@
-﻿namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
-{
-    public class SpaceJunk3 : SpaceJunk1
-    {
+﻿namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth;
 
-    }
+public class SpaceJunk3 : SpaceJunk1
+{
+
 }

@@ -1,39 +1,38 @@
 ﻿using System;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Subworlds
+namespace Macrocosm.Common.Subworlds;
+
+public abstract class MultiSubworld : MacrocosmSubworld
 {
-    public abstract class MultiSubworld : MacrocosmSubworld
+    public override string Name => base.Name + InstanceIndex;
+    public int InstanceIndex { get; private set; } = 0;
+    protected abstract int InstanceCount { get; }
+
+    public override void Load()
     {
-        public override string Name => base.Name + InstanceIndex;
-        public int InstanceIndex { get; private set; } = 0;
-        protected abstract int InstanceCount { get; }
+        base.Load();
 
-        public override void Load()
+        // Index 0 manages the loading of all the other instances
+        if (InstanceIndex <= 0)
         {
-            base.Load();
+            MultiSubworld[] subworlds = new MultiSubworld[InstanceCount];
+            subworlds[0] = this;
 
-            // Index 0 manages the loading of all the other instances
-            if (InstanceIndex <= 0)
+            for (int i = 1; i < InstanceCount; i++)
             {
-                MultiSubworld[] subworlds = new MultiSubworld[InstanceCount];
-                subworlds[0] = this;
-
-                for (int i = 1; i < InstanceCount; i++)
+                if (Activator.CreateInstance(GetType()) is MultiSubworld instance)
                 {
-                    if (Activator.CreateInstance(GetType()) is MultiSubworld instance)
-                    {
-                        instance.InstanceIndex = i;
-                        Mod.AddContent(instance);
-                        subworlds[i] = instance;
-                    }
+                    instance.InstanceIndex = i;
+                    Mod.AddContent(instance);
+                    subworlds[i] = instance;
                 }
             }
         }
+    }
 
-        public override void Unload()
-        {
-            base.Unload();
-        }
+    public override void Unload()
+    {
+        base.Unload();
     }
 }

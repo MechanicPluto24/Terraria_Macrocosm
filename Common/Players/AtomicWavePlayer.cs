@@ -4,39 +4,38 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Players
+namespace Macrocosm.Common.Players;
+
+public class AtomicWavePlayer : ModPlayer
 {
-    public class AtomicWavePlayer : ModPlayer
+    public bool AtomicWave { get; set; }
+
+    private int cooldown;
+
+    public override void ResetEffects()
     {
-        public bool AtomicWave { get; set; }
+        AtomicWave = false;
+    }
 
-        private int cooldown;
-
-        public override void ResetEffects()
+    public override void PostUpdate()
+    {
+        if (AtomicWave)
         {
-            AtomicWave = false;
-        }
+            if (cooldown >= 1)
+                cooldown--;
 
-        public override void PostUpdate()
-        {
-            if (AtomicWave)
+            bool close = false;
+            for (int i = 0; i < Main.maxNPCs; i++)
             {
-                if (cooldown >= 1)
-                    cooldown--;
+                NPC npc = Main.npc[i];
+                if (npc.active && !npc.friendly && Vector2.Distance(Player.Center, npc.Center) < 200f)
+                    close = true;
+            }
 
-                bool close = false;
-                for (int i = 0; i < Main.maxNPCs; i++)
-                {
-                    NPC npc = Main.npc[i];
-                    if (npc.active && !npc.friendly && Vector2.Distance(Player.Center, npc.Center) < 200f)
-                        close = true;
-                }
-
-                if (close && cooldown < 1)
-                {
-                    Projectile.NewProjectile(new EntitySource_Misc("AtomicWave"), Player.Center, Vector2.Zero, ModContent.ProjectileType<AtomicWaveProjectile>(), 700, 10f, Main.myPlayer);
-                    cooldown = 300;
-                }
+            if (close && cooldown < 1)
+            {
+                Projectile.NewProjectile(new EntitySource_Misc("AtomicWave"), Player.Center, Vector2.Zero, ModContent.ProjectileType<AtomicWaveProjectile>(), 700, 10f, Main.myPlayer);
+                cooldown = 300;
             }
         }
     }

@@ -11,12 +11,11 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns
+namespace Macrocosm.Content.Projectiles.Friendly.Magic.WaveGuns;
+
+public class WaveGunRedBolt : WaveGunBlueBolt
 {
-    public class WaveGunRedBolt : WaveGunBlueBolt
-    {
-        public override Color BeamColor => new(255, 75, 75, 0);
-        public override Vector3 LightColor => new(1f, 0f, 0f);
-    }
+    public override Color BeamColor => new(255, 75, 75, 0);
+    public override Vector3 LightColor => new(1f, 0f, 0f);
 }
 

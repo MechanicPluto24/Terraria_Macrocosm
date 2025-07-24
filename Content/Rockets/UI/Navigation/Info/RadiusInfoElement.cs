@@ -3,24 +3,23 @@ using Macrocosm.Common.Enums;
 using System;
 using Terraria.Localization;
 
-namespace Macrocosm.Content.Rockets.UI.Navigation.Info
+namespace Macrocosm.Content.Rockets.UI.Navigation.Info;
+
+public class RadiusInfoElement : ValueUnitSpecialInfoElement
 {
-    public class RadiusInfoElement : ValueUnitSpecialInfoElement
+    public RadiusInfoElement(string specialValueKey) : base(specialValueKey) { }
+
+    public RadiusInfoElement(float value, string specialValueKey = "") : base(value, specialValueKey) { }
+
+    protected override LocalizedText GetLocalizedValueUnitText(ref float value)
     {
-        public RadiusInfoElement(string specialValueKey) : base(specialValueKey) { }
+        UnitSystemType unitType = ClientConfig.Instance.UnitSystem;
 
-        public RadiusInfoElement(float value, string specialValueKey = "") : base(value, specialValueKey) { }
+        // convert to miles
+        if (unitType == UnitSystemType.Imperial)
+            value *= 0.621f;
 
-        protected override LocalizedText GetLocalizedValueUnitText(ref float value)
-        {
-            UnitSystemType unitType = ClientConfig.Instance.UnitSystem;
-
-            // convert to miles
-            if (unitType == UnitSystemType.Imperial)
-                value *= 0.621f;
-
-            value = MathF.Round(value, 2);
-            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.Radius.Unit" + unitType.ToString());
-        }
+        value = MathF.Round(value, 2);
+        return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.Radius.Unit" + unitType.ToString());
     }
 }

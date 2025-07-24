@@ -1,10 +1,9 @@
-﻿namespace Macrocosm.Common.Enums
+﻿namespace Macrocosm.Common.Enums;
+
+public enum UpdateRate
 {
-    public enum UpdateRate
-    {
-        Realtime = 0,
-        Fast = 10,
-        Medium = 30,
-        Slow = 60
-    }
+    Realtime = 0,
+    Fast = 10,
+    Medium = 30,
+    Slow = 60
 }
