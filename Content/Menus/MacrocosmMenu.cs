@@ -21,9 +21,9 @@ public class MacrocosmMenu : ModMenu
     private Asset<Texture2D> logo;
     private Asset<Texture2D> logoOld;
 
-    private List<CelestialBody> celestialBodies;
-    private List<CelestialBody> planetsWithMoons;
-    private List<CelestialBody> interactible;
+    private List<CelestialBodySprite> celestialBodies;
+    private List<CelestialBodySprite> planetsWithMoons;
+    private List<CelestialBodySprite> interactible;
 
     private Stars stars;
     private Asset<Texture2D> milkyWay;
@@ -31,7 +31,7 @@ public class MacrocosmMenu : ModMenu
     private RawTexture milkyWayRaw;
     private RawTexture nebulaRaw;
 
-    private CelestialBody sun;
+    private CelestialBodySprite sun;
     private Asset<Texture2D> sunCorona1;
     private Asset<Texture2D> sunCorona2;
     private Asset<Texture2D> sunCorona3;
@@ -41,44 +41,44 @@ public class MacrocosmMenu : ModMenu
     private Asset<Texture2D> scorch1;
     private Asset<Texture2D> scorch2;
 
-    private CelestialBody vulcan;
+    private CelestialBodySprite vulcan;
 
-    private CelestialBody mercury;
+    private CelestialBodySprite mercury;
 
-    private CelestialBody venus;
+    private CelestialBodySprite venus;
 
-    private CelestialBody earth;
-    private CelestialBody luna;
+    private CelestialBodySprite earth;
+    private CelestialBodySprite luna;
 
-    private CelestialBody mars;
-    private CelestialBody phobos;
-    private CelestialBody deimos;
+    private CelestialBodySprite mars;
+    private CelestialBodySprite phobos;
+    private CelestialBodySprite deimos;
 
-    private CelestialBody ceres;
+    private CelestialBodySprite ceres;
     private Asset<Texture2D> asteroids;
-    private List<CelestialBody> asteroidBelt;
+    private List<CelestialBodySprite> asteroidBelt;
 
-    private CelestialBody jupiter;
-    private CelestialBody io;
-    private CelestialBody europa;
+    private CelestialBodySprite jupiter;
+    private CelestialBodySprite io;
+    private CelestialBodySprite europa;
 
-    private CelestialBody saturn;
-    private CelestialBody titan;
+    private CelestialBodySprite saturn;
+    private CelestialBodySprite titan;
 
-    private CelestialBody ouranos;
-    private CelestialBody miranda;
+    private CelestialBodySprite ouranos;
+    private CelestialBodySprite miranda;
 
-    private CelestialBody neptune;
-    private CelestialBody triton;
+    private CelestialBodySprite neptune;
+    private CelestialBodySprite triton;
 
-    private CelestialBody plutoBarycenter;
-    private CelestialBody pluto;
-    private CelestialBody charon;
+    private CelestialBodySprite plutoBarycenter;
+    private CelestialBodySprite pluto;
+    private CelestialBodySprite charon;
 
-    private CelestialBody eris;
+    private CelestialBodySprite eris;
 
     private Asset<Texture2D> icyAsteroids;
-    private List<CelestialBody> kuiperBelt;
+    private List<CelestialBodySprite> kuiperBelt;
 
     public MacrocosmMenu()
     {
@@ -164,7 +164,7 @@ public class MacrocosmMenu : ModMenu
         for (int i = 0; i < 450; i++)
         {
             Rectangle sourceRect = asteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
-            CelestialBody asteroid = new(asteroids, scale: 0.6f, bodySourceRect: sourceRect);
+            CelestialBodySprite asteroid = new(asteroids, scale: 0.6f, bodySourceRect: sourceRect);
             asteroid.ResetSpritebatch = false;
             asteroid.SetOrbitParent(sun,
                 orbitRadius: 370 + Main.rand.NextFloat(40) * MathF.Sin(Rand()),
@@ -226,7 +226,7 @@ public class MacrocosmMenu : ModMenu
         for (int i = 0; i < 600; i++)
         {
             Rectangle sourceRect = icyAsteroids.Frame(verticalFrames: 8, frameY: Main.rand.Next(8));
-            CelestialBody icyAsteroid = new(icyAsteroids, scale: 0.6f, bodySourceRect: sourceRect);
+            CelestialBodySprite icyAsteroid = new(icyAsteroids, scale: 0.6f, bodySourceRect: sourceRect);
             icyAsteroid.ResetSpritebatch = false;
             icyAsteroid.SetOrbitParent(sun,
                 orbitRadius: 800 + Main.rand.NextFloat(100) * MathF.Sin(Rand()),
@@ -261,7 +261,7 @@ public class MacrocosmMenu : ModMenu
             eris
         ];
 
-        foreach (CelestialBody body in celestialBodies)
+        foreach (CelestialBodySprite body in celestialBodies)
         {
             body.ShouldUpdate = true;
             body.Scale = 0.6f;
@@ -351,7 +351,7 @@ public class MacrocosmMenu : ModMenu
         spriteBatch.End();
         spriteBatch.Begin(state1);
 
-        List<CelestialBody> toDraw = planetsWithMoons.Where((planet) => !destroyed.Contains(planet)).ToList();
+        List<CelestialBodySprite> toDraw = planetsWithMoons.Where((planet) => !destroyed.Contains(planet)).ToList();
 
         // Draw the moons behind the host planet
         foreach (CelestialBody planet in toDraw)

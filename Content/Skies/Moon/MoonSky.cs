@@ -23,8 +23,8 @@ public class MoonSky : CustomSky, ILoadable
     private readonly Stars starsDay;
     private readonly Stars starsNight;
 
-    private readonly CelestialBody earth;
-    private readonly CelestialBody sun;
+    private readonly CelestialBodySprite earth;
+    private readonly CelestialBodySprite sun;
 
     private readonly Asset<Texture2D> skyTexture;
 
@@ -64,8 +64,8 @@ public class MoonSky : CustomSky, ILoadable
         starsDay = new();
         starsNight = new();
 
-        sun = new CelestialBody(sunTexture);
-        earth = new CelestialBody(earthBody, earthAtmo, scale: 0.9f);
+        sun = new(sunTexture);
+        earth = new(earthBody, earthAtmo, scale: 0.9f);
 
         sun.SetupSkyRotation(CelestialBody.SkyRotationMode.Day);
 
