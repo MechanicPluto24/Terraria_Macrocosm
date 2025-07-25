@@ -3,20 +3,26 @@ using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using Terraria;
 
 namespace Macrocosm.Common.Drawing.Sky;
 
-public class CelestialBody
+/// <summary>
+/// A base class for handling orbital logic of bodies as well as their children.
+/// </summary>
+public abstract class CelestialBody
 {
     public enum SkyRotationMode
     {
+        /// <summary> No rotation (default) </summary>
         None,
+        /// <summary> Only visible during the day (rotation logic will still run) </summary>
         Day,
+        /// <summary> Only visible during the night (rotation logic will still run) </summary>
         Night,
+        /// <summary> Cycle during both day and night </summary>
         Any
     }
 
@@ -32,10 +38,10 @@ public class CelestialBody
     /// <summary> Center position on the screen </summary>
     public Vector2 Center { get; set; }
 
-    public Vector2 Position => Center - Size / 2f;
+    public Vector2 Position => Center - Size * .5f;
 
     /// <summary> The CelestialBody's hitbox, defined by size and center position </summary>
-    public Rectangle Hitbox => new((int)(Center.X - Width / 2f), (int)(Center.Y - Height / 2f), (int)(Width), (int)(Height));
+    public Rectangle Hitbox => new((int)(Center.X - Width * .5f), (int)(Center.Y - Height * .5f), (int)Width, (int)Height);
 
     /// <summary> The CelestialBody's scale </summary>
     public float Scale
@@ -82,95 +88,39 @@ public class CelestialBody
     /// </summary>
     public bool ResetSpritebatch { get; set; } = true;
 
-    public delegate void FuncConfigureSphericalShader(CelestialBody celestialBody, CelestialBody lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
-    public FuncConfigureSphericalShader ConfigureBackSphericalShader;
-    public FuncConfigureSphericalShader ConfigureBodySphericalShader;
-    public FuncConfigureSphericalShader ConfigureFrontSphericalShader;
-
-    public delegate void FuncConfigureRadialShader(CelestialBody celestialBody, float rotation, out float intensity, out Vector2 offset, out float radius, ref Vector2 shadeResolution);
-    public FuncConfigureRadialShader ConfigureBackRadialShader = null;
-    public FuncConfigureRadialShader ConfigureBodyRadialShader = null;
-    public FuncConfigureRadialShader ConfigureFrontRadialShader = null;
-
-    public delegate Effect FuncOverrideShader();
-    public FuncOverrideShader OverrideBackShader = null;
-    public FuncOverrideShader OverrideBodyShader = null;
-    public FuncOverrideShader OverrideFrontShader = null;
-
-    public delegate void FuncOverrideDraw(CelestialBody celestialBody, SpriteBatch spriteBatch, SpriteBatchState state, Asset<Texture2D> texture, Effect shader);
-    /// <summary> Override the way this CelestialBody's pre-body texture is drawn. You must begin and end the SpriteBatch </summary>
-    public FuncOverrideDraw OverrideBackDraw = null;
-    /// <summary> Override the way this CelestialBody is drawn. You must begin and end the SpriteBatch </summary>
-    public FuncOverrideDraw OverrideBodyDraw = null;
-    /// <summary> Override the way this CelestialBody's pre-body texture is drawn. You must begin and end the SpriteBatch </summary>
-    public FuncOverrideDraw OverrideFrontDraw = null;
-
-    #region Private vars 
-    private Asset<Texture2D> backTexture;
-    private Asset<Texture2D> bodyTexture;
-    private Asset<Texture2D> frontTexture;
-
-    private Rectangle? backSourceRect;
-    private Rectangle? bodySourceRect;
-    private Rectangle? frontSourceRect;
+    #region Private Fields
 
     private Vector2 averageOffset = default;
     private float parallaxSpeedX = 0f;
     private float parallaxSpeedY = 0f;
-    private Vector2 defSize;
+    protected Vector2 defSize;
     private float scale;
     private float rotation;
 
-    private SkyRotationMode rotationMode = SkyRotationMode.None;
+    protected SkyRotationMode rotationMode = SkyRotationMode.None;
 
-    private CelestialBody lightSource = null;
+    protected CelestialBody lightSource = null;
 
-    private CelestialBody orbitParent = null;
-    private readonly List<CelestialBody> orbitChildren = new();
+    protected CelestialBody orbitParent = null;
+    protected readonly List<CelestialBody> orbitChildren = new();
 
     private Vector2 orbitEllipse = default;
     private float orbitAngle = 0f;
     private float orbitRotation = 0f;
     private float orbitSpeed = 0f;
 
-    private SpriteBatchState state;
+    protected SpriteBatchState state;
 
     #endregion
 
     public CelestialBody
     (
-        Asset<Texture2D> bodyTexture = null,
-        Asset<Texture2D> backTexture = null,
-        Asset<Texture2D> frontTexture = null,
         float scale = 1f,
         float rotation = 0f,
-        Vector2? size = null,
-        Rectangle? backSourceRect = null,
-        Rectangle? bodySourceRect = null,
-        Rectangle? frontSourceRect = null
+        Vector2 size = default
     )
     {
-        this.bodyTexture = bodyTexture;
-        this.backTexture = backTexture;
-        this.frontTexture = frontTexture;
-
-        this.backSourceRect = backSourceRect;
-        this.bodySourceRect = bodySourceRect;
-        this.frontSourceRect = frontSourceRect;
-
-        if (size.HasValue)
-        {
-            defSize = size.Value;
-        }
-        else
-        {
-            defSize = new
-            (
-                bodyTexture is null ? 1 : (bodySourceRect.HasValue ? bodySourceRect.Value.Width : bodyTexture.Width()),
-                bodyTexture is null ? 1 : (bodySourceRect.HasValue ? bodySourceRect.Value.Height : bodyTexture.Height())
-            );
-        }
-
+        defSize = size;
         Scale = scale;
         Rotation = rotation;
     }
@@ -191,27 +141,8 @@ public class CelestialBody
     public void SetPositionPolar(CelestialBody referenceBody, float radius, float theta) => Center = referenceBody.Center + Utility.PolarVector(radius, theta);
 
     /// <summary> Set the lightsource CelestialBody of this CelestialBody </summary>
-    public void SetLighting(CelestialBody lightSource)
-    {
+    public void SetLighting(CelestialBody lightSource) =>
         this.lightSource = lightSource;
-    }
-
-    /// <summary> Set the composing textures of the CelestialBody </summary>
-    public void SetTextures(Asset<Texture2D> bodyTexture = null, Asset<Texture2D> backTexture = null, Asset<Texture2D> frontTexture = null)
-    {
-        this.bodyTexture = bodyTexture;
-        this.backTexture = backTexture;
-        this.frontTexture = frontTexture;
-    }
-
-    public void SetCommonSourceRectangle(Rectangle? commonSourceRect = null) => SetSourceRectangles(commonSourceRect, commonSourceRect, commonSourceRect);
-
-    public void SetSourceRectangles(Rectangle? backSourceRect = null, Rectangle? bodySourceRect = null, Rectangle? frontSourceRect = null)
-    {
-        this.backSourceRect = backSourceRect;
-        this.bodySourceRect = bodySourceRect;
-        this.frontSourceRect = frontSourceRect;
-    }
 
     /// <summary>
     /// Configure parallax settings for the object while drawn in a world's sky 
@@ -229,12 +160,6 @@ public class CelestialBody
     /// <summary>
     /// Configures rotation of the object on the sky 
     /// </summary>
-    /// <param name="mode">
-    /// None  - No rotation (default)
-    /// Day   - Only visible during the day (rotation logic will still run)
-    /// Night - Only visible during the night (rotation logic will still run)
-    /// Any   - Cycle during both day and night  
-    /// </param>
     public void SetupSkyRotation(SkyRotationMode mode) => rotationMode = mode;
 
     /// <summary>
@@ -319,14 +244,11 @@ public class CelestialBody
             Rotate(); // rotate even if not drawing, it affects the shadow rotation  
         else if (orbitParent is not null)
             Orbit();
-
     }
 
-    /// <summary>
-    /// Draw this CelestialBody
+    /// <summary> 
+    /// Draw this CelestialBody 
     /// </summary>
-    /// <param name="spriteBatch"> The SpriteBatch </param>
-    /// <param name="withChildren"> Whether to draw the CelestialBody with all its orbiting children </param>
     public void Draw(SpriteBatch spriteBatch)
     {
         Update();
@@ -342,9 +264,7 @@ public class CelestialBody
             spriteBatch.EndIfBeginCalled();
         }
 
-        DrawBack(spriteBatch);
-        DrawBody(spriteBatch);
-        DrawFront(spriteBatch);
+        DrawSelf(spriteBatch);
 
         if (ResetSpritebatch && beginCalled)
             spriteBatch.Begin(state);
@@ -364,153 +284,10 @@ public class CelestialBody
         }
     }
 
-    private void DrawBack(SpriteBatch spriteBatch)
-    {
-        Effect backShader = null;
-        if (OverrideBackShader is not null)
-        {
-            backShader = OverrideBackShader();
-        }
-        else if (lightSource is not null)
-        {
-            if (ConfigureBackRadialShader is not null)
-            {
-                backShader = Macrocosm.GetShader("RadialLighting");
-                float rotation = (Center - lightSource.Center).ToRotation();
-                Vector2 shadeResolution = backTexture.Size();
-                Vector4 sourceRect = backSourceRect.HasValue ? backSourceRect.Value.Normalize(backTexture.Size()) : new Vector4(0, 0, 1, 1);
-                ConfigureBackRadialShader(this, rotation, out float intensity, out Vector2 offset, out float radius, ref shadeResolution);
-                backShader.Parameters["uOffset"].SetValue(offset);
-                backShader.Parameters["uIntensity"].SetValue(intensity);
-                backShader.Parameters["uRadius"].SetValue(radius);
-                backShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
-                backShader.Parameters["uSourceRect"].SetValue(sourceRect);
-                backShader.Parameters["uColor"].SetValue(Color.ToVector4());
-            }
-            else if (ConfigureBackSphericalShader is not null)
-            {
-                backShader = Macrocosm.GetShader("SphereLighting");
-                ConfigureBackSphericalShader(this, lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
-                backShader.Parameters["uLightSource"].SetValue(lightPosition);
-                backShader.Parameters["uEntityPosition"].SetValue(Position);
-                backShader.Parameters["uTextureSize"].SetValue(backTexture.Size());
-                backShader.Parameters["uEntitySize"].SetValue(backTexture.Size());
-                backShader.Parameters["uRadius"].SetValue(radius);
-                backShader.Parameters["uPixelSize"].SetValue(pixelSize);
-                backShader.Parameters["uColor"].SetValue(Color.ToVector4());
-            }
-
-        }
-
-        if (backTexture is not null)
-        {
-            if (OverrideBackDraw is null)
-            {
-                if (ResetSpritebatch) spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, backShader, state.Matrix);
-                spriteBatch.Draw(backTexture.Value, Center, backSourceRect, Color, Rotation, backTexture.Size() / 2, Scale, default, 0f);
-                if (ResetSpritebatch) spriteBatch.End();
-            }
-            else OverrideBackDraw(this, spriteBatch, state, backTexture, backShader);
-        }
-    }
-
-    private void DrawBody(SpriteBatch spriteBatch)
-    {
-        Effect bodyShader = null;
-        if (OverrideBodyShader is not null)
-        {
-            bodyShader = OverrideBodyShader();
-        }
-        else if (lightSource is not null)
-        {
-            if (ConfigureBodyRadialShader is not null)
-            {
-                bodyShader = Macrocosm.GetShader("RadialLighting");
-                float rotation = (Center - lightSource.Center).ToRotation();
-                Vector2 shadeResolution = bodyTexture.Size();
-                Vector4 sourceRect = bodySourceRect.HasValue ? bodySourceRect.Value.Normalize(bodyTexture.Size()) : new Vector4(0, 0, 1, 1);
-                ConfigureBodyRadialShader(this, rotation, out float intensity, out Vector2 offset, out float radius, ref shadeResolution);
-                bodyShader.Parameters["uOffset"].SetValue(offset);
-                bodyShader.Parameters["uIntensity"].SetValue(intensity);
-                bodyShader.Parameters["uRadius"].SetValue(radius);
-                bodyShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
-                bodyShader.Parameters["uSourceRect"].SetValue(sourceRect);
-                bodyShader.Parameters["uColor"].SetValue(Color.ToVector4());
-            }
-            else if (ConfigureBodySphericalShader is not null)
-            {
-                bodyShader = Macrocosm.GetShader("SphereLighting");
-                ConfigureBodySphericalShader(this, lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
-                bodyShader.Parameters["uLightSource"].SetValue(lightPosition);
-                bodyShader.Parameters["uEntityPosition"].SetValue(Position);
-                bodyShader.Parameters["uTextureSize"].SetValue(bodyTexture.Size());
-                bodyShader.Parameters["uEntitySize"].SetValue(bodyTexture.Size());
-                bodyShader.Parameters["uRadius"].SetValue(radius);
-                bodyShader.Parameters["uPixelSize"].SetValue(pixelSize);
-                bodyShader.Parameters["uColor"].SetValue(Color.ToVector4());
-            }
-        }
-
-        if (bodyTexture is not null)
-        {
-            if (OverrideBodyDraw is null)
-            {
-                if (ResetSpritebatch) spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, state.RasterizerState, bodyShader, state.Matrix);
-                spriteBatch.Draw(bodyTexture.Value, Center, bodySourceRect, Color, Rotation, bodyTexture.Size() / 2, Scale, default, 0f);
-                if (ResetSpritebatch) spriteBatch.End();
-            }
-            else OverrideBodyDraw(this, spriteBatch, state, bodyTexture, bodyShader);
-        }
-    }
-
-    private void DrawFront(SpriteBatch spriteBatch)
-    {
-        Effect frontShader = null;
-        if (OverrideFrontShader is not null)
-        {
-            frontShader = OverrideFrontShader();
-        }
-        else if (lightSource is not null)
-        {
-            if (ConfigureFrontRadialShader is not null)
-            {
-                frontShader = Macrocosm.GetShader("RadialLighting");
-                float rotation = (Center - lightSource.Center).ToRotation();
-                Vector2 shadeResolution = frontTexture.Size();
-                Vector4 sourceRect = frontSourceRect.HasValue ? frontSourceRect.Value.Normalize(frontTexture.Size()) : new Vector4(0, 0, 1, 1);
-                ConfigureFrontRadialShader(this, rotation, out float intensity, out Vector2 offset, out float radius, ref shadeResolution);
-                frontShader.Parameters["uOffset"].SetValue(offset);
-                frontShader.Parameters["uIntensity"].SetValue(intensity);
-                frontShader.Parameters["uRadius"].SetValue(radius);
-                frontShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
-                frontShader.Parameters["uSourceRect"].SetValue(sourceRect);
-                frontShader.Parameters["uColor"].SetValue(Color.ToVector4());
-            }
-            else if (ConfigureFrontSphericalShader is not null)
-            {
-                frontShader = Macrocosm.GetShader("SphereLighting");
-                ConfigureFrontSphericalShader(this, lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
-                frontShader.Parameters["uLightSource"].SetValue(lightPosition);
-                frontShader.Parameters["uEntityPosition"].SetValue(Position);
-                frontShader.Parameters["uTextureSize"].SetValue(frontTexture.Size());
-                frontShader.Parameters["uEntitySize"].SetValue(frontTexture.Size());
-                frontShader.Parameters["uRadius"].SetValue(radius);
-                frontShader.Parameters["uPixelSize"].SetValue(pixelSize);
-                frontShader.Parameters["uColor"].SetValue(Color.ToVector4());
-            }
-        }
-
-        if (frontTexture is not null)
-        {
-            if (OverrideFrontDraw is null)
-            {
-                if (ResetSpritebatch) spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, state.RasterizerState, frontShader, state.Matrix);
-                spriteBatch.Draw(frontTexture.Value, Center, frontSourceRect, Color, Rotation, frontTexture.Size() / 2, Scale, default, 0f);
-                if (ResetSpritebatch) spriteBatch.End();
-            }
-            else OverrideFrontDraw(this, spriteBatch, state, frontTexture, frontShader);
-        }
-    }
+    /// <summary>
+    /// Allows for inheriting classes to provide their own drawcode.
+    /// </summary>
+    protected virtual void DrawSelf(SpriteBatch spriteBatch) { }
 
     private void Parallax()
     {
@@ -541,7 +318,7 @@ public class CelestialBody
         if (rotationMode == SkyRotationMode.Day)
         {
             double progress = Main.dayTime ? Main.time / duration : 1.0 - Main.time / duration;
-            int timeX = (int)(progress * (Main.screenWidth + bodyTexture.Width() * 2)) - bodyTexture.Width();
+            int timeX = (int)(progress * (Main.screenWidth + Size.X * 2)) - (int)Size.X;
 
             double timeY = Main.time < duration / 2
                 ? Math.Pow((Main.time / duration - 0.5) * 2.0, 2.0) // AM
@@ -559,7 +336,7 @@ public class CelestialBody
         else if (rotationMode == SkyRotationMode.Night)
         {
             double progress = !Main.dayTime ? Main.time / duration : 1.0 - Main.time / duration;
-            int timeX = (int)(progress * (Main.screenWidth + bodyTexture.Width() * 2)) - bodyTexture.Width();
+            int timeX = (int)(progress * (Main.screenWidth + Size.X * 2)) - (int)Size.X;
 
             double timeY = Main.time < duration / 2
                 ? Math.Pow(1.0 - Main.time / duration * 2.0, 2.0)

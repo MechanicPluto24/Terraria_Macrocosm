@@ -26,8 +26,8 @@ public class MoonOrbitSky : CustomSky, ILoadable
 
     private readonly Stars stars;
 
-    private readonly CelestialBody earth;
-    private readonly CelestialBody sun;
+    private readonly CelestialBodySprite earth;
+    private readonly CelestialBodySprite sun;
 
     private readonly Asset<Texture2D> skyTexture;
 
@@ -74,8 +74,8 @@ public class MoonOrbitSky : CustomSky, ILoadable
 
         stars = new();
 
-        sun = new CelestialBody(sunTexture);
-        earth = new CelestialBody(earthBody, earthAtmo, scale: 0.9f);
+        sun = new(sunTexture);
+        earth = new(earthBody, earthAtmo, scale: 0.9f);
 
         earth.SetLighting(sun);
         earth.ConfigureBackRadialShader = ConfigureEarthAtmoShader;

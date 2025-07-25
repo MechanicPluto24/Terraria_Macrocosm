@@ -27,8 +27,8 @@ public class EarthOrbitSky : CustomSky, ILoadable
 
     private readonly Stars stars;
 
-    private readonly CelestialBody moon;
-    private readonly CelestialBody sun;
+    private readonly CelestialBodySprite moon;
+    private readonly CelestialBodySprite sun;
 
     private readonly Asset<Texture2D> skyTexture;
     private readonly Asset<Texture2D> sunTexture;
@@ -65,8 +65,8 @@ public class EarthOrbitSky : CustomSky, ILoadable
 
         stars = new();
 
-        sun = new CelestialBody(sunTexture);
-        moon = new CelestialBody(TextureAssets.Moon[Main.moonType]);
+        sun = new(sunTexture);
+        moon = new(TextureAssets.Moon[Main.moonType]);
     }
 
     public void Load(Mod mod)
@@ -256,7 +256,7 @@ public class EarthOrbitSky : CustomSky, ILoadable
         );
     }
 
-    // CelestialBody.Rotate is NOT working for drawing under the surface
+    // CelestialBody.Rotate is NOT working for drawing under the surface - What ?
     private void RotateSunAndMoon()
     {
         float bgTopY = (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;

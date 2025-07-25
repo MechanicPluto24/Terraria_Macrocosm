@@ -13,7 +13,7 @@ namespace Macrocosm.Content.LoadingScreens;
 public class MoonLoadingScreen : LoadingScreen
 {
     private static Asset<Texture2D> lunaBackground;
-    private CelestialBody earth;
+    private CelestialBodySprite earth;
 
     private readonly float animationDuration = 1000f;
     protected override void UpdateAnimation()
@@ -39,7 +39,7 @@ public class MoonLoadingScreen : LoadingScreen
 
         Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/Earth", AssetRequestMode.ImmediateLoad);
         Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
-        earth ??= new CelestialBody(earthSmallBackground, earthSmallAtmoBackground, scale: 0.7f);
+        earth ??= new CelestialBodySprite(earthSmallBackground, earthSmallAtmoBackground, scale: 0.7f);
     }
 
     private SpriteBatchState state;
