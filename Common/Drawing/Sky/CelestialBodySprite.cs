@@ -79,12 +79,9 @@ public class CelestialBodySprite : CelestialBody
                 bodyTexture is null ? 1 : (bodySourceRect.HasValue ? bodySourceRect.Value.Height : bodyTexture.Height())
             );
         }
-
-        Scale = scale;
-        Rotation = rotation;
     }
 
-    /// <summary> Set the composing textures of the CelestialBody </summary>
+    /// <summary> Set the composing textures of the CelestialBodySprite </summary>
     public void SetTextures(Asset<Texture2D> bodyTexture = null, Asset<Texture2D> backTexture = null, Asset<Texture2D> frontTexture = null)
     {
         this.bodyTexture = bodyTexture;
@@ -130,6 +127,7 @@ public class CelestialBodySprite : CelestialBody
                 backShader.Parameters["uRadius"].SetValue(radius);
                 backShader.Parameters["uShadeResolution"].SetValue(shadeResolution);
                 backShader.Parameters["uSourceRect"].SetValue(sourceRect);
+                    // TODO(?): Use the COLOR0 shader semantic to pull from SpriteBatch.Draw's color argument rather than a set shader parameter.
                 backShader.Parameters["uColor"].SetValue(Color.ToVector4());
             }
             else if (ConfigureBackSphericalShader is not null)
@@ -138,10 +136,12 @@ public class CelestialBodySprite : CelestialBody
                 ConfigureBackSphericalShader(this, lightSource, out Vector3 lightPosition, out float radius, out int pixelSize);
                 backShader.Parameters["uLightSource"].SetValue(lightPosition);
                 backShader.Parameters["uEntityPosition"].SetValue(Position);
+                    // TODO(?): Make these values distict or refer to the same value. unsure of why they are like this currently.
                 backShader.Parameters["uTextureSize"].SetValue(backTexture.Size());
                 backShader.Parameters["uEntitySize"].SetValue(backTexture.Size());
                 backShader.Parameters["uRadius"].SetValue(radius);
                 backShader.Parameters["uPixelSize"].SetValue(pixelSize);
+                    // TODO(?): Use the COLOR0 shader semantic to pull from SpriteBatch.Draw's color argument rather than a set shader parameter.
                 backShader.Parameters["uColor"].SetValue(Color.ToVector4());
             }
 

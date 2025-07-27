@@ -1,3 +1,5 @@
+#include "common.fxh"
+
 sampler textureSampler : register(s0);  // The texture, typically passed by the SpriteBatch
 sampler patternSampler : register(s1);  // The pattern, must be provided by the user 
 
@@ -13,13 +15,6 @@ float4 uColor[64];
 // The max accepted color distance between the 
 // provided color mask and the provided known color keys
 float uColorDistance = 0.1f;
-
-// Returns the grayscale of a RGB color, using the NTSC formula
-float3 RGBToLuminance(float3 color)
-{
-    float3 weights = float3(0.299, 0.587, 0.114);
-    return dot(color, weights);
-}
 
 float ColorDistance(float3 color1, float3 color2)
 {
