@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
+using Terraria.GameContent;
 
 namespace Macrocosm.Common.Drawing.Sky;
 
@@ -27,18 +28,30 @@ public class CelestialBodySphere : CelestialBody
     #region Private fields
 
     private Asset<Texture2D> projectionTexture;
+    private Asset<Texture2D> projectionShadowTexture;
+    private Asset<Texture2D> projectionOverlayTexture;
 
     #endregion
+
+    #nullable enable
 
     public CelestialBodySphere
     (
         Asset<Texture2D> projectionTexture,
         Vector2 size,
         float scale = 1f,
-        float rotation = 0f
+        float rotation = 0f,
+        Asset<Texture2D>? projectionShadowTexture = null,
+        Asset<Texture2D>? projectionOverlayTexture = null
     )
-        : base(scale, rotation, size) =>
+        : base(scale, rotation, size)
+    {
         this.projectionTexture = projectionTexture;
+        this.projectionShadowTexture = projectionShadowTexture ?? TextureAssets.MagicPixel;
+        this.projectionOverlayTexture = projectionOverlayTexture ?? Macrocosm.EmptyTex;
+    }
+
+    #nullable disable
 
     /// <summary> Set the projection texture of the CelestialBody </summary>
     public void SetTexture(Asset<Texture2D> projectionTexture) =>
@@ -73,6 +86,11 @@ public class CelestialBodySphere : CelestialBody
             sphereShader.Parameters["uRadius"].SetValue(radius);
             sphereShader.Parameters["uColor"].SetValue(Color.ToVector4());
         }
+
+        GraphicsDevice device = Main.instance.GraphicsDevice;
+
+        device.Textures[1] = projectionShadowTexture.Value;
+        device.Textures[2] = projectionOverlayTexture.Value;
 
         if (ResetSpritebatch)
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, sphereShader, state.Matrix);
