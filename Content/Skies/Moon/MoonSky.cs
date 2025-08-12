@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
@@ -15,6 +16,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Skies.Moon;
 
+    // Only load visuals on the client.
+[Autoload(Side = ModSide.Client)]
 public class MoonSky : CustomSky, ILoadable
 {
     private bool active;
@@ -23,7 +26,7 @@ public class MoonSky : CustomSky, ILoadable
     private readonly Stars starsDay;
     private readonly Stars starsNight;
 
-    private readonly CelestialBodySphere earth;
+    private CelestialBody earth;
     private readonly CelestialBodySprite sun;
 
     private readonly Asset<Texture2D> skyTexture;
@@ -51,9 +54,6 @@ public class MoonSky : CustomSky, ILoadable
 
     public MoonSky()
     {
-        //if (Main.dedServ)
-        //   return;
-
         AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
         skyTexture = ModContent.Request<Texture2D>(Path + "MoonSky", mode);
 
@@ -70,14 +70,13 @@ public class MoonSky : CustomSky, ILoadable
         starsNight = new();
 
         sun = new(sunTexture);
-        earth = new(earthMercator, new(190), projectionOverlayTexture: earthMercatorOverlay);
+
+        SetupEarth(this, EventArgs.Empty);
+
+            // Allow the type of earth to be changed without requiring a reload.
+        ClientConfig.Instance.OnConfigChanged += SetupEarth;
 
         sun.SetupSkyRotation(CelestialBody.SkyRotationMode.Day);
-
-        earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
-
-        earth.SetLighting(sun);
-        earth.ConfigureSphereShader = ConfigureEarthSphereShader;
 
         string[] nebulaNames =
         [
@@ -99,13 +98,23 @@ public class MoonSky : CustomSky, ILoadable
             nebulaRawTextures[i] = RawTexture.FromAsset(nebulaTextures[i]);
     }
 
-    public void Load(Mod mod)
+    private void SetupEarth(object sender, EventArgs e)
     {
-        if (Main.dedServ)
-            return;
+        if (ClientConfig.Instance.Use3DCelestialBodies)
+        {
+            earth = new CelestialBodySphere(earthMercator, new(190), projectionOverlayTexture: earthMercatorOverlay)
+                { ConfigureSphereShader = ConfigureEarthSphereShader };
+        }
+        else
+            earth = new CelestialBodySprite(earthBody, earthAtmo, scale: 0.9f);
 
-        SkyManager.Instance["Macrocosm:MoonSky"] = new MoonSky();
+        earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
+
+        earth.SetLighting(sun);
     }
+
+    public void Load(Mod mod) =>
+        SkyManager.Instance["Macrocosm:MoonSky"] = new MoonSky();
 
     public void Unload() { }
 
