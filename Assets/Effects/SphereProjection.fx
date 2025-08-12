@@ -57,7 +57,11 @@ float4 planet(float2 uv, float dist, float3 sp, float shad)
     
     float4 light = lerp(tex2D(uImage0, pt), overlay, overlay.a);
     
-    return lerp(tex2D(uImage1, pt) * uShadowColor, light * uLightColor, shad);
+    float4 col = lerp(tex2D(uImage1, pt) * uShadowColor, light * uLightColor, shad);
+    
+    col.a = 1;
+    
+    return col;
 }
 
 float4 SphereProjection(float2 coords : TEXCOORD0, float2 screenPos : SV_POSITION) : COLOR0
