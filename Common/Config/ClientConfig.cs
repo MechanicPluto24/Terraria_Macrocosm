@@ -37,6 +37,10 @@ public class ClientConfig : ModConfig
     [DefaultValue(true)]
     public bool DisplayGravityInGs { get; set; }
 
+    [Header("VisualsHeader")]
+    [DefaultValue(true)]
+    public bool Use3DCelestialBodies { get; set; }
+
     /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
     public event EventHandler OnConfigChanged;
     public override void OnChanged() => OnConfigChanged?.Invoke(this, EventArgs.Empty);
