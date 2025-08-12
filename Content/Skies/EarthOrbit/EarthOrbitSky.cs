@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;
@@ -18,15 +19,16 @@ using static Macrocosm.Common.Drawing.Sky.CelestialBody;
 
 namespace Macrocosm.Content.Skies.EarthOrbit;
 
+    // Only load visuals on the client.
+[Autoload(Side = ModSide.Client)]
 public class EarthOrbitSky : CustomSky, ILoadable
 {
-    public bool Background3D { get; set; } = true;
-
     private bool active;
     private float intensity;
 
     private readonly Stars stars;
 
+    private CelestialBodySphere earth3D;
     private readonly CelestialBodySprite moon;
     private readonly CelestialBodySprite sun;
 
@@ -35,13 +37,10 @@ public class EarthOrbitSky : CustomSky, ILoadable
 
     private static List<Asset<Texture2D>> earthBackgrounds;
     private static Asset<Texture2D> earthBackground;
-
-    private static Asset<Texture2D> earthMercator;
-    private static Asset<Texture2D> earthMercatorClouds;
     private static Asset<Texture2D> earthAtmo;
 
-    private Mesh earthMesh;
-    private Mesh earthCloudMesh;
+    private static Asset<Texture2D> earthMercator;
+    private static Asset<Texture2D> earthMercatorOverlay;
 
     private const string Path = "Macrocosm/Content/Skies/EarthOrbit/";
 
@@ -59,23 +58,28 @@ public class EarthOrbitSky : CustomSky, ILoadable
             ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Earth_SouthAmerica")
         ];
 
-        earthMercator = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_Mercator");
-        earthMercatorClouds = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_MercatorClouds");
         earthAtmo = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_Atmo");
+
+        earthMercator = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_Mercator");
+        earthMercatorOverlay = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_MercatorClouds");
 
         stars = new();
 
         sun = new(sunTexture);
         moon = new(TextureAssets.Moon[Main.moonType]);
+
+            // Please tweak these values.
+        earth3D = new(earthMercator, new(3000), projectionOverlayTexture: earthMercatorOverlay)
+        { ConfigureSphereShader = ConfigureEarthSphereShader };
+
+        earth3D.SetLighting(sun);
+
+        earth3D.SetParallax(0f, 0f);
+        earth3D.SetPosition(Main.screenWidth * .7f, Main.screenHeight * 1.85f);
     }
 
-    public void Load(Mod mod)
-    {
-        if (Main.dedServ)
-            return;
-
+    public void Load(Mod mod) =>
         SkyManager.Instance["Macrocosm:EarthOrbitSky"] = new EarthOrbitSky();
-    }
 
     public void Unload() { }
 
@@ -169,80 +173,53 @@ public class EarthOrbitSky : CustomSky, ILoadable
 
             RotateSunAndMoon();
 
-            state.SaveState(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.LinearClamp, state);
-
-            if (Background3D)
-                DrawEarth3D(spriteBatch);
+            if (ClientConfig.Instance.Use3DCelestialBodies)
+                earth3D.Draw(spriteBatch);
             else
+            {
+                state.SaveState(spriteBatch);
+
+                spriteBatch.End();
+                spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.PointClamp, state);
+
                 DrawEarth2D(spriteBatch);
 
-            spriteBatch.End();
-            spriteBatch.Begin(state);
+                spriteBatch.End();
+                spriteBatch.Begin(state);
+            }
         }
     }
 
-    private void DrawEarth3D(SpriteBatch spriteBatch)
+    private void ConfigureEarthSphereShader(
+        CelestialBodySphere celestialBody,
+        CelestialBody lightSource,
+        out Vector3 lightPosition,
+        out Vector4 lightColor,
+        out Vector4 shadowColor,
+        out Vector4 lightAtmosphereColor,
+        out Vector4 shadowAtmosphereColor,
+        out Matrix bodyRotation,
+        out float radius)
     {
-        float x = -(float)((Main.screenPosition.X / Main.maxTilesX * 16.0) + 800);
-        float y = -(float)((Main.screenPosition.Y / Main.maxTilesY * 16.0) - 50);
-
-        float depthFactor = 16f;
-        float radius = 1580 * depthFactor;
-        Vector2 position = new(x, y);
-
-        earthMesh ??= new Mesh();
-        earthCloudMesh ??= new Mesh();
-
-        earthMesh.CreateSphere(
-            position: default,
-            radius: radius,
-            horizontalResolution: 100,
-            verticalResolution: 100,
-            depthFactor: depthFactor,
-            rotation: new Vector3(
-                x: 0,
-                y: (float)Main.timeForVisualEffects / 6000 % MathHelper.TwoPi, // axial rotation
-                z: MathHelper.ToRadians(23.44f)), // axial tilt
-            projectionType: Mesh.SphereProjectionType.Mercator
-        );
-
-        earthCloudMesh.CreateSphere(
-              position: default,
-              radius: radius,
-              horizontalResolution: 100,
-              verticalResolution: 100,
-              depthFactor: depthFactor,
-              rotation: new Vector3(
-                  x: 0,
-                  y: (float)Main.timeForVisualEffects / 5500 % MathHelper.TwoPi, // axial rotation
-                  z: MathHelper.ToRadians(23.44f)), // axial tilt
-              projectionType: Mesh.SphereProjectionType.Mercator
-        );
-
-        Effect pixelate = Macrocosm.GetShader("Pixelate");
-        pixelate.Parameters["uPixelCount"].SetValue(new Vector2(1024));
-        Texture2D earth = earthMesh.DrawToRenderTarget(earthMercator.Value.ApplyEffects(pixelate), state.Matrix);
-        Texture2D earthClouds = earthCloudMesh.DrawToRenderTarget(earthMercatorClouds.Value.ApplyEffects(pixelate), state.Matrix, blendState: BlendState.NonPremultiplied);
-
-        Vector2 center = position + earth.Size() / 2f;
-        Vector3 lightPosition;
         float depth = 1600f;
         lightPosition = new Vector3(sun.Center, depth);
-        radius = 0.01f;
 
-        Effect lighting = Macrocosm.GetShader("SphereLighting");
-        lighting.Parameters["uLightSource"].SetValue(lightPosition);
-        lighting.Parameters["uEntityPosition"].SetValue(center);
-        lighting.Parameters["uTextureSize"].SetValue(earth.Size());
-        lighting.Parameters["uEntitySize"].SetValue(earth.Size());
-        lighting.Parameters["uRadius"].SetValue(radius);
-        lighting.Parameters["uPixelSize"].SetValue(1);
-        lighting.Parameters["uColor"].SetValue(Color.White.ToVector4());
+            // These are test/dummy values feel free to mess with these all you like.
+        lightColor = Vector4.One;
+        shadowColor = Color.Black.ToVector4();
 
-        spriteBatch.Draw(earth.ApplyEffects(lighting), new Vector2(x, y), Color.White);
-        spriteBatch.Draw(earthClouds.ApplyEffects(null), new Vector2(x, y), Color.White);
+        bodyRotation =
+            Matrix.CreateRotationX(MathHelper.PiOver2) *
+            Matrix.CreateRotationY(MathHelper.Pi) *
+            Matrix.CreateRotationZ(Main.GlobalTimeWrappedHourly * .2f);
+
+        lightAtmosphereColor = Color.Blue.ToVector4();
+        shadowAtmosphereColor = Color.DarkRed.ToVector4() * .6f;
+
+            // Value from 0-1 representing the ratio between the atmosphere and actual body.
+        radius = .96f;
+
+        earth3D.SetParallax(0.01f, 0.12f, new Vector2(800f, 300f));
     }
 
     private static void DrawEarth2D(SpriteBatch spriteBatch)
@@ -256,7 +233,7 @@ public class EarthOrbitSky : CustomSky, ILoadable
         );
     }
 
-    // CelestialBody.Rotate is NOT working for drawing under the surface - What ?
+    // CelestialBody.Rotate is NOT working for drawing under the surface
     private void RotateSunAndMoon()
     {
         float bgTopY = (float)(((Main.screenPosition.Y - Main.screenHeight / 2)) / (Main.maxTilesY * 16.0) * 0.2f * Main.screenHeight) * 0.5f;
