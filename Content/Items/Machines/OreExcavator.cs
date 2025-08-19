@@ -3,42 +3,41 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Machines
+namespace Macrocosm.Content.Items.Machines;
+
+public class OreExcavator : ModItem
 {
-    public class OreExcavator : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-        }
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.OreExcavator>());
-            Item.width = 60;
-            Item.height = 84;
-            Item.value = Item.sellPrice(gold: 2);
-            Item.mech = true;
-        }
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.OreExcavator>());
+        Item.width = 60;
+        Item.height = 84;
+        Item.value = Item.sellPrice(gold: 2);
+        Item.mech = true;
+    }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-               .AddIngredient<SteelBar>(20)
-               .AddIngredient(ItemID.Wire, 50)
-               .AddIngredient(ItemID.AdamantiteBar, 10)
-               .AddIngredient<AluminumBar>(20)
-               .AddIngredient(ItemID.Diamond, 10)
-               .AddTile<Tiles.Crafting.Fabricator>()
-               .Register();
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+           .AddIngredient<SteelBar>(20)
+           .AddIngredient(ItemID.Wire, 50)
+           .AddIngredient(ItemID.AdamantiteBar, 10)
+           .AddIngredient<AluminumBar>(20)
+           .AddIngredient(ItemID.Diamond, 10)
+           .AddTile<Tiles.Crafting.Fabricator>()
+           .Register();
 
-            CreateRecipe()
-                .AddIngredient<SteelBar>(20)
-                .AddIngredient(ItemID.Wire, 50)
-                .AddIngredient(ItemID.TitaniumBar, 10)
-                .AddIngredient<AluminumBar>(20)
-                .AddIngredient(ItemID.Diamond, 10)
-                .AddTile<Tiles.Crafting.Fabricator>()
-                .Register();
-        }
+        CreateRecipe()
+            .AddIngredient<SteelBar>(20)
+            .AddIngredient(ItemID.Wire, 50)
+            .AddIngredient(ItemID.TitaniumBar, 10)
+            .AddIngredient<AluminumBar>(20)
+            .AddIngredient(ItemID.Diamond, 10)
+            .AddTile<Tiles.Crafting.Fabricator>()
+            .Register();
     }
 }

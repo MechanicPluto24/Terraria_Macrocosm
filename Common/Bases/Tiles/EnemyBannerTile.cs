@@ -1,18 +1,17 @@
 ﻿using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Bases.Tiles
-{
-    public class EnemyBannerTile : ModBannerTile
-    {
-        private readonly string name;
-        private readonly string texture;
-        public override string Name => name;
-        public override string Texture => texture;
+namespace Macrocosm.Common.Bases.Tiles;
 
-        public EnemyBannerTile(string texture, string name)
-        {
-            this.texture = texture;
-            this.name = name;
-        }
+public class EnemyBannerTile : ModBannerTile
+{
+    private readonly string name;
+    private readonly string texture;
+    public override string Name => name;
+    public override string Texture => texture;
+
+    public EnemyBannerTile(string texture, string name)
+    {
+        this.texture = texture;
+        this.name = name;
     }
 }

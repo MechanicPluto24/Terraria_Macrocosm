@@ -9,54 +9,53 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons.Ranged
+namespace Macrocosm.Content.Items.Weapons.Ranged;
+
+public class ProtoRailgun : GunHeldProjectileItem
 {
-    public class ProtoRailgun : GunHeldProjectileItem
+    public override GunHeldProjectileData GunHeldProjectileData => new()
     {
-        public override GunHeldProjectileData GunHeldProjectileData => new()
-        {
-            GunBarrelPosition = new Vector2(32f, 7f),
-            CenterYOffset = 9f,
-            MuzzleOffset = 45f,
-            Recoil = (4, 0.01f),
-            RecoilDiminish = 0.8f
-        };
+        GunBarrelPosition = new Vector2(32f, 7f),
+        CenterYOffset = 9f,
+        MuzzleOffset = 45f,
+        Recoil = (4, 0.01f),
+        RecoilDiminish = 0.8f
+    };
 
-        public override void SetStaticDefaults()
-        {
-        }
+    public override void SetStaticDefaults()
+    {
+    }
 
-        public override void SetDefaultsHeldProjectile()
-        {
-            Item.damage = 200;
-            Item.DamageType = DamageClass.Ranged;
-            Item.width = 70;
-            Item.height = 26;
-            Item.useTime = 50;
-            Item.useAnimation = 50;
-            Item.useStyle = ItemUseStyleID.Shoot;
-            Item.noMelee = true;
-            Item.channel = true;
-            Item.knockBack = 16f;
-            Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarity2>();
-            Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
-            Item.autoReuse = true;
-            Item.shootSpeed = 12f;
-            Item.useAmmo = ModContent.ItemType<Ammo.RailgunBolt>();
-            Item.UseSound = SFX.RailgunShot;
-        }
+    public override void SetDefaultsHeldProjectile()
+    {
+        Item.damage = 200;
+        Item.DamageType = DamageClass.Ranged;
+        Item.width = 70;
+        Item.height = 26;
+        Item.useTime = 50;
+        Item.useAnimation = 50;
+        Item.useStyle = ItemUseStyleID.Shoot;
+        Item.noMelee = true;
+        Item.channel = true;
+        Item.knockBack = 16f;
+        Item.value = 10000;
+        Item.rare = ModContent.RarityType<MoonRarity2>();
+        Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
+        Item.autoReuse = true;
+        Item.shootSpeed = 12f;
+        Item.useAmmo = ModContent.ItemType<Ammo.RailgunBolt>();
+        Item.UseSound = SFX.RailgunShot;
+    }
 
-        public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
+    public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
 
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
-        {
-            return true;
-        }
+    public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
+    {
+        return true;
+    }
 
-        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-        {
-            position += new Vector2(10, 4 * player.direction).RotatedBy(velocity.ToRotation());
-        }
+    public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+    {
+        position += new Vector2(10, 4 * player.direction).RotatedBy(velocity.ToRotation());
     }
 }

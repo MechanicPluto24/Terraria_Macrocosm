@@ -8,35 +8,34 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Furniture.Industrial
+namespace Macrocosm.Content.Tiles.Furniture.Industrial;
+
+public class IndustrialSink : ModTile
 {
-    public class IndustrialSink : ModTile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Main.tileFrameImportant[Type] = true;
-            Main.tileNoAttach[Type] = true;
-            Main.tileLavaDeath[Type] = true;
+        Main.tileFrameImportant[Type] = true;
+        Main.tileNoAttach[Type] = true;
+        Main.tileLavaDeath[Type] = true;
 
-            TileID.Sets.CountsAsWaterSource[Type] = true;
+        TileID.Sets.CountsAsWaterSource[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-            TileObjectData.newTile.CoordinateHeights = [16, 18];
-            TileObjectData.newTile.DrawYOffset = 0;
-            TileObjectData.newTile.Origin = new Point16(0, 1);
-            TileObjectData.addTile(Type);
+        TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+        TileObjectData.newTile.CoordinateHeights = [16, 18];
+        TileObjectData.newTile.DrawYOffset = 0;
+        TileObjectData.newTile.Origin = new Point16(0, 1);
+        TileObjectData.addTile(Type);
 
-            AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Sink"));
+        AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Sink"));
 
-            AdjTiles = [TileID.Sinks];
-            DustType = ModContent.DustType<IndustrialPlatingDust>();
+        AdjTiles = [TileID.Sinks];
+        DustType = ModContent.DustType<IndustrialPlatingDust>();
 
-            TileSets.RandomStyles[Type] = 2;
+        TileSets.RandomStyles[Type] = 2;
 
-            // All styles
-            RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialSink>());
-        }
-
-        public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
+        // All styles
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Industrial.IndustrialSink>());
     }
+
+    public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
 }

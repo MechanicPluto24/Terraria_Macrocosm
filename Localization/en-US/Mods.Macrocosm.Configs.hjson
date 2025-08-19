@@ -3,8 +3,8 @@
 ClientConfig: {
 	DisplayName: Client Configuration
 	GameplayHeader: Gameplay
-	GraphicsHeader: Graphics
 	UIHeader: User Interface
+	VisualsHeader: Visuals
 
 	AlwaysDisplayTitleCards: {
 		Label: Always display title cards
@@ -41,9 +41,15 @@ ClientConfig: {
 		Tooltip: ""
 	}
 
+	Use3DCelestialBodies: {
+		Label: 3D Planets
+		Tooltip: Enables high resolution planet/moon textures.
+	}
+
 	Headers: {
-		GameplayHeader: Gameplay Header Header
-		UIHeader: U I Header Header
+		GameplayHeader: Gameplay
+		UIHeader: UI
+		VisualsHeader: Visuals
 	}
 }
 

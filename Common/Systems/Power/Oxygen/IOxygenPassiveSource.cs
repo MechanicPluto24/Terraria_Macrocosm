@@ -1,7 +1,6 @@
-﻿namespace Macrocosm.Common.Systems.Power.Oxygen
+﻿namespace Macrocosm.Common.Systems.Power.Oxygen;
+
+public interface IOxygenPassiveSource : IOxygenSource
 {
-    public interface IOxygenPassiveSource : IOxygenSource
-    {
-        public void TryActivateOxygen();
-    }
+    public void TryActivateOxygen();
 }

@@ -2,26 +2,25 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Hooks
+namespace Macrocosm.Common.Hooks;
+
+public class CoinSlotPlacementHooks : ILoadable
 {
-    public class CoinSlotPlacementHooks : ILoadable
+    public void Load(Mod mod)
     {
-        public void Load(Mod mod)
-        {
-            Terraria.UI.On_ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
-        }
+        Terraria.UI.On_ItemSlot.PickItemMovementAction += MoonCoin_AllowCoinSlotPlacement;
+    }
 
-        public void Unload()
-        {
-            Terraria.UI.On_ItemSlot.PickItemMovementAction -= MoonCoin_AllowCoinSlotPlacement;
-        }
+    public void Unload()
+    {
+        Terraria.UI.On_ItemSlot.PickItemMovementAction -= MoonCoin_AllowCoinSlotPlacement;
+    }
 
-        private int MoonCoin_AllowCoinSlotPlacement(Terraria.UI.On_ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
-        {
-            if (context == 1 && checkItem.type == ModContent.ItemType<Moonstone>())
-                return 0;
-            else
-                return orig(inv, context, slot, checkItem);
-        }
+    private int MoonCoin_AllowCoinSlotPlacement(Terraria.UI.On_ItemSlot.orig_PickItemMovementAction orig, Item[] inv, int context, int slot, Item checkItem)
+    {
+        if (context == 1 && checkItem.type == ModContent.ItemType<Moonstone>())
+            return 0;
+        else
+            return orig(inv, context, slot, checkItem);
     }
 }

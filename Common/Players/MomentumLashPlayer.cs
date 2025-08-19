@@ -2,49 +2,48 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Players
+namespace Macrocosm.Common.Players;
+
+public class MomentumLashPlayer : ModPlayer
 {
-    public class MomentumLashPlayer : ModPlayer
+    public bool MomentumLash { get; set; }
+
+    private float momentumBonus;
+    private int decreaseTick;
+
+    public override void ResetEffects()
     {
-        public bool MomentumLash { get; set; }
+        MomentumLash = false;
+    }
 
-        private float momentumBonus;
-        private int decreaseTick;
-
-        public override void ResetEffects()
+    public override void PostUpdateEquips()
+    {
+        if (MomentumLash)
         {
-            MomentumLash = false;
-        }
-
-        public override void PostUpdateEquips()
-        {
-            if (MomentumLash)
+            if (decreaseTick < 60 && momentumBonus > 0)
             {
-                if (decreaseTick < 60 && momentumBonus > 0)
-                {
-                    decreaseTick++;
-                }
-
-                if (decreaseTick >= 60)
-                {
-                    momentumBonus -= 0.01f;
-                    decreaseTick = 45;
-                }
-
-                Player.GetDamage<SummonDamageClass>() += momentumBonus;
-                Player.GetAttackSpeed<SummonDamageClass>() += momentumBonus;
+                decreaseTick++;
             }
-        }
 
-        public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            if (MomentumLash && ProjectileID.Sets.IsAWhip[proj.type] == true && !target.friendly && target.type != NPCID.TargetDummy)
+            if (decreaseTick >= 60)
             {
-                if (momentumBonus < 0.18f)
-                    momentumBonus += 0.01f;
-
-                decreaseTick = 0;
+                momentumBonus -= 0.01f;
+                decreaseTick = 45;
             }
+
+            Player.GetDamage<SummonDamageClass>() += momentumBonus;
+            Player.GetAttackSpeed<SummonDamageClass>() += momentumBonus;
+        }
+    }
+
+    public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
+    {
+        if (MomentumLash && ProjectileID.Sets.IsAWhip[proj.type] == true && !target.friendly && target.type != NPCID.TargetDummy)
+        {
+            if (momentumBonus < 0.18f)
+                momentumBonus += 0.01f;
+
+            decreaseTick = 0;
         }
     }
 }

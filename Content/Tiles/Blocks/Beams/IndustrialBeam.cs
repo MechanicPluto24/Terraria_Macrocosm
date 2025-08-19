@@ -6,15 +6,14 @@ using Microsoft.Xna.Framework;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Tiles.Blocks.Beams
+namespace Macrocosm.Content.Tiles.Blocks.Beams;
+
+public class IndustrialBeam : ModTile
 {
-    public class IndustrialBeam : ModTile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            TileID.Sets.IsBeam[Type] = true;
-            DustType = ModContent.DustType<IndustrialPlatingDust>();
-            AddMapEntry(new Color(70, 70, 73));
-        }
+        TileID.Sets.IsBeam[Type] = true;
+        DustType = ModContent.DustType<IndustrialPlatingDust>();
+        AddMapEntry(new Color(70, 70, 73));
     }
 }

@@ -1,11 +1,10 @@
-﻿namespace Macrocosm.Common.Enums
+﻿namespace Macrocosm.Common.Enums;
+
+public enum RadiationSeverity
 {
-    public enum RadiationSeverity
-    {
-        None,
-        Mild,
-        Moderate,
-        Severe,
-        //Fatal
-    }
+    None,
+    Mild,
+    Moderate,
+    Severe,
+    //Fatal
 }

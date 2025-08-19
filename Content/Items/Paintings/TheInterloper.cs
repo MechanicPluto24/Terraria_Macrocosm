@@ -1,23 +1,22 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Paintings
+namespace Macrocosm.Content.Items.Paintings;
+
+public class TheInterloper : ModItem
 {
-    public class TheInterloper : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-        }
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.TheEye>());
-            Item.width = 42;
-            Item.height = 34;
-        }
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.TheEye>());
+        Item.width = 42;
+        Item.height = 34;
+    }
 
-        public override void AddRecipes()
-        {
-        }
+    public override void AddRecipes()
+    {
     }
 }

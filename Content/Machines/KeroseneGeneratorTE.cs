@@ -11,58 +11,82 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Machines
+namespace Macrocosm.Content.Machines;
+
+public class KeroseneGeneratorTE : GeneratorTE, IInventoryOwner
 {
-    public class KeroseneGeneratorTE : GeneratorTE, IInventoryOwner
+    public override MachineTile MachineTile => ModContent.GetInstance<KeroseneGenerator>();
+
+    public float RPMProgress
     {
-        public override MachineTile MachineTile => ModContent.GetInstance<KeroseneGenerator>();
+        get => rpmProgress;
+        set => rpmProgress = MathHelper.Clamp(value, 0f, 1f);
+    }
+    protected float rpmProgress;
 
-        public float RPMProgress
+    /// <summary> The hull heat, in degrees Celsius </summary>
+    public float RPM => 6000f * RPMProgress;
+
+    /// <summary> The burning progress of the <see cref="ConsumedItem"/> </summary>
+    public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)burnTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
+    protected int burnTimer;
+
+    /// <summary> The rate at which <see cref="RPMProgress"/> changes. </summary>
+    public float RPMRate => 0.0001f;
+
+    /// <summary> The item currently being burned. </summary>
+    public Item ConsumedItem { get; set; } = new(ItemID.None);
+
+    public Inventory Inventory { get; set; }
+    protected virtual int InventorySize => 1;
+    public Vector2 InventoryPosition => base.Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
+
+    public override void OnFirstUpdate()
+    {
+        // Create new inventory if none found on world load
+        Inventory ??= new(InventorySize, this);
+        Inventory.SetReserved(
+             (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>(),
+             Language.GetText("Kerosene Canister"),
+             ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
+        );
+
+        // Assign inventory owner if the inventory was found on load
+        // IInvetoryOwner does not work well with TileEntities >:(
+        if (Inventory.Owner is null)
+            Inventory.Owner = this;
+    }
+
+    public override void MachineUpdate()
+    {
+        if (!PoweredOn)
         {
-            get => rpmProgress;
-            set => rpmProgress = MathHelper.Clamp(value, 0f, 1f);
-        }
-        protected float rpmProgress;
+            bool fuelFound = false;
 
-        /// <summary> The hull heat, in degrees Celsius </summary>
-        public float RPM => 6000f * RPMProgress;
-
-        /// <summary> The burning progress of the <see cref="ConsumedItem"/> </summary>
-        public float BurnProgress => ConsumedItem.type != ItemID.None ? 1f - (float)burnTimer / ItemSets.FuelData[ConsumedItem.type].ConsumptionRate : 0f;
-        protected int burnTimer;
-
-        /// <summary> The rate at which <see cref="RPMProgress"/> changes. </summary>
-        public float RPMRate => 0.0001f;
-
-        /// <summary> The item currently being burned. </summary>
-        public Item ConsumedItem { get; set; } = new(ItemID.None);
-
-        public Inventory Inventory { get; set; }
-        protected virtual int InventorySize => 1;
-        public Vector2 InventoryPosition => base.Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
-
-        public override void OnFirstUpdate()
-        {
-            // Create new inventory if none found on world load
-            Inventory ??= new(InventorySize, this);
-            Inventory.SetReserved(
-                 (item) => item.type >= ItemID.None && ItemSets.FuelData[item.type].Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>(),
-                 Language.GetText("Kerosene Canister"),
-                 ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
-            );
-
-            // Assign inventory owner if the inventory was found on load
-            // IInvetoryOwner does not work well with TileEntities >:(
-            if (Inventory.Owner is null)
-                Inventory.Owner = this;
-        }
-
-        public override void MachineUpdate()
-        {
-            if (!PoweredOn)
+            foreach (Item item in Inventory)
             {
-                bool fuelFound = false;
+                if (item.stack <= 0)
+                    continue;
 
+                var fuelData = ItemSets.FuelData[item.type];
+                if (fuelData.Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>())
+                {
+                    fuelFound = true;
+                    break;
+                }
+            }
+
+            if (fuelFound && !ManuallyTurnedOff)
+            {
+                TurnOn(automatic: true);
+            }
+        }
+
+        if (ConsumedItem.type == ItemID.None)
+        {
+            if (PoweredOn)
+            {
+                burnTimer = 0;
                 foreach (Item item in Inventory)
                 {
                     if (item.stack <= 0)
@@ -71,114 +95,89 @@ namespace Macrocosm.Content.Machines
                     var fuelData = ItemSets.FuelData[item.type];
                     if (fuelData.Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>())
                     {
-                        fuelFound = true;
+                        ConsumedItem = new Item(item.type, 1);
+                        RPMProgress += RPMRate * (float)fuelData.Potency;
+                        item.stack--;
+
+                        if (item.stack <= 0)
+                            item.TurnToAir();
+
                         break;
                     }
                 }
 
-                if (fuelFound && !ManuallyTurnedOff)
+                if (ConsumedItem.type == ItemID.None)
                 {
-                    TurnOn(automatic: true);
+                    RPMProgress -= RPMRate * 10;
                 }
             }
-
-            if (ConsumedItem.type == ItemID.None)
+        }
+        else
+        {
+            var fuelData = ItemSets.FuelData[ConsumedItem.type];
+            if (fuelData.Potency > 0 && ConsumedItem.type == ModContent.ItemType<RocketFuelCanister>())
             {
-                if (PoweredOn)
+                RPMProgress += RPMRate * (float)fuelData.Potency;
+
+                if (++burnTimer >= fuelData.ConsumptionRate)
                 {
                     burnTimer = 0;
-                    foreach (Item item in Inventory)
-                    {
-                        if (item.stack <= 0)
-                            continue;
-
-                        var fuelData = ItemSets.FuelData[item.type];
-                        if (fuelData.Potency > 0 && item.type == ModContent.ItemType<RocketFuelCanister>())
-                        {
-                            ConsumedItem = new Item(item.type, 1);
-                            RPMProgress += RPMRate * (float)fuelData.Potency;
-                            item.stack--;
-
-                            if (item.stack <= 0)
-                                item.TurnToAir();
-
-                            break;
-                        }
-                    }
-
-                    if (ConsumedItem.type == ItemID.None)
-                    {
-                        RPMProgress -= RPMRate * 10;
-                    }
+                    ConsumedItem.TurnToAir(fullReset: true);
                 }
             }
-            else
-            {
-                var fuelData = ItemSets.FuelData[ConsumedItem.type];
-                if (fuelData.Potency > 0 && ConsumedItem.type == ModContent.ItemType<RocketFuelCanister>())
-                {
-                    RPMProgress += RPMRate * (float)fuelData.Potency;
-
-                    if (++burnTimer >= fuelData.ConsumptionRate)
-                    {
-                        burnTimer = 0;
-                        ConsumedItem.TurnToAir(fullReset: true);
-                    }
-                }
-            }
-
-            MaxGeneratedPower = 15f;
-            GeneratedPower = RPMProgress * MaxGeneratedPower;
         }
 
-        public override void NetSend(BinaryWriter writer)
-        {
-            base.NetSend(writer);
+        MaxGeneratedPower = 15f;
+        GeneratedPower = RPMProgress * MaxGeneratedPower;
+    }
 
-            Inventory ??= new(InventorySize, this);
-            TagIO.Write(Inventory.SerializeData(), writer);
+    public override void NetSend(BinaryWriter writer)
+    {
+        base.NetSend(writer);
 
-            ItemIO.Send(ConsumedItem, writer);
+        Inventory ??= new(InventorySize, this);
+        TagIO.Write(Inventory.SerializeData(), writer);
 
-            writer.Write(rpmProgress);
-        }
+        ItemIO.Send(ConsumedItem, writer);
 
-        public override void NetReceive(BinaryReader reader)
-        {
-            base.NetReceive(reader);
+        writer.Write(rpmProgress);
+    }
 
-            TagCompound tag = TagIO.Read(reader);
-            Inventory = Inventory.DeserializeData(tag);
+    public override void NetReceive(BinaryReader reader)
+    {
+        base.NetReceive(reader);
 
-            ConsumedItem = ItemIO.Receive(reader);
+        TagCompound tag = TagIO.Read(reader);
+        Inventory = Inventory.DeserializeData(tag);
 
-            rpmProgress = reader.ReadSingle();
-        }
+        ConsumedItem = ItemIO.Receive(reader);
 
-        public override void SaveData(TagCompound tag)
-        {
-            base.SaveData(tag);
+        rpmProgress = reader.ReadSingle();
+    }
 
-            tag[nameof(Inventory)] = Inventory;
+    public override void SaveData(TagCompound tag)
+    {
+        base.SaveData(tag);
 
-            tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
+        tag[nameof(Inventory)] = Inventory;
 
-            if (rpmProgress > 0f)
-                tag[nameof(rpmProgress)] = rpmProgress;
-        }
+        tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
 
-        public override void LoadData(TagCompound tag)
-        {
-            base.LoadData(tag);
+        if (rpmProgress > 0f)
+            tag[nameof(rpmProgress)] = rpmProgress;
+    }
 
-            if (tag.ContainsKey(nameof(Inventory)))
-                Inventory = tag.Get<Inventory>(nameof(Inventory));
+    public override void LoadData(TagCompound tag)
+    {
+        base.LoadData(tag);
 
-            if (tag.ContainsKey(nameof(ConsumedItem)))
-                ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));
+        if (tag.ContainsKey(nameof(Inventory)))
+            Inventory = tag.Get<Inventory>(nameof(Inventory));
 
-            if (tag.ContainsKey(nameof(rpmProgress)))
-                rpmProgress = tag.GetFloat(nameof(rpmProgress));
-        }
+        if (tag.ContainsKey(nameof(ConsumedItem)))
+            ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));
+
+        if (tag.ContainsKey(nameof(rpmProgress)))
+            rpmProgress = tag.GetFloat(nameof(rpmProgress));
     }
 }

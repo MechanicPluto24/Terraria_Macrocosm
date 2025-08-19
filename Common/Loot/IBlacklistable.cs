@@ -1,8 +1,7 @@
-﻿namespace Macrocosm.Common.Loot
+﻿namespace Macrocosm.Common.Loot;
+
+public interface IBlacklistable
 {
-    public interface IBlacklistable
-    {
-        public int ItemID { get; }
-        public bool Blacklisted { get; set; }
-    }
+    public int ItemID { get; }
+    public bool Blacklisted { get; set; }
 }

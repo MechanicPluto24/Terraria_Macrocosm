@@ -3,73 +3,72 @@ using System.Collections.Generic;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Common.Hooks
+namespace Macrocosm.Common.Hooks;
+
+public class UIElementHooks : ILoadable
 {
-    public class UIElementHooks : ILoadable
+    private static Dictionary<string, IFocusable> focusedElementsByContext;
+
+    public void Load(Mod mod)
     {
-        private static Dictionary<string, IFocusable> focusedElementsByContext;
+        On_UIElement.Update += On_UIElement_Update;
+        focusedElementsByContext = new();
+    }
 
-        public void Load(Mod mod)
-        {
-            On_UIElement.Update += On_UIElement_Update;
-            focusedElementsByContext = new();
-        }
+    public void Unload()
+    {
+        On_UIElement.Update -= On_UIElement_Update;
+        focusedElementsByContext = null;
+    }
 
-        public void Unload()
-        {
-            On_UIElement.Update -= On_UIElement_Update;
-            focusedElementsByContext = null;
-        }
+    private void On_UIElement_Update(On_UIElement.orig_Update orig, UIElement self, Microsoft.Xna.Framework.GameTime gameTime)
+    {
+        orig(self, gameTime);
+        HandleFocus(self);
+    }
 
-        private void On_UIElement_Update(On_UIElement.orig_Update orig, UIElement self, Microsoft.Xna.Framework.GameTime gameTime)
+    private void HandleFocus(UIElement element)
+    {
+        // TODO: call OnFocusGain/Lost even if the element does not have a focus context 
+        if (element is IFocusable focusable && focusable.FocusContext is not null)
         {
-            orig(self, gameTime);
-            HandleFocus(self);
-        }
+            IFocusable current;
 
-        private void HandleFocus(UIElement element)
-        {
-            // TODO: call OnFocusGain/Lost even if the element does not have a focus context 
-            if (element is IFocusable focusable && focusable.FocusContext is not null)
+            // If current element should have focus
+            if (focusable.HasFocus)
             {
-                IFocusable current;
-
-                // If current element should have focus
-                if (focusable.HasFocus)
+                // In the case where there is an element in this context which already has focus...
+                if (focusedElementsByContext.TryGetValue(focusable.FocusContext, out current))
                 {
-                    // In the case where there is an element in this context which already has focus...
-                    if (focusedElementsByContext.TryGetValue(focusable.FocusContext, out current))
+                    // ... and it's not this element:
+                    if (current != focusable)
                     {
-                        // ... and it's not this element:
-                        if (current != focusable)
-                        {
-                            // Lose focus for that other element
-                            current.HasFocus = false;
-                            current.OnFocusLost?.Invoke();
+                        // Lose focus for that other element
+                        current.HasFocus = false;
+                        current.OnFocusLost?.Invoke();
 
-                            // Gain focus for this one
-                            focusedElementsByContext[focusable.FocusContext] = focusable;
-                            focusable.OnFocusGain?.Invoke();
-                        }
-                    }
-                    // In the case where there are no focused elements in this context:
-                    else
-                    {
                         // Gain focus for this one
                         focusedElementsByContext[focusable.FocusContext] = focusable;
                         focusable.OnFocusGain?.Invoke();
                     }
                 }
-                // In the case where this element should not have focus...
-                else if (focusedElementsByContext.TryGetValue(focusable.FocusContext, out current))
+                // In the case where there are no focused elements in this context:
+                else
                 {
-                    // ... but still has focus in this context:
-                    if (current == focusable)
-                    {
-                        // Lose focus for this one
-                        focusedElementsByContext.Remove(focusable.FocusContext);
-                        focusable.OnFocusLost?.Invoke();
-                    }
+                    // Gain focus for this one
+                    focusedElementsByContext[focusable.FocusContext] = focusable;
+                    focusable.OnFocusGain?.Invoke();
+                }
+            }
+            // In the case where this element should not have focus...
+            else if (focusedElementsByContext.TryGetValue(focusable.FocusContext, out current))
+            {
+                // ... but still has focus in this context:
+                if (current == focusable)
+                {
+                    // Lose focus for this one
+                    focusedElementsByContext.Remove(focusable.FocusContext);
+                    focusable.OnFocusLost?.Invoke();
                 }
             }
         }

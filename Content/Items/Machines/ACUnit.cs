@@ -6,32 +6,31 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Machines
+namespace Macrocosm.Content.Items.Machines;
+
+public class ACUnit : ModItem
 {
-    public class ACUnit : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Item.ResearchUnlockCount = 5;
-        }
+        Item.ResearchUnlockCount = 5;
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.ACUnit>());
-            Item.width = 26;
-            Item.height = 16;
-            Item.value = 100;
-            Item.rare = ItemRarityID.LightRed;
-        }
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.ACUnit>());
+        Item.width = 26;
+        Item.height = 16;
+        Item.value = 100;
+        Item.rare = ItemRarityID.LightRed;
+    }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient<AluminumBar>(6)
-                .AddIngredient<Plastic>(2)
-                .AddIngredient<PrintedCircuitBoard>()
-                .AddTile<Fabricator>()
-                .Register();
-        }
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient<AluminumBar>(6)
+            .AddIngredient<Plastic>(2)
+            .AddIngredient<PrintedCircuitBoard>()
+            .AddTile<Fabricator>()
+            .Register();
     }
 }
