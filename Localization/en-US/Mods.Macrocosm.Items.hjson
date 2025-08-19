@@ -443,7 +443,7 @@ ShoresOfOblivion: {
 }
 
 SakuraRuckenfigur: {
-	DisplayName: Sakura Rückenfigur
+	DisplayName: Sakura R�ckenfigur
 	Tooltip: "'U. C. Arts'"
 }
 
@@ -3279,4 +3279,9 @@ ShredderBullet: {
 IndustrialBeam: {
 	DisplayName: Industrial Beam
 	Tooltip: ""
+}
+
+ScrapshotBow: {
+	DisplayName: Scrapshot Bow
+	Tooltip: Prone to faulty firing
 }

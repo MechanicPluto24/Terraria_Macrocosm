@@ -83,27 +83,41 @@ public class HandheldEngineProjectile : ChargedHeldProjectile
 
     private bool OwnerHasMana => Player.CheckMana(ManaUseAmount);
 
-
     private Rectangle[] hitboxes = new Rectangle[3];
+    private void ManageKnockbackX()
+    {
+        bool SpeedCheck = (Math.Abs(Player.velocity.X)>10);
+        bool DirectionCheck = (Math.Sign(Player.velocity.X)!=Math.Sign(Player.direction));
+        if(SpeedCheck&&DirectionCheck)
+            return;
+        Player.velocity.X+=(2f*-(Main.MouseWorld-Player.Center).SafeNormalize(Vector2.UnitX).X);
+    }
+    private void ManageKnockbackY()
+    {
+        bool SpeedCheck = (Math.Abs(Player.velocity.Y)>10);
+        bool DirectionCheck = (Math.Sign(Player.velocity.Y)!=Math.Sign(Main.MouseWorld.Y-Player.Center.Y));
+        if(SpeedCheck&&DirectionCheck)
+            return;
+        Player.velocity.Y+=2f*-((Main.MouseWorld-Player.Center).SafeNormalize(Vector2.UnitX).Y);
+    }
     private void Shoot()
     {
-        if (CanShoot)
-        {
             Item item = Player.inventory[Player.selectedItem];
             int damage = Player.GetWeaponDamage(item);
             float knockback = item.knockBack;
 
             if (StillInUse && AI_UseCounter % ManaUseRate == 0)
                 Player.CheckMana(item, ManaUseAmount, pay: true);
-
+                
+            // Scale damage by windup
+            // Projectile.damage = (int)(Projectile.originalDamage * (float)(AI_Windup >= windupTime ? 1f : 0.5f + 0.5f * AI_Windup / (float)windupTime));
             Vector2 rotPoint1 = Utility.RotatingPoint(Projectile.Center, new Vector2(62, 12 * Projectile.spriteDirection), Projectile.rotation);
             Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(92, 12 * Projectile.spriteDirection), Projectile.rotation);
             Vector2 rotPoint3 = Utility.RotatingPoint(Projectile.Center, new Vector2(122, 12 * Projectile.spriteDirection), Projectile.rotation);
             int dimension = 30;
-
-            // Scale damage by windup
-            Projectile.damage = (int)(Projectile.originalDamage * (float)(AI_Windup >= windupTime ? 1f : 0.5f + 0.5f * AI_Windup / (float)windupTime));
-
+            ManageKnockbackX();
+            ManageKnockbackY();
+               
             if (AI_Overheat > 0f)
                 Projectile.damage += (int)(Projectile.originalDamage * AI_Overheat);
 
