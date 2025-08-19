@@ -8,110 +8,109 @@ using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Systems.Power
+namespace Macrocosm.Common.Systems.Power;
+
+public abstract class MachineUI : UIDragablePanel
 {
-    public abstract class MachineUI : UIDragablePanel
+    public MachineTE MachineTE { get; set; }
+
+    protected UIText title;
+    protected UIHoverImageButton powerOnIcon;
+    protected UIHoverImageButton powerOffIcon;
+
+    public override void OnInitialize()
     {
-        public MachineTE MachineTE { get; set; }
+        Width = new(640, 0);
+        Height = new(480, 0);
+        HAlign = 0.5f;
+        VAlign = 0.5f;
 
-        protected UIText title;
-        protected UIHoverImageButton powerOnIcon;
-        protected UIHoverImageButton powerOffIcon;
+        BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
+        BorderColor = UITheme.Current.WindowStyle.BorderColor;
 
-        public override void OnInitialize()
+        SetPadding(6f);
+        PaddingTop = 42f;
+
+        LocalizedText text = Language.GetOrRegister
+        (
+            $"Mods.Macrocosm.Machines.{MachineTE.MachineTile.GetType().Name}.DisplayName",
+            () => Regex.Replace(MachineTE.MachineTile.GetType().Name, "([A-Z])", " $1").Trim()
+        );
+
+        title = new(text, 0.6f, true)
         {
-            Width = new(640, 0);
-            Height = new(480, 0);
-            HAlign = 0.5f;
-            VAlign = 0.5f;
+            IsWrapped = false,
+            HAlign = 0.5f,
+            VAlign = 0.035f,
+            Top = new(-42, 0),
+            TextColor = Color.White
+        };
 
-            BackgroundColor = UITheme.Current.WindowStyle.BackgroundColor;
-            BorderColor = UITheme.Current.WindowStyle.BorderColor;
+        Append(title);
 
-            SetPadding(6f);
-            PaddingTop = 42f;
-
-            LocalizedText text = Language.GetOrRegister
-            (
-                $"Mods.Macrocosm.Machines.{MachineTE.MachineTile.GetType().Name}.DisplayName",
-                () => Regex.Replace(MachineTE.MachineTile.GetType().Name, "([A-Z])", " $1").Trim()
-            );
-
-            title = new(text, 0.6f, true)
+        if (MachineTE is ConsumerTE)
+        {
+            powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "LightningGreen", AssetRequestMode.ImmediateLoad))
             {
-                IsWrapped = false,
-                HAlign = 0.5f,
-                VAlign = 0.035f,
-                Top = new(-42, 0),
-                TextColor = Color.White
+                Left = new(-36, 1f),
+                Top = new(-34, 0f)
             };
 
-            Append(title);
-
-            if (MachineTE is ConsumerTE)
+            powerOffIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "LightningRed", AssetRequestMode.ImmediateLoad))
             {
-                powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "LightningGreen", AssetRequestMode.ImmediateLoad))
-                {
-                    Left = new(-36, 1f),
-                    Top = new(-34, 0f)
-                };
-
-                powerOffIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "LightningRed", AssetRequestMode.ImmediateLoad))
-                {
-                    Left = new(-36, 1f),
-                    Top = new(-34, 0f)
-                };
-            }
-            else if (MachineTE is GeneratorTE or BatteryTE)
+                Left = new(-36, 1f),
+                Top = new(-34, 0f)
+            };
+        }
+        else if (MachineTE is GeneratorTE or BatteryTE)
+        {
+            powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "BatteryFull", AssetRequestMode.ImmediateLoad))
             {
-                powerOnIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "BatteryFull", AssetRequestMode.ImmediateLoad))
-                {
-                    Left = new(-50, 1f),
-                    Top = new(-34, 0f)
-                };
+                Left = new(-50, 1f),
+                Top = new(-34, 0f)
+            };
 
-                powerOffIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "BatteryLow", AssetRequestMode.ImmediateLoad))
-                {
-                    Left = new(-50, 1f),
-                    Top = new(-34, 0f)
-                };
-            }
-
-            powerOnIcon.SetVisibility(0f);
-            powerOffIcon.SetVisibility(1f);
-            Append(powerOnIcon);
-            Append(powerOffIcon);
+            powerOffIcon = new(ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "BatteryLow", AssetRequestMode.ImmediateLoad))
+            {
+                Left = new(-50, 1f),
+                Top = new(-34, 0f)
+            };
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
+        powerOnIcon.SetVisibility(0f);
+        powerOffIcon.SetVisibility(1f);
+        Append(powerOnIcon);
+        Append(powerOffIcon);
+    }
 
-            if (MachineTE is ConsumerTE consumer)
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
+
+        if (MachineTE is ConsumerTE consumer)
+        {
+            if (consumer.InputPower >= consumer.MinPower)
             {
-                if (consumer.InputPower >= consumer.MinPower)
-                {
-                    powerOnIcon.SetVisibility(1f);
-                    powerOffIcon.SetVisibility(0f);
-                }
-                else
-                {
-                    powerOnIcon.SetVisibility(0f);
-                    powerOffIcon.SetVisibility(1f);
-                }
+                powerOnIcon.SetVisibility(1f);
+                powerOffIcon.SetVisibility(0f);
             }
-            else if (MachineTE is GeneratorTE or BatteryTE)
+            else
             {
-                if (MachineTE.PoweredOn)
-                {
-                    powerOnIcon.SetVisibility(1f);
-                    powerOffIcon.SetVisibility(0f);
-                }
-                else
-                {
-                    powerOnIcon.SetVisibility(0f);
-                    powerOffIcon.SetVisibility(1f);
-                }
+                powerOnIcon.SetVisibility(0f);
+                powerOffIcon.SetVisibility(1f);
+            }
+        }
+        else if (MachineTE is GeneratorTE or BatteryTE)
+        {
+            if (MachineTE.PoweredOn)
+            {
+                powerOnIcon.SetVisibility(1f);
+                powerOffIcon.SetVisibility(0f);
+            }
+            else
+            {
+                powerOnIcon.SetVisibility(0f);
+                powerOffIcon.SetVisibility(1f);
             }
         }
     }

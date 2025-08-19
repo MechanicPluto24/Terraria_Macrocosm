@@ -13,112 +13,111 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Common.UI.Rockets.Cargo
+namespace Macrocosm.Common.UI.Rockets.Cargo;
+
+public class UIPlayerInfoElement : UIPanel
 {
-    public class UIPlayerInfoElement : UIPanel
+    private readonly Player player;
+    private readonly bool large;
+
+    private UIText uIPlayerName;
+
+    public bool AddTargetWorld { get; set; } = true;
+    public bool DrawInListWithConnectors { get; set; } = true;
+    public bool LastInList { get; set; } = false;
+
+    private RocketPlayer RocketPlayer => player.GetModPlayer<RocketPlayer>();
+
+    public UIPlayerInfoElement(Player player, bool large = true)
     {
-        private readonly Player player;
-        private readonly bool large;
+        this.player = player;
+        this.large = large;
+    }
 
-        private UIText uIPlayerName;
+    public override void OnInitialize()
+    {
+        if (large)
+            Height.Set(74, 0f);
+        else
+            Height.Set(40, 0f);
 
-        public bool AddTargetWorld { get; set; } = true;
-        public bool DrawInListWithConnectors { get; set; } = true;
-        public bool LastInList { get; set; } = false;
+        BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
+        BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
 
-        private RocketPlayer RocketPlayer => player.GetModPlayer<RocketPlayer>();
-
-        public UIPlayerInfoElement(Player player, bool large = true)
+        if (Main.netMode == NetmodeID.SinglePlayer || RocketPlayer.IsCommander || !DrawInListWithConnectors)
         {
-            this.player = player;
-            this.large = large;
+            Width.Set(0f, 0.98f);
+            Left.Set(0f, 0f);
+        }
+        else
+        {
+            Width.Set(0f, 0.78f);
+            Left.Set(0f, 0.20f);
         }
 
-        public override void OnInitialize()
+        uIPlayerName = new(player.name)
         {
-            if (large)
-                Height.Set(74, 0f);
-            else
-                Height.Set(40, 0f);
+            Left = new(100, 0),
+            VAlign = 0.5f
+        };
+        Append(uIPlayerName);
+    }
 
-            BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
-            BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
+    SpriteBatchState state;
+    public override void Draw(SpriteBatch spriteBatch)
+    {
+        base.Draw(spriteBatch);
 
-            if (Main.netMode == NetmodeID.SinglePlayer || RocketPlayer.IsCommander || !DrawInListWithConnectors)
-            {
-                Width.Set(0f, 0.98f);
-                Left.Set(0f, 0f);
-            }
-            else
-            {
-                Width.Set(0f, 0.78f);
-                Left.Set(0f, 0.20f);
-            }
+        if (!player.active)
+            return;
 
-            uIPlayerName = new(player.name)
-            {
-                Left = new(100, 0),
-                VAlign = 0.5f
-            };
-            Append(uIPlayerName);
-        }
+        Recalculate();
+        CalculatedStyle dimensions = GetDimensions();
 
-        SpriteBatchState state;
-        public override void Draw(SpriteBatch spriteBatch)
+        // Uhh lotsa magic numbers -- Feldy
+        if (!RocketPlayer.IsCommander && DrawInListWithConnectors)
         {
-            base.Draw(spriteBatch);
+            UIConnectors.DrawConnectorHorizontal(spriteBatch, new Rectangle((int)(dimensions.X - dimensions.Width * 0.112f), (int)(dimensions.Y + dimensions.Height * 0.33f), 44, 23), BackgroundColor, BorderColor, out _, out _);
 
-            if (!player.active)
-                return;
-
-            Recalculate();
-            CalculatedStyle dimensions = GetDimensions();
-
-            // Uhh lotsa magic numbers -- Feldy
-            if (!RocketPlayer.IsCommander && DrawInListWithConnectors)
+            if (LastInList)
             {
-                UIConnectors.DrawConnectorHorizontal(spriteBatch, new Rectangle((int)(dimensions.X - dimensions.Width * 0.112f), (int)(dimensions.Y + dimensions.Height * 0.33f), 44, 23), BackgroundColor, BorderColor, out _, out _);
-
-                if (LastInList)
-                {
-                    UIConnectors.DrawConnectorVertical(spriteBatch, new Rectangle((int)(dimensions.X + dimensions.Width * -0.15f), (int)(dimensions.Y - 6), 23, (int)dimensions.Height / 2), BackgroundColor, BorderColor, out _, out _);
-                    UIConnectors.DrawConnectorLCorner(spriteBatch, new Vector2(dimensions.X - dimensions.Width * 0.152f, (int)(dimensions.Y + dimensions.Height * 0.33f)), BackgroundColor, BorderColor);
-                }
-                else
-                {
-                    UIConnectors.DrawConnectorVertical(spriteBatch, new Rectangle((int)(dimensions.X + dimensions.Width * -0.15f), (int)(dimensions.Y - 6), 23, (int)dimensions.Height + 4), BackgroundColor, BorderColor, out _, out _);
-                    UIConnectors.DrawConnectorTJunction(spriteBatch, new Vector2(dimensions.X - dimensions.Width * 0.151f, (int)(dimensions.Y + dimensions.Height * 0.33f)), BackgroundColor, BorderColor);
-                }
-            }
-
-            state.SaveState(spriteBatch, true);
-
-            Vector2 worldIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.85f, dimensions.Height * 0.5f);
-            Vector2 playerPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.08f, dimensions.Height * 0.2f);
-            Vector2 headIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.08f, dimensions.Height * 0.42f);
-
-            string targetWorld = MacrocosmSubworld.SanitizeID(RocketPlayer.TargetWorld, out _);
-            if (AddTargetWorld && RocketPlayer.IsCommander && ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + targetWorld, out Asset<Texture2D> iconTexture))
-                spriteBatch.Draw(iconTexture.Value, worldIconPosition, null, Color.White, 0f, iconTexture.Size() / 2f, 1f, SpriteEffects.None, 0);
-
-
-            spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
-
-            if (large)
-            {
-                player.DrawPetDummy(playerPosition, true);
-                var clonePlayer = player.PrepareDummy(playerPosition);
-                Main.PlayerRenderer.DrawPlayer(Main.Camera, clonePlayer, clonePlayer.position, 0f, player.Size / 2f);
+                UIConnectors.DrawConnectorVertical(spriteBatch, new Rectangle((int)(dimensions.X + dimensions.Width * -0.15f), (int)(dimensions.Y - 6), 23, (int)dimensions.Height / 2), BackgroundColor, BorderColor, out _, out _);
+                UIConnectors.DrawConnectorLCorner(spriteBatch, new Vector2(dimensions.X - dimensions.Width * 0.152f, (int)(dimensions.Y + dimensions.Height * 0.33f)), BackgroundColor, BorderColor);
             }
             else
             {
-                Main.PlayerRenderer.DrawPlayerHead(Main.Camera, player, headIconPosition);
+                UIConnectors.DrawConnectorVertical(spriteBatch, new Rectangle((int)(dimensions.X + dimensions.Width * -0.15f), (int)(dimensions.Y - 6), 23, (int)dimensions.Height + 4), BackgroundColor, BorderColor, out _, out _);
+                UIConnectors.DrawConnectorTJunction(spriteBatch, new Vector2(dimensions.X - dimensions.Width * 0.151f, (int)(dimensions.Y + dimensions.Height * 0.33f)), BackgroundColor, BorderColor);
             }
-
-            spriteBatch.End();
-            spriteBatch.Begin(state);
         }
+
+        state.SaveState(spriteBatch, true);
+
+        Vector2 worldIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.85f, dimensions.Height * 0.5f);
+        Vector2 playerPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.08f, dimensions.Height * 0.2f);
+        Vector2 headIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.08f, dimensions.Height * 0.42f);
+
+        string targetWorld = MacrocosmSubworld.SanitizeID(RocketPlayer.TargetWorld, out _);
+        if (AddTargetWorld && RocketPlayer.IsCommander && ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + targetWorld, out Asset<Texture2D> iconTexture))
+            spriteBatch.Draw(iconTexture.Value, worldIconPosition, null, Color.White, 0f, iconTexture.Size() / 2f, 1f, SpriteEffects.None, 0);
+
+
+        spriteBatch.End();
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, state);
+
+        if (large)
+        {
+            player.DrawPetDummy(playerPosition, true);
+            var clonePlayer = player.PrepareDummy(playerPosition);
+            Main.PlayerRenderer.DrawPlayer(Main.Camera, clonePlayer, clonePlayer.position, 0f, player.Size / 2f);
+        }
+        else
+        {
+            Main.PlayerRenderer.DrawPlayerHead(Main.Camera, player, headIconPosition);
+        }
+
+        spriteBatch.End();
+        spriteBatch.Begin(state);
     }
 }
 

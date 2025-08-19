@@ -8,57 +8,56 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Hostile
+namespace Macrocosm.Content.Projectiles.Hostile;
+
+public class ZombieSecurityBullet : ModProjectile
 {
-    public class ZombieSecurityBullet : ModProjectile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            ProjectileID.Sets.TrailCacheLength[Type] = 10;
-            ProjectileID.Sets.TrailingMode[Type] = 0;
+        ProjectileID.Sets.TrailCacheLength[Type] = 10;
+        ProjectileID.Sets.TrailingMode[Type] = 0;
 
-            ProjectileSets.HitsTiles[Type] = true;
-        }
+        ProjectileSets.HitsTiles[Type] = true;
+    }
 
-        public override void SetDefaults()
+    public override void SetDefaults()
+    {
+        Projectile.width = 4;
+        Projectile.height = 4;
+        Projectile.aiStyle = 1;
+        Projectile.hostile = true;
+        Projectile.penetrate = -1;
+        Projectile.light = 0.5f;
+        Projectile.alpha = 255;
+        Projectile.scale = 1.2f;
+        Projectile.timeLeft = 600;
+        Projectile.extraUpdates = 1;
+        Projectile.width = 4;
+        Projectile.height = 4;
+        Projectile.alpha = 0;
+        AIType = ProjectileID.Bullet;
+    }
+
+    bool spawned = false;
+    public override bool PreAI()
+    {
+        if (!spawned)
         {
-            Projectile.width = 4;
-            Projectile.height = 4;
-            Projectile.aiStyle = 1;
-            Projectile.hostile = true;
-            Projectile.penetrate = -1;
-            Projectile.light = 0.5f;
-            Projectile.alpha = 255;
-            Projectile.scale = 1.2f;
-            Projectile.timeLeft = 600;
-            Projectile.extraUpdates = 1;
-            Projectile.width = 4;
-            Projectile.height = 4;
+            if (!Main.dedServ)
+                SoundEngine.PlaySound(SFX.DesertEagleShot with { Volume = 0.3f }, Projectile.position);
+
             Projectile.alpha = 0;
-            AIType = ProjectileID.Bullet;
+            spawned = true;
         }
 
-        bool spawned = false;
-        public override bool PreAI()
-        {
-            if (!spawned)
-            {
-                if (!Main.dedServ)
-                    SoundEngine.PlaySound(SFX.DesertEagleShot with { Volume = 0.3f }, Projectile.position);
+        Lighting.AddLight(Projectile.position, new Color(255, 202, 141).ToVector3() * 0.6f);
 
-                Projectile.alpha = 0;
-                spawned = true;
-            }
+        return true;
+    }
 
-            Lighting.AddLight(Projectile.position, new Color(255, 202, 141).ToVector3() * 0.6f);
-
-            return true;
-        }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-            Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetBrightness() * Projectile.Opacity, new Color(184, 58, 24, 0) * lightColor.GetBrightness() * Projectile.Opacity);
-            return true;
-        }
+    public override bool PreDraw(ref Color lightColor)
+    {
+        Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, new Color(255, 162, 141) * lightColor.GetBrightness() * Projectile.Opacity, new Color(184, 58, 24, 0) * lightColor.GetBrightness() * Projectile.Opacity);
+        return true;
     }
 }

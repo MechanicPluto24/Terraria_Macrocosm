@@ -1,16 +1,15 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Machines.Consumers.Autocrafters
+namespace Macrocosm.Content.Machines.Consumers.Autocrafters;
+
+public class AutocrafterT3TE : AutocrafterTEBase
 {
-    public class AutocrafterT3TE : AutocrafterTEBase
+    public override MachineTile MachineTile => ModContent.GetInstance<AutocrafterT3>();
+    public override int OutputSlots => 4;
+    public override void MachineUpdate()
     {
-        public override MachineTile MachineTile => ModContent.GetInstance<AutocrafterT3>();
-        public override int OutputSlots => 4;
-        public override void MachineUpdate()
-        {
-            MaxPower = 0.1f;
-            base.MachineUpdate();
-        }
+        MaxPower = 0.1f;
+        base.MachineUpdate();
     }
 }

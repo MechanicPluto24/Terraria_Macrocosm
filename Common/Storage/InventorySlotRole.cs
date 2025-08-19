@@ -1,10 +1,9 @@
-﻿namespace Macrocosm.Common.Storage
+﻿namespace Macrocosm.Common.Storage;
+
+public enum InventorySlotRole
 {
-    public enum InventorySlotRole
-    {
-        General,
-        Input,
-        Output,
-        OutputLocked
-    }
+    General,
+    Input,
+    Output,
+    OutputLocked
 }

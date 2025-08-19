@@ -11,23 +11,22 @@ using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
 
-namespace Macrocosm.Common.Systems.Connectors
+namespace Macrocosm.Common.Systems.Connectors;
+
+public class TileEntityInventoryOwnerConveyorContainerProvider : IConveyorContainerProvider<TileEntity>
 {
-    public class TileEntityInventoryOwnerConveyorContainerProvider : IConveyorContainerProvider<TileEntity>
+    public IEnumerable<TileEntity> EnumerateContainers() => TileEntity.ByID.Values.Where(te => te is IInventoryOwner);
+
+    public bool TryGetContainer(Point16 tilePos, out TileEntity te) => TileEntity.TryGet(tilePos, out te);
+
+    public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
     {
-        public IEnumerable<TileEntity> EnumerateContainers() => TileEntity.ByID.Values.Where(te => te is IInventoryOwner);
+        var data = Main.tile[tilePos].Get<ConveyorData>();
+        if (data.HasPipe(type) && (data.Inlet || data.Outlet) && TryGetContainer(tilePos, out TileEntity te) && te is IInventoryOwner)
+            return new ConveyorNode(te, data, type, tilePos, GetConnectionPositions(te));
 
-        public bool TryGetContainer(Point16 tilePos, out TileEntity te) => TileEntity.TryGet(tilePos, out te);
-
-        public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
-        {
-            var data = Main.tile[tilePos].Get<ConveyorData>();
-            if (data.HasPipe(type) && (data.Inlet || data.Outlet) && TryGetContainer(tilePos, out TileEntity te) && te is IInventoryOwner)
-                return new ConveyorNode(te, data, type, tilePos, GetConnectionPositions(te));
-
-            return null;
-        }
-
-        public IEnumerable<Point16> GetConnectionPositions(TileEntity te) => te.GetTilePositions();
+        return null;
     }
+
+    public IEnumerable<Point16> GetConnectionPositions(TileEntity te) => te.GetTilePositions();
 }

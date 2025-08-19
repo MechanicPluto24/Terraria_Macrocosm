@@ -2,11 +2,10 @@
 using Macrocosm.Common.Systems.Power.Oxygen;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Machines.Consumers.Oxygen
+namespace Macrocosm.Content.Machines.Consumers.Oxygen;
+
+public class ACUnitTE : OxygenPassiveSourceTE
 {
-    public class ACUnitTE : OxygenPassiveSourceTE
-    {
-        public override MachineTile MachineTile => ModContent.GetInstance<ACUnit>();
-        public override int MaxRoomSize => 1500;
-    }
+    public override MachineTile MachineTile => ModContent.GetInstance<ACUnit>();
+    public override int MaxRoomSize => 1500;
 }

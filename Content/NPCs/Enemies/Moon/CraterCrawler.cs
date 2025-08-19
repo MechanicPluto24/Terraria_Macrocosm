@@ -15,229 +15,185 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Enemies.Moon
+namespace Macrocosm.Content.NPCs.Enemies.Moon;
+
+public class CraterCrawlerHead : WormHead
 {
-    public class CraterCrawlerHead : WormHead
+    public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
+    public override int TailType => ModContent.NPCType<CraterCrawlerTail>();
+
+    public override void SetStaticDefaults()
     {
-        public override int BodyType => ModContent.NPCType<CraterCrawlerBody>();
-        public override int TailType => ModContent.NPCType<CraterCrawlerTail>();
-
-        public override void SetStaticDefaults()
+        NPCID.Sets.NPCBestiaryDrawModifiers value = new()
         {
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new()
+            CustomTexturePath = Texture.Replace("Head", "") + "_Bestiary",
+            Position = new Vector2(40f, 24f),
+            PortraitPositionXOverride = 0f,
+            PortraitPositionYOverride = 12f
+        };
+        NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+
+        NPC.ApplyBuffImmunity
+        (
+            BuffID.Confused
+        );
+
+        NPCSets.MoonNPC[Type] = true;
+
+        Redemption.AddElementToNPC(Type, Redemption.ElementID.Earth);
+        Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
+    }
+    public override float FallSpeed => 0.4f;
+    public override void SetDefaults()
+    {
+        NPC.CloneDefaults(NPCID.DiggerHead);
+        NPC.lifeMax = 3200;
+        NPC.damage = 65;
+        NPC.defense = 40;
+        NPC.width = 20;
+        NPC.height = 20;
+        SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
+        NPC.aiStyle = -1;
+    }
+
+    public override float SpawnChance(NPCSpawnInfo spawnInfo) => !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.1f : 0f;
+
+    public override void ModifyNPCLoot(NPCLoot loot)
+    {
+        loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 2, 1, 2));
+        loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 50, 1, 20));
+    }
+
+    public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+    {
+    }
+
+    public override void Init()
+    {
+        // Set the segment variance
+        // If you want the segment length to be constant, set these two properties to the same value
+        MinSegmentLength = 16;
+        MaxSegmentLength = 24;
+
+        CommonWormInit(this);
+    }
+
+    public static void CommonWormInit(Worm worm)
+    {
+        // These two properties handle the movement of the worm
+        worm.MoveSpeed = 15.5f;
+        worm.Acceleration = 0.12f;
+    }
+
+    private int attackCounter;
+    public override void SendExtraAI(BinaryWriter writer)
+    {
+        writer.Write(attackCounter);
+    }
+
+    public override void ReceiveExtraAI(BinaryReader reader)
+    {
+        attackCounter = reader.ReadInt32();
+    }
+
+    public override void AI()
+    {
+        if (Main.netMode != NetmodeID.MultiplayerClient)
+        {
+            // tick down the attack counter.
+            if (attackCounter > 0)
+                attackCounter--;
+
+            Player target = Main.player[NPC.target];
+            // If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
+            if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 200 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1))
             {
-                CustomTexturePath = Texture.Replace("Head", "") + "_Bestiary",
-                Position = new Vector2(40f, 24f),
-                PortraitPositionXOverride = 0f,
-                PortraitPositionYOverride = 12f
-            };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
-
-            NPC.ApplyBuffImmunity
-            (
-                BuffID.Confused
-            );
-
-            NPCSets.MoonNPC[Type] = true;
-
-            Redemption.AddElementToNPC(Type, Redemption.ElementID.Earth);
-            Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
-        }
-        public override float FallSpeed => 0.4f;
-        public override void SetDefaults()
-        {
-            NPC.CloneDefaults(NPCID.DiggerHead);
-            NPC.lifeMax = 3200;
-            NPC.damage = 65;
-            NPC.defense = 40;
-            NPC.width = 20;
-            NPC.height = 20;
-            SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
-            NPC.aiStyle = -1;
-        }
-
-        public override float SpawnChance(NPCSpawnInfo spawnInfo) => !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.1f : 0f;
-
-        public override void ModifyNPCLoot(NPCLoot loot)
-        {
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<AlienResidue>(), 2, 1, 2));
-            loot.Add(ItemDropRule.Common(ModContent.ItemType<Cheese>(), 50, 1, 20));
-        }
-
-        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
-        {
-        }
-
-        public override void Init()
-        {
-            // Set the segment variance
-            // If you want the segment length to be constant, set these two properties to the same value
-            MinSegmentLength = 16;
-            MaxSegmentLength = 24;
-
-            CommonWormInit(this);
-        }
-
-        public static void CommonWormInit(Worm worm)
-        {
-            // These two properties handle the movement of the worm
-            worm.MoveSpeed = 15.5f;
-            worm.Acceleration = 0.12f;
-        }
-
-        private int attackCounter;
-        public override void SendExtraAI(BinaryWriter writer)
-        {
-            writer.Write(attackCounter);
-        }
-
-        public override void ReceiveExtraAI(BinaryReader reader)
-        {
-            attackCounter = reader.ReadInt32();
-        }
-
-        public override void AI()
-        {
-            if (Main.netMode != NetmodeID.MultiplayerClient)
-            {
-                // tick down the attack counter.
-                if (attackCounter > 0)
-                    attackCounter--;
-
-                Player target = Main.player[NPC.target];
-                // If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
-                if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 200 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1))
-                {
-                    // some projectile attack here?
-                }
-            }
-        }
-
-        public override void HitEffect(NPC.HitInfo hit)
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
-                Dust dust = Main.dust[dustIndex];
-                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
-                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
-                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
-            }
-
-            if (NPC.life <= 0)
-            {
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerHeadGore").Type);
-
-                for (int i = 0; i < 20; i++)
-                {
-                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
-                    Dust dust = Main.dust[dustIndex];
-                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
-                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
-                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
-                }
+                // some projectile attack here?
             }
         }
     }
 
-    public class CraterCrawlerBody : WormBody
+    public override void HitEffect(NPC.HitInfo hit)
     {
-        public override void SetStaticDefaults()
+        for (int i = 0; i < 10; i++)
         {
-            NPC.ApplyBuffImmunity
-            (
-                BuffID.Confused
-            );
-
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+            int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+            Dust dust = Main.dust[dustIndex];
+            dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+            dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+            dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
         }
 
-        public override void SetDefaults()
+        if (NPC.life <= 0)
         {
-            NPC.CloneDefaults(NPCID.DiggerBody);
-            NPC.damage = 60;
-            NPC.defense = 60;
-            NPC.npcSlots = 0f;
-            NPC.width = 16;
-            NPC.height = 16;
-            NPC.aiStyle = -1;
-            Main.npcFrameCount[Type] = 1;
-        }
+            Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerHeadGore").Type);
 
-        public override void Init()
-        {
-            CraterCrawlerHead.CommonWormInit(this);
-        }
-
-        public override void OnSpawn(IEntitySource source)
-        {
-        }
-
-        public override void FindFrame(int frameHeight)
-        {
-        }
-
-        public override void HitEffect(NPC.HitInfo hit)
-        {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
                 int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
                 Dust dust = Main.dust[dustIndex];
                 dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
                 dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
-            }
-
-            if (NPC.life <= 0)
-            {
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerBodyGore").Type);
-
-                for (int i = 0; i < 20; i++)
-                {
-                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
-                    Dust dust = Main.dust[dustIndex];
-                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
-                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
-                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
-                }
             }
         }
     }
+}
 
-    public class CraterCrawlerTail : WormTail
+public class CraterCrawlerBody : WormBody
+{
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            NPC.ApplyBuffImmunity
-            (
-                BuffID.Confused
-            );
+        NPC.ApplyBuffImmunity
+        (
+            BuffID.Confused
+        );
 
-            NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
-            NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+        NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
+        NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+    }
+
+    public override void SetDefaults()
+    {
+        NPC.CloneDefaults(NPCID.DiggerBody);
+        NPC.damage = 60;
+        NPC.defense = 60;
+        NPC.npcSlots = 0f;
+        NPC.width = 16;
+        NPC.height = 16;
+        NPC.aiStyle = -1;
+        Main.npcFrameCount[Type] = 1;
+    }
+
+    public override void Init()
+    {
+        CraterCrawlerHead.CommonWormInit(this);
+    }
+
+    public override void OnSpawn(IEntitySource source)
+    {
+    }
+
+    public override void FindFrame(int frameHeight)
+    {
+    }
+
+    public override void HitEffect(NPC.HitInfo hit)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+            Dust dust = Main.dust[dustIndex];
+            dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+            dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+            dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
         }
 
-        public override void SetDefaults()
+        if (NPC.life <= 0)
         {
-            NPC.CloneDefaults(NPCID.DiggerTail);
-            NPC.damage = 50;
-            NPC.defense = 80;
-            NPC.width = 30;
-            NPC.height = 30;
-            NPC.npcSlots = 0f;
-            NPC.aiStyle = -1;
-        }
+            Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerBodyGore").Type);
 
-        public override void Init()
-        {
-            FlipSprite = false;
-            CraterCrawlerHead.CommonWormInit(this);
-        }
-
-        public override void HitEffect(NPC.HitInfo hit)
-        {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 20; i++)
             {
                 int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
                 Dust dust = Main.dust[dustIndex];
@@ -245,19 +201,62 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon
                 dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
                 dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
             }
+        }
+    }
+}
 
-            if (NPC.life <= 0)
+public class CraterCrawlerTail : WormTail
+{
+    public override void SetStaticDefaults()
+    {
+        NPC.ApplyBuffImmunity
+        (
+            BuffID.Confused
+        );
+
+        NPCID.Sets.NPCBestiaryDrawModifiers value = new() { Hide = true };
+        NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
+    }
+
+    public override void SetDefaults()
+    {
+        NPC.CloneDefaults(NPCID.DiggerTail);
+        NPC.damage = 50;
+        NPC.defense = 80;
+        NPC.width = 30;
+        NPC.height = 30;
+        NPC.npcSlots = 0f;
+        NPC.aiStyle = -1;
+    }
+
+    public override void Init()
+    {
+        FlipSprite = false;
+        CraterCrawlerHead.CommonWormInit(this);
+    }
+
+    public override void HitEffect(NPC.HitInfo hit)
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+            Dust dust = Main.dust[dustIndex];
+            dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+            dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+            dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
+        }
+
+        if (NPC.life <= 0)
+        {
+            Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerTailGore").Type);
+
+            for (int i = 0; i < 20; i++)
             {
-                Gore.NewGore(NPC.GetSource_Death(), NPC.position, -NPC.velocity, Mod.Find<ModGore>("CraterCrawlerTailGore").Type);
-
-                for (int i = 0; i < 20; i++)
-                {
-                    int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
-                    Dust dust = Main.dust[dustIndex];
-                    dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
-                    dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
-                    dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
-                }
+                int dustIndex = Dust.NewDust(NPC.position, NPC.width, NPC.height, i % 2 == 0 ? ModContent.DustType<RegolithDust>() : DustID.GreenBlood);
+                Dust dust = Main.dust[dustIndex];
+                dust.velocity.X *= dust.velocity.X * 1.25f * hit.HitDirection + Main.rand.Next(0, 100) * 0.015f;
+                dust.velocity.Y *= dust.velocity.Y * 0.25f + Main.rand.Next(-50, 51) * 0.01f;
+                dust.scale *= 1f + Main.rand.Next(-30, 31) * 0.01f;
             }
         }
     }

@@ -11,125 +11,124 @@ using System.IO;
 using Terraria;
 using Terraria.ID;
 
-namespace Macrocosm.Common.Netcode
+namespace Macrocosm.Common.Netcode;
+
+public enum MessageType : byte
 {
-    public enum MessageType : byte
+    TravelRequest,
+    LastSubworldCheck,
+
+    SyncRocketCommonData,
+    SyncRocketCustomizationData,
+    SyncLaunchPadData,
+
+    SyncInventory,
+
+    SyncParticle,
+
+    SyncRocketPlayer,
+    SyncDashPlayer,
+    SyncMacrocosmPlayer,
+
+    SpawnNPCFromClient,
+    SyncNPCFromClient,
+
+    SyncTEFromClient,
+    SyncConveyor,
+    SyncConveyorRectangle
+}
+
+public class PacketHandler
+{
+    public static void HandlePacket(BinaryReader reader, int whoAmI)
     {
-        TravelRequest,
-        LastSubworldCheck,
+        MessageType messageType = (MessageType)reader.ReadByte();
 
-        SyncRocketCommonData,
-        SyncRocketCustomizationData,
-        SyncLaunchPadData,
+        if (DebugConfig.Instance.PacketDebug)
+            DebugPackets(messageType, whoAmI);
 
-        SyncInventory,
+        switch (messageType)
+        {
+            case MessageType.TravelRequest:
+                SubworldTravelPlayer.ReceiveTravelRequest(reader, whoAmI);
+                break;
 
-        SyncParticle,
+            case MessageType.LastSubworldCheck:
+                SubworldTravelPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
+                break;
 
-        SyncRocketPlayer,
-        SyncDashPlayer,
-        SyncMacrocosmPlayer,
+            case MessageType.SyncRocketCommonData:
+                Rocket.ReceiveSyncRocketCommonData(reader, whoAmI);
+                break;
 
-        SpawnNPCFromClient,
-        SyncNPCFromClient,
+            case MessageType.SyncRocketCustomizationData:
+                Rocket.ReceiveSyncRocketCustomizationData(reader, whoAmI);
+                break;
 
-        SyncTEFromClient,
-        SyncConveyor,
-        SyncConveyorRectangle
+            case MessageType.SyncLaunchPadData:
+                LaunchPad.ReceiveSyncLaunchPadData(reader, whoAmI);
+                break;
+
+            case MessageType.SyncInventory:
+                Inventory.HandlePacket(reader, whoAmI);
+                break;
+
+            case MessageType.SyncParticle:
+                Particle.ReceiveSyncParticle(reader, whoAmI);
+                break;
+
+            case MessageType.SyncRocketPlayer:
+                RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
+                break;
+
+            case MessageType.SyncMacrocosmPlayer:
+                MacrocosmPlayer.ReceiveSyncPlayer(reader, whoAmI);
+                break;
+
+            case MessageType.SyncDashPlayer:
+                DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
+                break;
+
+            case MessageType.SpawnNPCFromClient:
+                NetHelper.ReceiveSpawnNPCFromClient(reader, whoAmI);
+                break;
+
+            case MessageType.SyncNPCFromClient:
+                NetHelper.ReceiveSyncNPCFromClient(reader, whoAmI);
+                break;
+
+            case MessageType.SyncTEFromClient:
+                NetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
+                break;
+
+            case MessageType.SyncConveyor:
+                ConveyorSystem.ReceiveSyncConveyor(reader, whoAmI);
+                break;
+
+            case MessageType.SyncConveyorRectangle:
+                ConveyorSystem.ReceiveSyncConveyorRectangle(reader, whoAmI);
+                break;
+
+            default:
+                Macrocosm.Instance.Logger.WarnFormat("Macrocosm: Unknown Message type: {0}", messageType);
+                break;
+        }
     }
 
-    public class PacketHandler
+    private static void DebugPackets(MessageType messageType, int sender)
     {
-        public static void HandlePacket(BinaryReader reader, int whoAmI)
+        string message = $"Received message of type {messageType} from {sender}";
+
+        if (Main.netMode == NetmodeID.MultiplayerClient)
         {
-            MessageType messageType = (MessageType)reader.ReadByte();
-
-            if (DebugConfig.Instance.PacketDebug)
-                DebugPackets(messageType, whoAmI);
-
-            switch (messageType)
-            {
-                case MessageType.TravelRequest:
-                    SubworldTravelPlayer.ReceiveTravelRequest(reader, whoAmI);
-                    break;
-
-                case MessageType.LastSubworldCheck:
-                    SubworldTravelPlayer.ReceiveLastSubworldCheck(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncRocketCommonData:
-                    Rocket.ReceiveSyncRocketCommonData(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncRocketCustomizationData:
-                    Rocket.ReceiveSyncRocketCustomizationData(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncLaunchPadData:
-                    LaunchPad.ReceiveSyncLaunchPadData(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncInventory:
-                    Inventory.HandlePacket(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncParticle:
-                    Particle.ReceiveSyncParticle(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncRocketPlayer:
-                    RocketPlayer.ReceiveSyncPlayer(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncMacrocosmPlayer:
-                    MacrocosmPlayer.ReceiveSyncPlayer(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncDashPlayer:
-                    DashPlayer.ReceiveSyncPlayer(reader, whoAmI);
-                    break;
-
-                case MessageType.SpawnNPCFromClient:
-                    NetHelper.ReceiveSpawnNPCFromClient(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncNPCFromClient:
-                    NetHelper.ReceiveSyncNPCFromClient(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncTEFromClient:
-                    NetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncConveyor:
-                    ConveyorSystem.ReceiveSyncConveyor(reader, whoAmI);
-                    break;
-
-                case MessageType.SyncConveyorRectangle:
-                    ConveyorSystem.ReceiveSyncConveyorRectangle(reader, whoAmI);
-                    break;
-
-                default:
-                    Macrocosm.Instance.Logger.WarnFormat("Macrocosm: Unknown Message type: {0}", messageType);
-                    break;
-            }
+            Main.NewText(message);
+            Macrocosm.Instance.Logger.Info(message);
         }
 
-        private static void DebugPackets(MessageType messageType, int sender)
+        if (Main.netMode == NetmodeID.Server)
         {
-            string message = $"Received message of type {messageType} from {sender}";
-
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-            {
-                Main.NewText(message);
-                Macrocosm.Instance.Logger.Info(message);
-            }
-
-            if (Main.netMode == NetmodeID.Server)
-            {
-                if (Main.dedServ) Console.WriteLine(message);
-                Macrocosm.Instance.Logger.Info(message);
-            }
+            if (Main.dedServ) Console.WriteLine(message);
+            Macrocosm.Instance.Logger.Info(message);
         }
     }
 }

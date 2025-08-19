@@ -1,20 +1,19 @@
 ﻿using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Consumables.Unlockables
+namespace Macrocosm.Content.Items.Consumables.Unlockables;
+
+public abstract class PatternDesign : ModItem
 {
-    public abstract class PatternDesign : ModItem
+    public abstract string PatternName { get; }
+
+    public override void SetStaticDefaults()
     {
-        public abstract string PatternName { get; }
+        Item.ResearchUnlockCount = 5;
+    }
 
-        public override void SetStaticDefaults()
-        {
-            Item.ResearchUnlockCount = 5;
-        }
-
-        public override void SetDefaults()
-        {
-            Item.width = 30;
-            Item.height = 20;
-        }
+    public override void SetDefaults()
+    {
+        Item.width = 30;
+        Item.height = 20;
     }
 }

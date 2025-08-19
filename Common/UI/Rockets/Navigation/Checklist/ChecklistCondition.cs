@@ -1,81 +1,80 @@
 ﻿using Macrocosm.Common.UI;
 using System;
 
-namespace Macrocosm.Common.UI.Rockets.Navigation.Checklist
+namespace Macrocosm.Common.UI.Rockets.Navigation.Checklist;
+
+public class ChecklistCondition
 {
-    public class ChecklistCondition
+    public bool HideIfMet { get; set; } = true;
+    public string LangKey { get; private set; }
+
+    public bool HasChanged => hasChanged;
+    public bool IsMet => cachedMet;
+
+    private readonly Func<bool> predicate = () => false;
+
+    private bool lastMet;
+    private bool hasChanged = true;
+    private bool cachedMet;
+    private int checkCounter;
+    private int checkPeriod;
+
+    private readonly ChecklistInfoElement checklistInfoElement;
+
+    public ChecklistCondition(string langKey, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
     {
-        public bool HideIfMet { get; set; } = true;
-        public string LangKey { get; private set; }
+        LangKey = langKey;
+        predicate = canLaunch;
+        this.checkPeriod = checkPeriod;
+        checkCounter = checkPeriod - 1;
+        HideIfMet = hideIfMet;
 
-        public bool HasChanged => hasChanged;
-        public bool IsMet => cachedMet;
+        checklistInfoElement = new(langKey);
+    }
 
-        private readonly Func<bool> predicate = () => false;
+    public ChecklistCondition(string langKey, string customIconMet, string customIconNotMet, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
+    {
+        LangKey = langKey;
+        predicate = canLaunch;
+        this.checkPeriod = checkPeriod;
+        HideIfMet = hideIfMet;
 
-        private bool lastMet;
-        private bool hasChanged = true;
-        private bool cachedMet;
-        private int checkCounter;
-        private int checkPeriod;
+        checklistInfoElement = new(langKey, customIconMet, customIconNotMet);
+    }
 
-        private readonly ChecklistInfoElement checklistInfoElement;
+    public bool Check()
+    {
+        checkCounter++;
 
-        public ChecklistCondition(string langKey, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
+        if (checkCounter >= checkPeriod)
         {
-            LangKey = langKey;
-            predicate = canLaunch;
-            this.checkPeriod = checkPeriod;
-            checkCounter = checkPeriod - 1;
-            HideIfMet = hideIfMet;
+            checkCounter = 0;
 
-            checklistInfoElement = new(langKey);
-        }
-
-        public ChecklistCondition(string langKey, string customIconMet, string customIconNotMet, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
-        {
-            LangKey = langKey;
-            predicate = canLaunch;
-            this.checkPeriod = checkPeriod;
-            HideIfMet = hideIfMet;
-
-            checklistInfoElement = new(langKey, customIconMet, customIconNotMet);
-        }
-
-        public bool Check()
-        {
-            checkCounter++;
-
-            if (checkCounter >= checkPeriod)
+            bool currentMet = predicate();
+            if (currentMet != lastMet)
             {
-                checkCounter = 0;
-
-                bool currentMet = predicate();
-                if (currentMet != lastMet)
-                {
-                    hasChanged = true;
-                    cachedMet = currentMet;
-                }
-                else
-                {
-                    hasChanged = false;
-                }
-
-                lastMet = currentMet;
+                hasChanged = true;
+                cachedMet = currentMet;
+            }
+            else
+            {
+                hasChanged = false;
             }
 
-            return cachedMet;
+            lastMet = currentMet;
         }
 
-        public virtual UIInfoElement ProvideUIInfoElement()
-        {
-            checklistInfoElement.MetState = cachedMet;
-            UIInfoElement infoElement = checklistInfoElement.ProvideUI();
-            infoElement.Activate();
-            infoElement.SetTextDimensionLeft(50, 0);
-            infoElement.Height = new(52f, 0f);
-            infoElement.IconHAlign = 0.12f;
-            return infoElement;
-        }
+        return cachedMet;
+    }
+
+    public virtual UIInfoElement ProvideUIInfoElement()
+    {
+        checklistInfoElement.MetState = cachedMet;
+        UIInfoElement infoElement = checklistInfoElement.ProvideUI();
+        infoElement.Activate();
+        infoElement.SetTextDimensionLeft(50, 0);
+        infoElement.Height = new(52f, 0f);
+        infoElement.IconHAlign = 0.12f;
+        return infoElement;
     }
 }

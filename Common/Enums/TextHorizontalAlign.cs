@@ -1,9 +1,8 @@
-﻿namespace Macrocosm.Common.Enums
+﻿namespace Macrocosm.Common.Enums;
+
+public enum TextHorizontalAlign
 {
-    public enum TextHorizontalAlign
-    {
-        Left,
-        Center,
-        Right
-    };
-}
+    Left,
+    Center,
+    Right
+};

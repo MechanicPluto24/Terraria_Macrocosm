@@ -8,167 +8,166 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 
-namespace Macrocosm.Common.Systems.Connectors
+namespace Macrocosm.Common.Systems.Connectors;
+
+public class ConveyorCircuit : Circuit<ConveyorNode>
 {
-    public class ConveyorCircuit : Circuit<ConveyorNode>
+    public ConveyorPipeType PipeType { get; }
+
+    public ConveyorCircuit(ConveyorPipeType type)
     {
-        public ConveyorPipeType PipeType { get; }
+        PipeType = type;
+    }
 
-        public ConveyorCircuit(ConveyorPipeType type)
-        {
-            PipeType = type;
-        }
+    public override void Add(ConveyorNode node)
+    {
+        if (node is ConveyorNode conveyorNode && !nodes.Contains(conveyorNode))
+            base.Add(node);
+    }
 
-        public override void Add(ConveyorNode node)
+    public override void Merge(Circuit<ConveyorNode> other)
+    {
+        if (other is ConveyorCircuit conveyorOther && conveyorOther.PipeType == PipeType)
         {
-            if (node is ConveyorNode conveyorNode && !nodes.Contains(conveyorNode))
-                base.Add(node);
-        }
-
-        public override void Merge(Circuit<ConveyorNode> other)
-        {
-            if (other is ConveyorCircuit conveyorOther && conveyorOther.PipeType == PipeType)
+            foreach (var node in conveyorOther.nodes)
             {
-                foreach (var node in conveyorOther.nodes)
+                Add(node);
+                node.Circuit = this;
+            }
+
+            conveyorOther.Clear();
+        }
+    }
+
+    public override void Solve(int updateRate)
+    {
+        var outlets = nodes
+            .OfType<ConveyorNode>()
+            .Where(n => n.Outlet)
+            .ToList();
+
+        var inlets = nodes
+            .OfType<ConveyorNode>()
+            .Where(n => n.Inlet)
+            .ToList();
+
+        foreach (var outletNode in outlets)
+        {
+            if (outletNode.Entity is Chest chestOut)
+                TransferFromChest(chestOut, inlets);
+            else if (outletNode.Entity is IInventoryOwner ownerOut)
+                TransferFromTE(ownerOut, inlets);
+        }
+    }
+
+    private void TransferFromChest(Chest sourceChest, List<ConveyorNode> inlets)
+    {
+        Vector2 sourcePosition = new Vector2(sourceChest.x, sourceChest.y) * 16f + new Vector2(8, 8);
+        foreach (var inletNode in inlets)
+        {
+            int transferAmount = 1;
+            for (int slot = 0; slot < sourceChest.item.Length; slot++)
+            {
+                Item sourceItem = sourceChest.item[slot];
+                if (sourceItem == null || sourceItem.IsAir)
+                    continue;
+
+                Item sourceClone = sourceItem.Clone();
+                sourceClone.stack = transferAmount;
+                Item visualClone = sourceClone.Clone();
+
+                if (inletNode.Entity is Chest inletChest)
                 {
-                    Add(node);
-                    node.Circuit = this;
+                    if (Utility.TryPlacingItemInChest(ref sourceClone, inletChest, justCheck: false))
+                    {
+                        Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
+                        ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, inletChest);
+                        sourceItem.DecreaseStack(transferAmount);
+                        break;
+                    }
                 }
-
-                conveyorOther.Clear();
+                else if (inletNode.Entity is IInventoryOwner inletOwner)
+                {
+                    if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, justCheck: false))
+                    {
+                        Vector2 inletPosition = inletOwner.InventoryPosition;
+                        ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, null);
+                        sourceItem.DecreaseStack(transferAmount);
+                        break;
+                    }
+                }
             }
         }
+    }
 
-        public override void Solve(int updateRate)
+
+    private void TransferFromTE(IInventoryOwner sourceOwner, List<ConveyorNode> inlets)
+    {
+        Vector2 sourcePosition = sourceOwner.InventoryPosition;
+        foreach (var inletNode in inlets)
         {
-            var outlets = nodes
-                .OfType<ConveyorNode>()
-                .Where(n => n.Outlet)
-                .ToList();
-
-            var inlets = nodes
-                .OfType<ConveyorNode>()
-                .Where(n => n.Inlet)
-                .ToList();
-
-            foreach (var outletNode in outlets)
+            int transferAmount = 1;
+            for (int slot = 0; slot < sourceOwner.Inventory.Size; slot++)
             {
-                if (outletNode.Entity is Chest chestOut)
-                    TransferFromChest(chestOut, inlets);
-                else if (outletNode.Entity is IInventoryOwner ownerOut)
-                    TransferFromTE(ownerOut, inlets);
+                Item sourceItem = sourceOwner.Inventory[slot];
+                if (sourceItem == null || sourceItem.IsAir)
+                    continue;
+
+                Item sourceClone = sourceItem.Clone();
+                sourceClone.stack = transferAmount;
+                Item visualClone = sourceClone.Clone();
+
+                if (inletNode.Entity is Chest inletChest)
+                {
+                    if (Utility.TryPlacingItemInChest(ref sourceClone, inletChest, justCheck: false))
+                    {
+                        Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
+                        ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, inletChest);
+                        sourceItem.DecreaseStack(transferAmount);
+                        break;
+                    }
+                }
+                else if (inletNode.Entity is IInventoryOwner inletOwner)
+                {
+                    if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, justCheck: false))
+                    {
+                        Vector2 inletPosition = inletOwner.InventoryPosition;
+                        ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, null);
+                        sourceItem.DecreaseStack(transferAmount);
+                        break;
+                    }
+                }
             }
         }
+    }
 
-        private void TransferFromChest(Chest sourceChest, List<ConveyorNode> inlets)
+
+    private void ItemTransferVisuals(int itemId, int quantity, Vector2 startPosition, Vector2 endPosition, Chest sourceChest = null, Chest destinationChest = null)
+    {
+        for (int i = 0; i < 1 + (quantity / 500); i++)
+        {
+            var p = Particle.Create<ItemTransferParticle>((p) =>
+            {
+                p.StartPosition = startPosition + Main.rand.NextVector2Circular(32, 16);
+                p.EndPosition = endPosition + Main.rand.NextVector2Circular(16, 16);
+                p.ItemType = itemId;
+                p.TimeToLive = Main.rand.Next(60, 80);
+            });
+        }
+
+        if (sourceChest != null)
         {
             Vector2 sourcePosition = new Vector2(sourceChest.x, sourceChest.y) * 16f + new Vector2(8, 8);
-            foreach (var inletNode in inlets)
-            {
-                int transferAmount = 1;
-                for (int slot = 0; slot < sourceChest.item.Length; slot++)
-                {
-                    Item sourceItem = sourceChest.item[slot];
-                    if (sourceItem == null || sourceItem.IsAir)
-                        continue;
-
-                    Item sourceClone = sourceItem.Clone();
-                    sourceClone.stack = transferAmount;
-                    Item visualClone = sourceClone.Clone();
-
-                    if (inletNode.Entity is Chest inletChest)
-                    {
-                        if (Utility.TryPlacingItemInChest(ref sourceClone, inletChest, justCheck: false))
-                        {
-                            Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
-                            ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, inletChest);
-                            sourceItem.DecreaseStack(transferAmount);
-                            break;
-                        }
-                    }
-                    else if (inletNode.Entity is IInventoryOwner inletOwner)
-                    {
-                        if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, justCheck: false))
-                        {
-                            Vector2 inletPosition = inletOwner.InventoryPosition;
-                            ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, null);
-                            sourceItem.DecreaseStack(transferAmount);
-                            break;
-                        }
-                    }
-                }
-            }
+            Chest.AskForChestToEatItem(sourcePosition, 60);
         }
 
-
-        private void TransferFromTE(IInventoryOwner sourceOwner, List<ConveyorNode> inlets)
+        if (destinationChest != null)
         {
-            Vector2 sourcePosition = sourceOwner.InventoryPosition;
-            foreach (var inletNode in inlets)
-            {
-                int transferAmount = 1;
-                for (int slot = 0; slot < sourceOwner.Inventory.Size; slot++)
-                {
-                    Item sourceItem = sourceOwner.Inventory[slot];
-                    if (sourceItem == null || sourceItem.IsAir)
-                        continue;
-
-                    Item sourceClone = sourceItem.Clone();
-                    sourceClone.stack = transferAmount;
-                    Item visualClone = sourceClone.Clone();
-
-                    if (inletNode.Entity is Chest inletChest)
-                    {
-                        if (Utility.TryPlacingItemInChest(ref sourceClone, inletChest, justCheck: false))
-                        {
-                            Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
-                            ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, inletChest);
-                            sourceItem.DecreaseStack(transferAmount);
-                            break;
-                        }
-                    }
-                    else if (inletNode.Entity is IInventoryOwner inletOwner)
-                    {
-                        if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, justCheck: false))
-                        {
-                            Vector2 inletPosition = inletOwner.InventoryPosition;
-                            ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, null);
-                            sourceItem.DecreaseStack(transferAmount);
-                            break;
-                        }
-                    }
-                }
-            }
+            Vector2 destinationPosition = new Vector2(destinationChest.x, destinationChest.y) * 16f + new Vector2(8, 8);
+            Chest.AskForChestToEatItem(destinationPosition, 60);
         }
-
-
-        private void ItemTransferVisuals(int itemId, int quantity, Vector2 startPosition, Vector2 endPosition, Chest sourceChest = null, Chest destinationChest = null)
-        {
-            for (int i = 0; i < 1 + (quantity / 500); i++)
-            {
-                var p = Particle.Create<ItemTransferParticle>((p) =>
-                {
-                    p.StartPosition = startPosition + Main.rand.NextVector2Circular(32, 16);
-                    p.EndPosition = endPosition + Main.rand.NextVector2Circular(16, 16);
-                    p.ItemType = itemId;
-                    p.TimeToLive = Main.rand.Next(60, 80);
-                });
-            }
-
-            if (sourceChest != null)
-            {
-                Vector2 sourcePosition = new Vector2(sourceChest.x, sourceChest.y) * 16f + new Vector2(8, 8);
-                Chest.AskForChestToEatItem(sourcePosition, 60);
-            }
-
-            if (destinationChest != null)
-            {
-                Vector2 destinationPosition = new Vector2(destinationChest.x, destinationChest.y) * 16f + new Vector2(8, 8);
-                Chest.AskForChestToEatItem(destinationPosition, 60);
-            }
-        }
-
-        public override bool Equals(object obj) => obj is ConveyorCircuit other && nodes.SetEquals(other.nodes);
-        public override int GetHashCode() => nodes.Aggregate(0, (hash, node) => hash ^ node.GetHashCode());
     }
+
+    public override bool Equals(object obj) => obj is ConveyorCircuit other && nodes.SetEquals(other.nodes);
+    public override int GetHashCode() => nodes.Aggregate(0, (hash, node) => hash ^ node.GetHashCode());
 }

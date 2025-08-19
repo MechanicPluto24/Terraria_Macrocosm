@@ -1,6 +1,5 @@
-﻿namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth
+﻿namespace Macrocosm.Content.WorldGeneration.Structures.Orbit.Earth;
+
+public class SpaceLoot3 : SpaceLoot1
 {
-    public class SpaceLoot3 : SpaceLoot1
-    {
-    }
 }

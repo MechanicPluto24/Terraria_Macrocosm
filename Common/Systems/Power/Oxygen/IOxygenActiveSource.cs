@@ -1,7 +1,6 @@
-﻿namespace Macrocosm.Common.Systems.Power.Oxygen
+﻿namespace Macrocosm.Common.Systems.Power.Oxygen;
+
+public interface IOxygenActiveSource : IOxygenSource
 {
-    public interface IOxygenActiveSource : IOxygenSource
-    {
-        public int MaxPassiveSources { get; }
-    }
+    public int MaxPassiveSources { get; }
 }

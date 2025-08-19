@@ -8,38 +8,37 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Machines.Generators.Solar
+namespace Macrocosm.Content.Machines.Generators.Solar;
+
+public class SolarPanelSmall : MachineTile
 {
-    public class SolarPanelSmall : MachineTile
+    public override short Width => 3;
+    public override short Height => 2;
+    public override MachineTE MachineTE => ModContent.GetInstance<SolarPanelSmallTE>();
+
+    public override void SetStaticDefaults()
     {
-        public override short Width => 3;
-        public override short Height => 2;
-        public override MachineTE MachineTE => ModContent.GetInstance<SolarPanelSmallTE>();
+        Main.tileFrameImportant[Type] = true;
+        Main.tileNoAttach[Type] = true;
+        Main.tileLavaDeath[Type] = true;
 
-        public override void SetStaticDefaults()
-        {
-            Main.tileFrameImportant[Type] = true;
-            Main.tileNoAttach[Type] = true;
-            Main.tileLavaDeath[Type] = true;
+        TileObjectData.newTile.DefaultToMachine(this);
+        TileObjectData.newTile.Origin = new Point16(0, 1);
+        TileObjectData.newTile.DrawYOffset = 2;
+        TileObjectData.newTile.LavaDeath = true;
+        TileObjectData.newTile.StyleHorizontal = false;
+        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 1, 1);
+        TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
+        TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+        TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+        TileObjectData.addAlternate(1);
+        TileObjectData.addTile(Type);
 
-            TileObjectData.newTile.DefaultToMachine(this);
-            TileObjectData.newTile.Origin = new Point16(0, 1);
-            TileObjectData.newTile.DrawYOffset = 2;
-            TileObjectData.newTile.LavaDeath = true;
-            TileObjectData.newTile.StyleHorizontal = false;
-            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 1, 1);
-            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-            TileObjectData.addAlternate(1);
-            TileObjectData.addTile(Type);
+        HitSound = SoundID.Dig;
+        DustType = -1;
 
-            HitSound = SoundID.Dig;
-            DustType = -1;
+        AddMapEntry(new Color(0, 52, 154), CreateMapEntryName());
 
-            AddMapEntry(new Color(0, 52, 154), CreateMapEntryName());
-
-            RegisterItemDrop(ModContent.ItemType<Items.Machines.Generators.Solar.SolarPanelSmall>(), 0, 1);
-        }
+        RegisterItemDrop(ModContent.ItemType<Items.Machines.Generators.Solar.SolarPanelSmall>(), 0, 1);
     }
 }

@@ -3,33 +3,32 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Dusts
+namespace Macrocosm.Content.Dusts;
+
+/// <summary>
+/// Using vanilla texture of DustID.Smoke
+/// </summary>
+public class SmokeDust : ModDust
 {
-    /// <summary>
-    /// Using vanilla texture of DustID.Smoke
-    /// </summary>
-    public class SmokeDust : ModDust
+    public override string Texture => null;
+
+    public override void OnSpawn(Dust dust)
     {
-        public override string Texture => null;
+        dust.frame = Utility.VanillaDustFrame(DustID.Smoke);
+    }
 
-        public override void OnSpawn(Dust dust)
+    public override bool Update(Dust dust)
+    {
+        dust.scale *= 0.99f;
+
+        if (dust.scale <= 0.4f)
         {
-            dust.frame = Utility.VanillaDustFrame(DustID.Smoke);
+            dust.active = false;
         }
 
-        public override bool Update(Dust dust)
-        {
-            dust.scale *= 0.99f;
+        dust.position += dust.velocity;
+        dust.rotation += 0.05f * (dust.dustIndex % 2 == 0 ? -1 : 1);
 
-            if (dust.scale <= 0.4f)
-            {
-                dust.active = false;
-            }
-
-            dust.position += dust.velocity;
-            dust.rotation += 0.05f * (dust.dustIndex % 2 == 0 ? -1 : 1);
-
-            return false;
-        }
+        return false;
     }
 }

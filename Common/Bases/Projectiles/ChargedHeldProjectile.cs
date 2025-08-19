@@ -4,118 +4,117 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Bases.Projectiles
+namespace Macrocosm.Common.Bases.Projectiles;
+
+// TODO: Extend from HeldProjectile
+public abstract class ChargedHeldProjectile : ModProjectile
 {
-    // TODO: Extend from HeldProjectile
-    public abstract class ChargedHeldProjectile : ModProjectile
+    public virtual void SetProjectileStaticDefaults() { }
+
+    public override void SetStaticDefaults()
     {
-        public virtual void SetProjectileStaticDefaults() { }
+        ProjectileID.Sets.NeedsUUID[Type] = true;
+        SetProjectileStaticDefaults();
+    }
 
-        public override void SetStaticDefaults()
+    public virtual void SetProjectileDefaults() { }
+    public override void SetDefaults()
+    {
+        Projectile.CloneDefaults(ProjectileID.LastPrism);
+        Projectile.friendly = true;
+        Projectile.width = 1;
+        Projectile.height = 1;
+        Projectile.tileCollide = false;
+
+        SetProjectileDefaults();
+    }
+
+    protected bool spawned;
+    protected int itemUseTimer;
+
+    protected Player Player => Main.player[Projectile.owner];
+    protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed && !Player.dead;
+
+    public virtual float CircularHoldoutOffset { get; set; } = 1f;
+
+    public virtual bool ShouldUpdateAimRotation => true;
+    public virtual Player.CompositeArmStretchAmount? CompositeArmStretchAmount => null;
+
+    public override bool? CanDamage() => false;
+    public virtual void ProjectileAI() { }
+    public virtual void ProjectileOnSpawn() { }
+
+    public override void AI()
+    {
+        AI_OnSpawn();
+        UpdateItemTime();
+        Aim();
+        PlayerVisuals();
+
+        ProjectileAI();
+
+        if (!StillInUse)
+            Projectile.Kill();
+    }
+
+    private void AI_OnSpawn()
+    {
+        if (!spawned)
         {
-            ProjectileID.Sets.NeedsUUID[Type] = true;
-            SetProjectileStaticDefaults();
+            ProjectileOnSpawn();
+            itemUseTimer = Player.CurrentItem().useTime;
+            spawned = true;
         }
+    }
 
-        public virtual void SetProjectileDefaults() { }
-        public override void SetDefaults()
-        {
-            Projectile.CloneDefaults(ProjectileID.LastPrism);
-            Projectile.friendly = true;
-            Projectile.width = 1;
-            Projectile.height = 1;
-            Projectile.tileCollide = false;
+    private void UpdateItemTime()
+    {
+        if (itemUseTimer > 0)
+            itemUseTimer--;
+    }
 
-            SetProjectileDefaults();
-        }
+    protected virtual void PlayerVisuals()
+    {
+        Projectile.rotation = Projectile.velocity.ToRotation();
 
-        protected bool spawned;
-        protected int itemUseTimer;
+        if (Player.whoAmI != Main.myPlayer)
+            return;
 
-        protected Player Player => Main.player[Projectile.owner];
-        protected virtual bool StillInUse => Player.channel && !Player.noItems && !Player.CCed && !Player.dead;
+        Projectile.Center = Player.MountedCenter + new Vector2(0, Player.gfxOffY);
 
-        public virtual float CircularHoldoutOffset { get; set; } = 1f;
+        Projectile.spriteDirection = Projectile.direction;
 
-        public virtual bool ShouldUpdateAimRotation => true;
-        public virtual Player.CompositeArmStretchAmount? CompositeArmStretchAmount => null;
+        Player.ChangeDir(Projectile.direction);
+        Player.heldProj = Projectile.whoAmI;
+        //OwnerPlayer.itemTime = 2;
+        //OwnerPlayer.itemAnimation = 3;
 
-        public override bool? CanDamage() => false;
-        public virtual void ProjectileAI() { }
-        public virtual void ProjectileOnSpawn() { }
+        float armRotation = (Projectile.velocity * Projectile.direction).ToRotation();
 
-        public override void AI()
-        {
-            AI_OnSpawn();
-            UpdateItemTime();
-            Aim();
-            PlayerVisuals();
+        if (CompositeArmStretchAmount.HasValue)
+            Player.SetCompositeArmFront(true, CompositeArmStretchAmount.Value, armRotation);
+        else
+            Player.itemRotation = armRotation;
 
-            ProjectileAI();
+        Projectile.netUpdate = true;
+    }
 
-            if (!StillInUse)
-                Projectile.Kill();
-        }
+    protected virtual void Aim()
+    {
+        if (Player.whoAmI != Main.myPlayer)
+            return;
 
-        private void AI_OnSpawn()
-        {
-            if (!spawned)
-            {
-                ProjectileOnSpawn();
-                itemUseTimer = Player.CurrentItem().useTime;
-                spawned = true;
-            }
-        }
+        // Get the player's current aiming direction as a normalized vector.
+        Vector2 aim = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitY);
 
-        private void UpdateItemTime()
-        {
-            if (itemUseTimer > 0)
-                itemUseTimer--;
-        }
+        // Change a portion of the gun's current velocity so that it points to the mouse. This gives smooth movement over time.
+        aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, 1));
+        aim *= CircularHoldoutOffset;
 
-        protected virtual void PlayerVisuals()
-        {
-            Projectile.rotation = Projectile.velocity.ToRotation();
-
-            if (Player.whoAmI != Main.myPlayer)
-                return;
-
-            Projectile.Center = Player.MountedCenter + new Vector2(0, Player.gfxOffY);
-
-            Projectile.spriteDirection = Projectile.direction;
-
-            Player.ChangeDir(Projectile.direction);
-            Player.heldProj = Projectile.whoAmI;
-            //OwnerPlayer.itemTime = 2;
-            //OwnerPlayer.itemAnimation = 3;
-
-            float armRotation = (Projectile.velocity * Projectile.direction).ToRotation();
-
-            if (CompositeArmStretchAmount.HasValue)
-                Player.SetCompositeArmFront(true, CompositeArmStretchAmount.Value, armRotation);
-            else
-                Player.itemRotation = armRotation;
-
+        if ((aim != Projectile.velocity || Projectile.velocity != Projectile.oldVelocity) && Main.netMode != NetmodeID.MultiplayerClient)
             Projectile.netUpdate = true;
-        }
 
-        protected virtual void Aim()
-        {
-            if (Player.whoAmI != Main.myPlayer)
-                return;
-
-            // Get the player's current aiming direction as a normalized vector.
-            Vector2 aim = (Main.MouseWorld - Projectile.Center).SafeNormalize(Vector2.UnitY);
-
-            // Change a portion of the gun's current velocity so that it points to the mouse. This gives smooth movement over time.
-            aim = Vector2.Normalize(Vector2.Lerp(Vector2.Normalize(Projectile.velocity), aim, 1));
-            aim *= CircularHoldoutOffset;
-
-            if ((aim != Projectile.velocity || Projectile.velocity != Projectile.oldVelocity) && Main.netMode != NetmodeID.MultiplayerClient)
-                Projectile.netUpdate = true;
-
-            if (ShouldUpdateAimRotation)
-                Projectile.velocity = aim;
-        }
+        if (ShouldUpdateAimRotation)
+            Projectile.velocity = aim;
     }
 }

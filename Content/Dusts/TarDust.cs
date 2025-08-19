@@ -2,41 +2,40 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Dusts
+namespace Macrocosm.Content.Dusts;
+
+// Haha black lung
+public class TarDust : ModDust
 {
-    // Haha black lung
-    public class TarDust : ModDust
+    public override void OnSpawn(Dust dust)
     {
-        public override void OnSpawn(Dust dust)
-        {
-            dust.noLight = true;
-            dust.scale += Main.rand.NextFloat(0f, 0.35f);
-        }
+        dust.noLight = true;
+        dust.scale += Main.rand.NextFloat(0f, 0.35f);
+    }
 
-        public override bool Update(Dust dust)
-        {
-            if (!dust.noGravity)
-                dust.velocity.Y += 0.12f;
+    public override bool Update(Dust dust)
+    {
+        if (!dust.noGravity)
+            dust.velocity.Y += 0.12f;
 
-            dust.velocity = Collision.TileCollision(dust.position, dust.velocity, 1, 1);
+        dust.velocity = Collision.TileCollision(dust.position, dust.velocity, 1, 1);
 
-            dust.position += dust.velocity;
-            dust.scale -= 0.02f;
-            dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
+        dust.position += dust.velocity;
+        dust.scale -= 0.02f;
+        dust.rotation += (dust.velocity.Y - dust.velocity.X) / 5;
 
-            if (dust.scale < 0f)
-                dust.active = false;
-            return false;
-        }
+        if (dust.scale < 0f)
+            dust.active = false;
+        return false;
+    }
 
-        public override bool MidUpdate(Dust dust)
-        {
-            return true;
-        }
+    public override bool MidUpdate(Dust dust)
+    {
+        return true;
+    }
 
-        public override Color? GetAlpha(Dust dust, Color lightColor)
-        {
-            return new Color(lightColor.R, lightColor.G, lightColor.B, 255);
-        }
+    public override Color? GetAlpha(Dust dust, Color lightColor)
+    {
+        return new Color(lightColor.R, lightColor.G, lightColor.B, 255);
     }
 }

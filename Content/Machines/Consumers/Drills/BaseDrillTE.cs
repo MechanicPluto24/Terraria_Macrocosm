@@ -20,81 +20,80 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Machines.Consumers.Drills
+namespace Macrocosm.Content.Machines.Consumers.Drills;
+
+public abstract class BaseDrillTE : ConsumerTE
 {
-    public abstract class BaseDrillTE : ConsumerTE
+    public List<int> BlacklistedItems { get; set; } = new();
+    public LootTable LootTable { get; set; }
+
+    protected abstract float ExcavateRate { get; }
+
+    protected abstract void PopulateItemLoot(LootTable lootTable);
+
+    protected float excavateTimer;
+    protected int sceneCheckTimer;
+    protected SceneData scene;
+
+    public override void MachineUpdate()
     {
-        public List<int> BlacklistedItems { get; set; } = new();
-        public LootTable LootTable { get; set; }
+        // Capture current scene
+        scene ??= new(Position);
 
-        protected abstract float ExcavateRate { get; }
-
-        protected abstract void PopulateItemLoot(LootTable lootTable);
-
-        protected float excavateTimer;
-        protected int sceneCheckTimer;
-        protected SceneData scene;
-
-        public override void MachineUpdate()
+        // Generate loot table based on current subworld and biome
+        if (LootTable is null)
         {
-            // Capture current scene
-            scene ??= new(Position);
+            LootTable = new();
+            PopulateItemLoot(LootTable);
+        }
 
-            // Generate loot table based on current subworld and biome
-            if (LootTable is null)
+        if (PoweredOn)
+        {
+            excavateTimer += 1f * PowerProgress;
+            if (excavateTimer >= ExcavateRate)
             {
-                LootTable = new();
-                PopulateItemLoot(LootTable);
-            }
-
-            if (PoweredOn)
-            {
-                excavateTimer += 1f * PowerProgress;
-                if (excavateTimer >= ExcavateRate)
+                excavateTimer -= ExcavateRate;
+                if(LootTable is not null)
                 {
-                    excavateTimer -= ExcavateRate;
-                    if(LootTable is not null)
-                    {
-                        foreach (var entry in LootTable.Where((rule) => rule is IBlacklistable).Cast<IBlacklistable>())
-                            entry.Blacklisted = BlacklistedItems.Contains(entry.ItemID);
+                    foreach (var entry in LootTable.Where((rule) => rule is IBlacklistable).Cast<IBlacklistable>())
+                        entry.Blacklisted = BlacklistedItems.Contains(entry.ItemID);
 
-                        LootTable.Drop(Utility.GetClosestPlayer(Position, MachineTile.Width * 16, MachineTile.Height * 16));
-                    }
-                }
-
-                sceneCheckTimer++;
-                if (sceneCheckTimer >= 5 * 60 * 60)
-                {
-                    sceneCheckTimer = 0;
-                    scene?.Scan();
+                    LootTable.Drop(Utility.GetClosestPlayer(Position, MachineTile.Width * 16, MachineTile.Height * 16));
                 }
             }
-        }
-       
-        public override void MachineNetSend(BinaryWriter writer)
-        {
-            writer.Write(BlacklistedItems.Count);
-            foreach (int itemId in BlacklistedItems)
-                writer.Write(itemId);
-        }
 
-        public override void MachineNetReceive(BinaryReader reader)
-        {
-            int blacklistedCount = reader.ReadInt32();
-            BlacklistedItems = new(blacklistedCount);
-            for (int i = 0; i < blacklistedCount; i++)
-                BlacklistedItems.Add(reader.ReadInt32());
+            sceneCheckTimer++;
+            if (sceneCheckTimer >= 5 * 60 * 60)
+            {
+                sceneCheckTimer = 0;
+                scene?.Scan();
+            }
         }
+    }
+   
+    public override void MachineNetSend(BinaryWriter writer)
+    {
+        writer.Write(BlacklistedItems.Count);
+        foreach (int itemId in BlacklistedItems)
+            writer.Write(itemId);
+    }
 
-        public override void MachineSaveData(TagCompound tag)
-        {
-            tag[nameof(BlacklistedItems)] = BlacklistedItems;
-        }
+    public override void MachineNetReceive(BinaryReader reader)
+    {
+        int blacklistedCount = reader.ReadInt32();
+        BlacklistedItems = new(blacklistedCount);
+        for (int i = 0; i < blacklistedCount; i++)
+            BlacklistedItems.Add(reader.ReadInt32());
+    }
 
-        public override void MachineLoadData(TagCompound tag)
-        {
-            if (tag.ContainsKey(nameof(BlacklistedItems)))
-                BlacklistedItems = tag.GetList<int>(nameof(BlacklistedItems)) as List<int>;
-        }
+    public override void MachineSaveData(TagCompound tag)
+    {
+        tag[nameof(BlacklistedItems)] = BlacklistedItems;
+    }
+
+    public override void MachineLoadData(TagCompound tag)
+    {
+        if (tag.ContainsKey(nameof(BlacklistedItems)))
+            BlacklistedItems = tag.GetList<int>(nameof(BlacklistedItems)) as List<int>;
     }
 }

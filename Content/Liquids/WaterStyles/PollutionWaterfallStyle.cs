@@ -1,9 +1,8 @@
 
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Liquids.WaterStyles
+namespace Macrocosm.Content.Liquids.WaterStyles;
+
+public class PollutionWaterfallStyle : ModWaterfallStyle
 {
-    public class PollutionWaterfallStyle : ModWaterfallStyle
-    {
-    }
 }
