@@ -86,95 +86,94 @@ public class HandheldEngineProjectile : ChargedHeldProjectile
     private Rectangle[] hitboxes = new Rectangle[3];
     private void ManageKnockbackX()
     {
-        bool SpeedCheck = (Math.Abs(Player.velocity.X)>10);
-        bool DirectionCheck = (Math.Sign(Player.velocity.X)!=Math.Sign(Player.direction));
-        if(SpeedCheck&&DirectionCheck)
+        bool SpeedCheck = (Math.Abs(Player.velocity.X) > 10);
+        bool DirectionCheck = (Math.Sign(Player.velocity.X) != Math.Sign(Player.direction));
+        if (SpeedCheck && DirectionCheck)
             return;
-        Player.velocity.X+=(2f*-(Main.MouseWorld-Player.Center).SafeNormalize(Vector2.UnitX).X);
+        Player.velocity.X += (2f * -(Main.MouseWorld - Player.Center).SafeNormalize(Vector2.UnitX).X);
     }
     private void ManageKnockbackY()
     {
-        bool SpeedCheck = (Math.Abs(Player.velocity.Y)>10);
-        bool DirectionCheck = (Math.Sign(Player.velocity.Y)!=Math.Sign(Main.MouseWorld.Y-Player.Center.Y));
-        if(SpeedCheck&&DirectionCheck)
+        bool SpeedCheck = (Math.Abs(Player.velocity.Y) > 10);
+        bool DirectionCheck = (Math.Sign(Player.velocity.Y) != Math.Sign(Main.MouseWorld.Y - Player.Center.Y));
+        if (SpeedCheck && DirectionCheck)
             return;
-        Player.velocity.Y+=2f*-((Main.MouseWorld-Player.Center).SafeNormalize(Vector2.UnitX).Y);
+        Player.velocity.Y += 2f * -((Main.MouseWorld - Player.Center).SafeNormalize(Vector2.UnitX).Y);
     }
     private void Shoot()
     {
-            Item item = Player.inventory[Player.selectedItem];
-            int damage = Player.GetWeaponDamage(item);
-            float knockback = item.knockBack;
+        Item item = Player.inventory[Player.selectedItem];
+        int damage = Player.GetWeaponDamage(item);
+        float knockback = item.knockBack;
 
-            if (StillInUse && AI_UseCounter % ManaUseRate == 0)
-                Player.CheckMana(item, ManaUseAmount, pay: true);
-                
-            // Scale damage by windup
-            // Projectile.damage = (int)(Projectile.originalDamage * (float)(AI_Windup >= windupTime ? 1f : 0.5f + 0.5f * AI_Windup / (float)windupTime));
-            Vector2 rotPoint1 = Utility.RotatingPoint(Projectile.Center, new Vector2(62, 12 * Projectile.spriteDirection), Projectile.rotation);
-            Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(92, 12 * Projectile.spriteDirection), Projectile.rotation);
-            Vector2 rotPoint3 = Utility.RotatingPoint(Projectile.Center, new Vector2(122, 12 * Projectile.spriteDirection), Projectile.rotation);
-            int dimension = 30;
-            ManageKnockbackX();
-            ManageKnockbackY();
-               
-            if (AI_Overheat > 0f)
-                Projectile.damage += (int)(Projectile.originalDamage * AI_Overheat);
+        if (StillInUse && AI_UseCounter % ManaUseRate == 0)
+            Player.CheckMana(item, ManaUseAmount, pay: true);
 
-            if (AI_Overheat >= 1f)
+        // Scale damage by windup
+        // Projectile.damage = (int)(Projectile.originalDamage * (float)(AI_Windup >= windupTime ? 1f : 0.5f + 0.5f * AI_Windup / (float)windupTime));
+        Vector2 rotPoint1 = Utility.RotatingPoint(Projectile.Center, new Vector2(62, 12 * Projectile.spriteDirection), Projectile.rotation);
+        Vector2 rotPoint2 = Utility.RotatingPoint(Projectile.Center, new Vector2(92, 12 * Projectile.spriteDirection), Projectile.rotation);
+        Vector2 rotPoint3 = Utility.RotatingPoint(Projectile.Center, new Vector2(122, 12 * Projectile.spriteDirection), Projectile.rotation);
+        int dimension = 30;
+        ManageKnockbackX();
+        ManageKnockbackY();
+
+        if (AI_Overheat > 0f)
+            Projectile.damage += (int)(Projectile.originalDamage * AI_Overheat);
+
+        if (AI_Overheat >= 1f)
+        {
+            Projectile.Kill();
+            SoundEngine.PlaySound(SoundID.LiquidsWaterLava, Projectile.position);
+
+            Player.AddBuff(ModContent.BuffType<HandheldEngineOverheat>(), 60 * 3);
+
+            for (int i = 0; i < 25; i++)
             {
-                Projectile.Kill();
-                SoundEngine.PlaySound(SoundID.LiquidsWaterLava, Projectile.position);
+                Vector2 pos = i % 3 == 0 ? rotPoint1 : i % 3 == 1 ? rotPoint2 : rotPoint3;
+                Dust.NewDust(pos, 1, 1, DustID.Smoke, newColor: Color.DarkGray);
 
-                Player.AddBuff(ModContent.BuffType<HandheldEngineOverheat>(), 60 * 3);
-
-                for (int i = 0; i < 25; i++)
-                {
-                    Vector2 pos = i % 3 == 0 ? rotPoint1 : i % 3 == 1 ? rotPoint2 : rotPoint3;
-                    Dust.NewDust(pos, 1, 1, DustID.Smoke, newColor: Color.DarkGray);
-
-                    if (i % 5 == 0)
-                        Particle.Create<RocketExhaustSmoke>(p =>
-                        {
-                            p.Position = Projectile.position;
-                            p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
-                            p.Color = Color.DarkGray;
-                        });
-                }
+                if (i % 5 == 0)
+                    Particle.Create<RocketExhaustSmoke>(p =>
+                    {
+                        p.Position = Projectile.position;
+                        p.Velocity = Vector2.UnitX.RotatedByRandom(MathHelper.TwoPi);
+                        p.Color = Color.DarkGray;
+                    });
             }
+        }
 
-            hitboxes[0] = new Rectangle((int)(rotPoint1.X - dimension / 2), (int)(rotPoint1.Y - dimension / 2), dimension, dimension);
-            hitboxes[1] = new Rectangle((int)(rotPoint2.X - dimension / 2), (int)(rotPoint2.Y - dimension / 2), dimension, dimension);
+        hitboxes[0] = new Rectangle((int)(rotPoint1.X - dimension / 2), (int)(rotPoint1.Y - dimension / 2), dimension, dimension);
+        hitboxes[1] = new Rectangle((int)(rotPoint2.X - dimension / 2), (int)(rotPoint2.Y - dimension / 2), dimension, dimension);
 
-            if (AI_Windup >= windupTime - 10)
-                hitboxes[2] = new Rectangle((int)(rotPoint3.X - dimension / 2), (int)(rotPoint3.Y - dimension / 2), dimension, dimension);
-            else
-                hitboxes[2] = default;
+        if (AI_Windup >= windupTime - 10)
+            hitboxes[2] = new Rectangle((int)(rotPoint3.X - dimension / 2), (int)(rotPoint3.Y - dimension / 2), dimension, dimension);
+        else
+            hitboxes[2] = default;
 
-            Vector2 rotPoint4 = Utility.RotatingPoint(Projectile.Center, new Vector2(130, 12 * Projectile.spriteDirection), Projectile.rotation);
-            Vector2 rotPoint5 = Utility.RotatingPoint(Projectile.Center, new Vector2(145, 12 * Projectile.spriteDirection), Projectile.rotation);
+        Vector2 rotPoint4 = Utility.RotatingPoint(Projectile.Center, new Vector2(130, 12 * Projectile.spriteDirection), Projectile.rotation);
+        Vector2 rotPoint5 = Utility.RotatingPoint(Projectile.Center, new Vector2(145, 12 * Projectile.spriteDirection), Projectile.rotation);
 
-            Lighting.AddLight(rotPoint1, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.25f).ToVector3() * (1.5f - (0.75f * Utility.PositiveSineWave(10))));
-            Lighting.AddLight(rotPoint3, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.50f).ToVector3() * (1.2f - (0.6f * Utility.PositiveSineWave(10, 1))));
-            Lighting.AddLight(rotPoint4, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.60f).ToVector3() * (0.8f - (0.4f * Utility.PositiveSineWave(10, 2))));
-            Lighting.AddLight(rotPoint5, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.75f).ToVector3() * (0.5f - (0.25f * Utility.PositiveSineWave(10, 3))));
+        Lighting.AddLight(rotPoint1, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.25f).ToVector3() * (1.5f - (0.75f * Utility.PositiveSineWave(10))));
+        Lighting.AddLight(rotPoint3, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.50f).ToVector3() * (1.2f - (0.6f * Utility.PositiveSineWave(10, 1))));
+        Lighting.AddLight(rotPoint4, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.60f).ToVector3() * (0.8f - (0.4f * Utility.PositiveSineWave(10, 2))));
+        Lighting.AddLight(rotPoint5, Color.Lerp(Color.Lerp(new Color(98, 204, 255, 0), new Color(255, 177, 65, 0), AI_Overheat), Color.Lerp(new Color(255, 177, 65), new Color(255, 24, 24), AI_Overheat), 0.75f).ToVector3() * (0.5f - (0.25f * Utility.PositiveSineWave(10, 3))));
 
-            for (int i = 0; i < (int)(10f * MathHelper.Clamp((AI_Windup / windupTime), 0, 1)); i++)
+        for (int i = 0; i < (int)(10f * MathHelper.Clamp((AI_Windup / windupTime), 0, 1)); i++)
+        {
+            float amp = Main.rand.NextFloat(0, 1f);
+            Vector2 position = rotPoint1 + Main.rand.NextVector2Circular(12, 20);
+            Vector2 velocity = (Utility.PolarVector(36 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.15f) + Player.velocity;
+
+            Particle.Create<EngineSpark>(p =>
             {
-                float amp = Main.rand.NextFloat(0, 1f);
-                Vector2 position = rotPoint1 + Main.rand.NextVector2Circular(12, 20);
-                Vector2 velocity = (Utility.PolarVector(36 * (1 - amp), MathHelper.WrapAngle(Projectile.rotation)) - Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedByRandom(MathHelper.PiOver4 * 0.15f) + Player.velocity;
-
-                Particle.Create<EngineSpark>(p =>
-                {
-                    p.Position = position;
-                    p.Velocity = velocity;
-                    p.Scale = new(Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp));
-                    p.Rotation = Projectile.rotation;
-                    p.ColorOnSpawn = Color.White;
-                    p.ColorOnDespawn = Color.Lerp(new Color(89, 151, 193), new Color(255, 177, 65), AI_Overheat);
-                });
-            }
+                p.Position = position;
+                p.Velocity = velocity;
+                p.Scale = new(Main.rand.NextFloat(1.2f, 1.8f) * (1 - amp));
+                p.Rotation = Projectile.rotation;
+                p.ColorOnSpawn = Color.White;
+                p.ColorOnDespawn = Color.Lerp(new Color(89, 151, 193), new Color(255, 177, 65), AI_Overheat);
+            });
         }
     }
 
