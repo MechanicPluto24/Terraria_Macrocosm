@@ -11,7 +11,7 @@ namespace Macrocosm.Common.WorldGeneration
     {
         public virtual string StructureFile => this.GetNamespacePath().Replace("Macrocosm/", "");
 
-        public bool IsMultistructure => Generator.IsMultistructure(StructureFile, Macrocosm.Instance) ?? false;
+        public bool IsMultistructure => StructureHelper.API.Legacy.LegacyGenerator.IsMultistructure(StructureFile, Macrocosm.Instance) ?? false;
 
         private Point16 size;
         /// <summary> Size of the structure's first variant </summary>
@@ -23,9 +23,9 @@ namespace Macrocosm.Common.WorldGeneration
                 {
                     Point16 dims = default;
                     if (IsMultistructure)
-                        Generator.GetMultistructureDimensions(StructureFile, Macrocosm.Instance, 0, ref dims);
+                        StructureHelper.API.Legacy.LegacyGenerator.GetMultistructureDimensions(StructureFile, Macrocosm.Instance, 0, ref dims);
                     else
-                        Generator.GetDimensions(StructureFile, Macrocosm.Instance, ref dims);
+                        StructureHelper.API.Legacy.LegacyGenerator.GetDimensions(StructureFile, Macrocosm.Instance, ref dims);
                     size = dims;
                 }
 
@@ -67,13 +67,13 @@ namespace Macrocosm.Common.WorldGeneration
             if (IsMultistructure)
             {
                 if (variant is null)
-                    success = Generator.GenerateMultistructureRandom(StructureFile, origin, Macrocosm.Instance, false, ignoreNull, genFlags);
+                    success = StructureHelper.API.Legacy.LegacyGenerator.GenerateMultistructureRandom(StructureFile, origin, Macrocosm.Instance, false, ignoreNull, genFlags);
                 else
-                    success = Generator.GenerateMultistructureSpecific(StructureFile, origin, Macrocosm.Instance, variant.Value, false, ignoreNull, genFlags);
+                    success = StructureHelper.API.Legacy.LegacyGenerator.GenerateMultistructureSpecific(StructureFile, origin, Macrocosm.Instance, variant.Value, false, ignoreNull, genFlags);
             }
             else
             {
-                success = Generator.GenerateStructure(StructureFile, origin, Macrocosm.Instance, false, ignoreNull, genFlags);
+                success = StructureHelper.API.Legacy.LegacyGenerator.GenerateStructure(StructureFile, origin, Macrocosm.Instance, false, ignoreNull, genFlags);
             }
 
             if (success)
