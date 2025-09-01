@@ -2,35 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Macrocosm.Common.Subworlds
+namespace Macrocosm.Common.Subworlds;
+
+public abstract class OrbitSubworld : MultiSubworld
 {
-    public abstract class OrbitSubworld : MultiSubworld
+    public abstract string ParentSubworldID { get; }
+
+    public static IEnumerable<OrbitSubworld> GetOrbitSubworlds(string parentSubworldId)
     {
-        public abstract string ParentSubworldID { get; }
+        foreach (var subworld in MacrocosmSubworlds)
+            if (subworld is OrbitSubworld orbitSubworld && orbitSubworld.ParentSubworldID == parentSubworldId)
+                yield return orbitSubworld;
+    }
 
-        public static IEnumerable<OrbitSubworld> GetOrbitSubworlds(string parentSubworldId)
-        {
-            foreach (var subworld in MacrocosmSubworlds)
-                if (subworld is OrbitSubworld orbitSubworld && orbitSubworld.ParentSubworldID == parentSubworldId)
-                    yield return orbitSubworld;
-        }
+    public static bool AnyActive() => IsOrbitSubworld(CurrentID);
+    public static bool IsActive(string subworldId) => SubworldSystem.IsActive(subworldId) && IsOrbitSubworld(subworldId);
+    public static bool IsOrbitSubworld(string subworldId)
+    {
+        if (MacrocosmSubworlds.FirstOrDefault(s => s.ID == subworldId) is OrbitSubworld _)
+            return true;
 
-        public static bool AnyActive() => IsOrbitSubworld(CurrentID);
-        public static bool IsActive(string subworldId) => SubworldSystem.IsActive(subworldId) && IsOrbitSubworld(subworldId);
-        public static bool IsOrbitSubworld(string subworldId)
-        {
-            if (MacrocosmSubworlds.FirstOrDefault(s => s.ID == subworldId) is OrbitSubworld _)
-                return true;
+        return false;
+    }
 
-            return false;
-        }
+    public static string GetParentID(string subworldId)
+    {
+        if (MacrocosmSubworlds.FirstOrDefault(s => s.ID == subworldId) is OrbitSubworld orbitSubworld)
+            return orbitSubworld.ParentSubworldID;
 
-        public static string GetParentID(string subworldId)
-        {
-            if (MacrocosmSubworlds.FirstOrDefault(s => s.ID == subworldId) is OrbitSubworld orbitSubworld)
-                return orbitSubworld.ParentSubworldID;
-
-            return subworldId;
-        }
+        return subworldId;
     }
 }

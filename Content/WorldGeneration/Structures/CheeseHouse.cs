@@ -1,8 +1,7 @@
 ﻿using Macrocosm.Common.WorldGeneration;
 
-namespace Macrocosm.Content.WorldGeneration.Structures
+namespace Macrocosm.Content.WorldGeneration.Structures;
+
+public class CheeseHouse : Structure
 {
-    public class CheeseHouse : Structure
-    {
-    }
 }

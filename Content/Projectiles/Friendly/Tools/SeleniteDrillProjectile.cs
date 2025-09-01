@@ -4,50 +4,49 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Tools
+namespace Macrocosm.Content.Projectiles.Friendly.Tools;
+
+public class SeleniteDrillProjectile : ModProjectile
 {
-    public class SeleniteDrillProjectile : ModProjectile
+    public override void SetDefaults()
     {
-        public override void SetDefaults()
+        Projectile.CloneDefaults(ProjectileID.SolarFlareDrill);
+        Projectile.width = 22;
+        Projectile.height = 22;
+    }
+
+    public override bool PreAI()
+    {
+        #region Variables
+        Player player = Main.player[Projectile.owner];
+        Rectangle hitbox = Projectile.Hitbox;
+
+        float lightMultiplier = 0.25f;
+        #endregion
+
+        #region Offset
+        if (player.direction == 1)
         {
-            Projectile.CloneDefaults(ProjectileID.SolarFlareDrill);
-            Projectile.width = 22;
-            Projectile.height = 22;
+            DrawOffsetX = -5;
         }
-
-        public override bool PreAI()
+        else if (player.direction == -1)
         {
-            #region Variables
-            Player player = Main.player[Projectile.owner];
-            Rectangle hitbox = Projectile.Hitbox;
-
-            float lightMultiplier = 0.25f;
-            #endregion
-
-            #region Offset
-            if (player.direction == 1)
-            {
-                DrawOffsetX = -5;
-            }
-            else if (player.direction == -1)
-            {
-                DrawOffsetX = 5;
-            }
-            #endregion
-
-            #region Dust
-            if (Main.rand.NextBool(4))
-            {
-                int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<SeleniteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(0.5f, 1f));
-                Main.dust[swingDust].velocity *= 0.05f;
-            }
-            #endregion
-
-            #region Lighting
-            Lighting.AddLight(player.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
-            #endregion
-
-            return true;
+            DrawOffsetX = 5;
         }
+        #endregion
+
+        #region Dust
+        if (Main.rand.NextBool(4))
+        {
+            int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<SeleniteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(0.5f, 1f));
+            Main.dust[swingDust].velocity *= 0.05f;
+        }
+        #endregion
+
+        #region Lighting
+        Lighting.AddLight(player.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
+        #endregion
+
+        return true;
     }
 }

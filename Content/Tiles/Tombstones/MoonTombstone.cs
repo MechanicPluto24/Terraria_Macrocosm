@@ -7,33 +7,32 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Tombstones
+namespace Macrocosm.Content.Tiles.Tombstones;
+
+public class MoonTombstone : ModTile
 {
-    public class MoonTombstone : ModTile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Main.tileFrameImportant[Type] = true;
-            Main.tileNoAttach[Type] = true;
-            Main.tileLavaDeath[Type] = false;
-            Main.tileSign[Type] = true;
+        Main.tileFrameImportant[Type] = true;
+        Main.tileNoAttach[Type] = true;
+        Main.tileLavaDeath[Type] = false;
+        Main.tileSign[Type] = true;
 
-            TileSets.CountsForGraveyard[Type] = true;
+        TileSets.CountsForGraveyard[Type] = true;
 
-            TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-            TileObjectData.newTile.Origin = new Point16(0, 1);
-            TileObjectData.newTile.StyleHorizontal = true;
-            TileObjectData.newTile.DrawYOffset = 2;
-            TileObjectData.newTile.LavaDeath = false;
-            TileObjectData.addTile(Type);
+        TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+        TileObjectData.newTile.Origin = new Point16(0, 1);
+        TileObjectData.newTile.StyleHorizontal = true;
+        TileObjectData.newTile.DrawYOffset = 2;
+        TileObjectData.newTile.LavaDeath = false;
+        TileObjectData.addTile(Type);
 
-            HitSound = SoundID.Dig;
-            DustType = ModContent.DustType<RegolithDust>();
+        HitSound = SoundID.Dig;
+        DustType = ModContent.DustType<RegolithDust>();
 
-            AddMapEntry(new Color(180, 180, 180));
+        AddMapEntry(new Color(180, 180, 180));
 
-            RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonTombstone>(), 0, 1);
-            RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonHeadstone>(), 2, 3);
-        }
+        RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonTombstone>(), 0, 1);
+        RegisterItemDrop(ModContent.ItemType<Items.Tombstones.MoonHeadstone>(), 2, 3);
     }
 }

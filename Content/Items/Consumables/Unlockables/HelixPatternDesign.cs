@@ -1,11 +1,10 @@
 ﻿using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Consumables.Unlockables
-{
-    public class HelixPatternDesign : PatternDesign
-    {
-        public override bool IsLoadingEnabled(Mod mod) => false;
+namespace Macrocosm.Content.Items.Consumables.Unlockables;
 
-        public override string PatternName => "Helix";
-    }
+public class HelixPatternDesign : PatternDesign
+{
+    public override bool IsLoadingEnabled(Mod mod) => false;
+
+    public override string PatternName => "Helix";
 }

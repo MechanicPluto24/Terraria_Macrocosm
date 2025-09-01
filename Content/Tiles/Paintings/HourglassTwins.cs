@@ -7,26 +7,25 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Paintings
+namespace Macrocosm.Content.Tiles.Paintings;
+
+public class HourglassTwins : ModTile
 {
-    public class HourglassTwins : ModTile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            Main.tileSolid[Type] = false;
-            Main.tileSolidTop[Type] = false;
-            Main.tileFrameImportant[Type] = true;
-            Main.tileNoAttach[Type] = true;
-            Main.tileTable[Type] = false;
-            Main.tileLavaDeath[Type] = true;
+        Main.tileSolid[Type] = false;
+        Main.tileSolidTop[Type] = false;
+        Main.tileFrameImportant[Type] = true;
+        Main.tileNoAttach[Type] = true;
+        Main.tileTable[Type] = false;
+        Main.tileLavaDeath[Type] = true;
 
-            TileObjectData.newTile.DefaultToPainting(4, 4);
-            TileObjectData.addTile(Type);
+        TileObjectData.newTile.DefaultToPainting(4, 4);
+        TileObjectData.addTile(Type);
 
-            TileID.Sets.DisableSmartCursor[Type] = true;
-            AddMapEntry(new Color(64, 51, 40), Language.GetText("Painting"));
+        TileID.Sets.DisableSmartCursor[Type] = true;
+        AddMapEntry(new Color(64, 51, 40), Language.GetText("Painting"));
 
-            DustType = -1;
-        }
+        DustType = -1;
     }
 }

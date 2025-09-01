@@ -1,20 +1,19 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Machines
+namespace Macrocosm.Content.Machines;
+
+public class IndustrialBatteryTE : BatteryTE
 {
-    public class IndustrialBatteryTE : BatteryTE
+    public override MachineTile MachineTile => ModContent.GetInstance<IndustrialBattery>();
+
+    public override float EnergyCapacity => 750;
+
+    public override void OnFirstUpdate()
     {
-        public override MachineTile MachineTile => ModContent.GetInstance<IndustrialBattery>();
+    }
 
-        public override float EnergyCapacity => 750;
-
-        public override void OnFirstUpdate()
-        {
-        }
-
-        public override void MachineUpdate()
-        {
-        }
+    public override void MachineUpdate()
+    {
     }
 }

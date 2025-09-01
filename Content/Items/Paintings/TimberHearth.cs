@@ -1,23 +1,22 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Paintings
+namespace Macrocosm.Content.Items.Paintings;
+
+public class TimberHearth : ModItem
 {
-    public class TimberHearth : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-        }
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.TimberHearth>());
-            Item.width = 28;
-            Item.height = 28;
-        }
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.TimberHearth>());
+        Item.width = 28;
+        Item.height = 28;
+    }
 
-        public override void AddRecipes()
-        {
-        }
+    public override void AddRecipes()
+    {
     }
 }

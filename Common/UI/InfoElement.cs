@@ -3,45 +3,44 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria.Localization;
 
-namespace Macrocosm.Common.UI
+namespace Macrocosm.Common.UI;
+
+public class InfoElement
 {
-    public class InfoElement
+    protected float value = float.MinValue;
+    protected string specialValueKey = "default";
+
+    public bool HasValue => value != float.MinValue;
+    public bool HasSpecial => specialValueKey != "default";
+
+
+    public InfoElement(string specialValueKey)
     {
-        protected float value = float.MinValue;
-        protected string specialValueKey = "default";
+        this.specialValueKey = specialValueKey;
+    }
 
-        public bool HasValue => value != float.MinValue;
-        public bool HasSpecial => specialValueKey != "default";
+    public InfoElement(float value, string specialValueKey = "")
+    {
+        this.value = value;
+        this.specialValueKey = specialValueKey;
+    }
 
+    protected virtual Asset<Texture2D> GetIcon() => null;
+    protected virtual Asset<Texture2D> GetIconSymbol() => null;
+    protected virtual LocalizedColorScaleText GetText() => new(Language.GetText(specialValueKey));
+    protected virtual LocalizedText GetHoverText() => LocalizedText.Empty;
 
-        public InfoElement(string specialValueKey)
+    public virtual UIInfoElement ProvideUI()
+    {
+        if (!HasValue && !HasSpecial)
+            return null;
+
+        return new UIInfoElement(GetText(), GetIcon(), GetIconSymbol(), GetHoverText())
         {
-            this.specialValueKey = specialValueKey;
-        }
-
-        public InfoElement(float value, string specialValueKey = "")
-        {
-            this.value = value;
-            this.specialValueKey = specialValueKey;
-        }
-
-        protected virtual Asset<Texture2D> GetIcon() => null;
-        protected virtual Asset<Texture2D> GetIconSymbol() => null;
-        protected virtual LocalizedColorScaleText GetText() => new(Language.GetText(specialValueKey));
-        protected virtual LocalizedText GetHoverText() => LocalizedText.Empty;
-
-        public virtual UIInfoElement ProvideUI()
-        {
-            if (!HasValue && !HasSpecial)
-                return null;
-
-            return new UIInfoElement(GetText(), GetIcon(), GetIconSymbol(), GetHoverText())
-            {
-                Width = new(0f, 1f),
-                Height = new(40f, 0f),
-                BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor,
-                BorderColor = UITheme.Current.InfoElementStyle.BorderColor
-            };
-        }
+            Width = new(0f, 1f),
+            Height = new(40f, 0f),
+            BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor,
+            BorderColor = UITheme.Current.InfoElementStyle.BorderColor
+        };
     }
 }

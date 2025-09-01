@@ -4,23 +4,22 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Accessories.Info
+namespace Macrocosm.Content.Items.Accessories.Info;
+
+public class BarometerInfoDisplay : InfoDisplay
 {
-    public class BarometerInfoDisplay : InfoDisplay
+    public override bool Active()
     {
-        public override bool Active()
-        {
-            return Main.LocalPlayer.GetModPlayer<InfoDisplayPlayer>().Barometer;
-        }
+        return Main.LocalPlayer.GetModPlayer<InfoDisplayPlayer>().Barometer;
+    }
 
-        private float pressure;
+    private float pressure;
 
-        public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
-        {
-            pressure = MathHelper.Lerp(pressure, MacrocosmSubworld.GetAtmosphericDensity(Main.LocalPlayer.Center, checkRooms: true), 0.1f);
-            string text = $"{pressure:F2} atm";
-            displayColor = Color.White;
-            return text;
-        }
+    public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
+    {
+        pressure = MathHelper.Lerp(pressure, MacrocosmSubworld.GetAtmosphericDensity(Main.LocalPlayer.Center, checkRooms: true), 0.1f);
+        string text = $"{pressure:F2} atm";
+        displayColor = Color.White;
+        return text;
     }
 }
