@@ -2,22 +2,23 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Ores;
-
-public class NickelOre : ModItem
+namespace Macrocosm.Content.Items.Ores
 {
-    public override void SetStaticDefaults()
+    public class NickelOre : ModItem
     {
-        Item.ResearchUnlockCount = 100;
-    }
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 100;
+        }
 
-    public override void SetDefaults()
-    {
-        Item.width = 16;
-        Item.height = 16;
-        Item.maxStack = Item.CommonMaxStack;
-        Item.value = 750;
-        Item.rare = ModContent.RarityType<MoonRarity1>();
+        public override void SetDefaults()
+        {
+            Item.width = 16;
+            Item.height = 16;
+            Item.maxStack = Item.CommonMaxStack;
+            Item.value = 750;
+            Item.rare = ModContent.RarityType<MoonRarity1>();
 
+        }
     }
 }

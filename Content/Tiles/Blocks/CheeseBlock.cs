@@ -3,18 +3,19 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Tiles.Blocks;
-
-public class CheeseBlock : ModTile
+namespace Macrocosm.Content.Tiles.Blocks
 {
-    public override void SetStaticDefaults()
+    public class CheeseBlock : ModTile
     {
-        Main.tileSolid[Type] = true;
-        Main.tileBlockLight[Type] = true;
-        Main.tileBrick[Type] = true;
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            Main.tileBrick[Type] = true;
 
-        AddMapEntry(new Color(220, 216, 121), CreateMapEntryName());
+            AddMapEntry(new Color(220, 216, 121), CreateMapEntryName());
 
-        DustType = ModContent.DustType<CheeseDust>();
+            DustType = ModContent.DustType<CheeseDust>();
+        }
     }
 }

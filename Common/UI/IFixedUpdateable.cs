@@ -1,6 +1,7 @@
-﻿namespace Macrocosm.Common.UI;
-
-public interface IFixedUpdateable
+﻿namespace Macrocosm.Common.UI
 {
-    public void FixedUpdate();
+    public interface IFixedUpdateable
+    {
+        public void FixedUpdate();
+    }
 }

@@ -4,37 +4,38 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Tools.Hammers;
-
-public class DianiteHammer : ModItem
+namespace Macrocosm.Content.Items.Tools.Hammers
 {
-    public override void SetStaticDefaults()
+    public class DianiteHammer : ModItem
     {
+        public override void SetStaticDefaults()
+        {
 
-    }
-    public override void SetDefaults()
-    {
-        Item.damage = 70;
-        Item.DamageType = DamageClass.Melee;
-        Item.width = 44;
-        Item.height = 38;
-        Item.useTime = 5;
-        Item.useAnimation = 12;
-        Item.hammer = 125;
-        Item.useStyle = ItemUseStyleID.Swing;
-        Item.knockBack = 6;
-        Item.value = 10000;
-        Item.rare = ModContent.RarityType<MoonRarity1>();
-        Item.UseSound = SoundID.Item1;
-        Item.autoReuse = true;
-        Item.tileBoost = 5;
-    }
+        }
+        public override void SetDefaults()
+        {
+            Item.damage = 70;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 44;
+            Item.height = 38;
+            Item.useTime = 5;
+            Item.useAnimation = 12;
+            Item.hammer = 125;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 6;
+            Item.value = 10000;
+            Item.rare = ModContent.RarityType<MoonRarity1>();
+            Item.UseSound = SoundID.Item1;
+            Item.autoReuse = true;
+            Item.tileBoost = 5;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<DianiteBar>(12)
-        .AddTile(TileID.LunarCraftingStation)
-        .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<DianiteBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
+        }
     }
 }

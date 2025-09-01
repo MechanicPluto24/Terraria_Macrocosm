@@ -3,26 +3,27 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Furniture.Luminite;
-
-public class LuminitePlatform : ModItem
+namespace Macrocosm.Content.Items.Furniture.Luminite
 {
-    public override void SetStaticDefaults()
+    public class LuminitePlatform : ModItem
     {
-        Item.ResearchUnlockCount = 200;
-    }
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 200;
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminitePlatform>(), (int)LuminiteStyle.Luminite);
-        Item.width = 24;
-        Item.height = 16;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminitePlatform>(), (int)LuminiteStyle.Luminite);
+            Item.width = 24;
+            Item.height = 16;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe(2)
-            .AddIngredient(ItemID.LunarBrick)
-            .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe(2)
+                .AddIngredient(ItemID.LunarBrick)
+                .Register();
+        }
     }
 }

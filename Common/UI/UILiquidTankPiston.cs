@@ -6,76 +6,77 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Common.UI;
-
-/// <summary> Panel wrapper for <see cref="UILiquid"/> with automatic hiding of overflow and (TODO) gradations </summary>
-public class UILiquidTankPiston : UILiquidTank
+namespace Macrocosm.Common.UI
 {
-    private static Asset<Texture2D> piston;
-
-    private int animationTimer;
-    private int animationSpeed;
-    private int pistonFrame = 0;
-    private const int pistonFrameMax = 9;
-
-    public UILiquidTankPiston(LiquidType liquidType) : base(liquidType) { }
-
-    public override void OnInitialize()
+    /// <summary> Panel wrapper for <see cref="UILiquid"/> with automatic hiding of overflow and (TODO) gradations </summary>
+    public class UILiquidTankPiston : UILiquidTank
     {
-        base.OnInitialize();
-        Width = new(62, 0);
-        Height = new(60, 0);
-        Bubbles = true;
-    }
+        private static Asset<Texture2D> piston;
 
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
+        private int animationTimer;
+        private int animationSpeed;
+        private int pistonFrame = 0;
+        private const int pistonFrameMax = 9;
 
-        if (pistonFrame > 0)
+        public UILiquidTankPiston(LiquidType liquidType) : base(liquidType) { }
+
+        public override void OnInitialize()
         {
-            if (animationTimer++ >= animationSpeed)
-            {
-                if (pistonFrame++ >= pistonFrameMax - 1)
-                    pistonFrame = 0;
+            base.OnInitialize();
+            Width = new(62, 0);
+            Height = new(60, 0);
+            Bubbles = true;
+        }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (pistonFrame > 0)
+            {
+                if (animationTimer++ >= animationSpeed)
+                {
+                    if (pistonFrame++ >= pistonFrameMax - 1)
+                        pistonFrame = 0;
+
+                    animationTimer = 0;
+                }
+
+                LiquidLevel = pistonFrame switch
+                {
+                    0 => 0.85f,
+                    1 or 6 => 0.2f,
+                    2 or 3 or 4 or 5 => 0.1f,
+                    7 => 0.45f,
+                    8 => 0.55f,
+                    _ => 0f
+                };
+            }
+            else
+            {
                 animationTimer = 0;
             }
+        }
 
-            LiquidLevel = pistonFrame switch
+        public void StartAnimation(int speed)
+        {
+            if (pistonFrame <= 0)
             {
-                0 => 0.85f,
-                1 or 6 => 0.2f,
-                2 or 3 or 4 or 5 => 0.1f,
-                7 => 0.45f,
-                8 => 0.55f,
-                _ => 0f
-            };
+                pistonFrame = 1;
+                animationSpeed = speed;
+            }
         }
-        else
+
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            animationTimer = 0;
+            base.Draw(spriteBatch);
+
+            piston ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Piston");
+
+            CalculatedStyle dimensions = GetDimensions();
+            Vector2 position = dimensions.Position();
+
+            spriteBatch.Draw(piston.Value, position + new Vector2(2, 2), piston.Frame(pistonFrameMax, frameX: pistonFrame), Color.White);
         }
-    }
-
-    public void StartAnimation(int speed)
-    {
-        if (pistonFrame <= 0)
-        {
-            pistonFrame = 1;
-            animationSpeed = speed;
-        }
-    }
-
-    public override void Draw(SpriteBatch spriteBatch)
-    {
-        base.Draw(spriteBatch);
-
-        piston ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Piston");
-
-        CalculatedStyle dimensions = GetDimensions();
-        Vector2 position = dimensions.Position();
-
-        spriteBatch.Draw(piston.Value, position + new Vector2(2, 2), piston.Frame(pistonFrameMax, frameX: pistonFrame), Color.White);
     }
 }

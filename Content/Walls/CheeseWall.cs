@@ -3,15 +3,16 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Walls;
-
-public class CheeseWall : ModWall
+namespace Macrocosm.Content.Walls
 {
-    public override void SetStaticDefaults()
+    public class CheeseWall : ModWall
     {
-        Main.wallHouse[Type] = true;
-        AddMapEntry(new Color(100, 90, 25));
+        public override void SetStaticDefaults()
+        {
+            Main.wallHouse[Type] = true;
+            AddMapEntry(new Color(100, 90, 25));
 
-        DustType = ModContent.DustType<CheeseDust>();
+            DustType = ModContent.DustType<CheeseDust>();
+        }
     }
 }

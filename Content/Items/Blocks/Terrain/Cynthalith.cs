@@ -1,21 +1,22 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Blocks.Terrain;
-
-public class Cynthalith : ModItem
+namespace Macrocosm.Content.Items.Blocks.Terrain
 {
-    public override void SetStaticDefaults()
+    public class Cynthalith : ModItem
     {
-        Item.ResearchUnlockCount = 100;
-    }
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 100;
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Terrain.Cynthalith>());
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Terrain.Cynthalith>());
+        }
 
-    public override void AddRecipes()
-    {
+        public override void AddRecipes()
+        {
+        }
     }
 }

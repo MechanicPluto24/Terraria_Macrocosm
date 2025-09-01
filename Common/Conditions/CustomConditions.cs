@@ -6,9 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using Terraria;
 
-namespace Macrocosm.Common.Conditions;
-
-public class CustomConditions
+namespace Macrocosm.Common.Conditions
 {
-    public static Condition BloodMoonOrDemonSun => ConditionChain.Any(Condition.BloodMoon, DynamicConditions.Get<WorldData>(nameof(WorldData.DemonSun)));
+    public class CustomConditions
+    {
+        public static Condition BloodMoonOrDemonSun => ConditionChain.Any(Condition.BloodMoon, DynamicConditions.Get<WorldData>(nameof(WorldData.DemonSun)));
+    }
 }

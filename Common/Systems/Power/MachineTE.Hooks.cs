@@ -1,31 +1,32 @@
 ﻿using Macrocosm.Common.Utils;
 using Terraria;
 
-namespace Macrocosm.Common.Systems.Power;
-
-public partial class MachineTE
+namespace Macrocosm.Common.Systems.Power
 {
-    public override void Load()
+    public partial class MachineTE
     {
-        On_Main.DrawWires += On_Main_DrawWires;
-    }
-
-    public override void Unload()
-    {
-        On_Main.DrawWires -= On_Main_DrawWires;
-    }
-
-    private void On_Main_DrawWires(On_Main.orig_DrawWires orig, Main self)
-    {
-        orig(self);
-
-        if (Main.LocalPlayer.CurrentItem().mech)
+        public override void Load()
         {
-            foreach (var kvp in ByID)
+            On_Main.DrawWires += On_Main_DrawWires;
+        }
+
+        public override void Unload()
+        {
+            On_Main.DrawWires -= On_Main_DrawWires;
+        }
+
+        private void On_Main_DrawWires(On_Main.orig_DrawWires orig, Main self)
+        {
+            orig(self);
+
+            if (Main.LocalPlayer.CurrentItem().mech)
             {
-                if (kvp.Value is MachineTE machine)
+                foreach (var kvp in ByID)
                 {
-                    machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
+                    if (kvp.Value is MachineTE machine)
+                    {
+                        machine.DrawMachinePowerInfo(Main.spriteBatch, machine.Position.ToWorldCoordinates(), Lighting.GetColor(machine.Position.ToPoint()));
+                    }
                 }
             }
         }

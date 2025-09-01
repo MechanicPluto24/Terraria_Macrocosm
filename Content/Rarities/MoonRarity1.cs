@@ -2,20 +2,21 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rarities;
-
-public class MoonRarity1 : ModRarity
+namespace Macrocosm.Content.Rarities
 {
-    public override Color RarityColor => new(203, 227, 21); // acid color 
-
-    public override int GetPrefixedRarity(int offset, float valueMult)
+    public class MoonRarity1 : ModRarity
     {
-        if (offset < 0)
-            return ItemRarityID.Purple;
+        public override Color RarityColor => new(203, 227, 21); // acid color 
 
-        if (offset > 0)
-            return ModContent.RarityType<MoonRarity2>();
+        public override int GetPrefixedRarity(int offset, float valueMult)
+        {
+            if (offset < 0)
+                return ItemRarityID.Purple;
 
-        return Type;
+            if (offset > 0)
+                return ModContent.RarityType<MoonRarity2>();
+
+            return Type;
+        }
     }
 }

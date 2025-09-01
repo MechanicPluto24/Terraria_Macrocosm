@@ -8,71 +8,72 @@ using System;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.LoadingScreens;
-
-public class MoonLoadingScreen : LoadingScreen
+namespace Macrocosm.Content.LoadingScreens
 {
-    private static Asset<Texture2D> lunaBackground;
-    private CelestialBodySprite earth;
-
-    private readonly float animationDuration = 1000f;
-    protected override void UpdateAnimation()
+    public class MoonLoadingScreen : LoadingScreen
     {
-        if (!Moving && animationTimer > 5)
-            return;
+        private static Asset<Texture2D> lunaBackground;
+        private CelestialBodySprite earth;
 
-        if (animationTimer < animationDuration)
-            animationTimer += 1f;
-    }
+        private readonly float animationDuration = 1000f;
+        protected override void UpdateAnimation()
+        {
+            if (!Moving && animationTimer > 5)
+                return;
 
-    protected override void Reset()
-    {
-        SetProgressBar(new(
-            ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad),
-            ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad),
-            new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
-        ));
+            if (animationTimer < animationDuration)
+                animationTimer += 1f;
+        }
 
-        ResetAnimation();
+        protected override void Reset()
+        {
+            SetProgressBar(new(
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon", AssetRequestMode.ImmediateLoad),
+                ModContent.Request<Texture2D>("Macrocosm/Content/LoadingScreens/WorldGen/ProgressBarMoon_Lower", AssetRequestMode.ImmediateLoad),
+                new Color(56, 10, 28), new Color(155, 38, 74), new Color(6, 53, 27), new Color(93, 228, 162)
+            ));
 
-        lunaBackground ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Luna");
+            ResetAnimation();
 
-        Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/Earth", AssetRequestMode.ImmediateLoad);
-        Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
-        earth ??= new CelestialBodySprite(earthSmallBackground, earthSmallAtmoBackground, scale: 0.7f);
-    }
+            lunaBackground ??= ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/2D/Luna");
 
-    private SpriteBatchState state;
-    protected override void PreDraw(SpriteBatch spriteBatch)
-    {
-        state.SaveState(spriteBatch);
-        spriteBatch.End();
-        spriteBatch.Begin(BlendState.NonPremultiplied, state);
+            Asset<Texture2D> earthSmallBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/Earth", AssetRequestMode.ImmediateLoad);
+            Asset<Texture2D> earthSmallAtmoBackground = ModContent.Request<Texture2D>("Macrocosm/Content/Skies/Moon/EarthAtmo", AssetRequestMode.ImmediateLoad);
+            earth ??= new CelestialBodySprite(earthSmallBackground, earthSmallAtmoBackground, scale: 0.7f);
+        }
 
-        Color bodyColor = (Color.White * (float)(animationTimer / 5) * 1f).WithOpacity(1f);
-        float scale = Main.UIScale * 0.75f;
+        private SpriteBatchState state;
+        protected override void PreDraw(SpriteBatch spriteBatch)
+        {
+            state.SaveState(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(BlendState.NonPremultiplied, state);
 
-        float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
-        progress = (float)Math.Pow(progress, 0.6);
-        int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f) * MovementDirection;
+            Color bodyColor = (Color.White * (float)(animationTimer / 5) * 1f).WithOpacity(1f);
+            float scale = Main.UIScale * 0.75f;
 
-        spriteBatch.Draw(
-                lunaBackground.Value,
-                new Rectangle((int)(Main.screenWidth - lunaBackground.Width() * scale), (int)(Main.screenHeight - lunaBackground.Height() * scale + movement), (int)(lunaBackground.Width() * scale), (int)(lunaBackground.Height() * scale)),
-                null,
-                bodyColor
-        );
+            float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
+            progress = (float)Math.Pow(progress, 0.6);
+            int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f) * MovementDirection;
 
-        progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
-        progress = (float)Math.Pow(progress, 0.2);
-        movement = (int)(Utility.QuadraticEaseIn(progress) * 100f) * MovementDirection;
+            spriteBatch.Draw(
+                    lunaBackground.Value,
+                    new Rectangle((int)(Main.screenWidth - lunaBackground.Width() * scale), (int)(Main.screenHeight - lunaBackground.Height() * scale + movement), (int)(lunaBackground.Width() * scale), (int)(lunaBackground.Height() * scale)),
+                    null,
+                    bodyColor
+            );
 
-        earth.Color = bodyColor;
-        earth.Scale = scale;
-        earth.SetPosition(Main.screenWidth * 0.265f, Main.screenHeight * 0.185f + movement);
-        earth.Draw(spriteBatch);
+            progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
+            progress = (float)Math.Pow(progress, 0.2);
+            movement = (int)(Utility.QuadraticEaseIn(progress) * 100f) * MovementDirection;
 
-        spriteBatch.End();
-        spriteBatch.Begin(state);
+            earth.Color = bodyColor;
+            earth.Scale = scale;
+            earth.SetPosition(Main.screenWidth * 0.265f, Main.screenHeight * 0.185f + movement);
+            earth.Draw(spriteBatch);
+
+            spriteBatch.End();
+            spriteBatch.Begin(state);
+        }
     }
 }

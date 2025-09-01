@@ -1,17 +1,18 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Buffs.Potions;
-
-public class MedkitLow : ModBuff
+namespace Macrocosm.Content.Buffs.Potions
 {
-    public override void SetStaticDefaults()
+    public class MedkitLow : ModBuff
     {
-        Main.buffNoSave[Type] = true;
-        Main.buffNoTimeDisplay[Type] = false;
-    }
+        public override void SetStaticDefaults()
+        {
+            Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[Type] = false;
+        }
 
-    public override void Update(Player player, ref int buffIndex)
-    {
+        public override void Update(Player player, ref int buffIndex)
+        {
+        }
     }
 }

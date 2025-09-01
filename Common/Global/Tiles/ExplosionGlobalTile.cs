@@ -1,15 +1,16 @@
 ﻿using SubworldLibrary;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.Tiles;
-
-public class ExplosionGlobalTile : GlobalTile
+namespace Macrocosm.Common.Global.Tiles
 {
-    public override bool CanExplode(int i, int j, int type)
+    public class ExplosionGlobalTile : GlobalTile
     {
-        if (SubworldSystem.AnyActive<Macrocosm>())
-            return false;
-        else
-            return base.CanExplode(i, j, type);
+        public override bool CanExplode(int i, int j, int type)
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>())
+                return false;
+            else
+                return base.CanExplode(i, j, type);
+        }
     }
 }

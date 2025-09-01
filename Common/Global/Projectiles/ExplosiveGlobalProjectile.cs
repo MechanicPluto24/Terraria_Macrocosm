@@ -5,58 +5,59 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.Projectiles;
-
-public class ExplosiveGlobalProjectile : GlobalProjectile
+namespace Macrocosm.Common.Global.Projectiles
 {
-    public override void Load()
+    public class ExplosiveGlobalProjectile : GlobalProjectile
     {
-        On_Projectile.BombsHurtPlayers += On_Projectile_BombsHurtPlayers;
-    }
-
-    public override void Unload()
-    {
-        On_Projectile.BombsHurtPlayers -= On_Projectile_BombsHurtPlayers;
-    }
-
-    public override bool InstancePerEntity => true;
-    public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) => (entity.aiStyle == ProjAIStyleID.Explosive || ProjectileID.Sets.Explosive[entity.type]);
-
-    private int sourceItemType = -1;
-
-    public override void OnSpawn(Projectile projectile, IEntitySource source)
-    {
-        // Save the item that spawned this
-        if (source is EntitySource_ItemUse_WithAmmo source_ItemUse_WithAmmo)
+        public override void Load()
         {
-            sourceItemType = source_ItemUse_WithAmmo.Item.type;
+            On_Projectile.BombsHurtPlayers += On_Projectile_BombsHurtPlayers;
         }
 
-        // Inherit item source from the projectile that spawned this (for example, Cluster Rockets)
-        if (source is EntitySource_Parent source_Parent && source_Parent.Entity is Projectile proj && proj.TryGetGlobalProjectile(out ExplosiveGlobalProjectile parent))
+        public override void Unload()
         {
-            sourceItemType = parent.sourceItemType;
+            On_Projectile.BombsHurtPlayers -= On_Projectile_BombsHurtPlayers;
         }
-    }
 
-    private void On_Projectile_BombsHurtPlayers(On_Projectile.orig_BombsHurtPlayers orig, Projectile self, Rectangle projRectangle, int j)
-    {
-        if (self.TryGetGlobalProjectile(out ExplosiveGlobalProjectile global))
+        public override bool InstancePerEntity => true;
+        public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) => (entity.aiStyle == ProjAIStyleID.Explosive || ProjectileID.Sets.Explosive[entity.type]);
+
+        private int sourceItemType = -1;
+
+        public override void OnSpawn(Projectile projectile, IEntitySource source)
         {
-            int type = global.sourceItemType;
-            if (type > 0)
+            // Save the item that spawned this
+            if (source is EntitySource_ItemUse_WithAmmo source_ItemUse_WithAmmo)
             {
-                bool dealDamage;
-                if (Main.getGoodWorld)
-                    dealDamage = ItemSets.ExplosivesShotDealDamageToOwner_GetGoodWorld[type];
-                else
-                    dealDamage = ItemSets.ExplosivesShotDealDamageToOwner[type];
+                sourceItemType = source_ItemUse_WithAmmo.Item.type;
+            }
 
-                if (!dealDamage)
-                    return;
+            // Inherit item source from the projectile that spawned this (for example, Cluster Rockets)
+            if (source is EntitySource_Parent source_Parent && source_Parent.Entity is Projectile proj && proj.TryGetGlobalProjectile(out ExplosiveGlobalProjectile parent))
+            {
+                sourceItemType = parent.sourceItemType;
             }
         }
 
-        orig(self, projRectangle, j);
+        private void On_Projectile_BombsHurtPlayers(On_Projectile.orig_BombsHurtPlayers orig, Projectile self, Rectangle projRectangle, int j)
+        {
+            if (self.TryGetGlobalProjectile(out ExplosiveGlobalProjectile global))
+            {
+                int type = global.sourceItemType;
+                if (type > 0)
+                {
+                    bool dealDamage;
+                    if (Main.getGoodWorld)
+                        dealDamage = ItemSets.ExplosivesShotDealDamageToOwner_GetGoodWorld[type];
+                    else
+                        dealDamage = ItemSets.ExplosivesShotDealDamageToOwner[type];
+
+                    if (!dealDamage)
+                        return;
+                }
+            }
+
+            orig(self, projRectangle, j);
+        }
     }
 }

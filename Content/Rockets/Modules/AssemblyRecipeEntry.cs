@@ -3,43 +3,44 @@ using System;
 using Terraria;
 using Terraria.Localization;
 
-namespace Macrocosm.Content.Rockets.Modules;
-
-public record AssemblyRecipeEntry
+namespace Macrocosm.Content.Rockets.Modules
 {
-    public Func<Item, bool> ItemCheck { get; }
-    public int RequiredAmount { get; }
-    public int? ItemType { get; }
-
-    public LocalizedText Description { get; }
-
-    public AssemblyRecipeEntry(Func<Item, bool> itemCheck, LocalizedText description, int requiredAmount = 1)
+    public record AssemblyRecipeEntry
     {
-        ItemCheck = itemCheck;
-        RequiredAmount = requiredAmount;
-        Description = description;
-    }
+        public Func<Item, bool> ItemCheck { get; }
+        public int RequiredAmount { get; }
+        public int? ItemType { get; }
 
-    public AssemblyRecipeEntry(int itemType, int requiredAmount = 1) : this
-    (
-        itemCheck: (inputItem) => inputItem.type == itemType,
-        description: Lang.GetItemName(itemType),
-        requiredAmount: requiredAmount
-    )
-    {
-        ItemType = itemType;
-    }
+        public LocalizedText Description { get; }
 
-    public bool Check(Item inputItem, bool consume = false)
-    {
-        if (ItemCheck(inputItem) && inputItem.stack >= RequiredAmount)
+        public AssemblyRecipeEntry(Func<Item, bool> itemCheck, LocalizedText description, int requiredAmount = 1)
         {
-            if (consume)
-                inputItem.DecreaseStack(RequiredAmount);
-
-            return true;
+            ItemCheck = itemCheck;
+            RequiredAmount = requiredAmount;
+            Description = description;
         }
 
-        return false;
+        public AssemblyRecipeEntry(int itemType, int requiredAmount = 1) : this
+        (
+            itemCheck: (inputItem) => inputItem.type == itemType,
+            description: Lang.GetItemName(itemType),
+            requiredAmount: requiredAmount
+        )
+        {
+            ItemType = itemType;
+        }
+
+        public bool Check(Item inputItem, bool consume = false)
+        {
+            if (ItemCheck(inputItem) && inputItem.stack >= RequiredAmount)
+            {
+                if (consume)
+                    inputItem.DecreaseStack(RequiredAmount);
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }

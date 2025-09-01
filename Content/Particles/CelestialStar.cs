@@ -5,67 +5,68 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace Macrocosm.Content.Particles;
-
-public class CelestialStar : Particle
+namespace Macrocosm.Content.Particles
 {
-    public override string Texture => Macrocosm.EmptyTexPath;
-    public BlendState BlendStateOverride;
-
-    private bool fadeIn;
-    private float defScale;
-    private float actualScale;
-
-    public override void SetDefaults()
+    public class CelestialStar : Particle
     {
-        BlendStateOverride = null;
-        fadeIn = true;
-        actualScale = 0.5f;
-    }
+        public override string Texture => Macrocosm.EmptyTexPath;
+        public BlendState BlendStateOverride;
 
-    public override void OnSpawn()
-    {
-        defScale = Scale.X;
-    }
+        private bool fadeIn;
+        private float defScale;
+        private float actualScale;
 
-    public override void AI()
-    {
-        if (fadeIn)
+        public override void SetDefaults()
         {
-            actualScale *= 1.45f;
-            if (actualScale > defScale)
-                fadeIn = false;
-        }
-        else
-        {
-            actualScale *= 0.92f;
+            BlendStateOverride = null;
+            fadeIn = true;
+            actualScale = 0.5f;
         }
 
-        Velocity *= 0.98f;
-
-        Lighting.AddLight(Center, Color.ToVector3() * (actualScale / defScale));
-
-        if (actualScale < 0.2f)
-            Kill();
-    }
-
-    private SpriteBatchState state;
-    public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-    {
-        if (BlendStateOverride is not null)
+        public override void OnSpawn()
         {
-            state.SaveState(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(BlendStateOverride, state);
+            defScale = Scale.X;
         }
 
-        Utility.DrawStar(Position - screenPosition, 2, Color * (actualScale / defScale), actualScale, Rotation);
-
-        if (BlendStateOverride is not null)
+        public override void AI()
         {
-            spriteBatch.End();
-            spriteBatch.Begin(state);
+            if (fadeIn)
+            {
+                actualScale *= 1.45f;
+                if (actualScale > defScale)
+                    fadeIn = false;
+            }
+            else
+            {
+                actualScale *= 0.92f;
+            }
+
+            Velocity *= 0.98f;
+
+            Lighting.AddLight(Center, Color.ToVector3() * (actualScale / defScale));
+
+            if (actualScale < 0.2f)
+                Kill();
         }
-        return false;
+
+        private SpriteBatchState state;
+        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            if (BlendStateOverride is not null)
+            {
+                state.SaveState(spriteBatch);
+                spriteBatch.End();
+                spriteBatch.Begin(BlendStateOverride, state);
+            }
+
+            Utility.DrawStar(Position - screenPosition, 2, Color * (actualScale / defScale), actualScale, Rotation);
+
+            if (BlendStateOverride is not null)
+            {
+                spriteBatch.End();
+                spriteBatch.Begin(state);
+            }
+            return false;
+        }
     }
 }

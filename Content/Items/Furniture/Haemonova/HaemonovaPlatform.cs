@@ -3,26 +3,27 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Furniture.Haemonova;
-
-public class HaemonovaPlatform : ModItem
+namespace Macrocosm.Content.Items.Furniture.Haemonova
 {
-    public override void SetStaticDefaults()
+    public class HaemonovaPlatform : ModItem
     {
-        Item.ResearchUnlockCount = 200;
-    }
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 200;
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminitePlatform>(), (int)LuminiteStyle.Haemonova);
-        Item.width = 24;
-        Item.height = 16;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminitePlatform>(), (int)LuminiteStyle.Haemonova);
+            Item.width = 24;
+            Item.height = 16;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe(2)
-            .AddIngredient(ItemID.LunarBrick)
-            .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe(2)
+                .AddIngredient(ItemID.LunarBrick)
+                .Register();
+        }
     }
 }

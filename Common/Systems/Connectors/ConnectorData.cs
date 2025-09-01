@@ -1,37 +1,38 @@
 ﻿using System;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Common.Systems.Connectors;
-
-public readonly struct ConnectorData : TagSerializable
+namespace Macrocosm.Common.Systems.Connectors
 {
-    public ConnectorType Type { get; }
-
-    public bool Any => Type != ConnectorType.None;
-    public bool ConveyorBase => Type == ConnectorType.Conveyor;
-    public bool ConveyorInlet => Type == ConnectorType.ConveyorInlet;
-    public bool ConveyorOutlet => Type == ConnectorType.ConveyorOutlet;
-    public bool AnyConveyor => ConveyorBase || ConveyorInlet || ConveyorOutlet;
-
-    public ConnectorData(ConnectorType type)
+    public readonly struct ConnectorData : TagSerializable
     {
-        Type = type;
-    }
+        public ConnectorType Type { get; }
 
-    public TagCompound SerializeData()
-    {
-        return new()
+        public bool Any => Type != ConnectorType.None;
+        public bool ConveyorBase => Type == ConnectorType.Conveyor;
+        public bool ConveyorInlet => Type == ConnectorType.ConveyorInlet;
+        public bool ConveyorOutlet => Type == ConnectorType.ConveyorOutlet;
+        public bool AnyConveyor => ConveyorBase || ConveyorInlet || ConveyorOutlet;
+
+        public ConnectorData(ConnectorType type)
         {
-            [nameof(Type)] = (byte)Type
-        };
-    }
+            Type = type;
+        }
 
-    public static readonly Func<TagCompound, ConnectorData> DESERIALIZER = DeserializeData;
-    public static ConnectorData DeserializeData(TagCompound tag)
-    {
-        if (tag.ContainsKey(nameof(Type)))
-            return new((ConnectorType)tag.GetByte(nameof(Type)));
+        public TagCompound SerializeData()
+        {
+            return new()
+            {
+                [nameof(Type)] = (byte)Type
+            };
+        }
 
-        return default;
+        public static readonly Func<TagCompound, ConnectorData> DESERIALIZER = DeserializeData;
+        public static ConnectorData DeserializeData(TagCompound tag)
+        {
+            if (tag.ContainsKey(nameof(Type)))
+                return new((ConnectorType)tag.GetByte(nameof(Type)));
+
+            return default;
+        }
     }
 }

@@ -1,24 +1,25 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Players;
-
-public class SafeguardPlayer : ModPlayer
+namespace Macrocosm.Common.Players
 {
-    public bool Safeguard { get; set; }
-
-    public override void ResetEffects()
+    public class SafeguardPlayer : ModPlayer
     {
-        Safeguard = false;
-    }
+        public bool Safeguard { get; set; }
 
-    public override void ModifyHurt(ref Player.HurtModifiers modifiers)
-    {
-        if (Safeguard)
+        public override void ResetEffects()
         {
-            modifiers.Cancel();
-            Player.ClearBuff(ModContent.BuffType<Content.Buffs.Potions.SafeguardBuff>());
-            Player.immuneTime = 60;
+            Safeguard = false;
+        }
+
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
+        {
+            if (Safeguard)
+            {
+                modifiers.Cancel();
+                Player.ClearBuff(ModContent.BuffType<Content.Buffs.Potions.SafeguardBuff>());
+                Player.immuneTime = 60;
+            }
         }
     }
 }

@@ -4,40 +4,41 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons.Melee;
-
-public class AluminumShortsword : ModItem
+namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    public override void SetStaticDefaults()
+    public class AluminumShortsword : ModItem
     {
+        public override void SetStaticDefaults()
+        {
 
-    }
+        }
 
-    public override void SetDefaults()
-    {
-        Item.damage = 8;
-        Item.DamageType = DamageClass.MeleeNoSpeed;
-        Item.width = 32;
-        Item.height = 32;
-        Item.useTime = 12;
-        Item.useAnimation = 12;
-        Item.useStyle = ItemUseStyleID.Rapier;
-        Item.knockBack = 4.2f;
-        Item.value = Item.sellPrice(silver: 2, copper: 20);
-        Item.rare = ItemRarityID.White;
-        Item.UseSound = SoundID.Item1;
-        Item.autoReuse = false;
-        Item.noUseGraphic = true;
-        Item.noMelee = true;
-        Item.shoot = ModContent.ProjectileType<AluminumShortswordProjectile>();
-        Item.shootSpeed = 2.1f;
-    }
+        public override void SetDefaults()
+        {
+            Item.damage = 8;
+            Item.DamageType = DamageClass.MeleeNoSpeed;
+            Item.width = 32;
+            Item.height = 32;
+            Item.useTime = 12;
+            Item.useAnimation = 12;
+            Item.useStyle = ItemUseStyleID.Rapier;
+            Item.knockBack = 4.2f;
+            Item.value = Item.sellPrice(silver: 2, copper: 20);
+            Item.rare = ItemRarityID.White;
+            Item.UseSound = SoundID.Item1;
+            Item.autoReuse = false;
+            Item.noUseGraphic = true;
+            Item.noMelee = true;
+            Item.shoot = ModContent.ProjectileType<AluminumShortswordProjectile>();
+            Item.shootSpeed = 2.1f;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<AluminumBar>(6)
-        .AddTile(TileID.Anvils)
-        .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<AluminumBar>(6)
+            .AddTile(TileID.Anvils)
+            .Register();
+        }
     }
 }

@@ -1,15 +1,16 @@
 ﻿using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Players;
-
-public class ProjectileDistancePlayer : ModPlayer
+namespace Macrocosm.Common.Players
 {
-    public bool PointBlank { get; set; }
-    public bool Zoning { get; set; }
-
-    public override void ResetEffects()
+    public class ProjectileDistancePlayer : ModPlayer
     {
-        PointBlank = false;
-        Zoning = false;
+        public bool PointBlank { get; set; }
+        public bool Zoning { get; set; }
+
+        public override void ResetEffects()
+        {
+            PointBlank = false;
+            Zoning = false;
+        }
     }
 }

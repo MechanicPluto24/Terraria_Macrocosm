@@ -9,24 +9,25 @@ using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.MapLayers;
-
-public class LaunchPadMapLayer : ModMapLayer
+namespace Macrocosm.Content.MapLayers
 {
-    private Asset<Texture2D> texture;
-    public override void Load()
+    public class LaunchPadMapLayer : ModMapLayer
     {
-        texture = ModContent.Request<Texture2D>(GetType().Namespace.Replace(".", "/") + "/LaunchPadMap");
-    }
-
-    public override Position GetDefaultPosition() => new Before(IMapLayer.Pings);
-
-    public override void Draw(ref MapOverlayDrawContext context, ref string text)
-    {
-        foreach (LaunchPad launchPad in LaunchPadManager.GetLaunchPads(MacrocosmSubworld.CurrentID))
+        private Asset<Texture2D> texture;
+        public override void Load()
         {
-            if (context.Draw(texture.Value, launchPad.CenterTile.ToVector2() + new Vector2(0, 1), Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
-                text = launchPad.DisplayName;
+            texture = ModContent.Request<Texture2D>(GetType().Namespace.Replace(".", "/") + "/LaunchPadMap");
+        }
+
+        public override Position GetDefaultPosition() => new Before(IMapLayer.Pings);
+
+        public override void Draw(ref MapOverlayDrawContext context, ref string text)
+        {
+            foreach (LaunchPad launchPad in LaunchPadManager.GetLaunchPads(MacrocosmSubworld.CurrentID))
+            {
+                if (context.Draw(texture.Value, launchPad.CenterTile.ToVector2() + new Vector2(0, 1), Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
+                    text = launchPad.DisplayName;
+            }
         }
     }
 }

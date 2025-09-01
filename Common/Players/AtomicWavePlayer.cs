@@ -4,38 +4,39 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Players;
-
-public class AtomicWavePlayer : ModPlayer
+namespace Macrocosm.Common.Players
 {
-    public bool AtomicWave { get; set; }
-
-    private int cooldown;
-
-    public override void ResetEffects()
+    public class AtomicWavePlayer : ModPlayer
     {
-        AtomicWave = false;
-    }
+        public bool AtomicWave { get; set; }
 
-    public override void PostUpdate()
-    {
-        if (AtomicWave)
+        private int cooldown;
+
+        public override void ResetEffects()
         {
-            if (cooldown >= 1)
-                cooldown--;
+            AtomicWave = false;
+        }
 
-            bool close = false;
-            for (int i = 0; i < Main.maxNPCs; i++)
+        public override void PostUpdate()
+        {
+            if (AtomicWave)
             {
-                NPC npc = Main.npc[i];
-                if (npc.active && !npc.friendly && Vector2.Distance(Player.Center, npc.Center) < 200f)
-                    close = true;
-            }
+                if (cooldown >= 1)
+                    cooldown--;
 
-            if (close && cooldown < 1)
-            {
-                Projectile.NewProjectile(new EntitySource_Misc("AtomicWave"), Player.Center, Vector2.Zero, ModContent.ProjectileType<AtomicWaveProjectile>(), 700, 10f, Main.myPlayer);
-                cooldown = 300;
+                bool close = false;
+                for (int i = 0; i < Main.maxNPCs; i++)
+                {
+                    NPC npc = Main.npc[i];
+                    if (npc.active && !npc.friendly && Vector2.Distance(Player.Center, npc.Center) < 200f)
+                        close = true;
+                }
+
+                if (close && cooldown < 1)
+                {
+                    Projectile.NewProjectile(new EntitySource_Misc("AtomicWave"), Player.Center, Vector2.Zero, ModContent.ProjectileType<AtomicWaveProjectile>(), 700, 10f, Main.myPlayer);
+                    cooldown = 300;
+                }
             }
         }
     }

@@ -14,157 +14,158 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 
 
-namespace Macrocosm.Content.Machines;
-
-public class BurnerGeneratorUI : MachineUI
+namespace Macrocosm.Content.Machines
 {
-    public BurnerGeneratorTE BurnerGenerator => MachineTE as BurnerGeneratorTE;
-
-    private UIPanel backgroundPanel;
-    private UIPanel inventoryPanel;
-    private UIPanelProgressBar burnItemIconProgressBar;
-    private UIPanelProgressBar hullHeatProgressBar;
-    private UIInventoryItemIcon itemIcon;
-    private UITextPanel<string> hullHeatText;
-    private UITextPanel<string> powerStatusText;
-    private UIHoverImageButton arrow;
-
-    public BurnerGeneratorUI()
+    public class BurnerGeneratorUI : MachineUI
     {
-    }
+        public BurnerGeneratorTE BurnerGenerator => MachineTE as BurnerGeneratorTE;
 
-    public override void OnInitialize()
-    {
-        base.OnInitialize();
+        private UIPanel backgroundPanel;
+        private UIPanel inventoryPanel;
+        private UIPanelProgressBar burnItemIconProgressBar;
+        private UIPanelProgressBar hullHeatProgressBar;
+        private UIInventoryItemIcon itemIcon;
+        private UITextPanel<string> hullHeatText;
+        private UITextPanel<string> powerStatusText;
+        private UIHoverImageButton arrow;
 
-        Width.Set(495f, 0f);
-        Height.Set(250f, 0f);
-
-        title.Top.Set(-36, 0);
-
-        //Recalculate();
-
-        backgroundPanel = new()
+        public BurnerGeneratorUI()
         {
-            Width = new(0, 1),
-            Height = new(0, 1),
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        Append(backgroundPanel);
-
-        powerStatusText = new("", textScale: 1f, large: false)
-        {
-            HAlign = 1f,
-            VAlign = 0.04f,
-            Width = new(0, 0.6f - 0.01f),
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        backgroundPanel.Append(powerStatusText);
-
-        hullHeatText = new("", textScale: 1f, large: false)
-        {
-            HAlign = 0f,
-            VAlign = 0.04f,
-            Width = new(0, 0.4f - 0.01f),
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        backgroundPanel.Append(hullHeatText);
-
-        hullHeatProgressBar = new()
-        {
-            Width = new(0, 1f),
-            Height = new(42, 0),
-            Left = new(0, 0f),
-            VAlign = 0.45f,
-            FillColor = new Color(255, 255, 0),
-            FillColorEnd = new Color(255, 0, 0),
-            IsVertical = false,
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        backgroundPanel.Append(hullHeatProgressBar);
-
-        inventoryPanel = new()
-        {
-            Width = new(0, 1f),
-            Height = new(48 + 10, 0),
-            Left = new(0, 0f),
-            VAlign = 1f,
-            PaddingLeft = PaddingRight = 20,
-            PaddingTop = PaddingBottom = 10,
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        backgroundPanel.Append(inventoryPanel);
-
-        if (BurnerGenerator.Inventory is not null)
-        {
-            for (int i = 0; i < BurnerGenerator.Inventory.Size; i++)
-            {
-                var inputSlot = BurnerGenerator.Inventory.ProvideItemSlot(i);
-
-                inputSlot.Left = new(i * 48, 0f);
-                inputSlot.VAlign = 0.5f;
-                inputSlot.SetPadding(0f);
-                inventoryPanel.Append(inputSlot);
-            }
         }
 
-        arrow = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Buttons/LongArrow", AssetRequestMode.ImmediateLoad))
+        public override void OnInitialize()
         {
-            Left = new(0, 0.71f),
-            VAlign = 0.5f
-        };
-        arrow.SetVisibility(1f);
-        inventoryPanel.Append(arrow);
+            base.OnInitialize();
 
-        burnItemIconProgressBar = new()
+            Width.Set(495f, 0f);
+            Height.Set(250f, 0f);
+
+            title.Top.Set(-36, 0);
+
+            //Recalculate();
+
+            backgroundPanel = new()
+            {
+                Width = new(0, 1),
+                Height = new(0, 1),
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            Append(backgroundPanel);
+
+            powerStatusText = new("", textScale: 1f, large: false)
+            {
+                HAlign = 1f,
+                VAlign = 0.04f,
+                Width = new(0, 0.6f - 0.01f),
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(powerStatusText);
+
+            hullHeatText = new("", textScale: 1f, large: false)
+            {
+                HAlign = 0f,
+                VAlign = 0.04f,
+                Width = new(0, 0.4f - 0.01f),
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(hullHeatText);
+
+            hullHeatProgressBar = new()
+            {
+                Width = new(0, 1f),
+                Height = new(42, 0),
+                Left = new(0, 0f),
+                VAlign = 0.45f,
+                FillColor = new Color(255, 255, 0),
+                FillColorEnd = new Color(255, 0, 0),
+                IsVertical = false,
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(hullHeatProgressBar);
+
+            inventoryPanel = new()
+            {
+                Width = new(0, 1f),
+                Height = new(48 + 10, 0),
+                Left = new(0, 0f),
+                VAlign = 1f,
+                PaddingLeft = PaddingRight = 20,
+                PaddingTop = PaddingBottom = 10,
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(inventoryPanel);
+
+            if (BurnerGenerator.Inventory is not null)
+            {
+                for (int i = 0; i < BurnerGenerator.Inventory.Size; i++)
+                {
+                    var inputSlot = BurnerGenerator.Inventory.ProvideItemSlot(i);
+
+                    inputSlot.Left = new(i * 48, 0f);
+                    inputSlot.VAlign = 0.5f;
+                    inputSlot.SetPadding(0f);
+                    inventoryPanel.Append(inputSlot);
+                }
+            }
+
+            arrow = new(ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Buttons/LongArrow", AssetRequestMode.ImmediateLoad))
+            {
+                Left = new(0, 0.71f),
+                VAlign = 0.5f
+            };
+            arrow.SetVisibility(1f);
+            inventoryPanel.Append(arrow);
+
+            burnItemIconProgressBar = new()
+            {
+                Width = new(46, 0),
+                Height = new(46, 0),
+                Left = new(0, 0.85f),
+                VAlign = 0.95f,
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                FillColor = new Color(255, 255, 0),
+                FillColorEnd = new Color(255, 0, 0),
+                IsVertical = true,
+            };
+            backgroundPanel.Append(burnItemIconProgressBar);
+
+            itemIcon = new()
+            {
+                HAlign = 0.5f,
+                VAlign = 0.5f
+            };
+            burnItemIconProgressBar.Append(itemIcon);
+        }
+
+        public override void Update(GameTime gameTime)
         {
-            Width = new(46, 0),
-            Height = new(46, 0),
-            Left = new(0, 0.85f),
-            VAlign = 0.95f,
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-            FillColor = new Color(255, 255, 0),
-            FillColorEnd = new Color(255, 0, 0),
-            IsVertical = true,
-        };
-        backgroundPanel.Append(burnItemIconProgressBar);
+            base.Update(gameTime);
+            Inventory.ActiveInventory = BurnerGenerator.Inventory;
 
-        itemIcon = new()
-        {
-            HAlign = 0.5f,
-            VAlign = 0.5f
-        };
-        burnItemIconProgressBar.Append(itemIcon);
-    }
+            string power = $"{BurnerGenerator.GeneratedPower:F2}";
+            powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format(power));
 
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-        Inventory.ActiveInventory = BurnerGenerator.Inventory;
+            burnItemIconProgressBar.Progress = BurnerGenerator.BurnProgress;
 
-        string power = $"{BurnerGenerator.GeneratedPower:F2}";
-        powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format(power));
+            hullHeatProgressBar.Progress = BurnerGenerator.HullHeatProgress;
 
-        burnItemIconProgressBar.Progress = BurnerGenerator.BurnProgress;
+            float temperature = MacrocosmSubworld.GetAmbientTemperature() + BurnerGenerator.HullHeat;
+            string text = ClientConfig.Instance.UnitSystem switch
+            {
+                UnitSystemType.Metric => Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatMetric").Format((int)temperature),
+                UnitSystemType.Imperial => Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)),
+                _ => "",
+            };
+            hullHeatText.SetText(text);
 
-        hullHeatProgressBar.Progress = BurnerGenerator.HullHeatProgress;
-
-        float temperature = MacrocosmSubworld.GetAmbientTemperature() + BurnerGenerator.HullHeat;
-        string text = ClientConfig.Instance.UnitSystem switch
-        {
-            UnitSystemType.Metric => Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatMetric").Format((int)temperature),
-            UnitSystemType.Imperial => Language.GetText("Mods.Macrocosm.Machines.BurnerGenerator.HullHeatImperial").Format((int)Utility.CelsiusToFarhenheit(temperature)),
-            _ => "",
-        };
-        hullHeatText.SetText(text);
-
-        if (itemIcon.Item.type != BurnerGenerator.ConsumedItem.type)
-            itemIcon.Item = BurnerGenerator.ConsumedItem;
+            if (itemIcon.Item.type != BurnerGenerator.ConsumedItem.type)
+                itemIcon.Item = BurnerGenerator.ConsumedItem;
+        }
     }
 }

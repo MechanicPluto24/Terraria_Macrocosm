@@ -5,40 +5,41 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.DrawLayers;
-
-class HeldItemLayer : PlayerDrawLayer
+namespace Macrocosm.Content.DrawLayers
 {
-    public override void SetStaticDefaults()
+    class HeldItemLayer : PlayerDrawLayer
     {
-    }
-
-    public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => true;
-
-    public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.HeldItem);
-
-    protected override void Draw(ref PlayerDrawSet drawInfo)
-    {
-        Item item = drawInfo.heldItem;
-        if (item is null)
-            return;
-
-        if (item.TryGetGlobalItem(out CustomDrawGlobalItem result))
+        public override void SetStaticDefaults()
         {
-            if (result.CustomHeldTexture != null)
+        }
+
+        public override bool GetDefaultVisibility(PlayerDrawSet drawInfo) => true;
+
+        public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.HeldItem);
+
+        protected override void Draw(ref PlayerDrawSet drawInfo)
+        {
+            Item item = drawInfo.heldItem;
+            if (item is null)
+                return;
+
+            if (item.TryGetGlobalItem(out CustomDrawGlobalItem result))
             {
-                Utility.DrawHeldItemLayer(ref drawInfo, item, result.CustomHeldTexture.Value, drawInfo.itemColor, ignoreNoUseGraphic: true);
-                if (result.CustomHeldTextureGlowmask != null)
+                if (result.CustomHeldTexture != null)
+                {
+                    Utility.DrawHeldItemLayer(ref drawInfo, item, result.CustomHeldTexture.Value, drawInfo.itemColor, ignoreNoUseGraphic: true);
+                    if (result.CustomHeldTextureGlowmask != null)
+                    {
+                        Color color = result.GlowmaskColor.HasValue ? result.GlowmaskColor.Value.WithAlpha((byte)item.alpha) : drawInfo.itemColor;
+                        Utility.DrawHeldItemLayer(ref drawInfo, item, result.CustomHeldTextureGlowmask.Value, color, ignoreNoUseGraphic: true);
+                    }
+
+                }
+                else if (result.Glowmask != null)
                 {
                     Color color = result.GlowmaskColor.HasValue ? result.GlowmaskColor.Value.WithAlpha((byte)item.alpha) : drawInfo.itemColor;
-                    Utility.DrawHeldItemLayer(ref drawInfo, item, result.CustomHeldTextureGlowmask.Value, color, ignoreNoUseGraphic: true);
+                    Utility.DrawHeldItemLayer(ref drawInfo, item, result.Glowmask.Value, color, ignoreNoUseGraphic: false);
                 }
-
-            }
-            else if (result.Glowmask != null)
-            {
-                Color color = result.GlowmaskColor.HasValue ? result.GlowmaskColor.Value.WithAlpha((byte)item.alpha) : drawInfo.itemColor;
-                Utility.DrawHeldItemLayer(ref drawInfo, item, result.Glowmask.Value, color, ignoreNoUseGraphic: false);
             }
         }
     }

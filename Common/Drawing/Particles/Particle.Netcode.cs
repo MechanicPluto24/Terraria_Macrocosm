@@ -4,52 +4,53 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Drawing.Particles;
-
-/// <summary> Particle.Netcode by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
-public partial class Particle
+namespace Macrocosm.Common.Drawing.Particles
 {
-    public const int MaxParticles = ushort.MaxValue;
-    public const int MaxParticleTypes = ushort.MaxValue;
-
-    /// <summary>
-    /// Syncs the particle and particle fields with <see cref="NetSyncAttribute"/> across all clients and the server.
-    /// </summary>
-    public void NetSync(int toClient = -1, int ignoreClient = -1)
+    /// <summary> Particle.Netcode by sucss, Nurby & Feldy @ PellucidMod (RIP) </summary>
+    public partial class Particle
     {
-        if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0)
-            return;
+        public const int MaxParticles = ushort.MaxValue;
+        public const int MaxParticleTypes = ushort.MaxValue;
 
-        ModPacket packet = Macrocosm.Instance.GetPacket();
+        /// <summary>
+        /// Syncs the particle and particle fields with <see cref="NetSyncAttribute"/> across all clients and the server.
+        /// </summary>
+        public void NetSync(int toClient = -1, int ignoreClient = -1)
+        {
+            if (Main.netMode == NetmodeID.SinglePlayer || WhoAmI < 0)
+                return;
 
-        packet.Write((byte)MessageType.SyncParticle);
-        packet.Write((ushort)WhoAmI);
-        packet.Write((ushort)Type);
+            ModPacket packet = Macrocosm.Instance.GetPacket();
 
-        if (this.NetWrite(packet)) // Check if the writer was able to write all the fields.
-            packet.Send(toClient, ignoreClient);
+            packet.Write((byte)MessageType.SyncParticle);
+            packet.Write((ushort)WhoAmI);
+            packet.Write((ushort)Type);
 
-        packet.Dispose();
-    }
+            if (this.NetWrite(packet)) // Check if the writer was able to write all the fields.
+                packet.Send(toClient, ignoreClient);
 
-    /// <summary>
-    /// Syncs a particle with data from the <see cref="BinaryReader"/>. Don't use this method outside <see cref="PacketHandler.HandlePacket(BinaryReader, int)"/>
-    /// </summary>
-    /// <param name="reader"></param>
-    public static void ReceiveSyncParticle(BinaryReader reader, int sender)
-    {
-        int particleIndex = reader.ReadUInt16(); // the Particle WhoAmI
-        int particleType = reader.ReadUInt16();  // the Type int index
+            packet.Dispose();
+        }
 
-        Particle particle;
-        if (ParticleManager.Particles.Count <= particleIndex)
-            particle = ParticleManager.CreateParticle(ParticleManager.Types[particleType]);
-        else
-            particle = ParticleManager.Particles[particleIndex];
+        /// <summary>
+        /// Syncs a particle with data from the <see cref="BinaryReader"/>. Don't use this method outside <see cref="PacketHandler.HandlePacket(BinaryReader, int)"/>
+        /// </summary>
+        /// <param name="reader"></param>
+        public static void ReceiveSyncParticle(BinaryReader reader, int sender)
+        {
+            int particleIndex = reader.ReadUInt16(); // the Particle WhoAmI
+            int particleType = reader.ReadUInt16();  // the Type int index
 
-        particle.NetRead(reader);
+            Particle particle;
+            if (ParticleManager.Particles.Count <= particleIndex)
+                particle = ParticleManager.CreateParticle(ParticleManager.Types[particleType]);
+            else
+                particle = ParticleManager.Particles[particleIndex];
 
-        if (Main.netMode == NetmodeID.Server)
-            particle.NetSync(ignoreClient: sender);
+            particle.NetRead(reader);
+
+            if (Main.netMode == NetmodeID.Server)
+                particle.NetSync(ignoreClient: sender);
+        }
     }
 }

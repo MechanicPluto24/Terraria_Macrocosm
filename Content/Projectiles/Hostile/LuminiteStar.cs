@@ -8,114 +8,115 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Hostile;
-
-public class LuminiteStar : ModProjectile
+namespace Macrocosm.Content.Projectiles.Hostile
 {
-    public override string Texture => Macrocosm.EmptyTexPath;
-
-    public override void SetStaticDefaults()
+    public class LuminiteStar : ModProjectile
     {
-        ProjectileID.Sets.TrailCacheLength[Type] = 15;
-        ProjectileID.Sets.TrailingMode[Type] = 0;
-    }
+        public override string Texture => Macrocosm.EmptyTexPath;
 
-    public ref float AI_Timer => ref Projectile.ai[0];
-
-    public int TargetPlayer
-    {
-        get => (int)Projectile.ai[1];
-        set => Projectile.ai[1] = value;
-    }
-
-    public bool Fall
-    {
-        get => Projectile.ai[2] > 0f;
-        set => Projectile.ai[2] = value ? 1f : 0f;
-    }
-
-
-    public override void SetDefaults()
-    {
-        Projectile.width = 8;
-        Projectile.height = 8;
-        Projectile.hostile = true;
-        Projectile.friendly = false;
-        Projectile.tileCollide = false;
-        Projectile.timeLeft = 600;
-        Projectile.penetrate = -1;
-
-        Projectile.tileCollide = true;
-    }
-
-    private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
-    {
-        Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, LuminiteSlime.EffectColor, LuminiteSlime.EffectColor.WithOpacity(0f));
-
-        state.SaveState(Main.spriteBatch);
-        Main.spriteBatch.End();
-        Main.spriteBatch.Begin(BlendState.Additive, state);
-
-        Utility.DrawStar(Projectile.Center - Main.screenPosition, 2, LuminiteSlime.EffectColor, 0.4f, Projectile.rotation, entity: true);
-
-        Main.spriteBatch.End();
-        Main.spriteBatch.Begin(state);
-
-
-        return false;
-    }
-
-    public override void AI()
-    {
-        float timeToShoot = 40;
-        float baseShootSpeed = 12f;
-        float shootDeviation = 0.5f;
-
-        AI_Timer++;
-
-        bool hasTarget = TargetPlayer >= 0 && TargetPlayer < Main.maxPlayers;
-        if (hasTarget)
+        public override void SetStaticDefaults()
         {
-            Player player = Main.player[TargetPlayer];
-            if (AI_Timer == timeToShoot)
-            {
-                if (Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    float aimAngle = (player.Center - Projectile.Center).ToRotation();
-                    float shootSpeed = baseShootSpeed + Main.rand.NextFloat(-shootDeviation, shootDeviation);
-                    Projectile.velocity = Utility.PolarVector(shootSpeed, aimAngle);
-
-                    Projectile.netUpdate = true;
-                }
-            }
-            else if (AI_Timer > timeToShoot)
-            {
-                Vector2 direction = (player.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * baseShootSpeed, 0.005f);
-
-                if (!Fall && AI_Timer > timeToShoot * Main.rand.NextFloat(2.5f, 4f) && Main.netMode != NetmodeID.MultiplayerClient)
-                {
-                    Fall = true;
-                    Projectile.netUpdate = true;
-                }
-            }
-
+            ProjectileID.Sets.TrailCacheLength[Type] = 15;
+            ProjectileID.Sets.TrailingMode[Type] = 0;
         }
 
-        if (Fall)
-        {
-            Projectile.tileCollide = !WorldGen.SolidTile(Projectile.Center.ToTileCoordinates());
-            Projectile.velocity.Y += 0.1f;
-        }
-    }
+        public ref float AI_Timer => ref Projectile.ai[0];
 
-    public override void OnKill(int timeLeft)
-    {
-        for (int i = 0; i < 10; i++)
+        public int TargetPlayer
         {
-            Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
-            Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
+            get => (int)Projectile.ai[1];
+            set => Projectile.ai[1] = value;
+        }
+
+        public bool Fall
+        {
+            get => Projectile.ai[2] > 0f;
+            set => Projectile.ai[2] = value ? 1f : 0f;
+        }
+
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.hostile = true;
+            Projectile.friendly = false;
+            Projectile.tileCollide = false;
+            Projectile.timeLeft = 600;
+            Projectile.penetrate = -1;
+
+            Projectile.tileCollide = true;
+        }
+
+        private SpriteBatchState state;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, LuminiteSlime.EffectColor, LuminiteSlime.EffectColor.WithOpacity(0f));
+
+            state.SaveState(Main.spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            Utility.DrawStar(Projectile.Center - Main.screenPosition, 2, LuminiteSlime.EffectColor, 0.4f, Projectile.rotation, entity: true);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+
+            return false;
+        }
+
+        public override void AI()
+        {
+            float timeToShoot = 40;
+            float baseShootSpeed = 12f;
+            float shootDeviation = 0.5f;
+
+            AI_Timer++;
+
+            bool hasTarget = TargetPlayer >= 0 && TargetPlayer < Main.maxPlayers;
+            if (hasTarget)
+            {
+                Player player = Main.player[TargetPlayer];
+                if (AI_Timer == timeToShoot)
+                {
+                    if (Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        float aimAngle = (player.Center - Projectile.Center).ToRotation();
+                        float shootSpeed = baseShootSpeed + Main.rand.NextFloat(-shootDeviation, shootDeviation);
+                        Projectile.velocity = Utility.PolarVector(shootSpeed, aimAngle);
+
+                        Projectile.netUpdate = true;
+                    }
+                }
+                else if (AI_Timer > timeToShoot)
+                {
+                    Vector2 direction = (player.Center - Projectile.Center).SafeNormalize(Vector2.Zero);
+                    Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * baseShootSpeed, 0.005f);
+
+                    if (!Fall && AI_Timer > timeToShoot * Main.rand.NextFloat(2.5f, 4f) && Main.netMode != NetmodeID.MultiplayerClient)
+                    {
+                        Fall = true;
+                        Projectile.netUpdate = true;
+                    }
+                }
+
+            }
+
+            if (Fall)
+            {
+                Projectile.tileCollide = !WorldGen.SolidTile(Projectile.Center.ToTileCoordinates());
+                Projectile.velocity.Y += 0.1f;
+            }
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Vector2 dustVelocity = Utility.PolarVector(0.01f, Utility.RandomRotation());
+                Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<LuminiteBrightDust>(), dustVelocity.X, dustVelocity.Y, newColor: Color.White * 0.1f);
+            }
         }
     }
 }

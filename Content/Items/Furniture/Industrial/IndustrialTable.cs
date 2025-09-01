@@ -2,27 +2,28 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Furniture.Industrial;
-
-public class IndustrialTable : ModItem
+namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    public override void SetStaticDefaults()
+    public class IndustrialTable : ModItem
     {
-    }
+        public override void SetStaticDefaults()
+        {
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialTable>());
-        Item.width = 32;
-        Item.height = 22;
-        Item.value = 500;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialTable>());
+            Item.width = 32;
+            Item.height = 22;
+            Item.value = 500;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<IndustrialPlating>(12)
-        .AddTile<Tiles.Crafting.Fabricator>()
-        .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<IndustrialPlating>(12)
+            .AddTile<Tiles.Crafting.Fabricator>()
+            .Register();
+        }
     }
 }

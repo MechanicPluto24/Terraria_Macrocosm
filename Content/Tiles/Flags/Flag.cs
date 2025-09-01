@@ -14,144 +14,145 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Flags;
-
-public class Flag : ModTile
+namespace Macrocosm.Content.Tiles.Flags
 {
-    private static int testing_globalFlagStyle;
-
-    public override void SetStaticDefaults()
+    public class Flag : ModTile
     {
-        Main.tileFrameImportant[Type] = true;
-        Main.tileNoAttach[Type] = true;
-        Main.tileLavaDeath[Type] = true;
+        private static int testing_globalFlagStyle;
 
-        TileID.Sets.MultiTileSway[Type] = true;
-        TileID.Sets.DisableSmartCursor[Type] = true;
-
-        TileObjectData.newTile.Width = 3;
-        TileObjectData.newTile.Height = 5;
-
-        TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
-        TileObjectData.newTile.CoordinateWidth = 16;
-        TileObjectData.newTile.CoordinatePadding = 2;
-
-        TileObjectData.newTile.StyleHorizontal = true;
-        TileObjectData.newTile.StyleWrapLimit = 2;
-        TileObjectData.newTile.StyleMultiplier = 2;
-
-        TileObjectData.newTile.DrawYOffset = 2;
-        TileObjectData.newTile.LavaDeath = true;
-
-        TileObjectData.newTile.Origin = new(0, TileObjectData.newTile.Height - 1);
-        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
-        TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
-
-        TileObjectData.newTile.UsesCustomCanPlace = true;
-
-        TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
-        TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
-        TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 1, TileObjectData.newTile.Width - 1);
-        TileObjectData.addAlternate(1);
-
-        TileObjectData.addTile(Type);
-
-        AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
-        DustType = -1;
-    }
-
-    public override bool RightClick(int i, int j)
-    {
-        Main.mouseRightRelease = false;
-        Utility.UICloseOthers();
-
-        Point16 origin = TileObjectData.TopLeft(i, j);
-        // TOOD: Open UI
-
-        testing_globalFlagStyle++;
-        testing_globalFlagStyle %= PatternManager.GetAll(context: "FlagTile").Count();
-
-        return true;
-    }
-
-    public override void MouseOver(int i, int j)
-    {
-        Player player = Main.LocalPlayer;
-
-        if (!player.mouseInterface)
+        public override void SetStaticDefaults()
         {
-            player.noThrow = 2;
-            player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
+            Main.tileFrameImportant[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileLavaDeath[Type] = true;
+
+            TileID.Sets.MultiTileSway[Type] = true;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+
+            TileObjectData.newTile.Width = 3;
+            TileObjectData.newTile.Height = 5;
+
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16, 16, 16];
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
+
+            TileObjectData.newTile.DrawYOffset = 2;
+            TileObjectData.newTile.LavaDeath = true;
+
+            TileObjectData.newTile.Origin = new(0, TileObjectData.newTile.Height - 1);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+            TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
+
+            TileObjectData.newTile.UsesCustomCanPlace = true;
+
+            TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
+            TileObjectData.newAlternate.Direction = TileObjectDirection.PlaceLeft;
+            TileObjectData.newAlternate.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 1, TileObjectData.newTile.Width - 1);
+            TileObjectData.addAlternate(1);
+
+            TileObjectData.addTile(Type);
+
+            AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
+            DustType = -1;
         }
-    }
 
-    public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
-    {
-        int frame = Main.tileFrame[type];
-        var topLeft = TileObjectData.TopLeft(i, j);
-        if (frame > 0 && WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, 3, 2))
+        public override bool RightClick(int i, int j)
         {
-            frame = 1 + (topLeft.X + frame) % 4;
-            bool direction = Main.tile[i, j].TileFrameX / (18 * 3) > 0;
-            frameYOffset = 18 * 5 * (direction ? frame : 5 - frame);
+            Main.mouseRightRelease = false;
+            Utility.UICloseOthers();
+
+            Point16 origin = TileObjectData.TopLeft(i, j);
+            // TOOD: Open UI
+
+            testing_globalFlagStyle++;
+            testing_globalFlagStyle %= PatternManager.GetAll(context: "FlagTile").Count();
+
+            return true;
         }
-    }
 
-    public override void AnimateTile(ref int frame, ref int frameCounter)
-    {
-        float speed = Math.Abs(Utility.WindSpeedScaled);
-
-        if (speed > 0.1f)
+        public override void MouseOver(int i, int j)
         {
-            int ticksPerFrame = Math.Clamp((int)(10 * (1f - speed)), 4, 10);
-            int frameCount = 5;
-            if (++frameCounter >= ticksPerFrame)
+            Player player = Main.LocalPlayer;
+
+            if (!player.mouseInterface)
             {
-                frameCounter = 0;
-                if (Utility.WindSpeedScaled < 0f)
-                    frame++;
-                else
-                    frame--;
-
-                if (frame >= frameCount)
-                    frame = 1;
-
-                if (frame < 1)
-                    frame = frameCount - 1;
+                player.noThrow = 2;
+                player.cursorItemIconEnabled = true;
+                player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
             }
         }
-        else
+
+        public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
         {
-            frame = 0;
-        }
-    }
-
-    public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
-    {
-        if (TileObjectData.IsTopLeft(i, j))
-            Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
-
-        return false;
-    }
-
-    private SpriteBatchState state;
-    public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
-    {
-        state.SaveState(spriteBatch);
-        spriteBatch.End();
-        spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
-
-        Pattern[] patterns = PatternManager.GetAll(context: "FlagTile").ToArray();
-        if (patterns.Length > 0)
-        {
-            var pattern = patterns[testing_globalFlagStyle];
-            pattern.Apply();
+            int frame = Main.tileFrame[type];
+            var topLeft = TileObjectData.TopLeft(i, j);
+            if (frame > 0 && WorldGen.InAPlaceWithWind(topLeft.X, topLeft.Y, 3, 2))
+            {
+                frame = 1 + (topLeft.X + frame) % 4;
+                bool direction = Main.tile[i, j].TileFrameX / (18 * 3) > 0;
+                frameYOffset = 18 * 5 * (direction ? frame : 5 - frame);
+            }
         }
 
-        TileRendering.DrawMultiTileGrass(i, j, totalWindMultiplier: 0.07f, perTileLighting: false);
+        public override void AnimateTile(ref int frame, ref int frameCounter)
+        {
+            float speed = Math.Abs(Utility.WindSpeedScaled);
 
-        spriteBatch.End();
-        spriteBatch.Begin(state);
+            if (speed > 0.1f)
+            {
+                int ticksPerFrame = Math.Clamp((int)(10 * (1f - speed)), 4, 10);
+                int frameCount = 5;
+                if (++frameCounter >= ticksPerFrame)
+                {
+                    frameCounter = 0;
+                    if (Utility.WindSpeedScaled < 0f)
+                        frame++;
+                    else
+                        frame--;
+
+                    if (frame >= frameCount)
+                        frame = 1;
+
+                    if (frame < 1)
+                        frame = frameCount - 1;
+                }
+            }
+            else
+            {
+                frame = 0;
+            }
+        }
+
+        public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            if (TileObjectData.IsTopLeft(i, j))
+                Main.instance.TilesRenderer.AddSpecialPoint(i, j, TileDrawing.TileCounterType.CustomNonSolid);
+
+            return false;
+        }
+
+        private SpriteBatchState state;
+        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            state.SaveState(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
+
+            Pattern[] patterns = PatternManager.GetAll(context: "FlagTile").ToArray();
+            if (patterns.Length > 0)
+            {
+                var pattern = patterns[testing_globalFlagStyle];
+                pattern.Apply();
+            }
+
+            TileRendering.DrawMultiTileGrass(i, j, totalWindMultiplier: 0.07f, perTileLighting: false);
+
+            spriteBatch.End();
+            spriteBatch.Begin(state);
+        }
     }
 }

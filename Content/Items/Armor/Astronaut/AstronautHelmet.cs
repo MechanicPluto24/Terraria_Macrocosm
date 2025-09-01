@@ -6,43 +6,44 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Armor.Astronaut;
-
-[AutoloadEquip(EquipType.Head)]
-public class AstronautHelmet : ModItem
+namespace Macrocosm.Content.Items.Armor.Astronaut
 {
-    public override void SetStaticDefaults()
+    [AutoloadEquip(EquipType.Head)]
+    public class AstronautHelmet : ModItem
     {
-    }
-    public override void SetDefaults()
-    {
-        Item.width = 18;
-        Item.height = 18;
-        Item.value = 10000;
-        Item.rare = ItemRarityID.Purple;
-        Item.defense = 4;
-    }
+        public override void SetStaticDefaults()
+        {
+        }
+        public override void SetDefaults()
+        {
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = 10000;
+            Item.rare = ItemRarityID.Purple;
+            Item.defense = 4;
+        }
 
-    public override void UpdateEquip(Player player)
-    {
-        player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
-    }
+        public override void UpdateEquip(Player player)
+        {
+            player.GetModPlayer<MacrocosmPlayer>().SpaceProtection += 1f;
+        }
 
-    public override bool IsArmorSet(Item head, Item body, Item legs)
-    {
-        return head.type == ModContent.ItemType<AstronautHelmet>() && body.type == ModContent.ItemType<AstronautSuit>() && legs.type == ModContent.ItemType<AstronautLeggings>();
-    }
+        public override bool IsArmorSet(Item head, Item body, Item legs)
+        {
+            return head.type == ModContent.ItemType<AstronautHelmet>() && body.type == ModContent.ItemType<AstronautSuit>() && legs.type == ModContent.ItemType<AstronautLeggings>();
+        }
 
-    public override void UpdateArmorSet(Player player)
-    {
-    }
+        public override void UpdateArmorSet(Player player)
+        {
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<SpacesuitFabric>(20)
-        .AddIngredient<LexanGlass>(5)
-        .AddTile<IndustrialLoom>()
-        .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<SpacesuitFabric>(20)
+            .AddIngredient<LexanGlass>(5)
+            .AddTile<IndustrialLoom>()
+            .Register();
+        }
     }
 }

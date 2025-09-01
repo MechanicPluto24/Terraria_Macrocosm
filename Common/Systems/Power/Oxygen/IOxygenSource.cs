@@ -1,7 +1,8 @@
-﻿namespace Macrocosm.Common.Systems.Power.Oxygen;
-
-public interface IOxygenSource
+﻿namespace Macrocosm.Common.Systems.Power.Oxygen
 {
-    public bool IsProvidingOxygen { get; }
-    public int MaxRoomSize { get; }
+    public interface IOxygenSource
+    {
+        public bool IsProvidingOxygen { get; }
+        public int MaxRoomSize { get; }
+    }
 }

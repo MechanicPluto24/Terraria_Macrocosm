@@ -4,25 +4,26 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Furniture.Industrial;
-
-public class IndustrialCeilingMonitor : ModItem
+namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    public override void SetDefaults()
+    public class IndustrialCeilingMonitor : ModItem
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialCeilingMonitor>());
-        Item.width = 32;
-        Item.height = 30;
-        Item.value = 500;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialCeilingMonitor>());
+            Item.width = 32;
+            Item.height = 30;
+            Item.value = 500;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<IndustrialPlating>(8)
-        .AddIngredient<PrintedCircuitBoard>()
-        .AddIngredient(ItemID.Glass)
-        .AddTile<Tiles.Crafting.Fabricator>()
-        .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<IndustrialPlating>(8)
+            .AddIngredient<PrintedCircuitBoard>()
+            .AddIngredient(ItemID.Glass)
+            .AddTile<Tiles.Crafting.Fabricator>()
+            .Register();
+        }
     }
 }

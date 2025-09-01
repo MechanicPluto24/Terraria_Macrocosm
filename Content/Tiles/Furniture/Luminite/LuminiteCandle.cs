@@ -12,88 +12,89 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Furniture.Luminite;
-
-public class LuminiteCandle : ModTile, IToggleableTile
+namespace Macrocosm.Content.Tiles.Furniture.Luminite
 {
-    private static Asset<Texture2D> glowmask;
-
-    public override void SetStaticDefaults()
+    public class LuminiteCandle : ModTile, IToggleableTile
     {
-        Main.tileLighted[Type] = true;
-        Main.tileFrameImportant[Type] = true;
-        Main.tileNoAttach[Type] = true;
-        Main.tileWaterDeath[Type] = true;
-        Main.tileLavaDeath[Type] = true;
+        private static Asset<Texture2D> glowmask;
 
-        TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Candles, 0));
-        TileObjectData.newTile.DrawYOffset = 0;
-        TileObjectData.newTile.CoordinateHeights = [16];
-        TileObjectData.newTile.StyleHorizontal = true;
-        TileObjectData.newTile.StyleWrapLimit = 2;
-        TileObjectData.newTile.StyleMultiplier = 2;
-        TileObjectData.addTile(Type);
+        public override void SetStaticDefaults()
+        {
+            Main.tileLighted[Type] = true;
+            Main.tileFrameImportant[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileWaterDeath[Type] = true;
+            Main.tileLavaDeath[Type] = true;
 
-        AdjTiles = [TileID.Candles];
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+            TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Candles, 0));
+            TileObjectData.newTile.DrawYOffset = 0;
+            TileObjectData.newTile.CoordinateHeights = [16];
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleWrapLimit = 2;
+            TileObjectData.newTile.StyleMultiplier = 2;
+            TileObjectData.addTile(Type);
 
-        DustType = DustID.LunarOre;
+            AdjTiles = [TileID.Candles];
+            AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
 
-        foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
-            AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Candle"));
+            DustType = DustID.LunarOre;
 
-    }
+            foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
+                AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Candle"));
 
-    public override bool CreateDust(int i, int j, ref int type)
-    {
-        type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / 18));
-        return true;
-    }
+        }
 
-    public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / 18);
+        public override bool CreateDust(int i, int j, ref int type)
+        {
+            type = Utility.GetDustTypeFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / 18));
+            return true;
+        }
 
-    public void ToggleTile(int i, int j, bool skipWire = false)
-    {
-        if (Main.tile[i, j].TileFrameX >= 18)
-            Main.tile[i, j].TileFrameX -= 18;
-        else
-            Main.tile[i, j].TileFrameX += 18;
+        public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / 18);
 
-        if (Main.netMode != NetmodeID.SinglePlayer)
-            NetMessage.SendTileSquare(-1, i, j, 1, 1);
-    }
+        public void ToggleTile(int i, int j, bool skipWire = false)
+        {
+            if (Main.tile[i, j].TileFrameX >= 18)
+                Main.tile[i, j].TileFrameX -= 18;
+            else
+                Main.tile[i, j].TileFrameX += 18;
 
-    public override void HitWire(int i, int j)
-    {
-        ToggleTile(i, j, skipWire: true);
-    }
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, i, j, 1, 1);
+        }
 
-    public override bool RightClick(int i, int j)
-    {
-        ToggleTile(i, j, skipWire: false);
-        return true;
-    }
+        public override void HitWire(int i, int j)
+        {
+            ToggleTile(i, j, skipWire: true);
+        }
 
-    public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
-    public override void MouseOver(int i, int j)
-    {
-        Player player = Main.LocalPlayer;
-        player.noThrow = 2;
-        player.cursorItemIconEnabled = true;
-        player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
-    }
+        public override bool RightClick(int i, int j)
+        {
+            ToggleTile(i, j, skipWire: false);
+            return true;
+        }
 
-    public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
-    {
-        Tile tile = Main.tile[i, j];
-        Color color = Utility.GetLightColorFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / 18));
-        if (tile.TileFrameX == 0)
-            tile.GetEmmitedLight(color, applyPaint: true, out r, out g, out b);
-    }
+        public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            player.noThrow = 2;
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
+        }
 
-    public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
-    {
-        glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-        TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true, Color.White);
+        public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+        {
+            Tile tile = Main.tile[i, j];
+            Color color = Utility.GetLightColorFromLuminiteStyle((LuminiteStyle)(Main.tile[i, j].TileFrameY / 18));
+            if (tile.TileFrameX == 0)
+                tile.GetEmmitedLight(color, applyPaint: true, out r, out g, out b);
+        }
+
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true, Color.White);
+        }
     }
 }

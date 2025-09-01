@@ -1,14 +1,15 @@
 ﻿using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Plants;
-
-public class RubberTreeSapling : ModItem
+namespace Macrocosm.Content.Items.Plants
 {
-    public override void SetDefaults()
+    public class RubberTreeSapling : ModItem
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Trees.RubberTreeSapling>(), 0);
-        Item.width = 16;
-        Item.height = 36;
-        Item.value = 10;
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Trees.RubberTreeSapling>(), 0);
+            Item.width = 16;
+            Item.height = 36;
+            Item.value = 10;
+        }
     }
 }

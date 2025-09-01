@@ -2,27 +2,28 @@
 using Macrocosm.Common.Systems.Power.Oxygen;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Machines;
-
-public class OxygenSystemTE : ConsumerTE, IOxygenActiveSource
+namespace Macrocosm.Content.Machines
 {
-    public override MachineTile MachineTile => ModContent.GetInstance<OxygenSystem>();
-
-    public bool IsProvidingOxygen
+    public class OxygenSystemTE : ConsumerTE, IOxygenActiveSource
     {
-        get => PoweredOn;
-        set { }
-    }
+        public override MachineTile MachineTile => ModContent.GetInstance<OxygenSystem>();
 
-    public int MaxPassiveSources => 5;
-    public int MaxRoomSize => 1500;
+        public bool IsProvidingOxygen
+        {
+            get => PoweredOn;
+            set { }
+        }
 
-    public override void OnFirstUpdate()
-    {
-    }
+        public int MaxPassiveSources => 5;
+        public int MaxRoomSize => 1500;
 
-    public override void MachineUpdate()
-    {
-        RequiredPower = 5f;
+        public override void OnFirstUpdate()
+        {
+        }
+
+        public override void MachineUpdate()
+        {
+            RequiredPower = 5f;
+        }
     }
 }

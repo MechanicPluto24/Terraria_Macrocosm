@@ -1,15 +1,16 @@
-﻿namespace Macrocosm.Common.Enums;
-
-public enum LuminiteStyle
+﻿namespace Macrocosm.Common.Enums
 {
-    Luminite,
-    Heavenforge,
-    LunarRust,
-    Astra,
-    DarkCelestial,
-    Mercury,
-    StarRoyale,
-    Cryocore,
-    CosmicEmber,
-    Haemonova
+    public enum LuminiteStyle
+    {
+        Luminite,
+        Heavenforge,
+        LunarRust,
+        Astra,
+        DarkCelestial,
+        Mercury,
+        StarRoyale,
+        Cryocore,
+        CosmicEmber,
+        Haemonova
+    }
 }

@@ -1,21 +1,22 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Buffs.Enemies;
-
-public class Fear : ModBuff
+namespace Macrocosm.Content.Buffs.Enemies
 {
-    public override void SetStaticDefaults()
+    public class Fear : ModBuff
     {
-        Main.debuff[Type] = true;
-        Main.buffNoSave[Type] = true;
-        Main.buffNoTimeDisplay[Type] = false;
-        Main.pvpBuff[Type] = true;
-    }
+        public override void SetStaticDefaults()
+        {
+            Main.debuff[Type] = true;
+            Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[Type] = false;
+            Main.pvpBuff[Type] = true;
+        }
 
-    public override void Update(Player player, ref int buffIndex)
-    {
-        player.cursed = true;
-        player.moveSpeed /= 4;
+        public override void Update(Player player, ref int buffIndex)
+        {
+            player.cursed = true;
+            player.moveSpeed /= 4;
+        }
     }
 }

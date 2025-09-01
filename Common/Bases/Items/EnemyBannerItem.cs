@@ -2,33 +2,34 @@
 using Terraria.Enums;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Bases.Items;
-
-public class EnemyBannerItem : ModItem
+namespace Macrocosm.Common.Bases.Items
 {
-    private readonly string texture;
-    private readonly string name;
-    private readonly int createTile;
-    private readonly int placeStyle;
-
-    public override string Name => name;
-    public override string Texture => texture;
-    protected override bool CloneNewInstances => true;
-
-    public EnemyBannerItem(string texture, string name, int createTile, int placeStyle = 0)
+    public class EnemyBannerItem : ModItem
     {
-        this.texture = texture;
-        this.name = name;
+        private readonly string texture;
+        private readonly string name;
+        private readonly int createTile;
+        private readonly int placeStyle;
 
-        this.createTile = createTile;
-        this.placeStyle = placeStyle;
-    }
+        public override string Name => name;
+        public override string Texture => texture;
+        protected override bool CloneNewInstances => true;
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(createTile, placeStyle);
-        Item.width = 10;
-        Item.height = 24;
-        Item.SetShopValues(ItemRarityColor.Blue1, Item.buyPrice(silver: 10));
+        public EnemyBannerItem(string texture, string name, int createTile, int placeStyle = 0)
+        {
+            this.texture = texture;
+            this.name = name;
+
+            this.createTile = createTile;
+            this.placeStyle = placeStyle;
+        }
+
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(createTile, placeStyle);
+            Item.width = 10;
+            Item.height = 24;
+            Item.SetShopValues(ItemRarityColor.Blue1, Item.buyPrice(silver: 10));
+        }
     }
 }

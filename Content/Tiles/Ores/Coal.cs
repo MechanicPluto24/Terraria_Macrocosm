@@ -4,25 +4,26 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Tiles.Ores;
-
-public class Coal : ModTile
+namespace Macrocosm.Content.Tiles.Ores
 {
-    public override void SetStaticDefaults()
+    public class Coal : ModTile
     {
-        TileID.Sets.Ore[Type] = true;
-        Main.tileSpelunker[Type] = true;
-        Main.tileOreFinderPriority[Type] = 190;
-        Main.tileSolid[Type] = true;
-        Main.tileBlockLight[Type] = true;
+        public override void SetStaticDefaults()
+        {
+            TileID.Sets.Ore[Type] = true;
+            Main.tileSpelunker[Type] = true;
+            Main.tileOreFinderPriority[Type] = 190;
+            Main.tileSolid[Type] = true;
+            Main.tileBlockLight[Type] = true;
 
-        Main.tileMergeDirt[Type] = true;
+            Main.tileMergeDirt[Type] = true;
 
-        AddMapEntry(new Color(32, 31, 33), CreateMapEntryName());
+            AddMapEntry(new Color(32, 31, 33), CreateMapEntryName());
 
-        DustType = ModContent.DustType<CoalDust>();
-        HitSound = SoundID.Tink;
+            DustType = ModContent.DustType<CoalDust>();
+            HitSound = SoundID.Tink;
 
-        MinPick = 35;
+            MinPick = 35;
+        }
     }
 }

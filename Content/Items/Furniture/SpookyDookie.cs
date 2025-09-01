@@ -1,19 +1,20 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Furniture;
-
-public class SpookyDookie : ModItem
+namespace Macrocosm.Content.Items.Furniture
 {
-    public override void SetDefaults()
+    public class SpookyDookie : ModItem
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.SpookyDookie>());
-        Item.width = 16;
-        Item.height = 22;
-        Item.value = 150;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.SpookyDookie>());
+            Item.width = 16;
+            Item.height = 22;
+            Item.value = 150;
+        }
 
-    public override void AddRecipes()
-    {
+        public override void AddRecipes()
+        {
+        }
     }
 }

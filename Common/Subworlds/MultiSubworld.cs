@@ -1,38 +1,39 @@
 ﻿using System;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Subworlds;
-
-public abstract class MultiSubworld : MacrocosmSubworld
+namespace Macrocosm.Common.Subworlds
 {
-    public override string Name => base.Name + InstanceIndex;
-    public int InstanceIndex { get; private set; } = 0;
-    protected abstract int InstanceCount { get; }
-
-    public override void Load()
+    public abstract class MultiSubworld : MacrocosmSubworld
     {
-        base.Load();
+        public override string Name => base.Name + InstanceIndex;
+        public int InstanceIndex { get; private set; } = 0;
+        protected abstract int InstanceCount { get; }
 
-        // Index 0 manages the loading of all the other instances
-        if (InstanceIndex <= 0)
+        public override void Load()
         {
-            MultiSubworld[] subworlds = new MultiSubworld[InstanceCount];
-            subworlds[0] = this;
+            base.Load();
 
-            for (int i = 1; i < InstanceCount; i++)
+            // Index 0 manages the loading of all the other instances
+            if (InstanceIndex <= 0)
             {
-                if (Activator.CreateInstance(GetType()) is MultiSubworld instance)
+                MultiSubworld[] subworlds = new MultiSubworld[InstanceCount];
+                subworlds[0] = this;
+
+                for (int i = 1; i < InstanceCount; i++)
                 {
-                    instance.InstanceIndex = i;
-                    Mod.AddContent(instance);
-                    subworlds[i] = instance;
+                    if (Activator.CreateInstance(GetType()) is MultiSubworld instance)
+                    {
+                        instance.InstanceIndex = i;
+                        Mod.AddContent(instance);
+                        subworlds[i] = instance;
+                    }
                 }
             }
         }
-    }
 
-    public override void Unload()
-    {
-        base.Unload();
+        public override void Unload()
+        {
+            base.Unload();
+        }
     }
 }

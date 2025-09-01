@@ -1,20 +1,21 @@
 using SubworldLibrary;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.Tiles;
-
-public class SubworldGlobalWall : GlobalWall
+namespace Macrocosm.Common.Global.Tiles
 {
-    /// <summary>
-    /// Unnoticeable lighting due to bad rendering at some subworld heigths for pitch black walls
-    /// </summary>
-    public override void ModifyLight(int i, int j, int type, ref float r, ref float g, ref float b)
+    public class SubworldGlobalWall : GlobalWall
     {
-        if (SubworldSystem.AnyActive<Macrocosm>() && j > 900 && (r == 0 || g == 0 || b == 0))
+        /// <summary>
+        /// Unnoticeable lighting due to bad rendering at some subworld heigths for pitch black walls
+        /// </summary>
+        public override void ModifyLight(int i, int j, int type, ref float r, ref float g, ref float b)
         {
-            r = 0.004f;
-            g = 0.004f;
-            b = 0.004f;
+            if (SubworldSystem.AnyActive<Macrocosm>() && j > 900 && (r == 0 || g == 0 || b == 0))
+            {
+                r = 0.004f;
+                g = 0.004f;
+                b = 0.004f;
+            }
         }
     }
 }

@@ -1,18 +1,19 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Projectiles.Friendly.Tools;
-
-public class MoonBeastBobber : ModProjectile
+namespace Macrocosm.Content.Projectiles.Friendly.Tools
 {
-    public override void SetDefaults()
+    public class MoonBeastBobber : ModProjectile
     {
-        Projectile.width = 14;
-        Projectile.height = 14;
-        Projectile.aiStyle = 61;
-        Projectile.bobber = true;
-        Projectile.penetrate = -1;
-        Projectile.netImportant = true;
-        DrawOriginOffsetY = -8;
+        public override void SetDefaults()
+        {
+            Projectile.width = 14;
+            Projectile.height = 14;
+            Projectile.aiStyle = 61;
+            Projectile.bobber = true;
+            Projectile.penetrate = -1;
+            Projectile.netImportant = true;
+            DrawOriginOffsetY = -8;
+        }
     }
 }

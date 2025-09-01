@@ -12,211 +12,212 @@ using Terraria.GameContent;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Rockets.UI.Navigation;
-
-public class UINavigationTarget : UIElement, IFixedUpdateable
+namespace Macrocosm.Content.Rockets.UI.Navigation
 {
-    /// <summary> The panel instance this target belongs to </summary>
-    public UINavigationPanel OwnerPanel { get; set; }
-
-    /// <summary> The navigation map instance this target belongs to </summary>
-    public UINavigationMap OwnerMap => OwnerPanel.CurrentMap;
-
-    /// <summary> 
-    /// The name identification of this target.
-    /// <br/> For travel purposes, use <see cref="TargetID"/>!
-    /// <br/> Must be unique within the same <c>UINavigationMap</c>, but can have same ID-linked targets in other navigation maps.
-    /// </summary>
-    public readonly string Name = "default";
-
-    /// <summary>
-    /// The mod-independent world ID, respective to the <see cref="MacrocosmSubworld.CurrentID"/>
-    /// </summary>
-    public string TargetID => Macrocosm.Instance.Name + "/" + Name;
-
-    /// <summary> Collection to determine whether the subworld is accesible </summary>
-    public ChecklistConditionCollection LaunchConditions { get; set; } = null;
-
-    /// <summary> Whether the target satisfies the launch conditions </summary>
-    public bool IsReachable { get; set; } = false;
-
-    /// <summary> Whether the launch location is selected </summary>
-    public bool LaunchLocationSelected { get; set; } = false;
-
-    /// <summary> Whether this target's ID is equal to the current subworld </summary>
-    public bool AlreadyHere => TargetID == MacrocosmSubworld.CurrentID;
-
-    /// <summary> Whether the target is currently selected </summary>
-    public bool Selected { get; set; }
-
-    public void ResetAnimation()
+    public class UINavigationTarget : UIElement, IFixedUpdateable
     {
-        rotation = 0f;
-        targetOpacity = 0f;
-        drawColor = new Color(0, 0, 0, 0);
-        targetColor = new Color(0, 0, 0, 0);
-        targetColorLerp = 0f;
-    }
+        /// <summary> The panel instance this target belongs to </summary>
+        public UINavigationPanel OwnerPanel { get; set; }
 
-    // selection outline texture, has default
-    private readonly Asset<Texture2D> selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/SelectionOutlineSmall", AssetRequestMode.ImmediateLoad);
+        /// <summary> The navigation map instance this target belongs to </summary>
+        public UINavigationMap OwnerMap => OwnerPanel.CurrentMap;
 
-    // Selection outline rotation
-    private float rotation = 0f;
+        /// <summary> 
+        /// The name identification of this target.
+        /// <br/> For travel purposes, use <see cref="TargetID"/>!
+        /// <br/> Must be unique within the same <c>UINavigationMap</c>, but can have same ID-linked targets in other navigation maps.
+        /// </summary>
+        public readonly string Name = "default";
 
-    // Target opacity of the selection outline
-    private float targetOpacity = 0f;
+        /// <summary>
+        /// The mod-independent world ID, respective to the <see cref="MacrocosmSubworld.CurrentID"/>
+        /// </summary>
+        public string TargetID => Macrocosm.Instance.Name + "/" + Name;
 
-    // The selection outline draw color
-    private Color drawColor = new(0, 0, 0, 0);
+        /// <summary> Collection to determine whether the subworld is accesible </summary>
+        public ChecklistConditionCollection LaunchConditions { get; set; } = null;
 
-    // The selection outline target color 
-    private Color targetColor = new(0, 0, 0, 0);
+        /// <summary> Whether the target satisfies the launch conditions </summary>
+        public bool IsReachable { get; set; } = false;
 
-    // The draw color and target color blending factor
-    private float targetColorLerp = 0f;
+        /// <summary> Whether the launch location is selected </summary>
+        public bool LaunchLocationSelected { get; set; } = false;
 
-    /// <summary> Creates a new UINavigationTarget based on a target Macrocosm Subworld </summary>
-    /// <param name="owner"> The owner navigation panel </param>
-    /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
-    /// <param name="width"> Interactible area width in pixels </param>
-    /// <param name="height"> Interactible area height in pixels </param>
-    /// <param name="targetSubworld"> The subworld (instance) associated with the map target </param>
-    public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, MacrocosmSubworld targetSubworld, Asset<Texture2D> outline = null) : this(owner, position, width, height)
-    {
-        LaunchConditions = targetSubworld.LaunchConditions;
-        Name = targetSubworld.Name;
+        /// <summary> Whether this target's ID is equal to the current subworld </summary>
+        public bool AlreadyHere => TargetID == MacrocosmSubworld.CurrentID;
 
-        selectionOutline = outline ?? selectionOutline;
-    }
+        /// <summary> Whether the target is currently selected </summary>
+        public bool Selected { get; set; }
 
-    /// <summary>  Creates a new UINavigationTarget with the given custom data. Used for special navigation, like towards Earth  </summary>
-    /// <param name="owner"> The owner navigation panel </param>
-    /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
-    /// <param name="width"> Interactible area width in pixels </param>
-    /// <param name="height"> Interactible area height in pixels </param>
-    /// <param name="targetName"> The name of the target, handled in <see cref="Rocket.HandleTravel"/> </param>
-    public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetName, ChecklistConditionCollection launchConditions = null, Asset<Texture2D> outline = null) : this(owner, position, width, height)
-    {
-        LaunchConditions = launchConditions;
-        Name = targetName;
-
-        selectionOutline = outline ?? selectionOutline;
-    }
-
-    /// <summary> Creates a new UINavigationTarget </summary>
-    /// <param name="owner"> The owner navigation panel </param>
-    /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
-    /// <param name="width"> Interactible area width in pixels </param>
-    /// <param name="height"> Interactible area height in pixels </param>
-    private UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height)
-    {
-        OwnerPanel = owner;
-        Width.Set(width, 0);
-        Height.Set(height, 0);
-        Top.Set(position.Y, 0);
-        Left.Set(position.X, 0);
-    }
-
-    public override void OnInitialize()
-    {
-        OnLeftClick += (_, _) =>
+        public void ResetAnimation()
         {
-            if (!OwnerMap.AnimationActive)
-            {
-                OwnerMap.DeselectAllTargets();
-                Selected = true;
-            }
-        };
-
-        OnRightClick += (_, _) => Selected = false;
-
-        OnLeftDoubleClick += (_, _) => OwnerPanel.ZoomIn(useDefault: false);
-    }
-
-    public void FixedUpdate()
-    {
-        rotation += 0.006f;
-
-        // Compute target opacity of the selection outline
-        if (Selected || IsMouseHovering)
-            targetOpacity += 0.1f;
-        else
-            targetOpacity -= 0.1f;
-
-        targetOpacity = MathHelper.Clamp(targetOpacity, 0, 1);
-
-        if (targetOpacity > 0f)
-        {
-            // Get the target color
-            if (Selected)
-            {
-                if (AlreadyHere)
-                    targetColor = Color.Gray;
-                else if (!LaunchLocationSelected)
-                    targetColor = Color.Gold;
-                else if (IsReachable)
-                    targetColor = new Color(0, 255, 0);
-                else
-                    targetColor = new Color(255, 0, 0);
-            }
-            else if (IsMouseHovering)
-            {
-                targetColor = Color.Gold;
-            }
-
-            if (drawColor != targetColor)
-                targetColorLerp = 0f;
-
-            targetColorLerp += 0.1f;
-            targetColorLerp = MathHelper.Clamp(targetColorLerp, 0, 1);
-
-            drawColor = Color.Lerp(drawColor, targetColor, targetColorLerp);
-        }
-        else
-        {
+            rotation = 0f;
+            targetOpacity = 0f;
             drawColor = new Color(0, 0, 0, 0);
             targetColor = new Color(0, 0, 0, 0);
             targetColorLerp = 0f;
         }
-    }
 
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-    }
+        // selection outline texture, has default
+        private readonly Asset<Texture2D> selectionOutline = ModContent.Request<Texture2D>("Macrocosm/Assets/Textures/UI/Buttons/SelectionOutlineSmall", AssetRequestMode.ImmediateLoad);
 
-    /// <summary> Check whether all the launch conditions specific to this target have been met </summary>
-    public bool CheckLaunchConditions()
-    {
-        if (LaunchConditions is not null)
-            return LaunchConditions.AllMet();
+        // Selection outline rotation
+        private float rotation = 0f;
 
-        return true;
-    }
+        // Target opacity of the selection outline
+        private float targetOpacity = 0f;
 
-    private SpriteBatchState state;
-    protected override void DrawSelf(SpriteBatch spriteBatch)
-    {
-        Rectangle rect = GetDimensions().ToRectangle();
+        // The selection outline draw color
+        private Color drawColor = new(0, 0, 0, 0);
 
-        if (DebugConfig.Instance.UIDebug)
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.WithOpacity(0.1f));
+        // The selection outline target color 
+        private Color targetColor = new(0, 0, 0, 0);
 
-        // Should draw the outline if not fully transparent
-        if (targetOpacity > 0f)
+        // The draw color and target color blending factor
+        private float targetColorLerp = 0f;
+
+        /// <summary> Creates a new UINavigationTarget based on a target Macrocosm Subworld </summary>
+        /// <param name="owner"> The owner navigation panel </param>
+        /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
+        /// <param name="width"> Interactible area width in pixels </param>
+        /// <param name="height"> Interactible area height in pixels </param>
+        /// <param name="targetSubworld"> The subworld (instance) associated with the map target </param>
+        public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, MacrocosmSubworld targetSubworld, Asset<Texture2D> outline = null) : this(owner, position, width, height)
         {
-            Vector2 origin = new(selectionOutline.Width() / 2f, selectionOutline.Height() / 2f);
+            LaunchConditions = targetSubworld.LaunchConditions;
+            Name = targetSubworld.Name;
 
-            state.SaveState(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, state);
+            selectionOutline = outline ?? selectionOutline;
+        }
 
-            float scale = 0.918f + (0.98f - 0.918f) * Utility.NormalizedUIScale;
-            spriteBatch.Draw(selectionOutline.Value, rect.Center(), null, drawColor.WithOpacity(targetOpacity), rotation, origin, scale, SpriteEffects.None, 0f);
+        /// <summary>  Creates a new UINavigationTarget with the given custom data. Used for special navigation, like towards Earth  </summary>
+        /// <param name="owner"> The owner navigation panel </param>
+        /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
+        /// <param name="width"> Interactible area width in pixels </param>
+        /// <param name="height"> Interactible area height in pixels </param>
+        /// <param name="targetName"> The name of the target, handled in <see cref="Rocket.HandleTravel"/> </param>
+        public UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height, string targetName, ChecklistConditionCollection launchConditions = null, Asset<Texture2D> outline = null) : this(owner, position, width, height)
+        {
+            LaunchConditions = launchConditions;
+            Name = targetName;
 
-            spriteBatch.End();
-            spriteBatch.Begin(state);
+            selectionOutline = outline ?? selectionOutline;
+        }
+
+        /// <summary> Creates a new UINavigationTarget </summary>
+        /// <param name="owner"> The owner navigation panel </param>
+        /// <param name="position"> The map target's position relative to the top corner of the NavigationMap </param>
+        /// <param name="width"> Interactible area width in pixels </param>
+        /// <param name="height"> Interactible area height in pixels </param>
+        private UINavigationTarget(UINavigationPanel owner, Vector2 position, float width, float height)
+        {
+            OwnerPanel = owner;
+            Width.Set(width, 0);
+            Height.Set(height, 0);
+            Top.Set(position.Y, 0);
+            Left.Set(position.X, 0);
+        }
+
+        public override void OnInitialize()
+        {
+            OnLeftClick += (_, _) =>
+            {
+                if (!OwnerMap.AnimationActive)
+                {
+                    OwnerMap.DeselectAllTargets();
+                    Selected = true;
+                }
+            };
+
+            OnRightClick += (_, _) => Selected = false;
+
+            OnLeftDoubleClick += (_, _) => OwnerPanel.ZoomIn(useDefault: false);
+        }
+
+        public void FixedUpdate()
+        {
+            rotation += 0.006f;
+
+            // Compute target opacity of the selection outline
+            if (Selected || IsMouseHovering)
+                targetOpacity += 0.1f;
+            else
+                targetOpacity -= 0.1f;
+
+            targetOpacity = MathHelper.Clamp(targetOpacity, 0, 1);
+
+            if (targetOpacity > 0f)
+            {
+                // Get the target color
+                if (Selected)
+                {
+                    if (AlreadyHere)
+                        targetColor = Color.Gray;
+                    else if (!LaunchLocationSelected)
+                        targetColor = Color.Gold;
+                    else if (IsReachable)
+                        targetColor = new Color(0, 255, 0);
+                    else
+                        targetColor = new Color(255, 0, 0);
+                }
+                else if (IsMouseHovering)
+                {
+                    targetColor = Color.Gold;
+                }
+
+                if (drawColor != targetColor)
+                    targetColorLerp = 0f;
+
+                targetColorLerp += 0.1f;
+                targetColorLerp = MathHelper.Clamp(targetColorLerp, 0, 1);
+
+                drawColor = Color.Lerp(drawColor, targetColor, targetColorLerp);
+            }
+            else
+            {
+                drawColor = new Color(0, 0, 0, 0);
+                targetColor = new Color(0, 0, 0, 0);
+                targetColorLerp = 0f;
+            }
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        /// <summary> Check whether all the launch conditions specific to this target have been met </summary>
+        public bool CheckLaunchConditions()
+        {
+            if (LaunchConditions is not null)
+                return LaunchConditions.AllMet();
+
+            return true;
+        }
+
+        private SpriteBatchState state;
+        protected override void DrawSelf(SpriteBatch spriteBatch)
+        {
+            Rectangle rect = GetDimensions().ToRectangle();
+
+            if (DebugConfig.Instance.UIDebug)
+                spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, Color.Green.WithOpacity(0.1f));
+
+            // Should draw the outline if not fully transparent
+            if (targetOpacity > 0f)
+            {
+                Vector2 origin = new(selectionOutline.Width() / 2f, selectionOutline.Height() / 2f);
+
+                state.SaveState(spriteBatch);
+                spriteBatch.End();
+                spriteBatch.Begin(BlendState.NonPremultiplied, SamplerState.AnisotropicClamp, state);
+
+                float scale = 0.918f + (0.98f - 0.918f) * Utility.NormalizedUIScale;
+                spriteBatch.Draw(selectionOutline.Value, rect.Center(), null, drawColor.WithOpacity(targetOpacity), rotation, origin, scale, SpriteEffects.None, 0f);
+
+                spriteBatch.End();
+                spriteBatch.Begin(state);
+            }
         }
     }
 }

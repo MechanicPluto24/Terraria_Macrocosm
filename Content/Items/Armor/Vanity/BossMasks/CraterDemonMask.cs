@@ -2,21 +2,22 @@ using Macrocosm.Content.Rarities;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Armor.Vanity.BossMasks;
-
-[AutoloadEquip(EquipType.Head)]
-public class CraterDemonMask : ModItem
+namespace Macrocosm.Content.Items.Armor.Vanity.BossMasks
 {
-    public override void SetStaticDefaults()
+    [AutoloadEquip(EquipType.Head)]
+    public class CraterDemonMask : ModItem
     {
-    }
+        public override void SetStaticDefaults()
+        {
+        }
 
-    public override void SetDefaults()
-    {
-        Item.width = 24;
-        Item.height = 20;
-        Item.value = 10000;
-        Item.rare = ModContent.RarityType<MoonRarity1>();
-        Item.vanity = true;
+        public override void SetDefaults()
+        {
+            Item.width = 24;
+            Item.height = 20;
+            Item.value = 10000;
+            Item.rare = ModContent.RarityType<MoonRarity1>();
+            Item.vanity = true;
+        }
     }
 }

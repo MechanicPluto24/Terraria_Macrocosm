@@ -6,32 +6,33 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons.Summon;
-
-public class ChandriumWhip : ModItem
+namespace Macrocosm.Content.Items.Weapons.Summon
 {
-    public override bool MeleePrefix() { return true; }
-    public override void SetStaticDefaults()
+    public class ChandriumWhip : ModItem
     {
-        Redemption.AddElement(Item, Redemption.ElementID.Shadow);
-        Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
-    }
+        public override bool MeleePrefix() { return true; }
+        public override void SetStaticDefaults()
+        {
+            Redemption.AddElement(Item, Redemption.ElementID.Shadow);
+            Redemption.AddElement(Item, Redemption.ElementID.Celestial, true);
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToWhip(ModContent.ProjectileType<ChandriumWhipProjectile>(), 180, 2, 4);
+        public override void SetDefaults()
+        {
+            Item.DefaultToWhip(ModContent.ProjectileType<ChandriumWhipProjectile>(), 180, 2, 4);
 
-        Item.shootSpeed = 4;
-        Item.rare = ModContent.RarityType<MoonRarity1>();
+            Item.shootSpeed = 4;
+            Item.rare = ModContent.RarityType<MoonRarity1>();
 
-        Item.channel = true;
-    }
+            Item.channel = true;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<ChandriumBar>(12)
-        .AddTile(TileID.LunarCraftingStation)
-        .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<ChandriumBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
+        }
     }
 }

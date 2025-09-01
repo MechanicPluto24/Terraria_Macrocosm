@@ -10,109 +10,110 @@ using Terraria.GameContent;
 using Terraria.Graphics.Shaders;
 using Terraria.ID;
 using Terraria.ModLoader;
-namespace Macrocosm.Content.Projectiles.Friendly.Ranged;
-
-public class BLPShot : ModProjectile
+namespace Macrocosm.Content.Projectiles.Friendly.Ranged
 {
-    private bool spawned;
-    private Color color = default;
-
-    public override string Texture => Macrocosm.FancyTexturesPath + "Trace2";
-
-    public override void SetStaticDefaults()
+    public class BLPShot : ModProjectile
     {
-        Main.projFrames[Projectile.type] = 1;
-    }
+        private bool spawned;
+        private Color color = default;
 
-    public override void SetDefaults()
-    {
-        Projectile.width = 8;
-        Projectile.height = 8;
-        Projectile.friendly = true;
-        Projectile.DamageType = DamageClass.Ranged;
-        Projectile.tileCollide = true;
-        Projectile.ignoreWater = true;
-        Projectile.penetrate = 1;
-        Projectile.timeLeft = 600;
-        Projectile.scale = 1f;
-        Projectile.alpha = 165;
-        Projectile.usesLocalNPCImmunity = true;
-        Projectile.localNPCHitCooldown = -1;
-        color = new Color(144, 255, 255, 255);
-    }
+        public override string Texture => Macrocosm.FancyTexturesPath + "Trace2";
 
-    public override void AI()
-    {
-        if (!spawned)
+        public override void SetStaticDefaults()
         {
-            spawned = true;
+            Main.projFrames[Projectile.type] = 1;
         }
 
-        Projectile.rotation = Projectile.velocity.ToRotation();
-
-        if (Projectile.alpha > 0)
-            Projectile.alpha -= 50;
-    }
-
-    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-    {
-        base.OnHitNPC(target, hit, damageDone);
-    }
-
-    public override void OnKill(int timeLeft)
-    {
-        int dustCount = 22;
-        int lightningCount = 10;
-
-        for (int i = 0; i < dustCount; i++)
+        public override void SetDefaults()
         {
-            Vector2 velocity = new Vector2(2f, 0).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
-            Dust dust = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<ElectricSparkDust>(), velocity, Scale: Main.rand.NextFloat(0.1f, 0.6f));
-            dust.noGravity = false;
-            dust.color = color.WithAlpha(255);
-            dust.alpha = 64;
+            Projectile.width = 8;
+            Projectile.height = 8;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Ranged;
+            Projectile.tileCollide = true;
+            Projectile.ignoreWater = true;
+            Projectile.penetrate = 1;
+            Projectile.timeLeft = 600;
+            Projectile.scale = 1f;
+            Projectile.alpha = 165;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = -1;
+            color = new Color(144, 255, 255, 255);
         }
 
-        for (int i = 0; i < lightningCount; i++)
+        public override void AI()
         {
-            Particle.Create<LightningParticle>((p) =>
+            if (!spawned)
             {
-                p.Position = Projectile.Center;
-                p.Velocity = Main.rand.NextVector2Circular(4, 4);
-                p.Scale = new Vector2(Main.rand.NextFloat(0.1f, 0.4f));
-                p.FadeOutNormalizedTime = 0.5f;
-                p.Color = color.WithAlpha((byte)Main.rand.Next(0, 64));
-                p.OutlineColor = color * 0.2f;
+                spawned = true;
+            }
+
+            Projectile.rotation = Projectile.velocity.ToRotation();
+
+            if (Projectile.alpha > 0)
+                Projectile.alpha -= 50;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            base.OnHitNPC(target, hit, damageDone);
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            int dustCount = 22;
+            int lightningCount = 10;
+
+            for (int i = 0; i < dustCount; i++)
+            {
+                Vector2 velocity = new Vector2(2f, 0).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+                Dust dust = Dust.NewDustPerfect(Projectile.Center, ModContent.DustType<ElectricSparkDust>(), velocity, Scale: Main.rand.NextFloat(0.1f, 0.6f));
+                dust.noGravity = false;
+                dust.color = color.WithAlpha(255);
+                dust.alpha = 64;
+            }
+
+            for (int i = 0; i < lightningCount; i++)
+            {
+                Particle.Create<LightningParticle>((p) =>
+                {
+                    p.Position = Projectile.Center;
+                    p.Velocity = Main.rand.NextVector2Circular(4, 4);
+                    p.Scale = new Vector2(Main.rand.NextFloat(0.1f, 0.4f));
+                    p.FadeOutNormalizedTime = 0.5f;
+                    p.Color = color.WithAlpha((byte)Main.rand.Next(0, 64));
+                    p.OutlineColor = color * 0.2f;
+                    p.ScaleVelocity = new(0.01f);
+                });
+            }
+
+            Particle.Create<TintableFlash>((p) =>
+            {
+                p.Position = Projectile.Center ;
+                p.Scale = new(0.1f);
                 p.ScaleVelocity = new(0.01f);
+                p.Color = color.WithOpacity(0.5f);
             });
         }
 
-        Particle.Create<TintableFlash>((p) =>
+        public override Color? GetAlpha(Color lightColor) => color * Projectile.Opacity;
+
+        private SpriteBatchState state;
+        public override bool PreDraw(ref Color lightColor)
         {
-            p.Position = Projectile.Center ;
-            p.Scale = new(0.1f);
-            p.ScaleVelocity = new(0.01f);
-            p.Color = color.WithOpacity(0.5f);
-        });
+            state.SaveState(Main.spriteBatch);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.Additive, state);
+
+            var texture = TextureAssets.Projectile[Type];
+            Main.EntitySpriteDraw(texture.Value, Projectile.Center - Main.screenPosition + new Vector2(0, 0).RotatedBy(Projectile.velocity.ToRotation()), null, color, Projectile.rotation + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale * 0.2f, SpriteEffects.None, 0);
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
+            return false;
+        }
     }
 
-    public override Color? GetAlpha(Color lightColor) => color * Projectile.Opacity;
-
-    private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
-    {
-        state.SaveState(Main.spriteBatch);
-
-        Main.spriteBatch.End();
-        Main.spriteBatch.Begin(BlendState.Additive, state);
-
-        var texture = TextureAssets.Projectile[Type];
-        Main.EntitySpriteDraw(texture.Value, Projectile.Center - Main.screenPosition + new Vector2(0, 0).RotatedBy(Projectile.velocity.ToRotation()), null, color, Projectile.rotation + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale * 0.2f, SpriteEffects.None, 0);
-
-        Main.spriteBatch.End();
-        Main.spriteBatch.Begin(state);
-
-        return false;
-    }
 }
-

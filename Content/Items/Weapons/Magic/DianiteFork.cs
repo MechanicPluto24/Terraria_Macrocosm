@@ -8,65 +8,66 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons.Magic;
-
-public class DianiteFork : ModItem
+namespace Macrocosm.Content.Items.Weapons.Magic
 {
-    public override void SetStaticDefaults()
+    public class DianiteFork : ModItem
     {
-        Item.staff[Type] = true;
-
-        Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
-        Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane, true);
-    }
-
-    public override void SetDefaults()
-    {
-        Item.damage = 145;
-        Item.DamageType = DamageClass.Magic;
-        Item.mana = 8;
-        Item.width = 80;
-        Item.height = 80;
-        Item.useTime = 12;
-        Item.useAnimation = 10;
-        Item.useStyle = ItemUseStyleID.Shoot;
-        Item.noMelee = true;
-        Item.knockBack = 5;
-        Item.value = 10000;
-        Item.rare = ModContent.RarityType<MoonRarity1>();
-        Item.UseSound = SoundID.Item20;
-        Item.autoReuse = true;
-        Item.shoot = ModContent.ProjectileType<DianiteForkProjectile>();
-        Item.shootSpeed = 10f;
-        Item.tileBoost = 50;
-    }
-
-    public override Vector2? HoldoutOrigin()
-        => new Vector2(0, 0);
-
-
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<DianiteBar>(12)
-        .AddTile(TileID.LunarCraftingStation)
-        .Register();
-    }
-
-    public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
-    {
-        int projCount = 2;
-
-        for (int i = 0; i < projCount; i++)
+        public override void SetStaticDefaults()
         {
-            float angle = 360f / projCount * i;
-            Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<DianiteForkProjectile>(), damage, knockBack, player.whoAmI, ai1: angle);
+            Item.staff[Type] = true;
+
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
+            Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane, true);
         }
 
-        return false;
-    }
+        public override void SetDefaults()
+        {
+            Item.damage = 145;
+            Item.DamageType = DamageClass.Magic;
+            Item.mana = 8;
+            Item.width = 80;
+            Item.height = 80;
+            Item.useTime = 12;
+            Item.useAnimation = 10;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.noMelee = true;
+            Item.knockBack = 5;
+            Item.value = 10000;
+            Item.rare = ModContent.RarityType<MoonRarity1>();
+            Item.UseSound = SoundID.Item20;
+            Item.autoReuse = true;
+            Item.shoot = ModContent.ProjectileType<DianiteForkProjectile>();
+            Item.shootSpeed = 10f;
+            Item.tileBoost = 50;
+        }
 
-    public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
-    {
+        public override Vector2? HoldoutOrigin()
+            => new Vector2(0, 0);
+
+
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<DianiteBar>(12)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
+        }
+
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
+        {
+            int projCount = 2;
+
+            for (int i = 0; i < projCount; i++)
+            {
+                float angle = 360f / projCount * i;
+                Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<DianiteForkProjectile>(), damage, knockBack, player.whoAmI, ai1: angle);
+            }
+
+            return false;
+        }
+
+        public override void ModifyShootStats(Player player, ref Vector2 position, ref Vector2 velocity, ref int type, ref int damage, ref float knockback)
+        {
+        }
     }
 }

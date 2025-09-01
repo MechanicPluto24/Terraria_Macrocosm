@@ -13,289 +13,290 @@ using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.UI.Chat;
 
-namespace Macrocosm.Content.Rockets;
-
-public enum RocketDrawLayer
+namespace Macrocosm.Content.Rockets
 {
-    BeforeProjectiles,
-    AfterProjectiles,
-    BeforeNPCs,
-    AfterNPCs
-}
-
-public class RocketManager : ModSystem
-{
-    public static Rocket[] Rockets { get; private set; }
-
-    public const int MaxRockets = 256;
-
-    public override void Load()
+    public enum RocketDrawLayer
     {
-        On_Main.DoDraw_DrawNPCsBehindTiles += On_Main_DoDraw_DrawNPCsBehindTiles;
-        On_Main.DrawProjectiles += DrawRockets_Projectiles;
-        On_Main.DrawNPCs += DrawRockets_NPCs;
-        On_Main.DrawDust += DrawRockets_OverlaysAfterDusts;
+        BeforeProjectiles,
+        AfterProjectiles,
+        BeforeNPCs,
+        AfterNPCs
     }
 
-    public override void OnModLoad()
+    public class RocketManager : ModSystem
     {
-        Rockets = new Rocket[MaxRockets];
-        for (int i = 0; i < MaxRockets; i++)
-            Rockets[i] = new Rocket();
-    }
+        public static Rocket[] Rockets { get; private set; }
 
-    public override void Unload()
-    {
-        Rockets = null;
+        public const int MaxRockets = 256;
 
-        On_Main.DoDraw_DrawNPCsBehindTiles -= On_Main_DoDraw_DrawNPCsBehindTiles;
-        On_Main.DrawProjectiles -= DrawRockets_Projectiles;
-        On_Main.DrawNPCs -= DrawRockets_NPCs;
-        On_Main.DrawDust -= DrawRockets_OverlaysAfterDusts;
-    }
-
-    public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active && rocket.CurrentWorld != "");
-    public static int InCurrentSubworldRocketCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
-
-    public static void AddRocket(Rocket rocket)
-    {
-        if (ActiveRocketCount >= MaxRockets)
-            return;
-
-        int index = Rockets.Select((rocket, idx) => new { rocket, idx })
-                                .Where(item => !item.rocket.Active)
-                                .Select(item => item.idx)
-                                .FirstOrDefault();
-
-        rocket.WhoAmI = index;
-        Rockets[index] = rocket;
-    }
-
-    public override void PostUpdateNPCs()
-    {
-        UpdateRockets();
-    }
-
-    private static void UpdateRockets()
-    {
-        for (int i = 0; i < MaxRockets; i++)
+        public override void Load()
         {
-            Rocket rocket = Rockets[i];
-
-            if (!rocket.ActiveInCurrentWorld)
-                continue;
-
-            rocket.Update();
-        }
-    }
-
-    public static void DespawnAllRockets(bool announce = true)
-    {
-        if (announce)
-            Utility.Chat("Despawned all rockets!", Color.Green);
-
-        for (int i = 0; i < MaxRockets; i++)
-        {
-            Rocket rocket = Rockets[i];
-
-            if (rocket.Active)
-                rocket.Despawn();
-        }
-    }
-
-
-    private static void PreDrawBeforeTiles()
-    {
-        for (int i = 0; i < MaxRockets; i++)
-        {
-            Rocket rocket = Rockets[i];
-
-            if (!rocket.ActiveInCurrentWorld)
-                continue;
-
-            rocket.PreDrawBeforeTiles(Main.spriteBatch, rocket.Position - Main.screenPosition, inWorld: true);
-        }
-    }
-
-    private static void DrawRockets(RocketDrawLayer layer)
-    {
-        for (int i = 0; i < MaxRockets; i++)
-        {
-            Rocket rocket = Rockets[i];
-
-            if (!rocket.ActiveInCurrentWorld)
-                continue;
-
-            if (rocket.DrawLayer != layer)
-                continue;
-
-            rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition, useRenderTarget: !DebugConfig.Instance.RocketBounds);
-
-            if (DebugConfig.Instance.RocketIndex)
-            {
-                rocket.DisplayWhoAmI();
-            }
-
-            if (DebugConfig.Instance.RocketBounds)
-            {
-                rocket.DrawDebugBounds();
-                rocket.DrawDebugModuleHitbox();
-            }
+            On_Main.DoDraw_DrawNPCsBehindTiles += On_Main_DoDraw_DrawNPCsBehindTiles;
+            On_Main.DrawProjectiles += DrawRockets_Projectiles;
+            On_Main.DrawNPCs += DrawRockets_NPCs;
+            On_Main.DrawDust += DrawRockets_OverlaysAfterDusts;
         }
 
-        if (DebugConfig.Instance.RocketCount)
+        public override void OnModLoad()
         {
-            string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
-            ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.14f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
+            Rockets = new Rocket[MaxRockets];
+            for (int i = 0; i < MaxRockets; i++)
+                Rockets[i] = new Rocket();
         }
-    }
 
-    private static void PostDrawRockets(RocketDrawLayer layer)
-    {
-        for (int i = 0; i < MaxRockets; i++)
+        public override void Unload()
         {
-            Rocket rocket = Rockets[i];
+            Rockets = null;
 
-            if (!rocket.ActiveInCurrentWorld)
-                continue;
-
-            if (rocket.DrawLayer != layer)
-                continue;
-
-            rocket.PostDraw(Main.spriteBatch, rocket.Position - Main.screenPosition, inWorld: true);
+            On_Main.DoDraw_DrawNPCsBehindTiles -= On_Main_DoDraw_DrawNPCsBehindTiles;
+            On_Main.DrawProjectiles -= DrawRockets_Projectiles;
+            On_Main.DrawNPCs -= DrawRockets_NPCs;
+            On_Main.DrawDust -= DrawRockets_OverlaysAfterDusts;
         }
-    }
 
-    private static void DrawOverlays()
-    {
-        for (int i = 0; i < MaxRockets; i++)
+        public static int ActiveRocketCount => Rockets.Count(rocket => rocket.Active && rocket.CurrentWorld != "");
+        public static int InCurrentSubworldRocketCount => Rockets.Count(rocket => rocket.ActiveInCurrentWorld);
+
+        public static void AddRocket(Rocket rocket)
         {
-            Rocket rocket = Rockets[i];
+            if (ActiveRocketCount >= MaxRockets)
+                return;
 
-            if (!rocket.ActiveInCurrentWorld)
-                continue;
+            int index = Rockets.Select((rocket, idx) => new { rocket, idx })
+                                    .Where(item => !item.rocket.Active)
+                                    .Select(item => item.idx)
+                                    .FirstOrDefault();
 
-            rocket.DrawOverlay(Main.spriteBatch, rocket.Position - Main.screenPosition);
+            rocket.WhoAmI = index;
+            Rockets[index] = rocket;
         }
-    }
 
-    public override void ClearWorld()
-    {
-        for (int i = 0; i < MaxRockets; i++)
-            Rockets[i] = new Rocket();
-    }
+        public override void PostUpdateNPCs()
+        {
+            UpdateRockets();
+        }
 
-    public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
-    {
-        if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+        private static void UpdateRockets()
         {
             for (int i = 0; i < MaxRockets; i++)
             {
-                var rocket = Rockets[i];
-                rocket.SyncEverything(toClient: remoteClient);
+                Rocket rocket = Rockets[i];
+
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
+
+                rocket.Update();
             }
         }
 
-        return false;
-    }
-
-    public override void SaveWorldData(TagCompound tag) => SaveData(tag);
-    public override void LoadWorldData(TagCompound tag) => LoadData(tag);
-
-    public static void SaveData(TagCompound dataCopyTag)
-    {
-        dataCopyTag[nameof(Rockets)] = Rockets;
-    }
-
-    public static void LoadData(TagCompound dataCopyTag)
-    {
-        if (dataCopyTag.ContainsKey(nameof(Rockets)))
+        public static void DespawnAllRockets(bool announce = true)
         {
-            // This is for future-proofing regarding array size
-            var rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
-            Array.Copy(rockets, Rockets, rockets.Length);
+            if (announce)
+                Utility.Chat("Despawned all rockets!", Color.Green);
+
+            for (int i = 0; i < MaxRockets; i++)
+            {
+                Rocket rocket = Rockets[i];
+
+                if (rocket.Active)
+                    rocket.Despawn();
+            }
         }
-    }
 
-    private static SpriteBatchState state1, state2;
 
-    private void On_Main_DoDraw_DrawNPCsBehindTiles(On_Main.orig_DoDraw_DrawNPCsBehindTiles orig, Main self)
-    {
-        orig(self);
+        private static void PreDrawBeforeTiles()
+        {
+            for (int i = 0; i < MaxRockets; i++)
+            {
+                Rocket rocket = Rockets[i];
 
-        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
-        PreDrawBeforeTiles();
-        Main.spriteBatch.End();
-    }
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
 
-    private void DrawRockets_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
-    {
-        SpriteBatch spriteBatch = Main.spriteBatch;
-        state1.SaveState(spriteBatch);
-        spriteBatch.End();
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+                rocket.PreDrawBeforeTiles(Main.spriteBatch, rocket.Position - Main.screenPosition, inWorld: true);
+            }
+        }
 
-        DrawRockets(RocketDrawLayer.BeforeNPCs);
+        private static void DrawRockets(RocketDrawLayer layer)
+        {
+            for (int i = 0; i < MaxRockets; i++)
+            {
+                Rocket rocket = Rockets[i];
 
-        spriteBatch.End();
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
 
-        PostDrawRockets(RocketDrawLayer.BeforeNPCs);
+                if (rocket.DrawLayer != layer)
+                    continue;
 
-        spriteBatch.End();
-        spriteBatch.Begin(state1);
+                rocket.Draw(Rocket.DrawMode.World, Main.spriteBatch, rocket.Position - Main.screenPosition, useRenderTarget: !DebugConfig.Instance.RocketBounds);
 
-        orig(self, behindTiles);
+                if (DebugConfig.Instance.RocketIndex)
+                {
+                    rocket.DisplayWhoAmI();
+                }
 
-        state2.SaveState(spriteBatch);
-        spriteBatch.End();
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+                if (DebugConfig.Instance.RocketBounds)
+                {
+                    rocket.DrawDebugBounds();
+                    rocket.DrawDebugModuleHitbox();
+                }
+            }
 
-        DrawRockets(RocketDrawLayer.AfterNPCs);
+            if (DebugConfig.Instance.RocketCount)
+            {
+                string text = $"Rockets active: {Rockets.Where(r => r.Active).Count()}\nHere: {Rockets.Where(r => r.ActiveInCurrentWorld).Count()}";
+                ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.DeathText.Value, text, new Vector2(Main.screenWidth * 0.5f, Main.screenHeight * 0.14f), Color.White, 0f, Vector2.Zero, Vector2.One * 0.5f);
+            }
+        }
 
-        spriteBatch.End();
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+        private static void PostDrawRockets(RocketDrawLayer layer)
+        {
+            for (int i = 0; i < MaxRockets; i++)
+            {
+                Rocket rocket = Rockets[i];
 
-        PostDrawRockets(RocketDrawLayer.AfterNPCs);
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
 
-        spriteBatch.End();
-        spriteBatch.Begin(state2);
-    }
+                if (rocket.DrawLayer != layer)
+                    continue;
 
-    private void DrawRockets_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
-    {
-        SpriteBatch spriteBatch = Main.spriteBatch;
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+                rocket.PostDraw(Main.spriteBatch, rocket.Position - Main.screenPosition, inWorld: true);
+            }
+        }
 
-        DrawRockets(RocketDrawLayer.BeforeProjectiles);
+        private static void DrawOverlays()
+        {
+            for (int i = 0; i < MaxRockets; i++)
+            {
+                Rocket rocket = Rockets[i];
 
-        spriteBatch.End();
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
 
-        PostDrawRockets(RocketDrawLayer.BeforeProjectiles);
+                rocket.DrawOverlay(Main.spriteBatch, rocket.Position - Main.screenPosition);
+            }
+        }
 
-        spriteBatch.End();
+        public override void ClearWorld()
+        {
+            for (int i = 0; i < MaxRockets; i++)
+                Rockets[i] = new Rocket();
+        }
 
-        orig(self);
+        public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+        {
+            if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+            {
+                for (int i = 0; i < MaxRockets; i++)
+                {
+                    var rocket = Rockets[i];
+                    rocket.SyncEverything(toClient: remoteClient);
+                }
+            }
 
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+            return false;
+        }
 
-        DrawRockets(RocketDrawLayer.AfterProjectiles);
+        public override void SaveWorldData(TagCompound tag) => SaveData(tag);
+        public override void LoadWorldData(TagCompound tag) => LoadData(tag);
 
-        spriteBatch.End();
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+        public static void SaveData(TagCompound dataCopyTag)
+        {
+            dataCopyTag[nameof(Rockets)] = Rockets;
+        }
 
-        PostDrawRockets(RocketDrawLayer.AfterProjectiles);
+        public static void LoadData(TagCompound dataCopyTag)
+        {
+            if (dataCopyTag.ContainsKey(nameof(Rockets)))
+            {
+                // This is for future-proofing regarding array size
+                var rockets = dataCopyTag.Get<Rocket[]>(nameof(Rockets));
+                Array.Copy(rockets, Rockets, rockets.Length);
+            }
+        }
 
-        spriteBatch.End();
-    }
+        private static SpriteBatchState state1, state2;
 
-    private void DrawRockets_OverlaysAfterDusts(On_Main.orig_DrawDust orig, Main self)
-    {
-        orig(self);
+        private void On_Main_DoDraw_DrawNPCsBehindTiles(On_Main.orig_DoDraw_DrawNPCsBehindTiles orig, Main self)
+        {
+            orig(self);
 
-        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, RasterizerState.CullNone, default, Main.Transform);
-        DrawOverlays();
-        Main.spriteBatch.End();
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+            PreDrawBeforeTiles();
+            Main.spriteBatch.End();
+        }
+
+        private void DrawRockets_NPCs(On_Main.orig_DrawNPCs orig, Main self, bool behindTiles)
+        {
+            SpriteBatch spriteBatch = Main.spriteBatch;
+            state1.SaveState(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+
+            DrawRockets(RocketDrawLayer.BeforeNPCs);
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+
+            PostDrawRockets(RocketDrawLayer.BeforeNPCs);
+
+            spriteBatch.End();
+            spriteBatch.Begin(state1);
+
+            orig(self, behindTiles);
+
+            state2.SaveState(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+
+            DrawRockets(RocketDrawLayer.AfterNPCs);
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+
+            PostDrawRockets(RocketDrawLayer.AfterNPCs);
+
+            spriteBatch.End();
+            spriteBatch.Begin(state2);
+        }
+
+        private void DrawRockets_Projectiles(On_Main.orig_DrawProjectiles orig, Main self)
+        {
+            SpriteBatch spriteBatch = Main.spriteBatch;
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+
+            DrawRockets(RocketDrawLayer.BeforeProjectiles);
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+
+            PostDrawRockets(RocketDrawLayer.BeforeProjectiles);
+
+            spriteBatch.End();
+
+            orig(self);
+
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+
+            DrawRockets(RocketDrawLayer.AfterProjectiles);
+
+            spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, RasterizerState.CullNone, default, Main.Transform);
+
+            PostDrawRockets(RocketDrawLayer.AfterProjectiles);
+
+            spriteBatch.End();
+        }
+
+        private void DrawRockets_OverlaysAfterDusts(On_Main.orig_DrawDust orig, Main self)
+        {
+            orig(self);
+
+            Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive, SamplerState.LinearClamp, default, RasterizerState.CullNone, default, Main.Transform);
+            DrawOverlays();
+            Main.spriteBatch.End();
+        }
     }
 }

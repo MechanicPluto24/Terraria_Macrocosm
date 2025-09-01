@@ -6,46 +6,47 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Walls;
-
-public class ProtolithBrickWall : ModItem
+namespace Macrocosm.Content.Items.Walls
 {
-    public override void SetStaticDefaults()
+    public class ProtolithBrickWall : ModItem
     {
-        Item.ResearchUnlockCount = 400;
-        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<ProtolithBrickWallUnsafe>();
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 400;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<ProtolithBrickWallUnsafe>();
+        }
+
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.ProtolithBrickWall>());
+            Item.width = 24;
+            Item.height = 24;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe(4)
+                .AddIngredient<ProtolithBrick>()
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 
-    public override void SetDefaults()
+    public class ProtolithBrickWallUnsafe : ProtolithBrickWall
     {
-        Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.ProtolithBrickWall>());
-        Item.width = 24;
-        Item.height = 24;
-    }
+        public override string Texture => base.Texture.Replace("Unsafe", "");
 
-    public override void AddRecipes()
-    {
-        CreateRecipe(4)
-            .AddIngredient<ProtolithBrick>()
-            .AddTile(TileID.WorkBenches)
-            .Register();
-    }
-}
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+            ItemID.Sets.DrawUnsafeIndicator[Type] = true;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<ProtolithBrickWall>();
+        }
 
-public class ProtolithBrickWallUnsafe : ProtolithBrickWall
-{
-    public override string Texture => base.Texture.Replace("Unsafe", "");
-
-    public override void SetStaticDefaults()
-    {
-        base.SetStaticDefaults();
-        ItemID.Sets.DrawUnsafeIndicator[Type] = true;
-        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<ProtolithBrickWall>();
-    }
-
-    public override void SetDefaults()
-    {
-        base.SetDefaults();
-        Item.createWall = VariantWall.WallType<Content.Walls.ProtolithBrickWall>(WallSafetyType.Unsafe);
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            Item.createWall = VariantWall.WallType<Content.Walls.ProtolithBrickWall>(WallSafetyType.Unsafe);
+        }
     }
 }

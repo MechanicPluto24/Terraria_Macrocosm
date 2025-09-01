@@ -1,74 +1,75 @@
-﻿namespace Macrocosm.Content.Rockets.Modules;
-
-public abstract class AnimatedRocketModule : RocketModule
+﻿namespace Macrocosm.Content.Rockets.Modules
 {
-    /// <summary> The current animation frame </summary>
-    public int CurrentFrame { get; set; } = 9;
-
-    /// <summary> The total number of frames </summary>
-    public virtual int NumberOfFrames => 10;
-    public virtual bool AnimationNeedsRenderReset => false;
-
-    public int FrameSpeed => 4;
-    public bool IsAnimationActive => isAnimating;
-
-    private int frameCounter;
-    private bool isAnimating = false;
-    private bool isAnimatingForward = true;
-
-    public void UpdateAnimation()
+    public abstract class AnimatedRocketModule : RocketModule
     {
-        if (!isAnimating)
-            return;
+        /// <summary> The current animation frame </summary>
+        public int CurrentFrame { get; set; } = 9;
 
-        if (frameCounter >= FrameSpeed)
+        /// <summary> The total number of frames </summary>
+        public virtual int NumberOfFrames => 10;
+        public virtual bool AnimationNeedsRenderReset => false;
+
+        public int FrameSpeed => 4;
+        public bool IsAnimationActive => isAnimating;
+
+        private int frameCounter;
+        private bool isAnimating = false;
+        private bool isAnimatingForward = true;
+
+        public void UpdateAnimation()
         {
-            frameCounter = 0;
+            if (!isAnimating)
+                return;
 
-            if (isAnimatingForward)
+            if (frameCounter >= FrameSpeed)
             {
-                if (CurrentFrame == NumberOfFrames - 1)
+                frameCounter = 0;
+
+                if (isAnimatingForward)
                 {
-                    isAnimating = false;
+                    if (CurrentFrame == NumberOfFrames - 1)
+                    {
+                        isAnimating = false;
+                    }
+                    else
+                    {
+                        CurrentFrame++;
+                    }
                 }
                 else
                 {
-                    CurrentFrame++;
+                    if (CurrentFrame == 0)
+                    {
+                        isAnimating = false;
+                    }
+                    else
+                    {
+                        CurrentFrame--;
+                    }
                 }
             }
             else
             {
-                if (CurrentFrame == 0)
-                {
-                    isAnimating = false;
-                }
-                else
-                {
-                    CurrentFrame--;
-                }
+                frameCounter++;
             }
         }
-        else
+
+        public void StartAnimation()
         {
-            frameCounter++;
+            isAnimatingForward = true;
+            isAnimating = true;
         }
-    }
 
-    public void StartAnimation()
-    {
-        isAnimatingForward = true;
-        isAnimating = true;
-    }
+        public void StartReverseAnimation()
+        {
+            isAnimatingForward = false;
+            isAnimating = true;
+        }
 
-    public void StartReverseAnimation()
-    {
-        isAnimatingForward = false;
-        isAnimating = true;
-    }
-
-    public void StopAnimation()
-    {
-        frameCounter = 0;
-        isAnimating = false;
+        public void StopAnimation()
+        {
+            frameCounter = 0;
+            isAnimating = false;
+        }
     }
 }

@@ -4,20 +4,21 @@ using System;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Machines;
-
-public class WindTurbineSmallTE : GeneratorTE
+namespace Macrocosm.Content.Machines
 {
-    public override MachineTile MachineTile => ModContent.GetInstance<WindTurbineSmall>();
-    public override bool PoweredOn => Math.Abs(Utility.WindSpeedScaled) > 0.1f && WorldGen.InAPlaceWithWind(Position.X, Position.Y, MachineTile.Width, MachineTile.Height - 1);
-
-    public override void OnFirstUpdate()
+    public class WindTurbineSmallTE : GeneratorTE
     {
-    }
+        public override MachineTile MachineTile => ModContent.GetInstance<WindTurbineSmall>();
+        public override bool PoweredOn => Math.Abs(Utility.WindSpeedScaled) > 0.1f && WorldGen.InAPlaceWithWind(Position.X, Position.Y, MachineTile.Width, MachineTile.Height - 1);
 
-    public override void MachineUpdate()
-    {
-        MaxGeneratedPower = 1f;
-        GeneratedPower = PoweredOn ? MaxGeneratedPower * Math.Abs(Utility.WindSpeedScaled) : 0;
+        public override void OnFirstUpdate()
+        {
+        }
+
+        public override void MachineUpdate()
+        {
+            MaxGeneratedPower = 1f;
+            GeneratedPower = PoweredOn ? MaxGeneratedPower * Math.Abs(Utility.WindSpeedScaled) : 0;
+        }
     }
 }

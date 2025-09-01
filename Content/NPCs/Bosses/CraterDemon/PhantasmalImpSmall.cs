@@ -1,13 +1,14 @@
 using Terraria;
 
-namespace Macrocosm.Content.NPCs.Bosses.CraterDemon;
-
-public class PhantasmalImpSmall : PhantasmalImp
+namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-    public override void SetDefaults()
+    public class PhantasmalImpSmall : PhantasmalImp
     {
-        base.SetDefaults();
-        Projectile.width = 42;
-        Projectile.height = 54;
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            Projectile.width = 42;
+            Projectile.height = 54;
+        }
     }
 }

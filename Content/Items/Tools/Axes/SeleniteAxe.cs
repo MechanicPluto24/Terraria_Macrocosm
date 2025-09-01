@@ -5,50 +5,51 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Tools.Axes;
-
-public class SeleniteAxe : ModItem
+namespace Macrocosm.Content.Items.Tools.Axes
 {
-    public override void SetStaticDefaults()
+    public class SeleniteAxe : ModItem
     {
-
-    }
-
-    public override void SetDefaults()
-    {
-        Item.damage = 65;
-        Item.DamageType = DamageClass.Melee;
-        Item.width = 50;
-        Item.height = 50;
-        Item.useTime = 7;
-        Item.useAnimation = 27;
-        Item.useStyle = ItemUseStyleID.Swing;
-        Item.knockBack = 7.5f;
-        Item.value = Item.sellPrice(gold: 6);
-        Item.rare = ModContent.RarityType<MoonRarity1>();
-        Item.UseSound = SoundID.Item1;
-        Item.autoReuse = true;
-        Item.useTurn = true;
-        Item.axe = 33;
-        Item.tileBoost = 5;
-    }
-
-    public override void MeleeEffects(Player player, Rectangle hitbox)
-    {
-        #region Variables
-        float lightMultiplier = 0.25f;
-        #endregion
-
-        #region Dust
-        if (Main.rand.NextBool(4))
+        public override void SetStaticDefaults()
         {
-            int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<SeleniteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(1.25f, 1.35f));
-            Main.dust[swingDust].velocity *= 0.05f;
-        }
-        #endregion
 
-        #region Lighting
-        Lighting.AddLight(player.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
-        #endregion
+        }
+
+        public override void SetDefaults()
+        {
+            Item.damage = 65;
+            Item.DamageType = DamageClass.Melee;
+            Item.width = 50;
+            Item.height = 50;
+            Item.useTime = 7;
+            Item.useAnimation = 27;
+            Item.useStyle = ItemUseStyleID.Swing;
+            Item.knockBack = 7.5f;
+            Item.value = Item.sellPrice(gold: 6);
+            Item.rare = ModContent.RarityType<MoonRarity1>();
+            Item.UseSound = SoundID.Item1;
+            Item.autoReuse = true;
+            Item.useTurn = true;
+            Item.axe = 33;
+            Item.tileBoost = 5;
+        }
+
+        public override void MeleeEffects(Player player, Rectangle hitbox)
+        {
+            #region Variables
+            float lightMultiplier = 0.25f;
+            #endregion
+
+            #region Dust
+            if (Main.rand.NextBool(4))
+            {
+                int swingDust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<SeleniteDust>(), -35 * player.direction, default, default, default, Main.rand.NextFloat(1.25f, 1.35f));
+                Main.dust[swingDust].velocity *= 0.05f;
+            }
+            #endregion
+
+            #region Lighting
+            Lighting.AddLight(player.position, 1 * lightMultiplier, 1 * lightMultiplier, 1 * lightMultiplier);
+            #endregion
+        }
     }
 }

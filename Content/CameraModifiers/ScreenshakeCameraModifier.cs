@@ -3,32 +3,33 @@ using System;
 using Terraria;
 using Terraria.Graphics.CameraModifiers;
 
-namespace Macrocosm.Content.CameraModifiers;
-
-public class ScreenshakeCameraModifier : ICameraModifier
+namespace Macrocosm.Content.CameraModifiers
 {
-    public string UniqueIdentity { get; private set; }
-    public bool Finished { get; private set; }
-
-    private float intensity = 0f;
-    private float multiplier;
-
-    public ScreenshakeCameraModifier(float intensity, string uniqueIdentity, float multiplier = 0.9f)
+    public class ScreenshakeCameraModifier : ICameraModifier
     {
-        this.intensity = Math.Clamp(intensity, 0, 100);
-        this.multiplier = Math.Clamp(multiplier, 0f, 0.99f);
-        UniqueIdentity = uniqueIdentity;
-    }
+        public string UniqueIdentity { get; private set; }
+        public bool Finished { get; private set; }
 
-    public void Update(ref CameraInfo cameraPosition)
-    {
-        cameraPosition.CameraPosition += new Vector2(Main.rand.NextFloat(intensity), Main.rand.NextFloat(intensity));
-        intensity *= multiplier;
+        private float intensity = 0f;
+        private float multiplier;
 
-        if (intensity < 0.1f)
+        public ScreenshakeCameraModifier(float intensity, string uniqueIdentity, float multiplier = 0.9f)
         {
-            intensity = 0f;
-            Finished = true;
+            this.intensity = Math.Clamp(intensity, 0, 100);
+            this.multiplier = Math.Clamp(multiplier, 0f, 0.99f);
+            UniqueIdentity = uniqueIdentity;
+        }
+
+        public void Update(ref CameraInfo cameraPosition)
+        {
+            cameraPosition.CameraPosition += new Vector2(Main.rand.NextFloat(intensity), Main.rand.NextFloat(intensity));
+            intensity *= multiplier;
+
+            if (intensity < 0.1f)
+            {
+                intensity = 0f;
+                Finished = true;
+            }
         }
     }
 }

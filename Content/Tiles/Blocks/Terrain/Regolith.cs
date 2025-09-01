@@ -5,46 +5,47 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Tiles.Blocks.Terrain;
-
-public class Regolith : ModTile
+namespace Macrocosm.Content.Tiles.Blocks.Terrain
 {
-    /// <summary> Types that merge with this. Use instead of <c>Main.tileFrame[][]</c> </summary>
-    public static bool[] TileMerge { get; set; } = TileID.Sets.Factory.CreateBoolSet();
-
-    public override void SetStaticDefaults()
+    public class Regolith : ModTile
     {
-        Main.tileSolid[Type] = true;
-        Main.tileBlockLight[Type] = true;
-        Main.tileLighted[Type] = true;
+        /// <summary> Types that merge with this. Use instead of <c>Main.tileFrame[][]</c> </summary>
+        public static bool[] TileMerge { get; set; } = TileID.Sets.Factory.CreateBoolSet();
 
-        TileID.Sets.ChecksForMerge[Type] = true;
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            Main.tileLighted[Type] = true;
 
-        TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
+            TileID.Sets.ChecksForMerge[Type] = true;
 
-        MinPick = 225;
-        MineResist = 3f;
+            TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
 
-        AddMapEntry(new Color(220, 220, 220));
+            MinPick = 225;
+            MineResist = 3f;
 
-        HitSound = SoundID.Dig;
-        DustType = ModContent.DustType<RegolithDust>();
-    }
+            AddMapEntry(new Color(220, 220, 220));
 
-    public override bool CanExplode(int i, int j)
-    {
-        return false;
-    }
+            HitSound = SoundID.Dig;
+            DustType = ModContent.DustType<RegolithDust>();
+        }
 
-    public override bool HasWalkDust() => MacrocosmSubworld.GetGravityMultiplier() != 0f;
+        public override bool CanExplode(int i, int j)
+        {
+            return false;
+        }
 
-    public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
-    {
-        dustType = ModContent.DustType<RegolithDust>();
-    }
+        public override bool HasWalkDust() => MacrocosmSubworld.GetGravityMultiplier() != 0f;
 
-    public override void ModifyFrameMerge(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
-    {
-        WorldGen.TileMergeAttemptFrametest(i, j, Type, TileMerge, ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
+        public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
+        {
+            dustType = ModContent.DustType<RegolithDust>();
+        }
+
+        public override void ModifyFrameMerge(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
+        {
+            WorldGen.TileMergeAttemptFrametest(i, j, Type, TileMerge, ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
+        }
     }
 }

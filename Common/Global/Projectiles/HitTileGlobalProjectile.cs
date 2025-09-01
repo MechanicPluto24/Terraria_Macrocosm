@@ -3,15 +3,16 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.Projectiles;
-
-public class HitTileGlobalProjectile : GlobalProjectile
+namespace Macrocosm.Common.Global.Projectiles
 {
-    public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity)
+    public class HitTileGlobalProjectile : GlobalProjectile
     {
-        if (ProjectileSets.HitsTiles[projectile.type])
-            Collision.HitTiles(projectile.position, oldVelocity, projectile.width, projectile.height);
+        public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity)
+        {
+            if (ProjectileSets.HitsTiles[projectile.type])
+                Collision.HitTiles(projectile.position, oldVelocity, projectile.width, projectile.height);
 
-        return true;
+            return true;
+        }
     }
 }

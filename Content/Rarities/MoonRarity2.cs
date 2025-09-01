@@ -1,20 +1,21 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rarities;
-
-public class MoonRarity2 : ModRarity
+namespace Macrocosm.Content.Rarities
 {
-    public override Color RarityColor => new(64, 224, 208); // turquoise color 
-
-    public override int GetPrefixedRarity(int offset, float valueMult)
+    public class MoonRarity2 : ModRarity
     {
-        if (offset < 0)
-            return ModContent.RarityType<MoonRarity1>();
+        public override Color RarityColor => new(64, 224, 208); // turquoise color 
 
-        if (offset > 0)
-            return ModContent.RarityType<MoonRarity3>();
+        public override int GetPrefixedRarity(int offset, float valueMult)
+        {
+            if (offset < 0)
+                return ModContent.RarityType<MoonRarity1>();
 
-        return Type;
+            if (offset > 0)
+                return ModContent.RarityType<MoonRarity3>();
+
+            return Type;
+        }
     }
 }

@@ -4,23 +4,24 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Tiles.Blocks.Bricks;
-
-public class IrradiatedBrick : ModTile
+namespace Macrocosm.Content.Tiles.Blocks.Bricks
 {
-    public override void SetStaticDefaults()
+    public class IrradiatedBrick : ModTile
     {
-        Main.tileSolid[Type] = true;
-        Main.tileBrick[Type] = true;
-        Main.tileBlockLight[Type] = true;
-        Main.tileLighted[Type] = true;
+        public override void SetStaticDefaults()
+        {
+            Main.tileSolid[Type] = true;
+            Main.tileBrick[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            Main.tileLighted[Type] = true;
 
-        MinPick = 225;
-        MineResist = 3f;
+            MinPick = 225;
+            MineResist = 3f;
 
-        AddMapEntry(new Color(129, 117, 0));
+            AddMapEntry(new Color(129, 117, 0));
 
-        DustType = ModContent.DustType<IrradiatedRockDust>();
-        HitSound = SoundID.Tink;
+            DustType = ModContent.DustType<IrradiatedRockDust>();
+            HitSound = SoundID.Tink;
+        }
     }
 }

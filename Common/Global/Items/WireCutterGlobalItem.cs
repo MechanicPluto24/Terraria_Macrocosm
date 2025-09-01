@@ -5,25 +5,26 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.Items;
-
-public class WireCutterGlobalItem : GlobalItem
+namespace Macrocosm.Common.Global.Items
 {
-    public override bool AppliesToEntity(Item entity, bool lateInstantiation) => entity.type == ItemID.WireCutter;
-
-    public override bool? UseItem(Item item, Player player)
+    public class WireCutterGlobalItem : GlobalItem
     {
-        Tile targetTile = player.TargetTile();
-        Point targetCoords = player.TargetCoords();
-        if (targetTile.HasWire() || targetTile.HasActuator)
-            return null;
+        public override bool AppliesToEntity(Item entity, bool lateInstantiation) => entity.type == ItemID.WireCutter;
 
-        if (ConnectorSystem.Map[targetCoords].Any)
+        public override bool? UseItem(Item item, Player player)
         {
-            ConnectorSystem.CutWire(targetCoords);
-            return true;
-        }
+            Tile targetTile = player.TargetTile();
+            Point targetCoords = player.TargetCoords();
+            if (targetTile.HasWire() || targetTile.HasActuator)
+                return null;
 
-        return null;
+            if (ConnectorSystem.Map[targetCoords].Any)
+            {
+                ConnectorSystem.CutWire(targetCoords);
+                return true;
+            }
+
+            return null;
+        }
     }
 }

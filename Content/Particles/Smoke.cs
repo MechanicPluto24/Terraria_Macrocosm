@@ -4,68 +4,69 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace Macrocosm.Content.Particles;
-
-public class Smoke : Particle
+namespace Macrocosm.Content.Particles
 {
-    public override int FrameCount => 3;
-    public override bool SetRandomFrameOnSpawn => true;
-
-    public float WindFactor { get; set; }
-    public float Opacity { get; set; }
-    public bool VanillaUpdate { get; set; }
-    private bool fadedIn;
-
-    public override void SetDefaults()
+    public class Smoke : Particle
     {
-        ScaleVelocity = new(-0.005f);
-        Opacity = 1f;
-        VanillaUpdate = false;
-        fadedIn = false;
-        WindFactor = 0f;
-    }
+        public override int FrameCount => 3;
+        public override bool SetRandomFrameOnSpawn => true;
 
-    public override void OnSpawn()
-    {
-    }
+        public float WindFactor { get; set; }
+        public float Opacity { get; set; }
+        public bool VanillaUpdate { get; set; }
+        private bool fadedIn;
 
-    public override void AI()
-    {
-        if (VanillaUpdate)
+        public override void SetDefaults()
         {
-            if (!fadedIn)
-            {
-                Opacity += 0.03f;
-                if (Opacity >= 1f)
-                    fadedIn = true;
-            }
-            else
-            {
-                if (Opacity > 0f)
-                    Opacity -= 0.012f;
-            }
+            ScaleVelocity = new(-0.005f);
+            Opacity = 1f;
+            VanillaUpdate = false;
+            fadedIn = false;
+            WindFactor = 0f;
         }
 
+        public override void OnSpawn()
+        {
+        }
 
-        Velocity.X += WindFactor * Utility.WindSpeedScaled;
+        public override void AI()
+        {
+            if (VanillaUpdate)
+            {
+                if (!fadedIn)
+                {
+                    Opacity += 0.03f;
+                    if (Opacity >= 1f)
+                        fadedIn = true;
+                }
+                else
+                {
+                    if (Opacity > 0f)
+                        Opacity -= 0.012f;
+                }
+            }
 
-        if (VanillaUpdate)
-            if (Scale.X < 0.1f || (Opacity <= 0 && fadedIn))
-                Kill();
-    }
 
-    public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-    {
-        spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor).WithAlpha(Color.A) * Opacity * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
-    }
+            Velocity.X += WindFactor * Utility.WindSpeedScaled;
 
-    public static Color GetTileHitColor(Point coords) => GetTileHitColor(coords.X, coords.Y);
-    public static Color GetTileHitColor(int i, int j)
-    {
-        Tile hitTile = Main.tile[i, j];
-        Color mapColor = Utility.GetTileColor(i, j);
-        Color paintColor = Utility.GetPaintColor(hitTile);
-        Color lerpedColor = Color.Lerp(mapColor, paintColor == Color.White ? Color.Gray : paintColor, 0.5f);
-        return lerpedColor * Main.rand.NextFloat(0.2f, 0.8f);
+            if (VanillaUpdate)
+                if (Scale.X < 0.1f || (Opacity <= 0 && fadedIn))
+                    Kill();
+        }
+
+        public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Utility.Colorize(Color, lightColor).WithAlpha(Color.A) * Opacity * FadeFactor, Rotation, Size * 0.5f, Scale, SpriteEffects.None, 0f);
+        }
+
+        public static Color GetTileHitColor(Point coords) => GetTileHitColor(coords.X, coords.Y);
+        public static Color GetTileHitColor(int i, int j)
+        {
+            Tile hitTile = Main.tile[i, j];
+            Color mapColor = Utility.GetTileColor(i, j);
+            Color paintColor = Utility.GetPaintColor(hitTile);
+            Color lerpedColor = Color.Lerp(mapColor, paintColor == Color.White ? Color.Gray : paintColor, 0.5f);
+            return lerpedColor * Main.rand.NextFloat(0.2f, 0.8f);
+        }
     }
 }

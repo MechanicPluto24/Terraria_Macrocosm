@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace Macrocosm.Common.Graphics;
-
-public class CustomRasterizerStates
+namespace Macrocosm.Common.Graphics
 {
-    public static readonly RasterizerState ScissorTest = new()
+    public class CustomRasterizerStates
     {
-        CullMode = CullMode.None,
-        ScissorTestEnable = true
-    };
+        public static readonly RasterizerState ScissorTest = new()
+        {
+            CullMode = CullMode.None,
+            ScissorTestEnable = true
+        };
+    }
 }

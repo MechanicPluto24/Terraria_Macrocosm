@@ -12,95 +12,96 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Machines;
-
-public class IndustrialBattery : MachineTile
+namespace Macrocosm.Content.Machines
 {
-    private static Asset<Texture2D> glowmask;
-
-    public override short Width => 3;
-    public override short Height => 3;
-    public override MachineTE MachineTE => ModContent.GetInstance<IndustrialBatteryTE>();
-
-    public override void SetStaticDefaults()
+    public class IndustrialBattery : MachineTile
     {
-        Main.tileFrameImportant[Type] = true;
-        Main.tileLavaDeath[Type] = true;
+        private static Asset<Texture2D> glowmask;
 
-        TileObjectData.newTile.Width = Width;
-        TileObjectData.newTile.Height = Height;
-        TileObjectData.newTile.Origin = new Point16(1, 2);
+        public override short Width => 3;
+        public override short Height => 3;
+        public override MachineTE MachineTE => ModContent.GetInstance<IndustrialBatteryTE>();
 
-        TileObjectData.newTile.CoordinateWidth = 16;
-        TileObjectData.newTile.CoordinatePadding = 2;
-        TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
-
-        TileObjectData.newTile.StyleHorizontal = true;
-        TileObjectData.newTile.StyleLineSkip = 2;
-        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.Table | AnchorType.SolidSide, Width, 0);
-        TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
-        TileObjectData.newTile.UsesCustomCanPlace = true;
-        TileObjectData.addTile(Type);
-
-        HitSound = SoundID.Dig;
-        DustType = -1;
-
-        AddMapEntry(new Color(139, 75, 14), CreateMapEntryName());
-    }
-
-    public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
-
-    public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
-    {
-        Point16 origin = TileObjectData.TopLeft(i, j);
-        for (int x = origin.X; x < origin.X + Width; x++)
+        public override void SetStaticDefaults()
         {
-            for (int y = origin.Y; y < origin.Y + Height; y++)
-            {
-                Tile tile = Main.tile[x, y];
+            Main.tileFrameImportant[Type] = true;
+            Main.tileLavaDeath[Type] = true;
 
-                if (IsPoweredOnFrame(x, y))
-                    tile.TileFrameY -= (short)(Height * 18);
-                else
-                    tile.TileFrameY += (short)(Height * 18);
+            TileObjectData.newTile.Width = Width;
+            TileObjectData.newTile.Height = Height;
+            TileObjectData.newTile.Origin = new Point16(1, 2);
 
-                if (skipWire && Wiring.running)
-                    Wiring.SkipWire(x, y);
-            }
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+
+            TileObjectData.newTile.StyleHorizontal = true;
+            TileObjectData.newTile.StyleLineSkip = 2;
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.Table | AnchorType.SolidSide, Width, 0);
+            TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(MachineTE.Hook_AfterPlacement, -1, 0, false);
+            TileObjectData.newTile.UsesCustomCanPlace = true;
+            TileObjectData.addTile(Type);
+
+            HitSound = SoundID.Dig;
+            DustType = -1;
+
+            AddMapEntry(new Color(139, 75, 14), CreateMapEntryName());
         }
 
-        if (Main.netMode != NetmodeID.SinglePlayer)
-            NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
-    }
+        public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= (Height * 18);
 
-    public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
-    {
-        glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-        TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
-    }
-
-    public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
-    {
-        Tile tile = Main.tile[i, j];
-        if (TileObjectData.IsTopLeft(i, j) && tile.TileFrameY == 18 * 3)
-            Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
-    }
-
-    public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
-    {
-        if (TileEntity.ByPosition.TryGetValue(new Point16(i, j), out TileEntity entity) && entity is BatteryTE batter)
+        public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
         {
-            float fill = batter.EnergyCapacity > 0 ? batter.StoredEnergy / batter.EnergyCapacity : 0f;
-            float barWidth = 4f;
-            float barHeight = (22 * fill);
+            Point16 origin = TileObjectData.TopLeft(i, j);
+            for (int x = origin.X; x < origin.X + Width; x++)
+            {
+                for (int y = origin.Y; y < origin.Y + Height; y++)
+                {
+                    Tile tile = Main.tile[x, y];
 
-            Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
-            Vector2 offset = new(4, 18 + (22 - barHeight));
-            Vector2 tileDrawPosition = new Vector2(i, j) * 16f + zero + offset - Main.screenPosition;
+                    if (IsPoweredOnFrame(x, y))
+                        tile.TileFrameY -= (short)(Height * 18);
+                    else
+                        tile.TileFrameY += (short)(Height * 18);
 
+                    if (skipWire && Wiring.running)
+                        Wiring.SkipWire(x, y);
+                }
+            }
+
+            if (Main.netMode != NetmodeID.SinglePlayer)
+                NetMessage.SendTileSquare(-1, origin.X, origin.Y, Width, Height);
+        }
+
+        public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+            TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
+        }
+
+        public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref TileDrawInfo drawData)
+        {
             Tile tile = Main.tile[i, j];
-            Color color = tile.TileColor != PaintID.None ? tile.GetPaintColor() : new Color(96, 13, 13) * 2.2f;
-            spriteBatch.Draw(TextureAssets.MagicPixel.Value, tileDrawPosition, new Rectangle(0, 0, 1, 1), color, 0f, Vector2.Zero, new Vector2(barWidth, barHeight), SpriteEffects.None, 0f);
+            if (TileObjectData.IsTopLeft(i, j) && tile.TileFrameY == 18 * 3)
+                Main.instance.TilesRenderer.AddSpecialLegacyPoint(i, j);
+        }
+
+        public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
+        {
+            if (TileEntity.ByPosition.TryGetValue(new Point16(i, j), out TileEntity entity) && entity is BatteryTE batter)
+            {
+                float fill = batter.EnergyCapacity > 0 ? batter.StoredEnergy / batter.EnergyCapacity : 0f;
+                float barWidth = 4f;
+                float barHeight = (22 * fill);
+
+                Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
+                Vector2 offset = new(4, 18 + (22 - barHeight));
+                Vector2 tileDrawPosition = new Vector2(i, j) * 16f + zero + offset - Main.screenPosition;
+
+                Tile tile = Main.tile[i, j];
+                Color color = tile.TileColor != PaintID.None ? tile.GetPaintColor() : new Color(96, 13, 13) * 2.2f;
+                spriteBatch.Draw(TextureAssets.MagicPixel.Value, tileDrawPosition, new Rectangle(0, 0, 1, 1), color, 0f, Vector2.Zero, new Vector2(barWidth, barHeight), SpriteEffects.None, 0f);
+            }
         }
     }
 }

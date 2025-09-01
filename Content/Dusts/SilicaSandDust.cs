@@ -1,20 +1,21 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Dusts;
-
-public class SilicaSandDust : ModDust
+namespace Macrocosm.Content.Dusts
 {
-    public override bool Update(Dust dust)
+    public class SilicaSandDust : ModDust
     {
-        dust.scale -= 0.01f;
-        dust.velocity.X *= 0.96f;
-
-        if (!dust.noGravity)
+        public override bool Update(Dust dust)
         {
-            dust.velocity.Y += 0.1f;
-        }
+            dust.scale -= 0.01f;
+            dust.velocity.X *= 0.96f;
 
-        return true;
+            if (!dust.noGravity)
+            {
+                dust.velocity.Y += 0.1f;
+            }
+
+            return true;
+        }
     }
 }

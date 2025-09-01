@@ -6,47 +6,48 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Walls;
-
-public class IndustrialPlatingWall : ModItem
+namespace Macrocosm.Content.Items.Walls
 {
-    public override void SetStaticDefaults()
+    public class IndustrialPlatingWall : ModItem
     {
-        Item.ResearchUnlockCount = 400;
-        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialPlatingWallUnsafe>();
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 400;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialPlatingWallUnsafe>();
+        }
+
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.IndustrialPlatingWall>());
+            Item.width = 24;
+            Item.height = 24;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe(4)
+                .AddIngredient<IndustrialPlating>()
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 
-    public override void SetDefaults()
+    public class IndustrialPlatingWallUnsafe : IndustrialPlatingWall
     {
-        Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.IndustrialPlatingWall>());
-        Item.width = 24;
-        Item.height = 24;
-    }
+        public override string Texture => base.Texture.Replace("Unsafe", "");
 
-    public override void AddRecipes()
-    {
-        CreateRecipe(4)
-            .AddIngredient<IndustrialPlating>()
-            .AddTile(TileID.WorkBenches)
-            .Register();
-    }
-}
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+            ItemID.Sets.DrawUnsafeIndicator[Type] = true;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialPlatingWall>();
+        }
 
-public class IndustrialPlatingWallUnsafe : IndustrialPlatingWall
-{
-    public override string Texture => base.Texture.Replace("Unsafe", "");
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            Item.createWall = VariantWall.WallType<Content.Walls.IndustrialPlatingWall>(WallSafetyType.Unsafe);
 
-    public override void SetStaticDefaults()
-    {
-        base.SetStaticDefaults();
-        ItemID.Sets.DrawUnsafeIndicator[Type] = true;
-        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialPlatingWall>();
-    }
-
-    public override void SetDefaults()
-    {
-        base.SetDefaults();
-        Item.createWall = VariantWall.WallType<Content.Walls.IndustrialPlatingWall>(WallSafetyType.Unsafe);
-
+        }
     }
 }

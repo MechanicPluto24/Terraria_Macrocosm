@@ -6,42 +6,43 @@ using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.UI.Chat;
 
-namespace Macrocosm.Common.Systems.Power;
-
-public abstract class ConsumerTE : MachineTE
+namespace Macrocosm.Common.Systems.Power
 {
-    public float InputPower { get; set; }
-    public float RequiredPower { get; set; }
-
-    public override void UpdatePowerState()
+    public abstract class ConsumerTE : MachineTE
     {
-        if (PoweredOn && InputPower < RequiredPower)
-            TurnOff(automatic: true);
-        else if (!PoweredOn && InputPower >= RequiredPower && !ManuallyTurnedOff)
-            TurnOn(automatic: true);
-    }
+        public float InputPower { get; set; }
+        public float RequiredPower { get; set; }
 
-    public override void OnPowerDisconnected()
-    {
-        InputPower = 0;
-    }
+        public override void UpdatePowerState()
+        {
+            if (PoweredOn && InputPower < RequiredPower)
+                TurnOff(automatic: true);
+            else if (!PoweredOn && InputPower >= RequiredPower && !ManuallyTurnedOff)
+                TurnOn(automatic: true);
+        }
 
-    public override Color DisplayColor => Color.Orange;
+        public override void OnPowerDisconnected()
+        {
+            InputPower = 0;
+        }
 
-    public override string GetPowerInfo() => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Consumer").Format($"{InputPower:F2}", $"{RequiredPower:F2}")}";
+        public override Color DisplayColor => Color.Orange;
 
-    public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
-    {
-        string active = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format($"{InputPower:F2}");
-        string total = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format($"{RequiredPower:F2}");
-        string line = new('_', Math.Max(active.Length, total.Length) / 2);
+        public override string GetPowerInfo() => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Consumer").Format($"{InputPower:F2}", $"{RequiredPower:F2}")}";
 
-        Vector2 textSize = FontAssets.MouseText.Value.MeasureString(total);
-        Vector2 position = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (textSize.X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
-        Color color = DisplayColor;
+        public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
+        {
+            string active = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format($"{InputPower:F2}");
+            string total = Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Simple").Format($"{RequiredPower:F2}");
+            string line = new('_', Math.Max(active.Length, total.Length) / 2);
 
-        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, active, position - new Vector2(active.Length, 24), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
-        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, line, position - new Vector2(line.Length + 5, 22), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
-        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, total, position - new Vector2(total.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+            Vector2 textSize = FontAssets.MouseText.Value.MeasureString(total);
+            Vector2 position = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (textSize.X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
+            Color color = DisplayColor;
+
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, active, position - new Vector2(active.Length, 24), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, line, position - new Vector2(line.Length + 5, 22), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, total, position - new Vector2(total.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+        }
     }
 }

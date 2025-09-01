@@ -3,15 +3,16 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.NPCs;
-
-public class VanillaNPCShop : GlobalNPC
+namespace Macrocosm.Common.Global.NPCs
 {
-    public override void ModifyShop(NPCShop shop)
+    public class VanillaNPCShop : GlobalNPC
     {
-        if (shop.NpcType == NPCID.Painter && shop.Name == "Decor")
+        public override void ModifyShop(NPCShop shop)
         {
-            shop.Add<Freedomfaller>(Condition.MoonPhaseWaxingGibbous, Condition.DownedGolem);
+            if (shop.NpcType == NPCID.Painter && shop.Name == "Decor")
+            {
+                shop.Add<Freedomfaller>(Condition.MoonPhaseWaxingGibbous, Condition.DownedGolem);
+            }
         }
     }
 }

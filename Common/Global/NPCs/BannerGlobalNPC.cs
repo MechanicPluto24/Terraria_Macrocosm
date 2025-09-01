@@ -1,19 +1,20 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.NPCs;
-
-public class BannerGlobalNPC : GlobalNPC
+namespace Macrocosm.Common.Global.NPCs
 {
-    public override void SetDefaults(NPC npc)
+    public class BannerGlobalNPC : GlobalNPC
     {
-        if (npc.ModNPC is ModNPC modNPC && modNPC.Mod == Mod)
+        public override void SetDefaults(NPC npc)
         {
-            int customBanner = Mod.TryFind(modNPC.Name + "BannerItem", out ModItem modItem) ? modItem.Type : -1;
-            if (customBanner > 0)
+            if (npc.ModNPC is ModNPC modNPC && modNPC.Mod == Mod)
             {
-                modNPC.Banner = modNPC.Type;
-                modNPC.BannerItem = customBanner;
+                int customBanner = Mod.TryFind(modNPC.Name + "BannerItem", out ModItem modItem) ? modItem.Type : -1;
+                if (customBanner > 0)
+                {
+                    modNPC.Banner = modNPC.Type;
+                    modNPC.BannerItem = customBanner;
+                }
             }
         }
     }

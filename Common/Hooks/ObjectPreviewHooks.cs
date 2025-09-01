@@ -4,72 +4,73 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Hooks;
-
-// Unused. Needs more attention (or tML integration)
-public interface IPreviewDrawTile
+namespace Macrocosm.Common.Hooks
 {
-    public bool PreDrawPreview(int i, int j, SpriteBatch spriteBatch, Color previewColor) { return true; }
-    public void PostDrawPreview(int i, int j, SpriteBatch spriteBatch, Color previewColor) { }
-    public void SpecialDrawPreview(int i, int j, SpriteBatch spriteBatch, Color previewColor) { }
-}
-
-internal class ObjectPreviewHooks : ILoadable
-{
-    public void Load(Mod mod)
+    // Unused. Needs more attention (or tML integration)
+    public interface IPreviewDrawTile
     {
-        //On_TileObject.DrawPreview += On_TileObject_DrawPreview;
+        public bool PreDrawPreview(int i, int j, SpriteBatch spriteBatch, Color previewColor) { return true; }
+        public void PostDrawPreview(int i, int j, SpriteBatch spriteBatch, Color previewColor) { }
+        public void SpecialDrawPreview(int i, int j, SpriteBatch spriteBatch, Color previewColor) { }
     }
 
-    public void Unload()
+    internal class ObjectPreviewHooks : ILoadable
     {
-        //On_TileObject.DrawPreview -= On_TileObject_DrawPreview;
-    }
-
-    private void On_TileObject_DrawPreview(On_TileObject.orig_DrawPreview orig, SpriteBatch sb, TileObjectPreviewData op, Vector2 position)
-    {
-        if (TileLoader.GetTile(op.Type) is IPreviewDrawTile preview)
+        public void Load(Mod mod)
         {
-            for (int i = 0; i < op.Size.X; i++)
+            //On_TileObject.DrawPreview += On_TileObject_DrawPreview;
+        }
+
+        public void Unload()
+        {
+            //On_TileObject.DrawPreview -= On_TileObject_DrawPreview;
+        }
+
+        private void On_TileObject_DrawPreview(On_TileObject.orig_DrawPreview orig, SpriteBatch sb, TileObjectPreviewData op, Vector2 position)
+        {
+            if (TileLoader.GetTile(op.Type) is IPreviewDrawTile preview)
             {
-                for (int j = 0; j < op.Size.Y; j++)
+                for (int i = 0; i < op.Size.X; i++)
                 {
-                    int data = op[i, j];
-                    if (data == TileObjectPreviewData.None) continue;
+                    for (int j = 0; j < op.Size.Y; j++)
+                    {
+                        int data = op[i, j];
+                        if (data == TileObjectPreviewData.None) continue;
 
-                    Color color = (data == TileObjectPreviewData.InvalidSpot) ? Color.Red * 0.7f : Color.White;
-                    int x = op.Coordinates.X + i;
-                    int y = op.Coordinates.Y + j;
+                        Color color = (data == TileObjectPreviewData.InvalidSpot) ? Color.Red * 0.7f : Color.White;
+                        int x = op.Coordinates.X + i;
+                        int y = op.Coordinates.Y + j;
 
-                    if (!preview.PreDrawPreview(x, y, sb, color))
-                        return;
+                        if (!preview.PreDrawPreview(x, y, sb, color))
+                            return;
+                    }
+                }
+
+                orig(sb, op, position);
+
+                for (int i = 0; i < op.Size.X; i++)
+                {
+                    for (int j = 0; j < op.Size.Y; j++)
+                    {
+                        int data = op[i, j];
+
+                        if (data == TileObjectPreviewData.None)
+                            continue;
+
+                        Color color = (data == TileObjectPreviewData.InvalidSpot) ? Color.Red * 0.7f : Color.White;
+                        int x = op.Coordinates.X + i;
+                        int y = op.Coordinates.Y + j;
+
+                        preview.PostDrawPreview(x, y, sb, color);
+                        //preview.SpecialDrawPreview(x, y, sb, color);
+                    }
                 }
             }
-
-            orig(sb, op, position);
-
-            for (int i = 0; i < op.Size.X; i++)
+            else
             {
-                for (int j = 0; j < op.Size.Y; j++)
-                {
-                    int data = op[i, j];
-
-                    if (data == TileObjectPreviewData.None)
-                        continue;
-
-                    Color color = (data == TileObjectPreviewData.InvalidSpot) ? Color.Red * 0.7f : Color.White;
-                    int x = op.Coordinates.X + i;
-                    int y = op.Coordinates.Y + j;
-
-                    preview.PostDrawPreview(x, y, sb, color);
-                    //preview.SpecialDrawPreview(x, y, sb, color);
-                }
+                orig(sb, op, position);
             }
         }
-        else
-        {
-            orig(sb, op, position);
-        }
-    }
 
+    }
 }

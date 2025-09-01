@@ -2,24 +2,25 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.NPCs;
-
-public class BleedingGlobalNPC : GlobalNPC
+namespace Macrocosm.Common.Global.NPCs
 {
-    public override void AI(NPC npc)
+    public class BleedingGlobalNPC : GlobalNPC
     {
-        if (npc.HasBuff(BuffID.Bleeding))
+        public override void AI(NPC npc)
         {
-            if (Main.rand.NextBool(30) && npc.Opacity > 0.1f)
+            if (npc.HasBuff(BuffID.Bleeding))
             {
-                npc.HitEffect();
+                if (Main.rand.NextBool(30) && npc.Opacity > 0.1f)
+                {
+                    npc.HitEffect();
+                }
             }
         }
-    }
 
-    public override void UpdateLifeRegen(NPC npc, ref int damage)
-    {
-        if (npc.HasBuff(BuffID.Bleeding))
-            npc.lifeRegen -= 10;
+        public override void UpdateLifeRegen(NPC npc, ref int damage)
+        {
+            if (npc.HasBuff(BuffID.Bleeding))
+                npc.lifeRegen -= 10;
+        }
     }
 }

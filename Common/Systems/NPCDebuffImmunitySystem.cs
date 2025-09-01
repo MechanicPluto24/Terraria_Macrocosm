@@ -2,21 +2,22 @@
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Systems;
-
-public class NPCDebuffImmunitySystem : ModSystem
+namespace Macrocosm.Common.Systems
 {
-    public override void PostSetupContent()
+    public class NPCDebuffImmunitySystem : ModSystem
     {
-        for (int type = 0; type < NPCLoader.NPCCount; type++)
+        public override void PostSetupContent()
         {
-            if (NPCSets.MoonNPC[type])
+            for (int type = 0; type < NPCLoader.NPCCount; type++)
             {
-                NPCID.Sets.SpecificDebuffImmunity[type][BuffID.OnFire] = true;
-                NPCID.Sets.SpecificDebuffImmunity[type][BuffID.CursedInferno] = true;
-                NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Frostburn] = true;
-                NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Confused] = true;
-                NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Poisoned] = true;
+                if (NPCSets.MoonNPC[type])
+                {
+                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.OnFire] = true;
+                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.CursedInferno] = true;
+                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Frostburn] = true;
+                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Confused] = true;
+                    NPCID.Sets.SpecificDebuffImmunity[type][BuffID.Poisoned] = true;
+                }
             }
         }
     }

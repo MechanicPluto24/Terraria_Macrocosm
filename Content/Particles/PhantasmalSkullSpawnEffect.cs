@@ -3,45 +3,46 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace Macrocosm.Content.Particles;
-
-public class PhantasmalSkullSpawnEffect : Particle
+namespace Macrocosm.Content.Particles
 {
-    public override string Texture => Macrocosm.FancyTexturesPath + "Circle3";
-
-    private float defScale;
-    private float actualScale;
-    public float Opacity { get; set; }
-
-    public override void SetDefaults()
+    public class PhantasmalSkullSpawnEffect : Particle
     {
-        Color = new Color(30, 255, 105, 255);
-        actualScale = 0f;
-        Color = new(30, 255, 105);
-        Opacity = 0.8f;
-    }
+        public override string Texture => Macrocosm.FancyTexturesPath + "Circle3";
 
-    public override void OnSpawn()
-    {
-        defScale = Scale.X;
-    }
+        private float defScale;
+        private float actualScale;
+        public float Opacity { get; set; }
 
-    public override void AI()
-    {
-        Opacity -= 0.05f;
-        actualScale += 0.03f;
+        public override void SetDefaults()
+        {
+            Color = new Color(30, 255, 105, 255);
+            actualScale = 0f;
+            Color = new(30, 255, 105);
+            Opacity = 0.8f;
+        }
 
-        Velocity = Vector2.Zero;
+        public override void OnSpawn()
+        {
+            defScale = Scale.X;
+        }
 
-        Lighting.AddLight(Position, Color.ToVector3() * (actualScale / defScale));
+        public override void AI()
+        {
+            Opacity -= 0.05f;
+            actualScale += 0.03f;
 
-        if (actualScale > 0.7f)
-            Kill();
-    }
+            Velocity = Vector2.Zero;
 
-    public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-    {
-        spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale * 0.5f, SpriteEffects.None, 0f);
-        return false;
+            Lighting.AddLight(Position, Color.ToVector3() * (actualScale / defScale));
+
+            if (actualScale > 0.7f)
+                Kill();
+        }
+
+        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale * 0.5f, SpriteEffects.None, 0f);
+            return false;
+        }
     }
 }

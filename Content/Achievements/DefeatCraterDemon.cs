@@ -3,16 +3,17 @@ using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Terraria.Achievements;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Achievements;
-
-public class DefeatCraterDemon : TMLAchievement
+namespace Macrocosm.Content.Achievements
 {
-    public override float Order => 40;
-    public override AchievementCategory Category => AchievementCategory.Slayer;
-
-    protected override void SetupConditions()
+    public class DefeatCraterDemon : TMLAchievement
     {
-        AddKillNPCCondition(ModContent.NPCType<CraterDemon>());
-    }
-}
+        public override float Order => 40;
+        public override AchievementCategory Category => AchievementCategory.Slayer;
 
+        protected override void SetupConditions()
+        {
+            AddKillNPCCondition(ModContent.NPCType<CraterDemon>());
+        }
+    }
+
+}

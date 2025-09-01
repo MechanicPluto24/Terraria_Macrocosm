@@ -1,47 +1,48 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Macrocosm.Common.DataStructures;
-
-// TODO: expand this & make this some kind of graph?
-public abstract class Circuit<T> : IEnumerable<T>
+namespace Macrocosm.Common.DataStructures
 {
-    protected readonly HashSet<T> nodes = new();
-    public int NodeCount => nodes.Count;
-
-    public virtual void Add(T node)
+    // TODO: expand this & make this some kind of graph?
+    public abstract class Circuit<T> : IEnumerable<T>
     {
-        nodes.Add(node);
-    }
+        protected readonly HashSet<T> nodes = new();
+        public int NodeCount => nodes.Count;
 
-    public virtual void Remove(T node)
-    {
-        nodes.Remove(node);
-    }
+        public virtual void Add(T node)
+        {
+            nodes.Add(node);
+        }
 
-    public virtual void Clear()
-    {
-        nodes.Clear();
-    }
+        public virtual void Remove(T node)
+        {
+            nodes.Remove(node);
+        }
 
-    public virtual bool Contains(T node)
-    {
-        return nodes.Contains(node);
-    }
+        public virtual void Clear()
+        {
+            nodes.Clear();
+        }
 
-    public bool IsEmpty => nodes.Count == 0;
+        public virtual bool Contains(T node)
+        {
+            return nodes.Contains(node);
+        }
 
-    public abstract void Merge(Circuit<T> other);
+        public bool IsEmpty => nodes.Count == 0;
 
-    public abstract void Solve(int updateRate);
+        public abstract void Merge(Circuit<T> other);
 
-    public IEnumerator<T> GetEnumerator()
-    {
-        return nodes.GetEnumerator();
-    }
+        public abstract void Solve(int updateRate);
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
+        public IEnumerator<T> GetEnumerator()
+        {
+            return nodes.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }

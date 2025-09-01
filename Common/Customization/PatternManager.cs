@@ -9,185 +9,186 @@ using System.Linq;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Common.Customization;
-
-public class PatternManager : ModSystem
+namespace Macrocosm.Common.Customization
 {
-    private static readonly Dictionary<(string name, string context), Pattern> patterns = new();
-    private static readonly HashSet<string> unlockedPatterns = new();
-
-    public override void Load()
+    public class PatternManager : ModSystem
     {
-        patterns.Clear();
-        unlockedPatterns.Clear();
+        private static readonly Dictionary<(string name, string context), Pattern> patterns = new();
+        private static readonly HashSet<string> unlockedPatterns = new();
 
-        LoadPatterns();
-    }
-
-    public override void Unload()
-    {
-        patterns.Clear();
-        unlockedPatterns.Clear();
-    }
-
-    /// <summary> Gets a pattern by name, context. Returns a dummy object if no match is found. </summary>
-    public static Pattern Get(string name, string context)
-    {
-        if (patterns.TryGetValue((name, context), out var specificPattern))
-            return specificPattern.Clone();
-
-        return new Pattern();
-    }
-
-    /// <summary> Tries to get a pattern by name and context. </summary>
-    public static bool TryGet(string name, string context, out Pattern pattern)
-    {
-        pattern = Get(name, context);
-        return !string.IsNullOrEmpty(pattern.Name);
-    }
-
-    /// <summary>
-    /// Gets all patterns based on the specified filters. Any filter set to null or default is ignored.
-    /// </summary>
-    /// <param name="name">The name of the pattern to filter by. Null to ignore.</param>
-    /// <param name="context">The context of the pattern to filter by. Null to ignore.</param>
-    /// <param name="unlocked">
-    /// If true, only unlocked patterns will be returned. 
-    /// If false, only locked patterns will be returned. 
-    /// If null, unlocked status is ignored.
-    /// </param>
-    /// <returns>An enumerable of filtered patterns.</returns>
-    public static IEnumerable<Pattern> GetAll(string name = null, string context = null, bool? unlocked = null)
-    {
-        var query = patterns.AsEnumerable();
-        if (!string.IsNullOrEmpty(name))
-            query = query.Where(kvp => kvp.Key.name == name);
-
-        if (!string.IsNullOrEmpty(context))
-            query = query.Where(kvp => kvp.Key.context == context);
-
-        if (unlocked.HasValue)
+        public override void Load()
         {
-            if (unlocked.Value)
-                query = query.Where(kvp => unlockedPatterns.Contains(kvp.Key.name));
-            else
-                query = query.Where(kvp => !unlockedPatterns.Contains(kvp.Key.name));
+            patterns.Clear();
+            unlockedPatterns.Clear();
+
+            LoadPatterns();
         }
 
-        return query.Select(kvp => kvp.Value.Clone());
-    }
-
-    public static bool IsUnlocked(string name) => unlockedPatterns.Contains(name);
-
-    public static void SetUnlocked(string name, bool unlocked)
-    {
-        if (unlocked)
-            unlockedPatterns.Add(name);
-        else
-            unlockedPatterns.Remove(name);
-    }
-
-    private void LoadPatterns()
-    {
-        var mpatternFiles = Mod.GetFileNames()
-            .Where(file => file.EndsWith(".mpattern"))
-            .ToList();
-
-        foreach (var mpatternFile in mpatternFiles)
+        public override void Unload()
         {
-            try
+            patterns.Clear();
+            unlockedPatterns.Clear();
+        }
+
+        /// <summary> Gets a pattern by name, context. Returns a dummy object if no match is found. </summary>
+        public static Pattern Get(string name, string context)
+        {
+            if (patterns.TryGetValue((name, context), out var specificPattern))
+                return specificPattern.Clone();
+
+            return new Pattern();
+        }
+
+        /// <summary> Tries to get a pattern by name and context. </summary>
+        public static bool TryGet(string name, string context, out Pattern pattern)
+        {
+            pattern = Get(name, context);
+            return !string.IsNullOrEmpty(pattern.Name);
+        }
+
+        /// <summary>
+        /// Gets all patterns based on the specified filters. Any filter set to null or default is ignored.
+        /// </summary>
+        /// <param name="name">The name of the pattern to filter by. Null to ignore.</param>
+        /// <param name="context">The context of the pattern to filter by. Null to ignore.</param>
+        /// <param name="unlocked">
+        /// If true, only unlocked patterns will be returned. 
+        /// If false, only locked patterns will be returned. 
+        /// If null, unlocked status is ignored.
+        /// </param>
+        /// <returns>An enumerable of filtered patterns.</returns>
+        public static IEnumerable<Pattern> GetAll(string name = null, string context = null, bool? unlocked = null)
+        {
+            var query = patterns.AsEnumerable();
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(kvp => kvp.Key.name == name);
+
+            if (!string.IsNullOrEmpty(context))
+                query = query.Where(kvp => kvp.Key.context == context);
+
+            if (unlocked.HasValue)
             {
-                string folderPath = mpatternFile[..mpatternFile.LastIndexOf('/')];
+                if (unlocked.Value)
+                    query = query.Where(kvp => unlockedPatterns.Contains(kvp.Key.name));
+                else
+                    query = query.Where(kvp => !unlockedPatterns.Contains(kvp.Key.name));
+            }
 
-                var json = JObject.Parse(Utility.GetTextFromFile(mpatternFile));
+            return query.Select(kvp => kvp.Value.Clone());
+        }
 
-                // "name" is the only data which is strictly required in the .mpattern files
-                string name = json["name"]?.Value<string>() ?? throw new Exception("Missing 'name' field.");
+        public static bool IsUnlocked(string name) => unlockedPatterns.Contains(name);
 
-                // "unlockedByDefault" determines whether the pattern is readily available, or must be unlocked by in-game means
-                bool unlockedByDefault = json["unlockedByDefault"]?.Value<bool>() ?? true;
-                if (unlockedByDefault)
-                    SetUnlocked(name, true);
+        public static void SetUnlocked(string name, bool unlocked)
+        {
+            if (unlocked)
+                unlockedPatterns.Add(name);
+            else
+                unlockedPatterns.Remove(name);
+        }
 
-                // Look for other image next to the .mpattern
-                var imageFiles = Mod.GetFileNames().Where(file => file.StartsWith(folderPath) && file.EndsWith(".rawimg")).ToList();
-                foreach (var imageFile in imageFiles)
+        private void LoadPatterns()
+        {
+            var mpatternFiles = Mod.GetFileNames()
+                .Where(file => file.EndsWith(".mpattern"))
+                .ToList();
+
+            foreach (var mpatternFile in mpatternFiles)
+            {
+                try
                 {
-                    string textureAssetPath = $"{Mod.Name}/{imageFile}".Replace(".rawimg", "");
-                    var rawTexture = RawTexture.FromStream(Macrocosm.Instance.GetFileStream(imageFile));
+                    string folderPath = mpatternFile[..mpatternFile.LastIndexOf('/')];
 
-                    // The "context" is determined by the image file name
-                    string context = Path.GetFileNameWithoutExtension(imageFile);
+                    var json = JObject.Parse(Utility.GetTextFromFile(mpatternFile));
 
-                    Dictionary<Color, PatternColorData> colorData = new();
+                    // "name" is the only data which is strictly required in the .mpattern files
+                    string name = json["name"]?.Value<string>() ?? throw new Exception("Missing 'name' field.");
 
-                    if (json["colorData"] is JObject colorDataJson)
+                    // "unlockedByDefault" determines whether the pattern is readily available, or must be unlocked by in-game means
+                    bool unlockedByDefault = json["unlockedByDefault"]?.Value<bool>() ?? true;
+                    if (unlockedByDefault)
+                        SetUnlocked(name, true);
+
+                    // Look for other image next to the .mpattern
+                    var imageFiles = Mod.GetFileNames().Where(file => file.StartsWith(folderPath) && file.EndsWith(".rawimg")).ToList();
+                    foreach (var imageFile in imageFiles)
                     {
-                        foreach (var entry in colorDataJson.Properties())
+                        string textureAssetPath = $"{Mod.Name}/{imageFile}".Replace(".rawimg", "");
+                        var rawTexture = RawTexture.FromStream(Macrocosm.Instance.GetFileStream(imageFile));
+
+                        // The "context" is determined by the image file name
+                        string context = Path.GetFileNameWithoutExtension(imageFile);
+
+                        Dictionary<Color, PatternColorData> colorData = new();
+
+                        if (json["colorData"] is JObject colorDataJson)
                         {
-                            if (Utility.TryGetColorFromHex(entry.Name, out Color key))
+                            foreach (var entry in colorDataJson.Properties())
                             {
-                                if (entry.Value.Type == JTokenType.String) // Default to user color when it's a shorthand ("#XXXXXX" : "#YYYYYY")
+                                if (Utility.TryGetColorFromHex(entry.Name, out Color key))
                                 {
-                                    string colorHex = entry.Value.Value<string>();
-                                    if (Utility.TryGetColorFromHex(colorHex, out Color color))
-                                        colorData[key] = new PatternColorData(color, isUserModifiable: true);
-                                    else
-                                        throw new ArgumentException($"Invalid color shorthand: {colorHex}");
-                                }
-                                else if (entry.Value is JObject value && value != null) // Full object ({"color": "#YYYYYY"})
-                                {
-                                    colorData[key] = PatternColorData.FromJObject(value);
+                                    if (entry.Value.Type == JTokenType.String) // Default to user color when it's a shorthand ("#XXXXXX" : "#YYYYYY")
+                                    {
+                                        string colorHex = entry.Value.Value<string>();
+                                        if (Utility.TryGetColorFromHex(colorHex, out Color color))
+                                            colorData[key] = new PatternColorData(color, isUserModifiable: true);
+                                        else
+                                            throw new ArgumentException($"Invalid color shorthand: {colorHex}");
+                                    }
+                                    else if (entry.Value is JObject value && value != null) // Full object ({"color": "#YYYYYY"})
+                                    {
+                                        colorData[key] = PatternColorData.FromJObject(value);
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    // Keys and default from the first MaxColors unique fully opaque colors 
-                    foreach (var color in rawTexture.GetUniqueColors(Pattern.MaxColors, maxDistance: Pattern.ColorDistance, alphaSensitive: false, validColor: c => c.A > 0))
-                    {
-                        colorData.TryAdd(color, new PatternColorData(color));
-                    }
+                        // Keys and default from the first MaxColors unique fully opaque colors 
+                        foreach (var color in rawTexture.GetUniqueColors(Pattern.MaxColors, maxDistance: Pattern.ColorDistance, alphaSensitive: false, validColor: c => c.A > 0))
+                        {
+                            colorData.TryAdd(color, new PatternColorData(color));
+                        }
 
-                    patterns[(name, context)] = new Pattern(name, context, textureAssetPath, colorData);
+                        patterns[(name, context)] = new Pattern(name, context, textureAssetPath, colorData);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Macrocosm.Instance.Logger.Error($"Error loading pattern from {mpatternFile}: {ex}");
                 }
             }
-            catch (Exception ex)
+
+            LogLoadedPatterns();
+        }
+
+        public override void SaveWorldData(TagCompound tag) => SaveData(tag);
+
+        public static void SaveData(TagCompound tag)
+        {
+            tag["UnlockedPatterns"] = unlockedPatterns.ToList();
+        }
+
+        public override void LoadWorldData(TagCompound tag) => LoadData(tag);
+
+        public static void LoadData(TagCompound tag)
+        {
+            if (tag.ContainsKey("UnlockedPatterns"))
             {
-                Macrocosm.Instance.Logger.Error($"Error loading pattern from {mpatternFile}: {ex}");
+                var savedPatterns = tag.GetList<string>("UnlockedPatterns");
+                foreach (var name in savedPatterns)
+                    unlockedPatterns.Add(name);
             }
         }
 
-        LogLoadedPatterns();
-    }
-
-    public override void SaveWorldData(TagCompound tag) => SaveData(tag);
-
-    public static void SaveData(TagCompound tag)
-    {
-        tag["UnlockedPatterns"] = unlockedPatterns.ToList();
-    }
-
-    public override void LoadWorldData(TagCompound tag) => LoadData(tag);
-
-    public static void LoadData(TagCompound tag)
-    {
-        if (tag.ContainsKey("UnlockedPatterns"))
+        private static void LogLoadedPatterns()
         {
-            var savedPatterns = tag.GetList<string>("UnlockedPatterns");
-            foreach (var name in savedPatterns)
-                unlockedPatterns.Add(name);
+            string logString = "Loaded Patterns:\n";
+            foreach (var ((name, context), pattern) in patterns)
+            {
+                bool unlocked = unlockedPatterns.Contains(pattern.Name);
+                logString += $"- Name: {name}, Context: {context}, Unlocked: {unlocked}\n";
+            }
+            Macrocosm.Instance.Logger.Info(logString);
         }
-    }
-
-    private static void LogLoadedPatterns()
-    {
-        string logString = "Loaded Patterns:\n";
-        foreach (var ((name, context), pattern) in patterns)
-        {
-            bool unlocked = unlockedPatterns.Contains(pattern.Name);
-            logString += $"- Name: {name}, Context: {context}, Unlocked: {unlocked}\n";
-        }
-        Macrocosm.Instance.Logger.Info(logString);
     }
 }

@@ -7,20 +7,21 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.NPCs;
-
-public class LootGlobalNPC : GlobalNPC
+namespace Macrocosm.Common.Global.NPCs
 {
-    public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+    public class LootGlobalNPC : GlobalNPC
     {
-        // Moonstone drops
-        npcLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<Moonstone>(), 10, 1, 5, new ConditionsChain.All(
-            new SubworldDropCondition<Moon>(),
-            new GlobalItemDropCondition(),
-            new Condition(LocalizedText.Empty, () => !NPCSets.NoMoonstoneDrop[npc.type]).ToDropCondition(default)
-        )));
+        public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
+        {
+            // Moonstone drops
+            npcLoot.Add(new ItemDropWithConditionRule(ModContent.ItemType<Moonstone>(), 10, 1, 5, new ConditionsChain.All(
+                new SubworldDropCondition<Moon>(),
+                new GlobalItemDropCondition(),
+                new Condition(LocalizedText.Empty, () => !NPCSets.NoMoonstoneDrop[npc.type]).ToDropCondition(default)
+            )));
 
-        //if(npc.type == NPCID.MoonLordCore)
-        //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CortexFragment>(), 10));
+            //if(npc.type == NPCID.MoonLordCore)
+            //npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<CortexFragment>(), 10));
+        }
     }
 }

@@ -2,15 +2,16 @@
 using Terraria;
 using Terraria.DataStructures;
 
-namespace Macrocosm.Common.ItemCreationContexts;
-
-public class MachineItemCreationContext : ItemCreationContext
+namespace Macrocosm.Common.ItemCreationContexts
 {
-    public Item DestinationStack { get; }
-    public MachineTE Machine { get; }
-    public MachineItemCreationContext(Item destinationStack, MachineTE machine)
+    public class MachineItemCreationContext : ItemCreationContext
     {
-        DestinationStack = destinationStack;
-        Machine = machine;
+        public Item DestinationStack { get; }
+        public MachineTE Machine { get; }
+        public MachineItemCreationContext(Item destinationStack, MachineTE machine)
+        {
+            DestinationStack = destinationStack;
+            Machine = machine;
+        }
     }
 }

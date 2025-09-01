@@ -6,52 +6,53 @@ using Terraria;
 using Terraria.Enums;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Hooks;
-
-public class TreeHooks : ILoadable
+namespace Macrocosm.Common.Hooks
 {
-    public void Load(Mod mod)
+    public class TreeHooks : ILoadable
     {
-        On_WorldGen.GetTreeType += On_WorldGen_GetTreeType;
-        On_WorldGen.AttemptToGrowTreeFromSapling += On_WorldGen_AttemptToGrowTreeFromSapling;
-        On_WorldGen.TryGrowingTreeByType += On_WorldGen_TryGrowingTreeByType;
-    }
+        public void Load(Mod mod)
+        {
+            On_WorldGen.GetTreeType += On_WorldGen_GetTreeType;
+            On_WorldGen.AttemptToGrowTreeFromSapling += On_WorldGen_AttemptToGrowTreeFromSapling;
+            On_WorldGen.TryGrowingTreeByType += On_WorldGen_TryGrowingTreeByType;
+        }
 
-    public void Unload()
-    {
-        On_WorldGen.GetTreeType -= On_WorldGen_GetTreeType;
-        On_WorldGen.AttemptToGrowTreeFromSapling -= On_WorldGen_AttemptToGrowTreeFromSapling;
-        On_WorldGen.TryGrowingTreeByType -= On_WorldGen_TryGrowingTreeByType;
-    }
+        public void Unload()
+        {
+            On_WorldGen.GetTreeType -= On_WorldGen_GetTreeType;
+            On_WorldGen.AttemptToGrowTreeFromSapling -= On_WorldGen_AttemptToGrowTreeFromSapling;
+            On_WorldGen.TryGrowingTreeByType -= On_WorldGen_TryGrowingTreeByType;
+        }
 
-    private TreeTypes On_WorldGen_GetTreeType(On_WorldGen.orig_GetTreeType orig, int tileType)
-    {
-        if (TileLoader.GetTile(tileType) is CustomTree customTree)
-            return customTree.CountsAsTreeType;
+        private TreeTypes On_WorldGen_GetTreeType(On_WorldGen.orig_GetTreeType orig, int tileType)
+        {
+            if (TileLoader.GetTile(tileType) is CustomTree customTree)
+                return customTree.CountsAsTreeType;
 
-        return orig(tileType);
-    }
+            return orig(tileType);
+        }
 
-    private bool On_WorldGen_AttemptToGrowTreeFromSapling(On_WorldGen.orig_AttemptToGrowTreeFromSapling orig, int x, int y, bool underground)
-    {
-        if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.CheckRoomOxygen(x, y))
-            return false;
+        private bool On_WorldGen_AttemptToGrowTreeFromSapling(On_WorldGen.orig_AttemptToGrowTreeFromSapling orig, int x, int y, bool underground)
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.CheckRoomOxygen(x, y))
+                return false;
 
-        int treeType = TileSets.SaplingTreeGrowthType[Main.tile[x, y].TileType];
-        if (treeType > 0)
-            return WorldGen.TryGrowingTreeByType(treeType, x, y);
+            int treeType = TileSets.SaplingTreeGrowthType[Main.tile[x, y].TileType];
+            if (treeType > 0)
+                return WorldGen.TryGrowingTreeByType(treeType, x, y);
 
-        return orig(x, y, underground);
-    }
+            return orig(x, y, underground);
+        }
 
-    private bool On_WorldGen_TryGrowingTreeByType(On_WorldGen.orig_TryGrowingTreeByType orig, int treeTileType, int checkedX, int checkedY)
-    {
-        if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.CheckRoomOxygen(checkedX, checkedY))
-            return false;
+        private bool On_WorldGen_TryGrowingTreeByType(On_WorldGen.orig_TryGrowingTreeByType orig, int treeTileType, int checkedX, int checkedY)
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.CheckRoomOxygen(checkedX, checkedY))
+                return false;
 
-        if (TileLoader.GetTile(treeTileType) is CustomTree customTree)
-            return customTree.GrowTree(checkedX, checkedY);
+            if (TileLoader.GetTile(treeTileType) is CustomTree customTree)
+                return customTree.GrowTree(checkedX, checkedY);
 
-        return orig(treeTileType, checkedX, checkedY);
+            return orig(treeTileType, checkedX, checkedY);
+        }
     }
 }

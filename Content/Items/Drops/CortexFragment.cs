@@ -3,22 +3,23 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Drops;
-
-public class CortexFragment : ModItem
+namespace Macrocosm.Content.Items.Drops
 {
-    public override void SetStaticDefaults()
+    public class CortexFragment : ModItem
     {
-        ItemSets.UnobtainableItem[Type] = true;
-    }
+        public override void SetStaticDefaults()
+        {
+            ItemSets.UnobtainableItem[Type] = true;
+        }
 
-    public override void SetDefaults()
-    {
-        Item.width = 20;
-        Item.height = 20;
-        Item.maxStack = Item.CommonMaxStack;
-        Item.value = 100;
-        Item.rare = ItemRarityID.Red;
+        public override void SetDefaults()
+        {
+            Item.width = 20;
+            Item.height = 20;
+            Item.maxStack = Item.CommonMaxStack;
+            Item.value = 100;
+            Item.rare = ItemRarityID.Red;
 
+        }
     }
 }

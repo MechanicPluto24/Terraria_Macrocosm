@@ -3,60 +3,61 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 
-namespace Macrocosm.Content.Particles;
-
-public class PhantasmalSkullHitEffect : Particle
+namespace Macrocosm.Content.Particles
 {
-    public override string Texture => Macrocosm.FancyTexturesPath + "Star6";
-    public override int MaxPoolCount => 100;
-
-    public int StarPointCount { get; set; }
-    public float FadeInFactor { get; set; }
-    public float FadeOutFactor { get; set; }
-
-    private bool fadeIn;
-    private float defScale;
-    private float actualScale;
-    public float Opacity { get; set; }
-    public override void SetDefaults()
+    public class PhantasmalSkullHitEffect : Particle
     {
-        Color = new Color(30, 255, 105, 255);
-        FadeInFactor = 1.5f;
-        FadeOutFactor = 0.88f;
-        fadeIn = true;
-        actualScale = 0.1f;
-        Opacity = 1f;
-    }
+        public override string Texture => Macrocosm.FancyTexturesPath + "Star6";
+        public override int MaxPoolCount => 100;
 
-    public override void OnSpawn()
-    {
-        defScale = Scale.X;
-    }
+        public int StarPointCount { get; set; }
+        public float FadeInFactor { get; set; }
+        public float FadeOutFactor { get; set; }
 
-    public override void AI()
-    {
-        if (fadeIn)
+        private bool fadeIn;
+        private float defScale;
+        private float actualScale;
+        public float Opacity { get; set; }
+        public override void SetDefaults()
         {
-            actualScale *= FadeInFactor;
-            Opacity *= FadeInFactor;
-            if (actualScale > defScale)
-                fadeIn = false;
-        }
-        else
-        {
-            actualScale *= FadeOutFactor;
-            Opacity *= FadeOutFactor;
+            Color = new Color(30, 255, 105, 255);
+            FadeInFactor = 1.5f;
+            FadeOutFactor = 0.88f;
+            fadeIn = true;
+            actualScale = 0.1f;
+            Opacity = 1f;
         }
 
-        Lighting.AddLight(Center, Color.ToVector3() * actualScale * 0.5f);
+        public override void OnSpawn()
+        {
+            defScale = Scale.X;
+        }
 
-        if (actualScale < 0.01f && !fadeIn)
-            Kill();
-    }
+        public override void AI()
+        {
+            if (fadeIn)
+            {
+                actualScale *= FadeInFactor;
+                Opacity *= FadeInFactor;
+                if (actualScale > defScale)
+                    fadeIn = false;
+            }
+            else
+            {
+                actualScale *= FadeOutFactor;
+                Opacity *= FadeOutFactor;
+            }
 
-    public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-    {
-        spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale, SpriteEffects.None, 0f);
-        return false;
+            Lighting.AddLight(Center, Color.ToVector3() * actualScale * 0.5f);
+
+            if (actualScale < 0.01f && !fadeIn)
+                Kill();
+        }
+
+        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, GetFrame(), Color * Opacity * FadeFactor, Rotation, Size * 0.5f, actualScale, SpriteEffects.None, 0f);
+            return false;
+        }
     }
 }

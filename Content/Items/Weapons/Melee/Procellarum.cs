@@ -8,75 +8,76 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons.Melee;
-
-public class Procellarum : ModItem
+namespace Macrocosm.Content.Items.Weapons.Melee
 {
-    public override void SetStaticDefaults()
+    public class Procellarum : ModItem
     {
-        Item.ResearchUnlockCount = 1;
-        ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
-        ItemID.Sets.Spears[Type] = true;
-
-        Redemption.AddElement(Item, Redemption.ElementID.Thunder, true);
-    }
-    public override void SetDefaults()
-    {
-        Item.width = 72;
-        Item.height = 72;
-        Item.damage = 550;
-        Item.DamageType = DamageClass.Melee;
-        Item.knockBack = 5;
-        Item.value = 10000;
-        Item.rare = ModContent.RarityType<MoonRarity3>();
-        Item.useTime = 30;
-        Item.noUseGraphic = true;
-        Item.shoot = ModContent.ProjectileType<ProcellarumHalberdProjectile>();
-        Item.autoReuse = true;
-        Item.useStyle = ItemUseStyleID.Shoot;
-        Item.useAnimation = 30;
-        Item.shootSpeed = 1f;
-        Item.channel = true;
-    }
-
-    public override bool AltFunctionUse(Player player)
-    {
-        return true;
-    }
-
-    public override bool CanUseItem(Player player)
-    {
-        if (player.AltFunction())
+        public override void SetStaticDefaults()
         {
-            Item.damage = 280;
-            Item.useTime = 30;
-            Item.useAnimation = 30;
-            Item.autoReuse = true;
-            Item.channel = false;
-            Item.useStyle = ItemUseStyleID.Swing;
+            Item.ResearchUnlockCount = 1;
+            ItemID.Sets.ItemsThatAllowRepeatedRightClick[Type] = true;
+            ItemID.Sets.Spears[Type] = true;
+
+            Redemption.AddElement(Item, Redemption.ElementID.Thunder, true);
         }
-        else
+        public override void SetDefaults()
         {
+            Item.width = 72;
+            Item.height = 72;
             Item.damage = 550;
+            Item.DamageType = DamageClass.Melee;
+            Item.knockBack = 5;
+            Item.value = 10000;
+            Item.rare = ModContent.RarityType<MoonRarity3>();
             Item.useTime = 30;
-            Item.useAnimation = 30;
+            Item.noUseGraphic = true;
+            Item.shoot = ModContent.ProjectileType<ProcellarumHalberdProjectile>();
             Item.autoReuse = true;
-            Item.channel = true;
             Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 30;
+            Item.shootSpeed = 1f;
+            Item.channel = true;
         }
-        return player.ownedProjectileCounts[ModContent.ProjectileType<ProcellarumHalberdProjectile>()] < 1;
-    }
 
-    public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-    {
-        if (Main.mouseRight)
+        public override bool AltFunctionUse(Player player)
         {
-            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ProcellarumHalberdProjectile>(), damage, knockback, player.whoAmI, 2f);
+            return true;
         }
-        else
+
+        public override bool CanUseItem(Player player)
         {
-            Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ProcellarumHalberdProjectile>(), damage, knockback, player.whoAmI, 1f);
+            if (player.AltFunction())
+            {
+                Item.damage = 280;
+                Item.useTime = 30;
+                Item.useAnimation = 30;
+                Item.autoReuse = true;
+                Item.channel = false;
+                Item.useStyle = ItemUseStyleID.Swing;
+            }
+            else
+            {
+                Item.damage = 550;
+                Item.useTime = 30;
+                Item.useAnimation = 30;
+                Item.autoReuse = true;
+                Item.channel = true;
+                Item.useStyle = ItemUseStyleID.Shoot;
+            }
+            return player.ownedProjectileCounts[ModContent.ProjectileType<ProcellarumHalberdProjectile>()] < 1;
         }
-        return false;
+
+        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
+        {
+            if (Main.mouseRight)
+            {
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ProcellarumHalberdProjectile>(), damage, knockback, player.whoAmI, 2f);
+            }
+            else
+            {
+                Projectile.NewProjectile(source, position, velocity, ModContent.ProjectileType<ProcellarumHalberdProjectile>(), damage, knockback, player.whoAmI, 1f);
+            }
+            return false;
+        }
     }
 }

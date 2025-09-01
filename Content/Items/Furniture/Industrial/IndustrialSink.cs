@@ -4,28 +4,29 @@ using Terraria.ID;
 using Terraria.ModLoader;
 
 
-namespace Macrocosm.Content.Items.Furniture.Industrial;
-
-public class IndustrialSink : ModItem
+namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    public override void SetStaticDefaults()
+    public class IndustrialSink : ModItem
     {
-    }
+        public override void SetStaticDefaults()
+        {
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialSink>());
-        Item.width = 26;
-        Item.height = 34;
-        Item.value = 150;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialSink>());
+            Item.width = 26;
+            Item.height = 34;
+            Item.value = 150;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-            .AddIngredient<IndustrialPlating>(6)
-            .AddIngredient(ItemID.WaterBucket, 1)
-            .AddTile(TileID.WorkBenches)
-            .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<IndustrialPlating>(6)
+                .AddIngredient(ItemID.WaterBucket, 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 }

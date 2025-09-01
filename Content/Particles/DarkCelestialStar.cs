@@ -3,32 +3,33 @@ using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Macrocosm.Content.Particles;
-
-public class DarkCelestialStar : Particle
+namespace Macrocosm.Content.Particles
 {
-    public override string Texture => Macrocosm.EmptyTexPath;
-    public float Opacity { get; set; }
-
-    public override void SetDefaults()
+    public class DarkCelestialStar : Particle
     {
-        ScaleVelocity = new(-0.035f);
-        Opacity = 0.8f;
-    }
+        public override string Texture => Macrocosm.EmptyTexPath;
+        public float Opacity { get; set; }
 
-    public override void OnSpawn()
-    {
-    }
+        public override void SetDefaults()
+        {
+            ScaleVelocity = new(-0.035f);
+            Opacity = 0.8f;
+        }
 
-    public override void AI()
-    {
-        if (Scale.X < 0.005f)
-            Kill();
-    }
+        public override void OnSpawn()
+        {
+        }
 
-    public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-    {
-        Utility.DrawStar(Position - screenPosition, 2, Color.WithOpacity(Opacity), Scale);
-        return false;
+        public override void AI()
+        {
+            if (Scale.X < 0.005f)
+                Kill();
+        }
+
+        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            Utility.DrawStar(Position - screenPosition, 2, Color.WithOpacity(Opacity), Scale);
+            return false;
+        }
     }
 }

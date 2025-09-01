@@ -1,8 +1,9 @@
-﻿namespace Macrocosm.Common.Enums;
-
-/// <summary> Supported unit systems in Macrocosm </summary>
-public enum UnitSystemType
+﻿namespace Macrocosm.Common.Enums
 {
-    Metric,
-    Imperial
-};
+    /// <summary> Supported unit systems in Macrocosm </summary>
+    public enum UnitSystemType
+    {
+        Metric,
+        Imperial
+    };
+}

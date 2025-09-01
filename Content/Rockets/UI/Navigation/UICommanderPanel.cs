@@ -6,49 +6,50 @@ using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 
-namespace Macrocosm.Content.Rockets.UI.Navigation;
-
-public class UICommanderPanel : UIListScrollablePanel, IRocketUIDataConsumer
+namespace Macrocosm.Content.Rockets.UI.Navigation
 {
-    public Rocket Rocket { get; set; }
-
-    public UICommanderPanel() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Commander"), scale: 1.2f))
+    public class UICommanderPanel : UIListScrollablePanel, IRocketUIDataConsumer
     {
-    }
+        public Rocket Rocket { get; set; }
 
-    public override void OnInitialize()
-    {
-        base.OnInitialize();
-        BorderColor = UITheme.Current.PanelStyle.BorderColor;
-        BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
-
-        if (Main.netMode == NetmodeID.SinglePlayer)
-            Add(new UIPlayerHeadInfoElement(Main.LocalPlayer));
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-
-        if (Main.netMode == NetmodeID.MultiplayerClient)
+        public UICommanderPanel() : base(new LocalizedColorScaleText(Language.GetText("Mods.Macrocosm.UI.Rocket.Common.Commander"), scale: 1.2f))
         {
-            Deactivate();
-            ClearList();
+        }
 
-            for (int i = 0; i < Main.maxPlayers; i++)
+        public override void OnInitialize()
+        {
+            base.OnInitialize();
+            BorderColor = UITheme.Current.PanelStyle.BorderColor;
+            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+
+            if (Main.netMode == NetmodeID.SinglePlayer)
+                Add(new UIPlayerHeadInfoElement(Main.LocalPlayer));
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            if (Main.netMode == NetmodeID.MultiplayerClient)
             {
-                var player = Main.player[i];
+                Deactivate();
+                ClearList();
 
-                if (!player.active)
-                    continue;
+                for (int i = 0; i < Main.maxPlayers; i++)
+                {
+                    var player = Main.player[i];
 
-                var rocketPlayer = player.GetModPlayer<RocketPlayer>();
+                    if (!player.active)
+                        continue;
 
-                if (rocketPlayer.InRocket && rocketPlayer.IsCommander && rocketPlayer.RocketID == Rocket.WhoAmI)
-                    Add(new UIPlayerHeadInfoElement(player));
+                    var rocketPlayer = player.GetModPlayer<RocketPlayer>();
+
+                    if (rocketPlayer.InRocket && rocketPlayer.IsCommander && rocketPlayer.RocketID == Rocket.WhoAmI)
+                        Add(new UIPlayerHeadInfoElement(player));
+                }
+
+                Activate();
             }
-
-            Activate();
         }
     }
 }

@@ -1,30 +1,31 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Players;
-
-public class InfoDisplayPlayer : ModPlayer
+namespace Macrocosm.Common.Players
 {
-    public bool Barometer { get; set; }
-    public bool GeigerMuller { get; set; }
-    public bool Thermometer { get; set; }
-
-    public override void ResetInfoAccessories()
+    public class InfoDisplayPlayer : ModPlayer
     {
-        Barometer = false;
-        GeigerMuller = false;
-        Thermometer = false;
-    }
+        public bool Barometer { get; set; }
+        public bool GeigerMuller { get; set; }
+        public bool Thermometer { get; set; }
 
-    public override void RefreshInfoAccessoriesFromTeamPlayers(Player otherPlayer)
-    {
-        if (otherPlayer.GetModPlayer<InfoDisplayPlayer>().Barometer)
-            Barometer = true;
+        public override void ResetInfoAccessories()
+        {
+            Barometer = false;
+            GeigerMuller = false;
+            Thermometer = false;
+        }
 
-        if (otherPlayer.GetModPlayer<InfoDisplayPlayer>().GeigerMuller)
-            GeigerMuller = true;
+        public override void RefreshInfoAccessoriesFromTeamPlayers(Player otherPlayer)
+        {
+            if (otherPlayer.GetModPlayer<InfoDisplayPlayer>().Barometer)
+                Barometer = true;
 
-        if (otherPlayer.GetModPlayer<InfoDisplayPlayer>().Thermometer)
-            Thermometer = true;
+            if (otherPlayer.GetModPlayer<InfoDisplayPlayer>().GeigerMuller)
+                GeigerMuller = true;
+
+            if (otherPlayer.GetModPlayer<InfoDisplayPlayer>().Thermometer)
+                Thermometer = true;
+        }
     }
 }

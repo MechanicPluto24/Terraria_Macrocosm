@@ -6,47 +6,48 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Walls;
-
-public class IndustrialSquarePaneledWall : ModItem
+namespace Macrocosm.Content.Items.Walls
 {
-    public override void SetStaticDefaults()
+    public class IndustrialSquarePaneledWall : ModItem
     {
-        Item.ResearchUnlockCount = 400;
-        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialSquarePaneledWallUnsafe>();
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 400;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialSquarePaneledWallUnsafe>();
+        }
+
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.IndustrialSquarePaneledWall>());
+            Item.width = 24;
+            Item.height = 24;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe(4)
+                .AddIngredient<IndustrialPlating>()
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 
-    public override void SetDefaults()
+    public class IndustrialSquarePaneledWallUnsafe : IndustrialSquarePaneledWall
     {
-        Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.IndustrialSquarePaneledWall>());
-        Item.width = 24;
-        Item.height = 24;
-    }
+        public override string Texture => base.Texture.Replace("Unsafe", "");
 
-    public override void AddRecipes()
-    {
-        CreateRecipe(4)
-            .AddIngredient<IndustrialPlating>()
-            .AddTile(TileID.WorkBenches)
-            .Register();
-    }
-}
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+            ItemID.Sets.DrawUnsafeIndicator[Type] = true;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialSquarePaneledWall>();
 
-public class IndustrialSquarePaneledWallUnsafe : IndustrialSquarePaneledWall
-{
-    public override string Texture => base.Texture.Replace("Unsafe", "");
+        }
 
-    public override void SetStaticDefaults()
-    {
-        base.SetStaticDefaults();
-        ItemID.Sets.DrawUnsafeIndicator[Type] = true;
-        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialSquarePaneledWall>();
-
-    }
-
-    public override void SetDefaults()
-    {
-        base.SetDefaults();
-        Item.createWall = VariantWall.WallType<Content.Walls.IndustrialSquarePaneledWall>(WallSafetyType.Unsafe);
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            Item.createWall = VariantWall.WallType<Content.Walls.IndustrialSquarePaneledWall>(WallSafetyType.Unsafe);
+        }
     }
 }

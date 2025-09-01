@@ -4,18 +4,19 @@ using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Walls;
-
-public class IndustrialHazardWall : VariantWall
+namespace Macrocosm.Content.Walls
 {
-    public override void SetVariantStaticDefaults(WallSafetyType variant)
+    public class IndustrialHazardWall : VariantWall
     {
-        AddMapEntry(new Color(159, 148, 0));
-        DustType = ModContent.DustType<IndustrialPlatingDust>();
+        public override void SetVariantStaticDefaults(WallSafetyType variant)
+        {
+            AddMapEntry(new Color(159, 148, 0));
+            DustType = ModContent.DustType<IndustrialPlatingDust>();
 
-        if (variant == WallSafetyType.Unsafe)
-            RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialHazardWallUnsafe>());
-        else
-            RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialHazardWall>());
+            if (variant == WallSafetyType.Unsafe)
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialHazardWallUnsafe>());
+            else
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.IndustrialHazardWall>());
+        }
     }
 }

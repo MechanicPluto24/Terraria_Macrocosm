@@ -4,52 +4,53 @@ using ReLogic.Content;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist;
-
-public class ChecklistInfoElement : InfoElement
+namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
 {
-    public bool MetState { get; set; } = false;
-
-    private string iconMet;
-    private string iconNotMet;
-
-    public ChecklistInfoElement(string langKey) : base(langKey)
+    public class ChecklistInfoElement : InfoElement
     {
-        iconMet = "Checklist/" + langKey + "_Met";
-        iconNotMet = "Checklist/" + langKey + "_NotMet";
-    }
+        public bool MetState { get; set; } = false;
 
-    public ChecklistInfoElement(string langKey, string customIconMet, string customIconNotMet) : base(langKey)
-    {
-        iconMet = customIconMet;
-        iconNotMet = customIconNotMet;
-    }
+        private string iconMet;
+        private string iconNotMet;
 
-    protected override Asset<Texture2D> GetIcon() => ModContent.RequestIfExists<Texture2D>("Macrocosm/Content/Rockets/Textures/" + (MetState ? iconMet : iconNotMet), out var texture) ? texture : null;
+        public ChecklistInfoElement(string langKey) : base(langKey)
+        {
+            iconMet = "Checklist/" + langKey + "_Met";
+            iconNotMet = "Checklist/" + langKey + "_NotMet";
+        }
 
-    protected override Asset<Texture2D> GetIconSymbol() => null;
+        public ChecklistInfoElement(string langKey, string customIconMet, string customIconNotMet) : base(langKey)
+        {
+            iconMet = customIconMet;
+            iconNotMet = customIconNotMet;
+        }
 
-    private string KeySelector => specialValueKey + "." + (MetState ? "Met" : "NotMet") + ".";
+        protected override Asset<Texture2D> GetIcon() => ModContent.RequestIfExists<Texture2D>("Macrocosm/Content/Rockets/Textures/" + (MetState ? iconMet : iconNotMet), out var texture) ? texture : null;
 
-    protected override LocalizedColorScaleText GetText()
-    {
-        string key = "Mods.Macrocosm.UI.Rocket.Navigation.Checklist." + KeySelector + "Display";
-        LocalizedText text = Language.GetText(key);
+        protected override Asset<Texture2D> GetIconSymbol() => null;
 
-        if (text.Value is "" or "default" || text.Value == key)
-            return new(LocalizedText.Empty);
-        else
-            return new(text);
-    }
+        private string KeySelector => specialValueKey + "." + (MetState ? "Met" : "NotMet") + ".";
 
-    protected override LocalizedText GetHoverText()
-    {
-        string key = "Mods.Macrocosm.UI.Rocket.Navigation.Checklist." + KeySelector + "Hover";
-        LocalizedText hoverText = Language.GetText(key);
+        protected override LocalizedColorScaleText GetText()
+        {
+            string key = "Mods.Macrocosm.UI.Rocket.Navigation.Checklist." + KeySelector + "Display";
+            LocalizedText text = Language.GetText(key);
 
-        if (hoverText.Value is "" or "default" || hoverText.Value == key)
-            return LocalizedText.Empty;
-        else
-            return hoverText;
+            if (text.Value is "" or "default" || text.Value == key)
+                return new(LocalizedText.Empty);
+            else
+                return new(text);
+        }
+
+        protected override LocalizedText GetHoverText()
+        {
+            string key = "Mods.Macrocosm.UI.Rocket.Navigation.Checklist." + KeySelector + "Hover";
+            LocalizedText hoverText = Language.GetText(key);
+
+            if (hoverText.Value is "" or "default" || hoverText.Value == key)
+                return LocalizedText.Empty;
+            else
+                return hoverText;
+        }
     }
 }

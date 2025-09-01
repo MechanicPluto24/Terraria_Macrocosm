@@ -6,31 +6,32 @@ using Terraria.GameContent;
 using Terraria.GameContent.UI.BigProgressBar;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.NPCs.Bosses.CraterDemon;
-
-public class CraterDemonBossBar : ModBossBar
+namespace Macrocosm.Content.NPCs.Bosses.CraterDemon
 {
-    private int bossHeadIndex = -1;
-
-    public override Asset<Texture2D> GetIconTexture(ref Rectangle? iconFrame)
+    public class CraterDemonBossBar : ModBossBar
     {
-        if (bossHeadIndex > 0)
-            return TextureAssets.NpcHeadBoss[bossHeadIndex];
+        private int bossHeadIndex = -1;
 
-        return null;
-    }
+        public override Asset<Texture2D> GetIconTexture(ref Rectangle? iconFrame)
+        {
+            if (bossHeadIndex > 0)
+                return TextureAssets.NpcHeadBoss[bossHeadIndex];
 
-    public override bool? ModifyInfo(ref BigProgressBarInfo info, ref float life, ref float lifeMax, ref float shield, ref float shieldMax)
-    {
-        NPC npc = Main.npc[info.npcIndexToAimAt];
-        if (!npc.active)
-            return false;
+            return null;
+        }
 
-        if (bossHeadIndex == -1)
-            bossHeadIndex = npc.GetBossHeadTextureIndex();
+        public override bool? ModifyInfo(ref BigProgressBarInfo info, ref float life, ref float lifeMax, ref float shield, ref float shieldMax)
+        {
+            NPC npc = Main.npc[info.npcIndexToAimAt];
+            if (!npc.active)
+                return false;
 
-        life = npc.life;
-        lifeMax = npc.lifeMax;
-        return true;
+            if (bossHeadIndex == -1)
+                bossHeadIndex = npc.GetBossHeadTextureIndex();
+
+            life = npc.life;
+            lifeMax = npc.lifeMax;
+            return true;
+        }
     }
 }

@@ -5,109 +5,110 @@ using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Drawing;
-
-// Currently only used in loading screens, prefer Main.BlackFadeIn for in-game.
-// TODO: rework into a clone of BlackFadeIn with custom colors?
-public class FadeEffect : ModSystem
+namespace Macrocosm.Common.Drawing
 {
-    public static bool IsFading => isFading;
-
-    public static float CurrentFade => fadeAlpha / 255f;
-
-    private static int fadeAlpha;
-    private static float fadeSpeed;
-    private static bool isFading;
-    private static bool isFadingIn;
-    private static bool interfaceSelfDraw;
-    private static bool keepActiveUntilReset;
-
-    public static void Draw()
+    // Currently only used in loading screens, prefer Main.BlackFadeIn for in-game.
+    // TODO: rework into a clone of BlackFadeIn with custom colors?
+    public class FadeEffect : ModSystem
     {
-        if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
-            UpdateFadeEffect();
+        public static bool IsFading => isFading;
 
-        DrawBlack(1f - fadeAlpha / 255f);
-    }
+        public static float CurrentFade => fadeAlpha / 255f;
 
-    public override void PostDrawInterface(SpriteBatch spriteBatch)
-    {
-        if (interfaceSelfDraw && (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient))
+        private static int fadeAlpha;
+        private static float fadeSpeed;
+        private static bool isFading;
+        private static bool isFadingIn;
+        private static bool interfaceSelfDraw;
+        private static bool keepActiveUntilReset;
+
+        public static void Draw()
         {
-            if (isFading)
+            if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
+                UpdateFadeEffect();
+
+            DrawBlack(1f - fadeAlpha / 255f);
+        }
+
+        public override void PostDrawInterface(SpriteBatch spriteBatch)
+        {
+            if (interfaceSelfDraw && (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient))
             {
-                Draw();
-            }
-            else
-            {
-                if (!keepActiveUntilReset)
+                if (isFading)
                 {
-                    interfaceSelfDraw = false;
-                    isFading = false;
+                    Draw();
+                }
+                else
+                {
+                    if (!keepActiveUntilReset)
+                    {
+                        interfaceSelfDraw = false;
+                        isFading = false;
+                    }
                 }
             }
         }
-    }
 
-    public static void DrawBlack(float opacity)
-    {
-        Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth + 1, Main.screenHeight + 1), Color.Black * opacity);
-    }
-
-    public static void ResetFade()
-    {
-        fadeAlpha = 0;
-        isFading = false;
-        isFadingIn = false;
-        interfaceSelfDraw = false;
-        keepActiveUntilReset = false;
-    }
-
-    public static void StartFadeIn(float speed = 0.098f, bool selfDraw = false, bool keepActive = false)
-    {
-        interfaceSelfDraw = selfDraw;
-        keepActiveUntilReset = keepActive;
-        fadeAlpha = 0;
-        fadeSpeed = speed;
-        isFadingIn = true;
-        isFading = true;
-    }
-
-    public static void StartFadeOut(float speed = 0.098f, bool selfDraw = false, bool keepActive = false)
-    {
-        interfaceSelfDraw = selfDraw;
-        keepActiveUntilReset = keepActive;
-        fadeAlpha = 255;
-        fadeSpeed = speed;
-        isFadingIn = false;
-        isFading = true;
-    }
-
-    private static void UpdateFadeEffect()
-    {
-        if (!isFading)
-            return;
-
-        if (isFadingIn)
+        public static void DrawBlack(float opacity)
         {
-            fadeAlpha += (int)(fadeSpeed * 255f);
-            if (fadeAlpha >= 255)
-            {
-                fadeAlpha = 255;
-
-                if (!keepActiveUntilReset)
-                    isFading = false;
-            }
+            Main.spriteBatch.Draw(TextureAssets.BlackTile.Value, new Rectangle(0, 0, Main.screenWidth + 1, Main.screenHeight + 1), Color.Black * opacity);
         }
-        else
-        {
-            fadeAlpha -= (int)(fadeSpeed * 255f);
-            if (fadeAlpha <= 0)
-            {
-                fadeAlpha = 0;
 
-                if (!keepActiveUntilReset)
-                    isFading = false;
+        public static void ResetFade()
+        {
+            fadeAlpha = 0;
+            isFading = false;
+            isFadingIn = false;
+            interfaceSelfDraw = false;
+            keepActiveUntilReset = false;
+        }
+
+        public static void StartFadeIn(float speed = 0.098f, bool selfDraw = false, bool keepActive = false)
+        {
+            interfaceSelfDraw = selfDraw;
+            keepActiveUntilReset = keepActive;
+            fadeAlpha = 0;
+            fadeSpeed = speed;
+            isFadingIn = true;
+            isFading = true;
+        }
+
+        public static void StartFadeOut(float speed = 0.098f, bool selfDraw = false, bool keepActive = false)
+        {
+            interfaceSelfDraw = selfDraw;
+            keepActiveUntilReset = keepActive;
+            fadeAlpha = 255;
+            fadeSpeed = speed;
+            isFadingIn = false;
+            isFading = true;
+        }
+
+        private static void UpdateFadeEffect()
+        {
+            if (!isFading)
+                return;
+
+            if (isFadingIn)
+            {
+                fadeAlpha += (int)(fadeSpeed * 255f);
+                if (fadeAlpha >= 255)
+                {
+                    fadeAlpha = 255;
+
+                    if (!keepActiveUntilReset)
+                        isFading = false;
+                }
+            }
+            else
+            {
+                fadeAlpha -= (int)(fadeSpeed * 255f);
+                if (fadeAlpha <= 0)
+                {
+                    fadeAlpha = 0;
+
+                    if (!keepActiveUntilReset)
+                        isFading = false;
+                }
             }
         }
     }

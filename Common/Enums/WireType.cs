@@ -1,9 +1,10 @@
-﻿namespace Macrocosm.Common.Enums;
-
-public enum WireType
+﻿namespace Macrocosm.Common.Enums
 {
-    Red,
-    Blue,
-    Green,
-    Yellow
+    public enum WireType
+    {
+        Red,
+        Blue,
+        Green,
+        Yellow
+    }
 }

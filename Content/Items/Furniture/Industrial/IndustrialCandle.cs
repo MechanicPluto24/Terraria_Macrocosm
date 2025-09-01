@@ -2,23 +2,24 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Furniture.Industrial;
-
-public class IndustrialCandle : ModItem
+namespace Macrocosm.Content.Items.Furniture.Industrial
 {
-    public override void SetDefaults()
+    public class IndustrialCandle : ModItem
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialCandle>());
-        Item.width = 16;
-        Item.height = 18;
-        Item.value = 500;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialCandle>());
+            Item.width = 16;
+            Item.height = 18;
+            Item.value = 500;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<IndustrialPlating>(4)
-        .AddTile<Tiles.Crafting.Fabricator>()
-        .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<IndustrialPlating>(4)
+            .AddTile<Tiles.Crafting.Fabricator>()
+            .Register();
+        }
     }
 }

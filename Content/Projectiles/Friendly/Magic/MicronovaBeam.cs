@@ -7,130 +7,131 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-namespace Macrocosm.Content.Projectiles.Friendly.Magic;
-
-public class MicronovaBeam : ModProjectile
+namespace Macrocosm.Content.Projectiles.Friendly.Magic
 {
-    public override void SetStaticDefaults()
+    public class MicronovaBeam : ModProjectile
     {
-        Main.projFrames[Type] = 1;
-    }
-    private const float MaxBeamLength = 3000f;
-    private const float BeamHitboxCollisionWidth = 22f;
-
-    public int AITimer
-    {
-        get => (int)Projectile.ai[0];
-        set => Projectile.ai[0] = value;
-    }
-
-    public ref float AimX => ref Projectile.ai[1];
-    public ref float AimY => ref Projectile.ai[2];
-
-    float Transparency = 0f;
-    public override void SetDefaults()
-    {
-        Projectile.width = 28;
-        Projectile.height = 22;
-        Projectile.hide = true;
-        Projectile.friendly = true;
-        Projectile.hostile = false;
-        Projectile.DamageType = DamageClass.Magic;
-        Projectile.penetrate = -1;
-        Projectile.tileCollide = false;
-        Projectile.alpha = 255;
-        Projectile.timeLeft = 85;
-        Projectile.usesLocalNPCImmunity = true;
-        Projectile.localNPCHitCooldown = 25;
-    }
-    public override bool ShouldUpdatePosition() => false;
-
-    public override void AI()
-    {
-        Player player = Main.player[Projectile.owner];
-        if (AITimer < 1)
-            Projectile.velocity = new Vector2(AimX, AimY);
-
-        Projectile.rotation = Projectile.velocity.ToRotation();
-        AITimer++;
-
-        if (Transparency < 1f && AITimer < 25)
-            Transparency += 0.1f;
-        else
-            Transparency -= 0.1f;
-        /*
+        public override void SetStaticDefaults()
         {
-            float visualBeamLength = MaxBeamLength - 14.5f * Projectile.scale * Projectile.scale;
-            for (int i = 0; i < visualBeamLength; i++)
+            Main.projFrames[Type] = 1;
+        }
+        private const float MaxBeamLength = 3000f;
+        private const float BeamHitboxCollisionWidth = 22f;
+
+        public int AITimer
+        {
+            get => (int)Projectile.ai[0];
+            set => Projectile.ai[0] = value;
+        }
+
+        public ref float AimX => ref Projectile.ai[1];
+        public ref float AimY => ref Projectile.ai[2];
+
+        float Transparency = 0f;
+        public override void SetDefaults()
+        {
+            Projectile.width = 28;
+            Projectile.height = 22;
+            Projectile.hide = true;
+            Projectile.friendly = true;
+            Projectile.hostile = false;
+            Projectile.DamageType = DamageClass.Magic;
+            Projectile.penetrate = -1;
+            Projectile.tileCollide = false;
+            Projectile.alpha = 255;
+            Projectile.timeLeft = 85;
+            Projectile.usesLocalNPCImmunity = true;
+            Projectile.localNPCHitCooldown = 25;
+        }
+        public override bool ShouldUpdatePosition() => false;
+
+        public override void AI()
+        {
+            Player player = Main.player[Projectile.owner];
+            if (AITimer < 1)
+                Projectile.velocity = new Vector2(AimX, AimY);
+
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            AITimer++;
+
+            if (Transparency < 1f && AITimer < 25)
+                Transparency += 0.1f;
+            else
+                Transparency -= 0.1f;
+            /*
             {
-                Vector2 pos = Vector2.Lerp(Projectile.Center, Projectile.Center + Projectile.velocity * MaxBeamLength, i / 2000f);
-                var d = Dust.NewDustPerfect(pos, DustID.Electric, Projectile.velocity);
-                d.alpha = 32;
-                d.noGravity = true;
+                float visualBeamLength = MaxBeamLength - 14.5f * Projectile.scale * Projectile.scale;
+                for (int i = 0; i < visualBeamLength; i++)
+                {
+                    Vector2 pos = Vector2.Lerp(Projectile.Center, Projectile.Center + Projectile.velocity * MaxBeamLength, i / 2000f);
+                    var d = Dust.NewDustPerfect(pos, DustID.Electric, Projectile.velocity);
+                    d.alpha = 32;
+                    d.noGravity = true;
+                }
             }
+            */
         }
-        */
-    }
 
-    public override bool? CanHitNPC(NPC npc)
-    {
-        return !npc.friendly;
-    }
+        public override bool? CanHitNPC(NPC npc)
+        {
+            return !npc.friendly;
+        }
 
-    public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-    {
-        overPlayers.Add(index);
-    }
+        public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
+        {
+            overPlayers.Add(index);
+        }
 
-    public override Color? GetAlpha(Color lightColor)
-        => Color.White * (1f - Projectile.alpha / 255f);
+        public override Color? GetAlpha(Color lightColor)
+            => Color.White * (1f - Projectile.alpha / 255f);
 
 
-    private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
-    {
-        if (Projectile.velocity == Vector2.Zero)
+        private SpriteBatchState state;
+        public override bool PreDraw(ref Color lightColor)
+        {
+            if (Projectile.velocity == Vector2.Zero)
+                return false;
+
+            Texture2D texture = TextureAssets.Projectile[Type].Value;
+            Vector2 centerFloored = Projectile.Center.Floor() + Projectile.velocity * Projectile.scale * 10.5f;
+            float visualBeamLength = MaxBeamLength - 14.5f * Projectile.scale * Projectile.scale;
+            Vector2 startPosition = centerFloored - Main.screenPosition;
+            Vector2 endPosition = startPosition + Projectile.velocity * visualBeamLength;
+
+            Vector2 scale = new Vector2(Projectile.scale * (0.5f + 0.5f * Transparency));
+            Color color = new Color(171, 255, 255).WithAlpha(86) * Transparency * (0.9f + (0.1f * MathF.Sin(AITimer)));
+            startPosition += Main.rand.NextVector2Circular(2, 2);
+
+            state.SaveState(Main.spriteBatch);
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
+
+            float count = (4f * Transparency);
+            for (int i = 0; i < count; i++)
+            {
+                float scaleFactor = 1f + i * 0.3f;
+                float alphaFactor = 1f - i / count;
+                Utility.DrawBeam(texture, startPosition, endPosition, scale * scaleFactor, color * alphaFactor, new Utils.LaserLineFraming(DelegateMethods.LightningLaserDraw));
+            }
+
+            Main.spriteBatch.End();
+            Main.spriteBatch.Begin(state);
+
             return false;
-
-        Texture2D texture = TextureAssets.Projectile[Type].Value;
-        Vector2 centerFloored = Projectile.Center.Floor() + Projectile.velocity * Projectile.scale * 10.5f;
-        float visualBeamLength = MaxBeamLength - 14.5f * Projectile.scale * Projectile.scale;
-        Vector2 startPosition = centerFloored - Main.screenPosition;
-        Vector2 endPosition = startPosition + Projectile.velocity * visualBeamLength;
-
-        Vector2 scale = new Vector2(Projectile.scale * (0.5f + 0.5f * Transparency));
-        Color color = new Color(171, 255, 255).WithAlpha(86) * Transparency * (0.9f + (0.1f * MathF.Sin(AITimer)));
-        startPosition += Main.rand.NextVector2Circular(2, 2);
-
-        state.SaveState(Main.spriteBatch);
-        Main.spriteBatch.End();
-        Main.spriteBatch.Begin(BlendState.AlphaBlend, state);
-
-        float count = (4f * Transparency);
-        for (int i = 0; i < count; i++)
-        {
-            float scaleFactor = 1f + i * 0.3f;
-            float alphaFactor = 1f - i / count;
-            Utility.DrawBeam(texture, startPosition, endPosition, scale * scaleFactor, color * alphaFactor, new Utils.LaserLineFraming(DelegateMethods.LightningLaserDraw));
         }
 
-        Main.spriteBatch.End();
-        Main.spriteBatch.Begin(state);
-
-        return false;
-    }
-
-    public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
-    {
-        // If the target is touching the beam's hitbox (which is a small rectangle vaguely overlapping the host Prism), that's good enough.
-        if (projHitbox.Intersects(targetHitbox))
+        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
         {
-            return true;
-        }
+            // If the target is touching the beam's hitbox (which is a small rectangle vaguely overlapping the host Prism), that's good enough.
+            if (projHitbox.Intersects(targetHitbox))
+            {
+                return true;
+            }
 
-        // Otherwise, perform an AABB line collision check to check the whole beam.
-        float _ = float.NaN;
-        Vector2 beamEndPos = Projectile.Center + Projectile.velocity * MaxBeamLength;
-        return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, beamEndPos, BeamHitboxCollisionWidth * Projectile.scale, ref _);
+            // Otherwise, perform an AABB line collision check to check the whole beam.
+            float _ = float.NaN;
+            Vector2 beamEndPos = Projectile.Center + Projectile.velocity * MaxBeamLength;
+            return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, beamEndPos, BeamHitboxCollisionWidth * Projectile.scale, ref _);
+        }
     }
 }

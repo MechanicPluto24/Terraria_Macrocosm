@@ -10,64 +10,65 @@ using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
-namespace Macrocosm.Content.Tiles.Furniture.Industrial;
-
-public class IndustrialDoorClosed : ModTile, IDoorTile
+namespace Macrocosm.Content.Tiles.Furniture.Industrial
 {
-    public int Height => 3;
-    public int Width => 1;
-    public bool IsClosed => true;
-    public int StyleCount => 1;
-
-    public override void SetStaticDefaults()
+    public class IndustrialDoorClosed : ModTile, IDoorTile
     {
-        Main.tileFrameImportant[Type] = true;
-        Main.tileBlockLight[Type] = true;
-        Main.tileSolid[Type] = true;
-        Main.tileNoAttach[Type] = true;
-        Main.tileLavaDeath[Type] = true;
-        TileID.Sets.NotReallySolid[Type] = true;
-        TileID.Sets.DrawsWalls[Type] = true;
-        TileID.Sets.HasOutlines[Type] = true;
-        TileID.Sets.DisableSmartCursor[Type] = true;
-        TileID.Sets.OpenDoorID[Type] = ModContent.TileType<IndustrialDoorOpen>();
+        public int Height => 3;
+        public int Width => 1;
+        public bool IsClosed => true;
+        public int StyleCount => 1;
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+        public override void SetStaticDefaults()
+        {
+            Main.tileFrameImportant[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            Main.tileSolid[Type] = true;
+            Main.tileNoAttach[Type] = true;
+            Main.tileLavaDeath[Type] = true;
+            TileID.Sets.NotReallySolid[Type] = true;
+            TileID.Sets.DrawsWalls[Type] = true;
+            TileID.Sets.HasOutlines[Type] = true;
+            TileID.Sets.DisableSmartCursor[Type] = true;
+            TileID.Sets.OpenDoorID[Type] = ModContent.TileType<IndustrialDoorOpen>();
 
-        DustType = ModContent.DustType<IndustrialPlatingDust>();
-        AdjTiles = [TileID.ClosedDoor];
+            AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
 
-        AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
-        TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.ClosedDoor, 0));
-        TileObjectData.newTile.Width = Width;
-        TileObjectData.newTile.Height = Height;
-        TileObjectData.newTile.Origin = new Point16(0, 0);
-        TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, TileObjectData.newTile.Width, 0);
-        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, TileObjectData.newTile.Width, 0);
-        TileObjectData.newTile.UsesCustomCanPlace = true;
-        TileObjectData.newTile.LavaDeath = true;
-        TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
-        TileObjectData.newTile.CoordinateWidth = 16;
-        TileObjectData.newTile.CoordinatePadding = 2;
-        TileObjectData.newTile.StyleHorizontal = false;
-        TileObjectData.addTile(Type);
-    }
+            DustType = ModContent.DustType<IndustrialPlatingDust>();
+            AdjTiles = [TileID.ClosedDoor];
 
-    public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
-    {
-        return true;
-    }
+            AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Door"));
+            TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.ClosedDoor, 0));
+            TileObjectData.newTile.Width = Width;
+            TileObjectData.newTile.Height = Height;
+            TileObjectData.newTile.Origin = new Point16(0, 0);
+            TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile, TileObjectData.newTile.Width, 0);
+            TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile, TileObjectData.newTile.Width, 0);
+            TileObjectData.newTile.UsesCustomCanPlace = true;
+            TileObjectData.newTile.LavaDeath = true;
+            TileObjectData.newTile.CoordinateHeights = [16, 16, 16];
+            TileObjectData.newTile.CoordinateWidth = 16;
+            TileObjectData.newTile.CoordinatePadding = 2;
+            TileObjectData.newTile.StyleHorizontal = false;
+            TileObjectData.addTile(Type);
+        }
 
-    public override void NumDust(int i, int j, bool fail, ref int num)
-    {
-        num = 1;
-    }
+        public override bool HasSmartInteract(int i, int j, SmartInteractScanSettings settings)
+        {
+            return true;
+        }
 
-    public override void MouseOver(int i, int j)
-    {
-        Player player = Main.LocalPlayer;
-        player.noThrow = 2;
-        player.cursorItemIconEnabled = true;
-        player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
+        public override void NumDust(int i, int j, bool fail, ref int num)
+        {
+            num = 1;
+        }
+
+        public override void MouseOver(int i, int j)
+        {
+            Player player = Main.LocalPlayer;
+            player.noThrow = 2;
+            player.cursorItemIconEnabled = true;
+            player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
+        }
     }
 }

@@ -2,18 +2,19 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Machines;
-
-public class SolarPanelTileTE : GeneratorTE
+namespace Macrocosm.Content.Machines
 {
-    public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelTile>();
-
-    public override bool PoweredOn => Main.dayTime;
-    public override bool CanCluster => true;
-
-    public override void MachineUpdate()
+    public class SolarPanelTileTE : GeneratorTE
     {
-        MaxGeneratedPower = 0.1f * ClusterSize;
-        GeneratedPower = PoweredOn ? MaxGeneratedPower : 0;
+        public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelTile>();
+
+        public override bool PoweredOn => Main.dayTime;
+        public override bool CanCluster => true;
+
+        public override void MachineUpdate()
+        {
+            MaxGeneratedPower = 0.1f * ClusterSize;
+            GeneratedPower = PoweredOn ? MaxGeneratedPower : 0;
+        }
     }
 }

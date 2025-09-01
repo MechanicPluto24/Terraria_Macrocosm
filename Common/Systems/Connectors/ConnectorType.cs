@@ -1,10 +1,11 @@
-﻿namespace Macrocosm.Common.Systems.Connectors;
-
-public enum ConnectorType
+﻿namespace Macrocosm.Common.Systems.Connectors
 {
-    None,
-    Conveyor,
-    ConveyorInlet,
-    ConveyorOutlet,
-    // ...
+    public enum ConnectorType
+    {
+        None,
+        Conveyor,
+        ConveyorInlet,
+        ConveyorOutlet,
+        // ...
+    }
 }

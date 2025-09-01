@@ -7,43 +7,44 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
 
-namespace Macrocosm.Content.Particles;
-
-public class TintableSpark : Particle
+namespace Macrocosm.Content.Particles
 {
-    public override string Texture => Macrocosm.EmptyTexPath;
-
-    private float origScale;
-
-    public override void SetDefaults()
+    public class TintableSpark : Particle
     {
-        TimeToLive = 250;
-        Color = Color.White;
-    }
+        public override string Texture => Macrocosm.EmptyTexPath;
 
-    public override void OnSpawn()
-    {
-        origScale = Scale.X;
-    }
+        private float origScale;
 
-    public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-    {
-        Texture2D texture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
-        spriteBatch.Draw(texture, Center - screenPosition, null, Color.WithOpacity(0.8f), Rotation, texture.Size() / 2, Scale, SpriteEffects.None, 0f);
-        return false;
-    }
+        public override void SetDefaults()
+        {
+            TimeToLive = 250;
+            Color = Color.White;
+        }
 
-    public override void AI()
-    {
-        float speed = Velocity.LengthSquared() * 0.9f;
-        Rotation = Velocity.ToRotation() + MathHelper.PiOver2;
-        Scale = new Vector2(Math.Clamp(speed, 0, 2), Math.Clamp(speed, 0, 5)) * 0.04f * origScale;
+        public override void OnSpawn()
+        {
+            origScale = Scale.X;
+        }
 
-        Velocity *= 0.91f;
+        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            Texture2D texture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
+            spriteBatch.Draw(texture, Center - screenPosition, null, Color.WithOpacity(0.8f), Rotation, texture.Size() / 2, Scale, SpriteEffects.None, 0f);
+            return false;
+        }
 
-        Lighting.AddLight(Center, new Vector3(1f, 1f, 1f) * Scale.X * 0.02f);
+        public override void AI()
+        {
+            float speed = Velocity.LengthSquared() * 0.9f;
+            Rotation = Velocity.ToRotation() + MathHelper.PiOver2;
+            Scale = new Vector2(Math.Clamp(speed, 0, 2), Math.Clamp(speed, 0, 5)) * 0.04f * origScale;
 
-        if (Scale.Y < 0.1f)
-            Kill();
+            Velocity *= 0.91f;
+
+            Lighting.AddLight(Center, new Vector3(1f, 1f, 1f) * Scale.X * 0.02f);
+
+            if (Scale.Y < 0.1f)
+                Kill();
+        }
     }
 }

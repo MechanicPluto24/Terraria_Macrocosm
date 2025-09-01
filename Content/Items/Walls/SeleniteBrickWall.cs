@@ -3,27 +3,28 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Walls;
-
-public class SeleniteBrickWall : ModItem
+namespace Macrocosm.Content.Items.Walls
 {
-    public override void SetStaticDefaults()
+    public class SeleniteBrickWall : ModItem
     {
-        Item.ResearchUnlockCount = 400;
-    }
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 400;
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableWall(ModContent.WallType<Content.Walls.SeleniteBrickWall>());
-        Item.width = 24;
-        Item.height = 24;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableWall(ModContent.WallType<Content.Walls.SeleniteBrickWall>());
+            Item.width = 24;
+            Item.height = 24;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe(4)
-            .AddIngredient<SeleniteBrickWall>()
-            .AddTile(TileID.WorkBenches)
-            .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe(4)
+                .AddIngredient<SeleniteBrickWall>()
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 }

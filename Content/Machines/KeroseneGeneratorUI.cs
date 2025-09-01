@@ -9,156 +9,157 @@ using Terraria.Localization;
 using Terraria.UI;
 
 
-namespace Macrocosm.Content.Machines;
-
-public class KeroseneGeneratorUI : MachineUI
+namespace Macrocosm.Content.Machines
 {
-    public KeroseneGeneratorTE KeroseneGenerator => MachineTE as KeroseneGeneratorTE;
-
-    private UIPanel backgroundPanel;
-    private UIPanel fuelPanel;
-
-    private UIText rpmText;
-    private UIPanelProgressBar rpmProgressBar;
-    private UITextPanel<string> powerStatusText;
-
-    private List<UILiquidTankPiston> pistons = new();
-
-    private int timer;
-
-    public KeroseneGeneratorUI()
+    public class KeroseneGeneratorUI : MachineUI
     {
-    }
+        public KeroseneGeneratorTE KeroseneGenerator => MachineTE as KeroseneGeneratorTE;
 
-    public override void OnInitialize()
-    {
-        base.OnInitialize();
+        private UIPanel backgroundPanel;
+        private UIPanel fuelPanel;
 
-        Width.Set(495f, 0f);
-        Height.Set(250f, 0f);
+        private UIText rpmText;
+        private UIPanelProgressBar rpmProgressBar;
+        private UITextPanel<string> powerStatusText;
 
-        title.Top.Set(-36, 0);
+        private List<UILiquidTankPiston> pistons = new();
 
-        //Recalculate();
+        private int timer;
 
-        backgroundPanel = new()
+        public KeroseneGeneratorUI()
         {
-            Width = new(0, 1),
-            Height = new(0, 1),
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        Append(backgroundPanel);
+        }
 
-        powerStatusText = new("", textScale: 1f, large: false)
+        public override void OnInitialize()
         {
-            HAlign = 1f,
-            VAlign = 0.04f,
-            Width = new(0, 0.6f - 0.01f),
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        backgroundPanel.Append(powerStatusText);
+            base.OnInitialize();
 
-        rpmProgressBar = new()
-        {
-            HAlign = 0f,
-            VAlign = 0.04f,
-            Width = new(0, 0.4f - 0.01f),
-            Height = new(0, 0.22f),
-            FillColor = new Color(0, 255, 0),
-            FillColorEnd = new Color(255, 0, 0),
-            IsVertical = false,
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        backgroundPanel.Append(rpmProgressBar);
+            Width.Set(495f, 0f);
+            Height.Set(250f, 0f);
 
-        rpmText = new("", textScale: 1f, large: false)
-        {
-            HAlign = 0.5f,
-            VAlign = 0.5f,
-            //Width = new(0, 0.4f - 0.01f),
-        };
-        rpmProgressBar.Append(rpmText);
+            title.Top.Set(-36, 0);
 
-        fuelPanel = new()
-        {
-            HAlign = 0.5f,
-            Top = new(0, 0.27f),
-            Height = new(0, 0.72f),
-            Width = new(0, 1f),
-            BorderColor = UITheme.Current.ButtonStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
-        };
-        backgroundPanel.Append(fuelPanel);
+            //Recalculate();
 
-        pistons = new();
-        for (int i = 0; i < 6; i++)
-        {
-            var piston = new UILiquidTankPiston(Liquids.LiquidType.RocketFuel)
+            backgroundPanel = new()
             {
-                Left = new(42 + i * 66, 0),
-                Top = new(-6, 0.5f),
-                Width = new(60, 0f),
-                Height = new(0, 0.4f),
+                Width = new(0, 1),
+                Height = new(0, 1),
                 BorderColor = UITheme.Current.ButtonStyle.BorderColor,
                 BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
             };
-            pistons.Add(piston);
-            fuelPanel.Append(piston);
-        }
+            Append(backgroundPanel);
 
-        if (KeroseneGenerator.Inventory is not null)
-        {
-            for (int i = 0; i < KeroseneGenerator.Inventory.Size; i++)
+            powerStatusText = new("", textScale: 1f, large: false)
             {
-                var inputSlot = KeroseneGenerator.Inventory.ProvideItemSlot(i, ItemSlot.Context.ChestItem);
+                HAlign = 1f,
+                VAlign = 0.04f,
+                Width = new(0, 0.6f - 0.01f),
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(powerStatusText);
 
-                inputSlot.Left = new(i * 48, 0f);
-                inputSlot.Top = new(-6, 0f);
-                inputSlot.SetPadding(0f);
-                fuelPanel.Append(inputSlot);
+            rpmProgressBar = new()
+            {
+                HAlign = 0f,
+                VAlign = 0.04f,
+                Width = new(0, 0.4f - 0.01f),
+                Height = new(0, 0.22f),
+                FillColor = new Color(0, 255, 0),
+                FillColorEnd = new Color(255, 0, 0),
+                IsVertical = false,
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(rpmProgressBar);
+
+            rpmText = new("", textScale: 1f, large: false)
+            {
+                HAlign = 0.5f,
+                VAlign = 0.5f,
+                //Width = new(0, 0.4f - 0.01f),
+            };
+            rpmProgressBar.Append(rpmText);
+
+            fuelPanel = new()
+            {
+                HAlign = 0.5f,
+                Top = new(0, 0.27f),
+                Height = new(0, 0.72f),
+                Width = new(0, 1f),
+                BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+            };
+            backgroundPanel.Append(fuelPanel);
+
+            pistons = new();
+            for (int i = 0; i < 6; i++)
+            {
+                var piston = new UILiquidTankPiston(Liquids.LiquidType.RocketFuel)
+                {
+                    Left = new(42 + i * 66, 0),
+                    Top = new(-6, 0.5f),
+                    Width = new(60, 0f),
+                    Height = new(0, 0.4f),
+                    BorderColor = UITheme.Current.ButtonStyle.BorderColor,
+                    BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor
+                };
+                pistons.Add(piston);
+                fuelPanel.Append(piston);
+            }
+
+            if (KeroseneGenerator.Inventory is not null)
+            {
+                for (int i = 0; i < KeroseneGenerator.Inventory.Size; i++)
+                {
+                    var inputSlot = KeroseneGenerator.Inventory.ProvideItemSlot(i, ItemSlot.Context.ChestItem);
+
+                    inputSlot.Left = new(i * 48, 0f);
+                    inputSlot.Top = new(-6, 0f);
+                    inputSlot.SetPadding(0f);
+                    fuelPanel.Append(inputSlot);
+                }
             }
         }
-    }
 
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
-        Inventory.ActiveInventory = KeroseneGenerator.Inventory;
-
-        string power = $"{KeroseneGenerator.GeneratedPower:F2}";
-        powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format(power));
-
-        timer++;
-
-        float rpmProgress = KeroseneGenerator.RPMProgress;
-        rpmProgressBar.Progress = rpmProgress;
-
-        float rpm = KeroseneGenerator.RPM;
-        rpmText.SetText(Language.GetText("Mods.Macrocosm.Machines.KeroseneGenerator.RPM").Format((int)rpm));
-        rpmText.SetText($"{(int)rpm} RPM");
-
-        if (rpmProgress > 0)
+        public override void Update(GameTime gameTime)
         {
-            // how do I animate this shit
-            int interval = (int)MathHelper.Lerp(120, 30, rpmProgress);
-            for (int i = 0; i < pistons.Count; i++)
+            base.Update(gameTime);
+            Inventory.ActiveInventory = KeroseneGenerator.Inventory;
+
+            string power = $"{KeroseneGenerator.GeneratedPower:F2}";
+            powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format(power));
+
+            timer++;
+
+            float rpmProgress = KeroseneGenerator.RPMProgress;
+            rpmProgressBar.Progress = rpmProgress;
+
+            float rpm = KeroseneGenerator.RPM;
+            rpmText.SetText(Language.GetText("Mods.Macrocosm.Machines.KeroseneGenerator.RPM").Format((int)rpm));
+            rpmText.SetText($"{(int)rpm} RPM");
+
+            if (rpmProgress > 0)
             {
-                UILiquidTankPiston piston = pistons[i];
-                if ((timer % (interval * 2)) < interval)
+                // how do I animate this shit
+                int interval = (int)MathHelper.Lerp(120, 30, rpmProgress);
+                for (int i = 0; i < pistons.Count; i++)
                 {
-                    if (i % 2 == 0)
-                        piston.StartAnimation(2);
-                }
-                else
-                {
-                    if (i % 2 == 1)
-                        piston.StartAnimation(2);
+                    UILiquidTankPiston piston = pistons[i];
+                    if ((timer % (interval * 2)) < interval)
+                    {
+                        if (i % 2 == 0)
+                            piston.StartAnimation(2);
+                    }
+                    else
+                    {
+                        if (i % 2 == 1)
+                            piston.StartAnimation(2);
+                    }
                 }
             }
         }
-    }
 
+    }
 }

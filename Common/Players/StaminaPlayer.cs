@@ -2,39 +2,40 @@
 using System;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Players;
-
-public class StaminaPlayer : ModPlayer
+namespace Macrocosm.Common.Players
 {
-    public override bool IsLoadingEnabled(Mod mod) => false;
-
-    private float staminaRegenCooldown = 90f;
-    private float staminaRegenPeriod = 60f;
-    public void ResetStaminaCooldown(float value) => staminaRegenCooldown = value;
-
-    private float meleeStamina = 1f;
-    public float MeleeStamina
+    public class StaminaPlayer : ModPlayer
     {
-        get => meleeStamina;
-        set => meleeStamina = MathHelper.Clamp(value, 0.01f, 1f);
-    }
+        public override bool IsLoadingEnabled(Mod mod) => false;
 
-    public override void PostUpdateMiscEffects()
-    {
-        if (MeleeStamina < 1f)
+        private float staminaRegenCooldown = 90f;
+        private float staminaRegenPeriod = 60f;
+        public void ResetStaminaCooldown(float value) => staminaRegenCooldown = value;
+
+        private float meleeStamina = 1f;
+        public float MeleeStamina
         {
-            staminaRegenCooldown--;
-            if (staminaRegenCooldown <= 0f)
+            get => meleeStamina;
+            set => meleeStamina = MathHelper.Clamp(value, 0.01f, 1f);
+        }
+
+        public override void PostUpdateMiscEffects()
+        {
+            if (MeleeStamina < 1f)
             {
-                staminaRegenCooldown = 0f;
-                MeleeStamina += 0.2f / staminaRegenPeriod;
+                staminaRegenCooldown--;
+                if (staminaRegenCooldown <= 0f)
+                {
+                    staminaRegenCooldown = 0f;
+                    MeleeStamina += 0.2f / staminaRegenPeriod;
+                }
+            }
+            else
+            {
+                ResetStaminaCooldown(90f);
             }
         }
-        else
-        {
-            ResetStaminaCooldown(90f);
-        }
+
+
     }
-
-
 }

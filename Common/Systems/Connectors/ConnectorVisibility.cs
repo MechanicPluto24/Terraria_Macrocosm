@@ -1,9 +1,10 @@
-﻿namespace Macrocosm.Common.Systems.Connectors;
-
-public enum ConnectorVisibility
+﻿namespace Macrocosm.Common.Systems.Connectors
 {
-    Normal,
-    Bright,
-    Subtle,
-    Hidden
+    public enum ConnectorVisibility
+    {
+        Normal,
+        Bright,
+        Subtle,
+        Hidden
+    }
 }

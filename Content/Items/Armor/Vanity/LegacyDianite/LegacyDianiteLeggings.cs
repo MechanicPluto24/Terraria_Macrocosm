@@ -5,20 +5,21 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Armor.Vanity.LegacyDianite;
-
-[AutoloadEquip(EquipType.Legs)]
-public class LegacyDianiteLeggings : ModItem
+namespace Macrocosm.Content.Items.Armor.Vanity.LegacyDianite
 {
-    public override void SetStaticDefaults()
+    [AutoloadEquip(EquipType.Legs)]
+    public class LegacyDianiteLeggings : ModItem
     {
-    }
+        public override void SetStaticDefaults()
+        {
+        }
 
-    public override void SetDefaults()
-    {
-        Item.width = 18;
-        Item.height = 18;
-        Item.value = Item.sellPrice(gold: 10);
-        Item.rare = ModContent.RarityType<MoonRarity1>();
+        public override void SetDefaults()
+        {
+            Item.width = 18;
+            Item.height = 18;
+            Item.value = Item.sellPrice(gold: 10);
+            Item.rare = ModContent.RarityType<MoonRarity1>();
+        }
     }
 }

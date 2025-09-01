@@ -4,29 +4,30 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Furniture.StarRoyale;
-
-public class StarRoyaleChandelier : ModItem
+namespace Macrocosm.Content.Items.Furniture.StarRoyale
 {
-    public override void SetStaticDefaults()
+    public class StarRoyaleChandelier : ModItem
     {
-    }
+        public override void SetStaticDefaults()
+        {
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChandelier>(), (int)LuminiteStyle.StarRoyale);
-        Item.width = 30;
-        Item.height = 20;
-        Item.value = 150;
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChandelier>(), (int)LuminiteStyle.StarRoyale);
+            Item.width = 30;
+            Item.height = 20;
+            Item.value = 150;
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-            .AddIngredient(ItemID.StarRoyaleBrick, 4)
-            .AddIngredient<LunarCrystal>(4)
-            .AddIngredient(ItemID.Chain, 1)
-            .AddTile(TileID.WorkBenches)
-            .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient(ItemID.StarRoyaleBrick, 4)
+                .AddIngredient<LunarCrystal>(4)
+                .AddIngredient(ItemID.Chain, 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 }

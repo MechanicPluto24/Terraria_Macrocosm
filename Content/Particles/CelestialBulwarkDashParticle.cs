@@ -13,144 +13,145 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Particles;
-
-public class CelestialBulwarkDashParticle : Particle
+namespace Macrocosm.Content.Particles
 {
-    private static Asset<Texture2D> circle;
-    private static Asset<Texture2D> fireball;
-    public override string Texture => Macrocosm.FancyTexturesPath + "Slash1";
-    public override int TrailCacheLength => 24;
-
-    public int PlayerID;
-    public Color? SecondaryColor;
-    public float Opacity;
-
-    private float defScale;
-    private float defRotation;
-    private bool collided;
-
-    private BlendState blendStateOverride;
-    private bool rainbow;
-
-    public Player Player => Main.player[PlayerID];
-    public DashPlayer DashPlayer => Player.GetModPlayer<DashPlayer>();
-    public float Progress => DashPlayer.DashProgress;
-
-    public override void SetDefaults()
+    public class CelestialBulwarkDashParticle : Particle
     {
-        TimeToLive = 1000;
-        PlayerID = 0;
-        Opacity = 0f;
-        DrawLayer = ParticleDrawLayer.BeforeNPCs;
+        private static Asset<Texture2D> circle;
+        private static Asset<Texture2D> fireball;
+        public override string Texture => Macrocosm.FancyTexturesPath + "Slash1";
+        public override int TrailCacheLength => 24;
 
-        collided = false;
-    }
+        public int PlayerID;
+        public Color? SecondaryColor;
+        public float Opacity;
 
-    public override void OnSpawn()
-    {
-        defScale = Scale.X;
-        defRotation = Rotation;
-        CelestialBulwark.GetEffectColor(Player, out Color, out SecondaryColor, out blendStateOverride, out _, out rainbow);
-    }
+        private float defScale;
+        private float defRotation;
+        private bool collided;
 
-    private SpriteBatchState state;
-    public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-    {
-        bool specialRainbow = false;
-        circle ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle5");
-        fireball ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Fireball");
+        private BlendState blendStateOverride;
+        private bool rainbow;
 
-        if (blendStateOverride is not null)
+        public Player Player => Main.player[PlayerID];
+        public DashPlayer DashPlayer => Player.GetModPlayer<DashPlayer>();
+        public float Progress => DashPlayer.DashProgress;
+
+        public override void SetDefaults()
         {
-            state.SaveState(spriteBatch);
-            spriteBatch.End();
-            spriteBatch.Begin(blendStateOverride, state);
+            TimeToLive = 1000;
+            PlayerID = 0;
+            Opacity = 0f;
+            DrawLayer = ParticleDrawLayer.BeforeNPCs;
+
+            collided = false;
         }
 
-        for (int i = 0; i < TrailCacheLength; i++)
+        public override void OnSpawn()
         {
-            float trailProgress = MathHelper.Clamp((float)i / TrailCacheLength, 0f, 1f);
-            float scale = defScale - (Scale.X * trailProgress * 5f);
+            defScale = Scale.X;
+            defRotation = Rotation;
+            CelestialBulwark.GetEffectColor(Player, out Color, out SecondaryColor, out blendStateOverride, out _, out rainbow);
+        }
 
-            bool even = i % 2 == 0;
-            Color baseColor;
-            if (SecondaryColor.HasValue)
+        private SpriteBatchState state;
+        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+        {
+            bool specialRainbow = false;
+            circle ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle5");
+            fireball ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Fireball");
+
+            if (blendStateOverride is not null)
             {
-                baseColor = even ? Color : SecondaryColor.Value;
+                state.SaveState(spriteBatch);
+                spriteBatch.End();
+                spriteBatch.Begin(blendStateOverride, state);
             }
-            else
+
+            for (int i = 0; i < TrailCacheLength; i++)
             {
-                baseColor = Color;
-            }
+                float trailProgress = MathHelper.Clamp((float)i / TrailCacheLength, 0f, 1f);
+                float scale = defScale - (Scale.X * trailProgress * 5f);
+
+                bool even = i % 2 == 0;
+                Color baseColor;
+                if (SecondaryColor.HasValue)
+                {
+                    baseColor = even ? Color : SecondaryColor.Value;
+                }
+                else
+                {
+                    baseColor = Color;
+                }
 
 
-            if (rainbow)
-            {
-                float rainbowProgress = Utility.WrapProgress(trailProgress + CelestialDisco.CelestialStyleProgress);
-                baseColor = Utility.Rainbow(rainbowProgress);
+                if (rainbow)
+                {
+                    float rainbowProgress = Utility.WrapProgress(trailProgress + CelestialDisco.CelestialStyleProgress);
+                    baseColor = Utility.Rainbow(rainbowProgress);
 
-                #region Special code for Subtractive + Rainbow
+                    #region Special code for Subtractive + Rainbow
 
-                specialRainbow = blendStateOverride == CustomBlendStates.Subtractive && SecondaryColor.HasValue;
+                    specialRainbow = blendStateOverride == CustomBlendStates.Subtractive && SecondaryColor.HasValue;
+                    if (specialRainbow && even)
+                    {
+                        baseColor = SecondaryColor.Value * (1f - trailProgress);
+                        spriteBatch.End();
+                        spriteBatch.Begin(blendStateOverride, state);
+                    }
+                    #endregion
+                }
+
+                Color color = scale < 0 ? baseColor * Progress * (1f - trailProgress) : baseColor * Progress;
+
+                Vector2 position = scale < 0 ? OldPositions[i] + new Vector2(0, 55).RotatedBy(OldRotations[i]) : OldPositions[i];
+                spriteBatch.Draw(TextureAsset.Value, position - screenPosition, null, color, OldRotations[i], TextureAsset.Size() / 2, scale, SpriteEffects.None, 0f);
+
+                #region Special code for Midnight Rainbow
                 if (specialRainbow && even)
                 {
-                    baseColor = SecondaryColor.Value * (1f - trailProgress);
                     spriteBatch.End();
-                    spriteBatch.Begin(blendStateOverride, state);
+                    spriteBatch.Begin(state);
                 }
                 #endregion
             }
 
-            Color color = scale < 0 ? baseColor * Progress * (1f - trailProgress) : baseColor * Progress;
+            spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, null, Color * Progress, Rotation, TextureAsset.Size() / 2, Scale, SpriteEffects.None, 0f);
+            spriteBatch.Draw(circle.Value, Position - screenPosition, null, Color.Lerp(Color.White, Color, 0.75f).WithOpacity(0.5f) * Progress, defRotation, circle.Size() / 2, Utility.QuadraticEaseIn(Progress) * 0.7f, SpriteEffects.None, 0f);
+        
+            if(Player.velocity.LengthSquared() > 1f)
+            spriteBatch.Draw(fireball.Value, Position - new Vector2(100 * Utility.QuadraticEaseIn(Progress), 0).RotatedBy(Player.velocity.ToRotation()) - screenPosition, null, Color.Lerp(Color.White, Color, 0.9f).WithOpacity(0.75f) * Progress, defRotation, fireball.Size() / 2, Utility.QuadraticEaseIn(Progress) * 4.8f, SpriteEffects.FlipVertically, 0f);
 
-            Vector2 position = scale < 0 ? OldPositions[i] + new Vector2(0, 55).RotatedBy(OldRotations[i]) : OldPositions[i];
-            spriteBatch.Draw(TextureAsset.Value, position - screenPosition, null, color, OldRotations[i], TextureAsset.Size() / 2, scale, SpriteEffects.None, 0f);
-
-            #region Special code for Midnight Rainbow
-            if (specialRainbow && even)
+            if (blendStateOverride is not null)
             {
                 spriteBatch.End();
                 spriteBatch.Begin(state);
             }
-            #endregion
+
+            return false;
         }
 
-        spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, null, Color * Progress, Rotation, TextureAsset.Size() / 2, Scale, SpriteEffects.None, 0f);
-        spriteBatch.Draw(circle.Value, Position - screenPosition, null, Color.Lerp(Color.White, Color, 0.75f).WithOpacity(0.5f) * Progress, defRotation, circle.Size() / 2, Utility.QuadraticEaseIn(Progress) * 0.7f, SpriteEffects.None, 0f);
-        
-        if(Player.velocity.LengthSquared() > 1f)
-        spriteBatch.Draw(fireball.Value, Position - new Vector2(100 * Utility.QuadraticEaseIn(Progress), 0).RotatedBy(Player.velocity.ToRotation()) - screenPosition, null, Color.Lerp(Color.White, Color, 0.9f).WithOpacity(0.75f) * Progress, defRotation, fireball.Size() / 2, Utility.QuadraticEaseIn(Progress) * 4.8f, SpriteEffects.FlipVertically, 0f);
-
-        if (blendStateOverride is not null)
+        public override void AI()
         {
-            spriteBatch.End();
-            spriteBatch.Begin(state);
-        }
+            if (DashPlayer.DashTimer <= 0 || Player.dead || Player.CCed)
+                Kill();
 
-        return false;
-    }
+            Scale.X = MathHelper.Lerp(Scale.X * 0.8f, defScale, Progress);
 
-    public override void AI()
-    {
-        if (DashPlayer.DashTimer <= 0 || Player.dead || Player.CCed)
-            Kill();
+            Lighting.AddLight(Player.Center, Color.ToVector3() * 2f * Utility.QuadraticEaseIn(Progress));
 
-        Scale.X = MathHelper.Lerp(Scale.X * 0.8f, defScale, Progress);
+            if (collided)
+                Color *= 0.9f;
+            else
+                collided = DashPlayer.CollidedWithNPC;
 
-        Lighting.AddLight(Player.Center, Color.ToVector3() * 2f * Utility.QuadraticEaseIn(Progress));
+            if (Player.velocity.Length() > 0.5f)
+            {
+                if (!collided)
+                    Rotation = Player.velocity.ToRotation() - MathHelper.PiOver2;
 
-        if (collided)
-            Color *= 0.9f;
-        else
-            collided = DashPlayer.CollidedWithNPC;
-
-        if (Player.velocity.Length() > 0.5f)
-        {
-            if (!collided)
-                Rotation = Player.velocity.ToRotation() - MathHelper.PiOver2;
-
-            Position = Player.Center + new Vector2(0, 15).RotatedBy(Rotation);
+                Position = Player.Center + new Vector2(0, 15).RotatedBy(Rotation);
+            }
         }
     }
 }

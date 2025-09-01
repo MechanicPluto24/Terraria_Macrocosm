@@ -1,23 +1,24 @@
 ﻿using Macrocosm.Content.Liquids;
 
-namespace Macrocosm.Common.DataStructures;
-
-public readonly struct LiquidExtractData
+namespace Macrocosm.Common.DataStructures
 {
-    public LiquidType LiquidType { get; init; }
-
-    public float ExtractedAmount { get; init; }
-
-    public LiquidExtractData()
+    public readonly struct LiquidExtractData
     {
-        LiquidType = LiquidType.None;
-    }
+        public LiquidType LiquidType { get; init; }
 
-    public LiquidExtractData(LiquidType liquidType, float extractedAmount)
-    {
-        LiquidType = liquidType;
-        ExtractedAmount = extractedAmount;
-    }
+        public float ExtractedAmount { get; init; }
 
-    public bool Valid => LiquidType >= 0;
+        public LiquidExtractData()
+        {
+            LiquidType = LiquidType.None;
+        }
+
+        public LiquidExtractData(LiquidType liquidType, float extractedAmount)
+        {
+            LiquidType = liquidType;
+            ExtractedAmount = extractedAmount;
+        }
+
+        public bool Valid => LiquidType >= 0;
+    }
 }

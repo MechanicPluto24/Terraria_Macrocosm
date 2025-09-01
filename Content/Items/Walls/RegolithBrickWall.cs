@@ -6,46 +6,47 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Walls;
-
-public class RegolithBrickWall : ModItem
+namespace Macrocosm.Content.Items.Walls
 {
-    public override void SetStaticDefaults()
+    public class RegolithBrickWall : ModItem
     {
-        Item.ResearchUnlockCount = 400;
-        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<RegolithBrickWallUnsafe>();
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 400;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<RegolithBrickWallUnsafe>();
+        }
+
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.RegolithBrickWall>());
+            Item.width = 24;
+            Item.height = 24;
+        }
+
+        public override void AddRecipes()
+        {
+            CreateRecipe(4)
+                .AddIngredient<RegolithBrick>()
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 
-    public override void SetDefaults()
+    public class RegolithBrickWallUnsafe : RegolithBrickWall
     {
-        Item.DefaultToPlaceableWall(VariantWall.WallType<Content.Walls.RegolithBrickWall>());
-        Item.width = 24;
-        Item.height = 24;
-    }
+        public override string Texture => base.Texture.Replace("Unsafe", "");
 
-    public override void AddRecipes()
-    {
-        CreateRecipe(4)
-            .AddIngredient<RegolithBrick>()
-            .AddTile(TileID.WorkBenches)
-            .Register();
-    }
-}
+        public override void SetStaticDefaults()
+        {
+            base.SetStaticDefaults();
+            ItemID.Sets.DrawUnsafeIndicator[Type] = true;
+            ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<RegolithBrickWall>();
+        }
 
-public class RegolithBrickWallUnsafe : RegolithBrickWall
-{
-    public override string Texture => base.Texture.Replace("Unsafe", "");
-
-    public override void SetStaticDefaults()
-    {
-        base.SetStaticDefaults();
-        ItemID.Sets.DrawUnsafeIndicator[Type] = true;
-        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<RegolithBrickWall>();
-    }
-
-    public override void SetDefaults()
-    {
-        base.SetDefaults();
-        Item.createWall = VariantWall.WallType<Content.Walls.RegolithBrickWall>(WallSafetyType.Unsafe);
+        public override void SetDefaults()
+        {
+            base.SetDefaults();
+            Item.createWall = VariantWall.WallType<Content.Walls.RegolithBrickWall>(WallSafetyType.Unsafe);
+        }
     }
 }

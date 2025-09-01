@@ -12,109 +12,110 @@ using Terraria.GameContent.ItemDropRules;
 using Terraria.GameContent.UI.Elements;
 
 
-namespace Macrocosm.Content.Machines;
-
-public class OreExcavatorUI : MachineUI
+namespace Macrocosm.Content.Machines
 {
-    public OreExcavatorTE OreExcavator => MachineTE as OreExcavatorTE;
-
-    private UIPanel inventoryPanel;
-    private UIListScrollablePanel dropRateList;
-
-    public OreExcavatorUI()
+    public class OreExcavatorUI : MachineUI
     {
-    }
+        public OreExcavatorTE OreExcavator => MachineTE as OreExcavatorTE;
 
-    public override void OnInitialize()
-    {
-        base.OnInitialize();
+        private UIPanel inventoryPanel;
+        private UIListScrollablePanel dropRateList;
 
-        Width.Set(745f, 0f);
-        Height.Set(394f, 0f);
-
-        Recalculate();
-
-        if (OreExcavator.Inventory is not null)
+        public OreExcavatorUI()
         {
-            inventoryPanel = OreExcavator.Inventory.ProvideUIWithInteractionButtons(iconsPerRow: 10, rowsWithoutScrollbar: 5, buttonMenuTopPercent: 0.765f);
-            inventoryPanel.Width = new(0, 0.69f);
-            inventoryPanel.BorderColor = UITheme.Current.ButtonStyle.BorderColor;
-            inventoryPanel.BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
-            inventoryPanel.Activate();
-            Append(inventoryPanel);
         }
 
-        dropRateList = CreateDroprateList();
-        Append(dropRateList);
-    }
-
-    private UIListScrollablePanel CreateDroprateList()
-    {
-        dropRateList = new("Loot")
+        public override void OnInitialize()
         {
-            Width = new(0, 0.306f),
-            Height = new(0, 1f),
-            HAlign = 1f,
-            BorderColor = UITheme.Current.PanelStyle.BorderColor,
-            BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
-            PaddingTop = 0f,
-            PaddingLeft = 2f,
-            PaddingRight = 2f
-        };
+            base.OnInitialize();
 
-        List<DropRateInfo> dropRates = new();
-        DropRateInfoChainFeed ratesInfo = new(1f);
-        foreach (var drop in OreExcavator.Loot.Entries)
-            if (drop.CanDrop(SimpleLootTable.CommonDropAttemptInfo) || (drop is IBlacklistable blacklistable && blacklistable.Blacklisted))
-                drop.ReportDroprates(dropRates, ratesInfo);
+            Width.Set(745f, 0f);
+            Height.Set(394f, 0f);
 
-        List<DropRateInfo> sortedDropRates = dropRates.OrderBy(entry => new Terraria.Item(entry.itemId).value).OrderBy(entry => entry.ComputeDropRarity()).ToList();
+            Recalculate();
 
-        foreach (DropRateInfo dropRateInfo in sortedDropRates)
-        {
-            UIItemDropInfo itemDropInfo = new(dropRateInfo)
+            if (OreExcavator.Inventory is not null)
             {
-                Left = new(0, 0),
-                Width = new(0, 1f),
-                BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor,
-                BorderColor = UITheme.Current.InfoElementStyle.BorderColor
+                inventoryPanel = OreExcavator.Inventory.ProvideUIWithInteractionButtons(iconsPerRow: 10, rowsWithoutScrollbar: 5, buttonMenuTopPercent: 0.765f);
+                inventoryPanel.Width = new(0, 0.69f);
+                inventoryPanel.BorderColor = UITheme.Current.ButtonStyle.BorderColor;
+                inventoryPanel.BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor;
+                inventoryPanel.Activate();
+                Append(inventoryPanel);
+            }
+
+            dropRateList = CreateDroprateList();
+            Append(dropRateList);
+        }
+
+        private UIListScrollablePanel CreateDroprateList()
+        {
+            dropRateList = new("Loot")
+            {
+                Width = new(0, 0.306f),
+                Height = new(0, 1f),
+                HAlign = 1f,
+                BorderColor = UITheme.Current.PanelStyle.BorderColor,
+                BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
+                PaddingTop = 0f,
+                PaddingLeft = 2f,
+                PaddingRight = 2f
             };
 
-            itemDropInfo.OnLeftClick += (_, element) => BlacklistItem(dropRateInfo);
-            dropRateList.Add(itemDropInfo);
+            List<DropRateInfo> dropRates = new();
+            DropRateInfoChainFeed ratesInfo = new(1f);
+            foreach (var drop in OreExcavator.Loot.Entries)
+                if (drop.CanDrop(SimpleLootTable.CommonDropAttemptInfo) || (drop is IBlacklistable blacklistable && blacklistable.Blacklisted))
+                    drop.ReportDroprates(dropRates, ratesInfo);
+
+            List<DropRateInfo> sortedDropRates = dropRates.OrderBy(entry => new Terraria.Item(entry.itemId).value).OrderBy(entry => entry.ComputeDropRarity()).ToList();
+
+            foreach (DropRateInfo dropRateInfo in sortedDropRates)
+            {
+                UIItemDropInfo itemDropInfo = new(dropRateInfo)
+                {
+                    Left = new(0, 0),
+                    Width = new(0, 1f),
+                    BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor,
+                    BorderColor = UITheme.Current.InfoElementStyle.BorderColor
+                };
+
+                itemDropInfo.OnLeftClick += (_, element) => BlacklistItem(dropRateInfo);
+                dropRateList.Add(itemDropInfo);
+            }
+
+            return dropRateList;
         }
 
-        return dropRateList;
-    }
-
-    private void BlacklistItem(DropRateInfo dropRateInfo)
-    {
-        foreach (var entry in OreExcavator.Loot.Entries)
+        private void BlacklistItem(DropRateInfo dropRateInfo)
         {
-            if (entry is IBlacklistable blacklistable)
+            foreach (var entry in OreExcavator.Loot.Entries)
             {
-                if (dropRateInfo.itemId == blacklistable.ItemID)
+                if (entry is IBlacklistable blacklistable)
                 {
-                    blacklistable.Blacklisted = !blacklistable.Blacklisted;
+                    if (dropRateInfo.itemId == blacklistable.ItemID)
+                    {
+                        blacklistable.Blacklisted = !blacklistable.Blacklisted;
 
-                    if (blacklistable.Blacklisted)
-                        OreExcavator.BlacklistedItems.Add(blacklistable.ItemID);
-                    else
-                        OreExcavator.BlacklistedItems.Remove(blacklistable.ItemID);
+                        if (blacklistable.Blacklisted)
+                            OreExcavator.BlacklistedItems.Add(blacklistable.ItemID);
+                        else
+                            OreExcavator.BlacklistedItems.Remove(blacklistable.ItemID);
+                    }
                 }
             }
+
+            NetHelper.SyncTEFromClient(OreExcavator.ID);
         }
 
-        NetHelper.SyncTEFromClient(OreExcavator.ID);
-    }
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
 
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
+            foreach (var dropInfo in dropRateList.Where(child => child is UIItemDropInfo).Cast<UIItemDropInfo>())
+                dropInfo.Blacklisted = OreExcavator.BlacklistedItems.Contains(dropInfo.Item.type);
 
-        foreach (var dropInfo in dropRateList.Where(child => child is UIItemDropInfo).Cast<UIItemDropInfo>())
-            dropInfo.Blacklisted = OreExcavator.BlacklistedItems.Contains(dropInfo.Item.type);
-
-        Inventory.ActiveInventory = OreExcavator.Inventory;
+            Inventory.ActiveInventory = OreExcavator.Inventory;
+        }
     }
 }

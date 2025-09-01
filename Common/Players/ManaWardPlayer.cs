@@ -1,37 +1,38 @@
 ﻿using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Players;
-
-public class ManaWardPlayer : ModPlayer
+namespace Macrocosm.Common.Players
 {
-    public bool ManaWard { get; set; }
-
-    public override void ResetEffects()
+    public class ManaWardPlayer : ModPlayer
     {
-        ManaWard = false;
-    }
+        public bool ManaWard { get; set; }
 
-    public override void OnHurt(Player.HurtInfo info)
-    {
-        if (ManaWard)
+        public override void ResetEffects()
         {
-            int manaDamage = 0;
-            if ((float)Player.statLife / Player.statLifeMax2 < 0.3f)
+            ManaWard = false;
+        }
+
+        public override void OnHurt(Player.HurtInfo info)
+        {
+            if (ManaWard)
             {
-                manaDamage = info.Damage;
+                int manaDamage = 0;
+                if ((float)Player.statLife / Player.statLifeMax2 < 0.3f)
+                {
+                    manaDamage = info.Damage;
 
-                if (manaDamage > Player.statMana)
-                    manaDamage = Player.statMana;
+                    if (manaDamage > Player.statMana)
+                        manaDamage = Player.statMana;
 
-                Player.statMana -= manaDamage;
-                Player.statLife -= info.Damage - manaDamage;
+                    Player.statMana -= manaDamage;
+                    Player.statLife -= info.Damage - manaDamage;
+                }
             }
         }
-    }
 
-    public override void ModifyHurt(ref Player.HurtModifiers modifiers)
-    {
-        if (ManaWard && (float)Player.statLife / Player.statLifeMax2 < 0.3f) modifiers.FinalDamage *= 0.5f;
+        public override void ModifyHurt(ref Player.HurtModifiers modifiers)
+        {
+            if (ManaWard && (float)Player.statLife / Player.statLifeMax2 < 0.3f) modifiers.FinalDamage *= 0.5f;
+        }
     }
 }

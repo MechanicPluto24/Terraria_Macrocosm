@@ -11,48 +11,49 @@ using Terraria;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.Rockets.UI.Navigation;
-
-public class UIPlayerHeadInfoElement : UIInfoElement
+namespace Macrocosm.Content.Rockets.UI.Navigation
 {
-    private Player player;
-
-    public UIPlayerHeadInfoElement(Player player) : base(player.name)
+    public class UIPlayerHeadInfoElement : UIInfoElement
     {
-        this.player = player;
-        Width = new(0f, 1f);
-        Height = new(40f, 0f);
-        BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
-        BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
-    }
+        private Player player;
 
-    SpriteBatchState state;
-    public override void Draw(SpriteBatch spriteBatch)
-    {
-        base.Draw(spriteBatch);
+        public UIPlayerHeadInfoElement(Player player) : base(player.name)
+        {
+            this.player = player;
+            Width = new(0f, 1f);
+            Height = new(40f, 0f);
+            BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
+            BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
+        }
 
-        if (!player.active)
-            return;
+        SpriteBatchState state;
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
 
-        Recalculate();
-        CalculatedStyle dimensions = GetDimensions();
-        Vector2 worldIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.8f, dimensions.Height * 0.1f);
-        Vector2 headIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.08f, dimensions.Height * 0.42f);
+            if (!player.active)
+                return;
 
-        var rocketPlayer = player.GetModPlayer<RocketPlayer>();
-        Texture2D texture = Macrocosm.EmptyTex.Value;
+            Recalculate();
+            CalculatedStyle dimensions = GetDimensions();
+            Vector2 worldIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.8f, dimensions.Height * 0.1f);
+            Vector2 headIconPosition = dimensions.Position() + new Vector2(dimensions.Width * 0.08f, dimensions.Height * 0.42f);
 
-        string targetWorld = MacrocosmSubworld.SanitizeID(rocketPlayer.TargetWorld, out _);
-        if (ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + targetWorld, out Asset<Texture2D> iconTexture))
-            texture = iconTexture.Value;
+            var rocketPlayer = player.GetModPlayer<RocketPlayer>();
+            Texture2D texture = Macrocosm.EmptyTex.Value;
 
-        spriteBatch.Draw(texture, worldIconPosition, Color.White);
+            string targetWorld = MacrocosmSubworld.SanitizeID(rocketPlayer.TargetWorld, out _);
+            if (ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + targetWorld, out Asset<Texture2D> iconTexture))
+                texture = iconTexture.Value;
 
-        state.SaveState(spriteBatch);
-        spriteBatch.End();
-        spriteBatch.Begin(state);
-        Main.PlayerRenderer.DrawPlayerHead(Main.Camera, player, headIconPosition);
-        spriteBatch.End();
-        spriteBatch.Begin(state);
+            spriteBatch.Draw(texture, worldIconPosition, Color.White);
+
+            state.SaveState(spriteBatch);
+            spriteBatch.End();
+            spriteBatch.Begin(state);
+            Main.PlayerRenderer.DrawPlayerHead(Main.Camera, player, headIconPosition);
+            spriteBatch.End();
+            spriteBatch.Begin(state);
+        }
     }
 }

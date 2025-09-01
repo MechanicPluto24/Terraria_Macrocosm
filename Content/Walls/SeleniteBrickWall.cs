@@ -4,13 +4,14 @@ using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Walls;
-
-public class SeleniteBrickWall : ModWall
+namespace Macrocosm.Content.Walls
 {
-    public override void SetStaticDefaults()
+    public class SeleniteBrickWall : ModWall
     {
-        AddMapEntry(new Color(170, 170, 180));
-        DustType = ModContent.DustType<IrradiatedRockDust>();
+        public override void SetStaticDefaults()
+        {
+            AddMapEntry(new Color(170, 170, 180));
+            DustType = ModContent.DustType<IrradiatedRockDust>();
+        }
     }
 }

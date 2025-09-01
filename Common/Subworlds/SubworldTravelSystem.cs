@@ -8,104 +8,105 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Subworlds;
-
-internal class SubworldTravelSystem : ModSystem
+namespace Macrocosm.Common.Subworlds
 {
-    public override void Load()
+    internal class SubworldTravelSystem : ModSystem
     {
-        On_UIWorldListItem.ctor += UIWorldListItem_ctor_AddWorldIcons;
-    }
-
-    public override void Unload()
-    {
-        On_UIWorldListItem.ctor -= UIWorldListItem_ctor_AddWorldIcons;
-    }
-
-    private void UIWorldListItem_ctor_AddWorldIcons(On_UIWorldListItem.orig_ctor orig, UIWorldListItem self, Terraria.IO.WorldFileData data, int orderInList, bool canBePlayed)
-    {
-        orig(self, data, orderInList, canBePlayed);
-
-        UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", self);
-
-        var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
-        string subworld = "Earth";
-        bool isSpaceStation = false;
-
-        if (player.TryGetReturnSubworld(self.Data.UniqueId, out string id))
+        public override void Load()
         {
-            isSpaceStation = OrbitSubworld.IsOrbitSubworld(id);
-            subworld = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(id), out _);
+            On_UIWorldListItem.ctor += UIWorldListItem_ctor_AddWorldIcons;
         }
 
-        bool exists = ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + subworld, out Asset<Texture2D> texture, AssetRequestMode.ImmediateLoad);
-        UIImage icon = new(exists ? texture : Macrocosm.EmptyTex)
+        public override void Unload()
         {
-            Left = new(0, 0),
-            Top = new(4.2f, 0),
-            HAlign = 0f,
-            VAlign = 1f,
-            ImageScale = 0.76f
-        };
+            On_UIWorldListItem.ctor -= UIWorldListItem_ctor_AddWorldIcons;
+        }
 
-        Texture2D spaceStation = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/SpaceStation", AssetRequestMode.ImmediateLoad).Value;
-        UIImage stationIcon = new(spaceStation)
+        private void UIWorldListItem_ctor_AddWorldIcons(On_UIWorldListItem.orig_ctor orig, UIWorldListItem self, Terraria.IO.WorldFileData data, int orderInList, bool canBePlayed)
         {
-            Left = new(0, 0),
-            Top = new(2f, 0),
-            HAlign = 0f,
-            VAlign = 1f,
-            ImageScale = 0.76f
-        };
+            orig(self, data, orderInList, canBePlayed);
 
+            UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", self);
 
-        if (exists)
-        {
-            icon.OnMouseOver += (_, _) =>
+            var player = Main.LocalPlayer.GetModPlayer<SubworldTravelPlayer>();
+            string subworld = "Earth";
+            bool isSpaceStation = false;
+
+            if (player.TryGetReturnSubworld(self.Data.UniqueId, out string id))
             {
-                SoundEngine.PlaySound(SoundID.MenuTick);
-                buttonLabel.SetText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworld + ".DisplayName"));
-            };
-            icon.OnMouseOut += (_, _) =>
+                isSpaceStation = OrbitSubworld.IsOrbitSubworld(id);
+                subworld = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(id), out _);
+            }
+
+            bool exists = ModContent.RequestIfExists(Macrocosm.TexturesPath + "Icons/" + subworld, out Asset<Texture2D> texture, AssetRequestMode.ImmediateLoad);
+            UIImage icon = new(exists ? texture : Macrocosm.EmptyTex)
             {
-                buttonLabel.SetText("");
+                Left = new(0, 0),
+                Top = new(4.2f, 0),
+                HAlign = 0f,
+                VAlign = 1f,
+                ImageScale = 0.76f
             };
-            self.Append(icon);
-        }
 
-        if (isSpaceStation)
-        {
-            stationIcon.OnMouseOver += (_, _) =>
+            Texture2D spaceStation = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Symbols/SpaceStation", AssetRequestMode.ImmediateLoad).Value;
+            UIImage stationIcon = new(spaceStation)
             {
-                SoundEngine.PlaySound(SoundID.MenuTick);
-                buttonLabel.SetText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworld + ".DisplayName"));
+                Left = new(0, 0),
+                Top = new(2f, 0),
+                HAlign = 0f,
+                VAlign = 1f,
+                ImageScale = 0.76f
             };
-            stationIcon.OnMouseOut += (_, _) =>
+
+
+            if (exists)
             {
-                buttonLabel.SetText("");
-            };
-            self.Append(stationIcon);
+                icon.OnMouseOver += (_, _) =>
+                {
+                    SoundEngine.PlaySound(SoundID.MenuTick);
+                    buttonLabel.SetText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworld + ".DisplayName"));
+                };
+                icon.OnMouseOut += (_, _) =>
+                {
+                    buttonLabel.SetText("");
+                };
+                self.Append(icon);
+            }
+
+            if (isSpaceStation)
+            {
+                stationIcon.OnMouseOver += (_, _) =>
+                {
+                    SoundEngine.PlaySound(SoundID.MenuTick);
+                    buttonLabel.SetText(Language.GetTextValue("Mods.Macrocosm.Subworlds." + subworld + ".DisplayName"));
+                };
+                stationIcon.OnMouseOut += (_, _) =>
+                {
+                    buttonLabel.SetText("");
+                };
+                self.Append(stationIcon);
+            }
+
+            self.Recalculate();
+
+            icon.Left.Pixels = buttonLabel.Left.Pixels - 6;
+            buttonLabel.Left.Pixels += icon.Width.Pixels * 0.84f;
+
+            if (isSpaceStation)
+            {
+                stationIcon.Left.Pixels = icon.Left.Pixels + stationIcon.Width.Pixels;
+                buttonLabel.Left.Pixels += stationIcon.Width.Pixels * 0.84f;
+            }
         }
 
-        self.Recalculate();
-
-        icon.Left.Pixels = buttonLabel.Left.Pixels - 6;
-        buttonLabel.Left.Pixels += icon.Width.Pixels * 0.84f;
-
-        if (isSpaceStation)
+        public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
         {
-            stationIcon.Left.Pixels = icon.Left.Pixels + stationIcon.Width.Pixels;
-            buttonLabel.Left.Pixels += stationIcon.Width.Pixels * 0.84f;
-        }
-    }
+            if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
+            {
+                SubworldTravelPlayer.SendLastSubworldCheck(remoteClient);
+            }
 
-    public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
-    {
-        if (Main.netMode == NetmodeID.Server && msgType == MessageID.FinishedConnectingToServer && remoteClient >= 0 && remoteClient < 255)
-        {
-            SubworldTravelPlayer.SendLastSubworldCheck(remoteClient);
+            return false;
         }
-
-        return false;
     }
 }

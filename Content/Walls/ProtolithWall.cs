@@ -4,18 +4,19 @@ using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Walls;
-
-public class ProtolithWall : VariantWall
+namespace Macrocosm.Content.Walls
 {
-    public override void SetVariantStaticDefaults(WallSafetyType variant)
+    public class ProtolithWall : VariantWall
     {
-        AddMapEntry(new Color(25, 25, 25));
-        DustType = ModContent.DustType<ProtolithDust>();
+        public override void SetVariantStaticDefaults(WallSafetyType variant)
+        {
+            AddMapEntry(new Color(25, 25, 25));
+            DustType = ModContent.DustType<ProtolithDust>();
 
-        if (variant == WallSafetyType.Unsafe)
-            RegisterItemDrop(ModContent.ItemType<Items.Walls.ProtolithWallUnsafe>());
-        else
-            RegisterItemDrop(ModContent.ItemType<Items.Walls.ProtolithWall>());
+            if (variant == WallSafetyType.Unsafe)
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.ProtolithWallUnsafe>());
+            else
+                RegisterItemDrop(ModContent.ItemType<Items.Walls.ProtolithWall>());
+        }
     }
 }

@@ -5,47 +5,48 @@ using MonoMod.Cil;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Hooks;
-
-public class GoreHooks : ILoadable
+namespace Macrocosm.Common.Hooks
 {
-    public void Load(Mod mod)
+    public class GoreHooks : ILoadable
     {
-        Terraria.IL_Gore.Update += Gore_Update;
-    }
-
-    public void Unload()
-    {
-        Terraria.IL_Gore.Update -= Gore_Update;
-    }
-
-    private static void Gore_Update(ILContext il)
-    {
-        var c = new ILCursor(il);
-
-        // matches "if (type < 411 || type > 430)" (general gores)
-        if (!c.TryGotoNext(
-            i => i.MatchLdfld<Gore>("type"),
-            i => i.MatchLdcI4(430)
-            ))
+        public void Load(Mod mod)
         {
-            Macrocosm.Instance.Logger.Error("Failed to inject ILHook: GoreGravityIL");
-            return;
+            Terraria.IL_Gore.Update += Gore_Update;
         }
 
-        // matches "velocity.Y += 0.2f" ... this might break if other mods alter gore gravity 
-        if (!c.TryGotoNext(i => i.MatchLdcR4(0.2f)))
+        public void Unload()
         {
-            Macrocosm.Instance.Logger.Error("Failed to inject ILHook: GoreGravityIL");
-            return;
-        };
+            Terraria.IL_Gore.Update -= Gore_Update;
+        }
 
-        c.Remove();
+        private static void Gore_Update(ILContext il)
+        {
+            var c = new ILCursor(il);
 
-        c.Emit(OpCodes.Ldarg_0);
-        c.EmitDelegate(GetGoreGravity);
+            // matches "if (type < 411 || type > 430)" (general gores)
+            if (!c.TryGotoNext(
+                i => i.MatchLdfld<Gore>("type"),
+                i => i.MatchLdcI4(430)
+                ))
+            {
+                Macrocosm.Instance.Logger.Error("Failed to inject ILHook: GoreGravityIL");
+                return;
+            }
+
+            // matches "velocity.Y += 0.2f" ... this might break if other mods alter gore gravity 
+            if (!c.TryGotoNext(i => i.MatchLdcR4(0.2f)))
+            {
+                Macrocosm.Instance.Logger.Error("Failed to inject ILHook: GoreGravityIL");
+                return;
+            };
+
+            c.Remove();
+
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate(GetGoreGravity);
+        }
+
+        // replace gravity increment with desired value 
+        private static float GetGoreGravity(Gore gore) => Earth.GoreGravity * MacrocosmSubworld.GetGravityMultiplier(gore.position);
     }
-
-    // replace gravity increment with desired value 
-    private static float GetGoreGravity(Gore gore) => Earth.GoreGravity * MacrocosmSubworld.GetGravityMultiplier(gore.position);
 }

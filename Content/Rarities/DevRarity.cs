@@ -2,14 +2,15 @@
 using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rarities;
-
-public class DevRarity : ModRarity
+namespace Macrocosm.Content.Rarities
 {
-    public override Color RarityColor => CelestialDisco.CelestialColor;
-
-    public override int GetPrefixedRarity(int offset, float valueMult)
+    public class DevRarity : ModRarity
     {
-        return Type;
+        public override Color RarityColor => CelestialDisco.CelestialColor;
+
+        public override int GetPrefixedRarity(int offset, float valueMult)
+        {
+            return Type;
+        }
     }
 }

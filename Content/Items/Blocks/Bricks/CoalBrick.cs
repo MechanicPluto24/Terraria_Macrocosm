@@ -3,25 +3,26 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Blocks.Bricks;
-
-public class CoalBrick : ModItem
+namespace Macrocosm.Content.Items.Blocks.Bricks
 {
-    public override void SetStaticDefaults()
+    public class CoalBrick : ModItem
     {
-        Item.ResearchUnlockCount = 100;
-    }
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 100;
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Bricks.CoalBrick>());
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Bricks.CoalBrick>());
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-        .AddIngredient<Coal>(2)
-        .AddTile(TileID.Furnaces)
-        .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+            .AddIngredient<Coal>(2)
+            .AddTile(TileID.Furnaces)
+            .Register();
+        }
     }
 }

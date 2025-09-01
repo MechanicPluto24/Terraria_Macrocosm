@@ -3,42 +3,43 @@ using ReLogic.Content;
 using System;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Customization;
-
-public readonly struct Decal
+namespace Macrocosm.Common.Customization
 {
-    public string Name { get; }
-    public string Context { get; }
-
-    public Asset<Texture2D> Texture { get; }
-    public Asset<Texture2D> Icon { get; }
-
-    public Decal(string name, string context, string texturePath, string iconPath)
+    public readonly struct Decal
     {
-        Name = name;
-        Context = context;
+        public string Name { get; }
+        public string Context { get; }
 
-        Texture = ModContent.RequestIfExists(texturePath, out Asset<Texture2D> decalTexture) ? decalTexture : Macrocosm.EmptyTex;
-        Icon = ModContent.RequestIfExists(iconPath, out Asset<Texture2D> decalIcon) ? decalIcon : Macrocosm.EmptyTex;
-    }
+        public Asset<Texture2D> Texture { get; }
+        public Asset<Texture2D> Icon { get; }
 
-    public override bool Equals(object obj)
-    {
-        return obj is Decal decal && Name == decal.Name;
-    }
+        public Decal(string name, string context, string texturePath, string iconPath)
+        {
+            Name = name;
+            Context = context;
 
-    public static bool operator ==(Decal left, Decal right)
-    {
-        return left.Equals(right);
-    }
+            Texture = ModContent.RequestIfExists(texturePath, out Asset<Texture2D> decalTexture) ? decalTexture : Macrocosm.EmptyTex;
+            Icon = ModContent.RequestIfExists(iconPath, out Asset<Texture2D> decalIcon) ? decalIcon : Macrocosm.EmptyTex;
+        }
 
-    public static bool operator !=(Decal left, Decal right)
-    {
-        return !(left == right);
-    }
+        public override bool Equals(object obj)
+        {
+            return obj is Decal decal && Name == decal.Name;
+        }
 
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, Context);
+        public static bool operator ==(Decal left, Decal right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Decal left, Decal right)
+        {
+            return !(left == right);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Context);
+        }
     }
 }

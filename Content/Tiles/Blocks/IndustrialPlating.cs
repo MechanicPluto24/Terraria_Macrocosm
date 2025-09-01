@@ -7,64 +7,65 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Tiles.Blocks;
-
-public class IndustrialPlating : ModTile
+namespace Macrocosm.Content.Tiles.Blocks
 {
-    public override void SetStaticDefaults()
+    public class IndustrialPlating : ModTile
     {
-        Main.tileSolid[Type] = true;
-        Main.tileBlockLight[Type] = true;
-        Main.tileLighted[Type] = true;
-        Main.tileBlendAll[Type] = true;
-
-        // To avoid things overlapping with outposts or the Moon Base
-        TileID.Sets.GeneralPlacementTiles[Type] = false;
-
-        TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
-
-        DustType = ModContent.DustType<IndustrialPlatingDust>();
-
-        MinPick = 100;
-        MineResist = 2f;
-
-        AddMapEntry(new Color(180, 180, 180));
-    }
-
-    public override bool Slope(int i, int j)
-    {
-        WorldGen.TileFrame(i + 1, j + 1);
-        WorldGen.TileFrame(i + 1, j - 1);
-        WorldGen.TileFrame(i - 1, j + 1);
-        WorldGen.TileFrame(i - 1, j - 1);
-        return true;
-    }
-
-    public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
-    {
-    }
-
-    public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
-    {
-        TileFraming.PlatingStyle(i, j);
-        return false;
-    }
-
-    public override bool CanExplode(int i, int j)
-    {
-        return false;
-    }
-
-    public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
-    {
-        Tile tile = Main.tile[i, j];
-        if (tile.IsSloped())
+        public override void SetStaticDefaults()
         {
-            tileFrameY += 90;
+            Main.tileSolid[Type] = true;
+            Main.tileBlockLight[Type] = true;
+            Main.tileLighted[Type] = true;
+            Main.tileBlendAll[Type] = true;
+
+            // To avoid things overlapping with outposts or the Moon Base
+            TileID.Sets.GeneralPlacementTiles[Type] = false;
+
+            TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
+
+            DustType = ModContent.DustType<IndustrialPlatingDust>();
+
+            MinPick = 100;
+            MineResist = 2f;
+
+            AddMapEntry(new Color(180, 180, 180));
         }
-        else if (new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((t) => WorldGen.SolidTile(t) && t.TileType != Type || TileID.Sets.NotReallySolid[t.TileType] || Utility.IsPlatform(t.TileType)).Count4Way > 0)
-        { 
-            tileFrameY += 90;
+
+        public override bool Slope(int i, int j)
+        {
+            WorldGen.TileFrame(i + 1, j + 1);
+            WorldGen.TileFrame(i + 1, j - 1);
+            WorldGen.TileFrame(i - 1, j + 1);
+            WorldGen.TileFrame(i - 1, j - 1);
+            return true;
+        }
+
+        public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
+        {
+        }
+
+        public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
+        {
+            TileFraming.PlatingStyle(i, j);
+            return false;
+        }
+
+        public override bool CanExplode(int i, int j)
+        {
+            return false;
+        }
+
+        public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
+        {
+            Tile tile = Main.tile[i, j];
+            if (tile.IsSloped())
+            {
+                tileFrameY += 90;
+            }
+            else if (new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((t) => WorldGen.SolidTile(t) && t.TileType != Type || TileID.Sets.NotReallySolid[t.TileType] || Utility.IsPlatform(t.TileType)).Count4Way > 0)
+            { 
+                tileFrameY += 90;
+            }
         }
     }
 }

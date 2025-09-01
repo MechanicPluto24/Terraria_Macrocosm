@@ -7,27 +7,28 @@ using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.Items;
-
-public class UnusableGlobalItem : GlobalItem
+namespace Macrocosm.Common.Global.Items
 {
-    public override bool CanUseItem(Item item, Player player)
+    public class UnusableGlobalItem : GlobalItem
     {
-        if (SubworldSystem.AnyActive<Macrocosm>() && ItemSets.UnusableItem[item.type])
-            return false;
-
-        return true;
-    }
-
-    public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
-    {
-        if (SubworldSystem.AnyActive<Macrocosm>())
+        public override bool CanUseItem(Item item, Player player)
         {
-            if (ItemSets.UnusableItem[item.type])
-                tooltips.Add(new TooltipLine(Macrocosm.Instance, "Unusable", Language.GetText("Mods.Macrocosm.Common.Unusable").Format(MacrocosmSubworld.Current.DisplayName.Value))
-                {
-                    OverrideColor = Color.Orange
-                });
+            if (SubworldSystem.AnyActive<Macrocosm>() && ItemSets.UnusableItem[item.type])
+                return false;
+
+            return true;
+        }
+
+        public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
+        {
+            if (SubworldSystem.AnyActive<Macrocosm>())
+            {
+                if (ItemSets.UnusableItem[item.type])
+                    tooltips.Add(new TooltipLine(Macrocosm.Instance, "Unusable", Language.GetText("Mods.Macrocosm.Common.Unusable").Format(MacrocosmSubworld.Current.DisplayName.Value))
+                    {
+                        OverrideColor = Color.Orange
+                    });
+            }
         }
     }
 }

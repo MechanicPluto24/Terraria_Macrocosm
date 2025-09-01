@@ -1,80 +1,81 @@
 ﻿using Macrocosm.Common.UI;
 using System;
 
-namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist;
-
-public class ChecklistCondition
+namespace Macrocosm.Content.Rockets.UI.Navigation.Checklist
 {
-    public bool HideIfMet { get; set; } = true;
-    public string LangKey { get; private set; }
-
-    public bool HasChanged => hasChanged;
-    public bool IsMet => cachedMet;
-
-    private readonly Func<bool> predicate = () => false;
-
-    private bool lastMet;
-    private bool hasChanged = true;
-    private bool cachedMet;
-    private int checkCounter;
-    private int checkPeriod;
-
-    private readonly ChecklistInfoElement checklistInfoElement;
-
-    public ChecklistCondition(string langKey, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
+    public class ChecklistCondition
     {
-        LangKey = langKey;
-        predicate = canLaunch;
-        this.checkPeriod = checkPeriod;
-        checkCounter = checkPeriod - 1;
-        HideIfMet = hideIfMet;
+        public bool HideIfMet { get; set; } = true;
+        public string LangKey { get; private set; }
 
-        checklistInfoElement = new(langKey);
-    }
+        public bool HasChanged => hasChanged;
+        public bool IsMet => cachedMet;
 
-    public ChecklistCondition(string langKey, string customIconMet, string customIconNotMet, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
-    {
-        LangKey = langKey;
-        predicate = canLaunch;
-        this.checkPeriod = checkPeriod;
-        HideIfMet = hideIfMet;
+        private readonly Func<bool> predicate = () => false;
 
-        checklistInfoElement = new(langKey, customIconMet, customIconNotMet);
-    }
+        private bool lastMet;
+        private bool hasChanged = true;
+        private bool cachedMet;
+        private int checkCounter;
+        private int checkPeriod;
 
-    public bool Check()
-    {
-        checkCounter++;
+        private readonly ChecklistInfoElement checklistInfoElement;
 
-        if (checkCounter >= checkPeriod)
+        public ChecklistCondition(string langKey, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
         {
-            checkCounter = 0;
+            LangKey = langKey;
+            predicate = canLaunch;
+            this.checkPeriod = checkPeriod;
+            checkCounter = checkPeriod - 1;
+            HideIfMet = hideIfMet;
 
-            bool currentMet = predicate();
-            if (currentMet != lastMet)
-            {
-                hasChanged = true;
-                cachedMet = currentMet;
-            }
-            else
-            {
-                hasChanged = false;
-            }
-
-            lastMet = currentMet;
+            checklistInfoElement = new(langKey);
         }
 
-        return cachedMet;
-    }
+        public ChecklistCondition(string langKey, string customIconMet, string customIconNotMet, Func<bool> canLaunch, int checkPeriod = 1, bool hideIfMet = false)
+        {
+            LangKey = langKey;
+            predicate = canLaunch;
+            this.checkPeriod = checkPeriod;
+            HideIfMet = hideIfMet;
 
-    public virtual UIInfoElement ProvideUIInfoElement()
-    {
-        checklistInfoElement.MetState = cachedMet;
-        UIInfoElement infoElement = checklistInfoElement.ProvideUI();
-        infoElement.Activate();
-        infoElement.SetTextLeft(50, 0);
-        infoElement.Height = new(52f, 0f);
-        infoElement.IconHAlign = 0.12f;
-        return infoElement;
+            checklistInfoElement = new(langKey, customIconMet, customIconNotMet);
+        }
+
+        public bool Check()
+        {
+            checkCounter++;
+
+            if (checkCounter >= checkPeriod)
+            {
+                checkCounter = 0;
+
+                bool currentMet = predicate();
+                if (currentMet != lastMet)
+                {
+                    hasChanged = true;
+                    cachedMet = currentMet;
+                }
+                else
+                {
+                    hasChanged = false;
+                }
+
+                lastMet = currentMet;
+            }
+
+            return cachedMet;
+        }
+
+        public virtual UIInfoElement ProvideUIInfoElement()
+        {
+            checklistInfoElement.MetState = cachedMet;
+            UIInfoElement infoElement = checklistInfoElement.ProvideUI();
+            infoElement.Activate();
+            infoElement.SetTextLeft(50, 0);
+            infoElement.Height = new(52f, 0f);
+            infoElement.IconHAlign = 0.12f;
+            return infoElement;
+        }
     }
 }

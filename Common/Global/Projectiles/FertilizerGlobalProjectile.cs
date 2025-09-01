@@ -4,38 +4,39 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Global.Projectiles;
-
-public class FertilizerGlobalProjectile : GlobalProjectile
+namespace Macrocosm.Common.Global.Projectiles
 {
-    public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) => entity.type == ProjectileID.Fertilizer;
-
-    // While CustomTree supports AttemptToGrowTreeFromSapling, Fertilizer AI only calls it for vanilla tiles (including ModTree), but not for modded tiles :(
-    // Here it runs the logic again for our saplings 
-    public override void PostAI(Projectile projectile)
+    public class FertilizerGlobalProjectile : GlobalProjectile
     {
-        if (Main.netMode != NetmodeID.MultiplayerClient)
+        public override bool AppliesToEntity(Projectile entity, bool lateInstantiation) => entity.type == ProjectileID.Fertilizer;
+
+        // While CustomTree supports AttemptToGrowTreeFromSapling, Fertilizer AI only calls it for vanilla tiles (including ModTree), but not for modded tiles :(
+        // Here it runs the logic again for our saplings 
+        public override void PostAI(Projectile projectile)
         {
-            int hitMinX = (int)(projectile.position.X / 16f) - 1;
-            int hitMaxX = (int)((projectile.position.X + projectile.width) / 16f) + 2;
-            int hitMinY = (int)(projectile.position.Y / 16f) - 1;
-            int hitMaxY = (int)((projectile.position.Y + projectile.height) / 16f) + 2;
-
-            for (int i = hitMinX; i < hitMaxX; i++)
+            if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                for (int j = hitMinY; j < hitMaxY; j++)
+                int hitMinX = (int)(projectile.position.X / 16f) - 1;
+                int hitMaxX = (int)((projectile.position.X + projectile.width) / 16f) + 2;
+                int hitMinY = (int)(projectile.position.Y / 16f) - 1;
+                int hitMaxY = (int)((projectile.position.Y + projectile.height) / 16f) + 2;
+
+                for (int i = hitMinX; i < hitMaxX; i++)
                 {
-                    Vector2 position = new Vector2(i, j) * 16f;
-                    if (!(projectile.position.X + projectile.width > position.X) || !(projectile.position.X < position.X + 16f) || !(projectile.position.Y + (float)projectile.height > position.Y) || !(projectile.position.Y < position.Y + 16f) || !Main.tile[i, j].HasTile)
-                        continue;
-
-                    Tile tile = Main.tile[i, j];
-                    if (TileSets.SaplingTreeGrowthType[tile.TileType] > 0)
+                    for (int j = hitMinY; j < hitMaxY; j++)
                     {
-                        if (Main.remixWorld && j >= (int)Main.worldSurface - 1 && j < Main.maxTilesY - 20)
-                            WorldGen.AttemptToGrowTreeFromSapling(i, j, underground: false);
+                        Vector2 position = new Vector2(i, j) * 16f;
+                        if (!(projectile.position.X + projectile.width > position.X) || !(projectile.position.X < position.X + 16f) || !(projectile.position.Y + (float)projectile.height > position.Y) || !(projectile.position.Y < position.Y + 16f) || !Main.tile[i, j].HasTile)
+                            continue;
 
-                        WorldGen.AttemptToGrowTreeFromSapling(i, j, j > (int)Main.worldSurface - 1);
+                        Tile tile = Main.tile[i, j];
+                        if (TileSets.SaplingTreeGrowthType[tile.TileType] > 0)
+                        {
+                            if (Main.remixWorld && j >= (int)Main.worldSurface - 1 && j < Main.maxTilesY - 20)
+                                WorldGen.AttemptToGrowTreeFromSapling(i, j, underground: false);
+
+                            WorldGen.AttemptToGrowTreeFromSapling(i, j, j > (int)Main.worldSurface - 1);
+                        }
                     }
                 }
             }

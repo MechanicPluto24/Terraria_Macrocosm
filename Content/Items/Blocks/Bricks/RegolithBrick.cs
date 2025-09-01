@@ -4,30 +4,31 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Blocks.Bricks;
-
-public class RegolithBrick : ModItem
+namespace Macrocosm.Content.Items.Blocks.Bricks
 {
-    public override void SetStaticDefaults()
+    public class RegolithBrick : ModItem
     {
-        Item.ResearchUnlockCount = 100;
-    }
+        public override void SetStaticDefaults()
+        {
+            Item.ResearchUnlockCount = 100;
+        }
 
-    public override void SetDefaults()
-    {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Bricks.RegolithBrick>());
-    }
+        public override void SetDefaults()
+        {
+            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Bricks.RegolithBrick>());
+        }
 
-    public override void AddRecipes()
-    {
-        CreateRecipe()
-            .AddIngredient<Regolith>(2)
-            .AddTile(TileID.Furnaces)
-            .Register();
+        public override void AddRecipes()
+        {
+            CreateRecipe()
+                .AddIngredient<Regolith>(2)
+                .AddTile(TileID.Furnaces)
+                .Register();
 
-        CreateRecipe()
-            .AddIngredient<RegolithBrickWall>(4)
-            .AddTile(TileID.WorkBenches)
-            .Register();
+            CreateRecipe()
+                .AddIngredient<RegolithBrickWall>(4)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
 }

@@ -3,27 +3,28 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 
-namespace Macrocosm.Content.WorldGeneration.Structures.Shrines;
-
-public class LuminiteShrine : Structure
+namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
 {
-    public override bool PrePlace(Point16 origin)
+    public class LuminiteShrine : Structure
     {
-        int max = WorldGen.genRand.Next(15, 26);
-        for (int vein = 0; vein < max; vein++)
+        public override bool PrePlace(Point16 origin)
         {
-            WorldGen.OreRunner(
-                i: origin.X + (int)(Size.X * WorldGen.genRand.NextFloat(1f)),
-                j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(1f)),
-                strength: WorldGen.genRand.Next(2, 5),
-                steps: WorldGen.genRand.Next(4, 8),
-                type: TileID.LunarOre
-            );
+            int max = WorldGen.genRand.Next(15, 26);
+            for (int vein = 0; vein < max; vein++)
+            {
+                WorldGen.OreRunner(
+                    i: origin.X + (int)(Size.X * WorldGen.genRand.NextFloat(1f)),
+                    j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(1f)),
+                    strength: WorldGen.genRand.Next(2, 5),
+                    steps: WorldGen.genRand.Next(4, 8),
+                    type: TileID.LunarOre
+                );
+            }
+            return true;
         }
-        return true;
-    }
 
-    public override void PostPlace(Point16 origin)
-    {
+        public override void PostPlace(Point16 origin)
+        {
+        }
     }
 }

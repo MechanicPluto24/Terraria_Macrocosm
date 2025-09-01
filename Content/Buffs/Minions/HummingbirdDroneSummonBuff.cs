@@ -2,27 +2,28 @@
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Buffs.Minions;
-
-// TODO: SummonBuff
-public class HummingbirdDroneSummonBuff : ModBuff
+namespace Macrocosm.Content.Buffs.Minions
 {
-    public override void SetStaticDefaults()
+    // TODO: SummonBuff
+    public class HummingbirdDroneSummonBuff : ModBuff
     {
-        Main.buffNoSave[Type] = true;
-        Main.buffNoTimeDisplay[Type] = true;
-    }
-
-    public override void Update(Player player, ref int buffIndex)
-    {
-        if (player.ownedProjectileCounts[ModContent.ProjectileType<HummingbirdDrone>()] > 0)
+        public override void SetStaticDefaults()
         {
-            player.buffTime[buffIndex] = 18000;
+            Main.buffNoSave[Type] = true;
+            Main.buffNoTimeDisplay[Type] = true;
         }
-        else
+
+        public override void Update(Player player, ref int buffIndex)
         {
-            player.DelBuff(buffIndex);
-            buffIndex--;
+            if (player.ownedProjectileCounts[ModContent.ProjectileType<HummingbirdDrone>()] > 0)
+            {
+                player.buffTime[buffIndex] = 18000;
+            }
+            else
+            {
+                player.DelBuff(buffIndex);
+                buffIndex--;
+            }
         }
     }
 }

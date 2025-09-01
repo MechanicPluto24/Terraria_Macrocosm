@@ -7,26 +7,27 @@ using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.UI;
 
-namespace Macrocosm.Content.MapLayers;
-
-public class RocketMapLayer : ModMapLayer
+namespace Macrocosm.Content.MapLayers
 {
-    private Asset<Texture2D> texture;
-    public override void Load()
+    public class RocketMapLayer : ModMapLayer
     {
-        texture = ModContent.Request<Texture2D>(GetType().Namespace.Replace(".", "/") + "/RocketMap");
-    }
-    public override Position GetDefaultPosition() => new Before(IMapLayer.Pings);
-
-    public override void Draw(ref MapOverlayDrawContext context, ref string text)
-    {
-        foreach (Rocket rocket in RocketManager.Rockets)
+        private Asset<Texture2D> texture;
+        public override void Load()
         {
-            if (!rocket.ActiveInCurrentWorld)
-                continue;
+            texture = ModContent.Request<Texture2D>(GetType().Namespace.Replace(".", "/") + "/RocketMap");
+        }
+        public override Position GetDefaultPosition() => new Before(IMapLayer.Pings);
 
-            if (context.Draw(texture.Value, (rocket.Center + new Vector2(0, rocket.Bounds.Height / 2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
-                text = rocket.DisplayName;
+        public override void Draw(ref MapOverlayDrawContext context, ref string text)
+        {
+            foreach (Rocket rocket in RocketManager.Rockets)
+            {
+                if (!rocket.ActiveInCurrentWorld)
+                    continue;
+
+                if (context.Draw(texture.Value, (rocket.Center + new Vector2(0, rocket.Bounds.Height / 2f)) / 16f, Color.White, new SpriteFrame(1, 1, 0, 0), 0.95f, 0.95f, Alignment.Bottom).IsMouseOver)
+                    text = rocket.DisplayName;
+            }
         }
     }
 }

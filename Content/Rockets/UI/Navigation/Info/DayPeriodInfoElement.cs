@@ -1,28 +1,29 @@
 ﻿using System;
 using Terraria.Localization;
 
-namespace Macrocosm.Content.Rockets.UI.Navigation.Info;
-
-public class DayPeriodInfoElement : ValueUnitSpecialInfoElement
+namespace Macrocosm.Content.Rockets.UI.Navigation.Info
 {
-    public DayPeriodInfoElement(string specialValueKey) : base(specialValueKey) { }
-
-    public DayPeriodInfoElement(float value, string specialValueKey = "") : base(value, specialValueKey) { }
-
-    protected override LocalizedText GetLocalizedValueUnitText(ref float value)
+    public class DayPeriodInfoElement : ValueUnitSpecialInfoElement
     {
-        string units;
-        if (value < 1f)
-        {
-            value *= 24f;
-            units = "Hours";
-        }
-        else
-        {
-            units = "Days";
-        }
+        public DayPeriodInfoElement(string specialValueKey) : base(specialValueKey) { }
 
-        value = MathF.Round(value, 2);
-        return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.DayPeriod.Unit" + units);
+        public DayPeriodInfoElement(float value, string specialValueKey = "") : base(value, specialValueKey) { }
+
+        protected override LocalizedText GetLocalizedValueUnitText(ref float value)
+        {
+            string units;
+            if (value < 1f)
+            {
+                value *= 24f;
+                units = "Hours";
+            }
+            else
+            {
+                units = "Days";
+            }
+
+            value = MathF.Round(value, 2);
+            return Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.DayPeriod.Unit" + units);
+        }
     }
 }

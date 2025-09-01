@@ -2,16 +2,17 @@
 using Terraria;
 using Terraria.Achievements;
 
-namespace Macrocosm.Content.Achievements;
-
-public class SurviveMoon : TMLAchievement
+namespace Macrocosm.Content.Achievements
 {
-    public override float Order => 40f;
-    public override AchievementCategory Category => AchievementCategory.Explorer;
-    public override bool ShowProgressBar => false;
-
-    protected override void SetupConditions()
+    public class SurviveMoon : TMLAchievement
     {
-        AddValueEvent(Name, (float)(Main.dayLength + Main.nightLength));
+        public override float Order => 40f;
+        public override AchievementCategory Category => AchievementCategory.Explorer;
+        public override bool ShowProgressBar => false;
+
+        protected override void SetupConditions()
+        {
+            AddValueEvent(Name, (float)(Main.dayLength + Main.nightLength));
+        }
     }
 }

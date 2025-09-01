@@ -8,127 +8,128 @@ using System.Linq;
 using Terraria;
 using Terraria.ID;
 
-namespace Macrocosm.Content.Rockets;
-
-public partial class Rocket
+namespace Macrocosm.Content.Rockets
 {
-    public Rocket VisualClone()
+    public partial class Rocket
     {
-        Rocket visualClone = new(Modules);
-        visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
-        return visualClone;
-    }
-
-    public bool CheckUnlockableItemUnlocked(Item item)
-    {
-        if (item.ModItem is PatternDesign patternDesign)
+        public Rocket VisualClone()
         {
-            if (PatternManager.IsUnlocked(patternDesign.PatternName))
-                return true;
+            Rocket visualClone = new(Modules);
+            visualClone.ApplyCustomizationChanges(this, sync: false, reset: true);
+            return visualClone;
         }
 
-        return false;
-    }
-
-    public void ApplyCustomizationChanges(Rocket source, bool sync = true, bool reset = true)
-    {
-        Nameplate.Text = source.Nameplate.Text;
-        Nameplate.TextColor = source.Nameplate.TextColor;
-        Nameplate.HAlign = source.Nameplate.HAlign;
-        Nameplate.VAlign = source.Nameplate.VAlign;
-
-        foreach (var module in Modules)
+        public bool CheckUnlockableItemUnlocked(Item item)
         {
-            module.Decal = source.Modules.FirstOrDefault((m) => m.Name == module.Name).Decal;
-            module.Pattern = source.Modules.FirstOrDefault((m) => m.Name == module.Name).Pattern.Clone();
-            foreach (var data in module.Pattern.ColorData.Values)
+            if (item.ModItem is PatternDesign patternDesign)
             {
-                if (data.Color.A > 0)
+                if (PatternManager.IsUnlocked(patternDesign.PatternName))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void ApplyCustomizationChanges(Rocket source, bool sync = true, bool reset = true)
+        {
+            Nameplate.Text = source.Nameplate.Text;
+            Nameplate.TextColor = source.Nameplate.TextColor;
+            Nameplate.HAlign = source.Nameplate.HAlign;
+            Nameplate.VAlign = source.Nameplate.VAlign;
+
+            foreach (var module in Modules)
+            {
+                module.Decal = source.Modules.FirstOrDefault((m) => m.Name == module.Name).Decal;
+                module.Pattern = source.Modules.FirstOrDefault((m) => m.Name == module.Name).Pattern.Clone();
+                foreach (var data in module.Pattern.ColorData.Values)
                 {
-                    for (int i = 0; i < 20; i++)
+                    if (data.Color.A > 0)
                     {
-                        Dust.NewDustDirect(module.Position, module.Width, module.Height, DustID.TintablePaint,
-                            newColor: data.Color.WithAlpha(220),
-                            Scale: Main.rand.NextFloat(0.2f, 1f));
+                        for (int i = 0; i < 20; i++)
+                        {
+                            Dust.NewDustDirect(module.Position, module.Width, module.Height, DustID.TintablePaint,
+                                newColor: data.Color.WithAlpha(220),
+                                Scale: Main.rand.NextFloat(0.2f, 1f));
+                        }
                     }
                 }
             }
+
+            if (sync)
+                SyncCustomizationData();
+
+            if (reset)
+                ResetRenderTarget();
         }
 
-        if (sync)
+        public void ResetCustomizationToDefault()
+        {
+            Nameplate = new();
+
+            foreach (var module in Modules)
+            {
+                module.Decal = default;
+                module.Pattern = PatternManager.Get("Basic", module.Name);
+            }
+
             SyncCustomizationData();
-
-        if (reset)
-            ResetRenderTarget();
-    }
-
-    public void ResetCustomizationToDefault()
-    {
-        Nameplate = new();
-
-        foreach (var module in Modules)
-        {
-            module.Decal = default;
-            module.Pattern = PatternManager.Get("Basic", module.Name);
         }
 
-        SyncCustomizationData();
-    }
-
-    public string GetCustomizationDataToJSON()
-    {
-        var jObject = new JObject
+        public string GetCustomizationDataToJSON()
         {
-            ["nameplate"] = Nameplate.ToJObject()
-        };
-
-        var modulesArray = new JArray();
-        foreach (var module in Modules)
-        {
-            modulesArray.Add(new JObject
+            var jObject = new JObject
             {
-                ["moduleName"] = module.Name,
-                ["decal"] = module.Decal.Name,
-                ["pattern"] = module.Pattern.ToJObject()
-            });
-        }
+                ["nameplate"] = Nameplate.ToJObject()
+            };
 
-        jObject["modules"] = modulesArray;
-
-        return jObject.ToString(Formatting.Indented);
-    }
-
-    public void ApplyRocketCustomizationFromJSON(string json)
-    {
-        var jObject = JObject.Parse(json);
-
-        if (jObject["nameplate"] is JObject nameplateJObject)
-        {
-            Nameplate = Nameplate.FromJObject(nameplateJObject);
-        }
-
-        if (jObject["modules"] is JArray modulesArray)
-        {
-            foreach (var moduleJObject in modulesArray.Children<JObject>())
+            var modulesArray = new JArray();
+            foreach (var module in Modules)
             {
-                string moduleName = moduleJObject["moduleName"].Value<string>();
-                var module = Modules.FirstOrDefault((m) => m.Name == moduleName);
-                if (module != null)
+                modulesArray.Add(new JObject
                 {
-                    try
+                    ["moduleName"] = module.Name,
+                    ["decal"] = module.Decal.Name,
+                    ["pattern"] = module.Pattern.ToJObject()
+                });
+            }
+
+            jObject["modules"] = modulesArray;
+
+            return jObject.ToString(Formatting.Indented);
+        }
+
+        public void ApplyRocketCustomizationFromJSON(string json)
+        {
+            var jObject = JObject.Parse(json);
+
+            if (jObject["nameplate"] is JObject nameplateJObject)
+            {
+                Nameplate = Nameplate.FromJObject(nameplateJObject);
+            }
+
+            if (jObject["modules"] is JArray modulesArray)
+            {
+                foreach (var moduleJObject in modulesArray.Children<JObject>())
+                {
+                    string moduleName = moduleJObject["moduleName"].Value<string>();
+                    var module = Modules.FirstOrDefault((m) => m.Name == moduleName);
+                    if (module != null)
                     {
-                        module.Decal = DecalManager.TryGetDecal(moduleJObject["decal"].Value<string>(), moduleName, out Decal decal) ? decal : new Decal();
-                        module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
-                    }
-                    catch (Exception ex)
-                    {
-                        Utility.Chat(ex.Message);
-                        Macrocosm.Instance.Logger.Warn(ex.Message);
+                        try
+                        {
+                            module.Decal = DecalManager.TryGetDecal(moduleJObject["decal"].Value<string>(), moduleName, out Decal decal) ? decal : new Decal();
+                            module.Pattern = Pattern.FromJObject(moduleJObject["pattern"].Value<JObject>());
+                        }
+                        catch (Exception ex)
+                        {
+                            Utility.Chat(ex.Message);
+                            Macrocosm.Instance.Logger.Warn(ex.Message);
+                        }
                     }
                 }
             }
-        }
 
-        ResetRenderTarget();
+            ResetRenderTarget();
+        }
     }
 }

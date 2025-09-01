@@ -1,8 +1,9 @@
-﻿namespace Macrocosm.Common.Enums;
-
-public enum TextVerticalAlign
+﻿namespace Macrocosm.Common.Enums
 {
-    Top,
-    Center,
-    Bottom
-};
+    public enum TextVerticalAlign
+    {
+        Top,
+        Center,
+        Bottom
+    };
+}
