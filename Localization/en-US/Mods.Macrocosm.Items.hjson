@@ -3305,3 +3305,23 @@ ShredderBullet: {
 	DisplayName: Shredder Bullet
 	Tooltip: ""
 }
+
+AutosmelterT1: {
+	DisplayName: Autosmelter T1
+	Tooltip: ""
+}
+
+AutosmelterT2Adamantite: {
+	DisplayName: Autosmelter T2 Adamantite
+	Tooltip: ""
+}
+
+AutosmelterT2Titanium: {
+	DisplayName: Autosmelter T2 Titanium
+	Tooltip: ""
+}
+
+AutosmelterT3: {
+	DisplayName: Autosmelter T3
+	Tooltip: ""
+}

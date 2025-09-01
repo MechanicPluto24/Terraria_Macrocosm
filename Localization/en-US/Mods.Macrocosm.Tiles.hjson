@@ -109,3 +109,6 @@ AutocrafterT2.MapEntry: Autocrafter
 AutocrafterT3.MapEntry: Autocrafter
 OreDrill.MapEntry: Ore Drill
 Pumpjack.MapEntry: Pumpjack
+AutosmelterT1.MapEntry: Autosmelter T1
+AutosmelterT2.MapEntry: Autosmelter T2
+AutosmelterT3.MapEntry: Autosmelter T3
