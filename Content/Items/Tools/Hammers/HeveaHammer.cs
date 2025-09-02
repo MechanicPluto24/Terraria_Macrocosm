@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Tools.Hammers;
 
-public class RubberWoodHammer : ModItem
+public class HeveaHammer : ModItem
 {
     public override void SetStaticDefaults()
     {
@@ -33,7 +33,7 @@ public class RubberWoodHammer : ModItem
     public override void AddRecipes()
     {
         CreateRecipe()
-        .AddIngredient<RubberTreeWood>(8)
+        .AddIngredient<HeveaWood>(8)
         .AddTile(TileID.WorkBenches)
         .Register();
     }

@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Melee;
 
-public class RubberWoodSword : ModItem
+public class HeveaSword : ModItem
 {
     public override void SetStaticDefaults()
     {
@@ -30,7 +30,7 @@ public class RubberWoodSword : ModItem
     public override void AddRecipes()
     {
         CreateRecipe()
-        .AddIngredient<RubberTreeWood>(7)
+        .AddIngredient<HeveaWood>(7)
         .AddTile(TileID.WorkBenches)
         .Register();
     }

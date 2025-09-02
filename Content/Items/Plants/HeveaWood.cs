@@ -1,9 +1,10 @@
 ﻿using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Tiles.Blocks.Woods;
 
 namespace Macrocosm.Content.Items.Plants;
 
-public class RubberTreeWood : ModItem
+public class HeveaWood : ModItem
 {
     public override void SetStaticDefaults()
     {
@@ -12,8 +13,7 @@ public class RubberTreeWood : ModItem
 
     public override void SetDefaults()
     {
-        //Item.DefaultToPlaceableTile(ModContent.TileType<RubberWood>());
-        Item.DefaultToPlaceableTile(TileID.RichMahogany);
+        Item.DefaultToPlaceableTile(ModContent.TileType<Content.Tiles.Blocks.Woods.HeveaWood>());
         Item.width = 8;
         Item.height = 10;
     }

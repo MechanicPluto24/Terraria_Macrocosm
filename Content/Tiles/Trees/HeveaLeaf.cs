@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Tiles.Trees;
 
-public class RubberTreeLeaf : ModGore
+public class HeveaLeaf : ModGore
 {
     public override void SetStaticDefaults()
     {

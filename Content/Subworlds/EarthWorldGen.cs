@@ -131,7 +131,7 @@ class EarthWorldGen : ModSystem
                 if (Main.tile[X, Y].TileType == TileID.JungleGrass)
                 {
                     if (WorldGen.genRand.NextBool(20))
-                        WorldGen.TryGrowingTreeByType(TileType<RubberTree>(), X, Y);
+                        WorldGen.TryGrowingTreeByType(TileType<HeveaTree>(), X, Y);
                 }
             }
 

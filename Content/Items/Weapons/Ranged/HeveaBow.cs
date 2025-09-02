@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged;
 
-public class RubberWoodBow : ModItem
+public class HeveaBow : ModItem
 {
     public override void SetStaticDefaults()
     {
@@ -25,7 +25,7 @@ public class RubberWoodBow : ModItem
     public override void AddRecipes()
     {
         CreateRecipe()
-        .AddIngredient<RubberTreeWood>(10)
+        .AddIngredient<HeveaWood>(10)
         .AddTile(TileID.WorkBenches)
         .Register();
     }

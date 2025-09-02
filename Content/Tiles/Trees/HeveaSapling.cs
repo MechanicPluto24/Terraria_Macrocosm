@@ -12,7 +12,7 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Trees;
 
-public class RubberTreeSapling : ModTile
+public class HeveaSapling : ModTile
 {
     public override void SetStaticDefaults()
     {
@@ -24,7 +24,7 @@ public class RubberTreeSapling : ModTile
 
         TileID.Sets.TreeSapling[Type] = false; // Do not run regular tree sapling logic
         TileID.Sets.CommonSapling[Type] = true;
-        TileSets.SaplingTreeGrowthType[Type] = ModContent.TileType<RubberTree>();
+        TileSets.SaplingTreeGrowthType[Type] = ModContent.TileType<HeveaTree>();
 
         // Make this tile interact with golf balls in the same way other plants do
         TileMaterials.SetForTileId(Type, TileMaterials._materialsByName["Plant"]);
