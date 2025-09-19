@@ -36,14 +36,18 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
     public override void Load()
     {
         conveyorTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Conveyors");
+        dropperTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Dropper");
     }
 
     public override void Unload()
     {
+        dropperTexture = null;
+        dropperStates.Clear();
     }
 
     public override void ClearWorld()
     {
+        ClearDroppers();
     }
 
     public static bool ShouldDraw => WiresUI.Settings.DrawWires;
@@ -123,6 +127,9 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
     public static bool Remove(Point16 targetCoords, bool sync = true) => Remove(targetCoords.X, targetCoords.Y, sync);
     public static bool Remove(int x, int y, bool sync = true)
     {
+        if (TryRemoveDropper(x, y, sync))
+            return true;
+
         bool removed = false;
         int itemDrop = 0;
         ref var data = ref Main.tile[x, y].Get<ConveyorData>();
@@ -184,6 +191,25 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
                 Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, dustType);
     }
 
+    public override void PostUpdateInput()
+    {
+        if (Main.dedServ)
+            return;
+
+        if (!ShouldDraw)
+            return;
+
+        if (Main.mouseRight && Main.mouseRightRelease)
+        {
+            Point target = Main.LocalPlayer.TargetCoords();
+            if (!WorldGen.InWorld(target.X, target.Y))
+                return;
+
+            if (TryRotateDropper(target.X, target.Y))
+                Main.mouseRightRelease = false;
+        }
+    }
+
     public override void PostUpdateWorld()
     {
         UpdateConveyors();
@@ -202,6 +228,8 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
             SolveConveyorCircuits();
             solveTimer = 0;
         }
+
+        UpdateDroppers();
     }
 
     private static void BuildConveyorCircuits()
@@ -275,6 +303,8 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
             }
         }
     }
+
+    private static bool TryGetConveyorNode(Point16 pos, out ConveyorNode node) => nodeLookup.TryGetValue(pos, out node);
 
     private static IEnumerable<ConveyorNode> GetAllConveyorNodes<T>(IConveyorContainerProvider<T> provider, T container) where T : class
     {
@@ -375,6 +405,9 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
                         }
                     }
                 }
+
+                if (data.Dropper)
+                    DrawDropper(spriteBatch, new Point16(i, j), zero);
             }
         }
 
@@ -409,11 +442,12 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
     {
         int x = reader.ReadUInt16();
         int y = reader.ReadUInt16();
-        byte data = reader.ReadByte();
+        ushort data = reader.ReadUInt16();
         bool dustEffects = reader.ReadBoolean();
 
         ref var localData = ref Main.tile[x, y].Get<ConveyorData>();
         localData = new(data);
+        RefreshDropperState(new Point16(x, y), localData);
 
         if (dustEffects)
             DustEffects(x, y);
@@ -469,8 +503,10 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
             {
                 for (int y = startY; y < startY + height; y++)
                 {
-                    byte data = compressedReader.ReadByte();
-                    Main.tile[x, y].Get<ConveyorData>() = new ConveyorData(data);
+                    ushort data = compressedReader.ReadUInt16();
+                    ConveyorData newData = new(data);
+                    Main.tile[x, y].Get<ConveyorData>() = newData;
+                    RefreshDropperState(new Point16(x, y), newData);
                 }
             }
         }
@@ -503,5 +539,6 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
             return;
         }
         bytes.CopyTo(MemoryMarshal.AsBytes(data.AsSpan()));
+        RebuildDropperStateCache();
     }
 }

@@ -22,7 +22,7 @@ public class TileEntityInventoryOwnerConveyorContainerProvider : IConveyorContai
     public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
     {
         var data = Main.tile[tilePos].Get<ConveyorData>();
-        if (data.HasPipe(type) && (data.Inlet || data.Outlet) && TryGetContainer(tilePos, out TileEntity te) && te is IInventoryOwner)
+        if ((data.HasPipe(type) && (data.Inlet || data.Outlet) || data.Dropper) && TryGetContainer(tilePos, out TileEntity te) && te is IInventoryOwner)
             return new ConveyorNode(te, data, type, tilePos, GetConnectionPositions(te));
 
         return null;

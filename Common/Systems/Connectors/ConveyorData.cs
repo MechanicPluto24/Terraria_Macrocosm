@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Terraria;
 using Terraria.DataStructures;
 
 namespace Macrocosm.Common.Systems.Connectors;
 
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
 public struct ConveyorData : ITileData
 {       
     /// <summary>
@@ -20,15 +22,24 @@ public struct ConveyorData : ITileData
     /// </code> 
     /// </summary>
     private BitsByte data;
+    private BitsByte dropperData;
 
     public ConveyorData()
     {
         data = 0;
+        dropperData = 0;
     }
 
     public ConveyorData(byte packed)
     {
         data = packed;
+        dropperData = 0;
+    }
+
+    public ConveyorData(ushort packed)
+    {
+        data = (byte)(packed & 0xFF);
+        dropperData = (byte)(packed >> 8);
     }
 
     public ConveyorData(bool red = false, bool green = false, bool blue = false, bool yellow = false, bool outlet = false, bool inlet = false) : this()
@@ -41,17 +52,38 @@ public struct ConveyorData : ITileData
         Inlet = inlet;
     }
 
-    public readonly byte Packed => data;
+    public readonly ushort Packed => (ushort)(data | ((ushort)(byte)dropperData << 8));
+    public readonly byte PackedPrimary => data;
+    public readonly byte PackedSecondary => dropperData;
     public bool RedPipe { get => data[0]; set => data[0] = value; }
     public bool GreenPipe { get => data[1]; set => data[1] = value; }
     public bool BluePipe { get => data[2]; set => data[2] = value; }
     public bool YellowPipe { get => data[3]; set => data[3] = value; }
     public bool Outlet { get => AnyPipe && data[4] && !data[5]; set => (data[4], data[5]) = (value && AnyPipe, false); }
     public bool Inlet { get => AnyPipe && data[5] && !data[4]; set => (data[5], data[4]) = (value && AnyPipe, false); }
+    public bool Dropper
+    {
+        get => dropperData[0];
+        set
+        {
+            dropperData[0] = value;
+            if (!dropperData[0])
+                DropperRotation = 0;
+        }
+    }
+    public byte DropperRotation
+    {
+        get => (byte)(((dropperData[1] ? 1 : 0) | (dropperData[2] ? 2 : 0)) & 0b11);
+        set
+        {
+            byte masked = (byte)(value & 0b11);
+            dropperData[1] = (masked & 0b01) != 0;
+            dropperData[2] = (masked & 0b10) != 0;
+        }
+    }
 
     public bool AnyPipe => RedPipe || GreenPipe || BluePipe || YellowPipe;
     public int PipeCount => (RedPipe ? 1 : 0) + (GreenPipe ? 1 : 0) + (BluePipe ? 1 : 0) + (YellowPipe ? 1 : 0);
-
 
     public bool HasPipe(ConveyorPipeType type)
     {
@@ -87,6 +119,13 @@ public struct ConveyorData : ITileData
             case ConveyorPipeType.YellowPipe: YellowPipe = false; break;
             default: break;
         }
+
+        if (!AnyPipe)
+        {
+            Dropper = false;
+            DropperRotation = 0;
+            dropperData = 0;
+        }
     }
 
     public void ClearAll()
@@ -97,5 +136,6 @@ public struct ConveyorData : ITileData
         YellowPipe = false;
         Outlet = false;
         Inlet = false;
+        dropperData = 0;
     }
 }

@@ -21,7 +21,7 @@ public class ChestConveyorContainerProvider : IConveyorContainerProvider<Chest>
     public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
     {
         var data = Main.tile[tilePos].Get<ConveyorData>();
-        if (data.HasPipe(type) && (data.Inlet || data.Outlet) && TryGetContainer(tilePos, out Chest chest))
+        if ((data.HasPipe(type) && (data.Inlet || data.Outlet) || data.Dropper) && TryGetContainer(tilePos, out Chest chest))
             return new ConveyorNode(chest, data, type, tilePos, GetConnectionPositions(chest));
 
         return null;

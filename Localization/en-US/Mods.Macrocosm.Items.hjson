@@ -3335,3 +3335,8 @@ SolarPanelExtraLarge: {
 	DisplayName: Solar Panel Extra Large
 	Tooltip: ""
 }
+
+Dropper: {
+	DisplayName: Dropper
+	Tooltip: ""
+}
