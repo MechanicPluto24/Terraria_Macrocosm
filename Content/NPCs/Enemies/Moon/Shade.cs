@@ -47,7 +47,7 @@ public class Shade : ModNPC
         );
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         NPCID.Sets.TrailCacheLength[NPC.type] = 8;
         NPCID.Sets.TrailingMode[NPC.type] = 0;
 

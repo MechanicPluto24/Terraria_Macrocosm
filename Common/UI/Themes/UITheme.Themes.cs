@@ -41,4 +41,3 @@ public readonly partial struct UITheme
     };
 
 }
-

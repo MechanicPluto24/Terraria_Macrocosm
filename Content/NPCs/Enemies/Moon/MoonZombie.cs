@@ -18,7 +18,7 @@ public class MoonZombie : ModNPC
         Main.npcFrameCount[Type] = 9;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Undead);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
     }

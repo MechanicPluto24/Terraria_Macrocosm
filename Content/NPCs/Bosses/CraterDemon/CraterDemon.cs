@@ -279,7 +279,7 @@ public class CraterDemon : ModNPC
     {
 		     // Difficulty value on :           NM1, NM2, EM1, EM2, MM1, MM2, FTW1, FTW2
 			 /*Phase2AnimDefenseBoost      */ { 40, 40, 50, 50, 50, 50, 60, 60 },
-              
+          
 			 /*MeteorShootBurst            */ { 8, 8, 8, 8, 8, 8, 8, 8 },                           
 			 /*MeteorShootPeriod           */ { 60, 60, 60, 60, 60, 60, 60, 60 },  
 			 /*MeteorShootCount            */ { 5, 5, 5, 5, 5, 5, 5, 5 },  
@@ -427,7 +427,7 @@ public class CraterDemon : ModNPC
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElement(NPC, Redemption.ElementID.Earth);
         Redemption.AddElement(NPC, Redemption.ElementID.Shadow);
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);

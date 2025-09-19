@@ -199,4 +199,3 @@ public class LightningBolt : ModProjectile
         return false;
     }
 }
-

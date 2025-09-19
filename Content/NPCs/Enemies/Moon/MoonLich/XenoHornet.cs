@@ -17,7 +17,7 @@ public class XenoHornet : ModNPC
         Main.npcFrameCount[Type] = 5;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
     }
 

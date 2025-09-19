@@ -148,7 +148,7 @@ public partial class MoonOrbitSubworld
                         6 => Structure.Get<LunarSatellite1>(),
                         _ => Structure.Get<ManmadePod1>(),
                     };
-                    
+                
                     if (gen_StructureMap.CanPlace(new Rectangle(x - 10, y - 10, structure.Size.X + 10, structure.Size.Y + 10)))
                     {
                         structure.Place(new(x, y), gen_StructureMap);

@@ -17,7 +17,7 @@ public class LunarChimera : ModNPC
         Main.npcFrameCount[Type] = 1;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
     }
 

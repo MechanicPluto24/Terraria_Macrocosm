@@ -566,4 +566,3 @@ public abstract class MacrocosmHouseBuilder : MicroBiome
         }
     }
 }
-

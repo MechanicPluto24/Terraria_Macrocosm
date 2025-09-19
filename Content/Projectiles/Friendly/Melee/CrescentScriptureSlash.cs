@@ -147,7 +147,7 @@ public class CrescentScriptureSlash : ModProjectile
             }
             }
         }
-       
+   
         return false;
     }
 

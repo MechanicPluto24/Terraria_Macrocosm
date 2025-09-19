@@ -64,7 +64,7 @@ public class Melting : ComplexBuff
         dust.noGravity = true;
         if (Main.rand.NextBool(2))
             dust.scale *= 0.1f;    
-        
+    
         return dust.dustIndex;
     }
 }

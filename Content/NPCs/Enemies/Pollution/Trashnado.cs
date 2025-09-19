@@ -38,7 +38,7 @@ public partial class Trashnado : ModNPC
         );
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
     }

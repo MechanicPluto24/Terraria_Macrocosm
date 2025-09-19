@@ -20,7 +20,7 @@ public class XenoHive : ModNPC
         Main.npcFrameCount[Type] = 6;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
     }
 

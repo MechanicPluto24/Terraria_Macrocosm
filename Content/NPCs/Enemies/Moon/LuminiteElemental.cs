@@ -71,7 +71,7 @@ public class LuminiteElemental : ModNPC
         );
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);

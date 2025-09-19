@@ -23,4 +23,3 @@ public static partial class Utility
 
     public static string PrettyPrintName(string name) => Regex.Replace(name, "([A-Z])", " $1").Trim();
 }
-

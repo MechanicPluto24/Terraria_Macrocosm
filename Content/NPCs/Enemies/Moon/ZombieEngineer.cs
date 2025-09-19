@@ -40,7 +40,7 @@ public class ZombieEngineer : ModNPC
         );
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Undead);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
     }

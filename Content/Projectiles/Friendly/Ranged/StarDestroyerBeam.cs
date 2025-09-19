@@ -82,4 +82,3 @@ public class StarDestroyerBeam : ModProjectile
         return false;
     }
 }
-

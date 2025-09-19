@@ -153,4 +153,3 @@ public class IrradiationPlayer : ModPlayer
         }
     }
 }
-

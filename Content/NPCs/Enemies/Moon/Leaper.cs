@@ -23,7 +23,7 @@ public class Leaper : ModNPC
         Main.npcFrameCount[Type] = 39;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Dark);

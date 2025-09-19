@@ -35,4 +35,3 @@ public class WaveRiflePurpleBolt : WaveGunBlueBolt
         Projectile.damage = (int)(Projectile.damage * 0.9f);
     }
 }
-

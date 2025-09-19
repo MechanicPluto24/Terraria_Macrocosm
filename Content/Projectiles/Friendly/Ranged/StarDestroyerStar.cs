@@ -222,4 +222,3 @@ public class StarDestroyerStar : ModProjectile
         return false;
     }
 }
-

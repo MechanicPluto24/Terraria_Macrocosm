@@ -30,7 +30,7 @@ public class LuminiteSlime : ModNPC
         );
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);

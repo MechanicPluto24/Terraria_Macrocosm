@@ -178,4 +178,3 @@ public class WaveGunBlueBolt : ModProjectile
         return false;
     }
 }
-

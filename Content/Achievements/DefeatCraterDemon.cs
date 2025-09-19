@@ -15,4 +15,3 @@ public class DefeatCraterDemon : TMLAchievement
         AddKillNPCCondition(ModContent.NPCType<CraterDemon>());
     }
 }
-

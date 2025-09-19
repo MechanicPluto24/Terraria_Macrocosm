@@ -18,4 +18,3 @@ public class WaveGunRedBolt : WaveGunBlueBolt
     public override Color BeamColor => new(255, 75, 75, 0);
     public override Vector3 LightColor => new(1f, 0f, 0f);
 }
-

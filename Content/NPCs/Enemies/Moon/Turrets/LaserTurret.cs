@@ -25,7 +25,7 @@ public class LaserTurret : ModNPC
         Main.npcFrameCount[NPC.type] = 1;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Robotic);
     }
 

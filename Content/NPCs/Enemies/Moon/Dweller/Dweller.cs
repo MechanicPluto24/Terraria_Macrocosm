@@ -651,7 +651,7 @@ public class Dweller : ModNPC
             Utils.DrawLine(spriteBatch, lastPosition, position, Color.Yellow);
             lastPosition = position;
         }
-       
+   
         // Debug collision hitbox
         Rectangle hitbox = collisionHitbox;
         hitbox.X -= (int)screenPos.X;

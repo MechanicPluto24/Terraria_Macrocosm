@@ -88,7 +88,7 @@ public class MoonWormHead : WormHead
         );
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
 
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
     }

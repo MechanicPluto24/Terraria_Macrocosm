@@ -30,7 +30,7 @@ public class RadioactiveSlime : ModNPC
         );
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Poison);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);

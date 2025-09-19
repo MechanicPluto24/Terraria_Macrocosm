@@ -10,7 +10,7 @@ public class CosmicEmberChest : ModItem
 {
     public override void SetStaticDefaults()
     {
-        
+    
     }
 
     public override void SetDefaults()

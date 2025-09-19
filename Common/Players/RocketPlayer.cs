@@ -304,4 +304,3 @@ public class RocketPlayer : ModPlayer
         }
     }
 }
-

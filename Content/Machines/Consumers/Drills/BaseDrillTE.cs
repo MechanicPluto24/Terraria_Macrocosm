@@ -70,7 +70,7 @@ public abstract class BaseDrillTE : ConsumerTE
             }
         }
     }
-   
+
     public override void MachineNetSend(BinaryWriter writer)
     {
         writer.Write(BlacklistedItems.Count);

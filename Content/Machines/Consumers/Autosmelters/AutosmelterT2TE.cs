@@ -23,4 +23,3 @@ public class AutosmelterT2TE : AutocrafterTEBase
         base.MachineUpdate();
     }
 }
-

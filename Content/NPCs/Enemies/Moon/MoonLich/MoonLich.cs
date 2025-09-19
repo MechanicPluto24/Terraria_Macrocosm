@@ -35,7 +35,7 @@ public class MoonLich : ModNPC
         Main.npcFrameCount[NPC.type] = 4;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
     }
 

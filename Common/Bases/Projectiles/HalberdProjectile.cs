@@ -142,17 +142,17 @@ public abstract class HalberdProjectile : ModProjectile
         switch (state)
         {
             case HalberdState.AttackOne:
-                
+            
                 attackOffset = (midOffset) * MathF.Sin(MathHelper.Pi * currentAnimProgress / finalMaxProgress[0]);
                 attackAngle = BaseRotation - (Player.direction * (MathHelper.Pi * ARC_ANGLE_DEG / 180) * MathF.Sin(MathHelper.TwoPi * FloatAnimProgress));
-                
+            
                 if (currentAnimProgress == finalMaxProgress[(int)state] / 2)
                     NPCsHit.Clear();
 
                 break;
 
             case HalberdState.TransOne:
-                
+            
                 attackOffset = (float)MathHelper.Lerp(startOffset, midOffset, 0.5f * FloatAnimProgress);
                 attackAngle = BaseRotation - (Player.direction * MathHelper.PiOver2 * MathF.Sin(MathHelper.TwoPi * 0.25f * FloatAnimProgress));
 
@@ -219,7 +219,7 @@ public abstract class HalberdProjectile : ModProjectile
                 currentAnimProgress = 0;
                 useTimeMulti = Player.GetAttackSpeed(DamageClass.Melee);
                 NPCsHit.Clear();
-                
+            
                 state = Utility.Next(state);
                 RotationLock ^= true;
             }

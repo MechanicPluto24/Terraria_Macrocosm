@@ -72,7 +72,7 @@ public class CraterImp : ModNPC
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, bestiaryData);
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElement(NPC, Redemption.ElementID.Earth);
         Redemption.AddElement(NPC, Redemption.ElementID.Shadow);
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);

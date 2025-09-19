@@ -4,30 +4,29 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Machines.Generators.Wind
-{
-    public class WindTurbineSmall : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
-        }
+namespace Macrocosm.Content.Items.Machines.Generators.Wind;
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Generators.Wind.WindTurbineSmall>());
-            Item.width = 20;
-            Item.height = 48;
-            Item.value = Item.sellPrice(silver: 10);
-            Item.mech = true;
-        }
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-               .AddIngredient<SteelBar>(10)
-               .AddIngredient(ItemID.Wire, 8)
-               .AddIngredient<Plastic>(2)
-               .AddTile<Tiles.Crafting.Fabricator>()
-               .Register();
-        }
+public class WindTurbineSmall : ModItem
+{
+    public override void SetStaticDefaults()
+    {
+    }
+
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Generators.Wind.WindTurbineSmall>());
+        Item.width = 20;
+        Item.height = 48;
+        Item.value = Item.sellPrice(silver: 10);
+        Item.mech = true;
+    }
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+           .AddIngredient<SteelBar>(10)
+           .AddIngredient(ItemID.Wire, 8)
+           .AddIngredient<Plastic>(2)
+           .AddTile<Tiles.Crafting.Fabricator>()
+           .Register();
     }
 }

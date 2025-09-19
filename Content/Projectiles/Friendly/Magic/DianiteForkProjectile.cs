@@ -317,4 +317,3 @@ public class DianiteForkProjectile : ModProjectile
         return false;
     }
 }
-

@@ -486,4 +486,3 @@ public class UIInventorySlot : UIElement
         ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.ItemStack.Value, label, indexPos, Color.White, 0f, Vector2.Zero, new Vector2(Main.inventoryScale), -1f, Main.inventoryScale);
     }
 }
-

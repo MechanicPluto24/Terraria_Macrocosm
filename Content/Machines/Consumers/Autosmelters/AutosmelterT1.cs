@@ -103,4 +103,3 @@ public class AutosmelterT1 : MachineTile
         }
     }
 }
-

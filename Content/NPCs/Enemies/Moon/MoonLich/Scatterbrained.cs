@@ -58,7 +58,7 @@ public class Scatterbrained : ModNPC
         Main.npcFrameCount[Type] = 2;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
     }
 

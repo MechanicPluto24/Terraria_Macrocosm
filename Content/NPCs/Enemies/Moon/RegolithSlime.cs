@@ -26,7 +26,7 @@ public class RegolithSlime : ModNPC
         );
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);
     }

@@ -115,4 +115,3 @@ public class BLPShot : ModProjectile
         return false;
     }
 }
-

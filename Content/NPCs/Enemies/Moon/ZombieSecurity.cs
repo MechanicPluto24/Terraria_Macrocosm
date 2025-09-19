@@ -62,7 +62,7 @@ public class ZombieSecurity : ModNPC
         Main.npcFrameCount[Type] = 32;
 
         NPCSets.MoonNPC[Type] = true;
-        
+    
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Undead);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
     }

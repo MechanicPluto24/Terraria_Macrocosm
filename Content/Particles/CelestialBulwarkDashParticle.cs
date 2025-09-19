@@ -118,7 +118,7 @@ public class CelestialBulwarkDashParticle : Particle
 
         spriteBatch.Draw(TextureAsset.Value, Position - screenPosition, null, Color * Progress, Rotation, TextureAsset.Size() / 2, Scale, SpriteEffects.None, 0f);
         spriteBatch.Draw(circle.Value, Position - screenPosition, null, Color.Lerp(Color.White, Color, 0.75f).WithOpacity(0.5f) * Progress, defRotation, circle.Size() / 2, Utility.QuadraticEaseIn(Progress) * 0.7f, SpriteEffects.None, 0f);
-        
+    
         if(Player.velocity.LengthSquared() > 1f)
         spriteBatch.Draw(fireball.Value, Position - new Vector2(100 * Utility.QuadraticEaseIn(Progress), 0).RotatedBy(Player.velocity.ToRotation()) - screenPosition, null, Color.Lerp(Color.White, Color, 0.9f).WithOpacity(0.75f) * Progress, defRotation, fireball.Size() / 2, Utility.QuadraticEaseIn(Progress) * 4.8f, SpriteEffects.FlipVertically, 0f);
 

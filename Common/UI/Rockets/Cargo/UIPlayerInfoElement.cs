@@ -120,4 +120,3 @@ public class UIPlayerInfoElement : UIPanel
         spriteBatch.Begin(state);
     }
 }
-

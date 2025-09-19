@@ -102,7 +102,7 @@ internal class ChampionsBladeHeldProjectile : ModProjectile
         var progress = 1f - (float)Player.itemAnimation / Player.itemAnimationMax;
         var x = progress - 1f;
         Projectile.rotation = Projectile.velocity.ToRotation() + (0.5f * Arc - Arc * (MathF.Sin((x * x * x - 0.5f) * MathHelper.Pi) + 1f) / 2f) * SwingDirection;
-           
+       
         float maxShots = 2 + 5 * ((float)hitStacks / ChampionsBlade.MaxStacks);
         if (shots < maxShots && Main.netMode != NetmodeID.MultiplayerClient && progress > 0.3f && progress < 0.5f && Main.rand.NextBool(2))
         {
