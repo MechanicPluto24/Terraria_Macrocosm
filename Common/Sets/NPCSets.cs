@@ -5,7 +5,7 @@ namespace Macrocosm.Common.Sets;
 
 /// <summary> NPC Sets for special behavior of some NPCs, useful for crossmod.  </summary>
 [ReinitializeDuringResizeArrays]
-public class NPCSets
+public partial class NPCSets
 {
     /// <summary> NPC types that can spawn on the Moon. Also adds the Moon tag to the bestiary. </summary>
     public static bool[] MoonNPC { get; } = NPCID.Sets.Factory.CreateNamedSet(nameof(MoonNPC)).Description("NPC types that can spawn on the Moon. Also adds the Moon tag to the bestiary.").RegisterBoolSet();

@@ -22,7 +22,7 @@ public class MoonChampionSentry : ModProjectile
     public override void SetDefaults()
     {
         Projectile.width = 40;
-        Projectile.height = 46;
+        Projectile.height = 48;
         Projectile.tileCollide = true;
         Projectile.sentry = true;
         Projectile.timeLeft = Projectile.SentryLifeTime;
@@ -56,12 +56,15 @@ public class MoonChampionSentry : ModProjectile
             Vector2 turningVector = (targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX);
             turretRotation = (new Vector2(5, 0).RotatedBy(turretRotation) + (turningVector * 0.6f)).ToRotation();
             timer++;
-            if (timer == 60)
+            if (timer % 10 == 0 && timer > 59)
             {
-                Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(-14, 0), new Vector2(16f, 0).RotatedBy(turretRotation), ProjectileID.RocketI, Projectile.damage / 2, 1f, Main.myPlayer);
+                Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(-14, 0), new Vector2(16f, 0).RotatedBy(turretRotation), ModContent.ProjectileType<MoonChampionSentryBullet>(), Projectile.damage / 2, 1f, Main.myPlayer);
                 p.DamageType = DamageClass.Summon;
-                timer = 0;
                 offset = 5f;
+            }
+            if (timer > 101)
+            {
+                timer = 0;
             }
         }
         else

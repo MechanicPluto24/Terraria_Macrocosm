@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
@@ -15,6 +16,8 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Skies.Moon;
 
+    // Only load visuals on the client.
+[Autoload(Side = ModSide.Client)]
 public class MoonSky : CustomSky, ILoadable
 {
     private bool active;
@@ -23,8 +26,8 @@ public class MoonSky : CustomSky, ILoadable
     private readonly Stars starsDay;
     private readonly Stars starsNight;
 
-    private readonly CelestialBody earth;
-    private readonly CelestialBody sun;
+    private CelestialBody earth;
+    private readonly CelestialBodySprite sun;
 
     private readonly Asset<Texture2D> skyTexture;
 
@@ -34,6 +37,9 @@ public class MoonSky : CustomSky, ILoadable
     private readonly Asset<Texture2D> earthBodyDrunk;
     private readonly Asset<Texture2D> earthBodyFlat;
     private readonly Asset<Texture2D> earthAtmo;
+
+    private readonly Asset<Texture2D> earthMercator;
+    private readonly Asset<Texture2D> earthMercatorOverlay;
 
     private readonly Asset<Texture2D>[] nebulaTextures = new Asset<Texture2D>[Main.maxMoons];
     private readonly RawTexture[] nebulaRawTextures = new RawTexture[Main.maxMoons];
@@ -48,9 +54,6 @@ public class MoonSky : CustomSky, ILoadable
 
     public MoonSky()
     {
-        //if (Main.dedServ)
-        //   return;
-
         AssetRequestMode mode = AssetRequestMode.ImmediateLoad;
         skyTexture = ModContent.Request<Texture2D>(Path + "MoonSky", mode);
 
@@ -58,22 +61,22 @@ public class MoonSky : CustomSky, ILoadable
         earthBody = ModContent.Request<Texture2D>(Path + "Earth", mode);
         earthBodyDrunk = ModContent.Request<Texture2D>(Path + "EarthDrunk", mode);
         earthBodyFlat = ModContent.Request<Texture2D>(Path + "EarthFlat", mode);
-
         earthAtmo = ModContent.Request<Texture2D>(Path + "EarthAtmo", mode);
+
+        earthMercator = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_Mercator");
+        earthMercatorOverlay = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "OrbitBackgrounds/3D/Earth_MercatorClouds");
 
         starsDay = new();
         starsNight = new();
 
-        sun = new CelestialBody(sunTexture);
-        earth = new CelestialBody(earthBody, earthAtmo, scale: 0.9f);
+        sun = new(sunTexture);
+
+        SetupEarth(this, EventArgs.Empty);
+
+            // Allow the type of earth to be changed without requiring a reload.
+        ClientConfig.Instance.OnConfigChanged += SetupEarth;
 
         sun.SetupSkyRotation(CelestialBody.SkyRotationMode.Day);
-
-        earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
-
-        earth.SetLighting(sun);
-        earth.ConfigureBackRadialShader = ConfigureEarthAtmoShader;
-        earth.ConfigureBodySphericalShader = ConfigureEarthBodyShader;
 
         string[] nebulaNames =
         [
@@ -95,13 +98,23 @@ public class MoonSky : CustomSky, ILoadable
             nebulaRawTextures[i] = RawTexture.FromAsset(nebulaTextures[i]);
     }
 
-    public void Load(Mod mod)
+    private void SetupEarth(object sender, EventArgs e)
     {
-        if (Main.dedServ)
-            return;
+        if (ClientConfig.Instance.Use3DCelestialBodies)
+        {
+            earth = new CelestialBodySphere(earthMercator, new(190), projectionOverlayTexture: earthMercatorOverlay)
+                { ConfigureSphereShader = ConfigureEarthSphereShader };
+        }
+        else
+            earth = new CelestialBodySprite(earthBody, earthAtmo, scale: 0.9f);
 
-        SkyManager.Instance["Macrocosm:MoonSky"] = new MoonSky();
+        earth.SetParallax(0.01f, 0.12f, new Vector2(0f, -200f));
+
+        earth.SetLighting(sun);
     }
+
+    public void Load(Mod mod) =>
+        SkyManager.Instance["Macrocosm:MoonSky"] = new MoonSky();
 
     public void Unload() { }
 
@@ -318,16 +331,16 @@ public class MoonSky : CustomSky, ILoadable
         if (Utility.IsAprilFools)
         {
             earth.SetLighting(null);
-            earth.SetTextures(earthBodyFlat);
+            //earth.SetTextures(earthBodyFlat);
         }
         else
         {
             earth.SetLighting(sun);
 
-            if (Main.drunkWorld)
-                earth.SetTextures(earthBodyDrunk, earthAtmo);
-            else
-                earth.SetTextures(earthBody, earthAtmo);
+            //if (Main.drunkWorld)
+                //earth.SetTextures(earthBodyDrunk, earthAtmo);
+            //else
+                //earth.SetTextures(earthBody, earthAtmo);
         }
 
         if (Main.LocalPlayer.head == 12)
@@ -359,7 +372,16 @@ public class MoonSky : CustomSky, ILoadable
         return brightness;
     }
 
-    private void ConfigureEarthBodyShader(CelestialBody celestialBody, CelestialBody lightSource, out Vector3 lightPosition, out float radius, out int pixelSize)
+    private void ConfigureEarthSphereShader(
+        CelestialBodySphere celestialBody,
+        CelestialBody lightSource,
+        out Vector3 lightPosition,
+        out Vector4 lightColor,
+        out Vector4 shadowColor,
+        out Vector4 lightAtmosphereColor,
+        out Vector4 shadowAtmosphereColor,
+        out Matrix bodyRotation,
+        out float radius)
     {
         float distanceFactor;
         float depth;
@@ -368,42 +390,27 @@ public class MoonSky : CustomSky, ILoadable
             distanceFactor = MathHelper.Clamp(Vector2.Distance(celestialBody.Center, lightSource.Center) / Math.Max(celestialBody.Width * 2, celestialBody.Height * 2), 0, 1);
             depth = MathHelper.Lerp(-60, 400, Utility.QuadraticEaseIn(distanceFactor));
             lightPosition = new Vector3(Utility.ClampOutsideCircle(lightSource.Center, celestialBody.Center, earth.Width / 2 * 2), depth);
-            radius = 0.1f;
         }
         else
         {
             distanceFactor = MathHelper.Clamp(Vector2.Distance(celestialBody.Center, lightSource.Center) / Math.Max(celestialBody.Width * 2, celestialBody.Height * 2), 0, 1);
             depth = MathHelper.Lerp(400, 5000, 1f - Utility.QuadraticEaseOut(distanceFactor));
             lightPosition = new Vector3(Utility.ClampOutsideCircle(lightSource.Center, celestialBody.Center, earth.Width / 2 * 2), depth);
-            radius = 0.01f;
         }
 
-        pixelSize = 1;
+            // These are test/dummy values feel free to mess with these all you like.
+        lightColor = Vector4.One;
+        shadowColor = Color.Black.ToVector4();
+
+        bodyRotation =
+            Matrix.CreateRotationX(MathHelper.PiOver2) *
+            Matrix.CreateRotationY(MathHelper.Pi) *
+            Matrix.CreateRotationZ(Main.GlobalTimeWrappedHourly * .2f);
+
+        lightAtmosphereColor = Color.Blue.ToVector4();
+        shadowAtmosphereColor = Color.DarkRed.ToVector4() * .6f;
+
+            // Value from 0-1 representing the ratio between the atmosphere and actual body.
+        radius = .9f;
     }
-
-    private void ConfigureEarthAtmoShader(CelestialBody earth, float rotation, out float intensity, out Vector2 offset, out float radius, ref Vector2 shadeResolution)
-    {
-        Vector2 screenSize = Main.ScreenSize.ToVector2();
-        float distance = Vector2.Distance(earth.Center / screenSize, earth.LightSource.Center / screenSize);
-        float offsetRadius = MathHelper.Lerp(0.12f, 0.56f, 1 - distance);
-
-        if (!Main.dayTime)
-        {
-            offsetRadius = MathHelper.Lerp(0.56f, 0.01f, 1 - distance);
-        }
-        else
-        {
-            if (distance < 0.1f)
-            {
-                float proximityFactor = 1 - distance / 0.1f;
-                offsetRadius += 0.8f * proximityFactor;
-            }
-        }
-
-        offset = Utility.PolarVector(offsetRadius, rotation) * 0.65f;
-        intensity = 0.96f;
-        shadeResolution /= 2;
-        radius = 1f;
-    }
-
 }

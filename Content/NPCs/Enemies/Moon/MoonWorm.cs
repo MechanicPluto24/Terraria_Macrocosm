@@ -1,6 +1,7 @@
 using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -89,7 +90,7 @@ public class MoonWormHead : WormHead
 
         NPCSets.MoonNPC[Type] = true;
     
-
+        NPCSets.Material[Type] = NPCMaterial.Earth;
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
     }
 

@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -36,6 +37,7 @@ public class MoonLich : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
+        NPCSets.Material[Type] = NPCMaterial.Organic;
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
     }
 

@@ -30,7 +30,7 @@ public class RandomUpdateGlobalTile : GlobalTile
             {
                 Tile tileAbove = Main.tile[i, j - 1];
                 if (WorldGen.genRand.NextBool(700) && (!tileAbove.HasTile || (tileAbove.TileType is TileID.JunglePlants or TileID.JunglePlants2 or TileID.JungleThorns)))
-                    WorldGen.TryGrowingTreeByType(ModContent.TileType<RubberTree>(), i, j);
+                    WorldGen.TryGrowingTreeByType(ModContent.TileType<HeveaTree>(), i, j);
             }
         }
     }

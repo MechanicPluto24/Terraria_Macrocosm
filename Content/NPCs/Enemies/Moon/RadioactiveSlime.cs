@@ -1,5 +1,6 @@
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
@@ -31,6 +32,7 @@ public class RadioactiveSlime : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
+        NPCSets.Material[Type] = NPCMaterial.Slime;
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Poison);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);

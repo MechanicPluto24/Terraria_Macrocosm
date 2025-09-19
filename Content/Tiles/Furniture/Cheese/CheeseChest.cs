@@ -9,6 +9,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Macrocosm.Common.Sets;
 
 namespace Macrocosm.Content.Tiles.Furniture.Cheese;
 
@@ -16,31 +17,25 @@ public class CheeseChest : ModTile
 {
     public override void SetStaticDefaults()
     {
-        Main.tileSpelunker[Type] = true;
         Main.tileContainer[Type] = true;
-        Main.tileShine2[Type] = true;
-        Main.tileShine[Type] = 1200;
         Main.tileFrameImportant[Type] = true;
         Main.tileNoAttach[Type] = true;
+        Main.tileLavaDeath[Type] = true;
 
         TileID.Sets.HasOutlines[Type] = true;
-        TileID.Sets.BasicChest[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.AvoidedByNPCs[Type] = true;
         TileID.Sets.InteractibleByNPCs[Type] = true;
         TileID.Sets.IsAContainer[Type] = true;
-        TileID.Sets.FriendlyFairyCanLureTo[Type] = true;
-        TileID.Sets.GeneralPlacementTiles[Type] = false;
+        TileID.Sets.BasicChest[Type] = true;
 
-        DustType = ModContent.DustType<CheeseDust>();
-        AdjTiles = [TileID.Containers];
-
-        AddMapEntry(new Color(220, 216, 121), CreateMapEntryName(), MapChestName);
+        TileSets.CustomContainer[Type] = true;
 
         TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-        TileObjectData.newTile.Origin = new Point16(0, 1);
-        TileObjectData.newTile.CoordinateHeights = [16, 16];
+    
         TileObjectData.newTile.DrawYOffset = 2;
+        TileObjectData.newTile.StyleHorizontal = true;
+
         TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
         TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
         TileObjectData.newTile.AnchorInvalidTiles =
@@ -51,10 +46,20 @@ public class CheeseChest : ModTile
             TileID.LifeCrystalBoulder,
             TileID.RollingCactus
         ];
-        TileObjectData.newTile.StyleHorizontal = true;
-        TileObjectData.newTile.LavaDeath = false;
-        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+
+        HitSound = SoundID.Dig;
+
+        DustType = DustID.LunarOre;
+        AdjTiles = [TileID.Containers];
+
+
+        DustType = ModContent.DustType<CheeseDust>();
+        AdjTiles = [TileID.Containers];
+
+        AddMapEntry(new Color(220, 216, 121), CreateMapEntryName(), MapChestName);
         TileObjectData.addTile(Type);
+
+        
     }
 
     public override LocalizedText DefaultContainerName(int frameX, int frameY) => this.GetLocalization("MapEntry");

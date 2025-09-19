@@ -55,7 +55,6 @@ public class IrradiatedAltar : ModTile
             Player player = Main.LocalPlayer;
             float distance = Vector2.DistanceSquared(player.Center / 16, new Vector2(i, j));
             if (distance <= 20 * 20)
-                player.GetModPlayer<IrradiationPlayer>().IrradiationLevel += 0.024f * (1f - distance / (20f * 20f));
-        }
+                player.GetModPlayer<IrradiationPlayer>().IrradiationLevel += 0.04f * (1f - distance / (20f * 20f));
     }
 }

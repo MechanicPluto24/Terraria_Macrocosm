@@ -3306,6 +3306,11 @@ ShredderBullet: {
 	Tooltip: ""
 }
 
+IndustrialBeam: {
+	DisplayName: Industrial Beam
+	Tooltip: ""
+}
+
 AutosmelterT1: {
 	DisplayName: Autosmelter T1
 	Tooltip: ""
@@ -3339,4 +3344,9 @@ SolarPanelExtraLarge: {
 Dropper: {
 	DisplayName: Dropper
 	Tooltip: ""
+}
+
+ScrapshotBow: {
+	DisplayName: Scrapshot Bow
+	Tooltip: Prone to faulty firing
 }

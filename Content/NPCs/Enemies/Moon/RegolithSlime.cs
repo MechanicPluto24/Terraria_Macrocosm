@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
@@ -27,6 +28,7 @@ public class RegolithSlime : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
+        NPCSets.Material[Type] = NPCMaterial.Slime;
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Water);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Slime);
     }

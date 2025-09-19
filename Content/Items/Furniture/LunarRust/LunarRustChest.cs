@@ -15,7 +15,7 @@ public class LunarRustChest : ModItem
 
     public override void SetDefaults()
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChest>(), (int)LuminiteStyle.LunarRust);
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Luminite.LuminiteChest>(), (int)LuminiteStyle.LunarRust*2);
         Item.width = 32;
         Item.height = 24;
         Item.value = 150;

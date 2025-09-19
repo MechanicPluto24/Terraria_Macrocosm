@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -19,6 +20,7 @@ public class MoonZombie : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
+        NPCSets.Material[Type] = NPCMaterial.Organic;
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Undead);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
     }

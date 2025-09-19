@@ -71,7 +71,6 @@ public abstract class ManisolBladeBase : ModProjectile
         Projectile.velocity = Vector2.Lerp(Projectile.velocity, direction * returnSpeed, 0.1f);
     }
 
-
     public virtual void OnReturnToPlayer()
     {
     }

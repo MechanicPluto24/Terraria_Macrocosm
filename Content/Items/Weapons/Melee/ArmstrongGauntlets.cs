@@ -1,3 +1,4 @@
+using Macrocosm.Common.Players;
 using Macrocosm.Content.Projectiles.Friendly.Melee;
 using Macrocosm.Content.Rarities;
 using Microsoft.Xna.Framework;
@@ -33,13 +34,20 @@ public class ArmstrongGauntlets : ModItem
         Item.shootSpeed = 20;
         Item.noUseGraphic = true;
     }
-    int shots = 0;
+
     public override bool CanUseItem(Player player) => player.ownedProjectileCounts[Item.shoot] < 2;
     public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
     {
-        Vector2 aim = velocity;
-        Projectile.NewProjectileDirect(source, position, aim.RotatedByRandom(MathHelper.PiOver4 / 3), ModContent.ProjectileType<ArmstrongGauntletProjectile>(), damage, knockback, player.whoAmI, ai1: Item.shootSpeed, ai2: shots % 8 == 7 ? 1f : 0f);
-        shots++;
+        Projectile.NewProjectileDirect(source,
+            position,
+            velocity.RotatedByRandom(MathHelper.PiOver4 / 3),
+            ModContent.ProjectileType<ArmstrongGauntletProjectile>(),
+            damage,
+            knockback,
+            player.whoAmI,
+            ai1: Item.shootSpeed,
+            ai2: player.GetModPlayer<MacrocosmPlayer>().ItemUseCount[Type] % 8 == 7 ? 1f : 0f
+        );
         return false;
     }
 }

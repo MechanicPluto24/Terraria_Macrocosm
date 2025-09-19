@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -21,6 +22,7 @@ public class XenoHive : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
+        NPCSets.Material[Type] = NPCMaterial.Organic;
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
     }
 

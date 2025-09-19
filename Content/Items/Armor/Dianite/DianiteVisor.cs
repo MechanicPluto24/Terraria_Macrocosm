@@ -15,8 +15,8 @@ public class DianiteVisor : ModItem
     }
     public override void SetDefaults()
     {
-        Item.width = 18;
-        Item.height = 18;
+        Item.width = 22;
+        Item.height = 26;
         Item.value = Item.sellPrice(gold: 10);
         Item.rare = ModContent.RarityType<MoonRarity1>();
         Item.defense = 5;

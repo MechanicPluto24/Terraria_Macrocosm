@@ -16,6 +16,8 @@ public class LifelinePlayer : ModPlayer
     {
         Lifeline = false;
         Cooldown--;
+        if(Cooldown<0)
+            Cooldown=0;
     }
     public override void OnHitAnything(float x, float y, Entity victim)
     {

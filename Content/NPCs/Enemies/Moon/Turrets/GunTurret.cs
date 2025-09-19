@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Items.Tech;
@@ -25,7 +26,7 @@ public class GunTurret : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
-
+        NPCSets.Material[Type] = NPCMaterial.Machine;
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Robotic);
     }
 

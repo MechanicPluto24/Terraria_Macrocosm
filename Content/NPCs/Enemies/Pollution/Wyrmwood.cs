@@ -1,5 +1,7 @@
 ﻿using Macrocosm.Common.Bases.NPCs;
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
+using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
@@ -35,6 +37,7 @@ public class WyrmwoodHead : WormHead
             BuffID.Confused
         );
 
+        NPCSets.Material[Type] = NPCMaterial.Slime;
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Dark);
     }

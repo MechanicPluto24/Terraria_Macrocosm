@@ -1,6 +1,7 @@
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -39,6 +40,7 @@ public partial class Trashnado : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
+        NPCSets.Material[Type] = NPCMaterial.Supernatural;
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
     }

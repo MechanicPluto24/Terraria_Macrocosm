@@ -26,8 +26,8 @@ public class BLPShot : ModProjectile
 
     public override void SetDefaults()
     {
-        Projectile.width = 4;
-        Projectile.height = 4;
+        Projectile.width = 8;
+        Projectile.height = 8;
         Projectile.friendly = true;
         Projectile.DamageType = DamageClass.Ranged;
         Projectile.tileCollide = true;
@@ -106,8 +106,8 @@ public class BLPShot : ModProjectile
         Main.spriteBatch.End();
         Main.spriteBatch.Begin(BlendState.Additive, state);
 
-        var fireball = TextureAssets.Projectile[Type];
-        Main.EntitySpriteDraw(fireball.Value, Projectile.position - Main.screenPosition + new Vector2(-12, 0).RotatedBy(Projectile.velocity.ToRotation()), null, color, Projectile.rotation + MathHelper.PiOver2, fireball.Size() / 2, Projectile.scale * 0.2f, SpriteEffects.None, 0);
+        var texture = TextureAssets.Projectile[Type];
+        Main.EntitySpriteDraw(texture.Value, Projectile.Center - Main.screenPosition + new Vector2(0, 0).RotatedBy(Projectile.velocity.ToRotation()), null, color, Projectile.rotation + MathHelper.PiOver2, texture.Size() / 2, Projectile.scale * 0.2f, SpriteEffects.None, 0);
 
         Main.spriteBatch.End();
         Main.spriteBatch.Begin(state);

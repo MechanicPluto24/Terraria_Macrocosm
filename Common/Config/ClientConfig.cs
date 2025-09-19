@@ -33,9 +33,13 @@ public class ClientConfig : ModConfig
     [DefaultValue(UnitSystemType.Metric)]
     public UnitSystemType UnitSystem { get; set; }
 
-    /// <summary> Whether to display gravity in Gs or as gravtiational acceleration </summary>
+    /// <summary> Whether to display gravity in Gs or as gravitational acceleration </summary>
     [DefaultValue(true)]
     public bool DisplayGravityInGs { get; set; }
+
+    [Header("VisualsHeader")]
+    [DefaultValue(true)]
+    public bool Use3DCelestialBodies { get; set; }
 
     /// <summary> Things can subscribe to this event for notification when the configuration has been changed </summary>
     public event EventHandler OnConfigChanged;

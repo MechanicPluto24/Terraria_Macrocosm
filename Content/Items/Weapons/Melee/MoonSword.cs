@@ -48,7 +48,6 @@ public class MoonSword : ModItem
 }
 
 
-
 /*
 public class ChampionsBladeProjectile : ModProjectile
 {

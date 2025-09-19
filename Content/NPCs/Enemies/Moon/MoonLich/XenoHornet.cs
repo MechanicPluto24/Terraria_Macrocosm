@@ -1,4 +1,5 @@
 using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -18,6 +19,7 @@ public class XenoHornet : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
+        NPCSets.Material[Type] = NPCMaterial.Organic;
         Redemption.AddElement(NPC, Redemption.ElementID.Celestial);
     }
 

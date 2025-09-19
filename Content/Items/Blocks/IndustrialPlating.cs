@@ -2,6 +2,7 @@ using Macrocosm.Content.Items.Walls;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Items.Furniture.Industrial;
 
 namespace Macrocosm.Content.Items.Blocks;
 
@@ -24,6 +25,11 @@ public class IndustrialPlating : ModItem
             .AddIngredient<Bars.SteelBar>(1)
             .AddIngredient(ItemID.StoneBlock, 5)
             .AddTile(TileID.Anvils)
+            .Register();
+
+        CreateRecipe()
+            .AddIngredient<IndustrialPlatform>(2)
+            .AddTile(TileID.WorkBenches)
             .Register();
 
         CreateRecipe()

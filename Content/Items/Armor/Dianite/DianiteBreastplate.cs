@@ -11,8 +11,19 @@ namespace Macrocosm.Content.Items.Armor.Dianite;
 [AutoloadEquip(EquipType.Body)]
 public class DianiteBreastplate : ModItem
 {
+   
+    private int backSlot;
+    private int frontSlot;
+    public override void Load()
+    {
+        backSlot = EquipLoader.AddEquipTexture(Mod, Texture + "_Back", EquipType.Back, name: "DianiteCapeB");
+        frontSlot = EquipLoader.AddEquipTexture(Mod, Texture + "_Front", EquipType.Front, name: "DianiteCapeF");
+    }
     public override void SetStaticDefaults()
     {
+        ArmorIDs.Body.Sets.IncludedCapeBack[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = backSlot;
+        ArmorIDs.Body.Sets.IncludedCapeBackFemale[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = backSlot;
+        ArmorIDs.Body.Sets.IncludedCapeFront[EquipLoader.GetEquipSlot(Mod, Name, EquipType.Body)] = frontSlot;
     }
 
     public override void SetDefaults()

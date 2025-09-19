@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -45,9 +46,9 @@ public class CrescentGhoul : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
 
+        NPCSets.Material[Type] = NPCMaterial.Earth;
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Arcane);
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Shadow);
-        Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
     }
 

@@ -37,18 +37,18 @@ public class ArmstrongGauntletProjectile : ModProjectile
         Projectile.ignoreWater = true;
         Projectile.usesOwnerMeleeHitCD = true;
         Projectile.gfxOffY = -3f;
+        Projectile.hide = true;
     }
 
     public ref float MaxTime => ref Projectile.ai[1];
+    public bool Launch => Projectile.ai[2] == 1f;
+    Player Player => Main.player[Projectile.owner];
 
     private Vector2 dirVec;
     private Vector2 armCenter;
     private int timer = 0;
     private int seed = 0;
     private bool spawned = false;
-
-    Player Player => Main.player[Projectile.owner];
-    bool Launch => Projectile.ai[2] == 1f;
 
     public override void OnSpawn(IEntitySource source)
     {
@@ -81,32 +81,19 @@ public class ArmstrongGauntletProjectile : ModProjectile
                     //armCenter = Player.RotatedRelativePoint(Player.MountedCenter, true) + new Vector2(-Player.direction * 3, -3);
                     //Projectile.Center = armCenter + (dirVec * -8f);
                     Player.velocity = dirVec * 15f;
+                    Player.AddImmuneTime(ImmunityCooldownID.General, 60);
                 }
             }
             spawned = true;
         }
 
-        //if (Timer % 3 == 0)
-        //  Dust.NewDustPerfect(Projectile.Center + Main.rand.NextVector2Circular(10, 10), ModContent.DustType<SparkleDust>(), Projectile.velocity.RotatedByRandom(MathHelper.PiOver4 * 0.7f) * Main.rand.NextFloat(.1f, .4f), 0, Color.Lerp(Color.White, new Color(254, 228, 21), Main.rand.NextFloat()) * 0.5f, Main.rand.NextFloat(0.07f, 0.1f));
         Projectile.spriteDirection = Player.direction;
-
         armCenter = Player.RotatedRelativePoint(Player.MountedCenter, true) + new Vector2(-Player.direction * 3, -3);
         Projectile.Center = armCenter;
-        if (Main.myPlayer == Projectile.owner)
-        {
-            if (!Launch)
-            {
-                //dirVec = armCenter.DirectionTo(Main.MouseWorld);
-                //Projectile.Center = armCenter + dirVec * ((float)(Math.Sin(Timer * 0.4f) * 2f) - 12f);
-            }
-        }
-
         Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, dirVec.ToRotation() - MathHelper.PiOver2);
         timer++;
-        //if (Launch)
-        //  Projectile.Center = armCenter + (dirVec * -8f);
-
         Projectile.rotation = dirVec.ToRotation();
+
         if (timer >= MaxTime)
             Projectile.Kill();
 
@@ -138,6 +125,7 @@ public class ArmstrongGauntletProjectile : ModProjectile
             }, shouldSync: true
             );
         }
+
         if (Launch)
         {
             Particle.Create<PrettySparkle>((p) =>
@@ -153,6 +141,8 @@ public class ArmstrongGauntletProjectile : ModProjectile
 
             Player.velocity = dirVec * -Player.velocity.Length() * 0.8f;
         }
+
+        Player.AddImmuneTime(ImmunityCooldownID.General, 30);
     }
 
     public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
@@ -162,11 +152,8 @@ public class ArmstrongGauntletProjectile : ModProjectile
 
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
     {
-        // If the target is touching the beam's hitbox (which is a small rectangle vaguely overlapping the host Prism), that's good enough.
         if (projHitbox.Intersects(targetHitbox))
-        {
             return true;
-        }
 
         // Otherwise, perform an AABB line collision check to check the whole beam.
         float _ = float.NaN;
@@ -174,7 +161,6 @@ public class ArmstrongGauntletProjectile : ModProjectile
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + (armCenter.DirectionTo(Main.MouseWorld) * ((float)(Math.Sin(timer * 1f) * 20f) + 23f)), 5f * Projectile.scale, ref _);
         else
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + dirVec * 20f, 5f * Projectile.scale, ref _);
-
     }
 
     public override bool PreDraw(ref Color lightColor)

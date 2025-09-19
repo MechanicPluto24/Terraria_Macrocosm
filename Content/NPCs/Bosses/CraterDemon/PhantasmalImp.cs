@@ -117,7 +117,7 @@ public class PhantasmalImp : ModProjectile
             if (Counter != -1)
             {
                 Counter = -1;
-                Direction = (TargetPlayer.Center - Projectile.Center).RotatedByRandom(MathHelper.Pi / 3);
+                Direction = (TargetPlayer.Center - Projectile.Center).RotatedByRandom(MathHelper.Pi / 5);
             }
             Direction = Direction.SafeNormalize(Vector2.UnitY);
             Projectile.velocity = Vector2.Lerp(Projectile.velocity, Direction * Speed, 0.5f);

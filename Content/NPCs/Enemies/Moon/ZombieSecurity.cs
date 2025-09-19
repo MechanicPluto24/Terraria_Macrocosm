@@ -1,5 +1,6 @@
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
@@ -63,6 +64,7 @@ public class ZombieSecurity : ModNPC
 
         NPCSets.MoonNPC[Type] = true;
     
+        NPCSets.Material[Type] = NPCMaterial.Metal;
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Undead);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Humanoid);
     }

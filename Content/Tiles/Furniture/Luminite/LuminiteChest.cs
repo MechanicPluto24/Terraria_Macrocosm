@@ -16,6 +16,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
+using Macrocosm.Common.Sets;
 
 namespace Macrocosm.Content.Tiles.Furniture.Luminite;
 
@@ -23,23 +24,38 @@ public class LuminiteChest : ModTile
 {
     public override void SetStaticDefaults()
     {
-        // Properties
-        Main.tileSpelunker[Type] = true;
         Main.tileContainer[Type] = true;
-        Main.tileShine2[Type] = true;
-        Main.tileShine[Type] = 1200;
         Main.tileFrameImportant[Type] = true;
         Main.tileNoAttach[Type] = true;
-        Main.tileOreFinderPriority[Type] = 500;
+        Main.tileLavaDeath[Type] = true;
 
         TileID.Sets.HasOutlines[Type] = true;
-        TileID.Sets.BasicChest[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.AvoidedByNPCs[Type] = true;
         TileID.Sets.InteractibleByNPCs[Type] = true;
         TileID.Sets.IsAContainer[Type] = true;
-        TileID.Sets.FriendlyFairyCanLureTo[Type] = true;
-        TileID.Sets.GeneralPlacementTiles[Type] = false;
+        TileID.Sets.BasicChest[Type] = true;
+
+        TileSets.CustomContainer[Type] = true;
+
+        TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+    
+        TileObjectData.newTile.DrawYOffset = 2;
+        TileObjectData.newTile.StyleHorizontal = true;
+
+        TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
+        TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
+        TileObjectData.newTile.AnchorInvalidTiles =
+        [
+            TileID.MagicalIceBlock,
+            TileID.Boulder,
+            TileID.BouncyBoulder,
+            TileID.LifeCrystalBoulder,
+            TileID.RollingCactus
+        ];
+        TileSets.RandomStyles[Type] = 20;
+
+        HitSound = SoundID.Dig;
 
         DustType = DustID.LunarOre;
         AdjTiles = [TileID.Containers];
@@ -52,29 +68,16 @@ public class LuminiteChest : ModTile
             AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), this.GetLocalization($"MapEntry{(i * 2) + 1}"), MapChestName);
         }
 
-        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteChest>(), 0, 1);
-
-        // Sometimes mods remove content, such as tile styles, or tiles accidentally get corrupted. We can, if desired, register a fallback item for any tile style that doesn't have an automatically determined item drop. This is done by omitting the tileStyles parameter.
-        RegisterItemDrop(ItemID.Chest);
-
-        // Placement
-        TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
-        TileObjectData.newTile.Origin = new Point16(0, 1);
-        TileObjectData.newTile.CoordinateHeights = [16, 18];
-        TileObjectData.newTile.StyleHorizontal = true;
-        TileObjectData.newTile.StyleMultiplier = 2;
-        TileObjectData.newTile.HookCheckIfCanPlace = new PlacementHook(Chest.FindEmptyChest, -1, 0, true);
-        TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(Chest.AfterPlacement_Hook, -1, 0, false);
-        TileObjectData.newTile.AnchorInvalidTiles = [
-            TileID.MagicalIceBlock,
-            TileID.Boulder,
-            TileID.BouncyBoulder,
-            TileID.LifeCrystalBoulder,
-            TileID.RollingCactus
-        ];
-        TileObjectData.newTile.StyleHorizontal = true;
-        TileObjectData.newTile.LavaDeath = false;
-        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Luminite.LuminiteChest>(), 0, 2);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Heavenforge.HeavenforgeChest>(), 2, 4);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.LunarRust.LunarRustChest>(), 4, 6);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Astra.AstraChest>(), 6, 8);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.DarkCelestial.DarkCelestialChest>(), 8, 10);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Mercury.MercuryChest>(), 10, 12);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.StarRoyale.StarRoyaleChest>(), 12, 14);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Cryocore.CryocoreChest>(), 14, 16);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.CosmicEmber.CosmicEmberChest>(), 16, 18);
+        RegisterItemDrop(ModContent.ItemType<Items.Furniture.Haemonova.HaemonovaChest>(), 18, 20);
         TileObjectData.addTile(Type);
     }
 

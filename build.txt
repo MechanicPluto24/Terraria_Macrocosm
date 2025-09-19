@@ -3,4 +3,4 @@ author = MechanicPluto24 and the Dev team
 version = 0.1.0.12
 modReferences = SubworldLibrary, StructureHelper
 hideCode = false
-buildIgnore = References/*
+buildIgnore = .vs\*, Properties\*, *.csproj, *.user, obj\*, bin\*, *.config, References\*, .git\*, .github\*, LICENSE, .editorconfig, .gitignore, .gitattributes, Assets\Effects\Compiler\*, TemplateEngineHost\*

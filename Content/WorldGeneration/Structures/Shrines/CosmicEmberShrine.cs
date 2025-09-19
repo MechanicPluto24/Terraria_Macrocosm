@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Tiles.Furniture.Luminite;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines;
 
@@ -18,6 +19,15 @@ public class CosmicEmberShrine : Structure
 
     public override void PostPlace(Point16 origin)
     {
+        for (int i = origin.X; i < origin.X + Size.X; i++)
+        {
+            for (int j = origin.Y; j < origin.Y + Size.Y; j++)
+            {
+                Tile tile = Main.tile[i, j];
+                if (tile.TileType == ModContent.TileType<LuminiteChest>())
+                    Utility.SetTileStyle(i, j, 17);
+            }
+        }
         int max = WorldGen.genRand.Next(15, 26);
         for (int vein = 0; vein < max; vein++)
         {

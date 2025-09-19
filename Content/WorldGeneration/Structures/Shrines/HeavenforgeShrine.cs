@@ -6,6 +6,8 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Macrocosm.Content.Tiles.Furniture.Luminite;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines;
 
@@ -18,6 +20,16 @@ public class HeavenforgeShrine : Structure
 
     public override void PostPlace(Point16 origin)
     {
+        for (int i = origin.X; i < origin.X + Size.X; i++)
+        {
+            for (int j = origin.Y; j < origin.Y + Size.Y; j++)
+            {
+                Tile tile = Main.tile[i, j];
+                if (tile.TileType == ModContent.TileType<LuminiteChest>())
+                    Utility.SetTileStyle(i, j, 3);
+            }
+        }
+
         WorldUtils.Gen(new Point(origin.X + Size.X / 2, origin.Y - 2 + Size.Y / 4), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
         WorldUtils.Gen(new Point(origin.X + Size.X / 2, origin.Y - 2 + Size.Y / 4), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
 

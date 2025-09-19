@@ -19,9 +19,9 @@ public class SafeguardPotion : ModItem
         Item.maxStack = Item.CommonMaxStack;
         Item.consumable = true;
         Item.useTurn = true;
-        Item.useTime = 17;
+        Item.useStyle = ItemUseStyleID.DrinkLiquid;
         Item.useAnimation = 17;
-        Item.useStyle = ItemUseStyleID.DrinkLong;
+        Item.useTime = 17;
         Item.UseSound = SoundID.Item3;
         Item.rare = ModContent.RarityType<MoonRarity1>();
         Item.value = Item.buyPrice(silver: 50);

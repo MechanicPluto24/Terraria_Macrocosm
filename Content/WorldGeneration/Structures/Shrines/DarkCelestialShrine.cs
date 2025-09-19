@@ -7,6 +7,7 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Macrocosm.Content.Tiles.Furniture.Luminite;
 
 namespace Macrocosm.Content.WorldGeneration.Structures.Shrines;
 
@@ -19,6 +20,15 @@ public class DarkCelestialShrine : Structure
 
     public override void PostPlace(Point16 origin)
     {
+        for (int i = origin.X; i < origin.X + Size.X; i++)
+        {
+            for (int j = origin.Y; j < origin.Y + Size.Y; j++)
+            {
+                Tile tile = Main.tile[i, j];
+                if (tile.TileType == ModContent.TileType<LuminiteChest>())
+                    Utility.SetTileStyle(i, j, 9);
+            }
+        }
         WorldUtils.Gen(new Point(origin.X + Size.X / 2, origin.Y - Size.Y / 4), new CustomShapes.ChasmSideways(30, 10, 100, 3, 0, dir: true), new CustomActions.ClearTileSafelyPostGen());
         WorldUtils.Gen(new Point(origin.X + Size.X / 2, origin.Y - Size.Y / 4), new CustomShapes.ChasmSideways(30, 10, 100, 3, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
         Utility.SafeTileRunner(origin.X + Size.X / 2, origin.Y + Size.Y / 2, Size.X * 1.2, 3, -1);
