@@ -200,3 +200,6 @@ ArmorPiercingBullet.DisplayName: Armor Piercing Bullet
 RailgunBolt.DisplayName: Railgun Bolt
 ShredderBullet.DisplayName: Shredder Bullet
 ScrapShrapnel.DisplayName: Scrap Shrapnel
+LightningSpearProjectile.DisplayName: Lightning Spear Projectile
+MetalCutterProjectile.DisplayName: Metal Cutter Projectile
+MoonChampionSentryBullet.DisplayName: Moon Champion Sentry Bullet

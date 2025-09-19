@@ -8,14 +8,14 @@ namespace Macrocosm.Common.Drawing;
 
 public class CursorIcon : ModSystem
 {
-    public static Icon Rocket { get; } = new(Macrocosm.SymbolsPath + "Rocket");
-    public static Icon LaunchPad { get; } = new(Macrocosm.SymbolsPath + "LaunchPad");
-    public static Icon Wrench { get; } = new(Macrocosm.SymbolsPath + "Wrench");
-    public static Icon MachineTurnOn { get; } = new(Macrocosm.SymbolsPath + "MachineTurnOn", scale: 1f);
-    public static Icon MachineTurnOff { get; } = new(Macrocosm.SymbolsPath + "MachineTurnOff", scale: 1f);
-    public static Icon SpaceStation { get; } = new(Macrocosm.SymbolsPath + "SpaceStation");
-    public static Icon QuestionMark { get; } = new(Macrocosm.SymbolsPath + "QuestionMark");
-    public static Icon Drill { get; } = new(Macrocosm.SymbolsPath + "Drill");
+    public static Icon Rocket { get; } = new(Macrocosm.UISymbolsPath + "Rocket");
+    public static Icon LaunchPad { get; } = new(Macrocosm.UISymbolsPath + "LaunchPad");
+    public static Icon Wrench { get; } = new(Macrocosm.UISymbolsPath + "Wrench");
+    public static Icon MachineTurnOn { get; } = new(Macrocosm.UISymbolsPath + "MachineTurnOn", scale: 1f);
+    public static Icon MachineTurnOff { get; } = new(Macrocosm.UISymbolsPath + "MachineTurnOff", scale: 1f);
+    public static Icon SpaceStation { get; } = new(Macrocosm.UISymbolsPath + "SpaceStation");
+    public static Icon QuestionMark { get; } = new(Macrocosm.UISymbolsPath + "QuestionMark");
+    public static Icon Drill { get; } = new(Macrocosm.UISymbolsPath + "Drill");
 
     public record Icon(string texturePath, float scale = 1f)
     {

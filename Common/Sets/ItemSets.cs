@@ -11,14 +11,6 @@ namespace Macrocosm.Common.Sets;
 
 /// <summary> Item Sets for special behavior of some Items, useful for crossmod. </summary>
 [ReinitializeDuringResizeArrays]
-public class ItemSets
-{
-    /// <summary> Items in this set have a "Developer" tooltip and rarity. Used for developer items or other testing items. </summary>
-    public static bool[] DeveloperItem { get; } = ItemID.Sets.Factory.CreateNamedSet(nameof(DeveloperItem)).Description("Items in this set have a \"Developer\" tooltip and rarity. Used for developer items or other testing items.").RegisterBoolSet();
-namespace Macrocosm.Common.Sets;
-
-/// <summary> Item Sets for special behavior of some Items, useful for crossmod. </summary>
-[ReinitializeDuringResizeArrays]
 public partial class ItemSets
 {
     /// <summary> Items in this set have a "Developer" tooltip and rarity. Used for developer items or other testing items. </summary>

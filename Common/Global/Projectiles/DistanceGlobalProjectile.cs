@@ -15,7 +15,7 @@ public class DistanceGlobalProjectile : GlobalProjectile
     public override void OnSpawn(Projectile projectile, IEntitySource source)
     {
         initialPosition = projectile.Center;
-        InitalDamage=projectile.damage;
+        InitalDamage = projectile.damage;
     }
 
     public override void PostAI(Projectile projectile)
@@ -29,7 +29,7 @@ public class DistanceGlobalProjectile : GlobalProjectile
                 float mult = Vector2.Distance(initialPosition, projectile.Center) / 300f;
                 if (mult > 1f)
                     mult = 1f;
-                projectile.damage = (int)(InitalDamage* (1.5f - mult));
+                projectile.damage = (int)(InitalDamage * (1.5f - mult));
             }
 
             bool zoning = player.GetModPlayer<ProjectileDistancePlayer>().Zoning;
@@ -39,6 +39,8 @@ public class DistanceGlobalProjectile : GlobalProjectile
                 if (mult > 1f)
                     mult = 1f;
                 projectile.damage = (int)(InitalDamage * (mult + 0.5f));
+            }
         }
+
     }
 }

@@ -3350,3 +3350,78 @@ ScrapshotBow: {
 	DisplayName: Scrapshot Bow
 	Tooltip: Prone to faulty firing
 }
+
+LegacyDianiteBreastplate: {
+	DisplayName: Legacy Dianite Breastplate
+	Tooltip: ""
+}
+
+LegacyDianiteLeggings: {
+	DisplayName: Legacy Dianite Leggings
+	Tooltip: ""
+}
+
+LegacyDianiteVisor: {
+	DisplayName: Legacy Dianite Visor
+	Tooltip: ""
+}
+
+SeleniteBrick: {
+	DisplayName: Selenite Brick
+	Tooltip: ""
+}
+
+MineralizedProtolith: {
+	DisplayName: Mineralized Protolith
+	Tooltip: ""
+}
+
+HeveaSapling: {
+	DisplayName: Hevea Sapling
+	Tooltip: ""
+}
+
+HeveaWood: {
+	DisplayName: Hevea Wood
+	Tooltip: ""
+}
+
+HeveaHammer: {
+	DisplayName: Hevea Hammer
+	Tooltip: ""
+}
+
+HeveaWall: {
+	DisplayName: Hevea Wall
+	Tooltip: ""
+}
+
+SeleniteBrickWall: {
+	DisplayName: Selenite Brick Wall
+	Tooltip: ""
+}
+
+LightningSpear: {
+	DisplayName: Lightning Spear
+	Tooltip: ""
+}
+
+HeveaSword: {
+	DisplayName: Hevea Sword
+	Tooltip: ""
+}
+
+MetalCutter: {
+	DisplayName: Metal Cutter
+	Tooltip: ""
+}
+
+HeveaBow: {
+	DisplayName: Hevea Bow
+	Tooltip: ""
+}
+
+ProtoRailgun: {
+	DisplayName: Proto Railgun
+	Tooltip: ""
+}

@@ -1,0 +1,20 @@
+# Normalize text files to LF in repo, convert on checkout if needed
+*           text=auto eol=lf
+
+# Treat common binaries as binary
+*.png       -text
+*.jpg       -text
+*.jpeg      -text
+*.gif       -text
+*.psd       -text
+*.wav       -text
+*.mp3       -text
+*.ogg       -text
+*.mp4       -text
+*.ttf       -text
+*.otf       -text
+*.bin       -text
+*.zip       -text
+
+*.csproj    text eol=lf
+*.sln       text eol=lf
