@@ -3325,3 +3325,13 @@ AutosmelterT3: {
 	DisplayName: Autosmelter T3
 	Tooltip: ""
 }
+
+OilBarrel: {
+	DisplayName: Oil Barrel
+	Tooltip: ""
+}
+
+SolarPanelExtraLarge: {
+	DisplayName: Solar Panel Extra Large
+	Tooltip: ""
+}

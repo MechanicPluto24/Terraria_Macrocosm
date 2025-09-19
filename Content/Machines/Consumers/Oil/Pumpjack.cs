@@ -20,8 +20,8 @@ namespace Macrocosm.Content.Machines.Consumers.Oil;
 
 public class Pumpjack : MachineTile
 {
-    public override short Width => 4;
-    public override short Height => 4;
+    public override short Width => 8;
+    public override short Height => 8;
     public override MachineTE MachineTE => ModContent.GetInstance<PumpjackTE>();
 
     public override void SetStaticDefaults()
@@ -86,7 +86,7 @@ public class Pumpjack : MachineTile
 
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
-        int ticksPerFrame = 4;
+        int ticksPerFrame = 5;
         int frameCount = 10;
         if (++frameCounter >= ticksPerFrame)
         {
