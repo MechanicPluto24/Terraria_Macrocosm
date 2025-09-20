@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Humanizer;
+using Macrocosm.Common.Sets;
+using Macrocosm.Common.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Terraria.DataStructures;
 using Terraria;
-using Macrocosm.Common.Utils;
+using Terraria.DataStructures;
 using Terraria.ID;
-using Macrocosm.Common.Sets;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Common.Systems.Connectors;
@@ -20,8 +21,8 @@ public class ChestConveyorContainerProvider : IConveyorContainerProvider<Chest>
 
     public ConveyorNode GetConveyorNode(Point16 tilePos, ConveyorPipeType type)
     {
-        var data = Main.tile[tilePos].Get<ConveyorData>();
-        if ((data.HasPipe(type) && (data.Inlet || data.Outlet) || data.Dropper) && TryGetContainer(tilePos, out Chest chest))
+        ConveyorData data = Main.tile[tilePos].Get<ConveyorData>();
+        if (data.IsValidForConveyorNode(type) && TryGetContainer(tilePos, out Chest chest))
             return new ConveyorNode(chest, data, type, tilePos, GetConnectionPositions(chest));
 
         return null;

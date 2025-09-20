@@ -1,13 +1,12 @@
-﻿using Macrocosm.Common.Systems.Connectors;
+using Macrocosm.Common.Systems.Connectors;
 using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Connectors;
 
-public class Conveyor : ModItem
+public class Hopper : ModItem
 {
     public override void SetStaticDefaults()
     {
@@ -27,12 +26,14 @@ public class Conveyor : ModItem
         Item.autoReuse = true;
         Item.consumable = true;
         Item.mech = true;
-        Item.ammo = Type;
-        Item.notAmmo = true;
     }
-    
+
     public override bool? UseItem(Player player)
     {
+        if (player.whoAmI == Main.myPlayer)
+            return ConveyorSystem.PlaceHopper(player.TargetCoords());
+
         return null;
     }
 }
+

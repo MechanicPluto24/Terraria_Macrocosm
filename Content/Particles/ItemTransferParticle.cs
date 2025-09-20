@@ -23,6 +23,8 @@ public class ItemTransferParticle : Particle
 
     public float Opacity;
 
+    public bool DisableFadeIn;
+
     public int ItemType;
     private Item item = new();
 
@@ -37,6 +39,7 @@ public class ItemTransferParticle : Particle
         ScaleBezier = default;
 
         Opacity = 0f;
+        DisableFadeIn = false;
         ItemType = 0;
         item = new();
     }
@@ -51,6 +54,12 @@ public class ItemTransferParticle : Particle
             float distance = Vector2.Distance(StartPosition, EndPosition);
             MovementBezier = movement * distance + Main.rand.NextVector2Circular(32f, 32f);
             ScaleBezier = -movement * distance + Main.rand.NextVector2Circular(32f, 32f);
+
+            if (DisableFadeIn)
+            {
+                Opacity = 1f;
+
+            }
         }
         else
         {
@@ -67,11 +76,19 @@ public class ItemTransferParticle : Particle
 
         Vector2.Hermite(ref EndPosition, ref MovementBezier, ref StartPosition, ref ScaleBezier, movementProgress, out Position);
 
-        float scaleProgress = Utils.Remap(progress, 0f, 0.1f, 0f, 1f);
-        scaleProgress = Utils.Remap(progress, 0.85f, 0.95f, scaleProgress, 0f);
-        Scale.X = item.scale * scaleProgress;
-
-        Opacity = Utils.Remap(progress, 0f, 0.25f, 0f, 1f) * Utils.Remap(progress, 0.85f, 0.95f, 1f, 0f);
+        if (DisableFadeIn)
+        {
+            Opacity = Utils.Remap(progress, 0f, 0.5f, 0f, 1f);
+            float scaleProgress =  Utils.Remap(progress, 0f, 0.35f, 0f, 1f);
+            Scale.X = item.scale * scaleProgress;
+        }
+        else
+        {
+            Opacity = Utils.Remap(progress, 0f, 0.25f, 0f, 1f) * Utils.Remap(progress, 0.85f, 0.95f, 1f, 0f);
+            float scaleProgress = Utils.Remap(progress, 0f, 0.1f, 0f, 1f);
+            scaleProgress = Utils.Remap(progress, 0.85f, 0.95f, scaleProgress, 0f);
+            Scale.X = item.scale * scaleProgress;
+        }
     }
 
     public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)

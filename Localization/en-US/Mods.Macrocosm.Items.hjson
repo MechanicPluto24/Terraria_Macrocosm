@@ -3425,3 +3425,8 @@ ProtoRailgun: {
 	DisplayName: Proto Railgun
 	Tooltip: ""
 }
+
+Hopper: {
+	DisplayName: Hopper
+	Tooltip: ""
+}

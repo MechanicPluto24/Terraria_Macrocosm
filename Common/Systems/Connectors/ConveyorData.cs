@@ -22,24 +22,34 @@ public struct ConveyorData : ITileData
     /// </code> 
     /// </summary>
     private BitsByte data;
-    private BitsByte dropperData;
+
+    /// <summary>
+    /// Attachments:
+    /// <code>
+    /// bit0 = present,
+    /// bit1 = type(0=Dropper,1=Hopper), 
+    /// bits2-3 = rotation(0..3)
+    /// </code>
+    /// </summary>
+
+    private BitsByte data2;
 
     public ConveyorData()
     {
         data = 0;
-        dropperData = 0;
+        data2 = 0;
     }
 
     public ConveyorData(byte packed)
     {
         data = packed;
-        dropperData = 0;
+        data2 = 0;
     }
 
     public ConveyorData(ushort packed)
     {
         data = (byte)(packed & 0xFF);
-        dropperData = (byte)(packed >> 8);
+        data2 = (byte)(packed >> 8);
     }
 
     public ConveyorData(bool red = false, bool green = false, bool blue = false, bool yellow = false, bool outlet = false, bool inlet = false) : this()
@@ -52,38 +62,38 @@ public struct ConveyorData : ITileData
         Inlet = inlet;
     }
 
-    public readonly ushort Packed => (ushort)(data | ((ushort)(byte)dropperData << 8));
-    public readonly byte PackedPrimary => data;
-    public readonly byte PackedSecondary => dropperData;
+    public readonly ushort Packed => (ushort)(data | ((ushort)(byte)data2 << 8));
+
     public bool RedPipe { get => data[0]; set => data[0] = value; }
     public bool GreenPipe { get => data[1]; set => data[1] = value; }
     public bool BluePipe { get => data[2]; set => data[2] = value; }
     public bool YellowPipe { get => data[3]; set => data[3] = value; }
     public bool Outlet { get => AnyPipe && data[4] && !data[5]; set => (data[4], data[5]) = (value && AnyPipe, false); }
     public bool Inlet { get => AnyPipe && data[5] && !data[4]; set => (data[5], data[4]) = (value && AnyPipe, false); }
-    public bool Dropper
+    public bool Attachment { get => data2[0]; set { data2[0] = value; if (!data2[0]) AttachmentRotation = 0; } }
+    public bool AttachmentIsHopper { get => data2[1]; set => data2[1] = value; }
+    public byte AttachmentRotation
     {
-        get => dropperData[0];
-        set
-        {
-            dropperData[0] = value;
-            if (!dropperData[0])
-                DropperRotation = 0;
-        }
-    }
-    public byte DropperRotation
-    {
-        get => (byte)(((dropperData[1] ? 1 : 0) | (dropperData[2] ? 2 : 0)) & 0b11);
+        get => (byte)(((data2[2] ? 1 : 0) | (data2[3] ? 2 : 0)) & 0b11);
         set
         {
             byte masked = (byte)(value & 0b11);
-            dropperData[1] = (masked & 0b01) != 0;
-            dropperData[2] = (masked & 0b10) != 0;
+            data2[2] = (masked & 0b01) != 0;
+            data2[3] = (masked & 0b10) != 0;
         }
     }
 
+    public bool Dropper { get => Attachment && !AttachmentIsHopper; set { Attachment = value; AttachmentIsHopper = false; if (!value) AttachmentRotation = 0; } }
+    public bool Hopper { get => Attachment && AttachmentIsHopper; set { Attachment = value; AttachmentIsHopper = true; if (!value) AttachmentRotation = 0; } }
+
     public bool AnyPipe => RedPipe || GreenPipe || BluePipe || YellowPipe;
     public int PipeCount => (RedPipe ? 1 : 0) + (GreenPipe ? 1 : 0) + (BluePipe ? 1 : 0) + (YellowPipe ? 1 : 0);
+
+    public bool IsValidForConveyorNode(ConveyorPipeType? pipe = null)
+    {
+        bool hasPipe = pipe.HasValue ? HasPipe(pipe.Value) : AnyPipe;
+        return (hasPipe && (Inlet || Outlet)) || Attachment;
+    }
 
     public bool HasPipe(ConveyorPipeType type)
     {
@@ -120,22 +130,11 @@ public struct ConveyorData : ITileData
             default: break;
         }
 
-        if (!AnyPipe)
-        {
-            Dropper = false;
-            DropperRotation = 0;
-            dropperData = 0;
-        }
     }
 
     public void ClearAll()
     {
-        RedPipe = false;
-        GreenPipe = false;
-        BluePipe = false;
-        YellowPipe = false;
-        Outlet = false;
-        Inlet = false;
-        dropperData = 0;
+        data = 0;
+        data2 = 0;
     }
 }

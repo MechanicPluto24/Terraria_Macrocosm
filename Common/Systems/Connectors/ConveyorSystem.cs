@@ -37,17 +37,19 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
     {
         conveyorTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Conveyors");
         dropperTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Dropper");
+        hopperTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Hopper");
     }
 
     public override void Unload()
     {
         dropperTexture = null;
-        dropperStates.Clear();
+        hopperTexture = null;
+        attachmentStates.Clear();
     }
 
     public override void ClearWorld()
     {
-        ClearDroppers();
+        ClearAttachments();
     }
 
     public static bool ShouldDraw => WiresUI.Settings.DrawWires;
@@ -127,7 +129,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
     public static bool Remove(Point16 targetCoords, bool sync = true) => Remove(targetCoords.X, targetCoords.Y, sync);
     public static bool Remove(int x, int y, bool sync = true)
     {
-        if (TryRemoveDropper(x, y, sync))
+        if (TryRemoveDropper(x, y, sync) || TryRemoveHopper(x, y, sync))
             return true;
 
         bool removed = false;
@@ -143,7 +145,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
         }
         else if (data.Outlet)
         {
-            itemDrop = ModContent.ItemType<ConveyorInlet>();
+            itemDrop = ModContent.ItemType<ConveyorOutlet>();
             data.Outlet = false;
             removed = true;
         }
@@ -191,25 +193,6 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
                 Dust.NewDustDirect(new Vector2(x * 16 + 8, y * 16 + 8), 1, 1, dustType);
     }
 
-    public override void PostUpdateInput()
-    {
-        if (Main.dedServ)
-            return;
-
-        if (!ShouldDraw)
-            return;
-
-        if (Main.mouseRight && Main.mouseRightRelease)
-        {
-            Point target = Main.LocalPlayer.TargetCoords();
-            if (!WorldGen.InWorld(target.X, target.Y))
-                return;
-
-            if (TryRotateDropper(target.X, target.Y))
-                Main.mouseRightRelease = false;
-        }
-    }
-
     public override void PostUpdateWorld()
     {
         UpdateConveyors();
@@ -229,7 +212,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
             solveTimer = 0;
         }
 
-        UpdateDroppers();
+        UpdateAttachments();
     }
 
     private static void BuildConveyorCircuits()
@@ -406,8 +389,8 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
                     }
                 }
 
-                if (data.Dropper)
-                    DrawDropper(spriteBatch, new Point16(i, j), zero);
+                if (data.Attachment)
+                    DrawAttachment(spriteBatch, new Point16(i, j), zero);
             }
         }
 
@@ -447,7 +430,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
 
         ref var localData = ref Main.tile[x, y].Get<ConveyorData>();
         localData = new(data);
-        RefreshDropperState(new Point16(x, y), localData);
+        RefreshAttachmentState(new Point16(x, y), localData);
 
         if (dustEffects)
             DustEffects(x, y);
@@ -506,7 +489,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
                     ushort data = compressedReader.ReadUInt16();
                     ConveyorData newData = new(data);
                     Main.tile[x, y].Get<ConveyorData>() = newData;
-                    RefreshDropperState(new Point16(x, y), newData);
+                    RefreshAttachmentState(new Point16(x, y), newData);
                 }
             }
         }
@@ -539,6 +522,6 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
             return;
         }
         bytes.CopyTo(MemoryMarshal.AsBytes(data.AsSpan()));
-        RebuildDropperStateCache();
+        RebuildAttachmentStateCache();
     }
 }
