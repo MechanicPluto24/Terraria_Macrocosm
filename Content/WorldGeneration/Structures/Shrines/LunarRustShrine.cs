@@ -6,40 +6,51 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Macrocosm.Content.Tiles.Furniture.Luminite;
+using Macrocosm.Common.Utils;
 
-namespace Macrocosm.Content.WorldGeneration.Structures.Shrines
+namespace Macrocosm.Content.WorldGeneration.Structures.Shrines;
+
+public class LunarRustShrine : Structure
 {
-    public class LunarRustShrine : Structure
+    public override bool PrePlace(Point16 origin)
     {
-        public override bool PrePlace(Point16 origin)
+        return true;
+    }
+
+    public override void PostPlace(Point16 origin)
+    {
+        for (int i = origin.X; i < origin.X + Size.X; i++)
         {
-            return true;
+            for (int j = origin.Y; j < origin.Y + Size.Y; j++)
+            {
+                Tile tile = Main.tile[i, j];
+                if (tile.TileType == ModContent.TileType<LuminiteChest>())
+                    Utility.SetTileStyle(i, j, 5);
+            }
         }
 
-        public override void PostPlace(Point16 origin)
+        WorldUtils.Gen(new Point(origin.X - Size.X / 4, origin.Y + 10), new CustomShapes.Chasm(65, 1, 10, 2, 0, dir: false), Actions.Chain(new CustomActions.ClearTileSafelyPostGen()));
+        WorldUtils.Gen(new Point(origin.X - Size.X / 4, origin.Y + 10), new CustomShapes.Chasm(65, 10, 180, 2, 0, dir: true), Actions.Chain(new CustomActions.ClearTileSafelyPostGen()));
+
+        int max = WorldGen.genRand.Next(20, 31);
+        for (int vein = 0; vein < max; vein++)
         {
-            WorldUtils.Gen(new Point(origin.X - Size.X / 4, origin.Y + 10), new CustomShapes.Chasm(65, 1, 10, 2, 0, dir: false), Actions.Chain(new CustomActions.ClearTileSafelyPostGen()));
-            WorldUtils.Gen(new Point(origin.X - Size.X / 4, origin.Y + 10), new CustomShapes.Chasm(65, 10, 180, 2, 0, dir: true), Actions.Chain(new CustomActions.ClearTileSafelyPostGen()));
+            WorldGen.OreRunner(
+                i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(2.5f)),
+                j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
+                strength: WorldGen.genRand.Next(3, 6),
+                steps: WorldGen.genRand.Next(8, 12),
+                type: (ushort)ModContent.TileType<ArtemiteOre>()
+            );
 
-            int max = WorldGen.genRand.Next(20, 31);
-            for (int vein = 0; vein < max; vein++)
-            {
-                WorldGen.OreRunner(
-                    i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(2.5f)),
-                    j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
-                    strength: WorldGen.genRand.Next(3, 6),
-                    steps: WorldGen.genRand.Next(8, 12),
-                    type: (ushort)ModContent.TileType<ArtemiteOre>()
-                );
-
-                WorldGen.OreRunner(
-                    i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(2.5f)),
-                    j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
-                    strength: WorldGen.genRand.Next(3, 6),
-                    steps: WorldGen.genRand.Next(8, 12),
-                    type: TileID.LunarBlockVortex
-                );
-            }
+            WorldGen.OreRunner(
+                i: origin.X - (int)(Size.X * WorldGen.genRand.NextFloat(0.5f)) + (int)(Size.X * WorldGen.genRand.NextFloat(2.5f)),
+                j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
+                strength: WorldGen.genRand.Next(3, 6),
+                steps: WorldGen.genRand.Next(8, 12),
+                type: TileID.LunarBlockVortex
+            );
         }
     }
 }

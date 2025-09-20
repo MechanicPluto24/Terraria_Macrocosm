@@ -3,8 +3,8 @@
 ClientConfig: {
 	DisplayName: Client Configuration
 	GameplayHeader: Gameplay
-	GraphicsHeader: Graphics
 	UIHeader: User Interface
+	VisualsHeader: Visuals
 
 	AlwaysDisplayTitleCards: {
 		Label: Always display title cards
@@ -14,11 +14,6 @@ ClientConfig: {
 	GunRecoilEffects: {
 		Label: Gun recoil effects
 		Tooltip: Whether guns have recoil effects.
-	}
-
-	HighResolutionEffects: {
-		Label: High Resolution Effects
-		Tooltip: Use high resolution visual effects.
 	}
 
 	UnitSystem: {
@@ -44,6 +39,17 @@ ClientConfig: {
 	DisableOilShaleGeneration: {
 		Label: Disable Oil Shale Generation
 		Tooltip: ""
+	}
+
+	Use3DCelestialBodies: {
+		Label: 3D Planets
+		Tooltip: Enables high resolution planet/moon textures.
+	}
+
+	Headers: {
+		GameplayHeader: Gameplay
+		UIHeader: UI
+		VisualsHeader: Visuals
 	}
 }
 
@@ -82,6 +88,11 @@ ServerConfig: {
 		Label: Cluster Find Update Rate
 		Tooltip: ""
 	}
+
+	Headers: {
+		WorldGenHeader: World Gen Header Header
+		UpdatesHeader: Updates Header Header
+	}
 }
 
 UnitSystemType: {
@@ -96,4 +107,48 @@ UpdateRate: {
 	Fast.Label: Fast (6 times per second)
 	Medium.Label: Medium (twice per second)
 	Slow.Label: Slow (once per second)
+}
+
+DebugConfig: {
+	DisplayName: Debug Config
+
+	RocketBounds: {
+		Label: Rocket Bounds
+		Tooltip: ""
+	}
+
+	RocketIndex: {
+		Label: Rocket Index
+		Tooltip: ""
+	}
+
+	RocketCount: {
+		Label: Rocket Count
+		Tooltip: ""
+	}
+
+	UIDebug: {
+		Label: U I Debug
+		Tooltip: ""
+	}
+
+	PacketDebug: {
+		Label: Packet Debug
+		Tooltip: ""
+	}
+
+	RoomOxygenDebug: {
+		Label: Room Oxygen Debug
+		Tooltip: ""
+	}
+
+	ShowCursorTileCoords: {
+		Label: Show Cursor Tile Coords
+		Tooltip: ""
+	}
+
+	ShowCursorWorldCoords: {
+		Label: Show Cursor World Coords
+		Tooltip: ""
+	}
 }

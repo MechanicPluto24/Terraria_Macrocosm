@@ -17,6 +17,8 @@ LuminiteChest: {
 	MapEntry15: Cryocore Chest (Locked)
 	MapEntry16: Cosmic Ember Chest
 	MapEntry17: Cosmic Ember Chest (Locked)
+	MapEntry18: Heamonova Chest
+	MapEntry19: Heamonova Chest (Locked)
 }
 
 IndustrialChest: {
@@ -95,5 +97,20 @@ IVPole.MapEntry: IV Pole
 InvarBar.MapEntry: Invar Bar
 IndustrialBattery.MapEntry: Industrial Battery
 KeroseneGenerator.MapEntry: Kerosene Generator
-SolarPanelTile.MapEntry: Solar Panel Tile
+SolarPanelTile.MapEntry: Solar Panel
 Flag.MapEntry: Flag
+ApolloLander.MapEntry: Apollo Lander
+ACUnit.MapEntry: AC Unit
+AirVent.MapEntry: Air Vent
+LuminiteCrystal.MapEntry: Luminite Crystal
+RegolithChest.MapEntry: Regolith Chest
+AutocrafterT1.MapEntry: Autocrafter
+AutocrafterT2.MapEntry: Autocrafter
+AutocrafterT3.MapEntry: Autocrafter
+OreDrill.MapEntry: Ore Drill
+Pumpjack.MapEntry: Pumpjack
+AutosmelterT1.MapEntry: Autosmelter T1
+AutosmelterT2.MapEntry: Autosmelter T2
+AutosmelterT3.MapEntry: Autosmelter T3
+SolarPanelExtraLarge.MapEntry: Solar Panel Extra Large
+OilBarrel.MapEntry: Oil Barrel

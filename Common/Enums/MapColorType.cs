@@ -1,13 +1,12 @@
-﻿namespace Macrocosm.Common.Enums
+﻿namespace Macrocosm.Common.Enums;
+
+public enum MapColorType
 {
-    public enum MapColorType
-    {
-        SkyUpper,
-        SkyLower,
-        UndergroundUpper,
-        UndergroundLower,
-        CavernUpper,
-        CavernLower,
-        Underworld
-    }
+    SkyUpper,
+    SkyLower,
+    UndergroundUpper,
+    UndergroundLower,
+    CavernUpper,
+    CavernLower,
+    Underworld
 }

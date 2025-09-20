@@ -4,33 +4,31 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Furniture.Industrial
+namespace Macrocosm.Content.Items.Furniture.Industrial;
+
+public class IndustrialChest : ModItem
 {
-    [LegacyName("MoonBaseChest")]
-    public class IndustrialChest : ModItem
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
-        {
-            ItemSets.Chest[Type] = true;
-        }
+        
+    }
 
-        public override void SetDefaults()
-        {
-            Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialChest>());
-            Item.width = 32;
-            Item.height = 28;
-            Item.value = 500;
+    public override void SetDefaults()
+    {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Furniture.Industrial.IndustrialChest>());
+        Item.width = 32;
+        Item.height = 28;
+        Item.value = 500;
 
-            Item.placeStyle = (int)Tiles.Furniture.Industrial.IndustrialChest.State.Normal;
-        }
+        Item.placeStyle = (int)Tiles.Furniture.Industrial.IndustrialChest.State.Normal;
+    }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-                .AddIngredient<IndustrialPlating>(8)
-                .AddIngredient(ItemID.IronBar)
-                .AddTile<Tiles.Crafting.Fabricator>()
-                .Register();
-        }
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+            .AddIngredient<IndustrialPlating>(8)
+            .AddIngredient(ItemID.IronBar)
+            .AddTile<Tiles.Crafting.Fabricator>()
+            .Register();
     }
 }

@@ -1,185 +1,183 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Rockets.Customization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using System.Collections.Generic;
-using Terraria;
+using System.Linq;
+using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Rockets.Modules
+namespace Macrocosm.Content.Rockets.Modules;
+
+public abstract partial class RocketModule : ModTexturedType, ILocalizedModType
 {
-    public abstract partial class RocketModule : ModType, ILocalizedModType
+    public enum SlotType
     {
-        public string LocalizationCategory => "UI.Rocket.Modules";
-        //public LocalizedText DisplayName => this.GetLocalization("DisplayName", PrettyPrintName);
-        public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
+        Top,
+        Service,
+        Utilitary,
+        Engine,
+        LeftSide,
+        RightSide
+    }
 
-        protected sealed override void Register()
+    public enum ConfigurationType
+    {
+        Any,
+        Manned,
+        Unmanned
+    }
+
+    /// <summary> List of all the existing rocket modules </summary>
+    public static List<RocketModule> Templates { get; } = new();
+
+    public static List<RocketModule> DefaultModules => Templates
+            .Where(m => m.Configuration != ConfigurationType.Unmanned)
+            .GroupBy(m => (int)m.Slot)
+            .Select(g => g.OrderBy(m => m.Tier).First().Clone())
+            .OrderBy(m => (int)m.Slot)
+            .ToList();
+
+    // For backwards compatibility
+    public static List<RocketModule> DefaultLegacyModules => new List<RocketModule>()
+    {
+        Templates.FirstOrDefault(m => m.Name == "CommandPod"),
+        Templates.FirstOrDefault(m => m.Name == "ServiceModule"),
+        Templates.FirstOrDefault(m => m.Name == "ReactorModule"),
+        Templates.FirstOrDefault(m => m.Name == "EngineModuleMk2"),
+        Templates.FirstOrDefault(m => m.Name == "BoosterLeft"),
+        Templates.FirstOrDefault(m => m.Name == "BoosterRight")
+    }.Where(m => m != null).ToList();
+
+    protected sealed override void Register()
+    {
+        ModTypeLookup<RocketModule>.Register(this);
+        Templates.Add(this);
+    }
+
+    public override void SetupContent() => SetStaticDefaults();
+    public override void SetStaticDefaults()
+    {
+        foreach (AssemblyRecipeEntry entry in Recipe)
         {
+            if (entry.ItemType.HasValue)
+                ItemID.Sets.IsAMaterial[entry.ItemType.Value] = true;
         }
+    }
 
-        public bool Active { get; set; }
+    public int Type => Templates.IndexOf(Templates.FirstOrDefault(m => m.Name == Name));
 
-        public Vector2 Position { get; set; }
-        public virtual Vector2 Offset => Vector2.Zero;
+    public Rocket Rocket { get; set; }
 
-        public abstract int Width { get; }
-        public abstract int Height { get; }
-        public Rectangle Bounds => new((int)Position.X, (int)Position.Y, Width, Height);
+    public abstract SlotType Slot { get; }
+    public abstract int Tier { get; }
+    public abstract ConfigurationType Configuration { get; }
+    public abstract AssemblyRecipe Recipe { get; }
 
-        public abstract AssemblyRecipe Recipe { get; }
+    public string LocalizationCategory => "UI.Rocket.Modules";
+    public LocalizedText DisplayName => Language.GetOrRegister("Mods.Macrocosm.UI.Rocket.Modules." + Name + ".DisplayName", PrettyPrintName);
 
-        public Detail Detail { get; set; }
-        public Pattern Pattern { get; set; }
+    public Vector2 Position { get; set; }
 
-        public bool HasPattern => Pattern != default;
-        public bool HasDetail => Detail != default;
-        private bool SpecialDraw => HasPattern || HasDetail;
+    public virtual Vector2 GlobalOffset => Vector2.Zero;
+    public virtual Vector2 GetDynamicOffset(int[] widths, int[] heights, Vector2 offsetAggregate) => Vector2.Zero;
+    public virtual Rectangle ModifyRenderBounds(Rectangle bounds, Rocket.DrawMode drawMode) => bounds;
 
-        /// <summary> This module's draw priority </summary>
-        public abstract int DrawPriority { get; }
+    public abstract int Width { get; }
+    public abstract int Height { get; }
+    public RotatedRectangle Bounds => new(Position, origin: Vector2.Zero, Width, Height, Rocket.Rotation);
 
-        /// <summary> The module's draw origin </summary>
-        protected virtual Vector2 Origin => new(0, 0);
+    public Pattern Pattern { get; set; }
+    public Decal Decal { get; set; }
 
-        public bool IsBlueprint { get; set; } = false;
+    public bool HasPattern => Pattern != default;
+    public bool HasDecal => Decal != default;
+    private bool SpecialDraw => HasPattern || HasDecal;
 
-        public virtual bool Interactible => true;
+    /// <summary> This module's draw priority </summary>
+    public abstract int DrawPriority { get; }
 
-        public virtual string TexturePath => Utility.GetNamespacePath(this);
-        public Texture2D Texture => ModContent.Request<Texture2D>(TexturePath, AssetRequestMode.ImmediateLoad).Value;
+    /// <summary> The module's draw origin </summary>
+    public virtual Vector2 Origin => new Vector2(Width, Height) / 2f;
 
-        public virtual string IconPath => (GetType().Namespace + "/Icons/" + Name).Replace(".", "/");
-        public Texture2D Icon => ModContent.Request<Texture2D>(IconPath, AssetRequestMode.ImmediateLoad).Value;
+    public bool IsBlueprint { get; set; } = false;
 
-        public virtual string BlueprintPath => (GetType().Namespace + "/Blueprints/" + Name).Replace(".", "/");
-        public Texture2D Blueprint => ModContent.Request<Texture2D>(BlueprintPath, AssetRequestMode.ImmediateLoad).Value;
-        public bool BlueprintHighlighted { get; set; } = false;
+    public virtual bool Interactible => true;
 
-        public Color BlueprintOutlineColor = UITheme.Current.PanelStyle.BorderColor;
-        public Color BlueprintFillColor = UITheme.Current.PanelStyle.BackgroundColor;
 
-        protected Rocket rocket;
+    private Asset<Texture2D> _moduleTexture;
+    public Texture2D ModuleTexture => (_moduleTexture ??= ModContent.Request<Texture2D>(Texture, AssetRequestMode.ImmediateLoad)).Value;
 
-        public RocketModule()
+    public virtual string IconPath => (Texture + "_Icon").Replace(".", "/");
+    private Asset<Texture2D> _icon;
+    public Texture2D Icon => (_icon ??= ModContent.RequestIfExists<Texture2D>(IconPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
+
+    public virtual string BlueprintPath => (Texture + "_Blueprint").Replace(".", "/");
+    private Asset<Texture2D> _blueprint;
+    public Texture2D Blueprint => (_blueprint ??= ModContent.RequestIfExists<Texture2D>(BlueprintPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
+
+    public bool BlueprintHighlighted { get; set; } = false;
+
+    public Color BlueprintOutlineColor = UITheme.Current.PanelStyle.BorderColor;
+    public Color BlueprintFillColor = UITheme.Current.PanelStyle.BackgroundColor;
+
+    public RocketModule()
+    {
+        Decal = default;
+        Pattern = PatternManager.Get("Basic", Name);
+    }
+
+    public RocketModule Clone() => DeserializeData(SerializeData());
+
+    public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
+    {
+    }
+
+    public virtual void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
+    {
+    }
+
+    private SpriteBatchState state;
+    public virtual void Draw(SpriteBatch spriteBatch, Vector2 position)
+    {
+        state.SaveState(spriteBatch);
+        if (SpecialDraw)
         {
-            Detail = CustomizationStorage.GetDefaultDetail(Name);
-            Pattern = CustomizationStorage.GetDefaultPattern(Name);
-        }
-
-        public void SetRocket(Rocket value) => rocket = value;
-
-        public virtual void PreDrawBeforeTiles(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
-        {
-        }
-
-        public virtual void PostDraw(SpriteBatch spriteBatch, Vector2 position, bool inWorld)
-        {
-        }
-
-        private static Asset<Effect> colorMaskShading;
-        private SpriteBatchState state;
-        public virtual void Draw(SpriteBatch spriteBatch, Vector2 position)
-        {
-            // Load current pattern and apply shader 
-            state.SaveState(spriteBatch);
-            SamplerState samplerState1 = Main.graphics.GraphicsDevice.SamplerStates[1];
-            SamplerState samplerState2 = Main.graphics.GraphicsDevice.SamplerStates[2];
-            if (SpecialDraw)
-            {
-                // Load the coloring shader
-                colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
-                Effect effect = colorMaskShading.Value;
-
-                if (HasPattern)
-                {
-                    // Pass the pattern to the shader via the S1 register
-                    Main.graphics.GraphicsDevice.Textures[1] = Pattern.Texture.Value;
-                    Main.graphics.GraphicsDevice.Textures[2] = null;
-
-                    // Change sampler state for proper alignment at all zoom levels 
-                    Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-                    //Pass the color mask keys as Vector3s and configured colors as Vector4s
-                    List<Vector4> colors = new();
-                    for (int i = 0; i < Pattern.MaxColorCount; i++)
-                        colors.Add(Pattern.GetColor(i).ToVector4());
-
-                    effect.Parameters["uColorCount"].SetValue(Pattern.MaxColorCount);
-                    effect.Parameters["uColorKey"].SetValue(Pattern.ColorKeys);
-                    effect.Parameters["uColor"].SetValue(colors.ToArray());
-                    effect.Parameters["uSampleBrightness"].SetValue(true);
-                }
-
-                if (HasDetail)
-                {
-                    // Pass the detail to the shader via the S2 register
-                    Main.graphics.GraphicsDevice.Textures[2] = Detail.Texture.Value;
-                    Main.graphics.GraphicsDevice.SamplerStates[2] = SamplerState.PointClamp;
-
-                }
-
-                spriteBatch.End();
-                spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
-            }
-
-            spriteBatch.Draw(Texture, position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
-
-            if (SpecialDraw)
-            {
-                spriteBatch.End();
-                spriteBatch.Begin(state);
-
-                // Clear the tex registers  
-                Main.graphics.GraphicsDevice.Textures[1] = null;
-                Main.graphics.GraphicsDevice.Textures[2] = null;
-
-                // Restore the sampler states
-                Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState1;
-                Main.graphics.GraphicsDevice.SamplerStates[2] = samplerState2;
-            }
-        }
-
-        public virtual void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
-        {
-            state.SaveState(spriteBatch);
-            SamplerState samplerState = Main.graphics.GraphicsDevice.SamplerStates[1];
-
-            colorMaskShading ??= ModContent.Request<Effect>(Macrocosm.ShadersPath + "ColorMaskShading", AssetRequestMode.ImmediateLoad);
-            Effect effect = colorMaskShading.Value;
-
-            Main.graphics.GraphicsDevice.Textures[1] = Blueprint;
-            Main.graphics.GraphicsDevice.SamplerStates[1] = SamplerState.PointClamp;
-
-            effect.Parameters["uColorCount"].SetValue(2);
-            effect.Parameters["uColorKey"].SetValue(blueprintKeys);
-            effect.Parameters["uColor"].SetValue((new Color[]
-            {
-                BlueprintHighlighted ? UITheme.Current.ButtonHighlightStyle.BorderColor : UITheme.Current.PanelStyle.BorderColor,
-                UITheme.Current.PanelStyle.BackgroundColor
-            }).ToVector4Array());
-            effect.Parameters["uSampleBrightness"].SetValue(false);
-
             spriteBatch.End();
-            spriteBatch.Begin(state.SpriteSortMode, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, effect, state.Matrix);
+            spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
+            Pattern?.Apply();
+            //TODO: Decal?.Pattern.Apply();
+        }
 
-            spriteBatch.Draw(Blueprint, Position + position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(ModuleTexture, position, null, Color.White, Rocket.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
+        if (SpecialDraw)
+        {
             spriteBatch.End();
             spriteBatch.Begin(state);
-
-            Main.graphics.GraphicsDevice.Textures[1] = null;
-            Main.graphics.GraphicsDevice.SamplerStates[1] = samplerState;
         }
+    }
 
-        protected readonly Vector3[] blueprintKeys = [
-            new Vector3(0.47f, 0.47f, 0.47f),
-            new Vector3(0.74f, 0.74f, 0.74f)
-        ];
+    public virtual void DrawBlueprint(SpriteBatch spriteBatch, Vector2 position)
+    {
+        Pattern blueprint = new("Blueprint", Name, BlueprintPath, new Dictionary<Color, PatternColorData>
+        {
+            { new Color(188, 188, 188), new PatternColorData( BlueprintHighlighted ? UITheme.Current.PanelButtonStyle.BorderColorHighlight : UITheme.Current.PanelStyle.BorderColor) },
+            { new Color(119, 119, 119), new PatternColorData( UITheme.Current.PanelStyle.BackgroundColor ) }
+        });
+
+        state.SaveState(spriteBatch);
+        spriteBatch.End();
+        spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
+
+        blueprint.Apply();
+        spriteBatch.Draw(Blueprint, Position + position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+
+        spriteBatch.End();
+        spriteBatch.Begin(state);
     }
 }

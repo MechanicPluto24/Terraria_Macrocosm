@@ -1,3 +1,4 @@
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Projectiles.Friendly.Magic;
@@ -10,60 +11,64 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.Weapons.Magic
+namespace Macrocosm.Content.Items.Weapons.Magic;
+
+public class DianiteTome : ModItem
 {
-    public class DianiteTome : ModItem
+    private static Asset<Texture2D> heldTexture;
+
+    public override void Load()
     {
-        private static Asset<Texture2D> heldTexture;
+        heldTexture = ModContent.Request<Texture2D>(Texture + "_Held");
+    }
 
-        public override void Load()
-        {
-            heldTexture = ModContent.Request<Texture2D>(Texture + "_Held");
-        }
+    public override void SetStaticDefaults()
+    {
+        Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
+        Redemption.AddElementToItem(Type, Redemption.ElementID.Fire);
+        Redemption.AddElementToItem(Type, Redemption.ElementID.Earth);
+        Redemption.AddElementToItem(Type, Redemption.ElementID.Explosive, true);
+    }
 
-        public override void SetStaticDefaults()
-        {
-        }
+    public override void SetDefaults()
+    {
+        Item.damage = 155;
+        Item.DamageType = DamageClass.Magic;
+        Item.mana = 25;
+        Item.width = 28;
+        Item.height = 30;
+        Item.useTime = 12;
+        Item.useAnimation = 10;
+        Item.useStyle = ItemUseStyleID.Shoot;
+        Item.noMelee = true;
+        Item.knockBack = 5;
+        Item.channel = true;
+        Item.value = 10000;
+        Item.rare = ModContent.RarityType<MoonRarity1>();
+        Item.UseSound = SoundID.Item78;
+        Item.shoot = ModContent.ProjectileType<DianitePortal>();
 
-        public override void SetDefaults()
-        {
-            Item.damage = 155;
-            Item.DamageType = DamageClass.Magic;
-            Item.mana = 25;
-            Item.width = 28;
-            Item.height = 30;
-            Item.useTime = 12;
-            Item.useAnimation = 10;
-            Item.useStyle = ItemUseStyleID.Shoot;
-            Item.noMelee = true;
-            Item.knockBack = 5;
-            Item.channel = true;
-            Item.value = 10000;
-            Item.rare = ModContent.RarityType<MoonRarityT1>();
-            Item.UseSound = SoundID.Item78;
-            Item.shoot = ModContent.ProjectileType<DianitePortal>();
+        Item.noUseGraphic = true;
+        Item.CustomDrawData().CustomHeldTexture = heldTexture;
+    }
 
-            Item.noUseGraphic = true;
-            Item.CustomDrawData().CustomHeldTexture = heldTexture;
-        }
+    public override void AddRecipes()
+    {
+        CreateRecipe()
+        .AddIngredient<DianiteBar>(12)
+        .AddTile(TileID.LunarCraftingStation)
+        .Register();
+    }
 
-        public override void AddRecipes()
-        {
-            CreateRecipe()
-            .AddIngredient<DianiteBar>(12)
-            .AddTile(TileID.LunarCraftingStation)
-            .Register();
-        }
+    public override Vector2? HoldoutOffset() => new Vector2(0, 1);
 
-        public override Vector2? HoldoutOffset() => new Vector2(0, 1);
+    public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
+    {
+        Projectile.NewProjectile(source, Main.MouseWorld, velocity, type, damage, knockBack, player.whoAmI);
+        return false;
+    }
 
-        public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
-        {
-            Projectile.NewProjectile(source, Main.MouseWorld, velocity, type, damage, knockBack, player.whoAmI);
-            return false;
-        }
-
-        /*public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
+    /*public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockBack)
 		{
 			int numProj = 2 + Main.rand.Next(1);  //This defines how many projectiles to shoot
 
@@ -95,5 +100,4 @@ namespace Macrocosm.Content.Items.Weapons.Magic
 			}
 			return false;
 		}*/
-    }
 }

@@ -2,48 +2,70 @@ using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Environment.Sands;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.GameContent.Metadata;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Tiles.Blocks.Sands
+namespace Macrocosm.Content.Tiles.Blocks.Sands;
+
+public class SilicaEbonsand : ModTile
 {
-    public class SilicaEbonsand : ModTile
+    public override void SetStaticDefaults()
     {
-        public override void SetStaticDefaults()
+        Main.tileSand[Type] = true;
+
+        Main.tileSolid[Type] = true;
+        Main.tileBlockLight[Type] = true;
+
+        // Merge with most blocks
+        Main.tileBrick[Type] = true;
+
+        // Merge with dirt without blend frames
+        Main.tileMergeDirt[Type] = false;
+        Main.tileMerge[TileID.Dirt][Type] = true;
+        Main.tileMerge[Type][TileID.Dirt] = true;
+
+        TileID.Sets.ForAdvancedCollision.ForSandshark[Type] = true;
+        TileID.Sets.CanBeDugByShovel[Type] = true;
+        TileID.Sets.Falling[Type] = true;
+        TileID.Sets.Suffocate[Type] = true;
+        TileID.Sets.FallingBlockProjectile[Type] = new(ModContent.ProjectileType<SilicaEbonsandFalling>(), FallingProjectileDamage: 15);
+
+        TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
+        TileID.Sets.ChecksForMerge[Type] = true;
+
+        TileMaterials.SetForTileId(Type, TileMaterials._materialsByName["Sand"]);
+
+        MineResist = 0.5f;
+        DustType = ModContent.DustType<SilicaEbonsandDust>();
+
+        AddMapEntry(new Color(195, 197, 196));
+    }
+
+    public override void Convert(int i, int j, int conversionType)
+    {
+        switch (conversionType)
         {
-            Main.tileSand[Type] = true;
+            case BiomeConversionID.Purity:
+            case BiomeConversionID.PurificationPowder:
+            case BiomeConversionID.Sand:
+                WorldGen.ConvertTile(i, j, ModContent.TileType<SilicaSand>());
+                return;
 
-            Main.tileSolid[Type] = true;
-            Main.tileBlockLight[Type] = true;
+            case BiomeConversionID.Crimson:
+                WorldGen.ConvertTile(i, j, ModContent.TileType<SilicaCrimsand>());
+                return;
 
-            // Merge with most blocks
-            Main.tileBrick[Type] = true;
-
-            // Merge with dirt without blend frames
-            Main.tileMergeDirt[Type] = false;
-            Main.tileMerge[TileID.Dirt][Type] = true;
-            Main.tileMerge[Type][TileID.Dirt] = true;
-
-            TileID.Sets.ForAdvancedCollision.ForSandshark[Type] = true;
-            TileID.Sets.CanBeDugByShovel[Type] = true;
-            TileID.Sets.Falling[Type] = true;
-            TileID.Sets.Suffocate[Type] = true;
-            TileID.Sets.FallingBlockProjectile[Type] = new(ModContent.ProjectileType<SilicaEbonsandFalling>(), FallingProjectileDamage: 15);
-
-            TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
-            TileID.Sets.ChecksForMerge[Type] = true;
-
-            MineResist = 0.5f;
-            DustType = ModContent.DustType<SilicaEbonsandDust>();
-
-            AddMapEntry(new Color(195, 197, 196));
+            case BiomeConversionID.Hallow:
+                WorldGen.ConvertTile(i, j, ModContent.TileType<SilicaPearlsand>());
+                return;
         }
+    }
 
-        public override bool HasWalkDust() => true;
+    public override bool HasWalkDust() => true;
 
-        public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
-        {
-            dustType = ModContent.DustType<SilicaEbonsandDust>();
-        }
+    public override void WalkDust(ref int dustType, ref bool makeDust, ref Color color)
+    {
+        dustType = ModContent.DustType<SilicaEbonsandDust>();
     }
 }

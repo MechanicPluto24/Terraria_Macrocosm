@@ -2,11 +2,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Graphics;
 using System;
+using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.UI;
 using Terraria.UI.Chat;
 
-namespace Terraria.GameContent.UI.Elements;
+namespace Macrocosm.Common.UI;
 
 /// <summary>
 /// Adaption of Terraria.GameContent.UI.Elements.UIText that allows snippets
@@ -140,7 +141,7 @@ public class UISnippetText : UIElement
 
     private void InternalSetText(object text, float textScale, bool large)
     {
-        DynamicSpriteFont dynamicSpriteFont = (large ? FontAssets.DeathText.Value : FontAssets.MouseText.Value);
+        DynamicSpriteFont dynamicSpriteFont = large ? FontAssets.DeathText.Value : FontAssets.MouseText.Value;
         this.text = text;
         isLarge = large;
         this.textScale = textScale;
@@ -152,7 +153,7 @@ public class UISnippetText : UIElement
             visibleText = lastTextReference;
 
         Vector2 size = ChatManager.GetStringSize(dynamicSpriteFont, visibleText, new Vector2(1));
-        Vector2 adjustedSize = (textSize = ((!IsWrapped) ? (new Vector2(size.X, large ? 32f : 16f) * textScale) : (new Vector2(size.X, size.Y + WrappedTextBottomPadding) * textScale)));
+        Vector2 adjustedSize = textSize = !IsWrapped ? new Vector2(size.X, large ? 32f : 16f) * textScale : new Vector2(size.X, size.Y + WrappedTextBottomPadding) * textScale;
 
         if (!IsWrapped)
             MinWidth.Set(adjustedSize.X + PaddingLeft + PaddingRight, 0f);

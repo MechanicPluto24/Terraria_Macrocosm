@@ -3,60 +3,47 @@ using System;
 using Terraria.DataStructures;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Rockets.LaunchPads
+namespace Macrocosm.Content.Rockets.LaunchPads;
+
+public partial class LaunchPad : TagSerializable
 {
-    public partial class LaunchPad : TagSerializable
+    public LaunchPad Clone() => DeserializeData(SerializeData());
+
+    public static readonly Func<TagCompound, LaunchPad> DESERIALIZER = DeserializeData;
+
+    public TagCompound SerializeData()
     {
-        public LaunchPad Clone() => DeserializeData(SerializeData());
+        TagCompound tag = new();
 
-        public static readonly Func<TagCompound, LaunchPad> DESERIALIZER = DeserializeData;
+        if (Active) tag[nameof(Active)] = true;
+        if (StartTile != default) tag[nameof(StartTile)] = StartTile;
+        if (EndTile != default) tag[nameof(EndTile)] = EndTile;
+        if (RocketID != -1) tag[nameof(RocketID)] = RocketID;
+        if (internalRocket != null) tag[nameof(internalRocket)] = internalRocket;
+        if (Inventory != null) tag[nameof(Inventory)] = Inventory;
 
-        public TagCompound SerializeData()
+        return tag;
+    }
+
+    public static LaunchPad DeserializeData(TagCompound tag)
+    {
+        Point16 startTile = tag.TryGet(nameof(StartTile), out Point16 start) ? start : default;
+        Point16 endTile = tag.TryGet(nameof(EndTile), out Point16 end) ? end : default;
+
+        LaunchPad launchPad = new(startTile, endTile)
         {
-            TagCompound tag = new()
-            {
-                [nameof(Active)] = Active,
-                [nameof(StartTile)] = StartTile,
-                [nameof(EndTile)] = EndTile,
-                [nameof(RocketID)] = RocketID,
-                [nameof(CompassCoordinates)] = CompassCoordinates,
-                [nameof(Inventory)] = Inventory
-            };
+            Active = tag.ContainsKey(nameof(Active)),
+            RocketID = tag.TryGet(nameof(RocketID), out int rocketID) ? rocketID : -1,
+            internalRocket = tag.TryGet(nameof(internalRocket), out Rocket inRocket) ? inRocket : new()
+        };
 
-            if (!HasRocket)
-                tag[nameof(unassembledRocket)] = unassembledRocket;
-
-            return tag;
+        if (tag.ContainsKey(nameof(Inventory)))
+        {
+            launchPad.Inventory = tag.Get<Inventory>(nameof(Inventory));
+            launchPad.Inventory.Size = launchPad.CountRequiredAssemblyItemSlots(out launchPad._moduleSlotRanges);
+            launchPad.ReserveAssemblySlots();
         }
 
-        public static LaunchPad DeserializeData(TagCompound tag)
-        {
-            LaunchPad launchPad = new();
-
-            launchPad.Active = tag.ContainsKey(nameof(Active));
-
-            if (tag.ContainsKey(nameof(RocketID)))
-                launchPad.RocketID = tag.GetInt(nameof(RocketID));
-
-            if (tag.ContainsKey(nameof(StartTile)))
-                launchPad.StartTile = tag.Get<Point16>(nameof(StartTile));
-
-            if (tag.ContainsKey(nameof(EndTile)))
-                launchPad.EndTile = tag.Get<Point16>(nameof(EndTile));
-
-            if (tag.ContainsKey(nameof(CompassCoordinates)))
-                launchPad.CompassCoordinates = tag.GetString(nameof(CompassCoordinates));
-
-            if (!launchPad.HasRocket && tag.ContainsKey(nameof(unassembledRocket)))
-                launchPad.unassembledRocket = tag.Get<Rocket>(nameof(unassembledRocket));
-
-            if (tag.ContainsKey(nameof(Inventory)))
-            {
-                launchPad.Inventory = tag.Get<Inventory>(nameof(Inventory));
-                launchPad.Inventory.Size = launchPad.CountRequiredAssemblyItemSlots(launchPad.Rocket);
-            }
-
-            return launchPad;
-        }
+        return launchPad;
     }
 }

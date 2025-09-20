@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Macrocosm.Common.Bases.NPCs;
+using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System;
@@ -7,219 +9,233 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Common.Bases.Projectiles
-{
-    public abstract class GreatswordHeldProjectileItem : HeldProjectileItem<GreatswordHeldProjectile>
-    {
-        public abstract Vector2 SpriteHandlePosition { get; }
+namespace Macrocosm.Common.Bases.Projectiles;
 
-        public virtual GreatswordSwingStyle SwingStyle => new DefaultGreatswordSwingStyle();
-        /// <summary>
-        /// The length of the sword used for collision. <br/>
-        /// If set to <c>null</c> the length will be taken from the sword's texture.
-        /// </summary>
-        public virtual float? SwordLength => null;
-        public virtual float SwordWidth => 10;
-        public virtual int MaxCharge => 33;
-        public virtual (float min, float max) ChargeBasedDamageRatio => (0.2f, 1f);
-        public virtual (float min, float max) ChargeBasedDashAmount => (0f, 5.5f);
-        public virtual string HeldProjectileTexturePath => Texture;
-        public virtual Action<Player, int> OnRelease => null;
-        public Texture2D HeldProjectileTexture => ModContent.Request<Texture2D>(HeldProjectileTexturePath, AssetRequestMode.ImmediateLoad).Value;
+public abstract class GreatswordHeldProjectileItem : HeldProjectileItem<GreatswordHeldProjectile>
+{
+    public enum UseBehavior
+    {
+        None,
+        Swing,
+        Charge
     }
 
-    public class GreatswordHeldProjectile : HeldProjectile
+    public abstract Vector2 SpriteHandlePosition { get; }
+    public virtual UseBehavior LeftClickBehavior => UseBehavior.Swing;
+    public virtual UseBehavior RightClickBehavior => UseBehavior.Charge;
+    public sealed override bool RightClickUse => RightClickBehavior != UseBehavior.None && Main.mouseRight;
+
+    /// <summary>
+    /// The length of the sword used for collision. <br/>
+    /// If set to <c>null</c> the length will be taken from the sword's texture.
+    /// </summary>
+    public virtual float SwordLength => 0.8f * MathF.Sqrt(MathF.Pow(HeldProjectileTexture?.Width ?? 1, 2) + MathF.Pow(HeldProjectileTexture?.Height ?? 1, 2));
+    public virtual float SwordWidth => 10;
+    public virtual int MaxCharge => 33;
+    public virtual int MaxSwingRestTime => 8;
+    public virtual (float min, float max) ChargeBasedDamageRatio => (1f, 1.6f);
+    public virtual (float min, float max) ChargeBasedDashAmount => (0f, 5.5f);
+    public virtual string HeldProjectileTexturePath => Texture;
+    public Texture2D HeldProjectileTexture => ModContent.Request<Texture2D>(HeldProjectileTexturePath, AssetRequestMode.ImmediateLoad).Value;
+
+    public virtual void OnMaxCharge(GreatswordHeldProjectile proj, Player player) { }
+    public virtual void OnRelease(GreatswordHeldProjectile proj, Player player, int damage, float charge) { }
+    public virtual bool UpdateSwing(GreatswordHeldProjectile proj, Player player, float charge, ref float timer, ref float armRotation, float initialArmRotation)
     {
-        public override string Texture => "Terraria/Images/Item_0";
-        public sealed override HeldProjectileKillMode KillMode => HeldProjectileKillMode.Manual;
-        public enum GreatswordState
+        int maxTimer = Item.useAnimation * (proj.Projectile.extraUpdates + 1);
+        float swingProgress = timer / maxTimer;
+        if (timer++ >= maxTimer)
         {
-            Charge,
-            Swing
+            if (timer >= maxTimer + MaxSwingRestTime)
+                return false;
+
+            armRotation += 0.01f;
+            return true;
         }
 
-        public GreatswordState State
+        float progress = MathF.Pow(MathF.Sin(MathHelper.PiOver2 * swingProgress), 4);
+
+        armRotation = MathHelper.Lerp(initialArmRotation, initialArmRotation + MathHelper.Pi * 1.15f, progress);
+        proj.Projectile.rotation = MathHelper.Lerp(proj.Projectile.rotation, armRotation + MathHelper.Pi * 0.6f, progress);
+
+        return true;
+    }
+
+    public virtual bool PreDrawSword(GreatswordHeldProjectile greatswordProjectile, Color lightColor, ref Color? drawColor) { return true; }
+    public virtual void PostDrawSword(GreatswordHeldProjectile greatswordProjectile, Color lightColor) { }
+}
+
+public class GreatswordHeldProjectile : HeldProjectile
+{
+    public override string Texture => Macrocosm.EmptyTexPath;
+    public sealed override HeldProjectileKillMode KillMode => HeldProjectileKillMode.Manual;
+    public enum GreatswordState
+    {
+        Charge,
+        Swing
+    }
+
+    public GreatswordState State
+    {
+        get => (GreatswordState)Projectile.ai[0];
+        set => Projectile.ai[0] = (float)value;
+    }
+
+    public int ChargeEndPlayerDirection
+    {
+        get => (int)Projectile.ai[1] > 0 ? 1 : -1;
+        set => Projectile.ai[1] = value > 0 ? 1 : -1;
+    }
+
+    public GreatswordHeldProjectileItem Sword { get; set; }
+
+    /// <summary> Charge ranging from 0 to 1. </summary>
+    public float Charge => MathHelper.Clamp((float)chargeTimer / MaxCharge, 0, 1);
+    public int MaxCharge { get; set; }
+
+    private int chargeTimer = 0;
+    private float armRotation = 0f;
+    private bool released = false;
+    protected float swingTimer = 1f;
+    private GreatswordHeldProjectileItem.UseBehavior currentUseBehavior;
+    protected override void OnSpawn()
+    {
+        ChargeEndPlayerDirection = 1;
+        Projectile.usesOwnerMeleeHitCD = true;
+
+        if (item.ModItem is GreatswordHeldProjectileItem sword)
         {
-            get => (GreatswordState)Projectile.ai[0];
-            set => Projectile.ai[0] = (float)value;
-        }
-
-        public int ChargeEndPlayerDirection
-        {
-            get => (int)Projectile.ai[1] > 0 ? 1 : -1;
-            set => Projectile.ai[1] = value > 0 ? 1 : -1;
-        }
-
-        public int MaxCharge { get; set; }
-        private int chargeTimer = 0;
-
-        /// <summary> Charge ranging from 0 to 1. </summary>
-        public float Charge => (float)chargeTimer / MaxCharge;
-
-        public Texture2D GreatswordTexture { get; private set; }
-        public float SwordWidth { get; set; }
-        public float SwordLength { get; set; }
-        public (float min, float max) ChargeBasedDashAmount { get; set; }
-        public (float min, float max) ChargeBasedDamageRatio { get; set; }
-        public Vector2 SpriteHandlePosition { get; set; }
-        public bool RightClickUse { get; set; }
-
-        private GreatswordSwingStyle SwingStyle { get; set; }
-        private Action<Player, int> OnRelease { get; set; } = null;
-
-        private float armRotation = 0f;
-        private float hitTimer = 0f;
-        private bool released = false;
-        protected override void OnSpawn()
-        {
-            ChargeEndPlayerDirection = 1;
-
-            Projectile.usesOwnerMeleeHitCD = true;
-
-            if (item.ModItem is GreatswordHeldProjectileItem greatswordHeldProjectileItem)
+            Sword = sword;
+            MaxCharge = sword.MaxCharge * (Projectile.extraUpdates + 1);
+            currentUseBehavior = Main.mouseRight && !Main.mouseLeft ? sword.RightClickBehavior : sword.LeftClickBehavior;
+            switch(currentUseBehavior)
             {
-                if (Main.netMode != NetmodeID.Server)
-                    GreatswordTexture = greatswordHeldProjectileItem.HeldProjectileTexture;
-
-                SwingStyle = greatswordHeldProjectileItem.SwingStyle;
-                SwordLength = greatswordHeldProjectileItem.SwordLength ?? 0.8f * MathF.Sqrt(
-                    MathF.Pow(greatswordHeldProjectileItem.HeldProjectileTexture.Width, 2)
-                    + MathF.Pow(greatswordHeldProjectileItem.HeldProjectileTexture.Height, 2)
-                );
-                SwordWidth = greatswordHeldProjectileItem.SwordWidth;
-                OnRelease = greatswordHeldProjectileItem.OnRelease;
-                ChargeBasedDashAmount = greatswordHeldProjectileItem.ChargeBasedDashAmount;
-                ChargeBasedDamageRatio = greatswordHeldProjectileItem.ChargeBasedDamageRatio;
-                SpriteHandlePosition = greatswordHeldProjectileItem.SpriteHandlePosition;
-                MaxCharge = greatswordHeldProjectileItem.MaxCharge * (Projectile.extraUpdates + 1);
-                RightClickUse = greatswordHeldProjectileItem.RightClickUse;
-            }
-            else
-            {
-                UnAlive();
-            }
-        }
-
-        public override void AI()
-        {
-            switch (State)
-            {
-                case GreatswordState.Charge:
-                    armRotation = MathHelper.Pi * 0.75f - Charge * MathHelper.PiOver4 * 0.25f;
-
-                    Projectile.rotation = MathHelper.Pi - MathF.Sin(Charge * MathHelper.PiOver2) * MathHelper.PiOver4 * 0.25f;
-                    if (chargeTimer < MaxCharge)
-                    {
-                        chargeTimer++;
-                    }
-
-                    Player.velocity.X *= 0.96f;
-
-                    bool holding = RightClickUse ? Main.mouseRight : Player.channel;
-
-                    if (Projectile.owner == Main.myPlayer && !holding)
-                    {
-                        SoundEngine.PlaySound(SoundID.DD2_MonkStaffSwing, Projectile.Center);
-                        ChargeEndPlayerDirection = Player.direction;
-                        Player.velocity.X += Player.direction * MathHelper.Lerp(
-                            ChargeBasedDashAmount.min,
-                            ChargeBasedDashAmount.max,
-                            Charge
-                        );
-                        State = GreatswordState.Swing;
-
-                        if (Main.netMode == NetmodeID.MultiplayerClient)
-                        {
-                            Projectile.netUpdate = true;
-                            NetMessage.SendData(MessageID.PlayerControls, number: Main.myPlayer);
-                        }
-                    }
-
+                case GreatswordHeldProjectileItem.UseBehavior.Swing:
+                    State = GreatswordState.Swing;
                     break;
+                case GreatswordHeldProjectileItem.UseBehavior.Charge:
+                    State = GreatswordState.Charge;
+                    break;
+                case GreatswordHeldProjectileItem.UseBehavior.None:
+                default:
+                    Despawn();
+                    break;
+            }
+        }
+        else
+        {
+            Despawn();
+        }
+    }
 
-                case GreatswordState.Swing:
+    public override void AI()
+    {
+        switch (State)
+        {
+            case GreatswordState.Charge:
+
+                armRotation = MathHelper.Pi * 0.75f - Charge * MathHelper.PiOver4 * 0.25f;
+                Projectile.rotation = MathHelper.Pi - MathF.Sin(Charge * MathHelper.PiOver2) * MathHelper.PiOver4 * 0.25f;
+
+                if (chargeTimer < MaxCharge)
+                {
+                    chargeTimer++;
+                    if (chargeTimer == MaxCharge)
+                        Sword.OnMaxCharge(this, Player);
+                }                        
+
+                Player.velocity.X *= 0.96f;
+
+                bool holding = Player.channel && Sword.LeftClickBehavior == GreatswordHeldProjectileItem.UseBehavior.Charge || Main.mouseRight && Sword.RightClickBehavior == GreatswordHeldProjectileItem.UseBehavior.Charge;
+                if (Projectile.owner == Main.myPlayer && !holding)
+                {
+                    State = GreatswordState.Swing;
+                    ChargeEndPlayerDirection = Player.direction;
+                }
+
+                break;
+
+            case GreatswordState.Swing:
+
+                if (currentUseBehavior == GreatswordHeldProjectileItem.UseBehavior.Charge)
                     Player.direction = ChargeEndPlayerDirection;
 
-                    if (!released && Player.whoAmI == Main.myPlayer)
+                if (!released && Player.whoAmI == Main.myPlayer)
+                {
+                    if(currentUseBehavior == GreatswordHeldProjectileItem.UseBehavior.Swing)
                     {
-                        int damage = (int)(Projectile.damage * MathHelper.Lerp(ChargeBasedDamageRatio.min, ChargeBasedDamageRatio.max, Charge));
-                        OnRelease?.Invoke(Player, damage);
-                        released = true;
+                        armRotation = MathHelper.Pi * 0.75f;
+                        Projectile.rotation = MathHelper.Pi;
                     }
 
-                    if (!SwingStyle.Update(ref armRotation, ref Projectile.rotation, Charge))
+                    Player.velocity.X += Player.direction * MathHelper.Lerp(Sword.ChargeBasedDashAmount.min, Sword.ChargeBasedDashAmount.max, Charge);
+
+                    int damage = (int)(Projectile.damage * MathHelper.Lerp(Sword.ChargeBasedDamageRatio.min, Sword.ChargeBasedDamageRatio.max, Charge));
+                    Sword.OnRelease(this, Player, damage, Charge);
+
+                    if (Sword.Item.UseSound.HasValue)
+                        SoundEngine.PlaySound(Sword.Item.UseSound, Projectile.Center);
+
+                    if (Main.netMode == NetmodeID.MultiplayerClient)
                     {
-                        UnAlive();
+                        Projectile.netUpdate = true;
+                        NetMessage.SendData(MessageID.PlayerControls, number: Main.myPlayer);
                     }
 
-                    break;
-            }
+                    released = true;
+                }
 
-            float localArmRot = Player.direction * armRotation;
-            Vector2 armDirection = (localArmRot + MathHelper.PiOver2).ToRotationVector2();
+                if (!Sword.UpdateSwing(this, Player, Charge, ref swingTimer, ref armRotation, MathHelper.Pi * 0.75f))
+                    Despawn();
 
-            Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + armDirection * 18;
-            Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, localArmRot);
-            Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, localArmRot + 0.1f * Player.direction);
-
-            hitTimer *= 0.95f;
+                break;
         }
 
-        public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+        float localArmRot = Player.direction * armRotation;
+        Vector2 armDirection = (localArmRot + MathHelper.PiOver2).ToRotationVector2();
+
+        Projectile.Center = Player.RotatedRelativePoint(Player.MountedCenter) + armDirection * 18;
+        Player.SetCompositeArmFront(true, Player.CompositeArmStretchAmount.Full, localArmRot);
+        Player.SetCompositeArmBack(true, Player.CompositeArmStretchAmount.Full, localArmRot + 0.1f * Player.direction);
+    }
+
+    public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
+    {
+        float _ = 0;
+        Vector2 hitboxEnd = Projectile.Center + ((Projectile.rotation - MathHelper.PiOver4) * Player.direction + (Player.direction == -1 ? MathHelper.Pi : 0f)).ToRotationVector2() * (Sword.SwordLength);
+        return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, hitboxEnd, Sword.SwordWidth, ref _);
+    }
+
+
+    public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
+    {
+        modifiers.SourceDamage *= MathHelper.Lerp(Sword.ChargeBasedDamageRatio.min, Sword.ChargeBasedDamageRatio.max, Charge);
+    }
+
+    public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone) => Sword.OnHitNPC(Player, target, hit, damageDone);
+    public override bool? CanHitNPC(NPC target) => State == GreatswordState.Swing ? null : false;
+
+    public override void OnHitPlayer(Player target, Player.HurtInfo info) => Sword.OnHitPvp(Player, target, info);
+    public override bool CanHitPvp(Player target) => State == GreatswordState.Swing;
+
+    public override void Draw(Color lightColor)
+    {
+        Color? drawColor = null;
+        if (Sword.PreDrawSword(this, lightColor, ref drawColor))
         {
-            float _ = 0;
-            return Collision.CheckAABBvLineCollision(
-                targetHitbox.TopLeft(),
-                targetHitbox.Size(),
-                Projectile.Center,
-                Projectile.Center + (
-                    (Projectile.rotation - MathHelper.PiOver4) * Player.direction + (Player.direction == -1 ? MathHelper.Pi : 0f)
-                ).ToRotationVector2() * SwordLength,
-                SwordWidth,
-                ref _
+            Main.EntitySpriteDraw(
+                Sword.HeldProjectileTexture,
+                Projectile.Center - Main.screenPosition,
+                null,
+                drawColor is null ? lightColor : drawColor.Value,
+                Projectile.rotation * Player.direction,
+                Player.direction == -1 ? new Vector2(Sword.HeldProjectileTexture.Width - Sword.SpriteHandlePosition.X, Sword.SpriteHandlePosition.Y) : Sword.SpriteHandlePosition,
+                Projectile.scale,
+                Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                0f
             );
         }
 
-        public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
-        {
-            modifiers.SourceDamage *= MathHelper.Lerp(
-                ChargeBasedDamageRatio.min,
-                ChargeBasedDamageRatio.max,
-                Charge
-            );
-        }
-
-        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
-        {
-            hitTimer = 1f;
-        }
-
-        public override bool? CanHitNPC(NPC target) => State == GreatswordState.Swing ? null : false;
-
-        public override bool CanHitPvp(Player target)
-        {
-            return base.CanHitPvp(target);
-        }
-
-        public override void Draw(Color lightColor)
-        {
-            Color? drawColor = null;
-            if (SwingStyle.PreDrawSword(this, lightColor, ref drawColor))
-            {
-                Main.EntitySpriteDraw(
-                    GreatswordTexture,
-                    Projectile.Center - Main.screenPosition,
-                    null,
-                    drawColor is null ? lightColor : drawColor.Value,
-                    Projectile.rotation * Player.direction,
-                    Player.direction == -1 ? new Vector2(GreatswordTexture.Width - SpriteHandlePosition.X, SpriteHandlePosition.Y) : SpriteHandlePosition,
-                    Projectile.scale,
-                    Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
-                    0f
-                );
-            }
-
-            SwingStyle.PostDrawSword(this, lightColor);
-        }
+        Sword.PostDrawSword(this, lightColor);
     }
 }

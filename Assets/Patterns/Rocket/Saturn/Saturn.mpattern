@@ -1,0 +1,11 @@
+{
+  "name": "Saturn",
+  "colorData": {
+    "#00FF00": {
+      "colorFunction": {
+        "name": "Lerp",
+        "parameters": [ "#FFFFFF", "#282828", 0.5 ]
+      }
+    }
+  }
+}

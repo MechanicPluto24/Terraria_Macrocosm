@@ -84,7 +84,14 @@ StarDestroyerStarBlue.DisplayName: Star Destroyer
 StarDestroyerStarYellow.DisplayName: Star Destroyer
 MoonRubble.DisplayName: Moon Rubble
 MoonLichNPCSummon.DisplayName: Moon Lich
-WaveRifleLaser.DisplayName: Wave Rifle Laser
+WaveGunBlueBolt.DisplayName: Zap Gun
+WaveGunRedBolt.DisplayName: Zap Gun
+WaveRifleHeld.DisplayName: Wave Gun
+WaveRiflePurpleBolt.DisplayName: Wave Gun
+WaveGunDualHeld.DisplayName: Zap Gun Dual Wield
+WaveGunBlueHeld.DisplayName: Blue Zap Gun
+WaveGunRedHeld.DisplayName: Red Zap Gun
+WaveGunRifleHeld.DisplayName: Wave Gun
 LichBolt.DisplayName: Lich Bolt
 GreenLaser.DisplayName: Green Laser
 LunarBarf.DisplayName: Lunar Barf
@@ -92,7 +99,6 @@ FrigorianIceShard.DisplayName: Frigorian Ice Shard
 MicronovaBeam.DisplayName: Micronova Beam
 MicronovaPortal.DisplayName: Micronova Portal
 WaveStar.DisplayName: Wave Star
-InhibitorFieldGrenade.DisplayName: Stasis Grenade
 CrescentMoonProjectile.DisplayName: Crescent Moon
 LunarCrystalProjectile.DisplayName: Lunar Crystal
 ImbriumJewelPhantasmalSkull.DisplayName: Phantasmal Skull
@@ -110,11 +116,6 @@ BlueGunHeld.DisplayName: Blue Gun Held
 PurpleEnergyBolt.DisplayName: Purple Energy Bolt
 RedEnergyBolt.DisplayName: Red Energy Bolt
 RedGunHeld.DisplayName: Red Gun Held
-WaveGunEnergyBolt.DisplayName: Energy Bolt
-WaveGunBlueHeld.DisplayName: Blue Zap Gun
-WaveGunDualHeld.DisplayName: Zap Gun Dual Wield
-WaveGunRedHeld.DisplayName: Red Zap Gun
-WaveGunRifleHeld.DisplayName: Wave Gun
 ChampionsBladeSlash.DisplayName: Champion's Blade
 CrescentScriptureProjectile.DisplayName: Crescent Scripture
 LuminiteWave.DisplayName: Luminite Wave
@@ -137,9 +138,10 @@ DroneLaser.DisplayName: P.D.C.D. "Hummingbird"
 DroneMinion.DisplayName: P.D.C.D. "Hummingbird"
 ExsanguinatorProjectile.DisplayName: Exsanguinator Projectile
 IlmeniteHeld.DisplayName: Ilmenite
-IlmeniteRegularProj.DisplayName: Ilmenite
-IlmeniteAltProj.DisplayName: Ilmenite
 IlmeniteExplosion.DisplayName: Ilmenite
+IlmeniteProjectile.DisplayName: Ilmenite
+IlmeniteProjectileDeflected.DisplayName: Ilmenite
+IlmeniteProjectileDouble.DisplayName: Ilmenite
 HummingbirdBullet.DisplayName: P.D.C.D. "Hummingbird"
 HummingbirdDrone.DisplayName: P.D.C.D. "Hummingbird"
 CalcicCaneBolt.DisplayName: Calcic Cane
@@ -167,3 +169,37 @@ ProcellarumExplosion.DisplayName: Procellarum
 LaserTurretProjectile.DisplayName: Laser Turret
 TurretTaserProjectile.DisplayName: Turret Taser
 PhantasmalSkullTomeProjectile.DisplayName: Phantasmal Skull Tome Projectile
+TrashnadoProjectile.DisplayName: Trashnado Projectile
+WyrmwoodProjectile.DisplayName: Wyrmwood Projectile
+IndustrialBobber.DisplayName: Industrial Bobber
+MoonBeastBobber.DisplayName: Moon Beast Bobber
+LuminitePebble.DisplayName: Luminite Pebble
+MoonChampionSentry.DisplayName: Moon Champion Sentry
+LightningBolt.DisplayName: Lightning Bolt
+BLPShot.DisplayName: BLP Asterix
+StasisGrenade.DisplayName: Stasis Grenade
+CelestialMeteorStaffProjectileNebula.DisplayName: Celestial Meteor Staff Projectile Nebula
+CelestialMeteorStaffProjectileSolar.DisplayName: Celestial Meteor Staff Projectile Solar
+CelestialMeteorStaffProjectileStardust.DisplayName: Celestial Meteor Staff Projectile Stardust
+CelestialMeteorStaffProjectileVortex.DisplayName: Celestial Meteor Staff Projectile Vortex
+EMGunBolt.DisplayName: E M Gun Bolt
+LockOnStaffBolt.DisplayName: Lock On Staff Bolt
+LockOnStaffProjectile.DisplayName: Lock On Staff Projectile
+NebulaRemnantProjectile.DisplayName: Nebula Remnant Projectile
+SolarGlob.DisplayName: Solar Glob
+StardustWormProjectile.DisplayName: Stardust Worm Projectile
+VortexPortal.DisplayName: Vortex Portal
+MegaBladeProjectile.DisplayName: Mega Blade Projectile
+AtomicWaveProjectile.DisplayName: Atomic Wave Projectile
+MageBoosterProjectile.DisplayName: Mage Booster Projectile
+NebulaStaffMeteor.DisplayName: Nebula Staff Meteor
+SolarStaffMeteor.DisplayName: Solar Staff Meteor
+StardustStaffMeteor.DisplayName: Stardust Staff Meteor
+VortexStaffMeteor.DisplayName: Vortex Staff Meteor
+ArmorPiercingBullet.DisplayName: Armor Piercing Bullet
+RailgunBolt.DisplayName: Railgun Bolt
+ShredderBullet.DisplayName: Shredder Bullet
+ScrapShrapnel.DisplayName: Scrap Shrapnel
+LightningSpearProjectile.DisplayName: Lightning Spear Projectile
+MetalCutterProjectile.DisplayName: Metal Cutter Projectile
+MoonChampionSentryBullet.DisplayName: Moon Champion Sentry Bullet

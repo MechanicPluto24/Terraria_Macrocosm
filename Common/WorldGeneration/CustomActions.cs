@@ -5,195 +5,194 @@ using Terraria;
 using Terraria.ID;
 using Terraria.WorldBuilding;
 
-namespace Macrocosm.Common.WorldGeneration
+namespace Macrocosm.Common.WorldGeneration;
+
+public class CustomActions
 {
-    public class CustomActions
+    public class ClearTileSafelyPostGen : GenAction
     {
-        public class ClearTileSafelyPostGen : GenAction
+        private readonly bool frameNeighbors;
+
+        public ClearTileSafelyPostGen(bool frameNeighbors = false)
         {
-            private readonly bool frameNeighbors;
-
-            public ClearTileSafelyPostGen(bool frameNeighbors = false)
-            {
-                this.frameNeighbors = frameNeighbors;
-            }
-
-            public override bool Apply(Point origin, int x, int y, params object[] args)
-            {
-                if(Utility.CoordinatesOutOfBounds(x, y))
-                    return false;
-
-                if (TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[x, y].TileType])
-                    WorldUtils.ClearTile(x, y, frameNeighbors);
-
-                return UnitApply(origin, x, y, args);
-            }
+            this.frameNeighbors = frameNeighbors;
         }
 
-        // By GroxTheGreat
-        public class SetModTile : GenAction
+        public override bool Apply(Point origin, int x, int y, params object[] args)
         {
-            public ushort type;
-            public short frameX = -1;
-            public short frameY = -1;
-            public bool doFraming;
-            public bool doNeighborFraming;
-            public Func<int, int, Tile, bool> canReplace;
+            if (!WorldGen.InWorld(x, y))
+                return false;
 
-            public SetModTile(ushort type, bool setSelfFrames = false, bool setNeighborFrames = true)
-            {
-                this.type = type;
-                doFraming = setSelfFrames;
-                doNeighborFraming = setNeighborFrames;
-            }
+            if (TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[x, y].TileType])
+                WorldUtils.ClearTile(x, y, frameNeighbors);
 
-            public SetModTile ExtraParams(Func<int, int, Tile, bool> canReplace, int frameX = -1, int frameY = -1)
-            {
-                this.canReplace = canReplace;
-                this.frameX = (short)frameX;
-                this.frameY = (short)frameY;
-                return this;
-            }
+            return UnitApply(origin, x, y, args);
+        }
+    }
 
-            public override bool Apply(Point origin, int x, int y, params object[] args)
+    // By GroxTheGreat
+    public class SetModTile : GenAction
+    {
+        public ushort type;
+        public short frameX = -1;
+        public short frameY = -1;
+        public bool doFraming;
+        public bool doNeighborFraming;
+        public Func<int, int, Tile, bool> canReplace;
+
+        public SetModTile(ushort type, bool setSelfFrames = false, bool setNeighborFrames = true)
+        {
+            this.type = type;
+            doFraming = setSelfFrames;
+            doNeighborFraming = setNeighborFrames;
+        }
+
+        public SetModTile ExtraParams(Func<int, int, Tile, bool> canReplace, int frameX = -1, int frameY = -1)
+        {
+            this.canReplace = canReplace;
+            this.frameX = (short)frameX;
+            this.frameY = (short)frameY;
+            return this;
+        }
+
+        public override bool Apply(Point origin, int x, int y, params object[] args)
+        {
+            if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY)
+                return false;
+            if (canReplace == null || canReplace != null && canReplace(x, y, _tiles[x, y]))
             {
-                if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY)
-                    return false;
-                if (canReplace == null || canReplace != null && canReplace(x, y, _tiles[x, y]))
+                _tiles[x, y].ResetToType(type);
+                if (frameX > -1)
+                    _tiles[x, y].TileFrameX = frameX;
+                if (frameY > -1)
+                    _tiles[x, y].TileFrameY = frameY;
+                if (doFraming)
                 {
-                    _tiles[x, y].ResetToType(type);
-                    if (frameX > -1)
-                        _tiles[x, y].TileFrameX = frameX;
-                    if (frameY > -1)
-                        _tiles[x, y].TileFrameY = frameY;
-                    if (doFraming)
-                    {
-                        WorldUtils.TileFrame(x, y, doNeighborFraming);
-                    }
+                    WorldUtils.TileFrame(x, y, doNeighborFraming);
                 }
-                return UnitApply(origin, x, y, args);
             }
+            return UnitApply(origin, x, y, args);
+        }
+    }
+
+    // By GroxTheGreat
+    public class SetMapBrightness : GenAction
+    {
+        public byte brightness;
+
+        public SetMapBrightness(byte brightness)
+        {
+            this.brightness = brightness;
         }
 
-        // By GroxTheGreat
-        public class SetMapBrightness : GenAction
+        public override bool Apply(Point origin, int x, int y, params object[] args)
         {
-            public byte brightness;
+            if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY) return false;
+            Main.Map.UpdateLighting(x, y, Math.Max(Main.Map[x, y].Light, brightness));
+            return UnitApply(origin, x, y, args);
+        }
+    }
 
-            public SetMapBrightness(byte brightness)
-            {
-                this.brightness = brightness;
-            }
+    // By GroxTheGreat
+    public class RadialDitherTopMiddle : GenAction
+    {
+        private int _width, _height;
+        private float _innerRadius, _outerRadius;
 
-            public override bool Apply(Point origin, int x, int y, params object[] args)
-            {
-                if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY) return false;
-                Main.Map.UpdateLighting(x, y, Math.Max(Main.Map[x, y].Light, brightness));
-                return UnitApply(origin, x, y, args);
-            }
+        public RadialDitherTopMiddle(int width, int height, float innerRadius, float outerRadius)
+        {
+            _width = width;
+            _height = height;
+            _innerRadius = innerRadius;
+            _outerRadius = outerRadius;
         }
 
-        // By GroxTheGreat
-        public class RadialDitherTopMiddle : GenAction
+        public override bool Apply(Point origin, int x, int y, params object[] args)
         {
-            private int _width, _height;
-            private float _innerRadius, _outerRadius;
-
-            public RadialDitherTopMiddle(int width, int height, float innerRadius, float outerRadius)
+            Vector2 value = new((float)origin.X + _width / 2, origin.Y);
+            Vector2 value2 = new(x, y);
+            float num = Vector2.Distance(value2, value);
+            float windRotationFactor = Math.Max(0f, Math.Min(1f, (num - _innerRadius) / (_outerRadius - _innerRadius)));
+            if (_random.NextDouble() > windRotationFactor)
             {
-                _width = width;
-                _height = height;
-                _innerRadius = innerRadius;
-                _outerRadius = outerRadius;
+                return UnitApply(origin, x, y, args);
             }
+            return Fail();
+        }
+    }
 
-            public override bool Apply(Point origin, int x, int y, params object[] args)
+    // By GroxTheGreat
+    public class PlaceModWall : GenAction
+    {
+        public ushort type;
+        public bool neighbors;
+        public Func<int, int, Tile, bool> canReplace;
+
+        public PlaceModWall(int type, bool neighbors = true)
+        {
+            this.type = (ushort)type;
+            this.neighbors = neighbors;
+        }
+
+        public PlaceModWall ExtraParams(Func<int, int, Tile, bool> canReplace)
+        {
+            this.canReplace = canReplace;
+            return this;
+        }
+
+        public override bool Apply(Point origin, int x, int y, params object[] args)
+        {
+            if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY) return false;
+            if (canReplace == null || canReplace != null && canReplace(x, y, _tiles[x, y]))
             {
-                Vector2 value = new((float)origin.X + _width / 2, origin.Y);
-                Vector2 value2 = new(x, y);
-                float num = Vector2.Distance(value2, value);
-                float windRotationFactor = Math.Max(0f, Math.Min(1f, (num - _innerRadius) / (_outerRadius - _innerRadius)));
-                if (_random.NextDouble() > windRotationFactor)
+                _tiles[x, y].WallType = type;
+                WorldGen.SquareWallFrame(x, y);
+                if (neighbors)
                 {
-                    return UnitApply(origin, x, y, args);
+                    WorldGen.SquareWallFrame(x + 1, y);
+                    WorldGen.SquareWallFrame(x - 1, y);
+                    WorldGen.SquareWallFrame(x, y - 1);
+                    WorldGen.SquareWallFrame(x, y + 1);
                 }
+            }
+            return UnitApply(origin, x, y, args);
+        }
+    }
+
+    // By GroxTheGreat
+    public class IsInWorld : GenAction
+    {
+        public override bool Apply(Point origin, int x, int y, params object[] args)
+        {
+            if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY)
                 return Fail();
-            }
+            return UnitApply(origin, x, y, args);
+        }
+    }
+
+    // By GroxTheGreat
+    public class ClearTileSafely : GenAction
+    {
+        private bool _frameNeighbors;
+
+        public ClearTileSafely(bool frameNeighbors = false)
+        {
+            _frameNeighbors = frameNeighbors;
         }
 
-        // By GroxTheGreat
-        public class PlaceModWall : GenAction
+        public override bool Apply(Point origin, int x, int y, params object[] args)
         {
-            public ushort type;
-            public bool neighbors;
-            public Func<int, int, Tile, bool> canReplace;
-
-            public PlaceModWall(int type, bool neighbors = true)
+            if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
+                return false;
+            _tiles[x, y].ClearTile();
+            if (_frameNeighbors)
             {
-                this.type = (ushort)type;
-                this.neighbors = neighbors;
+                WorldGen.TileFrame(x + 1, y);
+                WorldGen.TileFrame(x - 1, y);
+                WorldGen.TileFrame(x, y + 1);
+                WorldGen.TileFrame(x, y - 1);
             }
-
-            public PlaceModWall ExtraParams(Func<int, int, Tile, bool> canReplace)
-            {
-                this.canReplace = canReplace;
-                return this;
-            }
-
-            public override bool Apply(Point origin, int x, int y, params object[] args)
-            {
-                if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY) return false;
-                if (canReplace == null || canReplace != null && canReplace(x, y, _tiles[x, y]))
-                {
-                    _tiles[x, y].WallType = type;
-                    WorldGen.SquareWallFrame(x, y);
-                    if (neighbors)
-                    {
-                        WorldGen.SquareWallFrame(x + 1, y);
-                        WorldGen.SquareWallFrame(x - 1, y);
-                        WorldGen.SquareWallFrame(x, y - 1);
-                        WorldGen.SquareWallFrame(x, y + 1);
-                    }
-                }
-                return UnitApply(origin, x, y, args);
-            }
-        }
-
-        // By GroxTheGreat
-        public class IsInWorld : GenAction
-        {
-            public override bool Apply(Point origin, int x, int y, params object[] args)
-            {
-                if (x < 0 || x > Main.maxTilesX || y < 0 || y > Main.maxTilesY)
-                    return Fail();
-                return UnitApply(origin, x, y, args);
-            }
-        }
-
-        // By GroxTheGreat
-        public class ClearTileSafely : GenAction
-        {
-            private bool _frameNeighbors;
-
-            public ClearTileSafely(bool frameNeighbors = false)
-            {
-                _frameNeighbors = frameNeighbors;
-            }
-
-            public override bool Apply(Point origin, int x, int y, params object[] args)
-            {
-                if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
-                    return false;
-                _tiles[x, y].ClearTile();
-                if (_frameNeighbors)
-                {
-                    WorldGen.TileFrame(x + 1, y);
-                    WorldGen.TileFrame(x - 1, y);
-                    WorldGen.TileFrame(x, y + 1);
-                    WorldGen.TileFrame(x, y - 1);
-                }
-                return UnitApply(origin, x, y, args);
-            }
+            return UnitApply(origin, x, y, args);
         }
     }
 }

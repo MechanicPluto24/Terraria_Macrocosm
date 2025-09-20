@@ -422,6 +422,16 @@ WhenDayBreaks: {
 	Tooltip: "'L. Reda'"
 }
 
+InANutshell: {
+	DisplayName: In A Nutshell
+	Tooltip: "'L. Reda'"
+}
+
+Apollo115: {
+	DisplayName: Apollo 115
+	Tooltip: "'N. Cauvin'"
+}
+
 Freedomfaller: {
 	DisplayName: Freedomfaller
 	Tooltip: "'T. Williams'"
@@ -430,6 +440,11 @@ Freedomfaller: {
 ShoresOfOblivion: {
 	DisplayName: Shores Of Oblivion
 	Tooltip: "'E. Bracht'"
+}
+
+SakuraRuckenfigur: {
+	DisplayName: Sakura R�ckenfigur
+	Tooltip: "'U. C. Arts'"
 }
 
 CraterDemonRelic: {
@@ -1084,18 +1099,12 @@ Motor: {
 	Tooltip: ""
 }
 
-Apollo115: {
-	DisplayName: Apollo115
-	Tooltip: ""
-}
-
 CraterDemonPet: {
 	DisplayName: Toy Rocket
 	Tooltip:
 		'''
 		Summons a Crater Imp
 		'Fly me to the Moon!'
-		       
 		'''
 }
 
@@ -1130,28 +1139,48 @@ MercurianBanner: {
 }
 
 DeadworldMusicBox: {
-	DisplayName: Music Box (Deadworld)
-	Tooltip: ""
+	DisplayName: Music Box (Moon Day)
+	Tooltip:
+		'''
+		Plays Deadworld
+		By Lincolnennis
+		'''
 }
 
 RequiemMusicBox: {
-	DisplayName: Music Box (Requiem)
-	Tooltip: ""
+	DisplayName: Music Box (Moon Night)
+	Tooltip:
+		'''
+		Plays Requiem
+		By Lincolnennis
+		'''
 }
 
 SpaceInvaderMusicBox: {
-	DisplayName: Music Box (Space Invader)
-	Tooltip: ""
+	DisplayName: Music Box (Crater Demon)
+	Tooltip:
+		'''
+		Plays Space Invader
+		By Lincolnennis
+		'''
 }
 
 StygiaMusicBox: {
-	DisplayName: Music Box (Stygia)
-	Tooltip: ""
+	DisplayName: Music Box (Underground Moon)
+	Tooltip:
+		'''
+		Plays Stygia
+		By Lincolnennis
+		'''
 }
 
 IntoTheUnknownMusicBox: {
-	DisplayName: Music Box (Into The Unknown)
-	Tooltip: ""
+	DisplayName: Music Box (Menu)
+	Tooltip:
+		'''
+		Plays Into The Unknown
+		By Lincolnennis
+		'''
 }
 
 OsmiumBoots: {
@@ -1487,11 +1516,6 @@ BurnerGenerator: {
 
 IndustrialServer: {
 	DisplayName: Industrial Server
-	Tooltip: ""
-}
-
-InANutshell: {
-	DisplayName: In A Nutshell
 	Tooltip: ""
 }
 
@@ -2030,11 +2054,6 @@ InvarBar: {
 
 NickelOre: {
 	DisplayName: Nickel Ore
-	Tooltip: ""
-}
-
-InhibitorFieldGrenade: {
-	DisplayName: Stasis Grenade
 	Tooltip: ""
 }
 
@@ -2757,6 +2776,111 @@ TrailScepter: {
 	DisplayName: Trail Scepter
 }
 
+HaemonovaBrick: {
+	DisplayName: Haemonova Brick
+	Tooltip: ""
+}
+
+HaemonovaBathtub: {
+	DisplayName: Haemonova Bathtub
+	Tooltip: ""
+}
+
+HaemonovaBed: {
+	DisplayName: Haemonova Bed
+	Tooltip: ""
+}
+
+HaemonovaBookcase: {
+	DisplayName: Haemonova Bookcase
+	Tooltip: ""
+}
+
+HaemonovaCandelabra: {
+	DisplayName: Haemonova Candelabra
+	Tooltip: ""
+}
+
+HaemonovaCandle: {
+	DisplayName: Haemonova Candle
+	Tooltip: ""
+}
+
+HaemonovaChair: {
+	DisplayName: Haemonova Chair
+	Tooltip: ""
+}
+
+HaemonovaChandelier: {
+	DisplayName: Haemonova Chandelier
+	Tooltip: ""
+}
+
+HaemonovaChest: {
+	DisplayName: Haemonova Chest
+	Tooltip: ""
+}
+
+HaemonovaClock: {
+	DisplayName: Haemonova Clock
+	Tooltip: ""
+}
+
+HaemonovaDoor: {
+	DisplayName: Haemonova Door
+	Tooltip: ""
+}
+
+HaemonovaDresser: {
+	DisplayName: Haemonova Dresser
+	Tooltip: ""
+}
+
+HaemonovaLamp: {
+	DisplayName: Haemonova Lamp
+	Tooltip: ""
+}
+
+HaemonovaLantern: {
+	DisplayName: Haemonova Lantern
+	Tooltip: ""
+}
+
+HaemonovaPiano: {
+	DisplayName: Haemonova Piano
+	Tooltip: ""
+}
+
+HaemonovaPlatform: {
+	DisplayName: Haemonova Platform
+	Tooltip: ""
+}
+
+HaemonovaSink: {
+	DisplayName: Haemonova Sink
+	Tooltip: ""
+}
+
+HaemonovaSofa: {
+	DisplayName: Haemonova Sofa
+	Tooltip: ""
+}
+
+HaemonovaTable: {
+	DisplayName: Haemonova Table
+	Tooltip: ""
+}
+
+HaemonovaToilet: {
+	DisplayName: Haemonova Toilet
+	Tooltip: ""
+}
+
+HaemonovaWorkbench: {
+	DisplayName: Haemonova Workbench
+	Tooltip: ""
+}
+
 RubberTreeSapling: {
 	DisplayName: Rubber Tree Sapling
 	Tooltip: ""
@@ -2804,5 +2928,500 @@ ConveyorInlet: {
 
 ConveyorOutlet: {
 	DisplayName: Conveyor Outlet
+	Tooltip: ""
+}
+
+EngineComponentMk1: {
+	DisplayName: Engine Component Mk1
+	Tooltip: ""
+}
+
+EngineComponentMk2: {
+	DisplayName: Engine Component Mk2
+	Tooltip: ""
+}
+
+MannedManeuveringUnit: {
+	DisplayName: Manned Maneuvering Unit
+	Tooltip: ""
+}
+
+MoonChampionHelmet: {
+	DisplayName: Moon Champion Helmet
+	Tooltip: ""
+}
+
+MoonChampionLeggings: {
+	DisplayName: Moon Champion Leggings
+	Tooltip: ""
+}
+
+MoonChampionSuit: {
+	DisplayName: Moon Champion Suit
+	Tooltip: ""
+}
+
+Craterfish: {
+	DisplayName: Craterfish
+	Tooltip: ""
+}
+
+DunceCraterfish: {
+	DisplayName: Dunce Craterfish
+	Tooltip: ""
+}
+
+HermitCan: {
+	DisplayName: Hermit Can
+	Tooltip: ""
+}
+
+MutatedGoldfish: {
+	DisplayName: Mutated Goldfish
+	Tooltip: ""
+}
+
+SmogWispfish: {
+	DisplayName: Smog Wispfish
+	Tooltip: ""
+}
+
+RadioactiveSlimeBannerItem: {
+	DisplayName: Radioactive Slime Banner Item
+	Tooltip: ""
+}
+
+RegolithSlimeBannerItem: {
+	DisplayName: Regolith Slime Banner Item
+	Tooltip: ""
+}
+
+IndustrialFishingRod: {
+	DisplayName: Industrial Fishing Rod
+	Tooltip: ""
+}
+
+MoonBeastFishingRod: {
+	DisplayName: Moon Beast Fishing Rod
+	Tooltip: ""
+}
+
+ACUnit: {
+	DisplayName: A C Unit
+	Tooltip: ""
+}
+
+MoonChampionSentryItem: {
+	DisplayName: Moon Champion Sentry Item
+	Tooltip: ""
+}
+
+MoonChampionSentry: {
+	DisplayName: Moon Champion Sentry
+	Tooltip: ""
+}
+
+RegolithBathtub: {
+	DisplayName: Regolith Bathtub
+	Tooltip: ""
+}
+
+RegolithBed: {
+	DisplayName: Regolith Bed
+	Tooltip: ""
+}
+
+RegolithBookcase: {
+	DisplayName: Regolith Bookcase
+	Tooltip: ""
+}
+
+RegolithCandelabra: {
+	DisplayName: Regolith Candelabra
+	Tooltip: ""
+}
+
+RegolithCandle: {
+	DisplayName: Regolith Candle
+	Tooltip: ""
+}
+
+RegolithChair: {
+	DisplayName: Regolith Chair
+	Tooltip: ""
+}
+
+RegolithChandelier: {
+	DisplayName: Regolith Chandelier
+	Tooltip: ""
+}
+
+RegolithChest: {
+	DisplayName: Regolith Chest
+	Tooltip: ""
+}
+
+RegolithClock: {
+	DisplayName: Regolith Clock
+	Tooltip: ""
+}
+
+RegolithDoor: {
+	DisplayName: Regolith Door
+	Tooltip: ""
+}
+
+RegolithDresser: {
+	DisplayName: Regolith Dresser
+	Tooltip: ""
+}
+
+RegolithLamp: {
+	DisplayName: Regolith Lamp
+	Tooltip: ""
+}
+
+RegolithLantern: {
+	DisplayName: Regolith Lantern
+	Tooltip: ""
+}
+
+RegolithPiano: {
+	DisplayName: Regolith Piano
+	Tooltip: ""
+}
+
+RegolithSink: {
+	DisplayName: Regolith Sink
+	Tooltip: ""
+}
+
+RegolithSofa: {
+	DisplayName: Regolith Sofa
+	Tooltip: ""
+}
+
+RegolithTable: {
+	DisplayName: Regolith Table
+	Tooltip: ""
+}
+
+RegolithWorkbench: {
+	DisplayName: Regolith Workbench
+	Tooltip: ""
+}
+
+Thermometer: {
+	DisplayName: Thermometer
+	Tooltip: ""
+}
+
+CorrugatedSteelBrick: {
+	DisplayName: Corrugated Steel Brick
+	Tooltip: ""
+}
+
+SteelCage: {
+	DisplayName: Steel Cage
+	Tooltip: ""
+}
+
+BLPAsterix: {
+	DisplayName: BLP Asterix
+	Tooltip: ""
+}
+
+StasisGrenade: {
+	DisplayName: Stasis Grenade
+	Tooltip: ""
+}
+
+AutocrafterT1: {
+	DisplayName: Autocrafter
+	Tooltip: ""
+}
+
+AutocrafterT2Cobalt: {
+	DisplayName: Cobalt Autocrafter
+	Tooltip: ""
+}
+
+AutocrafterT2Palladium: {
+	DisplayName: Palladium Autocrafter
+	Tooltip: ""
+}
+
+AutocrafterT3: {
+	DisplayName: Advanced Autocrafter
+	Tooltip: ""
+}
+
+OreDrill: {
+	DisplayName: Ore Drill
+	Tooltip: ""
+}
+
+Pumpjack: {
+	DisplayName: Pumpjack
+	Tooltip: ""
+}
+
+Astrolith: {
+	DisplayName: Astrolith
+	Tooltip: ""
+}
+
+BrittleHollow: {
+	DisplayName: Brittle Hollow
+	Tooltip: ""
+}
+
+CacoLisa: {
+	DisplayName: Caco Lisa
+	Tooltip: ""
+}
+
+ChillingInSpace: {
+	DisplayName: Chilling In Space
+	Tooltip: ""
+}
+
+ElegyForTheRings: {
+	DisplayName: Elegy For The Rings
+	Tooltip: ""
+}
+
+GiantsDeep: {
+	DisplayName: Giants Deep
+	Tooltip: ""
+}
+
+HourglassTwins: {
+	DisplayName: Hourglass Twins
+	Tooltip: ""
+}
+
+IsleOfTheDead: {
+	DisplayName: Isle Of The Dead
+	Tooltip: ""
+}
+
+PaleBluePixel: {
+	DisplayName: Pale Blue Pixel
+	Tooltip: ""
+}
+
+TheEye: {
+	DisplayName: The Eye
+	Tooltip: ""
+}
+
+TheInterloper: {
+	DisplayName: The Interloper
+	Tooltip: ""
+}
+
+TimberHearth: {
+	DisplayName: Timber Hearth
+	Tooltip: ""
+}
+
+CelestialMeteorStaff: {
+	DisplayName: Celestial Meteor Staff
+	Tooltip: ""
+}
+
+LockOnStaff: {
+	DisplayName: Lock On Staff
+	Tooltip: ""
+}
+
+MegaBlade: {
+	DisplayName: Mega Blade
+	Tooltip: ""
+}
+
+Choronzon: {
+	DisplayName: Choronzon
+	Tooltip: ""
+}
+
+AtomicWavePotion: {
+	DisplayName: Atomic Wave Potion
+	Tooltip: ""
+}
+
+BoosterPotion: {
+	DisplayName: Booster Potion
+	Tooltip: ""
+}
+
+DensityPotion: {
+	DisplayName: Density Potion
+	Tooltip: ""
+}
+
+LifelinePotion: {
+	DisplayName: Lifeline Potion
+	Tooltip: ""
+}
+
+ManiaPotion: {
+	DisplayName: Mania Potion
+	Tooltip: ""
+}
+
+PointBlankPotion: {
+	DisplayName: Point Blank Potion
+	Tooltip: ""
+}
+
+SafeguardPotion: {
+	DisplayName: Safeguard Potion
+	Tooltip: ""
+}
+
+ZoningPotion: {
+	DisplayName: Zoning Potion
+	Tooltip: ""
+}
+
+RegolithToilet: {
+	DisplayName: Regolith Toilet
+	Tooltip: ""
+}
+
+ArmorPiercingRound: {
+	DisplayName: Armor Piercing Round
+	Tooltip: ""
+}
+
+RailgunBolt: {
+	DisplayName: Railgun Bolt
+	Tooltip: ""
+}
+
+ShredderBullet: {
+	DisplayName: Shredder Bullet
+	Tooltip: ""
+}
+
+IndustrialBeam: {
+	DisplayName: Industrial Beam
+	Tooltip: ""
+}
+
+AutosmelterT1: {
+	DisplayName: Autosmelter T1
+	Tooltip: ""
+}
+
+AutosmelterT2Adamantite: {
+	DisplayName: Autosmelter T2 Adamantite
+	Tooltip: ""
+}
+
+AutosmelterT2Titanium: {
+	DisplayName: Autosmelter T2 Titanium
+	Tooltip: ""
+}
+
+AutosmelterT3: {
+	DisplayName: Autosmelter T3
+	Tooltip: ""
+}
+
+OilBarrel: {
+	DisplayName: Oil Barrel
+	Tooltip: ""
+}
+
+SolarPanelExtraLarge: {
+	DisplayName: Solar Panel Extra Large
+	Tooltip: ""
+}
+
+Dropper: {
+	DisplayName: Dropper
+	Tooltip: ""
+}
+
+ScrapshotBow: {
+	DisplayName: Scrapshot Bow
+	Tooltip: Prone to faulty firing
+}
+
+LegacyDianiteBreastplate: {
+	DisplayName: Legacy Dianite Breastplate
+	Tooltip: ""
+}
+
+LegacyDianiteLeggings: {
+	DisplayName: Legacy Dianite Leggings
+	Tooltip: ""
+}
+
+LegacyDianiteVisor: {
+	DisplayName: Legacy Dianite Visor
+	Tooltip: ""
+}
+
+SeleniteBrick: {
+	DisplayName: Selenite Brick
+	Tooltip: ""
+}
+
+MineralizedProtolith: {
+	DisplayName: Mineralized Protolith
+	Tooltip: ""
+}
+
+HeveaSapling: {
+	DisplayName: Hevea Sapling
+	Tooltip: ""
+}
+
+HeveaWood: {
+	DisplayName: Hevea Wood
+	Tooltip: ""
+}
+
+HeveaHammer: {
+	DisplayName: Hevea Hammer
+	Tooltip: ""
+}
+
+HeveaWall: {
+	DisplayName: Hevea Wall
+	Tooltip: ""
+}
+
+SeleniteBrickWall: {
+	DisplayName: Selenite Brick Wall
+	Tooltip: ""
+}
+
+LightningSpear: {
+	DisplayName: Lightning Spear
+	Tooltip: ""
+}
+
+HeveaSword: {
+	DisplayName: Hevea Sword
+	Tooltip: ""
+}
+
+MetalCutter: {
+	DisplayName: Metal Cutter
+	Tooltip: ""
+}
+
+HeveaBow: {
+	DisplayName: Hevea Bow
+	Tooltip: ""
+}
+
+ProtoRailgun: {
+	DisplayName: Proto Railgun
 	Tooltip: ""
 }

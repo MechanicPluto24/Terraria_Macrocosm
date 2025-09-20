@@ -21,6 +21,7 @@ float4 SphereLighting(float2 uv : TEXCOORD0) : COLOR0
     float3 uv3D = float3(uv2D, sqrt(1 - dot(uv2D, uv2D)));
     float3 normal = normalize(uv3D);
     
+        // TODO(?): Use the SV_POSITION semantic instead of manually calculating the position of each pixel.
     float3 uvWorld = float3(uv * uEntitySize + uEntityPosition, 0);
     float diffuse = max(0.1, dot(normal, normalize(uLightSource - uvWorld)));
     diffuse = pow(diffuse, 2);
@@ -32,7 +33,7 @@ float4 SphereLighting(float2 uv : TEXCOORD0) : COLOR0
 
 technique
 {
-    pass p0
+    pass SphereLighting
     {
         PixelShader = compile ps_3_0 SphereLighting();
     }

@@ -152,3 +152,88 @@ TotalityTag: {
 	DisplayName: Totality Tag
 	Description: Mods.Macrocosm.Buffs.TotalityTag.Description
 }
+
+Stasis: {
+	DisplayName: Stasis
+	Description: Mods.Macrocosm.Buffs.Stasis.Description
+}
+
+MageBoosterDamage1: {
+	DisplayName: Mage Booster Damage1
+	Description: Mods.Macrocosm.Buffs.MageBoosterDamage1.Description
+}
+
+MageBoosterDamage2: {
+	DisplayName: Mage Booster Damage2
+	Description: Mods.Macrocosm.Buffs.MageBoosterDamage2.Description
+}
+
+MageBoosterMana1: {
+	DisplayName: Mage Booster Mana1
+	Description: Mods.Macrocosm.Buffs.MageBoosterMana1.Description
+}
+
+MageBoosterMana2: {
+	DisplayName: Mage Booster Mana2
+	Description: Mods.Macrocosm.Buffs.MageBoosterMana2.Description
+}
+
+MageBoosterRegen1: {
+	DisplayName: Mage Booster Regen1
+	Description: Mods.Macrocosm.Buffs.MageBoosterRegen1.Description
+}
+
+MageBoosterRegen2: {
+	DisplayName: Mage Booster Regen2
+	Description: Mods.Macrocosm.Buffs.MageBoosterRegen2.Description
+}
+
+AntiRadiationPillsBuff: {
+	DisplayName: Anti Radiation Pills Buff
+	Description: Mods.Macrocosm.Buffs.AntiRadiationPillsBuff.Description
+}
+
+AtomicWaveBuff: {
+	DisplayName: Atomic Wave Buff
+	Description: Mods.Macrocosm.Buffs.AtomicWaveBuff.Description
+}
+
+DensityBuff: {
+	DisplayName: Density Buff
+	Description: Mods.Macrocosm.Buffs.DensityBuff.Description
+}
+
+LifelineBuff: {
+	DisplayName: Lifeline Buff
+	Description: Mods.Macrocosm.Buffs.LifelineBuff.Description
+}
+
+MageBoosterPotionBuff: {
+	DisplayName: Mage Booster Potion Buff
+	Description: Mods.Macrocosm.Buffs.MageBoosterPotionBuff.Description
+}
+
+ManiaBuff: {
+	DisplayName: Mania Buff
+	Description: Mods.Macrocosm.Buffs.ManiaBuff.Description
+}
+
+PointBlankBuff: {
+	DisplayName: Point Blank Buff
+	Description: Mods.Macrocosm.Buffs.PointBlankBuff.Description
+}
+
+SafeguardBuff: {
+	DisplayName: Safeguard Buff
+	Description: Mods.Macrocosm.Buffs.SafeguardBuff.Description
+}
+
+SafeguardCooldown: {
+	DisplayName: Safeguard Cooldown
+	Description: Mods.Macrocosm.Buffs.SafeguardCooldown.Description
+}
+
+ZoningBuff: {
+	DisplayName: Zoning Buff
+	Description: Mods.Macrocosm.Buffs.ZoningBuff.Description
+}

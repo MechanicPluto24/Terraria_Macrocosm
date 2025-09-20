@@ -1,106 +1,72 @@
-﻿using Macrocosm.Common.Storage;
-using Macrocosm.Content.Rockets.Customization;
+﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.Storage;
 using Macrocosm.Content.Rockets.Modules;
 using Microsoft.Xna.Framework;
 using System;
+using System.Linq;
 using Terraria.ModLoader.IO;
 
-namespace Macrocosm.Content.Rockets
+namespace Macrocosm.Content.Rockets;
+
+public partial class Rocket : TagSerializable
 {
-    public partial class Rocket : TagSerializable
+    public Rocket Clone() => DeserializeData(SerializeData());
+
+    public static readonly Func<TagCompound, Rocket> DESERIALIZER = DeserializeData;
+
+    public TagCompound SerializeData()
     {
-        public Rocket Clone() => DeserializeData(SerializeData());
+        TagCompound tag = new();
 
-        public static readonly Func<TagCompound, Rocket> DESERIALIZER = DeserializeData;
+        if (Modules != null) tag[nameof(Modules)] = Modules;
 
-        public TagCompound SerializeData()
+        if (Active) tag[nameof(Active)] = true;
+        if (WhoAmI != -1) tag[nameof(WhoAmI)] = WhoAmI;
+        if (CurrentWorld != "") tag[nameof(CurrentWorld)] = CurrentWorld;
+
+        if (State != ActionState.Idle) tag[nameof(State)] = (int)State;
+        if (Position != default) tag[nameof(Position)] = Position;
+
+        if (OrbitTravel) tag[nameof(OrbitTravel)] = true;
+        if (TargetTravelPosition != default) tag[nameof(TargetTravelPosition)] = TargetTravelPosition;
+
+        if (Fuel != 0f) tag[nameof(Fuel)] = Fuel;
+        if (FuelCapacity != DefaultFuelCapacity) tag[nameof(FuelCapacity)] = FuelCapacity;
+
+        if (Nameplate != null) tag[nameof(Nameplate)] = Nameplate;
+        if (Inventory != null) tag[nameof(Inventory)] = Inventory;
+
+        return tag;
+    }
+
+    public static Rocket DeserializeData(TagCompound tag)
+    {
+        RocketModule[] modules = tag.ContainsKey(nameof(Modules))
+            ? tag.GetList<TagCompound>(nameof(Modules)).Select(RocketModule.DeserializeData).ToArray()
+            : RocketModule.DefaultLegacyModules.ToArray();
+
+        Rocket rocket = new(modules)
         {
-            TagCompound tag = new();
+            Active = tag.ContainsKey(nameof(Active)),
+            WhoAmI = tag.TryGet(nameof(WhoAmI), out int whoAmI) ? whoAmI : -1,
+            CurrentWorld = tag.TryGet(nameof(CurrentWorld), out string world) ? world : "",
 
-            if (Active)
-            {
-                tag[nameof(Active)] = true;
-                tag[nameof(WhoAmI)] = WhoAmI;
+            State = tag.TryGet(nameof(State), out int state) ? (ActionState)state : ActionState.Idle,
+            Position = tag.TryGet(nameof(Position), out Vector2 position) ? position : Vector2.Zero,
 
-                tag[nameof(State)] = (int)State;
+            OrbitTravel = tag.ContainsKey(nameof(OrbitTravel)),
+            TargetTravelPosition = tag.TryGet(nameof(TargetTravelPosition), out Vector2 target) ? target : Vector2.Zero,
 
-                tag[nameof(CurrentWorld)] = CurrentWorld;
-                tag[nameof(Position)] = Position;
-                tag[nameof(Fuel)] = Fuel;
-                tag[nameof(FuelCapacity)] = FuelCapacity;
+            Fuel = tag.TryGet(nameof(Fuel), out float fuel) ? fuel : 0f,
+            FuelCapacity = tag.TryGet(nameof(FuelCapacity), out float fuelCapacity) ? fuelCapacity : DefaultFuelCapacity,
+        };
 
-                tag[nameof(Inventory)] = Inventory;
+        if (tag.ContainsKey(nameof(Nameplate)))
+            rocket.Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
 
-                if (TargetTravelPosition != Vector2.Zero)
-                    tag[nameof(TargetTravelPosition)] = TargetTravelPosition;
+        if (tag.ContainsKey(nameof(Inventory)))
+            rocket.Inventory = tag.Get<Inventory>(nameof(Inventory));
 
-                tag[nameof(OrbitTravel)] = OrbitTravel;
-
-                tag[nameof(Nameplate)] = Nameplate;
-
-                foreach (var module in AvailableModules)
-                {
-                    tag[module.Name] = module;
-                    tag[module.Name + "_Type"] = module.FullName;
-                }
-            }
-
-            return tag;
-        }
-
-        public static Rocket DeserializeData(TagCompound tag)
-        {
-            Rocket rocket = new();
-            rocket.Active = tag.ContainsKey(nameof(Active));
-
-            if (rocket.Active)
-            {
-                if (tag.ContainsKey(nameof(WhoAmI)))
-                    rocket.WhoAmI = tag.GetInt(nameof(WhoAmI));
-
-                if (tag.ContainsKey(nameof(CurrentWorld)))
-                    rocket.CurrentWorld = tag.GetString(nameof(CurrentWorld));
-
-                if (tag.ContainsKey(nameof(State)))
-                    rocket.State = (ActionState)tag.GetInt(nameof(State));
-
-                if (tag.ContainsKey(nameof(Position)))
-                    rocket.Position = tag.Get<Vector2>(nameof(Position));
-
-                if (tag.ContainsKey(nameof(Fuel)))
-                    rocket.Fuel = tag.GetFloat(nameof(Fuel));
-
-                if (tag.ContainsKey(nameof(FuelCapacity)))
-                    rocket.FuelCapacity = tag.GetFloat(nameof(FuelCapacity));
-
-                if (tag.ContainsKey(nameof(Inventory)))
-                    rocket.Inventory = tag.Get<Inventory>(nameof(Inventory));
-
-                if (tag.ContainsKey(nameof(TargetTravelPosition)))
-                    rocket.TargetTravelPosition = tag.Get<Vector2>(nameof(TargetTravelPosition));
-
-                if (tag.ContainsKey(nameof(OrbitTravel)))
-                    rocket.OrbitTravel = tag.GetBool(nameof(OrbitTravel));
-
-                if (tag.ContainsKey(nameof(Nameplate)))
-                    rocket.Nameplate = tag.Get<Nameplate>(nameof(Nameplate));
-
-                foreach (string moduleName in ModuleNames)
-                {
-                    // This mess is just so each module can save their own data
-                    if (tag.ContainsKey(moduleName + "_Type"))
-                    {
-                        Type moduleType = Type.GetType(tag.GetString(moduleName + "_Type"));
-                        if (moduleType != null && moduleType.IsSubclassOf(typeof(RocketModule)))
-                        {
-                            var module = RocketModule.DeserializeData(tag.GetCompound(moduleName), rocket);
-                            rocket.AvailableModules.Add(module);
-                        }
-                    }
-                }
-            };
-
-            return rocket;
-        }
+        return rocket;
     }
 }

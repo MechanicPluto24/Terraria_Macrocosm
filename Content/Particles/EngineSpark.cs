@@ -6,55 +6,52 @@ using System;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Particles
+namespace Macrocosm.Content.Particles;
+
+public class EngineSpark : Particle
 {
-    public class EngineSpark : Particle
+    public override string Texture => Macrocosm.EmptyTexPath;
+    public Color ColorOnSpawn { get; set; }
+    public Color ColorOnDespawn { get; set; }
+
+    private float Opacity;
+    private float defScale = 0f;
+
+    public override void SetDefaults()
     {
-        public override string TexturePath => Macrocosm.EmptyTexPath;
-        public override ParticleDrawLayer DrawLayer => ParticleDrawLayer.AfterProjectiles;
+        TimeToLive = 10;
 
-        public Color ColorOnSpawn { get; set; }
-        public Color ColorOnDespawn { get; set; }
+        Opacity = 0f;
+        ColorOnSpawn = default;
+        ColorOnDespawn = default;
+    }
 
-        private float Opacity;
-        private float defScale = 0f;
+    public override void OnSpawn()
+    {
+        defScale = Scale.X;
+    }
 
-        public override void SetDefaults()
-        {
-            TimeToLive = 10;
+    public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
+    {
+        Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle6").Value;
+        Color color = Color.Lerp(ColorOnSpawn, ColorOnDespawn, (float)TimeLeft / TimeToLive);
+        spriteBatch.Draw(glow, Center - screenPosition, null, color.WithOpacity(Opacity), Rotation, glow.Size() / 2, 0.0375f * Scale, SpriteEffects.None, 0f);
+        return false;
+    }
 
-            Opacity = 0f;
-            ColorOnSpawn = default;
-            ColorOnDespawn = default;
-        }
+    public override void AI()
+    {
+        float speed = Velocity.LengthSquared() * 0.4f;
+        Rotation = Velocity.ToRotation();
+        Scale = new Vector2(Math.Clamp(speed, 0, 5), Math.Clamp(speed, 0, 1)) * 0.11f * defScale;
 
-        public override void OnSpawn()
-        {
-            defScale = Scale.X;
-        }
+        Opacity = 1f - Utility.InverseLerp(1f, 0f, (float)TimeLeft / TimeToLive, clamped: true);
 
-        public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
-        {
-            Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "Circle6").Value;
-            Color color = Color.Lerp(ColorOnSpawn, ColorOnDespawn, (float)TimeLeft / TimeToLive);
-            spriteBatch.Draw(glow, Center - screenPosition, null, color.WithOpacity(Opacity), Rotation, glow.Size() / 2, 0.0375f * Scale, SpriteEffects.None, 0f);
-            return false;
-        }
+        Velocity *= 0.71f;
 
-        public override void AI()
-        {
-            float speed = Velocity.LengthSquared() * 0.4f;
-            Rotation = Velocity.ToRotation();
-            Scale = new Vector2(Math.Clamp(speed, 0, 5), Math.Clamp(speed, 0, 1)) * 0.11f * defScale;
+        Lighting.AddLight(Center, new Vector3(1f, 1f, 1f) * Scale.X * 0.02f);
 
-            Opacity = 1f - Utility.InverseLerp(1f, 0f, (float)TimeLeft / TimeToLive, clamped: true);
-
-            Velocity *= 0.71f;
-
-            Lighting.AddLight(Center, new Vector3(1f, 1f, 1f) * Scale.X * 0.02f);
-
-            if (Scale.Y < 0.1f)
-                Kill();
-        }
+        if (Scale.Y < 0.1f)
+            Kill();
     }
 }

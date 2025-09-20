@@ -241,3 +241,16 @@ SmogWisp: {
 	DisplayName: Smog Wisp
 	BestiaryFlavorText: Ethereal predators that drift silently through densely polluted areas, blending seamlessly with the toxic haze until they close in on their prey. They’re thought to exclusively target humans and small critters.
 }
+
+Trashnado: {
+	DisplayName: Trashnado
+	BestiaryFlavorText: A cyclone-like wisp that pulls in discarded junk, only to launch it back at its unsuspecting targets. Underestimating it is a surefire way to get taken out like yesterday’s trash, by yesterday’s trash!
+}
+
+WyrmwoodHead: {
+	DisplayName: Wyrmwood
+	BestiaryFlavorText: A winged serpent seen within areas of extreme pollution. Wherever it flies, it leaves behind a trail of sticky tar, staining the ground in its wake.
+}
+
+WyrmwoodBody.DisplayName: Wyrmwood
+WyrmwoodTail.DisplayName: Wyrmwood

@@ -6,28 +6,27 @@ using Terraria;
 using Terraria.Graphics.Shaders;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Trails
+namespace Macrocosm.Content.Trails;
+
+public class MoonSwordTrail : VertexTrail
 {
-    public class MoonSwordTrail : VertexTrail
+    private static readonly MiscShaderData shader = new MiscShaderData(Utility.VanillaVertexShader, "MagicMissile")
+                    .UseProjectionMatrix(doUse: true)
+                    .UseImage0(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutMask"))
+                    .UseImage1(ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "FadeOutMask"))
+                    .UseImage2("Images/Extra_193");
+
+    public override MiscShaderData TrailShader => shader;
+
+    public override Color TrailColors(float progressOnStrip)
     {
-        private static readonly MiscShaderData shader = new MiscShaderData(Main.VertexPixelShaderRef, "MagicMissile")
-                        .UseProjectionMatrix(doUse: true)
-                        .UseImage0(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                        .UseImage1(ModContent.Request<Texture2D>(Macrocosm.TextureEffectsPath + "FadeOutMask"))
-                        .UseImage2("Images/Extra_193");
+        float lerp = Utility.InverseLerp(0, 0.01f, progressOnStrip);
+        Color result = Color.Lerp(Color.Lerp(Color.Black.WithAlpha(0), new Color(50, 255, 200, 0), lerp), new Color(91, 248, 158, 255), progressOnStrip);
+        return result;
+    }
 
-        public override MiscShaderData TrailShader => shader;
-
-        public override Color TrailColors(float progressOnStrip)
-        {
-            float lerp = Utility.InverseLerp(0, 0.01f, progressOnStrip);
-            Color result = Color.Lerp(Color.Lerp(Color.Black.WithAlpha(0), new Color(50, 255, 200, 0), lerp), new Color(91, 248, 158, 255), progressOnStrip);
-            return result;
-        }
-
-        public override float TrailWidths(float progressOnStrip)
-        {
-            return MathHelper.Lerp(70, 60, progressOnStrip);
-        }
+    public override float TrailWidths(float progressOnStrip)
+    {
+        return MathHelper.Lerp(70, 60, progressOnStrip);
     }
 }

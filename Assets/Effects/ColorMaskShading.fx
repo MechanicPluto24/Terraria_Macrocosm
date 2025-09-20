@@ -1,11 +1,9 @@
-sampler uTexture : register(s0); // The colored texture, typically passed by the SpriteBatch
-sampler uColorMask : register(s1); // The color mask, must be provided by the user 
-sampler uDetailTexture : register(s2);
+#include "common.fxh"
 
-// The max accepted color distance between the 
-// provided color mask and the provided known color keys
-const float MAX_COLOR_DIST = 0.1f;
+sampler textureSampler : register(s0);  // The texture, typically passed by the SpriteBatch
+sampler patternSampler : register(s1);  // The pattern, must be provided by the user 
 
+// Number of actual colors
 int uColorCount;
 
 // The color keys table
@@ -14,18 +12,9 @@ float3 uColorKey[64];
 // The user defined color values, per each existing key
 float4 uColor[64];
 
-// Whether this detail displays on non-customizable areas of the rocket
-bool uSampleBrightness = true;
-
-// Whether this detail displays on non-customizable areas of the rocket
-bool uDetailUseMask = false;
-
-// Returns the grayscale of a RGB color, using the NTSC formula
-float3 RGBToLuminance(float3 color)
-{
-    float3 weights = float3(0.299, 0.587, 0.114);
-    return dot(color, weights);
-}
+// The max accepted color distance between the 
+// provided color mask and the provided known color keys
+float uColorDistance = 0.1f;
 
 float ColorDistance(float3 color1, float3 color2)
 {
@@ -33,42 +22,27 @@ float ColorDistance(float3 color1, float3 color2)
     return length(dist);
 }
 
-float4 ColorMaskShading(float2 texCoord : TEXCOORD) : COLOR0
+float4 ColorMaskShading(float2 texCoord : TEXCOORD, float4 inputColor : COLOR0) : COLOR0
 {
-    // Sample the input texture and the color mask (pattern)
-    float4 color = tex2D(uTexture, texCoord);  
-    float4 mask = tex2D(uColorMask, texCoord);  
-    float4 detail = tex2D(uDetailTexture, texCoord);  
+    float4 texColor = tex2D(textureSampler, texCoord);
+    float4 patternColor = tex2D(patternSampler, texCoord);
     
-    // Get the brightness of the local pixel
-    float3 texelBrightness = uSampleBrightness ? RGBToLuminance(color.rgb) : float3(1,1,1);
+    //float3 brightness = RGBToLuminance(texColor.rgb);
+    float4 outputColor = texColor * inputColor;
     
-    float4 newColor = color;
-    
-    if (detail.a > 0.0f)
-    { 
-        float tranparency = uDetailUseMask ? mask.a : detail.a;
-        newColor = float4(detail.rgb * texelBrightness.rgb, 1.0f);
-        return float4(newColor.rgb, tranparency);
-    }
-    
-    // Ignore pixel if mask is transparent!
-    if (mask.a < 1.0f)
-        return color;
-    
+    if (patternColor.a == 0.0f)
+        return outputColor;
+        
     for (int i = 0; i < uColorCount; i++)
     {
-        if (ColorDistance(mask.rgb, uColorKey[i]) < MAX_COLOR_DIST)
+        if (ColorDistance(patternColor.rgb, uColorKey[i]) < uColorDistance)
         {
-            newColor = uColor[i];  
+            outputColor = float4(lerp(outputColor.rgb, outputColor.rgb * uColor[i].rgb, patternColor.a), texColor.a);
             break;
         }
     }
-        
-    // Blend the original color with the new found, accounting for the ambient brightness 
-    // (will return the original if found unrecognized key in the mask) 
-    color.rgb = lerp(color.rgb, newColor.rgb * texelBrightness, newColor.a);
-    return float4(color.rgb, newColor.a);
+     
+    return outputColor;
 }
 
 technique 
