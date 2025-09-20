@@ -1,5 +1,6 @@
 OilRefinery.DisplayName: Oil Refinery
 OreExcavator.DisplayName: Ore Excavator
+SteamEngine.DisplayName: Steam Engine
 
 BurnerGenerator: {
 	DisplayName: Burner Generator

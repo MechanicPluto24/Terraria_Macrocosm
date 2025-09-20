@@ -2751,6 +2751,11 @@ KeroseneGenerator: {
 	Tooltip: ""
 }
 
+SteamEngine: {
+	DisplayName: Steam Engine
+	Tooltip: ""
+}
+
 Flag: {
 	DisplayName: Flag
 	Tooltip: ""

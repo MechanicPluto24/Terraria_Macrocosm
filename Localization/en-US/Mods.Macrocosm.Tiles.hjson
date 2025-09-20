@@ -97,6 +97,7 @@ IVPole.MapEntry: IV Pole
 InvarBar.MapEntry: Invar Bar
 IndustrialBattery.MapEntry: Industrial Battery
 KeroseneGenerator.MapEntry: Kerosene Generator
+SteamEngine.MapEntry: Steam Engine
 SolarPanelTile.MapEntry: Solar Panel
 Flag.MapEntry: Flag
 ApolloLander.MapEntry: Apollo Lander
