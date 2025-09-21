@@ -2,6 +2,7 @@
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Themes;
+using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Machines.Generators.Fuel;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -97,7 +98,7 @@ public class KeroseneGeneratorUI : MachineUI
         pistons = new();
         for (int i = 0; i < 6; i++)
         {
-            var piston = new UILiquidTankPiston(Content.Liquids.LiquidType.RocketFuel)
+            var piston = new UILiquidTankPiston(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
             {
                 Left = new(42 + i * 66, 0),
                 Top = new(-6, 0.5f),

@@ -97,7 +97,7 @@ public class OilRefineryUI : MachineUI
         };
         backgroundPanel.Append(extractArrowProgressBar);
 
-        inputLiquidTank = new(LiquidType.Oil)
+        inputLiquidTank = new(ModLiquidLib.ModLiquidLib.LiquidType<Oil>())
         {
             Width = new(64, 0),
             Height = new(0, 0.7f),
@@ -106,7 +106,7 @@ public class OilRefineryUI : MachineUI
         };
         backgroundPanel.Append(inputLiquidTank);
 
-        inputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.Oil)}"))
+        inputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{ModContent.GetInstance<Oil>().Name}"))
         {
             HAlign = 0.335f,
             Top = new(0, 0.08f),
@@ -130,7 +130,7 @@ public class OilRefineryUI : MachineUI
         };
         backgroundPanel.Append(refineArrowProgressBar);
 
-        outputLiquidTank = new(LiquidType.RocketFuel)
+        outputLiquidTank = new(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
         {
             Width = new(64, 0),
             Height = new(0, 0.7f),
@@ -139,7 +139,7 @@ public class OilRefineryUI : MachineUI
         };
         backgroundPanel.Append(outputLiquidTank);
 
-        outputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.RocketFuel)}"))
+        outputTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{ModContent.GetInstance<RocketFuel>().Name}"))
         {
             HAlign = 0.68f,
             Top = new(0, 0.08f),

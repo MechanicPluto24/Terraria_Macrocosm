@@ -12,18 +12,17 @@ using Terraria;
 using Macrocosm.Content.Liquids.WaterStyles;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Liquids
-{
-    public class Oil : ModLiquid
-    {
-        public override void SetStaticDefaults()
-        {
-            LiquidFallLength = 3;
-            VisualViscosity = 160;
-            DefaultOpacity = 0.95f;
-            AddMapEntry(Color.Black, CreateMapEntryName());
-        }
+namespace Macrocosm.Content.Liquids;
 
-        public override int ChooseWaterfallStyle(int i, int j) => ModContent.GetInstance<OilFall>().Slot;
+public class Oil : ModLiquid
+{
+    public override void SetStaticDefaults()
+    {
+        LiquidFallLength = 3;
+        VisualViscosity = 160;
+        DefaultOpacity = 0.95f;
+        AddMapEntry(Color.Black, CreateMapEntryName());
     }
+
+    public override int ChooseWaterfallStyle(int i, int j) => ModContent.GetInstance<OilFall>().Slot;
 }

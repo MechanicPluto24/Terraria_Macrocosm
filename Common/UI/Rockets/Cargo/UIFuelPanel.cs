@@ -2,6 +2,7 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -67,7 +68,7 @@ public class UIFuelPanel : UIPanel, IRocketUIDataConsumer, IFixedUpdateable
 
         Append(titleSeparator);
 
-        rocketFuelTank = new(Content.Liquids.LiquidType.RocketFuel)
+        rocketFuelTank = new(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
         {
             Width = new(0, 0.421f),
             Height = new(0, 0.8f),

@@ -42,7 +42,7 @@ public class UICargoFuelPreview : UIPanel, IRocketUIDataConsumer
         };
         Append(title);
 
-        rocketFuelTank = new(LiquidType.RocketFuel)
+        rocketFuelTank = new(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
         {
             Width = new(0, 0.8f),
             Height = new(0, 0.75f),

@@ -5,23 +5,22 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Items.LiquidContainers
-{
-    public class LavaCanister : ModItem
-    {
-        public override void SetStaticDefaults()
-        {
-            Item.ResearchUnlockCount = 100;
-            ItemSets.LiquidContainerData[Type] = new LiquidContainerData(LiquidID.Lava, 20, ModContent.ItemType<Canister>());
-        }
+namespace Macrocosm.Content.Items.LiquidContainers;
 
-        public override void SetDefaults()
-        {
-            Item.width = 22;
-            Item.height = 44;
-            Item.maxStack = 9999;
-            Item.value = 100;
-            Item.rare = ItemRarityID.LightRed;
-        }
+public class LavaCanister : ModItem
+{
+    public override void SetStaticDefaults()
+    {
+        Item.ResearchUnlockCount = 100;
+        ItemSets.LiquidContainerData[Type] = new LiquidContainerData(LiquidID.Lava, 20, ModContent.ItemType<Canister>());
+    }
+
+    public override void SetDefaults()
+    {
+        Item.width = 22;
+        Item.height = 44;
+        Item.maxStack = 9999;
+        Item.value = 100;
+        Item.rare = ItemRarityID.LightRed;
     }
 }

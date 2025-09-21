@@ -66,7 +66,7 @@ public class PumpjackUI : MachineUI
         };
         backgroundPanel.Append(fillArrowProgressBar);
 
-        oilTank = new(LiquidType.Oil)
+        oilTank = new(ModLiquidLib.ModLiquidLib.LiquidType<Oil>())
         {
             Width = new(64, 0),
             Height = new(0, 0.7f),
@@ -75,7 +75,7 @@ public class PumpjackUI : MachineUI
         };
         backgroundPanel.Append(oilTank);
 
-        oilTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{nameof(LiquidType.Oil)}"))
+        oilTankLiquidName = new(Language.GetTextValue($"Mods.Macrocosm.Liquids.{ModContent.GetInstance<Oil>().Name}"))
         {
             HAlign = 0.28f,
             Top = new(0, 0.08f),

@@ -95,7 +95,7 @@ public class PumpjackTE : ConsumerTE
         if (OutputSlot.stack > OutputSlot.maxStack)
             return;
 
-        int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.Oil, ContainerSlot.type);
+        int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, ModLiquidLib.ModLiquidLib.LiquidType<Liquids.Oil>(), ContainerSlot.type);
         if (fillType <= 0)
             return;
 

@@ -13,18 +13,18 @@ public class RocketFuelCanister : ModItem
     {
         Item.ResearchUnlockCount = 100;
 
-            ItemSets.LiquidContainerData[Type] = new LiquidContainerData(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(), 20, ModContent.ItemType<Canister>());
-            ItemSets.FuelData[Type] = new FuelData(FuelPotency.VeryHigh, 240);
-        }
-
-        public override void SetDefaults()
-        {
-            Item.width = 22;
-            Item.height = 44;
-            Item.maxStack = 9999;
-            Item.value = 100;
-            Item.rare = ItemRarityID.LightRed;
-            
-        }
+        ItemSets.LiquidContainerData[Type] = new LiquidContainerData(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(), 20, ModContent.ItemType<Canister>());
+        ItemSets.FuelData[Type] = new FuelData(FuelPotency.VeryHigh, 240);
     }
+
+    public override void SetDefaults()
+    {
+        Item.width = 22;
+        Item.height = 44;
+        Item.maxStack = 9999;
+        Item.value = 100;
+        Item.rare = ItemRarityID.LightRed;
+
+    }
+
 }

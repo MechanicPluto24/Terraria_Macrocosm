@@ -146,7 +146,7 @@ public class OilRefineryTE : ConsumerTE
             {
                 fillTimer -= FillRate;
 
-                int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidType.RocketFuel, ContainerSlot.type);
+                int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(), ContainerSlot.type);
                 if (fillType > 0)
                 {
                     Item filledItem = new(fillType);

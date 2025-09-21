@@ -195,6 +195,7 @@ public static partial class Utility
             if ((position - player.Center).Length() < radius && player.dontHurtCritters)
                 return false;
         }
+        return true;
     }
 
     public static Rectangle GetSwungItemHitbox(this Player player)

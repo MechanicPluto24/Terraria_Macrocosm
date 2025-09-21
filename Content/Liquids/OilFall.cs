@@ -1,9 +1,8 @@
 using ModLiquidLib.ModLoader;
 using Terraria.ModLoader;
 
-namespace Macrocosm.Content.Liquids
+namespace Macrocosm.Content.Liquids;
+
+public class OilFall : ModLiquidFall
 {
-    public class OilFall : ModLiquidFall
-    {
-    }
 }

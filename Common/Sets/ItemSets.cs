@@ -163,12 +163,12 @@ public partial class ItemSets
 
     public static LiquidContainerData[] LiquidContainerData { get; } = ItemID.Sets.Factory.CreateCustomSet(defaultState: new LiquidContainerData(),
         ItemID.EmptyBucket, DataStructures.LiquidContainerData.CreateEmpty(10),
-        ItemID.WaterBucket, new LiquidContainerData(LiquidType.Water, 10, ItemID.EmptyBucket),
-        ItemID.LavaBucket, new LiquidContainerData(LiquidType.Lava, 10, ItemID.EmptyBucket),
-        ItemID.HoneyBucket, new LiquidContainerData(LiquidType.Honey, 10, ItemID.EmptyBucket),
-        ItemID.BottomlessBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Water),
-        ItemID.BottomlessLavaBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Lava),
-        ItemID.BottomlessHoneyBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Honey),
-        ItemID.BottomlessShimmerBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidType.Shimmer)
+        ItemID.WaterBucket, new LiquidContainerData(LiquidID.Water, 10, ItemID.EmptyBucket),
+        ItemID.LavaBucket, new LiquidContainerData(LiquidID.Lava, 10, ItemID.EmptyBucket),
+        ItemID.HoneyBucket, new LiquidContainerData(LiquidID.Honey, 10, ItemID.EmptyBucket),
+        ItemID.BottomlessBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidID.Water),
+        ItemID.BottomlessLavaBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidID.Lava),
+        ItemID.BottomlessHoneyBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidID.Honey),
+        ItemID.BottomlessShimmerBucket, DataStructures.LiquidContainerData.CreateInfinite(LiquidID.Shimmer)
     );
 }

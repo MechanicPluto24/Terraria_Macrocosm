@@ -6,7 +6,6 @@ using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using ModLiquidLib;
 using ModLiquidLib.ModLoader;
 using ReLogic.Content;
 using System;

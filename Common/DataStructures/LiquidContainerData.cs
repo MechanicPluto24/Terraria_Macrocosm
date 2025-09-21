@@ -1,29 +1,29 @@
 ﻿using Macrocosm.Content.Liquids;
 
-namespace Macrocosm.Common.DataStructures
+namespace Macrocosm.Common.DataStructures;
+
+public readonly struct LiquidContainerData
 {
-    public readonly struct LiquidContainerData
+    public int LiquidType { get; init; }
+    public float Capacity { get; init; }
+    public int EmptyContainerType { get; init; }
+    public bool Empty { get; init; }
+
+    public LiquidContainerData()
     {
-        public int LiquidType { get; init; }
-        public float Capacity { get; init; }
-        public int EmptyContainerType { get; init; }
-        public bool Empty { get; init; }
+        LiquidType = 0;
+        Capacity = 0;
+        EmptyContainerType = -1;
+        Empty = false;
+    }
 
-        public LiquidContainerData()
-        {
-            LiquidType = 0;
-            Capacity = 0;
-            EmptyContainerType = -1;
-            Empty = false;
-        }
-
-        public LiquidContainerData(int liquidType, float capacity, int emptyContainerType) 
-        {
-            LiquidType = liquidType;
-            Capacity = capacity;
-            EmptyContainerType = emptyContainerType;
-            Empty = false;
-        }
+    public LiquidContainerData(int liquidType, float capacity, int emptyContainerType)
+    {
+        LiquidType = liquidType;
+        Capacity = capacity;
+        EmptyContainerType = emptyContainerType;
+        Empty = false;
+    }
 
     public static LiquidContainerData CreateEmpty(float capacity)
     {
@@ -34,14 +34,14 @@ namespace Macrocosm.Common.DataStructures
         };
     }
 
-        public static LiquidContainerData CreateInfinite(int liquidType)
+    public static LiquidContainerData CreateInfinite(int liquidType)
+    {
+        return new()
         {
-            return new()
-            {
-                LiquidType = liquidType,
-                Capacity = int.MaxValue
-            };
-        }
+            LiquidType = liquidType,
+            Capacity = int.MaxValue
+        };
+    }
 
     public bool Infinite => Capacity == int.MaxValue;
     public bool Valid => Capacity > 0;
@@ -55,11 +55,11 @@ namespace Macrocosm.Common.DataStructures
         return filledTypeData.EmptyContainerType;
     }
 
-        public static int GetFillType(LiquidContainerData[] data, int liquidType, int emptyType)
-        {
-            LiquidContainerData emptyTypeData = data[emptyType];
-            if (!emptyTypeData.Valid || !emptyTypeData.Empty)
-                return 0;
+    public static int GetFillType(LiquidContainerData[] data, int liquidType, int emptyType)
+    {
+        LiquidContainerData emptyTypeData = data[emptyType];
+        if (!emptyTypeData.Valid || !emptyTypeData.Empty)
+            return 0;
 
         for (int type = 0; type < data.Length; type++)
         {
@@ -72,5 +72,4 @@ namespace Macrocosm.Common.DataStructures
 
         return 0;
     }
-
 }

@@ -495,7 +495,7 @@ public class CraterDemon : ModNPC
         }
     }
 
-    public override void BossLoot(ref string name, ref int potionType)
+    public override void BossLoot(ref int potionType)
     {
         potionType = ItemID.SuperHealingPotion;
     }

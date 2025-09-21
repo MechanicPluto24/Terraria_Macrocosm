@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,11 +12,7 @@ using Terraria.ModLoader;
 using System.Collections.Generic;
 using Terraria.Graphics;
 using Terraria.Graphics.Shaders;
-using ReLogic.Content;
-using ReLogic.Utilities;
 using Macrocosm.Common.DataStructures;
-using Terraria.ModLoader;
-using Terraria.GameContent;
 using System;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Magic;
