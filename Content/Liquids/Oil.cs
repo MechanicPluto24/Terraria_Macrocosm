@@ -1,15 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib.ID;
 using ModLiquidLib.ModLoader;
-using ModLiquidLib.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria.Graphics;
-using Terraria;
-using Macrocosm.Content.Liquids.WaterStyles;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Liquids;
@@ -20,7 +12,15 @@ public class Oil : ModLiquid
     {
         LiquidFallLength = 3;
         VisualViscosity = 160;
-        DefaultOpacity = 0.95f;
+
+        DefaultOpacity = 0.85f;
+        SlopeOpacity = 1f;
+        LiquidfallOpacityMultiplier = 0.5f;
+
+        WaterRippleMultiplier = 0.3f;
+        FallDelay = 2;
+        SplashSound = SoundID.SplashWeak;
+
         AddMapEntry(Color.Black, CreateMapEntryName());
     }
 

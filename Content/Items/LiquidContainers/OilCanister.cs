@@ -1,6 +1,7 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Liquids;
+using ModLiquidLib.ModLoader;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -12,7 +13,7 @@ public class OilCanister : ModItem
     public override void SetStaticDefaults()
     {
         Item.ResearchUnlockCount = 1;
-        ItemSets.LiquidContainerData[Type] = new LiquidContainerData(ModLiquidLib.ModLiquidLib.LiquidType<Oil>(), 20, ModContent.ItemType<Canister>());
+        ItemSets.LiquidContainerData[Type] = new LiquidContainerData(LiquidLoader.LiquidType<Oil>(), 20, ModContent.ItemType<Canister>());
     }
 
     public override void SetDefaults()

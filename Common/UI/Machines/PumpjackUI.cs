@@ -6,6 +6,7 @@ using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Machines.Consumers.Oil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib.ModLoader;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -66,7 +67,7 @@ public class PumpjackUI : MachineUI
         };
         backgroundPanel.Append(fillArrowProgressBar);
 
-        oilTank = new(ModLiquidLib.ModLiquidLib.LiquidType<Oil>())
+        oilTank = new(LiquidLoader.LiquidType<Oil>())
         {
             Width = new(64, 0),
             Height = new(0, 0.7f),

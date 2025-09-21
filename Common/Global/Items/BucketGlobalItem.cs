@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Liquids;
+using ModLiquidLib.ModLoader;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -21,13 +22,13 @@ public class BucketGlobalItem : GlobalItem
         if (tile.LiquidAmount == 0 || tile.LiquidType < LiquidID.Count)
             return null;
 
-        if (tile.LiquidType == ModLiquidLib.ModLiquidLib.LiquidType<Oil>())
+        if (tile.LiquidType == LiquidLoader.LiquidType<Oil>())
         {
             Utility.RemoveLiquid<Oil>(Player.tileTargetX, Player.tileTargetY);
             Utility.TransformItemAndPutInInventory(player, item, ModContent.ItemType<OilBucket>());
             return true;
         }
-        else if (tile.LiquidType == ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
+        else if (tile.LiquidType == LiquidLoader.LiquidType<RocketFuel>())
         {
             Utility.RemoveLiquid<RocketFuel>(Player.tileTargetX, Player.tileTargetY);
             Utility.TransformItemAndPutInInventory(player, item, ModContent.ItemType<RocketFuelBucket>());

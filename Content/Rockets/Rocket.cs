@@ -21,6 +21,7 @@ using Macrocosm.Content.Sounds;
 using Macrocosm.Content.WorldGeneration.Structures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib.ModLoader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -868,7 +869,7 @@ public partial class Rocket : IInventoryOwner
 
             Inventory.SetReserved(
                 SpecialInventorySlot_FuelTank,
-                (item) => ItemSets.LiquidContainerData[item.type].Valid && ItemSets.LiquidContainerData[item.type].LiquidType == ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(),
+                (item) => ItemSets.LiquidContainerData[item.type].Valid && ItemSets.LiquidContainerData[item.type].LiquidType == LiquidLoader.LiquidType<RocketFuel>(),
                 Lang.GetItemName(ModContent.ItemType<Canister>()),
                 ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
             );

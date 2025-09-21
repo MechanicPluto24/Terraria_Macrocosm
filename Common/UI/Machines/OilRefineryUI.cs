@@ -6,6 +6,7 @@ using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Machines.Consumers.Oil;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib.ModLoader;
 using ReLogic.Content;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -97,7 +98,7 @@ public class OilRefineryUI : MachineUI
         };
         backgroundPanel.Append(extractArrowProgressBar);
 
-        inputLiquidTank = new(ModLiquidLib.ModLiquidLib.LiquidType<Oil>())
+        inputLiquidTank = new(LiquidLoader.LiquidType<Oil>())
         {
             Width = new(64, 0),
             Height = new(0, 0.7f),
@@ -130,7 +131,7 @@ public class OilRefineryUI : MachineUI
         };
         backgroundPanel.Append(refineArrowProgressBar);
 
-        outputLiquidTank = new(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
+        outputLiquidTank = new(LiquidLoader.LiquidType<RocketFuel>())
         {
             Width = new(64, 0),
             Height = new(0, 0.7f),

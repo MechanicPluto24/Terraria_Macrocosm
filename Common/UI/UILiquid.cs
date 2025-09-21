@@ -63,7 +63,7 @@ public class UILiquid : UIElement
 
             if (Bubbles && bubbles.Count < (float)(20 * LiquidLevel))
             {
-                if (liquidType == ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
+                if (liquidType == LiquidLoader.LiquidType<RocketFuel>())
                 {
                     Particle.Create<RocketFuelBubble>((p) =>
                     {

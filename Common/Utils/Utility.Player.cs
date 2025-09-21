@@ -79,50 +79,58 @@ public static partial class Utility
     public static Tile TargetTile() => Main.tile[Player.tileTargetX, Player.tileTargetY];
     public static Tile TargetTile(this Player _) => Main.tile[Player.tileTargetX, Player.tileTargetY];
 
-        public static bool ItemInTileReach(this Player player, Item item, bool checkNoBuilding = true)
+    public static bool ItemInTileReach(this Player player, Item item, bool checkNoBuilding = true)
+    {
+        if(player.noBuilding && checkNoBuilding)
         {
-            return player.position.X / 16f - Player.tileRangeX - item.tileBoost - player.blockRange <= Player.tileTargetX
-                    && (player.position.X + player.width) / 16f + Player.tileRangeX + item.tileBoost - 1f + player.blockRange >= Player.tileTargetX
-                    && player.position.Y / 16f - Player.tileRangeY - item.tileBoost - player.blockRange <= Player.tileTargetY
-                    && (player.position.Y + player.height) / 16f + Player.tileRangeY + item.tileBoost - 2f + player.blockRange >= Player.tileTargetY
-                    && !(checkNoBuilding && player.noBuilding);
+            return false;
+        }   
+
+        if (!(player.position.X / 16f - Player.tileRangeX - item.tileBoost <= Player.tileTargetX) ||
+            !((player.position.X + player.width) / 16f + Player.tileRangeX + item.tileBoost - 1f >= Player.tileTargetX) ||
+            !(player.position.Y / 16f - Player.tileRangeY - item.tileBoost <= Player.tileTargetY) ||
+            !((player.position.Y + player.height) / 16f + Player.tileRangeY + item.tileBoost - 2f >= Player.tileTargetY))
+        {
+            return false;
         }
+        return true;
+    }
 
-        public static bool PlaceLiquid<T>(int x, int y, byte amount = 255) where T : ModLiquid => PlaceLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>(), amount);
-        public static bool PlaceLiquid(int x, int y, int type, byte amount = 255)
-        {
-            if (!WorldGen.InWorld(x, y))
-                return false;
+    public static bool PlaceLiquid<T>(int x, int y, byte amount = 255) where T : ModLiquid => PlaceLiquid(x, y, LiquidLoader.LiquidType<T>(), amount);
+    public static bool PlaceLiquid(int x, int y, int type, byte amount = 255)
+    {
+        if (!WorldGen.InWorld(x, y))
+            return false;
 
-            Tile tile = Main.tile[x, y];
-            ushort tileType = tile.TileType;
-            if (tile.LiquidAmount >= 200 || tile.HasUnactuatedTile && Main.tileSolid[tileType] && !Main.tileSolidTop[tileType] && tileType != TileID.Grate)
-                return false;
+        Tile tile = Main.tile[x, y];
+        ushort tileType = tile.TileType;
+        if (tile.LiquidAmount >= 200 || tile.HasUnactuatedTile && Main.tileSolid[tileType] && !Main.tileSolidTop[tileType] && tileType != TileID.Grate)
+            return false;
 
-            if (tile.LiquidAmount != 0 && type != tile.LiquidType)
-                return false;
+        if (tile.LiquidAmount != 0 && type != tile.LiquidType)
+            return false;
 
-            tile.LiquidType = type;
-            if (amount + tile.LiquidAmount > 255)
-                amount = (byte)(255 - tile.LiquidAmount);
+        tile.LiquidType = type;
+        if (amount + tile.LiquidAmount > 255)
+            amount = (byte)(255 - tile.LiquidAmount);
 
-            tile.LiquidAmount += amount;
-            WorldGen.SquareTileFrame(x, y);
-            if (Main.netMode != NetmodeID.SinglePlayer)
-                NetMessage.sendWater(x, y);
+        tile.LiquidAmount += amount;
+        WorldGen.SquareTileFrame(x, y);
+        if (Main.netMode != NetmodeID.SinglePlayer)
+            NetMessage.sendWater(x, y);
 
-            return true;
-        }
+        return true;
+    }
 
-        public static bool RemoveLiquid<T>(int x, int y, bool sponge = false) where T : ModLiquid => RemoveLiquid(x, y, ModLiquidLib.ModLiquidLib.LiquidType<T>(), sponge);
-        public static bool RemoveLiquid(int x, int y, int type, bool sponge = false)
-        {
-            Tile tile = Main.tile[x, y];
-            int liquidType = tile.LiquidType;
-            int liquidAmount = tile.LiquidAmount;
+    public static bool RemoveLiquid<T>(int x, int y, bool sponge = false) where T : ModLiquid => RemoveLiquid(x, y, LiquidLoader.LiquidType<T>(), sponge);
+    public static bool RemoveLiquid(int x, int y, int type, bool sponge = false)
+    {
+        Tile tile = Main.tile[x, y];
+        int liquidType = tile.LiquidType;
+        int liquidAmount = tile.LiquidAmount;
 
-            if (type != liquidType)
-                return false;
+        if (type != liquidType)
+            return false;
 
         int nearbyAmount = 0;
         for (int i = x - 1; i <= x + 1; i++)
@@ -134,8 +142,8 @@ public static partial class Utility
             }
         }
 
-            if (tile.LiquidAmount <= 0 || (nearbyAmount <= 100 && !sponge))
-                return false;
+        if (tile.LiquidAmount <= 0 || (nearbyAmount <= 100 && !sponge))
+            return false;
 
         SoundEngine.PlaySound(SoundID.Splash, new Vector2(x, y) * 16f);
 
@@ -166,27 +174,27 @@ public static partial class Utility
                         t.LiquidAmount -= (byte)amt;
                         t.LiquidType = liquidType;
 
-                            WorldGen.SquareTileFrame(k, l, resetFrame: false);
-                            if (Main.netMode == NetmodeID.MultiplayerClient)
-                                NetMessage.sendWater(k, l);
-                            else
-                                Liquid.AddWater(k, l);
-                        }
+                        WorldGen.SquareTileFrame(k, l, resetFrame: false);
+                        if (Main.netMode == NetmodeID.MultiplayerClient)
+                            NetMessage.sendWater(k, l);
+                        else
+                            Liquid.AddWater(k, l);
                     }
                 }
             }
-
-            return true;
         }
+
+        return true;
+    }
 
     public static void TransformItemAndPutInInventory(this Player player, Item selecteditem, int targetType)
     {
         if (player.whoAmI != Main.myPlayer)
             return;
 
-            selecteditem.DecreaseStack();
-            player.PutItemInInventoryFromItemUsage(targetType, player.selectedItem);
-        }
+        selecteditem.DecreaseStack();
+        player.PutItemInInventoryFromItemUsage(targetType, player.selectedItem);
+    }
 
     public static bool CanHurtCritterAroundPosition(Vector2 position, float radius)
     {

@@ -1,6 +1,7 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Liquids;
+using ModLiquidLib.ModLoader;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,7 +14,7 @@ public class RocketFuelCanister : ModItem
     {
         Item.ResearchUnlockCount = 100;
 
-        ItemSets.LiquidContainerData[Type] = new LiquidContainerData(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(), 20, ModContent.ItemType<Canister>());
+        ItemSets.LiquidContainerData[Type] = new LiquidContainerData(LiquidLoader.LiquidType<RocketFuel>(), 20, ModContent.ItemType<Canister>());
         ItemSets.FuelData[Type] = new FuelData(FuelPotency.VeryHigh, 240);
     }
 

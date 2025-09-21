@@ -6,6 +6,7 @@ using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib.ModLoader;
 using ReLogic.Content;
 using System;
 using Terraria;
@@ -68,7 +69,7 @@ public class UIFuelPanel : UIPanel, IRocketUIDataConsumer, IFixedUpdateable
 
         Append(titleSeparator);
 
-        rocketFuelTank = new(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
+        rocketFuelTank = new(LiquidLoader.LiquidType<RocketFuel>())
         {
             Width = new(0, 0.421f),
             Height = new(0, 0.8f),

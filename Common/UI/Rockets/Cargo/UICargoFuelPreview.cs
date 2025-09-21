@@ -5,6 +5,7 @@ using Macrocosm.Common.UI.Themes;
 using Macrocosm.Content.Liquids;
 using Macrocosm.Content.Rockets;
 using Microsoft.Xna.Framework;
+using ModLiquidLib.ModLoader;
 using Terraria;
 using Terraria.GameContent.UI.Elements;
 using Terraria.Localization;
@@ -42,7 +43,7 @@ public class UICargoFuelPreview : UIPanel, IRocketUIDataConsumer
         };
         Append(title);
 
-        rocketFuelTank = new(ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>())
+        rocketFuelTank = new(LiquidLoader.LiquidType<RocketFuel>())
         {
             Width = new(0, 0.8f),
             Height = new(0, 0.75f),

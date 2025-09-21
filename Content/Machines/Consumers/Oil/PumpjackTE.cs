@@ -8,6 +8,7 @@ using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib.ModLoader;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
@@ -95,7 +96,7 @@ public class PumpjackTE : ConsumerTE
         if (OutputSlot.stack > OutputSlot.maxStack)
             return;
 
-        int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, ModLiquidLib.ModLiquidLib.LiquidType<Liquids.Oil>(), ContainerSlot.type);
+        int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidLoader.LiquidType<Liquids.Oil>(), ContainerSlot.type);
         if (fillType <= 0)
             return;
 

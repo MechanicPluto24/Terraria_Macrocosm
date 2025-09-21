@@ -8,6 +8,7 @@ using Macrocosm.Content.Items.LiquidContainers;
 using Macrocosm.Content.Liquids;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ModLiquidLib.ModLoader;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
@@ -146,7 +147,7 @@ public class OilRefineryTE : ConsumerTE
             {
                 fillTimer -= FillRate;
 
-                int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, ModLiquidLib.ModLiquidLib.LiquidType<RocketFuel>(), ContainerSlot.type);
+                int fillType = LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidLoader.LiquidType<RocketFuel>(), ContainerSlot.type);
                 if (fillType > 0)
                 {
                     Item filledItem = new(fillType);
