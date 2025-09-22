@@ -202,7 +202,7 @@ public class BurnerGenerator : MachineTile
         if (tileOffsetX is 0 or 1 && tileOffsetY is 2)
         {
             if (IsPoweredOnFrame(i, j))
-                tile.GetEmmitedLight(new Color(191, 128, 0), applyPaint: true, out r, out g, out b);
+                tile.GetEmmitedLight(new Color(191, 128, 0), applyPaint: false, out r, out g, out b);
         }
     }
 }

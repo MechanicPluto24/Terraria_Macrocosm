@@ -1,9 +1,11 @@
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Systems.UI;
 using Macrocosm.Common.UI.Machines;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -19,6 +21,8 @@ public class AutosmelterT2 : MachineTile
     public override short Width => 4;
     public override short Height => 4;
     public override MachineTE MachineTE => ModContent.GetInstance<AutosmelterT2TE>();
+
+    private static Asset<Texture2D> glowmask;
 
     public override void SetStaticDefaults()
     {
@@ -106,6 +110,25 @@ public class AutosmelterT2 : MachineTile
             frameCounter = 0;
             if (++frame >= frameCount)
                 frame = 0;
+        }
+    }
+
+    public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
+    {
+        glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
+        TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: false, Color.White);
+    }
+
+    public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
+    {
+        Tile tile = Main.tile[i, j];
+        int tileOffsetX = tile.TileFrameX % (Width * 18) / 18;
+        int tileOffsetY = tile.TileFrameY % (Height * 18) / 18;
+
+        if (tileOffsetX is 1 or 2 && tileOffsetY is 3)
+        {
+            if (IsPoweredOnFrame(i, j))
+                tile.GetEmmitedLight(new Color(255, 226, 128), applyPaint: false, out r, out g, out b);
         }
     }
 }

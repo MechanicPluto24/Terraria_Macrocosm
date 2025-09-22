@@ -24,6 +24,7 @@ public abstract class AutocrafterTEBase : ConsumerTE
     public sealed override int InventorySize => OutputSlots + InputPoolSize;
     public Dictionary<int, List<int>> InputSlotAllocation { get; private set; } = new();
 
+    protected virtual bool AllowHandCrafting => false;
     protected virtual int[] AvailableCraftingStations => [];
     public Recipe[] SelectedRecipes { get; private set; }
 
@@ -41,8 +42,9 @@ public abstract class AutocrafterTEBase : ConsumerTE
 
     public virtual bool RecipeAllowed(Recipe recipe)
     {
-        if (recipe.requiredTile.All(tile => tile == -1))
+        if (AllowHandCrafting && recipe.requiredTile.All(tile => tile == -1))
             return true;
+
         return recipe.requiredTile.Where(tile => tile != -1).All(tile => AvailableCraftingStations.Contains(tile));
     }
 
