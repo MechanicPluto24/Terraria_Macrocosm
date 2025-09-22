@@ -535,13 +535,13 @@ public partial class ConveyorSystem
         itemIndex = -1;
 
         AttachmentOrientation orientation = GetAttachmentOrientation(pos);
-        int left = 3, right = 3, up = 3, down = 3;
+        int left = 1, right = 1, up = 1, down = 1;
         switch (orientation)
         {
-            case AttachmentOrientation.Left: left = 5; break;
-            case AttachmentOrientation.Right: right = 5; break;
-            case AttachmentOrientation.Up: up = 5; break;
-            case AttachmentOrientation.Down: down = 5; break;
+            case AttachmentOrientation.Left: left = 3; break;
+            case AttachmentOrientation.Right: right = 3; break;
+            case AttachmentOrientation.Up: up = 3; break;
+            case AttachmentOrientation.Down: down = 3; break;
         }
 
         Rectangle area = new ((pos.X - left) * 16, (pos.Y - up) * 16, 16 * (1 + left + right), 16 * (1 + up + down));
