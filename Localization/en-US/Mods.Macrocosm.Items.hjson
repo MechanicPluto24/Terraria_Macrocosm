@@ -3470,3 +3470,8 @@ Hopper: {
 	DisplayName: Hopper
 	Tooltip: ""
 }
+
+SteelPipe: {
+	DisplayName: Steel Pipe
+	Tooltip: ""
+}
