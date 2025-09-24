@@ -405,7 +405,7 @@ public class MoonSky : CustomSky, ILoadable
         bodyRotation =
             Matrix.CreateRotationX(MathHelper.PiOver2) *
             Matrix.CreateRotationY(MathHelper.Pi) *
-            Matrix.CreateRotationZ(Main.GlobalTimeWrappedHourly * .2f);
+            Matrix.CreateRotationZ(Main.GlobalTimeWrappedHourly * .01f);
 
         lightAtmosphereColor = Color.Blue.ToVector4();
         shadowAtmosphereColor = Color.DarkRed.ToVector4() * .6f;

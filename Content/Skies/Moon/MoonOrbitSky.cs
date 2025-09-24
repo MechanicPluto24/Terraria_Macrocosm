@@ -227,7 +227,7 @@ public class MoonOrbitSky : CustomSky, ILoadable
             depthFactor: depthFactor,
             rotation: new Vector3(
                 x: 0,
-                y: (float)Main.timeForVisualEffects / 6000 % MathHelper.TwoPi, // axial rotation
+                y: (float)Main.timeForVisualEffects / 15000 % MathHelper.TwoPi, // axial rotation
                 z: 0), // axial tilt
             projectionType: Mesh.SphereProjectionType.Mercator
         );
