@@ -4,6 +4,7 @@ using Macrocosm.Content.WorldGeneration.Structures;
 using Macrocosm.Content.WorldGeneration.Structures.Orbit.Moon;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Terraria;
 using Terraria.DataStructures;
@@ -57,95 +58,9 @@ public partial class MoonOrbitSubworld
     }
 
     [Task]
-    private void AsteroidTask(GenerationProgress progress)
+    private void MainTask(GenerationProgress progress)
     {
-        //I really do not care if they overlap eachother. BUT they do need to protect the area they spawn in -- Clyder
-        for (int x = 50; x < (int)Main.maxTilesX - 50; x++)
-        {
-            for (int y = 50; y < Main.maxTilesY - 50; y++)
-            {
-                // Don't spawn asteroids too close to the spawn area
-                if (Math.Abs(x - Main.spawnTileX) < gen_spawnExclusionRadius)
-                    continue;
-
-
-                if (WorldGen.genRand.NextBool(60000))
-                {
-                    //int wallType = VariantWall.WallType<AstrolithWall>(WallSafetyType.Natural);
-                    int wallType = 0;
-                    BlobTileRunner(x, y, (ushort)TileType<Astrolith>(), 0..8, 1..4, 4..6, 1f, 4, wallType: (ushort)wallType);
-
-                    //very small chance to create a flesh meteor
-                    if (WorldGen.genRand.NextBool(20))
-                    {
-                        ForEachInCircle(
-                            x,
-                            y,
-                            3,
-                            (i1, j1) =>
-                            {
-                                if (!WorldGen.InWorld(i1, j1))
-                                    return;
-
-                                float iDistance = Math.Abs(x - i1) / (3 * 0.5f);
-                                float jDistance = Math.Abs(y - j1) / (3 * 0.5f);
-                                if (WorldGen.genRand.NextFloat() < iDistance * 0.2f || WorldGen.genRand.NextFloat() < jDistance * 0.2f)
-                                    return;
-
-                                if (Main.tile[i1, j1].HasTile)
-                                    FastPlaceTile(i1, j1, TileID.FleshBlock);
-                            }
-                        );
-                    }
-
-                    gen_StructureMap.AddProtectedStructure(new Rectangle(x - 10, y - 10, x + 10, y + 10), padding: 1);
-                }
-            }
-        }
-    }
-
-    [Task]
-    private void OreTask(GenerationProgress progress)
-    {
-        GenerateOre(TileType<Tiles.Ores.ArtemiteOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
-        GenerateOre(TileType<Tiles.Ores.SeleniteOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
-        GenerateOre(TileType<Tiles.Ores.DianiteOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
-        GenerateOre(TileType<Tiles.Ores.ChandriumOre>(), 0.005, WorldGen.genRand.Next(1, 4), WorldGen.genRand.Next(1, 4), TileType<Astrolith>());
-    }
-
-    [Task(weight: 12.0)]
-    private void SmoothTask(GenerationProgress progress)
-    {
-        progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothTask");
-        SmoothWorld(progress);
-    }
-
-    [Task]
-    private void WallCleanupTask(GenerationProgress progress)
-    {
-        for (int x = 1; x < Main.maxTilesX; x++)
-        {
-            for (int y = 1; y < Main.maxTilesY; y++)
-            {
-                Tile tile = Main.tile[x, y];
-
-                if (!tile.HasTile || tile.BlockType != BlockType.Solid)
-                {
-                    //if (tile.WallType == VariantWall.WallType<AstrolithWall>())
-                    //    tile.WallType = 0;
-                }
-
-            }
-        }
-    }
-
-    [Task]
-    private void SpaceStationTask(GenerationProgress progress)
-    {
-        int x, y;
-        x = (int)(Main.maxTilesX / 2);
-        y = (int)(Main.maxTilesY / 2);
-        Structure.Get<BaseSpaceStationModule>().Place(new(x, y), null);
+        BaseOrbitSubworld.CommonGen(progress,gen_StructureMap,new List<ushort>{(ushort)TileType<Tiles.Ores.ArtemiteOre>(), (ushort)TileType<Tiles.Ores.SeleniteOre>(),(ushort)TileType<Tiles.Ores.DianiteOre>(),(ushort)TileType<Tiles.Ores.ChandriumOre>()},FleshMeteors:true);
     }
 
     [Task]
