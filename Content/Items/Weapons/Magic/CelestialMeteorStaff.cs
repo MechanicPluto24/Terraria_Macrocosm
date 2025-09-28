@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Common.Sets;
 
 namespace Macrocosm.Content.Items.Weapons.Magic;
 
@@ -14,7 +15,7 @@ public class CelestialMeteorStaff : ModItem
     public override void SetStaticDefaults()
     {
         Item.staff[Type] = true;
-
+        ItemSets.UnobtainableItem[Type] = true;//For now i don't know if this is making it into the update.
         // These just add all the element icons in the tooltips
         Redemption.AddElementToItem(Type, Redemption.ElementID.Arcane);
         Redemption.AddElementToItem(Type, Redemption.ElementID.Explosive);
