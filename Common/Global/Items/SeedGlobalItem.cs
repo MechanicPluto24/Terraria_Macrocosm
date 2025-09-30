@@ -11,7 +11,7 @@ public class SeedGlobalItem : GlobalItem
 {
     public override bool CanUseItem(Item item, Player player)
     {
-        if (SubworldSystem.AnyActive<Macrocosm>() && RoomOxygenSystem.CheckRoomOxygen(Player.tileTargetX, Player.tileTargetX))
+        if (SubworldSystem.AnyActive<Macrocosm>() && !RoomOxygenSystem.CheckRoomOxygen(Player.tileTargetX, Player.tileTargetX))
         {
             // Grass seeds - typically placed on dirt or mud
             // Modded seeds might not add their grass seeds to this set!

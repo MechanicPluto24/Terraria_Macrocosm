@@ -20,6 +20,8 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
+using Macrocosm.Content.Liquids;
+using ModLiquidLib.ModLoader;
 
 namespace Macrocosm.Content.Subworlds;
 
@@ -42,7 +44,7 @@ public partial class Moon : MacrocosmSubworld
     }
 
     protected override float AtmosphericDensity(Vector2 position) => 0.1f;
-    public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
+    public override int[] EvaporatingLiquidTypes => [LiquidID.Water, LiquidID.Honey,LiquidLoader.LiquidType<Oil>(),LiquidLoader.LiquidType<RocketFuel>()];
     public override string CustomSky => nameof(MoonSky);
 
     public float DemonSunIntensity { get; set; } = 0f;

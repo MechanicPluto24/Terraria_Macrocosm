@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.Utilities;
+using ModLiquidLib.ModLoader;
+using Macrocosm.Content.Liquids;
 
 namespace Macrocosm.Content.Subworlds;
 
@@ -25,7 +27,7 @@ public partial class EarthOrbitSubworld : OrbitSubworld
 
     public override string CustomSky => nameof(EarthOrbitSky);
 
-    public override int[] EvaporatingLiquidTypes => [LiquidID.Water];
+    public override int[] EvaporatingLiquidTypes => [LiquidID.Water, LiquidID.Honey,LiquidLoader.LiquidType<Oil>(),LiquidLoader.LiquidType<RocketFuel>()];
     protected override float GravityMultiplier(Vector2 position) => 0f;
     protected override float AtmosphericDensity(Vector2 position) => 0.1f;
     protected override float AmbientTemperature(Vector2 position) => base.AmbientTemperature(position);

@@ -75,7 +75,7 @@ public partial class MoonOrbitSubworld
                     continue;
                 if (WorldGen.genRand.NextBool(50000))
                 {
-                    int random = WorldGen.genRand.Next(8);
+                    int random = WorldGen.genRand.Next(10);
                     Structure structure = random switch
                     {
                         0 => Structure.Get<LunarianCameoPod>(),
@@ -85,7 +85,10 @@ public partial class MoonOrbitSubworld
                         4 => Structure.Get<LuminiteOrbitVein2>(),
                         5 => Structure.Get<LuminiteOrbitVein4>(),
                         6 => Structure.Get<LunarSatellite1>(),
-                        _ => Structure.Get<ManmadePod1>(),
+                        7 => Structure.Get<LCShip1>(),
+                        8 => Structure.Get<LCShip2>(),
+                        _ => Structure.Get<ManmadePod1>()
+                        
                     };
                     
                     if (gen_StructureMap.CanPlace(new Rectangle(x - 10, y - 10, structure.Size.X + 10, structure.Size.Y + 10)))

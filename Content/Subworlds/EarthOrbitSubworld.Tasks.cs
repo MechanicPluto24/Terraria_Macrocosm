@@ -96,12 +96,10 @@ public partial class EarthOrbitSubworld
                 {
                     if (WorldGen.genRand.NextBool(3))
                     {
-                        int random = WorldGen.genRand.Next(3); // We'll add more to this list
+                        int random = WorldGen.genRand.Next(1); // We'll add more to this list...maybe
                         Structure structure = random switch
                         {
-                            0 => Structure.Get<RareStructure1>(),
-                            1 => Structure.Get<LCShip1>(),
-                            _ => Structure.Get<LCShip2>(),
+                            0 => Structure.Get<RareStructure1>()
                         };
 
                         if (gen_StructureMap.CanPlace(new Rectangle(x - 10, y - 10, structure.Size.X + 10, structure.Size.Y + 10)))
