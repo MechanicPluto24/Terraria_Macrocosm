@@ -48,6 +48,8 @@ public partial class Moon : MacrocosmSubworld
     public float DemonSunIntensity { get; set; } = 0f;
     public float DemonSunVisualIntensity { get; set; } = 0f;
 
+    public float SolarStormIntensity { get; set; } = 0f;
+
     public float MeteorBoost { get; set; } = 1f;
 
     private double meteorTimePass = 0.0;
@@ -203,7 +205,14 @@ public partial class Moon : MacrocosmSubworld
     }
 
     //TODO 
-    private void UpdateSolarStorm() { }
+    private void UpdateSolarStorm() 
+    { 
+
+        if (WorldData.Current.SolarStorm&&SolarStormIntensity < 1f)
+            SolarStormIntensity += 0.005f;
+        else if (0f > SolarStormIntensity)
+            SolarStormIntensity -= 0.005f;
+    }
     private void UpdateMeteorStorm()
     {
         meteorStormCounter += Main.worldEventUpdates;

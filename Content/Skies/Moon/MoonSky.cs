@@ -141,6 +141,18 @@ public class MoonSky : CustomSky, ILoadable
 
     public override float GetCloudAlpha() => 0f;
 
+    public Color GetSolarStormColour()
+    {
+        Color darkColor = new Color(35, 35, 35);
+        if (Main.time < MacrocosmSubworld.GetDayLength() * 0.1)
+            return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.GetDayLength() * 0.1))), new Color(255, 250, 100)*2f, Subworlds.Moon.Instance.SolarStormIntensity);
+        else if (Main.time > MacrocosmSubworld.GetDayLength() * 0.9)
+            return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.GetDayLength() - Main.time) / (MacrocosmSubworld.GetDayLength() - MacrocosmSubworld.GetDayLength() * 0.9))), new Color(255, 250, 100)*2f, Subworlds.Moon.Instance.SolarStormIntensity);
+        else
+            return Color.Lerp(Color.White, new Color(255, 250, 100)*2f, Subworlds.Moon.Instance.SolarStormIntensity);
+    }
+
+
     public Color GetDemonSunDayColour()
     {
         Color darkColor = new Color(35, 35, 35);
@@ -152,7 +164,6 @@ public class MoonSky : CustomSky, ILoadable
         else
             return Color.Lerp(Color.White, new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
     }
-
     public Color GetDemonSunNightColour()
     {
         Color darkColor = new Color(35, 35, 35);
@@ -175,6 +186,8 @@ public class MoonSky : CustomSky, ILoadable
         {
             if (WorldData.DemonSun)
                 return GetDemonSunDayColour();
+            if (WorldData.Current.SolarStorm)
+                return GetSolarStormColour();
 
             if (Main.time < MacrocosmSubworld.GetDayLength() * 0.1)
                 return Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.GetDayLength() * 0.1)));
@@ -224,8 +237,10 @@ public class MoonSky : CustomSky, ILoadable
 
             sun.Draw(spriteBatch);
 
-            //if (WorldFlags.DemonSun&&Main.dayTime)
+            //if (WorldData.DemonSun&&Main.dayTime)
             //    DrawDemonSunFrontEffects(spriteBatch, sun);
+            if (WorldData.Current.SolarStorm&&Main.dayTime)
+                DrawSolarStormEffects(spriteBatch, sun);
 
             earth.Draw(spriteBatch);
 
@@ -299,6 +314,18 @@ public class MoonSky : CustomSky, ILoadable
         var circle = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "LowRes/Circle7").Value;
         var portal = ModContent.Request<Texture2D>(Path + "DemonSunFront").Value;
         spriteBatch.Draw(portal, Sun.Center, null, new Color(255, 255, 255) * intensity, 0f, portal.Size() / 2f, 1f * intensity, SpriteEffects.None, 0);
+    }
+    private void DrawSolarStormEffects(SpriteBatch spriteBatch, CelestialBody Sun)
+    {
+        var scorch1 = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch1").Value;
+        var scorch2 = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch2").Value;
+        var Flare = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Star6").Value;
+        float pulse = Utility.PositiveSineWave(450, MathF.PI / 2);
+
+        float intensity = Subworlds.Moon.Instance.SolarStormIntensity;
+        spriteBatch.Draw(scorch1, Sun.Center, null, new Color(255, 251, 230,0)*1.3f*intensity * (0.3f + 0.01f * pulse) * intensity, MathHelper.TwoPi * Utility.PositiveTriangleWave(15000), scorch1.Size() / 2f, (2.9f + 0.01f * pulse) * intensity, SpriteEffects.None, 0);
+        spriteBatch.Draw(scorch2, Sun.Center, null, new Color(255, 251, 230,0)*1.3f*intensity * (0.2f + 0.01f * pulse) * intensity, MathHelper.TwoPi * -Utility.PositiveTriangleWave(15000), scorch2.Size() / 2f, (3.1f + 0.01f * pulse) * intensity, SpriteEffects.None, 0);
+        spriteBatch.Draw(Flare, Sun.Center, null, new Color(255, 255, 255,0)*intensity * (0.15f + 0.01f * pulse) * intensity, 0f, Flare.Size() / 2f, (2.1f + 0.01f * pulse) * intensity, SpriteEffects.None, 0);
     }
 
     private void DrawMoonNebula(float brightness)

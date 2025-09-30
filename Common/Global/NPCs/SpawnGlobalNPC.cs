@@ -7,6 +7,7 @@ using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
+using Macrocosm.Common.Systems.Flags;
 
 namespace Macrocosm.Common.Global.NPCs;
 
@@ -20,6 +21,9 @@ public class SpawnGlobalNPC : GlobalNPC
             bool peaceful = MacrocosmSubworld.Current.PeacefulWorld;
             for (int type = 0; type < NPCLoader.NPCCount; type++)
             {
+                if (WorldData.Current.SolarStorm&&!NPCSets.SolarStormNPC[type])
+                    pool.Remove(type);
+                    
                 if (peaceful)
                     pool.Remove(type);
                 else if (SubworldSystem.IsActive<Moon>() && !NPCSets.MoonNPC[type])
@@ -70,5 +74,10 @@ public class SpawnGlobalNPC : GlobalNPC
             spawnRate = (int)(spawnRate * 0.1f);
             maxSpawns = (int)(maxSpawns * 0.6f);
         }
+        if (player.InModBiome<SolarStormBiome>())
+            {
+                spawnRate = 220;
+                maxSpawns = 10;
+            }
     }
 }
