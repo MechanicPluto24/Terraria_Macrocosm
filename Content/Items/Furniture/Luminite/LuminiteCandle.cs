@@ -25,7 +25,7 @@ public class LuminiteCandle : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 4)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

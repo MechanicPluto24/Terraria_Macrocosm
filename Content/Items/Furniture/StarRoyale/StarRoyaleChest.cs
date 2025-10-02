@@ -26,7 +26,7 @@ public class StarRoyaleChest : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 8)
             .AddRecipeGroup(RecipeGroupID.IronBar, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

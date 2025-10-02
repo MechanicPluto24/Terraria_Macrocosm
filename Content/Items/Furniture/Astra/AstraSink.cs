@@ -25,7 +25,7 @@ public class AstraSink : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 6)
             .AddIngredient(ItemID.WaterBucket, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

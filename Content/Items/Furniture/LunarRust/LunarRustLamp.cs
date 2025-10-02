@@ -25,7 +25,7 @@ public class LunarRustLamp : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 3)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

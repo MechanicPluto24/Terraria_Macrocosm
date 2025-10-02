@@ -24,7 +24,7 @@ public class MercuryTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 8)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

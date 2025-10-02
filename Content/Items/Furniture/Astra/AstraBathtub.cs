@@ -24,7 +24,7 @@ public class AstraBathtub : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 14)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -26,7 +26,7 @@ public class HaemonovaCandle : ModItem
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(4)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

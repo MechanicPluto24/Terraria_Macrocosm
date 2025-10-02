@@ -26,7 +26,7 @@ public class LunarRustChest : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 8)
             .AddRecipeGroup(RecipeGroupID.IronBar, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -24,7 +24,7 @@ public class LunarRustBathtub : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 14)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

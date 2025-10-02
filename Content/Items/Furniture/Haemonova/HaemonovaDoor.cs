@@ -24,7 +24,7 @@ public class HaemonovaDoor : ModItem
     {
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(6)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

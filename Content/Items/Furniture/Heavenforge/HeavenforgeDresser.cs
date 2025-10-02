@@ -23,7 +23,7 @@ public class HeavenforgeDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

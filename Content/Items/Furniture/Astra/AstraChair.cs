@@ -23,7 +23,7 @@ public class AstraChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.AstraBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

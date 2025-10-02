@@ -23,6 +23,7 @@ public class StarRoyalePlatform : ModItem
     {
         CreateRecipe(2)
             .AddIngredient(ItemID.StarRoyaleBrick)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

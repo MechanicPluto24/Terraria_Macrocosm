@@ -23,7 +23,7 @@ public class CosmicEmberChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.CosmicEmberBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

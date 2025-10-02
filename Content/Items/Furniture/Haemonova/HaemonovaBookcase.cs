@@ -25,7 +25,7 @@ public class HaemonovaBookcase : ModItem
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

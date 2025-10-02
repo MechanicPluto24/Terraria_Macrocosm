@@ -24,7 +24,7 @@ public class AstraBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

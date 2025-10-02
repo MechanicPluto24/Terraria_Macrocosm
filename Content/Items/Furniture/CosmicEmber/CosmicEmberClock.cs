@@ -24,7 +24,7 @@ public class CosmicEmberClock : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 20)
             .AddRecipeGroup(RecipeGroupID.IronBar, 3)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

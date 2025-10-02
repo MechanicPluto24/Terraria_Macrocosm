@@ -24,7 +24,7 @@ public class MercuryBathtub : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 14)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

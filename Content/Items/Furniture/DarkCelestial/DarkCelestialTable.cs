@@ -24,7 +24,7 @@ public class DarkCelestialTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.DarkCelestialBrick, 8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

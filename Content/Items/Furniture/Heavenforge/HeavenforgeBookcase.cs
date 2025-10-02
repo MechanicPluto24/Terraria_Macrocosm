@@ -24,7 +24,7 @@ public class HeavenforgeBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -24,7 +24,7 @@ public class LuminiteBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

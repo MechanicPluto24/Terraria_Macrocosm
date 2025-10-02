@@ -25,7 +25,7 @@ public class DarkCelestialSink : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.DarkCelestialBrick, 6)
             .AddIngredient(ItemID.WaterBucket, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

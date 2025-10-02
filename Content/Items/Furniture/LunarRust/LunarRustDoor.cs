@@ -23,7 +23,7 @@ public class LunarRustDoor : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 6)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

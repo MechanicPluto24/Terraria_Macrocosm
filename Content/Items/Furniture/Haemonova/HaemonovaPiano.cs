@@ -27,7 +27,7 @@ public class HaemonovaPiano : ModItem
             .AddIngredient<HaemonovaBrick>(15)
             .AddIngredient(ItemID.Bone, 4)
             .AddIngredient(ItemID.Book, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

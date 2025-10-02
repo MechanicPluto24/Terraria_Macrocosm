@@ -23,7 +23,7 @@ public class DarkCelestialDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.DarkCelestialBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

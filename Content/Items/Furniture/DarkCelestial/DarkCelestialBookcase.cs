@@ -24,7 +24,7 @@ public class DarkCelestialBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.DarkCelestialBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

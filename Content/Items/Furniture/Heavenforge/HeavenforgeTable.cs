@@ -24,7 +24,7 @@ public class HeavenforgeTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

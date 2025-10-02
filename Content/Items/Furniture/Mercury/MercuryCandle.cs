@@ -25,7 +25,7 @@ public class MercuryCandle : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 4)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -25,7 +25,7 @@ public class StarRoyaleSink : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 6)
             .AddIngredient(ItemID.WaterBucket, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -25,7 +25,7 @@ public class HaemonovaBathtub : ModItem
     {
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(14)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

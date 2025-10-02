@@ -23,7 +23,7 @@ public class LuminiteDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

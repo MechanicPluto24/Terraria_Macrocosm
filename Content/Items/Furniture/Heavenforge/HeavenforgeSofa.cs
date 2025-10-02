@@ -25,7 +25,7 @@ public class HeavenforgeSofa : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 5)
             .AddIngredient(ItemID.Silk, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

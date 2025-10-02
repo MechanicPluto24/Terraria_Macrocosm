@@ -23,6 +23,7 @@ public class MercuryPlatform : ModItem
     {
         CreateRecipe(2)
             .AddIngredient(ItemID.MercuryBrick)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

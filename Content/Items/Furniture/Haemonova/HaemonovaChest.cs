@@ -27,7 +27,7 @@ public class HaemonovaChest : ModItem
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(8)
             .AddRecipeGroup(RecipeGroupID.IronBar, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

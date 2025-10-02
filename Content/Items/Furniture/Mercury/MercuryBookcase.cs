@@ -24,7 +24,7 @@ public class MercuryBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -25,7 +25,7 @@ public class HeavenforgeSink : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 6)
             .AddIngredient(ItemID.WaterBucket, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

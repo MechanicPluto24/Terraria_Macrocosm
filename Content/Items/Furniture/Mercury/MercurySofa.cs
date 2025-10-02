@@ -25,7 +25,7 @@ public class MercurySofa : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 5)
             .AddIngredient(ItemID.Silk, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

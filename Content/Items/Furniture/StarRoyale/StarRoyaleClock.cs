@@ -24,7 +24,7 @@ public class StarRoyaleClock : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 20)
             .AddRecipeGroup(RecipeGroupID.IronBar, 3)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

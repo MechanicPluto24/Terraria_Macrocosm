@@ -23,7 +23,7 @@ public class LunarRustChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.LunarRustBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

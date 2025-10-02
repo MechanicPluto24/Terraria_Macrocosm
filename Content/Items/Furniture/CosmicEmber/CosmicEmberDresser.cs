@@ -23,7 +23,7 @@ public class CosmicEmberDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

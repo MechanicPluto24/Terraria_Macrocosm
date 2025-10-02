@@ -24,7 +24,7 @@ public class StarRoyaleTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

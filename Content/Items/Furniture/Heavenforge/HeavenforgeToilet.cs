@@ -24,7 +24,7 @@ public class HeavenforgeToilet : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 6)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

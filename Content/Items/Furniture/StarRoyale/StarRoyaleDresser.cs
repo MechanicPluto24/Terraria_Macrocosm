@@ -23,7 +23,7 @@ public class StarRoyaleDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

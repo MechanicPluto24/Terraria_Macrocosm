@@ -23,7 +23,7 @@ public class LunarRustDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

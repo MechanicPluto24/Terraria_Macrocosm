@@ -24,7 +24,7 @@ public class DarkCelestialToilet : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.DarkCelestialBrick, 6)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

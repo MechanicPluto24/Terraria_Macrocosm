@@ -24,7 +24,7 @@ public class LunarRustTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

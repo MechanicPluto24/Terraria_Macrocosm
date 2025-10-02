@@ -23,7 +23,7 @@ public class MercuryDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

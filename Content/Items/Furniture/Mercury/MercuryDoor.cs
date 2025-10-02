@@ -23,7 +23,7 @@ public class MercuryDoor : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 6)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

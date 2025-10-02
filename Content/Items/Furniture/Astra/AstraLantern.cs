@@ -25,7 +25,7 @@ public class AstraLantern : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarOre, 6)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

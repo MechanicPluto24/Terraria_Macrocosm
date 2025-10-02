@@ -24,7 +24,7 @@ public class MercuryClock : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 20)
             .AddRecipeGroup(RecipeGroupID.IronBar, 3)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

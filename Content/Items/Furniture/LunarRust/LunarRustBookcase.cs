@@ -24,7 +24,7 @@ public class LunarRustBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

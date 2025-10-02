@@ -25,7 +25,7 @@ public class CosmicEmberSofa : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 5)
             .AddIngredient(ItemID.Silk, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

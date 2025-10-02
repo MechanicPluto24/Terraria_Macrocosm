@@ -24,7 +24,7 @@ public class LuminiteBed : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 15)
             .AddIngredient(ItemID.Silk, 5)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

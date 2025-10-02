@@ -23,7 +23,7 @@ public class HeavenforgeChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.HeavenforgeBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

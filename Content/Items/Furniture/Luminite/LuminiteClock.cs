@@ -24,7 +24,7 @@ public class LuminiteClock : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 20)
             .AddRecipeGroup(RecipeGroupID.IronBar, 3)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

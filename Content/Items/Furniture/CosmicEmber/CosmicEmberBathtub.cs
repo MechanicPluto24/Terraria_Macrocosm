@@ -24,7 +24,7 @@ public class CosmicEmberBathtub : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 14)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

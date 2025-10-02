@@ -23,7 +23,7 @@ public class DarkCelestialChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.DarkCelestialBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

@@ -24,7 +24,7 @@ public class HeavenforgeClock : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 20)
             .AddRecipeGroup(RecipeGroupID.IronBar, 3)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -24,7 +24,7 @@ public class LunarRustBed : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 15)
             .AddIngredient(ItemID.Silk, 5)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -25,7 +25,7 @@ public class CosmicEmberLantern : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 6)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

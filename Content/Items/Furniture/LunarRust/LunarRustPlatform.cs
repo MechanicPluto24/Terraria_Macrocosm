@@ -23,6 +23,7 @@ public class LunarRustPlatform : ModItem
     {
         CreateRecipe(2)
             .AddIngredient(ItemID.LunarRustBrick)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

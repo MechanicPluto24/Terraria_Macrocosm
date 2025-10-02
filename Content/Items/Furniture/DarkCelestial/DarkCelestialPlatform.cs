@@ -23,6 +23,7 @@ public class DarkCelestialPlatform : ModItem
     {
         CreateRecipe(2)
             .AddIngredient(ItemID.DarkCelestialBrick)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -23,6 +23,7 @@ public class HeavenforgeWorkbench : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 10)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

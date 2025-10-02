@@ -24,7 +24,7 @@ public class MercuryBed : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 15)
             .AddIngredient(ItemID.Silk, 5)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

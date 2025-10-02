@@ -23,6 +23,7 @@ public class AstraWorkbench : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 10)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

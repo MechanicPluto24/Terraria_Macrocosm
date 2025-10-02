@@ -25,7 +25,7 @@ public class DarkCelestialLamp : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.DarkCelestialBrick, 3)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

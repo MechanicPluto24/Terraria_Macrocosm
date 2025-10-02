@@ -24,7 +24,7 @@ public class StarRoyaleBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

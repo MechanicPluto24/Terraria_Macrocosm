@@ -24,7 +24,7 @@ public class AstraBed : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 15)
             .AddIngredient(ItemID.Silk, 5)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

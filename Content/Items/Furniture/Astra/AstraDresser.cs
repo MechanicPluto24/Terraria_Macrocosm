@@ -23,7 +23,7 @@ public class AstraDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

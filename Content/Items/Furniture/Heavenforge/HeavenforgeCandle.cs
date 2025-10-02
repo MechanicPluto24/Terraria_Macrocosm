@@ -25,7 +25,7 @@ public class HeavenforgeCandle : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 4)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

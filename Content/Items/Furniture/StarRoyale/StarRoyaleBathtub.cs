@@ -24,7 +24,7 @@ public class StarRoyaleBathtub : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 14)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

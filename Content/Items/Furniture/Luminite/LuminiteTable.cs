@@ -24,7 +24,7 @@ public class LuminiteTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

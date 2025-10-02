@@ -17,8 +17,8 @@ LuminiteChest: {
 	MapEntry15: Cryocore Chest (Locked)
 	MapEntry16: Cosmic Ember Chest
 	MapEntry17: Cosmic Ember Chest (Locked)
-	MapEntry18: Heamonova Chest
-	MapEntry19: Heamonova Chest (Locked)
+	MapEntry18: Haemonova Chest
+	MapEntry19: Haemonova Chest (Locked)
 }
 
 IndustrialChest: {

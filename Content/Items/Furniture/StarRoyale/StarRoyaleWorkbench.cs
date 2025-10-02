@@ -23,6 +23,7 @@ public class StarRoyaleWorkbench : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 10)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

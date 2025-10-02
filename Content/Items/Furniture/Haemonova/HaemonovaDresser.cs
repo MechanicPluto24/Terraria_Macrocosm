@@ -24,7 +24,7 @@ public class HaemonovaDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

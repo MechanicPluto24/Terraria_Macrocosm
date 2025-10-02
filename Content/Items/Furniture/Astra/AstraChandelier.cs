@@ -26,7 +26,7 @@ public class AstraChandelier : ModItem
             .AddIngredient(ItemID.AstraBrick, 4)
             .AddIngredient<LunarCrystal>(4)
             .AddIngredient(ItemID.Chain, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

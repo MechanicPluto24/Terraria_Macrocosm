@@ -25,7 +25,7 @@ public class HeavenforgeLantern : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 6)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

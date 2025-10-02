@@ -25,7 +25,7 @@ public class MercurySink : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 6)
             .AddIngredient(ItemID.WaterBucket, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

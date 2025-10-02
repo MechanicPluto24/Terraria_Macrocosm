@@ -23,6 +23,7 @@ public class AstraPlatform : ModItem
     {
         CreateRecipe(2)
             .AddIngredient(ItemID.AstraBrick)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

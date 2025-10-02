@@ -23,7 +23,7 @@ public class StarRoyaleChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.StarRoyaleBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

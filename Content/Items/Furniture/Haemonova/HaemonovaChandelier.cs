@@ -27,7 +27,7 @@ public class HaemonovaChandelier : ModItem
             .AddIngredient<HaemonovaBrick>(4)
             .AddIngredient<LunarCrystal>(4)
             .AddIngredient(ItemID.Chain, 1)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

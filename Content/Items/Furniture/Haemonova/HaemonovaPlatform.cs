@@ -2,6 +2,7 @@ using Macrocosm.Common.Enums;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Items.Blocks.Bricks;
 
 namespace Macrocosm.Content.Items.Furniture.Haemonova;
 
@@ -22,7 +23,8 @@ public class HaemonovaPlatform : ModItem
     public override void AddRecipes()
     {
         CreateRecipe(2)
-            .AddIngredient(ItemID.LunarBrick)
+            .AddIngredient<HaemonovaBrick>(1)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

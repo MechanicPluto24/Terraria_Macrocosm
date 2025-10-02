@@ -24,7 +24,7 @@ public class CosmicEmberBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

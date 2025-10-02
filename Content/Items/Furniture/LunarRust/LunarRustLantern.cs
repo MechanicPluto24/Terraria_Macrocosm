@@ -25,7 +25,7 @@ public class LunarRustLantern : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 6)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

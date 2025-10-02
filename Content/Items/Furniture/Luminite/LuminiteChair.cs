@@ -23,7 +23,7 @@ public class LuminiteChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.LunarBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

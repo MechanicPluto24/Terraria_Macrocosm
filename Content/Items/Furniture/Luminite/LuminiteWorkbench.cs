@@ -23,6 +23,7 @@ public class LuminiteWorkbench : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 10)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

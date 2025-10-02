@@ -25,7 +25,7 @@ public class AstraCandle : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 4)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

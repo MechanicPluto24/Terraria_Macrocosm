@@ -24,7 +24,7 @@ public class CosmicEmberTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

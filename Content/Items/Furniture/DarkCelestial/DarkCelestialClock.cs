@@ -24,7 +24,7 @@ public class DarkCelestialClock : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.DarkCelestialBrick, 20)
             .AddRecipeGroup(RecipeGroupID.IronBar, 3)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -24,7 +24,7 @@ public class HeavenforgeBed : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 15)
             .AddIngredient(ItemID.Silk, 5)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

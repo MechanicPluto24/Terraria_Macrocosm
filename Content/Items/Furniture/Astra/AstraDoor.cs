@@ -23,7 +23,7 @@ public class AstraDoor : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 6)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

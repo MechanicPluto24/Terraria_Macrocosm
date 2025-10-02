@@ -25,7 +25,7 @@ public class HaemonovaClock : ModItem
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(20)
             .AddRecipeGroup(RecipeGroupID.IronBar, 3)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

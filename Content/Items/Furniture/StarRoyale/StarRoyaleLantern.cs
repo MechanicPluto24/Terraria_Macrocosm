@@ -25,7 +25,7 @@ public class StarRoyaleLantern : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 6)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

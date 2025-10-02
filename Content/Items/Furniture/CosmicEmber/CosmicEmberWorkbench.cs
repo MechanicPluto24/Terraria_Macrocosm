@@ -23,6 +23,7 @@ public class CosmicEmberWorkbench : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 10)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

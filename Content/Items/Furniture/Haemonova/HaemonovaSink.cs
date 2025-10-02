@@ -26,7 +26,7 @@ public class HaemonovaSink : ModItem
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(6)
             .AddIngredient(ItemID.WaterBucket, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

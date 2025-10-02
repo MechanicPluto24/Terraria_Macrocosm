@@ -24,7 +24,7 @@ public class LuminiteBathtub : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 14)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -25,7 +25,7 @@ public class LunarRustSofa : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 5)
             .AddIngredient(ItemID.Silk, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -24,7 +24,7 @@ public class AstraTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

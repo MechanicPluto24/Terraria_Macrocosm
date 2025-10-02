@@ -25,7 +25,7 @@ public class LunarRustSink : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.LunarRustBrick, 6)
             .AddIngredient(ItemID.WaterBucket, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

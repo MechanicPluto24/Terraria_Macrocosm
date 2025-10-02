@@ -26,7 +26,7 @@ public class DarkCelestialPiano : ModItem
             .AddIngredient(ItemID.DarkCelestialBrick, 15)
             .AddIngredient(ItemID.Bone, 4)
             .AddIngredient(ItemID.Book, 1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

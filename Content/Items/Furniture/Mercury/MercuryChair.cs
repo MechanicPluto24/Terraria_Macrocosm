@@ -23,7 +23,7 @@ public class MercuryChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.MercuryBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

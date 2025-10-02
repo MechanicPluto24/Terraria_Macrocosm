@@ -25,7 +25,7 @@ public class HaemonovaTable : ModItem
     {
         CreateRecipe()
             .AddIngredient<HaemonovaBrick>(8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }
