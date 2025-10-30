@@ -120,7 +120,7 @@ public class TownNPCSystem : ModSystem
         if (SubworldSystem.AnyActive<Macrocosm>() && !MacrocosmSubworld.Current.NormalUpdates)
             UpdateTime_SpawnTownNPCs();
 
-        Main.checkForSpawns += 100000;
+        Main.checkForSpawns += 100000; //???
     }
 
     public static void UpdateTownNPCSpawns()

@@ -12,7 +12,7 @@ public class SteelPipe : ModTile
     {
         Main.tileSolid[Type] = true;
         Main.tileBlockLight[Type] = true;
-        Main.tileBrick[Type] = true;
+        Main.tileBrick[Type] = false;
 
         HitSound = SoundID.Tink;
 

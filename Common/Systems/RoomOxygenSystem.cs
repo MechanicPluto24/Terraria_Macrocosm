@@ -171,7 +171,7 @@ public class RoomOxygenSystem : ModSystem
         if (!DebugConfig.Instance.RoomOxygenDebug)
             return;
 
-        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.ZoomMatrix);
+        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.TransformationMatrix);
         foreach (var entry in cache)
         {
             Color color = entry.Value ? Color.Lime * 0.4f : Color.Red * 0.4f;

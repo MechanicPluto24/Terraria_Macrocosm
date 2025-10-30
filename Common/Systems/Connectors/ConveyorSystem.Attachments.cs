@@ -1,13 +1,14 @@
 using Macrocosm.Common.Config;
 using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Utils;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
 using Macrocosm.Content.Items.Connectors;
+using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -24,17 +25,16 @@ public partial class ConveyorSystem
     private static int DropperGrabDelay => 200;
     private static int HopperCooldownTicks => 15;
 
-    private static Asset<Texture2D> dropperTexture;
-    private static Asset<Texture2D> hopperTexture;
+    private static Asset<Texture2D> attachmentTexture;
 
     private static readonly Dictionary<Point16, AttachmentState> attachmentStates = new();
 
     private enum AttachmentOrientation : byte
     {
-        Down,
-        Left,
-        Up,
-        Right
+        Left = 0,
+        Up = 1,
+        Right = 2,
+        Down = 3,
     }
 
     private struct AttachmentState
@@ -63,7 +63,7 @@ public partial class ConveyorSystem
             return false; // mutually exclusive; already has an attachment
 
         data.Dropper = true; // sets Attachment and type
-        data.AttachmentRotation = 0;
+        data.AttachmentRotation = (byte)AttachmentOrientation.Down;
 
         Point16 pos = new(x, y);
         attachmentStates[pos] = new AttachmentState(DropperCooldownTicks);
@@ -90,7 +90,7 @@ public partial class ConveyorSystem
             return false; // mutually exclusive; already has an attachment
 
         data.Hopper = true; // sets Attachment and type
-        data.AttachmentRotation = 0;
+        data.AttachmentRotation = (byte)AttachmentOrientation.Down;
 
         Point16 pos = new(x, y);
         attachmentStates[pos] = new AttachmentState(HopperCooldownTicks);
@@ -275,20 +275,24 @@ public partial class ConveyorSystem
         if (!data.Attachment)
             return;
 
-        var texture = data.AttachmentIsHopper ? hopperTexture : dropperTexture;
-        if (texture?.Value is null)
+        if (attachmentTexture?.Value is null)
             return;
 
-        Vector2 basePosition = new Vector2(pos.X * 16 - (int)Main.screenPosition.X, pos.Y * 16 - (int)Main.screenPosition.Y) + offset + new Vector2(8f);
-
+        Vector2 drawPosition = new Vector2(pos.X * 16 - (int)Main.screenPosition.X, pos.Y * 16 - (int)Main.screenPosition.Y) + offset;
         AttachmentOrientation orientation = GetAttachmentOrientation(pos);
-        float rotation = MathHelper.PiOver2 * (int)orientation;
+        Rectangle frame = GetAttachmentFrame(data.AttachmentIsHopper, orientation);
 
         bool highlight = ShouldHighlightAttachment(pos);
-        Color drawColor = highlight ? Color.Gold : Lighting.GetColor(pos.X, pos.Y);
-        float scale = highlight ? 1.15f : 1f;
+        Color drawColor = highlight ? Color.Gold.WithAlpha(220) : Lighting.GetColor(pos.X, pos.Y);
 
-        spriteBatch.Draw(texture.Value, basePosition, null, drawColor, rotation, new Vector2(8f, 8f), scale, SpriteEffects.None, 0f);
+        spriteBatch.Draw(attachmentTexture.Value, drawPosition, frame, drawColor, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+    }
+
+    private static Rectangle GetAttachmentFrame(bool isHopper, AttachmentOrientation orientation)
+    {
+        int frameY = isHopper ? 1 : 0;
+        int frameX = (int)orientation;
+        return new Rectangle(frameX * 18, frameY * 18, 16, 16);
     }
 
     private static bool ShouldHighlightAttachment(Point16 pos)
@@ -544,7 +548,7 @@ public partial class ConveyorSystem
             case AttachmentOrientation.Down: down = 3; break;
         }
 
-        Rectangle area = new ((pos.X - left) * 16, (pos.Y - up) * 16, 16 * (1 + left + right), 16 * (1 + up + down));
+        Rectangle area = new((pos.X - left) * 16, (pos.Y - up) * 16, 16 * (1 + left + right), 16 * (1 + up + down));
         for (int i = 0; i < Main.maxItems; i++)
         {
             Item it = Main.item[i];

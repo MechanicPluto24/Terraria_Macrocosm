@@ -152,10 +152,10 @@ public class LaunchPadManager : ModSystem, IOnPlayerJoining
 
     public override void PostDrawTiles()
     {
-        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, null, null, null, Main.GameViewMatrix.ZoomMatrix);
+        Main.spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, null, null, null, Main.GameViewMatrix.TransformationMatrix);
 
-        if (launchPadStorage.ContainsKey(MacrocosmSubworld.CurrentID))
-            foreach (LaunchPad launchPad in launchPadStorage[MacrocosmSubworld.CurrentID])
+        if (launchPadStorage.TryGetValue(MacrocosmSubworld.CurrentID, out List<LaunchPad> value))
+            foreach (LaunchPad launchPad in value)
                 launchPad.Draw(Main.spriteBatch, Main.screenPosition);
 
         Main.spriteBatch.End();

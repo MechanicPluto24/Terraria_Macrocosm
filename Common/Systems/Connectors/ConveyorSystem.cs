@@ -36,14 +36,12 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
     public override void Load()
     {
         conveyorTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Conveyors");
-        dropperTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Dropper");
-        hopperTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Hopper");
+        attachmentTexture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "HopperDropper");
     }
 
     public override void Unload()
     {
-        dropperTexture = null;
-        hopperTexture = null;
+        attachmentTexture = null;
         attachmentStates.Clear();
     }
 
@@ -314,7 +312,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
             return;
 
         SpriteBatch spriteBatch = Main.spriteBatch;
-        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.ZoomMatrix);
+        spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, default, default, null, Main.GameViewMatrix.TransformationMatrix);
 
         Vector2 zero = Vector2.Zero;
         Point screenOverdrawOffset = Main.GetScreenOverdrawOffset();
@@ -342,6 +340,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
             {
                 ref var data = ref Main.tile[i, j].Get<ConveyorData>();
 
+                Vector2 position = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
                 float visiblePipeCount = 0f;
                 for (int t = 0; t < (int)ConveyorPipeType.Count; t++)
                 {
@@ -370,7 +369,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
                         if (Main.tile[i - 1, j].Get<ConveyorData>().HasPipe(type))
                             frame.X += 144;
 
-                        spriteBatch.Draw(conveyorTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
+                        spriteBatch.Draw(conveyorTexture.Value, position, frame, color, 0f, zero, 1f, SpriteEffects.None, 0f);
 
                         if (InletOutletVisibility != ConveyorVisibility.Hidden && visiblePipeCount > 0)
                         {
@@ -378,12 +377,12 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
                             if (data.Inlet)
                             {
                                 frame.Y = ((int)ConveyorPipeType.Count + blinkFrame) * 18;
-                                spriteBatch.Draw(conveyorTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
+                                spriteBatch.Draw(conveyorTexture.Value, position, frame, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
                             }
                             else if (data.Outlet)
                             {
                                 frame.Y = ((int)ConveyorPipeType.Count + 2 + blinkFrame) * 18;
-                                spriteBatch.Draw(conveyorTexture.Value, new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero, frame, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
+                                spriteBatch.Draw(conveyorTexture.Value, position, frame, GetColor(i, j, InletOutletVisibility), 0f, zero, 1f, SpriteEffects.None, 0f);
                             }
                         }
                     }
