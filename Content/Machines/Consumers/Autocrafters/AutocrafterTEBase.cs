@@ -218,16 +218,9 @@ public abstract class AutocrafterTEBase : ConsumerTE
         }
     }
 
-    public override void MachineNetSend(BinaryWriter writer)
+    protected override void ConsumerSaveData(TagCompound tag)
     {
-    }
-
-    public override void MachineNetReceive(BinaryReader reader)
-    {
-    }
-
-    public override void MachineSaveData(TagCompound tag)
-    {
+        base.ConsumerSaveData(tag);
         if (SelectedRecipes is not null)
         {
             TagCompound[] recipeTags = new TagCompound[SelectedRecipes.Length];
@@ -254,8 +247,9 @@ public abstract class AutocrafterTEBase : ConsumerTE
         }
     }
 
-    public override void MachineLoadData(TagCompound tag)
+    protected override void ConsumerLoadData(TagCompound tag)
     {
+        base.ConsumerLoadData(tag);
         if (tag.TryGet(nameof(SelectedRecipes), out TagCompound[] recipeTags))
         {
             SelectedRecipes = new Recipe[OutputSlots];
@@ -281,4 +275,7 @@ public abstract class AutocrafterTEBase : ConsumerTE
             }
         }
     }
+
+    protected override void ConsumerNetSend(BinaryWriter writer) => base.ConsumerNetSend(writer);
+    protected override void ConsumerNetReceive(BinaryReader reader) => base.ConsumerNetReceive(reader);
 }

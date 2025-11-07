@@ -14,7 +14,7 @@ public class IndustrialBattery : ModItem
     public override void SetDefaults()
     {
         Item.DefaultToPlaceableTile(ModContent.TileType<Content.Machines.Batteries.IndustrialBattery>());
-        Item.width = 44;
+        Item.width = 32;
         Item.height = 34;
         Item.value = Item.sellPrice(silver: 90);
         Item.mech = true;

@@ -101,7 +101,7 @@ public class WireCircuit : Circuit<MachineTE>
 
     private void StoreExcessPowerInBatteries(List<BatteryTE> batteries, float excessPower, int updateRate)
     {
-        float deltaTime = updateRate / 60f;
+        float deltaTime = MathF.Max(1, updateRate) / 60f; // clamp to avoid 0
         float totalEnergyToStore = excessPower * deltaTime; // kW * s = kJ
 
         var availableBatteries = batteries.Where(b => b.StoredEnergy < b.EnergyCapacity).ToList();
@@ -138,7 +138,7 @@ public class WireCircuit : Circuit<MachineTE>
 
     private void DrawPowerFromBatteries(List<BatteryTE> batteries, float powerNeeded, int updateRate)
     {
-        float deltaTime = updateRate / 60f;
+        float deltaTime = MathF.Max(1, updateRate) / 60f; // clamp to avoid 0
         float totalEnergyNeeded = powerNeeded * deltaTime; // kW * s = kJ
 
         var availableBatteries = batteries.Where(b => b.StoredEnergy > 0f).ToList();

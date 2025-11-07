@@ -117,24 +117,25 @@ public class PumpjackTE : ConsumerTE
         }
     }
 
-    public override void MachineNetSend(BinaryWriter writer)
+    protected override void ConsumerNetSend(BinaryWriter writer)
     {
+        base.ConsumerNetSend(writer); 
         writer.Write(TankAmount);
     }
-
-    public override void MachineNetReceive(BinaryReader reader)
+    protected override void ConsumerNetReceive(BinaryReader reader)
     {
+        base.ConsumerNetReceive(reader);
         TankAmount = reader.ReadSingle();
     }
-
-    public override void MachineSaveData(TagCompound tag)
+    protected override void ConsumerSaveData(TagCompound tag)
     {
+        base.ConsumerSaveData(tag);
         if (TankAmount != default)
             tag[nameof(TankAmount)] = TankAmount;
     }
-
-    public override void MachineLoadData(TagCompound tag)
+    protected override void ConsumerLoadData(TagCompound tag)
     {
+        base.ConsumerLoadData(tag);
         if (tag.ContainsKey(nameof(TankAmount)))
             TankAmount = tag.GetFloat(nameof(TankAmount));
     }

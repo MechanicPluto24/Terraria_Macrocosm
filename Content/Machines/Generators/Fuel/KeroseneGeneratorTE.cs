@@ -121,27 +121,30 @@ public class KeroseneGeneratorTE : GeneratorTE
         GeneratedPower = RPMProgress * MaxGeneratedPower;
     }
 
-    public override void MachineNetSend(BinaryWriter writer)
+    protected override void GeneratorNetSend(BinaryWriter writer)
     {
+        base.GeneratorNetSend(writer);
         ItemIO.Send(ConsumedItem, writer);
         writer.Write(rpmProgress);
     }
-
-    public override void MachineNetReceive(BinaryReader reader)
+    protected override void GeneratorNetReceive(BinaryReader reader)
     {
+        base.GeneratorNetReceive(reader);
         ConsumedItem = ItemIO.Receive(reader);
         rpmProgress = reader.ReadSingle();
     }
-
-    public override void MachineSaveData(TagCompound tag)
+    protected override void GeneratorSaveData(TagCompound tag)
     {
+        base.GeneratorSaveData(tag);
+
         tag[nameof(ConsumedItem)] = ItemIO.Save(ConsumedItem);
         if (rpmProgress > 0f)
             tag[nameof(rpmProgress)] = rpmProgress;
     }
-
-    public override void MachineLoadData(TagCompound tag)
+    protected override void GeneratorLoadData(TagCompound tag)
     {
+        base.GeneratorLoadData(tag);
+
         if (tag.ContainsKey(nameof(ConsumedItem)))
             ItemIO.Load(ConsumedItem, tag.GetCompound(nameof(ConsumedItem)));
 

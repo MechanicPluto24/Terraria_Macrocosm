@@ -71,28 +71,36 @@ public abstract class BaseDrillTE : ConsumerTE
         }
     }
 
-    public override void MachineNetSend(BinaryWriter writer)
+    protected override void ConsumerNetSend(BinaryWriter writer)
     {
+        base.ConsumerNetSend(writer);
+
         writer.Write(BlacklistedItems.Count);
         foreach (int itemId in BlacklistedItems)
             writer.Write(itemId);
     }
 
-    public override void MachineNetReceive(BinaryReader reader)
+    protected override void ConsumerNetReceive(BinaryReader reader)
     {
+        base.ConsumerNetReceive(reader);
+
         int blacklistedCount = reader.ReadInt32();
         BlacklistedItems = new(blacklistedCount);
         for (int i = 0; i < blacklistedCount; i++)
             BlacklistedItems.Add(reader.ReadInt32());
     }
 
-    public override void MachineSaveData(TagCompound tag)
+    protected override void ConsumerSaveData(TagCompound tag)
     {
+        base.ConsumerSaveData(tag);
+
         tag[nameof(BlacklistedItems)] = BlacklistedItems;
     }
 
-    public override void MachineLoadData(TagCompound tag)
+    protected override void ConsumerLoadData(TagCompound tag)
     {
+        base.ConsumerLoadData(tag);
+
         if (tag.ContainsKey(nameof(BlacklistedItems)))
             BlacklistedItems = tag.GetList<int>(nameof(BlacklistedItems)) as List<int>;
     }

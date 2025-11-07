@@ -4,6 +4,8 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.UI.Chat;
+using System.IO;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Systems.Power;
 
@@ -54,5 +56,42 @@ public abstract class BatteryTE : MachineTE
         if (PowerFlow != 0)
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, flow, positionFlow - new Vector2(flow.Length, 24), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
         ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, percent, positionPercent - new Vector2(percent.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+    }
+
+    protected virtual void BatteryNetSend(BinaryWriter writer) { }
+    protected virtual void BatteryNetReceive(BinaryReader reader) { }
+    protected virtual void BatterySaveData(TagCompound tag) { }
+    protected virtual void BatteryLoadData(TagCompound tag) { }
+
+    public sealed override void MachineNetSend(BinaryWriter writer)
+    {
+        writer.Write(StoredEnergy);
+        writer.Write(PowerFlow);
+        BatteryNetSend(writer);
+    }
+
+    public sealed override void MachineNetReceive(BinaryReader reader)
+    {
+        StoredEnergy = reader.ReadSingle();
+        PowerFlow = reader.ReadSingle();
+        BatteryNetReceive(reader);
+    }
+
+    public sealed override void MachineSaveData(TagCompound tag)
+    {
+        if (StoredEnergy > 0f)
+            tag[nameof(StoredEnergy)] = StoredEnergy;
+        if (PowerFlow != 0f)
+            tag[nameof(PowerFlow)] = PowerFlow;
+        BatterySaveData(tag);
+    }
+
+    public sealed override void MachineLoadData(TagCompound tag)
+    {
+        if (tag.ContainsKey(nameof(StoredEnergy)))
+            StoredEnergy = tag.GetFloat(nameof(StoredEnergy));
+        if (tag.ContainsKey(nameof(PowerFlow)))
+            PowerFlow = tag.GetFloat(nameof(PowerFlow));
+        BatteryLoadData(tag);
     }
 }

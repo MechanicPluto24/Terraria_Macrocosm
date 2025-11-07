@@ -97,16 +97,40 @@ ServerConfig: {
 
 UnitSystemType: {
 	Tooltip: ""
-	Metric.Label: Metric
-	Imperial.Label: Imperial
+
+	Metric: {
+		Label: Metric
+		Tooltip: ""
+	}
+
+	Imperial: {
+		Label: Imperial
+		Tooltip: ""
+	}
 }
 
 UpdateRate: {
 	Tooltip: ""
-	Realtime.Label: Realtime (every update tick)
-	Fast.Label: Fast (6 times per second)
-	Medium.Label: Medium (twice per second)
-	Slow.Label: Slow (once per second)
+
+	Realtime: {
+		Label: Realtime (every update tick)
+		Tooltip: ""
+	}
+
+	Fast: {
+		Label: Fast (6 times per second)
+		Tooltip: ""
+	}
+
+	Medium: {
+		Label: Medium (twice per second)
+		Tooltip: ""
+	}
+
+	Slow: {
+		Label: Slow (once per second)
+		Tooltip: ""
+	}
 }
 
 DebugConfig: {

@@ -163,21 +163,26 @@ public class OilRefineryTE : ConsumerTE
         }
     }
 
-
-    public override void MachineNetSend(BinaryWriter writer)
+    protected override void ConsumerNetSend(BinaryWriter writer)
     {
+        base.ConsumerNetSend(writer);
+
         writer.Write(InputTankAmount);
         writer.Write(OutputTankAmount);
     }
 
-    public override void MachineNetReceive(BinaryReader reader)
+    protected override void ConsumerNetReceive(BinaryReader reader)
     {
+        base.ConsumerNetReceive(reader);
+
         InputTankAmount = reader.ReadSingle();
         OutputTankAmount = reader.ReadSingle();
     }
 
-    public override void MachineSaveData(TagCompound tag)
+    protected override void ConsumerSaveData(TagCompound tag)
     {
+        base.ConsumerSaveData(tag);
+
         if (InputTankAmount != default)
             tag[nameof(InputTankAmount)] = InputTankAmount;
 
@@ -185,8 +190,10 @@ public class OilRefineryTE : ConsumerTE
             tag[nameof(OutputTankAmount)] = OutputTankAmount;
     }
 
-    public override void MachineLoadData(TagCompound tag)
+    protected override void ConsumerLoadData(TagCompound tag)
     {
+        base.ConsumerLoadData(tag);
+
         if (tag.ContainsKey(nameof(InputTankAmount)))
             InputTankAmount = tag.GetFloat(nameof(InputTankAmount));
 

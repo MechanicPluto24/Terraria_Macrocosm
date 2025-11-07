@@ -3475,3 +3475,13 @@ SteelPipe: {
 	DisplayName: Steel Pipe
 	Tooltip: ""
 }
+
+IndustrialBatteryLarge: {
+	DisplayName: Large Industrial Battery 
+	Tooltip: ""
+}
+
+WindTurbineTiny: {
+	DisplayName: Tiny Wind Turbine 
+	Tooltip: ""
+}

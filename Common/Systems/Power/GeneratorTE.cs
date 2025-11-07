@@ -5,6 +5,8 @@ using Terraria;
 using Terraria.GameContent;
 using Terraria.Localization;
 using Terraria.UI.Chat;
+using System.IO;
+using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Common.Systems.Power;
 
@@ -22,7 +24,6 @@ public abstract class GeneratorTE : MachineTE
     }
 
     public override Color DisplayColor => Color.LimeGreen;
-
     public override string GetPowerInfo() => $"{Language.GetText($"Mods.Macrocosm.Machines.Common.PowerInfo.Generator").Format($"{GeneratedPower:F2}", $"{MaxGeneratedPower:F2}")}";
     public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
     {
@@ -37,5 +38,42 @@ public abstract class GeneratorTE : MachineTE
         ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, active, position - new Vector2(active.Length, 24), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
         ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, line, position - new Vector2(line.Length + 5, 22), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
         ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, total, position - new Vector2(total.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+    }
+
+    protected virtual void GeneratorNetSend(BinaryWriter writer) { }
+    protected virtual void GeneratorNetReceive(BinaryReader reader) { }
+    protected virtual void GeneratorSaveData(TagCompound tag) { }
+    protected virtual void GeneratorLoadData(TagCompound tag) { }
+
+    public sealed override void MachineNetSend(BinaryWriter writer)
+    {
+        writer.Write(GeneratedPower);
+        writer.Write(MaxGeneratedPower);
+        GeneratorNetSend(writer);
+    }
+
+    public sealed override void MachineNetReceive(BinaryReader reader)
+    {
+        GeneratedPower = reader.ReadSingle();
+        MaxGeneratedPower = reader.ReadSingle();
+        GeneratorNetReceive(reader);
+    }
+
+    public sealed override void MachineSaveData(TagCompound tag)
+    {
+        if (GeneratedPower != 0f)
+            tag[nameof(GeneratedPower)] = GeneratedPower;
+        if (MaxGeneratedPower != 0f)
+            tag[nameof(MaxGeneratedPower)] = MaxGeneratedPower;
+        GeneratorSaveData(tag);
+    }
+
+    public sealed override void MachineLoadData(TagCompound tag)
+    {
+        if (tag.ContainsKey(nameof(GeneratedPower)))
+            GeneratedPower = tag.GetFloat(nameof(GeneratedPower));
+        if (tag.ContainsKey(nameof(MaxGeneratedPower)))
+            MaxGeneratedPower = tag.GetFloat(nameof(MaxGeneratedPower));
+        GeneratorLoadData(tag);
     }
 }

@@ -1,26 +1,25 @@
-﻿using Macrocosm.Common.Drawing;
+using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Systems.Power;
-using Macrocosm.Common.Utils;
+using Macrocosm.Common.Utils; 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Machines.Batteries;
 
-public class IndustrialBattery : MachineTile
+public class IndustrialBatteryLarge : MachineTile
 {
     private static Asset<Texture2D> glowmask;
 
-    public override short Width => 3;
-    public override short Height => 3;
-    public override MachineTE MachineTE => ModContent.GetInstance<IndustrialBatteryTE>();
+    public override short Width => 5;
+    public override short Height => 5;
+    public override MachineTE MachineTE => ModContent.GetInstance<IndustrialBatteryLargeTE>();
 
     public override void SetStaticDefaults()
     {
@@ -29,7 +28,7 @@ public class IndustrialBattery : MachineTile
         Main.tileLavaDeath[Type] = true;
 
         TileObjectData.newTile.DefaultToMachine(this);
-        TileObjectData.newTile.Origin = new Point16(1, 2);
+        TileObjectData.newTile.Origin = new Point16(2, 4); 
         TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.Table | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
@@ -67,10 +66,9 @@ public class IndustrialBattery : MachineTile
 
     public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
     {
-        Main.tileLighted[Type] = true;
         glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
         float fill = 0f;
-        if (TileEntity.ByPosition.TryGetValue(TileObjectData.TopLeft(i, j), out TileEntity entity) && entity is BatteryTE batt)
+        if (TileEntity.ByPosition.TryGetValue(TileObjectData.TopLeft(i, j), out var entity) && entity is BatteryTE batt)
             fill = batt.EnergyCapacity > 0 ? batt.StoredEnergy / batt.EnergyCapacity : 0f;
         TileRendering.DrawTileExtraTexture(i, j, spriteBatch, glowmask, applyPaint: true, Color.White * fill);
     }
@@ -83,10 +81,10 @@ public class IndustrialBattery : MachineTile
         bool powered = IsPoweredOnFrame(i, j);
 
         float fill = 0f;
-        if (TileEntity.ByPosition.TryGetValue(TileObjectData.TopLeft(i, j), out TileEntity entity) && entity is BatteryTE batt)
+        if (TileEntity.ByPosition.TryGetValue(TileObjectData.TopLeft(i, j), out var entity) && entity is BatteryTE batt)
             fill = batt.EnergyCapacity > 0 ? batt.StoredEnergy / batt.EnergyCapacity : 0f;
 
-        if (powered && tileOffsetX != 1 && tileOffsetY is 0 or 2)
+        if (powered && (tileOffsetX is 0 or 2 or 4) && (tileOffsetY is 1 or 2 or 3))
             tile.GetEmmitedLight(new Color(233, 214, 92) * fill, applyPaint: true, out r, out g, out b);
     }
 }

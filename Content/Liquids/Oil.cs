@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using ModLiquidLib.ID;
 using ModLiquidLib.ModLoader;
+using Terraria.GameContent.Liquid;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -10,10 +11,9 @@ public class Oil : ModLiquid
 {
     public override void SetStaticDefaults()
     {
-        LiquidFallLength = 3;
-        VisualViscosity = 160;
-
-        DefaultOpacity = 0.85f;
+        LiquidRenderer.WATERFALL_LENGTH[Type] = 3;
+        LiquidRenderer.VISCOSITY_MASK[Type] = 160;
+        LiquidRenderer.DEFAULT_OPACITY[Type] = 0.85f;
         SlopeOpacity = 1f;
         LiquidfallOpacityMultiplier = 0.5f;
 
