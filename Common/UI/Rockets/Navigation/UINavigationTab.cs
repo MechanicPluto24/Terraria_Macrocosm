@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.Players;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;
-using Macrocosm.Common.UI;
 using Macrocosm.Common.UI.Rockets.Cargo;
 using Macrocosm.Common.UI.Rockets.Customization;
 using Macrocosm.Common.UI.Rockets.Navigation.Checklist;
@@ -10,6 +9,7 @@ using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets;
 using Macrocosm.Content.Rockets.LaunchPads;
+using Macrocosm.Content.Rockets.Modules; // added for module configuration check
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +43,9 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
     private bool selectedSpawnLocation;
 
     private UILaunchDestinationInfoElement spawnInfoElement;
+
+    private bool ShowExistingStations = false; // guard flag
+    private bool AllowUnmannedPlanetLanding = false; // reserved for future
 
     public UINavigationTab()
     {
@@ -95,6 +98,28 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
 
     private void LaunchRocket()
     {
+        bool isUnmanned = false;
+        if (Rocket != null && Rocket.Modules != null)
+        {
+            isUnmanned = true;
+            foreach (var m in Rocket.Modules)
+            {
+                if (m.Configuration == RocketModule.ConfigurationType.Manned)
+                {
+                    isUnmanned = false;
+                    break;
+                }
+            }
+        }
+        if (isUnmanned)
+        {
+            if (!Rocket.HasUnmannedMission)
+            {
+                Vector2 padCenter = targetLaunchPad?.CenterWorld ?? Rocket.Center;
+                Rocket.TryStartUnmannedOrbitMission(target.TargetID, padCenter, durationTicks:60 *60 *5);
+            }
+            return;
+        }
         if (targetOrbitSubworld != null)
             Rocket.Launch(targetOrbitSubworld.ID, orbitTravel: true);
         else
@@ -310,10 +335,17 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
             launchLocationsList.SetPadding(0f);
             launchLocationsList.TitleHAlign = 0.6f;
         }
+        // clear previous list before rebuilding
+        launchLocationsList.ClearList();
 
         List<UILaunchDestinationInfoElement> vacant = new();
         List<UILaunchDestinationInfoElement> occupied = new();
         UILaunchDestinationInfoElement current = null;
+
+        bool unmanned = false;
+        if (Rocket != null && Rocket.Modules != null)
+            unmanned = Rocket.Modules.All(m => m.Configuration != RocketModule.ConfigurationType.Manned);
+
         // Add the launchpads
         foreach (var launchPad in LaunchPadManager.GetLaunchPads(subworldId))
         {
@@ -348,8 +380,9 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
             }
         }
 
+        // Orbit subworlds only shown if not unmanned OR if we later allow existing station listing
         List<UILaunchDestinationInfoElement> orbitSubworlds = new();
-        if (target is not null && target.TargetID == MacrocosmSubworld.CurrentID)
+        if (!unmanned && target is not null && target.TargetID == MacrocosmSubworld.CurrentID)
         {
             foreach (var orbitSubworld in OrbitSubworld.GetOrbitSubworlds(target.TargetID).OrderBy(s => s.InstanceIndex))
             {
@@ -368,6 +401,17 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
                 orbitSubworlds.Add(infoElement);
             }
         }
+        else if (unmanned)
+        {
+            var createStationElement = new UILaunchDestinationInfoElement(true)
+            {
+                FocusContext = "LaunchLocations",
+            };
+            createStationElement.IsReachable = true;
+            createStationElement.OnLeftClick += InfoElement_OnLeftClick;
+            createStationElement.OnRightClick += InfoElement_OnRightClick;
+            orbitSubworlds.Add(createStationElement);
+        }
 
         launchLocationsList.AddRange(vacant.Cast<UIElement>().ToList());
         if (vacant.Count > 0)
@@ -376,7 +420,7 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
         launchLocationsList.AddRange(occupied.Cast<UIElement>().ToList());
 
         // Add the "Unknown" launch location if no vacant launchpads were found
-        if (vacant.Count == 0 && subworldId != MacrocosmSubworld.CurrentID)
+        if (vacant.Count == 0 && subworldId != MacrocosmSubworld.CurrentID && !unmanned)
         {
             spawnInfoElement = new()
             {

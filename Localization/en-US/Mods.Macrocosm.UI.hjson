@@ -78,7 +78,8 @@ Rocket: {
 			Launch: LAUNCH
 			LaunchInactive: LAUNCH
 		}
-
+		SpaceStationNumber: "Space station #{0}"
+		CreateSpaceStation: "Create space station"
 		Gravity: {
 			Name: Gravity
 			UnitG: "{0} G {1}{2}{3}"

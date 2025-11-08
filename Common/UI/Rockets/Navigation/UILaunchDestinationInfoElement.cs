@@ -21,12 +21,14 @@ public class UILaunchDestinationInfoElement : UIInfoElement, IFocusable
     public Action OnFocusGain { get; set; }
     public Action OnFocusLost { get; set; }
 
-    public bool IsSpawnPointDefault => LaunchPad is null;
+    public bool IsSpawnPointDefault => LaunchPad is null && OrbitSubworld is null && !IsCreateNewStation;
 
     public bool IsCurrent { get; set; }
     public bool IsReachable { get; set; }
 
     public bool CanInteract { get; set; } = true;
+
+    public bool IsCreateNewStation { get; init; }
 
     public UILaunchDestinationInfoElement() : base(
         Language.GetText("Mods.Macrocosm.UI.LaunchPad.UnknownLocation"),
@@ -56,13 +58,26 @@ public class UILaunchDestinationInfoElement : UIInfoElement, IFocusable
     }
 
     public UILaunchDestinationInfoElement(OrbitSubworld orbitSubworld) : base(
-        $"Space station #{orbitSubworld.InstanceIndex + 1}",
+        Language.GetTextValue("Mods.Macrocosm.UI.Rocket.Navigation.SpaceStationNumber", orbitSubworld.InstanceIndex + 1),
         ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "SpaceStation", AssetRequestMode.ImmediateLoad),
         null,
         null
     )
     {
         OrbitSubworld = orbitSubworld;
+        Width = new(0f, 1f);
+        Height = new(40f, 0f);
+        BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;
+        BorderColor = UITheme.Current.InfoElementStyle.BorderColor;
+    }
+
+    public UILaunchDestinationInfoElement(bool createNewStation) : base(
+        Language.GetText("Mods.Macrocosm.UI.Rocket.Navigation.CreateSpaceStation"),
+        ModContent.Request<Texture2D>(Macrocosm.UISymbolsPath + "SpaceStationPlus", AssetRequestMode.ImmediateLoad),
+        null,
+        null)
+    {
+        IsCreateNewStation = createNewStation;
         Width = new(0f, 1f);
         Height = new(40f, 0f);
         BackgroundColor = UITheme.Current.InfoElementStyle.BackgroundColor;

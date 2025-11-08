@@ -3477,11 +3477,11 @@ SteelPipe: {
 }
 
 IndustrialBatteryLarge: {
-	DisplayName: Large Industrial Battery 
+	DisplayName: Large Industrial Battery
 	Tooltip: ""
 }
 
 WindTurbineTiny: {
-	DisplayName: Tiny Wind Turbine 
+	DisplayName: Tiny Wind Turbine
 	Tooltip: ""
 }

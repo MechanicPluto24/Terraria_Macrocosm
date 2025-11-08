@@ -3,8 +3,10 @@ using SubworldLibrary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Macrocosm.Common.Utils; // Utility
 
 namespace Macrocosm.Common.Systems.Flags;
 
@@ -141,7 +143,7 @@ public class WorldData : ModSystem
         if (DownedDementoxin) tag[nameof(DownedDementoxin)] = true;
         if (DownedLunalgamate) tag[nameof(DownedLunalgamate)] = true;
 
-        if (LuminiteShrineUnlocked) tag[nameof(DownedLunalgamate)] = true;
+        if (LuminiteShrineUnlocked) tag[nameof(LuminiteShrineUnlocked)] = true;
         if (HeavenforgeShrineUnlocked) tag[nameof(HeavenforgeShrineUnlocked)] = true;
         if (LunarRustShrineUnlocked) tag[nameof(LunarRustShrineUnlocked)] = true;
         if (AstraShrineUnlocked) tag[nameof(AstraShrineUnlocked)] = true;
@@ -157,7 +159,7 @@ public class WorldData : ModSystem
 
     public static void LoadData(TagCompound tag)
     {
-        if (tag.ContainsKey("SubworldFlags"))
+        if (tag.ContainsKey("SubworldData"))
         {
             var subworldTags = tag.GetList<TagCompound>("SubworldData");
             foreach (var entry in subworldTags)
@@ -231,7 +233,6 @@ public class WorldData : ModSystem
             _subworldData[subworldName] = SubworldData.NetReceive(reader);
         }
 
-        // I prefer using properties, okay?! - Feldy
         (
             DownedCraterDemon,
             DownedMoonBeast,

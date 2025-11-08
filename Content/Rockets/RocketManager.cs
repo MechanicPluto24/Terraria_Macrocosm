@@ -82,7 +82,7 @@ public class RocketManager : ModSystem, IOnPlayerJoining
         {
             Rocket rocket = Rockets[i];
 
-            if (!rocket.ActiveInCurrentWorld)
+            if (!rocket.ActiveInCurrentWorld && !rocket.IsAutonomousMissionState)
                 continue;
 
             rocket.Update();
@@ -126,6 +126,9 @@ public class RocketManager : ModSystem, IOnPlayerJoining
             if (!rocket.ActiveInCurrentWorld)
                 continue;
 
+            if (rocket.IsAutonomousMissionState)
+                continue;
+
             if (rocket.DrawLayer != layer)
                 continue;
 
@@ -157,6 +160,9 @@ public class RocketManager : ModSystem, IOnPlayerJoining
             Rocket rocket = Rockets[i];
 
             if (!rocket.ActiveInCurrentWorld)
+                continue;
+
+            if (rocket.IsAutonomousMissionState)
                 continue;
 
             if (rocket.DrawLayer != layer)

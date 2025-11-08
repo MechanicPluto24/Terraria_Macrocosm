@@ -36,6 +36,13 @@ public partial class Rocket : TagSerializable
         if (Nameplate != null) tag[nameof(Nameplate)] = Nameplate;
         if (Inventory != null) tag[nameof(Inventory)] = Inventory;
 
+        if (unmannedMissionActive) tag[nameof(unmannedMissionActive)] = true;
+        if (unmannedMissionTicksRemaining != 0) tag[nameof(unmannedMissionTicksRemaining)] = unmannedMissionTicksRemaining;
+        if (!string.IsNullOrEmpty(unmannedMissionParentId)) tag[nameof(unmannedMissionParentId)] = unmannedMissionParentId;
+        if (!string.IsNullOrEmpty(unmannedMissionOrbitId)) tag[nameof(unmannedMissionOrbitId)] = unmannedMissionOrbitId;
+        if (unmannedMissionType != 0) tag[nameof(unmannedMissionType)] = unmannedMissionType;
+        if (unmannedMissionReturnPos != default) tag[nameof(unmannedMissionReturnPos)] = unmannedMissionReturnPos;
+
         return tag;
     }
 
@@ -66,6 +73,13 @@ public partial class Rocket : TagSerializable
 
         if (tag.ContainsKey(nameof(Inventory)))
             rocket.Inventory = tag.Get<Inventory>(nameof(Inventory));
+
+        rocket.unmannedMissionActive = tag.ContainsKey(nameof(unmannedMissionActive));
+        rocket.unmannedMissionTicksRemaining = tag.TryGet(nameof(unmannedMissionTicksRemaining), out int ticks) ? ticks : 0;
+        rocket.unmannedMissionParentId = tag.TryGet(nameof(unmannedMissionParentId), out string pid) ? pid : "";
+        rocket.unmannedMissionOrbitId = tag.TryGet(nameof(unmannedMissionOrbitId), out string oid) ? oid : "";
+        rocket.unmannedMissionType = tag.TryGet(nameof(unmannedMissionType), out byte mtype) ? mtype : (byte)0;
+        rocket.unmannedMissionReturnPos = tag.TryGet(nameof(unmannedMissionReturnPos), out Vector2 rpos) ? rpos : Vector2.Zero;
 
         return rocket;
     }

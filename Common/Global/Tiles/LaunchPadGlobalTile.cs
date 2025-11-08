@@ -32,7 +32,17 @@ public class LaunchPadGlobalTile : GlobalTile
                     Wiring.SkipWire(tileX, tileY);
 
             if (launchPad.HasActiveRocket)
-                RocketManager.Rockets[launchPad.RocketID].Launch(targetWorld: MacrocosmSubworld.CurrentID);
+            {
+                var rocket = RocketManager.Rockets[launchPad.RocketID];
+                if (!rocket.HasUnmannedMission)
+                {
+                    rocket.TryStartUnmannedOrbitMission(MacrocosmSubworld.CurrentID, launchPad.CenterWorld, durationTicks: 60 * 60 * 5);
+                }
+                else
+                {
+                    rocket.Launch(targetWorld: MacrocosmSubworld.CurrentID);
+                }
+            }
         }
     }
 
