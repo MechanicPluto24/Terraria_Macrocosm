@@ -583,7 +583,7 @@ DianiteTome: {
 
 ImbriumJewel: {
 	DisplayName: Imbrium Jewel
-	Tooltip: Fires phantasmal skulls around you
+	Tooltip: In it lies hidden magic
 }
 
 AluminumBroadsword: {
@@ -608,7 +608,7 @@ SeleniteSpear: {
 
 SeleniteSword: {
 	DisplayName: Selenite Straightsword
-	Tooltip: ""
+	Tooltip: Fires an accelerating energy wave
 }
 
 ClawWrench: {
@@ -627,7 +627,11 @@ Crucible: {
 
 MoonSword: {
 	DisplayName: Moon Sword
-	Tooltip: ""
+	Tooltip:
+		'''
+		Fires a lunar wave when swinging the blade
+		'My guiding moonlight'
+		'''
 }
 
 Noxsaber: {
@@ -1026,7 +1030,7 @@ Procellarum: {
 		'''
 		<left> to swing, with hits applying a Lightning Mark
 		<right> to throw, charging to call down 5 heavenly lightning bolts down upon enemies
-		lightning bolts will prioritise and home in on and deal 50% increased damage to marked enemies
+		Lightning bolts will prioritise and home in on and deal 50% increased damage to marked enemies
 		'''
 }
 
@@ -1091,7 +1095,7 @@ SteelLeggings: {
 
 RapaciousBrand: {
 	DisplayName: Rapacious Brand
-	Tooltip: ""
+	Tooltip: Shoots a bloody sawblade
 }
 
 Motor: {
@@ -2738,7 +2742,11 @@ ClydersWings: {
 
 Schroteri: {
 	DisplayName: Schroteri
-	Tooltip: ""
+	Tooltip:
+		'''
+		Repeated hits with the blade strengthen it and increase its range
+		This effect wears off after some time if the blade is not used
+		'''
 }
 
 Conveyor: {
@@ -2907,8 +2915,8 @@ Rubber: {
 }
 
 PhantasmalSkullTome: {
-	DisplayName: Phantasmal Skull Tome
-	Tooltip: ""
+	DisplayName: Phantasmal Skull
+	Tooltip: Fires phantasmal skulls around you
 }
 
 RubberWoodHammer: {
@@ -3051,14 +3059,9 @@ ACUnit: {
 	Tooltip: ""
 }
 
-MoonChampionSentryItem: {
-	DisplayName: Moon Champion Sentry Item
-	Tooltip: ""
-}
-
 MoonChampionSentry: {
-	DisplayName: Moon Champion Sentry
-	Tooltip: ""
+	DisplayName: Handmade Turret Caller
+	Tooltip: Summons a makeshift missile launcher
 }
 
 RegolithBathtub: {
@@ -3173,7 +3176,7 @@ BLPAsterix: {
 
 StasisGrenade: {
 	DisplayName: Stasis Grenade
-	Tooltip: ""
+	Tooltip: Greatly slows enemies caught in the blast
 }
 
 AutocrafterT1: {
@@ -3267,18 +3270,26 @@ TimberHearth: {
 }
 
 CelestialMeteorStaff: {
-	DisplayName: Celestial Meteor Staff
-	Tooltip: ""
+	DisplayName: Lunar Flash
+	Tooltip: Showers celestial meteors with varying deadly effects
 }
 
 LockOnStaff: {
-	DisplayName: Lock On Staff
-	Tooltip: ""
+	DisplayName: Lock-On Staff
+	Tooltip:
+		'''
+		Targets up to four enemies before firing explosive beams
+		'Time to hit 'em hard and make 'em regret it!'
+		'''
 }
 
 MegaBlade: {
 	DisplayName: Mega Blade
-	Tooltip: ""
+	Tooltip:
+		'''
+		A massive blade made from a rocket's hull
+		'Surprisingly lighter than it looks'
+		'''
 }
 
 Choronzon: {
@@ -3388,7 +3399,7 @@ Dropper: {
 
 ScrapshotBow: {
 	DisplayName: Scrapshot Bow
-	Tooltip: Prone to faulty firing
+	Tooltip: Shoots a burst of arrows and metal scrap
 }
 
 LegacyDianiteBreastplate: {
@@ -3443,7 +3454,7 @@ SeleniteBrickWall: {
 
 LightningSpear: {
 	DisplayName: Lightning Spear
-	Tooltip: ""
+	Tooltip: Hurls a lightning spear
 }
 
 HeveaSword: {
@@ -3453,7 +3464,7 @@ HeveaSword: {
 
 MetalCutter: {
 	DisplayName: Metal Cutter
-	Tooltip: ""
+	Tooltip: Shoots an energy flame controlled by the cursor
 }
 
 HeveaBow: {
@@ -3463,7 +3474,11 @@ HeveaBow: {
 
 ProtoRailgun: {
 	DisplayName: Proto Railgun
-	Tooltip: ""
+	Tooltip:
+		'''
+		Fires a high piercing bolt
+		'A mere glimpse into the future of firearms!'
+		'''
 }
 
 Hopper: {
@@ -3477,11 +3492,11 @@ SteelPipe: {
 }
 
 IndustrialBatteryLarge: {
-	DisplayName: Large Industrial Battery 
+	DisplayName: Large Industrial Battery
 	Tooltip: ""
 }
 
 WindTurbineTiny: {
-	DisplayName: Tiny Wind Turbine 
+	DisplayName: Tiny Wind Turbine
 	Tooltip: ""
 }
