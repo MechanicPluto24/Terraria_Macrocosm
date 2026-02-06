@@ -1,17 +1,23 @@
-﻿using Macrocosm.Common.CrossMod;
+﻿using System.Collections.Generic;
 using Terraria;
 using Terraria.Achievements;
+using Terraria.GameContent.Achievements;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Achievements;
 
-public class SurviveMoon : TMLAchievement
+public class SurviveMoon : ModAchievement
 {
-    public override float Order => 40f;
-    public override AchievementCategory Category => AchievementCategory.Explorer;
-    public override bool ShowProgressBar => false;
+    public CustomFloatCondition Condition { get; private set; }
 
-    protected override void SetupConditions()
+    public override void SetStaticDefaults()
     {
-        AddValueEvent(Name, (float)(Main.dayLength + Main.nightLength));
+        Achievement.SetCategory(AchievementCategory.Explorer);
+        Condition = AddFloatCondition((float)(Main.dayLength + Main.nightLength));
+    }
+
+    public override IEnumerable<Position> GetModdedConstraints()
+    {
+        yield return new After(ModContent.GetInstance<TravelToMoon>());
     }
 }

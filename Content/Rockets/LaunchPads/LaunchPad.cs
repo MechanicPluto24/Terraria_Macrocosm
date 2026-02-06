@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.CrossMod;
-using Macrocosm.Common.Drawing;
+﻿using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Storage;
@@ -284,7 +283,7 @@ public partial class LaunchPad : IInventoryOwner
         internalRocket = rocket.VisualClone();
 
         NetSync(MacrocosmSubworld.CurrentID);
-        TMLAchievement.Unlock<BuildRocket>();
+        ModContent.GetInstance<BuildRocket>()?.Condition?.Complete();
     }
 
     private void Assemble_CreateParticles()

@@ -40,9 +40,6 @@ public partial class CrossMod : ModSystem
         Call_MusicDisplay();
         Call_Wikithis();
         Call_TerrariaAmbience();
-
-        foreach (var achievement in Mod.GetContent<TMLAchievement>())
-            achievement.PostSetupContent();
     }
 
     private void Call_BossChecklist()

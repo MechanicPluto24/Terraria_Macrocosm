@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.CrossMod;
-using Macrocosm.Common.DataStructures;
+﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
@@ -80,7 +79,7 @@ public partial class Moon : MacrocosmSubworld
         meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
         meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
 
-        TMLAchievement.Unlock<TravelToMoon>();
+        ModContent.GetInstance<TravelToMoon>()?.Condition?.Complete();
     }
 
     public override void OnExitSubworld()

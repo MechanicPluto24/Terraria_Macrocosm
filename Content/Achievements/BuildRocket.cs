@@ -1,10 +1,18 @@
-﻿using Macrocosm.Common.CrossMod;
-using Terraria.Achievements;
+﻿using Terraria.Achievements;
+using Terraria.GameContent.Achievements;
+using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Achievements;
 
-public class BuildRocket : TMLAchievement
+public class BuildRocket : ModAchievement
 {
-    public override float Order => 37f;
-    public override AchievementCategory Category => AchievementCategory.Explorer;
+    public CustomFlagCondition Condition { get; private set; }
+
+    public override void SetStaticDefaults()
+    {
+        Achievement.SetCategory(AchievementCategory.Explorer);
+        Condition = AddCondition();
+    }
+
+    public override Position GetDefaultPosition() => new After("TO_INFINITY_AND_BEYOND");
 }

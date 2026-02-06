@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.CrossMod;
-using Macrocosm.Common.Netcode;
+﻿using Macrocosm.Common.Netcode;
 using Macrocosm.Common.Systems;
 using Macrocosm.Content.Achievements;
 using Macrocosm.Content.Buffs.Environment;
@@ -201,7 +200,11 @@ public class MacrocosmPlayer : ModPlayer
     public void HandleAchievements()
     {
         if (SubworldSystem.IsActive<Moon>())
-            TMLAchievement.IncreaseEventValue<SurviveMoon>(nameof(SurviveMoon), 1f);
+        {
+            var surviveMoon = GetInstance<SurviveMoon>();
+            if (surviveMoon?.Condition != null)
+                surviveMoon.Condition.Value += 1f;
+        }
     }
 
     private void HandleZeroGravity()
