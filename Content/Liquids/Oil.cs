@@ -23,6 +23,9 @@ public class Oil : ModLiquid
 
         AddMapEntry(Color.Black, CreateMapEntryName());
     }
-
+    public override bool PreLiquidMerge(int liquidX, int liquidY, int tileX, int tileY, int otherLiquid)
+	{
+		return false; //Keep this like so unless we want the liquids to merge with something specific.
+	}
     public override int ChooseWaterfallStyle(int i, int j) => ModContent.GetInstance<OilFall>().Slot;
 }

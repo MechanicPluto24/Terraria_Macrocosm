@@ -34,15 +34,39 @@ public class LightningSpearProjectile : ModProjectile
 
         ProjectileID.Sets.TrailCacheLength[Type] = 3;
         ProjectileID.Sets.TrailingMode[Type] = 2;
-
+        Projectile.usesLocalNPCImmunity = true;
+        Projectile.localNPCHitCooldown = 25;
+        Projectile.penetrate = -1;
+        Projectile.timeLeft=600;
         Redemption.SetSpearBonus(Projectile);
     }
-
+    NPC stuckTo;
+    Vector2 offset;
+    float stuckRot;
+    bool hasStuck=false;
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
+        if(!hasStuck){
         target.AddBuff(BuffID.Electrified, 300);
+        stuckTo = target;
+        offset = Projectile.Center-target.Center;
+        stuckRot = Projectile.rotation;
+        hasStuck=true;
+        }
     }
 
+    float groundRot;
+    bool hitGround=false;
+    public override bool OnTileCollide(Vector2 oldVelocity)
+    {
+        if(!hitGround){
+            groundRot=Projectile.rotation;
+            hitGround=true;
+        }
+
+        Projectile.velocity*=0f;
+        return false;
+    }
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
     {
         float _ = float.NaN;
@@ -52,11 +76,31 @@ public class LightningSpearProjectile : ModProjectile
 
     public override void AI()
     {
-        Projectile.rotation = Projectile.velocity.ToRotation();
+        bool isStuck=false;
+        if(stuckTo is not null){
+            if(stuckTo.active)
+                isStuck = true;
+            else
+                stuckTo=null;
+        }
 
+        if(isStuck)
+        {
+            Projectile.Center= stuckTo.Center+offset;
+            Projectile.rotation = stuckRot;
+            Projectile.velocity*=0f;
+        }
+        else{
+        Projectile.rotation = Projectile.velocity.ToRotation();
+        
         Projectile.direction = Math.Sign(Projectile.velocity.X);
         Projectile.tileCollide = true;
         Projectile.velocity.Y += 0.12f;
+        if(hitGround)
+            Projectile.rotation = groundRot;
+
+        }
+        
 
         if (!Main.dedServ)
         {

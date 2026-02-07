@@ -17,6 +17,7 @@ public class PollutionBiome : ModBiome
     public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/Pollution";
     public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Pollution";
     public override string MapBackground => BackgroundPath;
+    public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Pollution");
 
     public override ModWaterStyle WaterStyle => ModContent.GetInstance<PollutionWaterStyle>();
     public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Normal;

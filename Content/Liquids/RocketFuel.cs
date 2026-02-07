@@ -14,6 +14,9 @@ public class RocketFuel : ModLiquid
         LiquidRenderer.DEFAULT_OPACITY[Type] = 0.75f;
         AddMapEntry(new Color(155, 59, 0), CreateMapEntryName());
     }
-
+    public override bool PreLiquidMerge(int liquidX, int liquidY, int tileX, int tileY, int otherLiquid)
+	{
+		return false; //Keep this like so unless we want the liquids to merge with something specific.
+	}
     public override int ChooseWaterfallStyle(int i, int j) => ModContent.GetInstance<RocketFuelFall>().Slot;
 }

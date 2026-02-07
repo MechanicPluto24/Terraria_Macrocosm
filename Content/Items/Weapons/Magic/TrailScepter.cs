@@ -32,7 +32,7 @@ public class TrailScepter : ModItem
         Item.width = 40;
         Item.height = 40;
         Item.knockBack = 4;
-        Item.UseSound = SoundID.Item43;
+        Item.UseSound = SoundID.Item43 with { Volume = 0.4f };
     }
 
     //public override Vector2? HoldoutOrigin()

@@ -38,7 +38,6 @@ public partial class Trashnado : ModNPC
             BuffID.Venom
         );
 
-        NPCSets.MoonNPC[Type] = true;
     
         NPCSets.Material[Type] = NPCMaterial.Supernatural;
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Wind);
