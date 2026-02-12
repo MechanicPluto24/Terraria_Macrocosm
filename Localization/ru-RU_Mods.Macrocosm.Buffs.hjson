@@ -1,0 +1,126 @@
+{
+  "Fear": {
+    "DisplayName": "Страх",
+    "Description": "О БОЖЕ, ЧТО ЭТО?!"
+  },
+  "SuitBreach": {
+    "DisplayName": "Разрыв костюма",
+    "Description": "Вы подвержены воздействию стихий!"
+  },
+  "Depressurized": {
+    "DisplayName": "Депрессуризация",
+    "Description": "Ваша кровь кипит!"
+  },
+  "ChandriumWhipBuff": {
+    "DisplayName": "Усиление Чандриумом",
+    "Description": "Ваш следующий удар с Чандриумовым кнутом нанесет увеличенный урон!"
+  },
+  "CalcicCaneMinionBuff": {
+    "DisplayName": "Кратерный Бес",
+    "Description": "Кратерный бес будет сражаться за вас"
+  },
+  "ChandriumStaffMinionBuff": {
+    "DisplayName": "Лунный Призрак",
+    "Description": "Лунный призрак будет сражаться за вас"
+  },
+  "SpaceShuttle": {
+    "DisplayName": "Космический Шаттл",
+    "Description": "В память о STS-51-L и STS-107."
+  },
+  "Procellarum_LightningMarkDebuff": {
+    "DisplayName": "Метка Молнии Прокеллара",
+    "Description": "Вы получаете двойной урон от молний Прокеллара."
+  },
+  "HandheldEngineOverheat": {
+    "DisplayName": "Перегрев Ручного Двигателя",
+    "Description": "Ваше оружие перегрелось!"
+  },
+  "CraterDemonPet": {
+    "DisplayName": "Мини Кратерный Демон",
+    "Description": "Он что-то замышляет..."
+  },
+  "MedkitHigh": {
+    "DisplayName": "Аптечка",
+    "Description": "Вы исцеляетесь"
+  },
+  "MedkitLow": {
+    "DisplayName": "Аптечка",
+    "Description": "Вы исцеляетесь"
+  },
+  "MedkitMedium": {
+    "DisplayName": "Аптечка",
+    "Description": "Вы исцеляетесь"
+  },
+  "Irradiated": {
+    "DisplayName": "Облучение",
+    "Description": "У вас лучевая болезнь"
+  },
+  "Blindness": {
+    "DisplayName": "Слепота",
+    "Description": "Снижение видимости"
+  },
+  "MildNecrosis": {
+    "DisplayName": "Легкий Некроз",
+    "Description": "Ваше тело разлагается"
+  },
+  "Necrosis": {
+    "DisplayName": "Некроз",
+    "Description": "Ваше тело быстро разлагается"
+  },
+  "OrganFailure": {
+    "DisplayName": "Отказ органов",
+    "Description": "Ваши органы отказывают"
+  },
+  "Paralysis": {
+    "DisplayName": "Паралич",
+    "Description": "Вы не можете двигаться!"
+  },
+  "WeakBones": {
+    "DisplayName": "Слабые Кости",
+    "Description": "Вы чувствуете слабость..."
+  },
+  "Fatigue": {
+    "DisplayName": "Усталость",
+    "Description": "Вы чувствуете усталость..."
+  },
+  "AntiRadiationPills": {
+    "DisplayName": "Противорадиационные Таблетки",
+    "Description": "Вы излечились от лучевой болезни"
+  },
+  "Melting": {
+    "DisplayName": "Плавление",
+    "Description": "Вы плавитесь"
+  },
+  "HummingbirdDroneSummonBuff": {
+    "DisplayName": "P.D.C.D. \"Колибри\"",
+    "Description": "Боевой дрон будет вас защищать"
+  },
+  "GreatstaffOfHorusMinionBuff": {
+    "DisplayName": "Усиление Миньона Великого Посоха Хоруса",
+    "Description": "Солнечный гранул будет сражаться за вас"
+  },
+  "HorusBurn": {
+    "DisplayName": "Ожог Хоруса",
+    "Description": "Обожжено светом самой яркой звезды"
+  },
+  "RyuguSummonBuff": {
+    "DisplayName": "Усиление Призыва Рюгу",
+    "Description": "Рюгу будет сражаться за вас"
+  },
+  "ProcellarumLightningMarkDebuff": {
+    "DisplayName": "Метка Молнии Прокеллара",
+    "Description": "Вы получаете двойной урон от молний Прокеллара."
+  },
+  "ProcellarumLightningMark": {
+    "DisplayName": "Метка Молнии Прокеллара",
+    "Description": "Вы получаете двойной урон от молний Прокеллара."
+  },
+  "TotalitySlashed": {
+    "DisplayName": "Разрез Тотальности",
+    "Description": "Урон от молний Прокеллара увеличен."
+  },
+  "TotalityTag": {
+    "DisplayName": "Метка Тотальности",
+    "Description": "Урон от молний Прокеллара увеличен."
+  }
+}
