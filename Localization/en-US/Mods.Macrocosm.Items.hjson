@@ -583,7 +583,7 @@ DianiteTome: {
 
 ImbriumJewel: {
 	DisplayName: Imbrium Jewel
-	Tooltip: 'In it lies hidden magic'
+	Tooltip: In it lies hidden magic
 }
 
 AluminumBroadsword: {
@@ -3399,11 +3399,11 @@ Dropper: {
 
 ScrapshotBow: {
 	DisplayName: Scrapshot Bow
-	Tooltip: 
-	'''
-	Shoots a burst of arrows and metal scrap
-	'Prone to faulty firing!'
-	'''
+	Tooltip:
+		'''
+		Shoots a burst of arrows and metal scrap
+		'Prone to faulty firing!'
+		'''
 }
 
 LegacyDianiteBreastplate: {
@@ -3502,5 +3502,10 @@ IndustrialBatteryLarge: {
 
 WindTurbineTiny: {
 	DisplayName: Tiny Wind Turbine
+	Tooltip: ""
+}
+
+RegolithPlatform: {
+	DisplayName: Regolith Platform
 	Tooltip: ""
 }

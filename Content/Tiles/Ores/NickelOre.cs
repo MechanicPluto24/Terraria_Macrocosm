@@ -25,7 +25,7 @@ public class NickelOre : ModTile
         Regolith.TileMerge[Type] = true;
 
         LocalizedText name = CreateMapEntryName();
-        AddMapEntry(new Color(180, 170, 140), name);
+        AddMapEntry(new Color(220, 215, 205), name);
 
         DustType = ModContent.DustType<RegolithDust>();
         HitSound = SoundID.Tink;

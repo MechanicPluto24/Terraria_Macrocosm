@@ -16,8 +16,7 @@ public class ProtolithBrick : ModTile
         Main.tileSolid[Type] = true;
         Main.tileBrick[Type] = true;
         Main.tileBlockLight[Type] = true;
-
-        TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
+        Main.tileBlendAll[Type] = true;
 
         MinPick = 225;
         MineResist = 3f;
