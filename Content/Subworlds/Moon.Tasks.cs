@@ -1142,9 +1142,9 @@ public partial class Moon
                         Tile target = Main.tile[x, y];
                         if (!target.HasTile && WorldGen.SolidTile(tile))
                         {
-                            WorldGen.PlaceTile(x, y, ModContent.TileType<LuminiteCrystal>(), mute: true, forced: false);
-                            NetMessage.SendTileSquare(-1, x, y, 1, 1);
-                            break;
+                            WorldGen.PlaceTile(x, y, TileType<LuminiteCrystalNatural>(), mute: true, forced: false);
+                                                         NetMessage.SendTileSquare(-1, x, y, 1, 1);
+                                                         break;
                         }
                         }
                     }

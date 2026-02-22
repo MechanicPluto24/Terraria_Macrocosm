@@ -1,7 +1,8 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
+using Macrocosm.Content.Items.Ores;
 using Microsoft.Xna.Framework;
-using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.Enums;
@@ -12,17 +13,16 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Misc;
 
-public abstract class LuminiteCrystal : ModTile
+public abstract class QuartzCrystal : ModTile
 {
     // We want both tiles to use the same texture
-    public override string Texture => this.GetNamespacePath().Replace(Name, nameof(LuminiteCrystal));
+    public override string Texture => this.GetNamespacePath().Replace(Name, nameof(QuartzCrystal));
 
     public override void SetStaticDefaults()
     {
         Main.tileLighted[Type] = true;
         Main.tileNoFail[Type] = true;
         Main.tileObsidianKill[Type] = true;
-        Main.tileSpelunker[Type] = true;
         Main.tileFrameImportant[Type] = true;
         Main.tileShine[Type] = 300;
 
@@ -30,50 +30,43 @@ public abstract class LuminiteCrystal : ModTile
         TileObjectData.newTile.CopyFrom(TileObjectData.Style1x1);
         TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.LavaDeath = false;
-        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, 1, 0);
+        TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
         TileObjectData.newTile.DrawYOffset = 2;
 
         // Top anchor
         TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
         TileObjectData.newAlternate.AnchorBottom = AnchorData.Empty;
-        TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, 1, 0);
+        TileObjectData.newAlternate.AnchorTop = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
         TileObjectData.newAlternate.DrawYOffset = -2;
         TileObjectData.addAlternate(1);
 
         // Right wall anchor
         TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
         TileObjectData.newAlternate.AnchorBottom = AnchorData.Empty;
-        TileObjectData.newAlternate.AnchorRight = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, 1, 0);
+        TileObjectData.newAlternate.AnchorRight = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
         TileObjectData.newAlternate.DrawYOffset = 0;
-        TileObjectData.newAlternate.DrawXOffset = 2;
+        TileObjectData.newAlternate.DrawXOffset = -2;
         TileObjectData.addAlternate(2);
 
         // Left wall anchor
         TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);
         TileObjectData.newAlternate.AnchorBottom = AnchorData.Empty;
-        TileObjectData.newAlternate.AnchorLeft = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, 1, 0);
+        TileObjectData.newAlternate.AnchorLeft = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
         TileObjectData.newAlternate.DrawYOffset = 0;
-        TileObjectData.newAlternate.DrawXOffset = -2;
+        TileObjectData.newAlternate.DrawXOffset = 2;
         TileObjectData.addAlternate(3);
 
         TileObjectData.addTile(Type);
 
-        AddMapEntry(new Color(57, 242, 150), CreateMapEntryName());
+        AddMapEntry(new Color(240, 216, 235), CreateMapEntryName());
 
         HitSound = SoundID.Item27;
-        DustType = ModContent.DustType<LuminiteBrightDust>();
+        DustType = ModContent.DustType<QuartzDust>();
     }
 
     public override void NumDust(int i, int j, bool fail, ref int num)
     {
-        num = fail ? 1 : 5;
-    }
-
-    public override void ModifyLight(int i, int j, ref float r, ref float g, ref float b)
-    {
-        r = (float)Math.Abs(Math.Cos((i * j) + (Main.time / 200)) * 0.07f) * 0.3f;
-        g = ((float)Math.Abs(Math.Cos(i + (Main.time / 150)) * 0.12f) * 0.5f) + 0.5f;
-        b = ((float)Math.Abs(Math.Cos(j + (Main.time / 250)) * 0.03f) * 0.3f) + 0.4f;
+        num = 10;
     }
 
     public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
@@ -119,34 +112,38 @@ public abstract class LuminiteCrystal : ModTile
             Main.tile[i, j].TileFrameY = 54;
 
         if (resetFrame)
-            Main.tile[i, j].TileFrameX = (short)(WorldGen.genRand.Next(20) * 18);
+            Main.tile[i, j].TileFrameX = (short)(WorldGen.genRand.Next(8) * 18);
 
         return false;
     }
 }
 
-// Natural tile placed during world generation, drops LunarCrystal
-public class LuminiteCrystalNatural : LuminiteCrystal
+// Natural tile placed during world generation
+public class QuartzCrystalNatural : QuartzCrystal
 {
     public override void SetStaticDefaults()
     {
         base.SetStaticDefaults();
 
         TileID.Sets.BreakableWhenPlacing[Type] = true;
+    }
 
-        RegisterItemDrop(ModContent.ItemType<Items.Consumables.Throwable.LunarCrystal>());
+    public override IEnumerable<Item> GetItemDrops(int i, int j)
+    {
+        if (WorldGen.genRand.NextBool(3))
+            yield return new Item(ModContent.ItemType<QuartzFragment>());
     }
 }
 
-// Fake tile placed by the Rubblemaker, consumes and drops LunarCrystal
-public class LuminiteCrystalFake : LuminiteCrystal
+// Fake tile placed by the Rubblemaker, consumes and drops QuartzFragment
+public class QuartzCrystalFake : QuartzCrystal
 {
     public override void SetStaticDefaults()
     {
         base.SetStaticDefaults();
 
-        FlexibleTileWand.RubblePlacementSmall.AddVariations(ModContent.ItemType<Items.Consumables.Throwable.LunarCrystal>(), Type, 0..20);
+        FlexibleTileWand.RubblePlacementSmall.AddVariations(ModContent.ItemType<QuartzFragment>(), Type, 0..8);
 
-        RegisterItemDrop(ModContent.ItemType<Items.Consumables.Throwable.LunarCrystal>());
+        RegisterItemDrop(ModContent.ItemType<QuartzFragment>());
     }
 }

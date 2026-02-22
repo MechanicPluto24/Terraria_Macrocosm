@@ -13,11 +13,8 @@ public class QuartzFragment : ModItem
 
     public override void SetDefaults()
     {
-        Item.width = 20;
-        Item.height = 20;
-        Item.maxStack = Item.CommonMaxStack;
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Blocks.Terrain.QuartzBlock>());
         Item.value = 1000;
         Item.rare = ModContent.RarityType<MoonRarity1>();
-
     }
 }

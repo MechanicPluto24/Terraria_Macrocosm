@@ -14,9 +14,12 @@ public class ProtolithBrick : ModTile
     public override void SetStaticDefaults()
     {
         Main.tileSolid[Type] = true;
-        Main.tileBrick[Type] = true;
+        //Main.tileBrick[Type] = true; keep false
         Main.tileBlockLight[Type] = true;
         Main.tileBlendAll[Type] = true;
+
+        TileID.Sets.HasSlopeFrames[Type] = true;
+        TileID.Sets.GemsparkFramingTypes[Type] = Type;
 
         MinPick = 225;
         MineResist = 3f;
@@ -39,7 +42,8 @@ public class ProtolithBrick : ModTile
     public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
     {
         int index = (i + 3 * (j % 2)) % 6;
-        TileFraming.PlatingStyle(i, j, customVariation: index % 3);
+        TileFraming.GemsparkFraming(i, j, resetFrame, customVariation: index % 3);
+        TileFraming.SlopeFraming(i, j);
         return false;
     }
 
@@ -54,7 +58,7 @@ public class ProtolithBrick : ModTile
         {
             tileFrameY += 90;
         }
-        else
+        else if (Utility.HasInnerFrame(i, j))
         {
             int index = (i + 3 * (j % 2)) % 6;
             if (index >= 3)

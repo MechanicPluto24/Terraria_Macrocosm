@@ -103,7 +103,6 @@ Flag.MapEntry: Flag
 ApolloLander.MapEntry: Apollo Lander
 ACUnit.MapEntry: AC Unit
 AirVent.MapEntry: Air Vent
-LuminiteCrystal.MapEntry: Luminite Crystal
 RegolithChest.MapEntry: Regolith Chest
 AutocrafterT1.MapEntry: Autocrafter
 AutocrafterT2.MapEntry: Autocrafter
@@ -119,3 +118,7 @@ SteelPipe.MapEntry: Steel Pipe
 IndustrialBatteryLarge.MapEntry: Industrial Battery Large
 WindTurbineTiny.MapEntry: Wind Turbine Tiny
 NickelOre.MapEntry: Nickel Ore
+LuminiteCrystalFake.MapEntry: Luminite Crystal
+LuminiteCrystalNatural.MapEntry: Luminite Crystal
+QuartzCrystalFake.MapEntry: Quartz Crystal
+QuartzCrystalNatural.MapEntry: Quartz Crystal

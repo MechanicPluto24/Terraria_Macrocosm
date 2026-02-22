@@ -20,7 +20,7 @@ public class IndustrialPlating : ModTile
 
         // To avoid things overlapping with outposts or the Moon Base
         TileID.Sets.GeneralPlacementTiles[Type] = false;
-
+        TileID.Sets.GemsparkFramingTypes[Type] = Type;
         TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
 
         DustType = ModContent.DustType<IndustrialPlatingDust>();
@@ -46,7 +46,7 @@ public class IndustrialPlating : ModTile
 
     public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
     {
-        TileFraming.PlatingStyle(i, j);
+        TileFraming.GemsparkFraming(i, j, resetFrame);
         return false;
     }
 
@@ -62,7 +62,12 @@ public class IndustrialPlating : ModTile
         {
             tileFrameY += 90;
         }
-        else if (new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((t) => WorldGen.SolidTile(t) && t.TileType != Type || TileID.Sets.NotReallySolid[t.TileType] || Utility.IsPlatform(t.TileType)).Count4Way > 0)
+        else if (new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((t) => 
+            WorldGen.SolidTile(t)
+            && t.TileType != Type
+            || TileID.Sets.NotReallySolid[t.TileType]
+            || Utility.IsPlatform(t.TileType)
+        ).Count4Way > 0)
         { 
             tileFrameY += 90;
         }

@@ -3,6 +3,7 @@ using Macrocosm.Common.TileFrame;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines.Generators.Solar;
@@ -18,6 +19,8 @@ public class SolarPanelTile : MachineTile
         Main.tileSolid[Type] = true;
         Main.tileBlockLight[Type] = false;
 
+        TileID.Sets.GemsparkFramingTypes[Type] = Type;
+
         DustType = ModContent.DustType<IndustrialPlatingDust>();
 
         AddMapEntry(new Color(100, 100, 200), CreateMapEntryName());
@@ -25,7 +28,7 @@ public class SolarPanelTile : MachineTile
 
     public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
     {
-        TileFraming.PlatingStyle(i, j, resetFrame);
+        TileFraming.GemsparkFraming(i, j, resetFrame);
         return false;
     }
 }
