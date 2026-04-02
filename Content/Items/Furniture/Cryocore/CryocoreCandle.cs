@@ -25,7 +25,7 @@ public class CryocoreCandle : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 4)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

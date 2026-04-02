@@ -48,6 +48,7 @@ public class EarthLoadingScreen : LoadingScreen
         float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
         progress = (float)Math.Pow(progress, 0.6);
         int movement = 250 + (int)(Utility.QuadraticEaseIn(progress) * 500f) * MovementDirection;
+        movement = Math.Max(0, movement);
 
         Asset<Texture2D> earthBackground = earthBackgrounds[Utility.RealTimeCycle(earthBackgrounds.Count, 1800)];
         spriteBatch.Draw

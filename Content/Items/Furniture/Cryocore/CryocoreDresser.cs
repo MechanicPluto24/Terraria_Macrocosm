@@ -23,7 +23,7 @@ public class CryocoreDresser : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 16)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

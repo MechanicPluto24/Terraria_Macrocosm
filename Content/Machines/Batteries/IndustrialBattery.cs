@@ -21,6 +21,7 @@ public class IndustrialBattery : MachineTile
     public override short Width => 3;
     public override short Height => 3;
     public override MachineTE MachineTE => ModContent.GetInstance<IndustrialBatteryTE>();
+    public override int FrameCount => 2;
 
     public override void SetStaticDefaults()
     {
@@ -30,7 +31,6 @@ public class IndustrialBattery : MachineTile
 
         TileObjectData.newTile.DefaultToMachine(this);
         TileObjectData.newTile.Origin = new Point16(1, 2);
-        TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.Table | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
 

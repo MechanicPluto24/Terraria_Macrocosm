@@ -53,6 +53,16 @@ public class RocketPlayer : ModPlayer
 
     public void EmbarkPlayerInRocket(int rocketId, bool asCommander = false)
     {
+        if (rocketId < 0 || rocketId >= RocketManager.MaxRockets)
+            return;
+
+        Rocket rocket = RocketManager.Rockets[rocketId];
+        if (!rocket.Active || rocket.IsUnmannedConfiguration)
+        {
+            DisembarkFromRocket();
+            return;
+        }
+
         RocketID = rocketId;
         IsCommander = asCommander;
 
@@ -90,6 +100,12 @@ public class RocketPlayer : ModPlayer
             Rocket rocket = RocketManager.Rockets[RocketID];
 
             if (!rocket.Active)
+            {
+                DisembarkFromRocket();
+                return;
+            }
+
+            if (rocket.IsUnmannedConfiguration)
             {
                 DisembarkFromRocket();
                 return;
@@ -137,7 +153,13 @@ public class RocketPlayer : ModPlayer
         else if (Player.whoAmI == Main.myPlayer)
         {
             if (UISystem.RocketUIActive)
-                UISystem.Hide();
+            {
+                Rocket uiRocket = UISystem.Instance.UIRocketState?.Rocket;
+                bool shouldAutoCloseRocketUI = uiRocket is null || !uiRocket.IsUnmannedConfiguration;
+
+                if (shouldAutoCloseRocketUI)
+                    UISystem.Hide();
+            }
 
             if (cameraModifier is not null)
                 cameraModifier.ReturnToNormalPosition = true;

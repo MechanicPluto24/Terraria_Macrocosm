@@ -33,7 +33,6 @@ public class OxygenSystem : MachineTile
 
         TileObjectData.newTile.DefaultToMachine(this);
         TileObjectData.newTile.Origin = new Point16(1, 0);
-        TileObjectData.newTile.StyleHorizontal = false;
         TileObjectData.newTile.LavaDeath = true;
         TileObjectData.newTile.AnchorTop = new AnchorData(AnchorType.SolidTile | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);

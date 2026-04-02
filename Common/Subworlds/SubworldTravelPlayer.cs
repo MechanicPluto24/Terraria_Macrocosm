@@ -167,7 +167,7 @@ public class SubworldTravelPlayer : ModPlayer
         }
     }
 
-    public static void SendTravelRequest(int toPlayer, string targetWorld, int rocketId)
+    public static void SendTravelRequest(int toPlayer, string targetWorld, int rocketId, bool downwards = false)
     {
         if (Main.netMode != NetmodeID.Server)
             return;
@@ -176,6 +176,7 @@ public class SubworldTravelPlayer : ModPlayer
         packet.Write((byte)MessageType.TravelRequest);
         packet.Write(targetWorld);
         packet.Write((byte)rocketId);
+        packet.Write(downwards);
         packet.Send(toPlayer);
     }
 
@@ -183,13 +184,14 @@ public class SubworldTravelPlayer : ModPlayer
     {
         string targetWorld = reader.ReadString();
         int rocketId = reader.ReadByte();
+        bool downwards = reader.ReadBoolean();
 
         if (Main.netMode != NetmodeID.MultiplayerClient)
             return;
 
         Rocket rocket = (rocketId >= 0 && rocketId <= RocketManager.MaxRockets) ? RocketManager.Rockets[rocketId] : null;
         if (MacrocosmSubworld.IsValidID(targetWorld))
-            Travel(targetWorld, rocket);
+            Travel(targetWorld, rocket, downwards: downwards);
     }
 
     /// <summary>

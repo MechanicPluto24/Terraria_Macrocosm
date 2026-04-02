@@ -25,7 +25,7 @@ public class CryocoreLamp : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 3)
             .AddIngredient<LunarCrystal>(1)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

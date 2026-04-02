@@ -24,7 +24,7 @@ public class CryocoreBookcase : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 20)
             .AddIngredient(ItemID.Book, 10)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

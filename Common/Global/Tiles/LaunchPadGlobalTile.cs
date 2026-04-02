@@ -33,10 +33,11 @@ public class LaunchPadGlobalTile : GlobalTile
 
             if (launchPad.HasActiveRocket)
             {
-                var rocket = RocketManager.Rockets[launchPad.RocketID];
-                if (!rocket.HasUnmannedMission)
+                var rocket = launchPad.Rocket;
+                if (rocket.IsUnmannedConfiguration)
                 {
-                    rocket.TryStartUnmannedOrbitMission(MacrocosmSubworld.CurrentID, launchPad.CenterWorld, durationTicks: 60 * 60 * 5);
+                    if (!rocket.HasUnmannedMission)
+                        rocket.TryStartUnmannedOrbitMission(MacrocosmSubworld.CurrentID, launchPad.CenterWorld, durationTicks: Rocket.DefaultUnmannedMissionDurationTicks);
                 }
                 else
                 {

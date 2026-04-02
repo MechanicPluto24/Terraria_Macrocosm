@@ -24,7 +24,7 @@ public class CryocoreClock : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 20)
             .AddRecipeGroup(RecipeGroupID.IronBar, 3)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

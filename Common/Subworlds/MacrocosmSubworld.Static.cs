@@ -107,8 +107,14 @@ public partial class MacrocosmSubworld
     {
         string currentId = CurrentID;
         string targetId = targetWorld;
+        string screenSourceId = rocket is not null ? currentId : targetId;
+        if (OrbitSubworld.IsOrbitSubworld(screenSourceId))
+            screenSourceId = OrbitSubworld.GetParentID(screenSourceId);
 
-        string id = SanitizeID(rocket is not null ? currentId : targetId);
+        if (OrbitSubworld.IsOrbitSubworld(targetId))
+            targetId = OrbitSubworld.GetParentID(targetId);
+
+        string id = SanitizeID(screenSourceId);
 
         LoadingScreen = id switch
         {

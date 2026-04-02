@@ -55,6 +55,13 @@ public static partial class Utility
 
         data.Origin = new Point16(0, machineTile.Height - 1);
 
+        data.StyleHorizontal = false;
+        if (machineTile.FrameCount > 1)
+        {
+            data.StyleWrapLimit = machineTile.FrameCount;
+            data.StyleMultiplier = machineTile.FrameCount;
+        }
+
         data.HookPostPlaceMyPlayer = new PlacementHook(machineTE.Hook_AfterPlacement, -1, 0, false);
         if (machineTE.InventorySize > 0) 
         {

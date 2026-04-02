@@ -24,7 +24,7 @@ public class CryocoreBathtub : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 14)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

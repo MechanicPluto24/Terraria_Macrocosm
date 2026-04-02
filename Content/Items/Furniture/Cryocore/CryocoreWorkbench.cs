@@ -23,6 +23,7 @@ public class CryocoreWorkbench : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 10)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

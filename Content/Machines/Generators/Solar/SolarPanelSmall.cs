@@ -26,7 +26,6 @@ public class SolarPanelSmall : MachineTile
         TileObjectData.newTile.Origin = new Point16(0, 1);
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.LavaDeath = true;
-        TileObjectData.newTile.StyleHorizontal = false;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 1, 1);
         TileObjectData.newTile.Direction = TileObjectDirection.PlaceRight;
         TileObjectData.newAlternate.CopyFrom(TileObjectData.newTile);

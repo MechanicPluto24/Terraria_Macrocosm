@@ -25,6 +25,7 @@ public class KeroseneGenerator : MachineTile
     public override short Width => 6;
     public override short Height => 4;
     public override MachineTE MachineTE => ModContent.GetInstance<KeroseneGeneratorTE>();
+    public override int FrameCount => 3;
 
     private static Asset<Texture2D> extra;
 
@@ -37,8 +38,7 @@ public class KeroseneGenerator : MachineTile
 
         SceneData.Hooks[Type] = NearbyEffects;
 
-        TileObjectData.newTile.DefaultToMachine(this);;
-        TileObjectData.newTile.StyleHorizontal = true;
+        TileObjectData.newTile.DefaultToMachine(this);
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
@@ -91,13 +91,11 @@ public class KeroseneGenerator : MachineTile
 
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
-        if (frameCounter++ >= 6)
+        if (++frameCounter >= 6)
         {
             frameCounter = 0;
-            if (frame++ >= 1)
-            {
+            if (++frame >= FrameCount - 1)
                 frame = 0;
-            }
         }
     }
 

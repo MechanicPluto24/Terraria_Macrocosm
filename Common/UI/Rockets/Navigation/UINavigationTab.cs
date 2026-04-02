@@ -115,8 +115,12 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
         {
             if (!Rocket.HasUnmannedMission)
             {
-                Vector2 padCenter = targetLaunchPad?.CenterWorld ?? Rocket.Center;
-                Rocket.TryStartUnmannedOrbitMission(target.TargetID, padCenter, durationTicks:60 *60 *5);
+                LaunchPad sourceLaunchPad = LaunchPadManager
+                    .GetLaunchPads(MacrocosmSubworld.CurrentID)
+                    .FirstOrDefault(lp => lp.OccupyingRocketID == Rocket.WhoAmI || lp.RocketID == Rocket.WhoAmI);
+
+                Vector2 padCenter = sourceLaunchPad?.CenterWorld ?? Rocket.Position + new Vector2(Rocket.Width / 2f - 8f, Rocket.Height - 16f);
+                Rocket.TryStartUnmannedOrbitMission(target.TargetID, padCenter, durationTicks: Rocket.DefaultUnmannedMissionDurationTicks);
             }
             return;
         }
@@ -224,6 +228,8 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
 
     private void UpdateLaunchButton()
     {
+        bool canAutonomouslyLaunch = Rocket is not null && Rocket.IsUnmannedConfiguration;
+
         if (!flightChecklist.SelectedLaunchCondition.IsMet)
             launchButton.ButtonState = UILaunchButton.StateType.NoTarget;
         else if (navigationPanel.CurrentMap.HasNext)
@@ -234,7 +240,7 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
             launchButton.ButtonState = UILaunchButton.StateType.Occupied;
         else if (!flightChecklist.AllMet)
             launchButton.ButtonState = UILaunchButton.StateType.CantReach;
-        else if (Main.LocalPlayer.GetModPlayer<RocketPlayer>().IsCommander)
+        else if (canAutonomouslyLaunch || Main.LocalPlayer.GetModPlayer<RocketPlayer>().IsCommander)
             launchButton.ButtonState = UILaunchButton.StateType.Launch;
         else
             launchButton.ButtonState = UILaunchButton.StateType.LaunchInactive;

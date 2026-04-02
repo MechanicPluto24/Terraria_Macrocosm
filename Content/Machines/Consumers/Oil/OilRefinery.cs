@@ -22,6 +22,7 @@ public class OilRefinery : MachineTile
     public override short Width => 4;
     public override short Height => 4;
     public override MachineTE MachineTE => ModContent.GetInstance<OilRefineryTE>();
+    public override int FrameCount => 5;
 
     public override void SetStaticDefaults()
     {
@@ -32,7 +33,6 @@ public class OilRefinery : MachineTile
 
         TileObjectData.newTile.DefaultToMachine(this);
         TileObjectData.newTile.Origin = new Point16(2, 3);
-        TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
@@ -98,11 +98,10 @@ public class OilRefinery : MachineTile
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
         int ticksPerFrame = 4;
-        int frameCount = 4;
         if (++frameCounter >= ticksPerFrame)
         {
             frameCounter = 0;
-            if (++frame >= frameCount)
+            if (++frame >= FrameCount - 1)
                 frame = 0;
         }
     }

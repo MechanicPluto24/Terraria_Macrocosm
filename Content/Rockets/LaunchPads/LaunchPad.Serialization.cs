@@ -19,6 +19,7 @@ public partial class LaunchPad : TagSerializable
         if (StartTile != default) tag[nameof(StartTile)] = StartTile;
         if (EndTile != default) tag[nameof(EndTile)] = EndTile;
         if (RocketID != -1) tag[nameof(RocketID)] = RocketID;
+        if (ReservedRocketID != -1) tag[nameof(ReservedRocketID)] = ReservedRocketID;
         if (internalRocket != null) tag[nameof(internalRocket)] = internalRocket;
         if (Inventory != null) tag[nameof(Inventory)] = Inventory;
 
@@ -34,6 +35,7 @@ public partial class LaunchPad : TagSerializable
         {
             Active = tag.ContainsKey(nameof(Active)),
             RocketID = tag.TryGet(nameof(RocketID), out int rocketID) ? rocketID : -1,
+            ReservedRocketID = tag.TryGet(nameof(ReservedRocketID), out int reservedRocketID) ? reservedRocketID : -1,
             internalRocket = tag.TryGet(nameof(internalRocket), out Rocket inRocket) ? inRocket : new()
         };
 

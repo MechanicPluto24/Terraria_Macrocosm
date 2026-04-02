@@ -23,7 +23,7 @@ public class CryocoreChair : ModItem
     {
         CreateRecipe()
         .AddIngredient(ItemID.CryocoreBrick, 5)
-        .AddTile(TileID.MythrilAnvil)
+        .AddTile(TileID.LunarCraftingStation)
         .Register();
     }
 }

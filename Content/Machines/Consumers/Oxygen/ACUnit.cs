@@ -19,6 +19,7 @@ public class ACUnit : MachineTile
     public override short Width => 2;
     public override short Height => 1;
     public override MachineTE MachineTE => ModContent.GetInstance<ACUnitTE>();
+    public override int FrameCount => 5;
 
     public override void SetStaticDefaults()
     {
@@ -68,11 +69,10 @@ public class ACUnit : MachineTile
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
         int ticksPerFrame = 15;
-        int frameCount = 4;
         if (++frameCounter >= ticksPerFrame)
         {
             frameCounter = 0;
-            if (++frame >= frameCount)
+            if (++frame >= FrameCount - 1)
                 frame = 0;
         }
     }

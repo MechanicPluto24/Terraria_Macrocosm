@@ -7,6 +7,7 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Rockets.Modules;
 using Macrocosm.Content.Rockets.Modules.Top;
 using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.Rockets.LaunchPads;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
@@ -21,8 +22,8 @@ public partial class Rocket
     }
 
     private const int UnmannedPreLaunchDuration = 120;
-    private const int UnmannedFlightDurationTicks = 10 * 60; // abstracted flight time
     private const int UnmannedObstructionTimeoutTicks = 30 * 60; //30s timeout then force land
+    public const int DefaultUnmannedMissionDurationTicks = 30 * 60; // 30 seconds
 
     [NetSync] private bool unmannedMissionActive;
     [NetSync] private int unmannedMissionTicksRemaining;
@@ -33,11 +34,12 @@ public partial class Rocket
 
     private int unmannedSequenceTimer;
     private int unmannedObstructionTimer;
-    private Vector2 reservedLaunchpadCenter;
 
     public bool HasUnmannedMission => unmannedMissionActive;
-    public bool ReservesLaunchpad => reservedLaunchpadCenter != default && (HasUnmannedMission || State is ActionState.Suspended or ActionState.UnmannedLaunch or ActionState.UnmannedFlight or ActionState.UnmannedLanding);
-    public Vector2 ReservedLaunchpadCenter => reservedLaunchpadCenter;
+    public bool ReservesLaunchpad => unmannedMissionReturnPos != default && (HasUnmannedMission || State is ActionState.Suspended or ActionState.UnmannedLaunch or ActionState.UnmannedFlight or ActionState.UnmannedLanding);
+    public Vector2 ReservedLaunchpadCenter => unmannedMissionReturnPos;
+
+    private LaunchPad ReservedLaunchPad => LaunchPadManager.GetLaunchPads(unmannedMissionParentId).FirstOrDefault(lp => lp.ReservedRocketID == WhoAmI || lp.CenterWorld == unmannedMissionReturnPos);
 
     public void StartUnmannedMission(string parentId, string orbitId, Vector2 returnWorldPosition, int durationTicks, UnmannedMissionType type)
     {
@@ -50,9 +52,11 @@ public partial class Rocket
         unmannedMissionTicksRemaining = durationTicks;
         unmannedMissionType = (byte)type;
         unmannedMissionReturnPos = returnWorldPosition;
+        if (string.IsNullOrEmpty(unmannedMissionOrbitId) && type == UnmannedMissionType.CreateSpaceStation)
+            unmannedMissionOrbitId = OrbitSubworld.GetFirstLockedForParent(parentId)?.ID ?? "";
+        unmannedSequenceTimer = 0;
+        unmannedObstructionTimer = 0;
 
-        State = ActionState.Suspended;
-        Transparency = 0f;
         SyncCommonData();
     }
 
@@ -60,16 +64,14 @@ public partial class Rocket
     {
         if (!HasUnmannedMission)
             return;
+        if (State != ActionState.Suspended)
+            return;
+
         if (unmannedMissionTicksRemaining > 0)
-        {
             unmannedMissionTicksRemaining--;
-            if (unmannedMissionTicksRemaining == 0)
-                TryCompleteUnmannedMission();
-        }
-        else
-        {
-            TryCompleteUnmannedMission();
-        }
+
+        if (unmannedMissionTicksRemaining <= 0)
+            StartUnmannedReturn();
     }
 
     public bool TryStartUnmannedOrbitMission(string parentSubworldId, Vector2 launchPadCenterWorld, int durationTicks)
@@ -91,8 +93,12 @@ public partial class Rocket
             return false;
 
         StartUnmannedMission(parentSubworldId, orbitId: null, returnWorldPosition: launchPadCenterWorld, durationTicks: durationTicks, UnmannedMissionType.CreateSpaceStation);
-        // kick off autonomous launch sequence
-        reservedLaunchpadCenter = launchPadCenterWorld;
+        var launchPad = LaunchPadManager.GetLaunchPads(parentSubworldId).FirstOrDefault(lp => lp.CenterWorld == launchPadCenterWorld);
+        if (launchPad is not null)
+        {
+            launchPad.ReserveRocket(WhoAmI);
+            launchPad.NetSync(parentSubworldId);
+        }
         StartUnmannedLaunch();
         return true;
     }
@@ -102,8 +108,27 @@ public partial class Rocket
         State = ActionState.UnmannedLaunch;
         FlightTime = 0;
         unmannedSequenceTimer = 0;
+        unmannedObstructionTimer = 0;
         StartPositionY = Position.Y;
+        Transparency = 1f;
         SyncCommonData();
+    }
+
+    public void StartUnmannedReturn()
+    {
+        if (!HasUnmannedMission || State != ActionState.Suspended)
+            return;
+
+        State = ActionState.UnmannedLanding;
+        FlightTime = 0;
+        unmannedSequenceTimer = 0;
+        unmannedObstructionTimer = 0;
+        LandingProgress = 0f;
+        TargetTravelPosition = unmannedMissionReturnPos;
+        Position = new Vector2(TargetTravelPosition.X - Width / 2f - 8f, FlightExitPosition);
+        Transparency = 1f;
+        ResetRenderTarget();
+        SyncEverything();
     }
 
     private bool LaunchPadAreaClear()
@@ -123,14 +148,15 @@ public partial class Rocket
 
     public void TryCompleteUnmannedMission()
     {
-        if (!HasUnmannedMission || unmannedMissionTicksRemaining != 0)
+        if (!HasUnmannedMission || State != ActionState.UnmannedLanding || LandingProgress < 1f - float.Epsilon)
             return;
         if (!LaunchPadAreaClear())
             return;
 
         Position = unmannedMissionReturnPos - new Vector2(Width / 2f - 8, Height - 16);
-        Transparency = 0f;
+        Transparency = 1f;
         State = ActionState.Idle;
+        ResetRenderTarget();
 
         int topIndex = (int)RocketModule.SlotType.Top;
         var topModule = Modules[topIndex];
@@ -139,8 +165,12 @@ public partial class Rocket
 
         if (!string.IsNullOrEmpty(unmannedMissionOrbitId))
             OrbitSubworld.Unlock(unmannedMissionOrbitId);
-        else if (!string.IsNullOrEmpty(unmannedMissionParentId))
-            OrbitSubworld.UnlockForParent(unmannedMissionParentId);
+
+        if (ReservedLaunchPad is LaunchPad reservedLaunchPad)
+        {
+            reservedLaunchPad.ClearReservedRocket(WhoAmI);
+            reservedLaunchPad.NetSync(unmannedMissionParentId);
+        }
 
         Utility.Chat("Unmanned mission complete. Space station unlocked!", Color.LightSkyBlue);
 
@@ -148,6 +178,7 @@ public partial class Rocket
         unmannedMissionTicksRemaining = 0;
         unmannedMissionParentId = "";
         unmannedMissionOrbitId = "";
+        unmannedMissionReturnPos = Vector2.Zero;
         SyncCommonData();
         ResetAnimation();
     }

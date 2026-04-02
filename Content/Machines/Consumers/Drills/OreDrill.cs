@@ -25,6 +25,7 @@ public class OreDrill : MachineTile
     public override short Width => 4;
     public override short Height => 6;
     public override MachineTE MachineTE => ModContent.GetInstance<OreDrillTE>();
+    public override int FrameCount => 3;
 
     public override void SetStaticDefaults()
     {
@@ -36,7 +37,6 @@ public class OreDrill : MachineTile
         SceneData.Hooks[Type] = NearbyEffects;
 
         TileObjectData.newTile.DefaultToMachine(this);
-        TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
@@ -118,11 +118,10 @@ public class OreDrill : MachineTile
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
         int ticksPerFrame = 8;
-        int frameCount = 2;
         if (++frameCounter >= ticksPerFrame)
         {
             frameCounter = 0;
-            if (++frame >= frameCount)
+            if (++frame >= FrameCount - 1)
                 frame = 0;
         }
     }

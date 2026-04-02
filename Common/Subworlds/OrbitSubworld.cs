@@ -59,4 +59,11 @@ public abstract class OrbitSubworld : MultiSubworld
                 d.Unlocked = true;
         }
     }
+
+    public static OrbitSubworld GetFirstLockedForParent(string parentSubworldId)
+    {
+        return GetOrbitSubworlds(parentSubworldId)
+            .OrderBy(orbit => orbit.InstanceIndex)
+            .FirstOrDefault(orbit => !IsUnlocked(orbit.ID));
+    }
 }

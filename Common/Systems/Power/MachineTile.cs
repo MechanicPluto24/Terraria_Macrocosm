@@ -17,6 +17,12 @@ public abstract class MachineTile : ModTile
     /// <summary> The Machine TileEntity template instance associated with this multitile </summary>
     public abstract MachineTE MachineTE { get; }
 
+    /// <summary>
+    /// Total number of vertical frames per style in the spritesheet (generally: 1 off + animation frames).
+    /// <br/> Used by <see cref="TileObjectData"/> to set <c>StyleWrapLimit</c> and <c>StyleMultiplier</c>, ensuring that the ON state and animation frames are not treated as separate styles.
+    /// </summary>
+    public virtual int FrameCount => 1;
+
     public bool IsSingleTile => Width == 1 && Height == 1;
 
     /// <summary> 

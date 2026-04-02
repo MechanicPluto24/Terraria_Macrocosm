@@ -26,7 +26,7 @@ public class CryocoreChest : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 8)
             .AddRecipeGroup(RecipeGroupID.IronBar, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

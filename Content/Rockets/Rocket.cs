@@ -99,20 +99,24 @@ public partial class Rocket : IInventoryOwner
     /// <summary> Helper: true when executing autonomous mission visuals/logics (not physically present) </summary>
     public bool IsAutonomousMissionState => State is ActionState.Suspended or ActionState.UnmannedLaunch or ActionState.UnmannedFlight or ActionState.UnmannedLanding;
 
+    /// <summary> Helper: true only while the rocket is away and hidden from world rendering </summary>
+    public bool IsSuspendedMissionState => State == ActionState.Suspended;
+
     /// <summary> Helper: true when drawn/updated normally in this world (physically present) </summary>
-    public bool IsPhysicallyPresent => ActiveInCurrentWorld && !IsAutonomousMissionState;
+    public bool IsPhysicallyPresent => ActiveInCurrentWorld && !IsSuspendedMissionState;
 
     /// <summary> Helper: rocket configuration is unmanned if no module explicitly requires Manned </summary>
     public bool IsUnmannedConfiguration => Modules is not null && Modules.All(m => m.Configuration != RocketModule.ConfigurationType.Manned);
 
     /// <summary> Helper: can this rocket be drawn in world (manager uses this) </summary>
-    public bool CanDraw => ActiveInCurrentWorld && !IsAutonomousMissionState;
+    public bool CanDraw => ActiveInCurrentWorld && !IsSuspendedMissionState;
 
     /// <summary> Helper: can a player board this rocket now </summary>
     public bool CanBoard => !IsUnmannedConfiguration && State == ActionState.Idle && ActiveInCurrentWorld;
 
     /// <summary> The world Y coordinate for entering the target subworld </summary>
     private float FlightExitPosition => 60 * 16f;
+    private float UnmannedFlightExitPosition => 60 * 16f;
     private float UndockingExitPosition => Main.maxTilesY * 16f - 60 * 16f;
 
 
@@ -262,10 +266,10 @@ public partial class Rocket : IInventoryOwner
         CurrentWorld = MacrocosmSubworld.CurrentID;
         if (State == ActionState.Suspended)
         {
+            Transparency = 0f;
             if (HasUnmannedMission)
                 TickUnmannedMission();
 
-            Transparency = 0f;
             return;
         }
 
@@ -406,8 +410,8 @@ public partial class Rocket : IInventoryOwner
                 {
                     if (TargetTravelPosition == default && DockingProgress < float.Epsilon)
                     {
-                        Structure module = Structure.Get<BaseSpaceStationModule>();
-                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition) + new Vector2(0, Height + (int)(module.Size.Y * 16f));
+                        //Structure module = Structure.Get<BaseSpaceStationModule>(); // for space station size, if needed
+                        TargetTravelPosition = GetLandingSite(Utility.SpawnWorldPosition) + new Vector2(0, Height);
                     }
 
                     float dockingDistance = Math.Abs(UndockingExitPosition - TargetTravelPosition.Y);
@@ -465,8 +469,6 @@ public partial class Rocket : IInventoryOwner
 
             case ActionState.UnmannedLaunch:
                 {
-
-
                     FlightTime++;
                     unmannedSequenceTimer++;
                     Velocity.Y += 0.1f * MacrocosmSubworld.GetGravityMultiplier(Center);
@@ -484,30 +486,26 @@ public partial class Rocket : IInventoryOwner
                 {
                     // visual ascent similar to manned Flight, no player fade
                     FlightTime++;
-                    float launchDistance = Math.Abs(StartPositionY - FlightExitPosition);
+                    float launchDistance = Math.Abs(StartPositionY - UnmannedFlightExitPosition);
                     float duration = 10f * 60f * gravityFactor;
                     float increment = launchDistance / duration;
-                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, FlightExitPosition, EasedFlightProgress));
+                    Position = new Vector2(Position.X, MathHelper.Lerp(StartPositionY, UnmannedFlightExitPosition, EasedFlightProgress));
                     FlightProgress += increment / launchDistance;
                     FlightProgress = MathHelper.Clamp(FlightProgress, 0f, 1f);
                     UpdateModuleAnimation();
                     if (EasedFlightProgress > 0.01f)
                         StartModuleAnimation(landing: false);
-                    if (Position.Y < FlightExitPosition + 1)
+                    if (Position.Y < UnmannedFlightExitPosition + 1)
                     {
                         FlightProgress = 0f;
                         LandingProgress = 0f;
                         DockingProgress = 0f;
                         UndockingProgress = 0f;
                         ResetAnimation();
-                        HandleTravel();
-                        State = ActionState.UnmannedLanding;
+                        State = ActionState.Suspended;
                         unmannedSequenceTimer = 0;
-                        if (!string.IsNullOrEmpty(unmannedMissionOrbitId))
-                            OrbitSubworld.Unlock(unmannedMissionOrbitId);
-                        else if (!string.IsNullOrEmpty(unmannedMissionParentId))
-                            OrbitSubworld.UnlockForParent(unmannedMissionParentId);
-                        SyncEverything();
+                        Position = new Vector2(Position.X, UnmannedFlightExitPosition - Height);
+                        SyncCommonData();
                     }
                     break;
                 }
@@ -516,10 +514,10 @@ public partial class Rocket : IInventoryOwner
                 {
                     if (TargetTravelPosition == default && LandingProgress < float.Epsilon && Main.netMode != NetmodeID.MultiplayerClient)
                     {
-                        TargetTravelPosition = reservedLaunchpadCenter;
+                        TargetTravelPosition = unmannedMissionReturnPos;
                         SyncCommonData();
                     }
-                    float landingDistance = Math.Abs(FlightExitPosition - TargetTravelPosition.Y + Height);
+                    float landingDistance = Math.Abs(UnmannedFlightExitPosition - TargetTravelPosition.Y + Height);
                     float landingDuration = 10f * 60f * (1f / gravityFactor);
                     float landingIncrement = landingDistance / landingDuration;
                     Position = new Vector2(TargetTravelPosition.X - Width / 2 - 8, MathHelper.Lerp(FlightExitPosition, TargetTravelPosition.Y - Height, EasedLandingProgress));
@@ -544,8 +542,6 @@ public partial class Rocket : IInventoryOwner
                     }
                     if (LandingProgress >= 1f - float.Epsilon)
                     {
-                        State = ActionState.Idle;
-                        ResetAnimation();
                         TryCompleteUnmannedMission();
                     }
                     break;
@@ -556,13 +552,6 @@ public partial class Rocket : IInventoryOwner
         if (Position.X < 10 * 16 || Position.X > (Main.maxTilesX - 10) * 16 || Position.Y < 10 * 16 || Position.Y > (Main.maxTilesY - 10) * 16)
             State = ActionState.Idle;
         SyncCommonData();
-
-
-        if (Transparency < 1f)
-            Transparency += 0.01f;
-
-        if (Transparency > 1f)
-            Transparency = 1f;
 
         //Main.NewText(State);
     }
@@ -869,7 +858,7 @@ public partial class Rocket : IInventoryOwner
                 }
                 else
                 {
-                    Main.LocalPlayer.noThrow =2;
+                    Main.LocalPlayer.noThrow = 2;
                     CursorIcon.Current = CursorIcon.Rocket;
                 }
             }
@@ -1400,7 +1389,7 @@ public partial class Rocket : IInventoryOwner
                 {
                     if (CheckPlayerInRocket(player.whoAmI))
                     {
-                        SubworldTravelPlayer.SendTravelRequest(player.whoAmI, TargetWorld, WhoAmI);
+                        SubworldTravelPlayer.SendTravelRequest(player.whoAmI, TargetWorld, WhoAmI, downwards: toParentPlanet);
                     }
                 }
             }
