@@ -40,7 +40,7 @@ public class OreDrillTE : BaseDrillTE
                 loot.Add(new TECommonDrop(this, ModContent.ItemType<Protolith>(), 20, minAmt: 15, maxAmt: 150));
                 break;
 
-            default:
+            case nameof(Earth):
                 var purity = new SceneDataConditions.IsPurity(scene);
                 var corruption = new SceneDataConditions.IsCorruption(scene);
                 var crimson = new SceneDataConditions.IsCrimson(scene);
@@ -150,6 +150,8 @@ public class OreDrillTE : BaseDrillTE
                 loot.Add(new TEDropWithConditionRule(this, ItemID.AshBlock, 40, minAmt: 10, maxAmt: 100, condition: isUnderworld));
                 loot.Add(new TEDropWithConditionRule(this, ItemID.Hellstone, 20, hellstone));
 
+                break;
+            default:
                 break;
         }
     }

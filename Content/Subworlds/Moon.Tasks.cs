@@ -621,6 +621,8 @@ public partial class Moon
         int tries = 0;
         int geodes = WorldGen.genRand.Next(10, 14);
         int quartzType = TileType<QuartzBlock>();
+        int chalcType = TileType<Chalcedony>();
+
         while (geodes > 1 && tries < 100)
         {
             while (geodes > 1 && tries < 100)
@@ -635,6 +637,54 @@ public partial class Moon
                     int radius = WorldGen.genRand.Next(40, 46);
 
                     int radius2 = WorldGen.genRand.Next(30, 36);
+                    ForEachInCircle(
+                        iOffset2,
+                        jOffset2,
+                        radius+10,
+                        (i1, j1) =>
+                        {
+                            if (!WorldGen.InWorld(i1, j1))
+                                return;
+
+                            float iDistance = Math.Abs(iOffset2 - i) / ((radius+10) * 0.5f);
+                            float jDistance = Math.Abs(jOffset2 - j) / ((radius+10) * 0.5f);
+
+                            if (WorldGen.genRand.NextFloat() < 0.2f)
+                            {
+                                return;
+                            }
+
+
+                            if (Main.tile[i1, j1].HasTile)
+                            {
+                                FastPlaceTile(i1, j1, (ushort)chalcType);
+                            }
+                        }
+                    );
+                    ForEachInCircle(
+                        iOffset2,
+                        jOffset2,
+                        radius,
+                        (i1, j1) =>
+                        {
+                            if (!WorldGen.InWorld(i1, j1))
+                                return;
+
+                            float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
+                            float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
+
+                            if (WorldGen.genRand.NextFloat() < 0.2f)
+                            {
+                                return;
+                            }
+
+
+                            if (Main.tile[i1, j1].HasTile)
+                            {
+                                FastPlaceTile(i1, j1, (ushort)quartzType);
+                            }
+                        }
+                    );
                     ForEachInCircle(
                         iOffset2,
                         jOffset2,
@@ -676,7 +726,7 @@ public partial class Moon
                                 return;
                             }
 
-                            TileRunnerButItDoesntIgnoreAir(i1, j1, WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 10), (ushort)quartzType);
+                            TileRunnerButItDoesntIgnoreAir(i1, j1, WorldGen.genRand.Next(4, 10), WorldGen.genRand.Next(4, 20), (ushort)quartzType);
                         }
                     );
                     ForEachInCircle(
@@ -691,18 +741,42 @@ public partial class Moon
                             float iDistance = Math.Abs(iOffset2 - i) / (radius * 0.5f);
                             float jDistance = Math.Abs(jOffset2 - j) / (radius * 0.5f);
 
-                            if (WorldGen.genRand.NextFloat() < 0.2f)
+                            if (WorldGen.genRand.NextFloat() < 0.98f)
                             {
                                 return;
                             }
-
-
-                            if (Main.tile[i1, j1].HasTile)
+                            if (!Main.tile[i1, j1].HasTile)
                             {
-                                FastPlaceTile(i1, j1, (ushort)quartzType);
+                                return;
                             }
+                            float x=i1;
+                            float y=j1;
+                            Vector2 direction = new Vector2(i-x,j-y).SafeNormalize(Vector2.UnitX);
+                            float Size=WorldGen.genRand.NextFloat(2f,3.5f);
+                            float decrease=WorldGen.genRand.NextFloat(0.1f,0.2f);
+                            while(Size>0.05f)
+                            {
+                                ForEachInCircle(
+                                    (int)x,
+                                    (int)y ,
+                                    (int)Size,
+                                    (i2, j2) =>
+                                    {
+                                        if (!WorldGen.InWorld(i2, j2))
+                                            return;
+
+                                        FastPlaceTile(i2, j2, (ushort)quartzType);
+                                    }
+                                );
+
+                                Size-=decrease;
+                                x+=direction.X;
+                                y+=direction.Y;
+                            }
+
                         }
                     );
+                    
                     geodes--;
                 }
                 else
@@ -1142,9 +1216,9 @@ public partial class Moon
                         Tile target = Main.tile[x, y];
                         if (!target.HasTile && WorldGen.SolidTile(tile))
                         {
-                            WorldGen.PlaceTile(x, y, ModContent.TileType<LuminiteCrystal>(), mute: true, forced: false);
-                            NetMessage.SendTileSquare(-1, x, y, 1, 1);
-                            break;
+                            WorldGen.PlaceTile(x, y, TileType<LuminiteCrystalNatural>(), mute: true, forced: false);
+                                                         NetMessage.SendTileSquare(-1, x, y, 1, 1);
+                                                         break;
                         }
                         }
                     }

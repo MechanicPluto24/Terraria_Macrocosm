@@ -203,10 +203,6 @@ public static partial class Utility
     //------------------------------------------------------//
     //  Author(s): Grox the Great                           //
     //------------------------------------------------------// 
-    public static string[] GetLoadedMods()
-    {
-        return ModLoader.Mods.Reverse().Select(m => m.Name).ToArray();
-    }
 
     public static void LogBasic(string logText)
     {

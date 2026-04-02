@@ -57,7 +57,7 @@ public class MineralizedProtolith : ModTile
         if (!WorldGen.genRand.NextBool(3))
             return;
 
-        if (Utility.GetTileCount(new(i, j), [ModContent.TileType<LuminiteCrystal>()], distance: 2) >= 2)
+        if (Utility.GetTileCount(new(i, j), [ModContent.TileType<LuminiteCrystalNatural>()], distance: 2) >= 2)
             return;
 
         Point[] directions = [
@@ -76,7 +76,7 @@ public class MineralizedProtolith : ModTile
             Tile target = Main.tile[x, y];
             if (!target.HasTile && WorldGen.SolidTile(tile))
             {
-                WorldGen.PlaceTile(x, y, ModContent.TileType<LuminiteCrystal>(), mute: true, forced: false);
+                WorldGen.PlaceTile(x, y, ModContent.TileType<LuminiteCrystalNatural>(), mute: true, forced: false);
                 NetMessage.SendTileSquare(-1, x, y, 1, 1);
                 break;
             }

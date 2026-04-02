@@ -46,9 +46,8 @@ public class MegaBladeProjectile : ModProjectile
     private float SwingDirection = 1;
     private ref float Arc => ref Projectile.ai[1];
 
-    private CrescentScripture blade;
     private bool despawn;
-    float transparency = 0f;
+    private float transparency = 0f;
     private bool spawned = false;
 
     public override void OnSpawn(IEntitySource source)

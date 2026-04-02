@@ -76,7 +76,7 @@ public class WorldInfo : ILoadable
         Add("Venus",
             new GravityInfoElement(0.905f),
             new RadiusInfoElement(6051.8f),
-            new DayPeriodInfoElement(-243f, "Retrograde"),
+            new DayPeriodInfoElement(243f, "Retrograde"),
             new ThreatLevelInfoElement(ThreatLevel.Cataclysmic, Color.Orange)
         );
 
@@ -162,7 +162,7 @@ public class WorldInfo : ILoadable
         Add("Ouranos",
             new GravityInfoElement(0.886f),
             new RadiusInfoElement(25362f),
-            new DayPeriodInfoElement(-0.72f, "Retrograde"),
+            new DayPeriodInfoElement(0.72f, "Retrograde"),
             new ThreatLevelInfoElement(ThreatLevel.Nightmare, Color.Orange)
         );
 
@@ -188,7 +188,7 @@ public class WorldInfo : ILoadable
         Add("Pluto",
             new GravityInfoElement(0.063f),
             new RadiusInfoElement(1188.3f),
-            new DayPeriodInfoElement(-6.38f, "Retrograde"),
+            new DayPeriodInfoElement(6.38f, "Retrograde"),
             new ThreatLevelInfoElement(ThreatLevel.Lethal, Color.Orange)
         );
 

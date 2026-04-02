@@ -397,6 +397,7 @@ public class CraterDemon : ModNPC
     private const int Animation_LookFront_JawOpen = 3;
     private const int Animation_LookRight_JawClosed = 4;
     private const int Animation_LookRight_JawOpen = 5;
+    private const int AnimationFrameWidth = 178;
 
     private static Asset<Texture2D> glowmask;
 
@@ -441,7 +442,7 @@ public class CraterDemon : ModNPC
 
     public override void SetDefaults()
     {
-        baseWidth = NPC.width = 178;
+        baseWidth = NPC.width = AnimationFrameWidth;
         baseHeight = NPC.height = 196;
         NPC.knockBackResist = 0f;
 
@@ -628,30 +629,96 @@ public class CraterDemon : ModNPC
         spriteBatch.Begin(state1);
 
         if (AI_Attack == AttackState.Charge && AI_AttackProgress > 2 && NPC.alpha >= 160)
-            return true;
+            return false;
 
         for (int i = 0; i < NPC.oldPos.Length; i++)
         {
-            Vector2 drawPos = NPC.oldPos[i] - Main.screenPosition + new Vector2(0, 4);
+            Vector2 drawPos = GetDrawCenter(NPC.oldPos[i], screenPos, NPC.Size);
             Color trailColor = NPC.GetAlpha(drawColor) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
-            spriteBatch.Draw(TextureAssets.Npc[Type].Value, drawPos, NPC.frame, trailColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+            DrawCraterDemon(spriteBatch, TextureAssets.Npc[Type].Value, drawPos, trailColor * 0.6f);
 
             Color glowColor = (Color)GetAlpha(Color.White) * (((float)NPC.oldPos.Length - i) / NPC.oldPos.Length);
 
             glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-            spriteBatch.Draw(glowmask.Value, drawPos, NPC.frame, glowColor * 0.6f, NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+            DrawCraterDemon(spriteBatch, glowmask.Value, drawPos, glowColor * 0.6f);
         }
 
-        return true;
+        Vector2 npcDrawCenter = GetDrawCenter(NPC.position, screenPos, NPC.Size);
+        DrawBaseSprite(spriteBatch, TextureAssets.Npc[Type].Value, npcDrawCenter, NPC.GetAlpha(drawColor));
+
+        return false;
     }
 
     public override void PostDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
         glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-        spriteBatch.Draw(glowmask.Value, NPC.position - screenPos + new Vector2(0, 4), NPC.frame, (Color)GetAlpha(Color.White), NPC.rotation, Vector2.Zero, NPC.scale, SpriteEffects.None, 0f);
+        Vector2 drawCenter = GetDrawCenter(NPC.position, screenPos, NPC.Size);
+        DrawCraterDemon(spriteBatch, glowmask.Value, drawCenter, (Color)GetAlpha(Color.White));
+
+        if (AI_Attack == AttackState.Phase2Transition && !phase2)
+        {
+            Color transitionGlowColor = GetPhase2TransitionGlowColor();
+            if (transitionGlowColor != Color.Transparent)
+                DrawCraterDemon(spriteBatch, glowmask.Value, drawCenter, transitionGlowColor, GetFrame(usePhase2Column: true));
+        }
+
         DrawLensFlares(spriteBatch, screenPos);
         if(phase2)
             DrawPhase2Flares(spriteBatch, screenPos);
+    }
+
+    private static Vector2 GetDrawCenter(Vector2 topLeftPosition, Vector2 screenPos, Vector2 size) => topLeftPosition + size * 0.5f + new Vector2(0f, 4f) - screenPos;
+
+    private Rectangle GetFrame(bool usePhase2Column = false)
+    {
+        Rectangle frame = NPC.frame;
+
+        if (usePhase2Column)
+            frame.X = AnimationFrameWidth;
+
+        return frame;
+    }
+
+    private void DrawBaseSprite(SpriteBatch spriteBatch, Texture2D texture, Vector2 drawCenter, Color color)
+    {
+        float transitionProgress = GetPhase2TransitionProgress();
+        if (AI_Attack == AttackState.Phase2Transition && !phase2 && transitionProgress > 0.2f)
+        {
+            float crossfade = Utility.InverseLerp(0.2f, 1f, transitionProgress, true);
+            DrawCraterDemon(spriteBatch, texture, drawCenter, color * (1f - crossfade), GetFrame(usePhase2Column: false));
+            DrawCraterDemon(spriteBatch, texture, drawCenter, color * crossfade, GetFrame(usePhase2Column: true));
+            return;
+        }
+
+        DrawCraterDemon(spriteBatch, texture, drawCenter, color);
+    }
+
+    private void DrawCraterDemon(SpriteBatch spriteBatch, Texture2D texture, Vector2 drawCenter, Color color)
+    {
+        DrawCraterDemon(spriteBatch, texture, drawCenter, color, GetFrame());
+    }
+
+    private void DrawCraterDemon(SpriteBatch spriteBatch, Texture2D texture, Vector2 drawCenter, Color color, Rectangle frame)
+    {
+        spriteBatch.Draw(texture, drawCenter, frame, color, NPC.rotation, frame.Size() * 0.5f, NPC.scale, SpriteEffects.None, 0f);
+    }
+
+    private float GetPhase2TransitionProgress() => Utility.InverseLerp(Phase2Transition_InitialTimer * 0.8f, 0f, AI_Timer, true);
+    private Color GetPhase2TransitionGlowColor()
+    {
+        float progress = GetPhase2TransitionProgress();
+
+        if (progress <= 0f)
+            return Color.Transparent;
+
+        if (progress <= 0.2f)
+        {
+            float fadeIn = Utility.CubicEaseIn(progress / 0.2f);
+            return Color.White.WithAlpha(0) * fadeIn;
+        }
+
+        float fadeOut = 1f - Utility.CubicEaseInOut((progress - 0.2f) / 0.8f);
+        return Color.White.WithAlpha(0) * fadeOut;
     }
 
     private void DrawLensFlares(SpriteBatch spriteBatch, Vector2 screenPos)
@@ -666,7 +733,7 @@ public class CraterDemon : ModNPC
         {
             float progress = (1f - ((float)AI_Timer / Phase2Transition_InitialTimer));
             float scale = NPC.scale * 0.3f * (progress < 0.5f ? progress : 1f - progress);
-            spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
+            DrawHorizontalLensFlare(spriteBatch, flare, GetEyeDrawPosition(screenPos), new Color(157, 255, 156), scale);
         }
 
         if (AI_Attack == AttackState.SummonMeteors)
@@ -674,7 +741,7 @@ public class CraterDemon : ModNPC
             int maxTimer = GetInitialTimer(AttackState.SummonMeteors);
             float progress = MathHelper.Clamp((float)(AI_Timer - maxTimer * 0.5f) / (maxTimer - maxTimer * 0.5f), 0f, 1f);
             float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
-            spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(255, 141, 36), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
+            DrawHorizontalLensFlare(spriteBatch, flare, GetEyeDrawPosition(screenPos), new Color(255, 141, 36), scale);
         }
 
         if (AI_Attack == AttackState.SummonPhantasmals)
@@ -683,7 +750,7 @@ public class CraterDemon : ModNPC
             float timer = AI_Timer % maxTimer;
             float progress = Utility.CubicEaseInOut(timer / maxTimer);
             float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
-            spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
+            DrawHorizontalLensFlare(spriteBatch, flare, GetEyeDrawPosition(screenPos), new Color(157, 255, 156), scale);
         }
 
         if (AI_Attack == AttackState.SummonPhantasmalPortals)
@@ -691,7 +758,7 @@ public class CraterDemon : ModNPC
             int maxTimer = GetInitialTimer(AttackState.SummonPhantasmalPortals);
             float progress = MathHelper.Clamp((float)(AI_Timer - maxTimer * 0.7f) / (maxTimer - maxTimer * 0.7f), 0f, 1f);
             float scale = NPC.scale * 0.5f * (progress < 0.5f ? progress : 1f - progress);
-            spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, scale, SpriteEffects.None, 0f);
+            DrawHorizontalLensFlare(spriteBatch, flare, GetEyeDrawPosition(screenPos), new Color(157, 255, 156), scale);
         }
 
         if (AI_Attack == AttackState.FadeIn)
@@ -701,7 +768,7 @@ public class CraterDemon : ModNPC
             if (AI_Timer < FadeIn_LaughTime)
                 progress *= (float)AI_Timer / FadeIn_LaughTime;
 
-            spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156), NPC.rotation, flare.Size() / 2, 1.1f * Utility.QuadraticEaseIn(progress) * Main.rand.NextFloat(0.8f, 1f), SpriteEffects.None, 0f);
+            DrawHorizontalLensFlare(spriteBatch, flare, GetEyeDrawPosition(screenPos), new Color(157, 255, 156), 1.1f * Utility.QuadraticEaseIn(progress) * Main.rand.NextFloat(0.8f, 1f));
         }
 
         spriteBatch.End();
@@ -717,11 +784,19 @@ public class CraterDemon : ModNPC
         Texture2D flare = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare2").Value;
         if(flareprogress<1f)
             flareprogress+=0.01f;
-        spriteBatch.Draw(flare, NPC.Center - screenPos + GetEyeOffset(), null, new Color(157, 255, 156)*flareprogress, NPC.rotation+MathHelper.PiOver2, flare.Size() / 2, NPC.scale * 0.3f*flareprogress, SpriteEffects.None, 0f);
+        DrawHorizontalLensFlare(spriteBatch, flare, GetEyeDrawPosition(screenPos), new Color(157, 255, 156) * flareprogress, NPC.scale * 0.3f * flareprogress);
         
         spriteBatch.End();
         spriteBatch.Begin(state2);
     }
+
+    private static void DrawHorizontalLensFlare(SpriteBatch spriteBatch, Texture2D flare, Vector2 position, Color color, float scale)
+    {
+        spriteBatch.Draw(flare, position, null, color, 0f, flare.Size() / 2f, new Vector2(scale, scale * 0.45f), SpriteEffects.None, 0f);
+    }
+
+    private Vector2 GetEyeDrawPosition(Vector2 screenPos)
+        => NPC.Center - screenPos + GetEyeOffset();
 
     private Vector2 GetEyeOffset()
     {
@@ -818,6 +893,8 @@ public class CraterDemon : ModNPC
     {
         int set = GetAnimationSetFrame();
 
+        NPC.frame.Width = AnimationFrameWidth;
+        NPC.frame.X = phase2 ? AnimationFrameWidth : 0;
         NPC.frame.Y = frameHeight * set;
     }
 
