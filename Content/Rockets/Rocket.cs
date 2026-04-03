@@ -46,9 +46,9 @@ public partial class Rocket : IInventoryOwner
         Docking,
         Undocking,
         Suspended,
-        UnmannedLaunch, // autonomous pre-launch + ignition
-        UnmannedFlight, // autonomous ascent
-        UnmannedLanding // autonomous landing return
+        UnmannedLaunch,  
+        UnmannedFlight,  
+        UnmannedLanding 
     }
 
     /// <summary> The rocket's identifier </summary>
