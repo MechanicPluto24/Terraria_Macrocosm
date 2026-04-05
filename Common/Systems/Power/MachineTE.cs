@@ -2,6 +2,7 @@
 using Macrocosm.Common.Storage;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
@@ -194,8 +195,23 @@ public abstract partial class MachineTE : ModTileEntity, IInventoryOwner
     {
         ManuallyTurnedOff = reader.ReadBoolean();
         Inventory = Inventory.DeserializeData(TagIO.FromStream(reader.BaseStream, compressed: true));
+        if (Inventory.Size != InventorySize)
+            Inventory = ResizeInventoryForNetReceive(Inventory);
+        else
+            Inventory.Owner = this;
 
         MachineNetReceive(reader);
+    }
+
+    private Inventory ResizeInventoryForNetReceive(Inventory inventory)
+    {
+        Inventory resizedInventory = new(InventorySize, this);
+        int copyCount = Math.Min(inventory.Size, resizedInventory.Size);
+
+        for (int i = 0; i < copyCount; i++)
+            resizedInventory[i] = inventory[i].Clone();
+
+        return resizedInventory;
     }
 
     /// <summary> Save TE data. </summary>

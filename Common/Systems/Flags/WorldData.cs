@@ -193,8 +193,7 @@ public class WorldData : ModSystem
         writer.Write(_subworldData.Count);
         foreach (var (subworldName, data) in _subworldData)
         {
-            int index = SubworldSystem.GetIndex(subworldName);
-            writer.Write(index);
+            writer.Write(subworldName);
             data.NetSend(writer);
         }
 
@@ -228,8 +227,7 @@ public class WorldData : ModSystem
         int count = reader.ReadInt32();
         for (int i = 0; i < count; i++)
         {
-            int index = reader.ReadInt32();
-            string subworldName = MacrocosmSubworld.Subworlds[index].FullName;
+            string subworldName = reader.ReadString();
             _subworldData[subworldName] = SubworldData.NetReceive(reader);
         }
 

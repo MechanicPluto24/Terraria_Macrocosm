@@ -6,7 +6,7 @@ namespace Macrocosm.Content.Machines.Generators.Solar;
 
 public class SolarPanelExtraLargeTE : GeneratorTE
 {
-    public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelLarge>();
+    public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelExtraLarge>();
     public override bool PoweredOn => Main.dayTime;
 
     public override void OnFirstUpdate()

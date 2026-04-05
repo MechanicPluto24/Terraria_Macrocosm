@@ -921,7 +921,7 @@ public partial class Rocket : IInventoryOwner
         if (AnyEmbarkedPlayers(out int id) && !TryFindingCommander(out _))
         {
             GetRocketPlayer(id).IsCommander = true;
-            NetMessage.SendData(MessageID.SyncPlayer, number: id);
+            GetRocketPlayer(id).SyncPlayer(-1, -1, false);
         }
     }
 

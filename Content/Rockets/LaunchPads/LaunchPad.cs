@@ -59,7 +59,7 @@ public partial class LaunchPad : IInventoryOwner
         set => assemblyInventory = value;
     }
 
-    public InventoryOwnerType InventoryOwnerType => InventoryOwnerType.TileEntity;
+    public InventoryOwnerType InventoryOwnerType => InventoryOwnerType.Launchpad;
     public int InventoryIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
     public Vector2 InventoryPosition => CenterWorld;
 
