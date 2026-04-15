@@ -117,7 +117,7 @@ public class KeroseneGeneratorTE : GeneratorTE
             }
         }
 
-        MaxGeneratedPower = 15f;
+        MaxGeneratedPower = 225f;
         GeneratedPower = RPMProgress * MaxGeneratedPower;
     }
 

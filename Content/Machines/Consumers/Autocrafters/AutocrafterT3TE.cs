@@ -9,7 +9,7 @@ public class AutocrafterT3TE : AutocrafterTEBase
     public override int OutputSlots => 4;
     public override void MachineUpdate()
     {
-        MaxPower = 0.1f;
+        MaxPower = 65f;
         base.MachineUpdate();
     }
 }

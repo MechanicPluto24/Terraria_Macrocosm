@@ -16,7 +16,7 @@ public class SolarPanelSmallTE : GeneratorTE
 
     public override void MachineUpdate()
     {
-        MaxGeneratedPower = 0.5f;
+        MaxGeneratedPower = 10f;
         GeneratedPower = PoweredOn ? MaxGeneratedPower : 0;
     }
 }

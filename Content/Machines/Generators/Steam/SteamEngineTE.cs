@@ -9,7 +9,7 @@ public class SteamEngineTE : GeneratorTE
 
     public override void MachineUpdate()
     {
-        MaxGeneratedPower = 3f; // simple constant output
+        MaxGeneratedPower = 200f; // simple constant output
         GeneratedPower = PoweredOn ? MaxGeneratedPower : 0f; // no auto turn on
     }
 }

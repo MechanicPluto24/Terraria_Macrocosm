@@ -19,7 +19,7 @@ public class WindTurbineLargeTE : GeneratorTE
 
     public override void MachineUpdate()
     {
-        MaxGeneratedPower = 4f;
+        MaxGeneratedPower = 120f;
         GeneratedPower = PoweredOn ? MaxGeneratedPower * Math.Abs(Utility.WindSpeedScaled) : 0;
     }
 
