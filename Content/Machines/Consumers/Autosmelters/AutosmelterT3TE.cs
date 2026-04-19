@@ -13,9 +13,9 @@ public class AutosmelterT3TE : AutocrafterTEBase
     protected override int[] AvailableCraftingStations =>
     [
         TileID.Furnaces,
-        TileID.GlassKiln,
         TileID.Hellforge,
-        TileID.AdamantiteForge
+        TileID.AdamantiteForge,
+        TileID.LunarCraftingStation
     ];
 
     public override void MachineUpdate()

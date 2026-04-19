@@ -1,21 +1,10 @@
-﻿using Macrocosm.Common.Systems.Power;
-using Terraria;
+using Macrocosm.Common.Systems.Power;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines.Generators.Solar;
 
-public class SolarPanelExtraLargeTE : GeneratorTE
+public class SolarPanelExtraLargeTE : SolarPanelTEBase
 {
     public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelExtraLarge>();
-    public override bool PoweredOn => Main.dayTime;
-
-    public override void OnFirstUpdate()
-    {
-    }
-
-    public override void MachineUpdate()
-    {
-        MaxGeneratedPower = 65f;
-        GeneratedPower = PoweredOn ? MaxGeneratedPower : 0;
-    }
+    protected override float BaseGeneratedPower => 65f;
 }

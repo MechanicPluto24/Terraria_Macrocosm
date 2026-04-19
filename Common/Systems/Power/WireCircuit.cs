@@ -33,6 +33,7 @@ public class WireCircuit : Circuit<MachineTE>
 
     public override void Solve(int updateRate)
     {
+        float deltaTime = GetDeltaTime(updateRate);
         float totalGeneratorOutput = 0f;
         float totalConsumerDemand = 0f;
         float totalBatteryStoredEnergy = 0f;
@@ -73,15 +74,16 @@ public class WireCircuit : Circuit<MachineTE>
         else
         {
             float powerNeeded = -netPower;
+            float energyNeeded = powerNeeded * deltaTime;
 
-            if (totalBatteryStoredEnergy >= powerNeeded)
+            if (totalBatteryStoredEnergy >= energyNeeded)
             {
                 DistributePowerToConsumers(consumers, 1f);
-                DrawPowerFromBatteries(batteries, powerNeeded, updateRate);
+                DrawPowerFromBatteries(batteries, energyNeeded);
             }
             else
             {
-                float totalAvailablePower = totalGeneratorOutput + totalBatteryStoredEnergy;
+                float totalAvailablePower = totalGeneratorOutput + totalBatteryStoredEnergy / deltaTime;
                 float circuitPowerFactor = totalAvailablePower / totalConsumerDemand;
 
                 DistributePowerToConsumers(consumers, circuitPowerFactor);
@@ -101,7 +103,7 @@ public class WireCircuit : Circuit<MachineTE>
 
     private void StoreExcessPowerInBatteries(List<BatteryTE> batteries, float excessPower, int updateRate)
     {
-        float deltaTime = MathF.Max(1, updateRate) / 60f; // clamp to avoid 0
+        float deltaTime = GetDeltaTime(updateRate);
         float totalEnergyToStore = excessPower * deltaTime; // kW * s = kJ
 
         var availableBatteries = batteries.Where(b => b.StoredEnergy < b.EnergyCapacity).ToList();
@@ -136,11 +138,8 @@ public class WireCircuit : Circuit<MachineTE>
         }
     }
 
-    private void DrawPowerFromBatteries(List<BatteryTE> batteries, float powerNeeded, int updateRate)
+    private void DrawPowerFromBatteries(List<BatteryTE> batteries, float totalEnergyNeeded)
     {
-        float deltaTime = MathF.Max(1, updateRate) / 60f; // clamp to avoid 0
-        float totalEnergyNeeded = powerNeeded * deltaTime; // kW * s = kJ
-
         var availableBatteries = batteries.Where(b => b.StoredEnergy > 0f).ToList();
 
         while (totalEnergyNeeded > 0f && availableBatteries.Count > 0)
@@ -173,6 +172,7 @@ public class WireCircuit : Circuit<MachineTE>
         }
     }
 
+    private static float GetDeltaTime(int updateRate) => MathF.Max(1, updateRate) / 60f;
 
     private void DrainAllBatteries(List<BatteryTE> batteries)
     {

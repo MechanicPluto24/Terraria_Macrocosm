@@ -59,6 +59,9 @@ public abstract partial class MacrocosmSubworld : Subworld
     /// <summary> Get the atmospheric density at the specified position </summary>
     protected virtual float AtmosphericDensity(Vector2 position) => Earth.AtmosphericDensity;
 
+    /// <summary> Solar panel power multiplier for this subworld at the specified position </summary>
+    protected virtual float SolarPanelPowerMultiplier(Vector2 position) => 1.25f;
+
     /// <summary> The ambient temperature, expressed in °C. Pass position only when you need temperature at a position different than the local player's </summary>
     protected virtual float AmbientTemperature(Vector2 position) => Earth.AmbientTemperature(position);
 

@@ -23,9 +23,9 @@ namespace Macrocosm.Content.Machines.Consumers.Drills;
 public class OreDrill : MachineTile
 {
     public override short Width => 4;
-    public override short Height => 6;
+    public override short Height => 5;
     public override MachineTE MachineTE => ModContent.GetInstance<OreDrillTE>();
-    public override int FrameCount => 3;
+    public override int FrameCount => 5;
 
     public override void SetStaticDefaults()
     {
@@ -47,7 +47,7 @@ public class OreDrill : MachineTile
         AddMapEntry(new Color(206, 117, 44), CreateMapEntryName());
     }
 
-    // Frame 0 => idle, Frame 1 => active
+    // Frame 0 => idle, frames 1-4 => active animation
     public override bool IsPoweredOnFrame(int i, int j) => Main.tile[i, j].TileFrameY >= Height * 18 * 1;
 
     public override void OnToggleStateFrame(int i, int j, bool skipWire = false)
@@ -112,7 +112,7 @@ public class OreDrill : MachineTile
     public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
     {
         if (IsPoweredOnFrame(i, j))
-            frameYOffset = 18 * Height * Main.tileFrame[type] * -1; // Negative because "idle" frame is also an animation frame
+            frameYOffset = 18 * Height * Main.tileFrame[type];
     }
 
     public override void AnimateTile(ref int frame, ref int frameCounter)
@@ -137,9 +137,9 @@ public class OreDrill : MachineTile
         if (IsPoweredOnFrame(i, j))
         {
             // Exhaust position - spawn smoke
-            if (tileOffsetY == 0 && tileOffsetX % 2 == 0)
+            if (tileOffsetY == 0 && tileOffsetX == 0)
             {
-                if (Main.tileFrame[Type] == 1)
+                if (Main.tileFrame[Type] % 2 == 0)
                 {
                     float atmoDensity = 0.3f + 0.7f * MacrocosmSubworld.GetAtmosphericDensity(new Vector2(i, j) * 16f);
                     int count = atmoDensity < 1f ? 1 : 2;

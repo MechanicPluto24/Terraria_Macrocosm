@@ -101,6 +101,12 @@ public partial class MacrocosmSubworld
         }
     }
 
+    public static float GetSolarPanelPowerMultiplier(Vector2? position = null)
+    {
+        Vector2 worldPosition = position ?? Main.LocalPlayer.position;
+        return Current?.SolarPanelPowerMultiplier(worldPosition) ?? Earth.SolarPanelPowerMultiplier(worldPosition);
+    }
+
     /// <summary> The loading screen. </summary>
     public static LoadingScreen LoadingScreen { get; set; }
     public static void SetupLoadingScreen(Rocket rocket, string targetWorld, bool downwards = false)
