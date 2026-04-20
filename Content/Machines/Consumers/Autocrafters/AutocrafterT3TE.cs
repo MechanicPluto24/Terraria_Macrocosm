@@ -8,6 +8,7 @@ public class AutocrafterT3TE : AutocrafterTEBase
 {
     public override MachineTile MachineTile => ModContent.GetInstance<AutocrafterT3>();
     public override int OutputSlots => 4;
+    protected override bool AllowHandCrafting => true;
 
     protected override int[] AvailableCraftingStations =>
     [

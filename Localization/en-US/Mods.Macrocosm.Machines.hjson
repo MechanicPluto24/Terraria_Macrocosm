@@ -22,6 +22,7 @@ Common: {
 	BurnFuel: Flammable
 	TemperatureMetric: "{0}°C"
 	TemperatureImperial: "{0}°F"
+	AirQualityIndex: "{0} AQI"
 
 	PowerInfo: {
 		Simple: "{0}kW"

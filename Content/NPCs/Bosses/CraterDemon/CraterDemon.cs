@@ -1846,9 +1846,13 @@ public class CraterDemon : ModNPC
         {
             SpawnDusts(30);
 
-            Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreFace").Type);
-            Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreHead").Type);
-            Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>("CraterDemonGoreJaw").Type);
+            string faceGore = phase2 ? "CraterDemonGoreFaceCracked" : "CraterDemonGoreFace";
+            string headGore = phase2 ? "CraterDemonGoreHeadCracked" : "CraterDemonGoreHead";
+            string jawGore = "CraterDemonGoreJaw";
+
+            Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>(faceGore).Type);
+            Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>(headGore).Type);
+            Gore.NewGore(entitySource, NPC.position, NPC.velocity, Mod.Find<ModGore>(jawGore).Type);
         }
     }
 

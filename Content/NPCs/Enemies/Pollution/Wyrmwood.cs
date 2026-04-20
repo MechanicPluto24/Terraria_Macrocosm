@@ -7,10 +7,12 @@ using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
 using Macrocosm.Content.Projectiles.Hostile;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -18,17 +20,19 @@ namespace Macrocosm.Content.NPCs.Enemies.Pollution;
 
 public class WyrmwoodHead : WormHead
 {
+    private const int BestiaryFrameCount = 4;
+    private const int BestiaryTicksPerFrame = 8;
+
+    public int WingsType => ModContent.NPCType<WyrmwoodWings>();
     public override int BodyType => ModContent.NPCType<WyrmwoodBody>();
     public override int TailType => ModContent.NPCType<WyrmwoodTail>();
+    public override bool HasCustomBodySegments => true;
 
     public override void SetStaticDefaults()
     {
         NPCID.Sets.NPCBestiaryDrawModifiers value = new()
         {
-            CustomTexturePath = Texture.Replace("Head", "") + "_Bestiary",
-            Position = new Vector2(40f, 24f),
-            PortraitPositionXOverride = 0f,
-            PortraitPositionYOverride = 12f
+            Position = new Vector2(0, -12f),
         };
         NPCID.Sets.NPCBestiaryDrawOffset.Add(NPC.type, value);
 
@@ -48,8 +52,8 @@ public class WyrmwoodHead : WormHead
         NPC.lifeMax = 1200;
         NPC.damage = 40;
         NPC.defense = 10;
-        NPC.width = 26;
-        NPC.height = 58;
+        NPC.width = 16;
+        NPC.height = 16;
         SpawnModBiomes = [ModContent.GetInstance<PollutionBiome>().Type];
         NPC.aiStyle = -1;
     }
@@ -67,6 +71,43 @@ public class WyrmwoodHead : WormHead
     {
     }
 
+    public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+    {
+        if (NPC.IsABestiaryIconDummy)
+            return DrawBestiary(screenPos, drawColor);
+
+        return base.PreDraw(spriteBatch, screenPos, drawColor);
+    }
+
+    private bool DrawBestiary(Vector2 screenPos, Color drawColor)
+    {
+        Texture2D texture = ModContent.Request<Texture2D>(Texture.Replace("Head", "") + "_Bestiary").Value;
+        int frame = (int)(Main.GameUpdateCount / BestiaryTicksPerFrame) % BestiaryFrameCount;
+        Rectangle sourceRect = texture.Frame(verticalFrames: BestiaryFrameCount, frameY: frame);
+
+        NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = NPCID.Sets.NPCBestiaryDrawOffset.TryGetValue(Type, out var modifiers) ? modifiers : new();
+
+        Vector2 offset = drawModifiers.Position;
+        int direction = drawModifiers.Direction ?? -1;
+        int spriteDirection = drawModifiers.SpriteDirection ?? direction;
+        SpriteEffects effects = spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+        Vector2 drawPosition = NPC.Center + offset - screenPos;
+
+        Main.EntitySpriteDraw(
+            texture,
+            drawPosition,
+            sourceRect,
+            NPC.GetAlpha(drawColor),
+            drawModifiers.Rotation,
+            sourceRect.Size() * 0.5f,
+            NPC.scale * drawModifiers.Scale,
+            effects,
+            0f
+        );
+
+        return false;
+    }
+
     public override void Init()
     {
         // Set the segment variance
@@ -75,6 +116,21 @@ public class WyrmwoodHead : WormHead
         MaxSegmentLength = 9;
         CanFly = true;
         CommonWormInit(this);
+    }
+
+    public override int SpawnBodySegments(int segmentCount)
+    {
+        int latestNPC = NPC.whoAmI;
+        int wingsSegmentIndex = 0;
+        IEntitySource source = NPC.GetSource_FromAI();
+
+        for (int i = 0; i < segmentCount; i++)
+        {
+            int type = i == wingsSegmentIndex ? WingsType : BodyType;
+            latestNPC = SpawnSegment(source, type, latestNPC);
+        }
+
+        return latestNPC;
     }
 
     public static void CommonWormInit(Worm worm)
@@ -102,13 +158,6 @@ public class WyrmwoodHead : WormHead
             // tick down the attack counter.
             if (attackCounter > 0)
                 attackCounter--;
-
-            Player target = Main.player[NPC.target];
-            // If the attack counter is 0, this NPC is less than 12.5 tiles away from its target, and has a path to the target unobstructed by blocks, summon a projectile.
-            if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 200 && Collision.CanHit(NPC.Center, 1, 1, target.Center, 1, 1))
-            {
-                // some projectile attack here?
-            }
         }
     }
 
@@ -129,6 +178,8 @@ public class WyrmwoodBody : WormBody
 {
     public override void SetStaticDefaults()
     {
+        Main.npcFrameCount[Type] = 1;
+
         NPC.ApplyBuffImmunity
         (
             BuffID.Confused
@@ -153,17 +204,15 @@ public class WyrmwoodBody : WormBody
         NPC.damage = 20;
         NPC.defense = 20;
         NPC.npcSlots = 0f;
-        NPC.width = 28;
-        NPC.height = 28;
+        NPC.width = 16;
+        NPC.height = 18;
         NPC.aiStyle = -1;
-        Main.npcFrameCount[Type] = 1;
         attackCounter = Main.rand.Next(400, 500);
     }
 
     public override void Init()
     {
         FlipSprite = true;
-
         WyrmwoodHead.CommonWormInit(this);
     }
     public override void CustomBodyAI(Worm worm)
@@ -178,7 +227,7 @@ public class WyrmwoodBody : WormBody
             if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 1000f)
             {
                 Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 5), ModContent.ProjectileType<WyrmwoodProjectile>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer);
-                attackCounter = Main.rand.Next(400, 500);
+                attackCounter = Main.rand.Next(100, 200);
             }
         }
     }
@@ -203,6 +252,38 @@ public class WyrmwoodBody : WormBody
     }
 }
 
+public class WyrmwoodWings : WyrmwoodBody
+{
+    private const int TicksPerFrame = 6;
+
+    public override float SegmentSpacing => 12f;
+    public override Vector2 SpriteDrawOffset => new Vector2(-4, 6);
+
+    public override void SetStaticDefaults()
+    {
+        base.SetStaticDefaults();
+        Main.npcFrameCount[Type] = 4;
+    }
+
+    public override void SetDefaults()
+    {
+        base.SetDefaults();
+        NPC.width = 16;
+        NPC.height = 16;
+    }
+
+    public override void FindFrame(int frameHeight)
+    {
+        int frame = (int)(NPC.frameCounter / TicksPerFrame) % Main.npcFrameCount[Type];
+        NPC.frame = TextureAssets.Npc[Type].Frame(verticalFrames: Main.npcFrameCount[Type], frameY: frame);
+
+        NPC.frameCounter++;
+        if (NPC.frameCounter >= TicksPerFrame * Main.npcFrameCount[Type])
+            NPC.frameCounter = 0;
+    }
+
+}
+
 public class WyrmwoodTail : WormTail
 {
     public override void SetStaticDefaults()
@@ -221,8 +302,8 @@ public class WyrmwoodTail : WormTail
         NPC.CloneDefaults(NPCID.DiggerTail);
         NPC.damage = 5;
         NPC.defense = 30;
-        NPC.width = 28;
-        NPC.height = 44;
+        NPC.width = 16;
+        NPC.height = 26;
         NPC.npcSlots = 0f;
         NPC.aiStyle = -1;
     }

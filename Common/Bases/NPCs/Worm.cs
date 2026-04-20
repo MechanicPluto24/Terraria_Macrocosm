@@ -1,8 +1,10 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -44,6 +46,12 @@ public abstract class Worm : ModNPC
     /// <summary> Whether the segment sprite will flip in order to avoid the worm looking upside-down </summary>
     public bool FlipSprite { get; set; }
 
+    /// <summary> The distance this segment will try to keep from the segment it is following. </summary>
+    public virtual float SegmentSpacing => NPC.width;
+
+    /// <summary> Local sprite-space draw offset used by <see cref="DrawWormSegment(SpriteBatch, Vector2, Color)"/>. </summary>
+    public virtual Vector2 SpriteDrawOffset => Vector2.Zero;
+
     /// <summary> The NPC instance of the head segment for this worm. </summary>
     public NPC HeadSegment => Main.npc[NPC.realLife];
 
@@ -55,6 +63,9 @@ public abstract class Worm : ModNPC
 
     public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
         => SegmentType == WormSegmentType.Head ? null : false;
+
+    public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+        => DrawWormSegment(spriteBatch, screenPos, drawColor);
 
     public NPC GetFollowingSegment()
         => NPC.ai[1] >= Main.maxNPCs ? null : FollowingNPC;
@@ -135,6 +146,30 @@ public abstract class Worm : ModNPC
     public virtual void HeadAI() { }
 
     public virtual void BodyTailAI() { }
+
+    protected virtual bool DrawWormSegment(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+    {
+        Texture2D texture = TextureAssets.Npc[Type].Value;
+        Rectangle frame = NPC.frame.Width > 0 && NPC.frame.Height > 0 ? NPC.frame : texture.Frame(verticalFrames: Main.npcFrameCount[Type]);
+
+        SpriteEffects effects = NPC.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+        Vector2 localOffset = new(SpriteDrawOffset.X * NPC.spriteDirection, SpriteDrawOffset.Y);
+        Vector2 drawPosition = NPC.Center + new Vector2(0f, NPC.gfxOffY) + localOffset.RotatedBy(NPC.rotation) - screenPos;
+
+        Main.EntitySpriteDraw(
+            texture,
+            drawPosition,
+            frame,
+            NPC.GetAlpha(drawColor),
+            NPC.rotation,
+            frame.Size() * 0.5f,
+            NPC.scale,
+            effects,
+            0f
+        );
+
+        return false;
+    }
 
     public abstract void Init();
 }
@@ -290,7 +325,7 @@ public abstract class WormHead : Worm
                 {
                     NPC n = Main.npc[i];
 
-                    if (n.active && (n.type == Type || n.type == BodyType || n.type == TailType) && n.realLife == NPC.whoAmI)
+                    if (n.active && (n.whoAmI == NPC.whoAmI || n.realLife == NPC.whoAmI))
                         count++;
                 }
 
@@ -301,7 +336,7 @@ public abstract class WormHead : Worm
                     {
                         NPC n = Main.npc[i];
 
-                        if (n.active && (n.type == Type || n.type == BodyType || n.type == TailType) && n.realLife == NPC.whoAmI)
+                        if (n.active && (n.whoAmI == NPC.whoAmI || n.realLife == NPC.whoAmI))
                         {
                             n.active = false;
                             n.netUpdate = true;
@@ -657,7 +692,7 @@ public abstract class WormBody : Worm
             // We also get the length of the direction vector.
             float length = (float)Math.Sqrt(dirX * dirX + dirY * dirY);
             // We calculate aw new, correct distance.
-            float dist = (length - worm.NPC.width) / length;
+            float dist = (length - worm.SegmentSpacing) / length;
             float posX = dirX * dist;
             float posY = dirY * dist;
 
