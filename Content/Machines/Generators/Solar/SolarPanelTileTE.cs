@@ -7,5 +7,5 @@ public class SolarPanelTileTE : SolarPanelTEBase
 {
     public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelTile>();
     public override bool CanCluster => true;
-    protected override float BaseGeneratedPower => 0.1f * ClusterSize;
+    protected override float BaseGeneratedPower => 1.5f * ClusterSize;
 }
