@@ -132,7 +132,7 @@ public class BurnerGeneratorTE : GeneratorTE
             }
         }
 
-        MaxGeneratedPower = 5f;
+        MaxGeneratedPower = 75f;
         GeneratedPower = HullHeatProgress * MaxGeneratedPower;
     }
 

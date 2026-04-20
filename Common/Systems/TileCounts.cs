@@ -34,12 +34,12 @@ public class TileCounts : ModSystem
 
     public float PollutionLevel
     {
-        get => pollutionLevel;
-        set => pollutionLevel = MathHelper.Clamp(value, 0f, PollutionLevelMax);
+        get => field;
+        set => field = MathHelper.Clamp(value, 0f, PollutionLevelMax);
     }
-    private float pollutionLevel = 0f;
-    public float PollutionLevelThreshold => 6f;
-    public float PollutionLevelMax => 30f;
+    public float Pollution01 => PollutionLevelMax <= 0f ? 0f : PollutionLevel / PollutionLevelMax;
+    public const float PollutionLevelMax = 500f;
+    public const float PollutionLevelThreshold = 100f;
 
     public override void ResetNearbyTileEffects()
     {

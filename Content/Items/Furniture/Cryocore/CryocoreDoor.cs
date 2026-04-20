@@ -23,7 +23,7 @@ public class CryocoreDoor : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 6)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

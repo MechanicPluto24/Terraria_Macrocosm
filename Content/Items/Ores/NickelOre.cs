@@ -1,6 +1,8 @@
 ﻿using Macrocosm.Content.Rarities;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Items.Ores;
 
@@ -13,11 +15,18 @@ public class NickelOre : ModItem
 
     public override void SetDefaults()
     {
-        Item.width = 16;
-        Item.height = 16;
+        Item.width = 20;
+        Item.height = 20;
         Item.maxStack = Item.CommonMaxStack;
         Item.value = 750;
-        Item.rare = ModContent.RarityType<MoonRarity1>();
-
+        Item.useStyle = ItemUseStyleID.Swing;
+        Item.useTurn = true;
+        Item.useAnimation = 15;
+        Item.useTime = 10;
+        Item.autoReuse = true;
+        Item.consumable = true;
+        Item.createTile = TileType<Tiles.Ores.NickelOre>();
+        Item.placeStyle = 0;
+        Item.rare = RarityType<MoonRarity1>();
     }
 }

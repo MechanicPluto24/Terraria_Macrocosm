@@ -71,7 +71,7 @@ public class AutocrafterUI : MachineUI
 
         recipeBrowserPanel = new UIPanel()
         {
-            Width = new(0f, 0.65f),
+            Width = new(0f, 0.69f),
             Height = new(0f, 1f),
             Left = new(0f, 0f),
             BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
@@ -89,9 +89,9 @@ public class AutocrafterUI : MachineUI
 
         infoPanel = new UIPanel()
         {
-            Width = new(0f, 0.35f),
+            Width = new(0f, 0.3f),
             Height = new(0f, 1f),
-            Left = new(0f, 0.65f),
+            Left = new(0f, 0.70f),
             BackgroundColor = UITheme.Current.PanelStyle.BackgroundColor,
             BorderColor = UITheme.Current.PanelStyle.BorderColor
         };

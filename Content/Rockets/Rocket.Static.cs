@@ -21,7 +21,7 @@ public partial class Rocket
         {
             Position = position,
             Active = true,
-            Transparency = 0f
+            Transparency = 1f
         };
 
         RocketManager.AddRocket(rocket);

@@ -1,6 +1,9 @@
 ﻿using SubworldLibrary;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria;
+using Macrocosm.Common.Systems.Flags;
+using Macrocosm.Common.Utils;
 
 namespace Macrocosm.Common.Subworlds;
 
@@ -31,5 +34,36 @@ public abstract class OrbitSubworld : MultiSubworld
             return orbitSubworld.ParentSubworldID;
 
         return subworldId;
+    }
+
+    public static bool IsUnlocked(string subworldId) => WorldData.GetSubworldData(subworldId).Unlocked;
+    public static void Unlock(string subworldId)
+    {
+        var data = WorldData.GetSubworldData(subworldId);
+        if (!data.Unlocked)
+        {
+            data.Unlocked = true;
+            if (Main.netMode == Terraria.ID.NetmodeID.Server)
+            {
+                Utility.Chat($"Orbit unlocked: {subworldId}", Microsoft.Xna.Framework.Color.LightSkyBlue);
+            }
+        }
+    }
+
+    public static void UnlockForParent(string parentSubworldId)
+    {
+        foreach (var orbit in GetOrbitSubworlds(parentSubworldId))
+        {
+            var d = WorldData.GetSubworldData(orbit.ID);
+            if (!d.Unlocked)
+                d.Unlocked = true;
+        }
+    }
+
+    public static OrbitSubworld GetFirstLockedForParent(string parentSubworldId)
+    {
+        return GetOrbitSubworlds(parentSubworldId)
+            .OrderBy(orbit => orbit.InstanceIndex)
+            .FirstOrDefault(orbit => !IsUnlocked(orbit.ID));
     }
 }

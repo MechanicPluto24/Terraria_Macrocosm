@@ -25,6 +25,7 @@ public class OreExcavator : MachineTile
     public override short Width => 7;
     public override short Height => 10;
     public override MachineTE MachineTE => ModContent.GetInstance<OreExcavatorTE>();
+    public override int FrameCount => 5;
 
     private static Asset<Texture2D> glowmask;
 
@@ -39,7 +40,6 @@ public class OreExcavator : MachineTile
         SceneData.Hooks[Type] = NearbyEffects;
 
         TileObjectData.newTile.DefaultToMachine(this);
-        TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
@@ -124,13 +124,13 @@ public class OreExcavator : MachineTile
             return;
 
         if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
-            TileCounts.Instance.PollutionLevel += 5f;
+            TileCounts.Instance.PollutionLevel += 85f;
     }
 
     public void NearbyEffects(int i, int j, SceneData sceneData)
     {
         if (TileObjectData.IsTopLeft(i, j) && IsPoweredOnFrame(i, j))
-            sceneData.Macrocosm.PollutionLevel += 5f;
+            sceneData.Macrocosm.PollutionLevel += 85f;
     }
 
     public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
@@ -142,11 +142,10 @@ public class OreExcavator : MachineTile
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
         int ticksPerFrame = 4;
-        int frameCount = 4;
         if (++frameCounter >= ticksPerFrame)
         {
             frameCounter = 0;
-            if (++frame >= frameCount)
+            if (++frame >= FrameCount - 1)
                 frame = 0;
         }
     }

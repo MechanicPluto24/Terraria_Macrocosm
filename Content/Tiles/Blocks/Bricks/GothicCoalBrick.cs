@@ -14,6 +14,8 @@ public class GothicCoalBrick : ModTile
         Main.tileSolid[Type] = true;
         Main.tileBlockLight[Type] = true;
 
+        TileID.Sets.GemsparkFramingTypes[Type] = Type;
+
         //TileID.Sets.AllBlocksWithSmoothBordersToResolveHalfBlockIssue[Type] = false;
         //TileID.Sets.IgnoresNearbyHalfbricksWhenDrawn[Type] = true;
 
@@ -38,25 +40,7 @@ public class GothicCoalBrick : ModTile
 
     public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
     {
-        TileFraming.PlatingStyle(i, j, countHalfBlocks: true);
+        TileFraming.GemsparkFraming(i, j, resetFrame);
         return false;
     }
-
-    /*
-    public override void SetDrawPositions(int i, int j, ref int width, ref int offsetY, ref int height, ref short tileFrameX, ref short tileFrameY)
-    {
-        Tile tile = Main.tile[i, j];
-
-        var info = new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo
-        (
-            (neighbour) =>
-                WorldGen.SolidTile(neighbour) && neighbour.TileType != Type ||
-                TileID.Sets.CloseDoorID[neighbour.TileType] > 0 ||
-                neighbour.TileType == TileID.TallGateOpen
-        );
-
-        if (tile.IsSloped() || info.Count4Way > 0)
-            tileFrameY += 90;
-    }
-    */
 }

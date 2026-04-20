@@ -16,6 +16,8 @@ public class SeleniteBrick : ModTile
         Main.tileBlockLight[Type] = true;
         Main.tileLighted[Type] = true;
 
+        TileID.Sets.GemsparkFramingTypes[Type] = Type;
+
         MinPick = 225;
         MineResist = 3f;
 
@@ -34,7 +36,7 @@ public class SeleniteBrick : ModTile
     }
     public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
     {
-        TileFraming.PlatingStyle(i, j, countHalfBlocks: true);
+        TileFraming.GemsparkFraming(i, j, resetFrame);
         return false;
     }
 }

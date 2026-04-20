@@ -42,10 +42,12 @@ public abstract class AutocrafterTEBase : ConsumerTE
 
     public virtual bool RecipeAllowed(Recipe recipe)
     {
-        if (AllowHandCrafting && recipe.requiredTile.All(tile => tile == -1))
-            return true;
+        int[] requiredTiles = recipe.requiredTile.Where(tile => tile != -1).ToArray();
 
-        return recipe.requiredTile.Where(tile => tile != -1).All(tile => AvailableCraftingStations.Contains(tile));
+        if (requiredTiles.Length == 0)
+            return AllowHandCrafting;
+
+        return requiredTiles.All(tile => AvailableCraftingStations.Contains(tile));
     }
 
     public bool CanOverwriteRecipeAt(int outputSlot)

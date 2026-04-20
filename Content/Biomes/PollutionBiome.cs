@@ -12,11 +12,12 @@ namespace Macrocosm.Content.Biomes;
 public class PollutionBiome : ModBiome
 {
     public override SceneEffectPriority Priority => SceneEffectPriority.BiomeMedium;
-    public override float GetWeight(Player player) => TileCounts.Instance.PollutionLevel / TileCounts.Instance.PollutionLevelMax;
+    public override float GetWeight(Player player) => TileCounts.Instance.Pollution01;
 
     public override string BestiaryIcon => Macrocosm.TexturesPath + "Icons/Pollution";
     public override string BackgroundPath => Macrocosm.TexturesPath + "MapBackgrounds/Pollution";
     public override string MapBackground => BackgroundPath;
+    public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Pollution");
 
     public override ModWaterStyle WaterStyle => ModContent.GetInstance<PollutionWaterStyle>();
     public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Normal;
@@ -26,7 +27,7 @@ public class PollutionBiome : ModBiome
     private float visualIntensity = 0f;
     public override void SpecialVisuals(Player player, bool isActive)
     {
-        float level = MathHelper.Clamp(TileCounts.Instance.PollutionLevel / TileCounts.Instance.PollutionLevelMax, 0, 1);
+        float level = MathHelper.Clamp(TileCounts.Instance.Pollution01, 0f, 1f);
         if (visualIntensity < level)
         {
             visualIntensity += 0.02f;

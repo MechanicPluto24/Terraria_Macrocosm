@@ -1,10 +1,9 @@
-using Macrocosm.Content.Items.Blocks;
+using Macrocosm.Content.Items.Blocks.Bricks;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Furniture.Regolith;
 
-/*
 public class RegolithPlatform : ModItem
 {
     public override void SetStaticDefaults()
@@ -26,4 +25,3 @@ public class RegolithPlatform : ModItem
             .Register();
     }
 }
-*/

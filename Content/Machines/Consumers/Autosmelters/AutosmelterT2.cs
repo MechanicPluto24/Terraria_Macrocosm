@@ -21,6 +21,7 @@ public class AutosmelterT2 : MachineTile
     public override short Width => 4;
     public override short Height => 4;
     public override MachineTE MachineTE => ModContent.GetInstance<AutosmelterT2TE>();
+    public override int FrameCount => 6;
 
     private static Asset<Texture2D> glowmask;
 
@@ -33,7 +34,6 @@ public class AutosmelterT2 : MachineTile
         Main.tileLavaDeath[Type] = true;
 
         TileObjectData.newTile.DefaultToMachine(this);
-        TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
@@ -104,11 +104,10 @@ public class AutosmelterT2 : MachineTile
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
         int ticksPerFrame = 5;
-        int frameCount = 5;
         if (++frameCounter >= ticksPerFrame)
         {
             frameCounter = 0;
-            if (++frame >= frameCount)
+            if (++frame >= FrameCount - 1)
                 frame = 0;
         }
     }

@@ -24,7 +24,7 @@ public class CryocoreTable : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 8)
-            .AddTile(TileID.WorkBenches)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

@@ -25,7 +25,7 @@ public class CryocoreSofa : ModItem
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 5)
             .AddIngredient(ItemID.Silk, 2)
-            .AddTile(TileID.MythrilAnvil)
+            .AddTile(TileID.LunarCraftingStation)
             .Register();
     }
 }

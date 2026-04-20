@@ -15,6 +15,7 @@ public class SteamEngine : MachineTile
     public override short Width => 6;
     public override short Height => 4;
     public override MachineTE MachineTE => ModContent.GetInstance<SteamEngineTE>();
+    public override int FrameCount => 17;
 
     public override void SetStaticDefaults()
     {
@@ -25,7 +26,6 @@ public class SteamEngine : MachineTile
         Main.tileLavaDeath[Type] = true;
 
         TileObjectData.newTile.DefaultToMachine(this);
-        TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
@@ -69,11 +69,10 @@ public class SteamEngine : MachineTile
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
         int ticksPerFrame = 3;
-        int frameCount = 16;  
         if (++frameCounter >= ticksPerFrame)
         {
             frameCounter = 0;
-            if (++frame >= frameCount)
+            if (++frame >= FrameCount - 1)
                 frame = 0;
         }
     }

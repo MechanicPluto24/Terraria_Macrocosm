@@ -17,15 +17,17 @@ public class QuartzBlock : ModTile
         Main.tileLighted[Type] = true;
         Main.tileShine2[Type] = true;
         Main.tileShine[Type] = 975;
+
+        TileID.Sets.ChecksForMerge[Type] = true;
         TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
+
+        Chalcedony.TileMerge[Type] = true;
 
         MinPick = 225;
         MineResist = 0.5f;
         AddMapEntry(new Color(255, 255, 255));
         HitSound = SoundID.Tink;
-        DustType = ModContent.DustType<RegolithDust>();
-
-        RegisterItemDrop(ModContent.ItemType<Items.Ores.QuartzFragment>());
+        DustType = ModContent.DustType<QuartzDust>();
     }
 
     public override bool CanExplode(int i, int j)
@@ -33,11 +35,8 @@ public class QuartzBlock : ModTile
         return false;
     }
 
-    /*
-    public void ModifyTileFrame(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
+    public override void ModifyFrameMerge(int i, int j, ref int up, ref int down, ref int left, ref int right, ref int upLeft, ref int upRight, ref int downLeft, ref int downRight)
     {
-        WorldGen.TileMergeAttempt(-2, ModContent.TileType<Regolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
-        WorldGen.TileMergeAttempt(Type, ModContent.TileType<Protolith>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
+        WorldGen.TileMergeAttempt(-2, ModContent.TileType<Chalcedony>(), ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
     }
-    */
 }

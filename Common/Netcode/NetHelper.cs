@@ -110,7 +110,8 @@ public static class NetHelper
     public static void SpawnNPCFromClient(int netID, Vector2 position, float ai0 = 0f, float ai1 = 0f, float ai2 = 0f, float ai3 = 0f, Vector2 velocity = default, int target = 0, bool announce = false)
     {
         var packet = Macrocosm.Instance.GetPacket();
-        packet.Write((byte)MessageType.SyncNPCFromClient);
+        packet.Write((byte)MessageType.SpawnNPCFromClient);
+        packet.Write((short)netID);
 
         packet.WriteVector2(position);
         packet.WriteVector2(velocity);

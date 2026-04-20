@@ -40,15 +40,27 @@ public partial class LaunchPad
         int senderSubserver = reader.ReadInt16();
         string subworldId = reader.ReadString();
 
-        LaunchPad launchPad = new();
-        launchPad.internalRocket.NetRead(reader);
-        launchPad.NetRead(reader);
+        LaunchPad syncedLaunchPad = new();
+        syncedLaunchPad.internalRocket.NetRead(reader);
+        syncedLaunchPad.NetRead(reader);
 
-        LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(subworldId, launchPad.StartTile);
+        LaunchPad existingLaunchPad = LaunchPadManager.GetLaunchPadAtStartTile(subworldId, syncedLaunchPad.StartTile);
         if (existingLaunchPad is null)
-            LaunchPadManager.Add(subworldId, launchPad, notify: true);
+        {
+            LaunchPadManager.Add(subworldId, syncedLaunchPad, notify: true);
+        }
+        else
+        {
+            existingLaunchPad.internalRocket = syncedLaunchPad.internalRocket;
+            existingLaunchPad.Active = syncedLaunchPad.Active;
+            existingLaunchPad.StartTile = syncedLaunchPad.StartTile;
+            existingLaunchPad.EndTile = syncedLaunchPad.EndTile;
+            existingLaunchPad.RocketID = syncedLaunchPad.RocketID;
+            existingLaunchPad.ReservedRocketID = syncedLaunchPad.ReservedRocketID;
+            existingLaunchPad.CustomName = syncedLaunchPad.CustomName;
+        }
 
         if (Main.netMode == NetmodeID.Server)
-            launchPad.NetSync(subworldId, ignoreClient: sender, ignoreSubserver: senderSubserver);
+            syncedLaunchPad.NetSync(subworldId, ignoreClient: sender, ignoreSubserver: senderSubserver);
     }
 }

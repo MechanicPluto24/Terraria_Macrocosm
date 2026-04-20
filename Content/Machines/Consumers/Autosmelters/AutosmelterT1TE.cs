@@ -12,13 +12,12 @@ public class AutosmelterT1TE : AutocrafterTEBase
 
     protected override int[] AvailableCraftingStations =>
     [
-        TileID.Furnaces,
-        TileID.GlassKiln
+        TileID.Furnaces
     ];
 
     public override void MachineUpdate()
     {
-        MaxPower = 0.1f;
+        MaxPower = 25f;
         base.MachineUpdate();
     }
 }

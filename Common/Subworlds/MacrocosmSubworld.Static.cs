@@ -101,14 +101,26 @@ public partial class MacrocosmSubworld
         }
     }
 
+    public static float GetSolarPanelPowerMultiplier(Vector2? position = null)
+    {
+        Vector2 worldPosition = position ?? Main.LocalPlayer.position;
+        return Current?.SolarPanelPowerMultiplier(worldPosition) ?? Earth.SolarPanelPowerMultiplier(worldPosition);
+    }
+
     /// <summary> The loading screen. </summary>
     public static LoadingScreen LoadingScreen { get; set; }
     public static void SetupLoadingScreen(Rocket rocket, string targetWorld, bool downwards = false)
     {
         string currentId = CurrentID;
         string targetId = targetWorld;
+        string screenSourceId = rocket is not null ? currentId : targetId;
+        if (OrbitSubworld.IsOrbitSubworld(screenSourceId))
+            screenSourceId = OrbitSubworld.GetParentID(screenSourceId);
 
-        string id = SanitizeID(rocket is not null ? currentId : targetId);
+        if (OrbitSubworld.IsOrbitSubworld(targetId))
+            targetId = OrbitSubworld.GetParentID(targetId);
+
+        string id = SanitizeID(screenSourceId);
 
         LoadingScreen = id switch
         {

@@ -1,6 +1,5 @@
-using Macrocosm.Common.Enums;
-using Macrocosm.Common.Utils;
-using System;
+using Macrocosm.Content.Dusts;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,7 +7,6 @@ using Terraria.ObjectData;
 
 namespace Macrocosm.Content.Tiles.Furniture.Regolith;
 
-/*
 public class RegolithPlatform : ModTile
 {
     public override void SetStaticDefaults()
@@ -24,8 +22,9 @@ public class RegolithPlatform : ModTile
         TileID.Sets.DisableSmartCursor[Type] = true;
 
         AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
-        AddMapEntry(new(201, 201, 204));
-        DustType = ModContent.DustType<RegolithDust>(); 
+        AddMapEntry(new Color(201, 201, 204));
+
+        DustType = ModContent.DustType<RegolithDust>();
         AdjTiles = [TileID.Platforms];
 
         TileObjectData.newTile.CoordinateHeights = [16];
@@ -41,14 +40,5 @@ public class RegolithPlatform : ModTile
 
     public override void PostSetDefaults() => Main.tileNoSunLight[Type] = false;
 
-    public override bool CreateDust(int i, int j, ref int type)
-    {
-        type = Utility.GetDustTypeFromRegolithStyle((RegolithStyle)(Main.tile[i, j].TileFrameY / 18));
-        return true;
-    }
-
-    public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameY / 18);
-
     public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
 }
-*/

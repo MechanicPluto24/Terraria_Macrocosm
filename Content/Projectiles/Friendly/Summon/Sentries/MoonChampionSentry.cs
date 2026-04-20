@@ -58,7 +58,7 @@ public class MoonChampionSentry : ModProjectile
             timer++;
             if (timer % 10 == 0 && timer > 59)
             {
-                Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(-14, 0), new Vector2(16f, 0).RotatedBy(turretRotation), ModContent.ProjectileType<MoonChampionSentryBullet>(), Projectile.damage / 2, 1f, Main.myPlayer);
+                Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(14*Projectile.direction, -20), new Vector2(16f, 0).RotatedBy(turretRotation), ModContent.ProjectileType<MoonChampionSentryBullet>(), Projectile.damage / 2, 1f, Main.myPlayer);
                 p.DamageType = DamageClass.Summon;
                 offset = 5f;
             }

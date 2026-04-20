@@ -203,6 +203,7 @@ public static partial class Utility
     //------------------------------------------------------//
     //  Author(s): Grox the Great                           //
     //------------------------------------------------------// 
+
     public static void LogBasic(string logText)
     {
         ILog logger = LogManager.GetLogger("Terraria");

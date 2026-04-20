@@ -82,7 +82,7 @@ public class RocketManager : ModSystem, IOnPlayerJoining
         {
             Rocket rocket = Rockets[i];
 
-            if (!rocket.ActiveInCurrentWorld)
+            if (!rocket.ActiveInCurrentWorld && !rocket.IsAutonomousMissionState)
                 continue;
 
             rocket.Update();
@@ -110,7 +110,7 @@ public class RocketManager : ModSystem, IOnPlayerJoining
         {
             Rocket rocket = Rockets[i];
 
-            if (!rocket.ActiveInCurrentWorld)
+            if (!rocket.ActiveInCurrentWorld || rocket.IsSuspendedMissionState)
                 continue;
 
             rocket.PreDrawBeforeTiles(Main.spriteBatch, rocket.Position - Main.screenPosition, inWorld: true);
@@ -124,6 +124,9 @@ public class RocketManager : ModSystem, IOnPlayerJoining
             Rocket rocket = Rockets[i];
 
             if (!rocket.ActiveInCurrentWorld)
+                continue;
+
+            if (rocket.IsSuspendedMissionState)
                 continue;
 
             if (rocket.DrawLayer != layer)
@@ -159,6 +162,9 @@ public class RocketManager : ModSystem, IOnPlayerJoining
             if (!rocket.ActiveInCurrentWorld)
                 continue;
 
+            if (rocket.IsSuspendedMissionState)
+                continue;
+
             if (rocket.DrawLayer != layer)
                 continue;
 
@@ -172,7 +178,7 @@ public class RocketManager : ModSystem, IOnPlayerJoining
         {
             Rocket rocket = Rockets[i];
 
-            if (!rocket.ActiveInCurrentWorld)
+            if (!rocket.ActiveInCurrentWorld || rocket.IsSuspendedMissionState)
                 continue;
 
             rocket.DrawOverlay(Main.spriteBatch, rocket.Position - Main.screenPosition);

@@ -55,10 +55,13 @@ public class MoonLoadingScreen : LoadingScreen
         float progress = MathHelper.Clamp(animationTimer / animationDuration, 0f, 1f);
         progress = (float)Math.Pow(progress, 0.6);
         int movement = 500 + (int)(Utility.QuadraticEaseIn(progress) * 500f) * MovementDirection;
+        int lunaY = (int)(Main.screenHeight - lunaBackground.Height() * scale + movement);
+        int maxLunaY = Main.screenHeight - (int)(lunaBackground.Height() * scale);
+        lunaY = Math.Max(maxLunaY, lunaY);
 
         spriteBatch.Draw(
                 lunaBackground.Value,
-                new Rectangle((int)(Main.screenWidth - lunaBackground.Width() * scale), (int)(Main.screenHeight - lunaBackground.Height() * scale + movement), (int)(lunaBackground.Width() * scale), (int)(lunaBackground.Height() * scale)),
+                new Rectangle((int)(Main.screenWidth - lunaBackground.Width() * scale), lunaY, (int)(lunaBackground.Width() * scale), (int)(lunaBackground.Height() * scale)),
                 null,
                 bodyColor
         );

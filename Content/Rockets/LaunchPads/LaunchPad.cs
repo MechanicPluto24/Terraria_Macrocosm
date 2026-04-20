@@ -34,12 +34,14 @@ public partial class LaunchPad : IInventoryOwner
     [NetSync] public Point16 StartTile;
     [NetSync] public Point16 EndTile;
     [NetSync] public int RocketID = -1;
+    [NetSync] public int ReservedRocketID = -1;
     [NetSync] public string CustomName = "";
 
     public string DisplayName => !string.IsNullOrEmpty(CustomName) ? CustomName : Language.GetTextValue("Mods.Macrocosm.Common.LaunchPad");
 
-    public Rocket Rocket => HasActiveRocket ? RocketManager.Rockets[RocketID] : internalRocket;
-    public bool HasActiveRocket => RocketID >= 0;
+    public int OccupyingRocketID => RocketID >= 0 ? RocketID : ReservedRocketID;
+    public Rocket Rocket => HasActiveRocket ? RocketManager.Rockets[OccupyingRocketID] : internalRocket;
+    public bool HasActiveRocket => OccupyingRocketID >= 0;
 
     private Rocket internalRocket;
     private Inventory assemblyInventory;
@@ -56,7 +58,7 @@ public partial class LaunchPad : IInventoryOwner
         set => assemblyInventory = value;
     }
 
-    public InventoryOwnerType InventoryOwnerType => InventoryOwnerType.TileEntity;
+    public InventoryOwnerType InventoryOwnerType => InventoryOwnerType.Launchpad;
     public int InventoryIndex => ((StartTile.Y & 0xFFFF) << 16) | (StartTile.X & 0xFFFF);
     public Vector2 InventoryPosition => CenterWorld;
 
@@ -78,6 +80,7 @@ public partial class LaunchPad : IInventoryOwner
         EndTile = new();
 
         RocketID = -1;
+        ReservedRocketID = -1;
         internalRocket = new();
 
         assemblyInventory = new(CountRequiredAssemblyItemSlots(out _moduleSlotRanges), this);
@@ -145,31 +148,69 @@ public partial class LaunchPad : IInventoryOwner
 
     private void CheckRocket()
     {
-        int prevRocketId = RocketID;
+        int prevPhysicalRocketId = RocketID;
+        int prevOccupyingRocketId = OccupyingRocketID;
         RocketID = -1;
 
         for (int i = 0; i < RocketManager.MaxRockets; i++)
         {
             Rocket rocket = RocketManager.Rockets[i];
             if (rocket.ActiveInCurrentWorld && Hitbox.Intersects(rocket.Bounds))
+            {
                 RocketID = i;
+                break;
+            }
         }
 
-        if (RocketID != prevRocketId || !spawned)
+        if (ReservedRocketID >= 0)
         {
-            if (RocketID < 0)
-            {
-                LaunchPadMarker.SetState(StartTile, MarkerState.Vacant);
-                LaunchPadMarker.SetState(EndTile, MarkerState.Vacant);
-            }
-            else
-            {
-                LaunchPadMarker.SetState(StartTile, MarkerState.Occupied);
-                LaunchPadMarker.SetState(EndTile, MarkerState.Occupied);
-            }
+            Rocket reservedRocket = RocketManager.Rockets[ReservedRocketID];
+            if (!reservedRocket.Active || !reservedRocket.ReservesLaunchpad)
+                ReservedRocketID = -1;
+        }
 
+        if (OccupyingRocketID != prevOccupyingRocketId || RocketID != prevPhysicalRocketId || !spawned)
+        {
+            RefreshOccupancyMarkerState();
             NetSync(MacrocosmSubworld.CurrentID);
         }
+    }
+
+    private void RefreshOccupancyMarkerState()
+    {
+        if (!HasActiveRocket)
+        {
+            LaunchPadMarker.SetState(StartTile, MarkerState.Vacant);
+            LaunchPadMarker.SetState(EndTile, MarkerState.Vacant);
+        }
+        else
+        {
+            LaunchPadMarker.SetState(StartTile, MarkerState.Occupied);
+            LaunchPadMarker.SetState(EndTile, MarkerState.Occupied);
+        }
+    }
+
+    public bool ReserveRocket(int rocketID)
+    {
+        if (rocketID < 0 || rocketID >= RocketManager.MaxRockets)
+            return false;
+
+        var rocket = RocketManager.Rockets[rocketID];
+        if (!rocket.Active)
+            return false;
+
+        ReservedRocketID = rocketID;
+        RefreshOccupancyMarkerState();
+        return true;
+    }
+
+    public void ClearReservedRocket(int rocketID = -1)
+    {
+        if (rocketID >= 0 && ReservedRocketID != rocketID)
+            return;
+
+        ReservedRocketID = -1;
+        RefreshOccupancyMarkerState();
     }
 
     private void CheckTiles()
@@ -257,7 +298,7 @@ public partial class LaunchPad : IInventoryOwner
         => ModContent.RequestIfExists<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/" + key[(key.LastIndexOf('.') + 1)..], out var blueprint) ? blueprint : null;
 
     public bool CanAssemble() => CheckAssemble(consume: false) && !HasActiveRocket && RocketManager.ActiveRocketCount < RocketManager.MaxRockets;
-    public bool CanDisassemble() => HasActiveRocket;
+    public bool CanDisassemble() => RocketID >= 0;
 
     public bool CheckAssemble(bool consume)
     {
@@ -280,6 +321,7 @@ public partial class LaunchPad : IInventoryOwner
 
         Rocket rocket = Rocket.Create(CenterWorld - new Vector2(Rocket.Width / 2f - 8, Rocket.Height - 16), Rocket.Modules);
         RocketID = rocket.WhoAmI;
+        ReservedRocketID = -1;
         internalRocket = rocket.VisualClone();
 
         NetSync(MacrocosmSubworld.CurrentID);
@@ -322,6 +364,7 @@ public partial class LaunchPad : IInventoryOwner
         internalRocket = Rocket.VisualClone();
         Rocket.Despawn();
         RocketID = -1;
+        ReservedRocketID = -1;
         NetSync(MacrocosmSubworld.CurrentID);
     }
 

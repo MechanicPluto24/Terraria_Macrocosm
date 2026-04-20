@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ID;
@@ -6,30 +6,73 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Netcode;
 
-public class NetHooks : ILoadable
+public class NetHooks : ModSystem
 {
-    public void Load(Mod mod)
+    private const int JoinSyncDelayTicks = 30;
+
+    private static bool[] syncedPlayers;
+    private static int[] joinSyncTimers;
+
+    public override void Load()
     {
-        On_MessageBuffer.GetData += On_MessageBuffer_GetData;
+        syncedPlayers = new bool[Main.maxPlayers];
+        joinSyncTimers = new int[Main.maxPlayers];
     }
 
-    public void Unload()
+    public override void Unload()
     {
-        On_MessageBuffer.GetData -= On_MessageBuffer_GetData;
+        syncedPlayers = null;
+        joinSyncTimers = null;
     }
 
-    private void On_MessageBuffer_GetData(On_MessageBuffer.orig_GetData orig, MessageBuffer self, int start, int length, out int messageType)
+    public override void OnWorldLoad()
     {
-        orig(self, start, length, out messageType);
-        if(messageType == MessageID.SpawnTileData)
+        ResetJoinTracking();
+    }
+
+    public override void OnWorldUnload()
+    {
+        ResetJoinTracking();
+    }
+
+    public override void PreUpdatePlayers()
+    {
+        if (Main.netMode != NetmodeID.Server || syncedPlayers is null || joinSyncTimers is null)
+            return;
+
+        for (int i = 0; i < Main.maxPlayers; i++)
         {
+            Player player = Main.player[i];
+
+            if (player is null || !player.active)
+            {
+                syncedPlayers[i] = false;
+                joinSyncTimers[i] = 0;
+                continue;
+            }
+
+            if (syncedPlayers[i])
+                continue;
+
+            if (++joinSyncTimers[i] < JoinSyncDelayTicks)
+                continue;
+
             foreach (var system in Macrocosm.Instance.GetContent<ModSystem>())
             {
-                if(system is IOnPlayerJoining syncable)
-                {
-                    syncable.OnPlayerJoining(playerIndex: self.whoAmI);
-                }
+                if (system is IOnPlayerJoining syncable)
+                    syncable.OnPlayerJoining(playerIndex: i);
             }
+
+            syncedPlayers[i] = true;
         }
+    }
+
+    private static void ResetJoinTracking()
+    {
+        if (syncedPlayers is not null)
+            Array.Clear(syncedPlayers, 0, syncedPlayers.Length);
+
+        if (joinSyncTimers is not null)
+            Array.Clear(joinSyncTimers, 0, joinSyncTimers.Length);
     }
 }

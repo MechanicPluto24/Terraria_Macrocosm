@@ -23,7 +23,6 @@ public class SolarPanelExtraLarge : MachineTile
 
         TileObjectData.newTile.DefaultToMachine(this);
         TileObjectData.newTile.Origin = new Point16(3, 2);
-        TileObjectData.newTile.StyleHorizontal = false;
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, 2, 5);
         TileObjectData.newTile.Direction = TileObjectDirection.PlaceLeft;

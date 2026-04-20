@@ -8,12 +8,14 @@ public class InfoDisplayPlayer : ModPlayer
     public bool Barometer { get; set; }
     public bool GeigerMuller { get; set; }
     public bool Thermometer { get; set; }
+    public bool Nephelometer { get; set; }
 
     public override void ResetInfoAccessories()
     {
         Barometer = false;
         GeigerMuller = false;
         Thermometer = false;
+        Nephelometer = false;
     }
 
     public override void RefreshInfoAccessoriesFromTeamPlayers(Player otherPlayer)
@@ -26,5 +28,8 @@ public class InfoDisplayPlayer : ModPlayer
 
         if (otherPlayer.GetModPlayer<InfoDisplayPlayer>().Thermometer)
             Thermometer = true;
+
+        if (otherPlayer.GetModPlayer<InfoDisplayPlayer>().Nephelometer)
+            Nephelometer = true;
     }
 }

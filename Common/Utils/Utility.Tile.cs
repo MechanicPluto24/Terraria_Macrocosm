@@ -184,6 +184,9 @@ public static partial class Utility
     public static bool HasBlendingFrame(int i, int j) => Main.tile[i, j].TileFrameX >= 234 || Main.tile[i, j].TileFrameY >= 90;
     public static bool HasBlendingFrame(this Tile tile) => tile.TileFrameX >= 234 || tile.TileFrameY >= 90;
 
+    public static bool HasInnerFrame(int i, int j) => Main.tile[i, j].HasInnerFrame();
+    public static bool HasInnerFrame(this Tile tile) => new Rectangle(18, 18, 54, 18).Contains(tile.TileFrameX, tile.TileFrameY);
+
     public static Point GetClosestTile(Vector2 worldPosition, int type, int distance = 25, Func<Tile, bool> addTile = null) =>
         GetClosestTile((int)(worldPosition.X / 16f), (int)(worldPosition.Y / 16f), type, distance, addTile);
 

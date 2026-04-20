@@ -20,6 +20,7 @@ public class IndustrialBatteryLarge : MachineTile
     public override short Width => 5;
     public override short Height => 5;
     public override MachineTE MachineTE => ModContent.GetInstance<IndustrialBatteryLargeTE>();
+    public override int FrameCount => 2;
 
     public override void SetStaticDefaults()
     {
@@ -28,8 +29,7 @@ public class IndustrialBatteryLarge : MachineTile
         Main.tileLavaDeath[Type] = true;
 
         TileObjectData.newTile.DefaultToMachine(this);
-        TileObjectData.newTile.Origin = new Point16(2, 4); 
-        TileObjectData.newTile.StyleHorizontal = true;
+        TileObjectData.newTile.Origin = new Point16(2, 4);
         TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.Table | AnchorType.SolidSide, Width, 0);
         TileObjectData.addTile(Type);
 

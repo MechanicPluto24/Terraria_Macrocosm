@@ -25,7 +25,21 @@ namespace Macrocosm.Content.Machines.Consumers.Drills;
 public abstract class BaseDrillTE : ConsumerTE
 {
     public List<int> BlacklistedItems { get; set; } = new();
-    public LootTable LootTable { get; set; }
+
+    private LootTable lootTable;
+    public LootTable LootTable
+    {
+        get
+        {
+            if (lootTable is null)
+            {
+                lootTable = new();
+                PopulateItemLoot(lootTable);
+            }
+            return lootTable;
+        }
+        set => lootTable = value;
+    }
 
     protected abstract float ExcavateRate { get; }
 

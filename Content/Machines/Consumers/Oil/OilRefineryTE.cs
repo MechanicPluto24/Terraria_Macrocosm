@@ -82,7 +82,7 @@ public class OilRefineryTE : ConsumerTE
     {
         StartRefining();
 
-        MaxPower = 5f;
+        MaxPower = 40f;
 
         Extract();
         Refine();

@@ -19,6 +19,7 @@ public class AirVent : MachineTile
     public override short Width => 1;
     public override short Height => 1;
     public override MachineTE MachineTE => ModContent.GetInstance<AirVentTE>();
+    public override int FrameCount => 3;
 
     public override void SetStaticDefaults()
     {
@@ -68,11 +69,10 @@ public class AirVent : MachineTile
     public override void AnimateTile(ref int frame, ref int frameCounter)
     {
         int ticksPerFrame = 30;
-        int frameCount = 2;
         if (++frameCounter >= ticksPerFrame)
         {
             frameCounter = 0;
-            if (++frame >= frameCount)
+            if (++frame >= FrameCount - 1)
                 frame = 0;
         }
     }

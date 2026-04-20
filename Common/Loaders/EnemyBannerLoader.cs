@@ -2,6 +2,8 @@
 using Macrocosm.Common.Bases.Tiles;
 using System.IO;
 using System.Linq;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Loaders;
@@ -16,7 +18,10 @@ public class EnemyBannerLoader : ILoadable
 {
     public void Load(Mod mod)
     {
-        foreach (string fullTexturePath in mod.RootContentSource.EnumerateAssets().Where(t => t.Contains("EnemyBanners/")))
+        if (Main.netMode is NetmodeID.Server || Main.dedServ)
+            return;
+
+        foreach (string fullTexturePath in EnumerateBannerAssets(mod, "EnemyBanners/"))
         {
             string texturePath = Path.ChangeExtension(fullTexturePath, null);
             string internalName = Path.GetFileName(texturePath);
@@ -33,7 +38,7 @@ public class EnemyBannerLoader : ILoadable
             }
         }
 
-        foreach (string fullTexturePath in mod.RootContentSource.EnumerateAssets().Where(t => t.Contains("EnemyBannersLarge/")))
+        foreach (string fullTexturePath in EnumerateBannerAssets(mod, "EnemyBannersLarge/"))
         {
             string texturePath = Path.ChangeExtension(fullTexturePath, null);
             string internalName = Path.GetFileName(texturePath);
@@ -53,5 +58,11 @@ public class EnemyBannerLoader : ILoadable
 
     public void Unload()
     {
+    }
+
+    private static System.Collections.Generic.IEnumerable<string> EnumerateBannerAssets(Mod mod, string directoryName)
+    {
+        return mod.RootContentSource?.EnumerateAssets()?.Where(path => path is not null && path.Contains(directoryName))
+            ?? [];
     }
 }

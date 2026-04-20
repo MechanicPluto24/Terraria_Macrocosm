@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Machines.Consumers.Autocrafters;
@@ -13,9 +14,17 @@ public class AutocrafterT1TE : AutocrafterTEBase
 {
     public override MachineTile MachineTile => ModContent.GetInstance<AutocrafterT1>();
     public override int OutputSlots => 1;
+    protected override bool AllowHandCrafting => true;
+
+    protected override int[] AvailableCraftingStations =>
+    [
+        TileID.WorkBenches,
+        TileID.Anvils
+    ];
+
     public override void MachineUpdate()
     {
-        MaxPower = 0.1f;
+        MaxPower = 15f;
         base.MachineUpdate();
     }
 }

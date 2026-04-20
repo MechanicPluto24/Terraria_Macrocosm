@@ -1,5 +1,4 @@
-﻿using Humanizer;
-using Macrocosm.Common.Utils;
+﻿using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
@@ -17,284 +16,228 @@ public class TileFraming
     //  Empty      | _
     //  Don't care |  
     // ---------------
+
     /// <summary> 
-    /// Style currently used for plating blocks with special frames (e.g. Industrial Plating) 
-    /// Adapted from the Gemspark blend style 
+    /// Style currently used for blocks with special corner-aware frames (e.g. Gemspark, Conveyor Belt).
+    /// <br/> Uses vanilla's <see cref="Framing.SelfFrame8Way"/>, which already handles the equivalent of <see cref="CommonFraming"/>
+    /// <br/> Make sure to still set <see cref="TileID.Sets.GemsparkFramingTypes"/> for the tile type to its type.
     /// </summary>
-    public static void PlatingStyle(int i, int j, bool resetFrame = false, bool countHalfBlocks = false, int? customVariation = null)
+    public static void GemsparkFraming(int i, int j, bool resetFrame = false, int? customVariation = null)
     {
         Tile tile = Main.tile[i, j];
-        //var info = new TileNeighbourInfo(i, j).TypedSolid(tile.TileType);
-        CommonFraming(i, j, resetFrame, countHalfBlocks, customVariation);
 
-        // TODO: integrate this slope check logic to a TileNeightbourInfo delegate (if possible)
-
-        Tile tileTop = Main.tile[i, j - 1];
-        Tile tileBottom = Main.tile[i, j + 1];
-        Tile tileLeft = Main.tile[i - 1, j];
-        Tile tileRight = Main.tile[i + 1, j];
-        Tile tileTopLeft = Main.tile[i - 1, j - 1];
-        Tile tileBottomLeft = Main.tile[i - 1, j + 1];
-        Tile tileTopRight = Main.tile[i + 1, j - 1];
-        Tile tileBottomRight = Main.tile[i + 1, j + 1];
-
-        bool top = tileTop.HasTile && tileTop.TileType == tile.TileType;
-        if (tileTop.IsSloped() && !tileTop.TopSlope)
-            top = false;
-
-        bool bottom = tileBottom.HasTile && tileBottom.TileType == tile.TileType && (countHalfBlocks || !tileBottom.IsHalfBlock);
-        if (tileBottom.IsSloped() && !tileBottom.BottomSlope)
-            bottom = false;
-
-        bool left = tileLeft.HasTile && tileLeft.TileType == tile.TileType && (countHalfBlocks || !tileLeft.IsHalfBlock);
-        if (tileLeft.IsSloped() && !tileLeft.LeftSlope)
-            left = false;
-
-        bool right = tileRight.HasTile && tileRight.TileType == tile.TileType && (countHalfBlocks || !tileRight.IsHalfBlock);
-        if (tileRight.IsSloped() && !tileRight.RightSlope)
-            right = false;
-
-        bool topLeft = tileTopLeft.HasTile && tileTopLeft.TileType == tile.TileType && (countHalfBlocks || !tileTopLeft.IsHalfBlock);
-        if (tileTopLeft.IsSloped() && (tileTopLeft.BottomSlope || tileTopLeft.RightSlope))
-            topLeft = false;
-
-        bool topRight = tileTopRight.HasTile && tileTopRight.TileType == tile.TileType && (countHalfBlocks || !tileTopRight.IsHalfBlock);
-        if (tileTopRight.IsSloped() && (tileTopRight.BottomSlope || tileTopRight.LeftSlope))
-            topRight = false;
-
-        bool bottomLeft = tileBottomLeft.HasTile && tileBottomLeft.TileType == tile.TileType && (countHalfBlocks || !tileBottomLeft.IsHalfBlock);
-        if (tileBottomLeft.IsSloped() && (tileBottomLeft.TopSlope || tileBottomLeft.RightSlope))
-            bottomLeft = false;
-
-        bool bottomRight = tileBottomRight.HasTile && tileBottomRight.TileType == tile.TileType && (countHalfBlocks || !tileBottomRight.IsHalfBlock);
-        if (tileBottomRight.IsSloped() && (tileBottomRight.TopSlope || tileBottomRight.LeftSlope))
-            bottomRight = false;
-
-        if (tile.Slope is SlopeType.SlopeDownLeft)
+        if (customVariation.HasValue)
         {
-            top = false;
-            right = false;
-            topRight = false;
+            tile.TileFrameNumber = customVariation.Value;
+            resetFrame = false;
         }
 
-        if (tile.Slope is SlopeType.SlopeDownRight)
-        {
-            top = false;
-            left = false;
-            topLeft = false;
-        }
+        Framing.SelfFrame8Way(i, j, tile, resetFrame);
+    }
 
-        if (tile.Slope is SlopeType.SlopeUpLeft)
-        {
-            bottom = false;
-            right = false;
-            bottomRight = false;
-        }
-
-        if (tile.Slope is SlopeType.SlopeUpRight)
-        {
-            bottom = false;
-            left = false;
-            bottomLeft = false;
-        }
+    /// <summary>
+    /// Applies special slope frames adapted from vanilla Terraria's HasSlopeFrames behavior (e.g. Conveyor Belt)
+    /// <br/> Make sure to still set <see cref="TileID.Sets.HasSlopeFrames"/> for the tile type to true.
+    /// </summary>
+    public static void SlopeFraming(int i, int j)
+    {
+        Tile tile = Main.tile[i, j];
 
         if (tile.IsHalfBlock)
-        {
-            top = false;
-            topLeft = false;
-            topRight = false;
+            return;
 
-            right = false;
-            left = false;
+        int type = tile.TileType;
+        SlopeType slope = tile.Slope;
+
+        Tile tileTop = Main.tile[i, j - 1];
+        Tile tileRight = Main.tile[i + 1, j];
+        Tile tileBottom = Main.tile[i, j + 1];
+        Tile tileLeft = Main.tile[i - 1, j];
+        Tile tileTopLeft = Main.tile[i - 1, j - 1];
+        Tile tileTopRight = Main.tile[i + 1, j - 1];
+        Tile tileBottomLeft = Main.tile[i - 1, j + 1];
+        Tile tileBottomRight = Main.tile[i + 1, j + 1];
+
+        int top = tileTop.HasTile ? tileTop.TileType : -1;
+        int right = tileRight.HasTile ? tileRight.TileType : -1;
+        int bottom = tileBottom.HasTile ? tileBottom.TileType : -1;
+        int left = tileLeft.HasTile ? tileLeft.TileType : -1;
+        int topLeft = tileTopLeft.HasTile ? tileTopLeft.TileType : -1;
+        int topRight = tileTopRight.HasTile ? tileTopRight.TileType : -1;
+        int bottomLeft = tileBottomLeft.HasTile ? tileBottomLeft.TileType : -1;
+        int bottomRight = tileBottomRight.HasTile ? tileBottomRight.TileType : -1;
+
+        if (slope == SlopeType.Solid)
+        {
+            // Check which cardinal neighbors are same-type AND sloped toward this tile
+            bool topSloped = top == type && tileTop.TopSlope;
+            bool leftSloped = left == type && tileLeft.LeftSlope;
+            bool rightSloped = right == type && tileRight.RightSlope;
+            bool bottomSloped = bottom == type && tileBottom.BottomSlope;
+
+            int slopedCount = (topSloped ? 1 : 0) + (leftSloped ? 1 : 0) + (rightSloped ? 1 : 0) + (bottomSloped ? 1 : 0);
+
+            int offsetX = 0;
+            int offsetY = 0;
+
+            if (slopedCount > 2)
+            {
+                int backslashCount =
+                    (tileTop.HasTile && tileTop.Slope == SlopeType.SlopeDownLeft ? 1 : 0) +
+                    (tileRight.HasTile && tileRight.Slope == SlopeType.SlopeDownLeft ? 1 : 0) +
+                    (tileBottom.HasTile && tileBottom.Slope == SlopeType.SlopeUpRight ? 1 : 0) +
+                    (tileLeft.HasTile && tileLeft.Slope == SlopeType.SlopeUpRight ? 1 : 0);
+
+                int slashCount =
+                    (tileTop.HasTile && tileTop.Slope == SlopeType.SlopeDownRight ? 1 : 0) +
+                    (tileRight.HasTile && tileRight.Slope == SlopeType.SlopeUpLeft ? 1 : 0) +
+                    (tileBottom.HasTile && tileBottom.Slope == SlopeType.SlopeUpLeft ? 1 : 0) +
+                    (tileLeft.HasTile && tileLeft.Slope == SlopeType.SlopeDownRight ? 1 : 0);
+
+                if (backslashCount == slashCount)
+                {
+                    offsetX = 2;
+                    offsetY = 4;
+                }
+                else if (backslashCount > slashCount)
+                {
+                    bool topLeftSolid = topLeft == type && tileTopLeft.Slope == SlopeType.Solid;
+                    bool bottomRightSolid = bottomRight == type && tileBottomRight.Slope == SlopeType.Solid;
+
+                    if (topLeftSolid && bottomRightSolid)
+                    {
+                        offsetY = 4;
+                    }
+                    else if (bottomRightSolid)
+                    {
+                        offsetX = 6;
+                    }
+                    else
+                    {
+                        offsetX = 7;
+                        offsetY = 1;
+                    }
+                }
+                else
+                {
+                    bool topRightSolid = topRight == type && tileTopRight.Slope == SlopeType.Solid;
+                    bool bottomLeftSolid = bottomLeft == type && tileBottomLeft.Slope == SlopeType.Solid;
+
+                    if (topRightSolid && bottomLeftSolid)
+                    {
+                        offsetX = 1;
+                        offsetY = 4;
+                    }
+                    else if (bottomLeftSolid)
+                    {
+                        offsetX = 7;
+                    }
+                    else
+                    {
+                        offsetX = 6;
+                        offsetY = 1;
+                    }
+                }
+
+                tile.TileFrameX = (short)((18 + offsetX) * 18);
+                tile.TileFrameY = (short)(offsetY * 18);
+            }
+            else if (slopedCount == 2)
+            {
+                bool hasFrame = false;
+
+                if (topSloped && leftSloped && bottom == type && right == type)
+                {
+                    offsetY = 2;
+                    hasFrame = true;
+                }
+                else if (topSloped && rightSloped && bottom == type && left == type)
+                {
+                    offsetX = 1;
+                    offsetY = 2;
+                    hasFrame = true;
+                }
+                else if (rightSloped && bottomSloped && top == type && left == type)
+                {
+                    offsetX = 1;
+                    offsetY = 3;
+                    hasFrame = true;
+                }
+                else if (bottomSloped && leftSloped && top == type && right == type)
+                {
+                    offsetY = 3;
+                    hasFrame = true;
+                }
+
+                if (hasFrame)
+                {
+                    tile.TileFrameX = (short)((18 + offsetX) * 18);
+                    tile.TileFrameY = (short)(offsetY * 18);
+                }
+            }
         }
-
-        int count = new[] { top, topRight, topLeft, bottom, bottomRight, bottomLeft, right, left }.Count(b => b);
-
-        //   _  
-        // _ T #
-        //   # _
-        if (right && bottom && !top && !left && !bottomRight)
-            tile.SetFrame(234, 0);
-
-        // _ #  
-        // _ T #
-        //   _  
-        if (top && right && !bottom && !left && !topRight)
-            tile.SetFrame(234, 36);
-
-        //   _  
-        // # T _
-        // _ #  
-        if (left && bottom && !top && !right && !bottomLeft)
-            tile.SetFrame(270, 0);
-
-        // _ #  
-        // # T _
-        //   _  
-        if (top && left && !bottom && !right && !topLeft)
-            tile.SetFrame(270, 36);
-
-
-        //   # _
-        // _ T #
-        //   # _
-        if (top && bottom & right && !left && !topRight && !bottomRight)
-            tile.SetFrame(234, 18);
-
-        // _ #  
-        // # T _
-        // _ #  
-        if (top && bottom & left && !right && !topLeft && !bottomLeft)
-            tile.SetFrame(270, 18);
-
-        // _ # _
-        // # T #
-        //   _  
-        if (left && right && top && !bottom && !topLeft && !topRight)
-            tile.SetFrame(252, 36);
-
-        //   _  
-        // # T #
-        // _ # _
-        if (left && right && bottom && !top && !bottomRight && !bottomLeft)
-            tile.SetFrame(252, 0);
-
-        //   # _
-        // _ T #
-        //   # #
-        if (bottom && bottomRight && right && !topRight && top && !left)
-            tile.SetFrame(288, 0);
-
-        //   # #
-        // _ T #
-        //   # _
-        if (top && topRight && right && !bottomRight && bottom && !left)
-            tile.SetFrame(288, 18);
-
-        // _ #  
-        // # T _
-        // # #  
-        if (bottom && bottomLeft && left && !topLeft && top && !right)
-            tile.SetFrame(306, 0);
-
-        // # #  
-        // # T _
-        // _ #  
-        if (top && topLeft && left && !bottomLeft && bottom && !right)
-            tile.SetFrame(306, 18);
-
-        //   _   
-        // # T # 
-        // _ # # 
-        if (right && bottomRight && bottom && !bottomLeft && left && !top)
-            tile.SetFrame(288, 36);
-
-        //   _   
-        // # T # 
-        // # # _ 
-        if (left && bottomLeft && bottom && !bottomRight && right && !top)
-            tile.SetFrame(306, 36);
-
-        // _ # # 
-        // # T #
-        //   _   
-        if (right && topRight && top && !topLeft && left && !bottom)
-            tile.SetFrame(288, 54);
-
-        // # # _ 
-        // # T # 
-        // _ _   
-        if (left && topLeft && top && !topRight && right && !bottom)
-            tile.SetFrame(306, 54);
-
-        // Neighbour count dependent frames
-        switch (count)
+        else
         {
-            case 4:
-                {
-                    // _ # _
-                    // # T #
-                    // _ # _
-                    if (top && right && bottom && left)
-                        tile.SetFrame(252, 18);
+            int side = -1;
+            int other = -1;
+            int diagonal = -1;
+            int baseOffsetX = 0;
+            int baseOffsetY = 0;
 
+            switch (slope)
+            {
+                case SlopeType.SlopeDownLeft:
+                    side = left;
+                    other = bottom;
+                    diagonal = bottomLeft;
+                    baseOffsetX = 1;
                     break;
-                }
 
-            case 5:
-                {
-                    // _ # _
-                    // # T #
-                    // _ # #
-                    if (!topLeft && !topRight && !bottomLeft)
-                        tile.SetFrame(216, 54);
-
-                    // _ # _
-                    // # T #
-                    // # # _
-                    if (!topLeft && !topRight && !bottomRight)
-                        tile.SetFrame(234, 54);
-
-                    // _ # #
-                    // # T #
-                    // _ # _
-                    if (!bottomLeft && !bottomRight && !topLeft)
-                        tile.SetFrame(216, 72);
-
-                    // # # _
-                    // # T #
-                    // _ # _
-                    if (!bottomLeft && !bottomRight && !topRight)
-                        tile.SetFrame(234, 72);
-
+                case SlopeType.SlopeDownRight:
+                    side = right;
+                    other = bottom;
+                    diagonal = bottomRight;
                     break;
-                }
 
-            case 6:
-                {
-                    // _ # #
-                    // # T #
-                    // # # _
-                    if (!topLeft && !bottomRight)
-                        tile.SetFrame(306, 72);
-
-                    // # # _
-                    // # T #
-                    // _ # #
-                    if (!topRight && !bottomLeft)
-                        tile.SetFrame(288, 72);
-
+                case SlopeType.SlopeUpLeft:
+                    side = left;
+                    other = top;
+                    diagonal = topLeft;
+                    baseOffsetX = 1;
+                    baseOffsetY = 1;
                     break;
-                }
 
-            case 7:
-                {
-                    // # # _
-                    // # T #
-                    // # # #
-                    if (!topRight)
-                        tile.SetFrame(270, 54);
-
-                    // _ # #
-                    // # T #
-                    // # # #
-                    if (!topLeft)
-                        tile.SetFrame(252, 54);
-
-                    // # # #
-                    // # T #
-                    // # # _
-                    if (!bottomRight)
-                        tile.SetFrame(270, 72);
-
-                    // # # #
-                    // # T #
-                    // _ # #
-                    if (!bottomLeft)
-                        tile.SetFrame(252, 72);
-
+                case SlopeType.SlopeUpRight:
+                    side = right;
+                    other = top;
+                    diagonal = topRight;
+                    baseOffsetY = 1;
                     break;
+            }
+
+            int offsetX = baseOffsetX;
+            int offsetY = baseOffsetY;
+
+            if (side != type || other != type || diagonal != type)
+            {
+                if (side == type && other == type)
+                    offsetX += 2;
+                else if (side == type)
+                    offsetX += 4;
+                else if (other == type)
+                {
+                    offsetX += 4;
+                    offsetY += 2;
                 }
+                else
+                {
+                    offsetX += 2;
+                    offsetY += 2;
+                }
+            }
+
+            tile.TileFrameX = (short)((18 + offsetX) * 18);
+            tile.TileFrameY = (short)(offsetY * 18);
         }
     }
 
@@ -371,7 +314,7 @@ public class TileFraming
         switch (slope)
         {
             case SlopeType.SlopeDownRight:
-                if(right == type && bottom == type)
+                if (right == type && bottom == type)
                 {
                     switch (variation)
                     {
@@ -411,7 +354,7 @@ public class TileFraming
                             break;
                     }
                 }
-                else if(bottom == type)
+                else if (bottom == type)
                 {
                     switch (variation)
                     {
@@ -660,7 +603,7 @@ public class TileFraming
                             break;
                     }
                 }
-                else if(top == type)
+                else if (top == type)
                 {
                     switch (variation)
                     {
@@ -703,7 +646,7 @@ public class TileFraming
                 break;
         }
 
-        if(frame.X >= 0 && frame.Y >= 0)
+        if (frame.X >= 0 && frame.Y >= 0)
         {
             tile.TileFrameX = (short)frame.X;
             tile.TileFrameY = (short)frame.Y;
