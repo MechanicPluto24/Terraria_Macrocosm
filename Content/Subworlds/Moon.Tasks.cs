@@ -1330,6 +1330,159 @@ public partial class Moon
     }
 
     [Task(weight: 0.1)]
+    private void ApolloLanderTask(GenerationProgress progress)
+    {
+        progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.StructureTask");
+
+        int landerWidth = 16;
+        int landerHeight = 7;
+        int slopeWidth = 4;
+        int padWidth = landerWidth + slopeWidth * 2;
+        int clearanceHeight = 10;
+        int supportDepth = 4;
+        int padding = 30;
+        int maxCenterDelta = 3;
+        int maxOverallDelta = 6;
+
+        ushort regolithType = (ushort)TileType<Regolith>();
+        int spawnX = Main.maxTilesX / 2;
+        int[] padOffsets = [2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2];
+
+        bool TryGetSurfaceY(int worldX, out int worldY)
+        {
+            int startY = Math.Max(10, GetSurfaceHeight(worldX) - 20);
+            if (WorldUtils.Find(new Point(worldX, startY), Searches.Chain(new Searches.Down(80), new Conditions.IsSolid()), out Point solidGround))
+            {
+                worldY = solidGround.Y;
+                return true;
+            }
+
+            worldY = 0;
+            return false;
+        }
+
+        int GetTargetY(int[] surfaceProfile)
+        {
+            double sum = 0;
+            for (int i = slopeWidth; i < slopeWidth + landerWidth; i++)
+                sum += surfaceProfile[i];
+
+            return (int)Math.Round(sum / landerWidth);
+        }
+
+        Rectangle GetProtectedArea(int landerX, int targetY)
+        {
+            int padStart = landerX - slopeWidth;
+            return new Rectangle(
+                padStart,
+                targetY - landerHeight - clearanceHeight,
+                padWidth,
+                landerHeight + clearanceHeight + padOffsets.Max() + supportDepth + 1
+            );
+        }
+
+        bool TryGetSurfaceProfile(int landerX, out int[] surfaceProfile)
+        {
+            int padStart = landerX - slopeWidth;
+            surfaceProfile = new int[padWidth];
+
+            if (padStart < 80 || padStart + padWidth >= Main.maxTilesX - 80)
+                return false;
+
+            for (int offset = 0; offset < padWidth; offset++)
+            {
+                if (!TryGetSurfaceY(padStart + offset, out int surfaceY))
+                    return false;
+
+                surfaceProfile[offset] = surfaceY;
+            }
+
+            return true;
+        }
+
+        void SculptLandingPad(int landerX, int targetY, int[] surfaceProfile)
+        {
+            int padStart = landerX - slopeWidth;
+
+            for (int offset = 0; offset < padWidth; offset++)
+            {
+                int worldX = padStart + offset;
+                int desiredSurfaceY = targetY + padOffsets[offset];
+                int clearStartY = Math.Max(0, desiredSurfaceY - clearanceHeight);
+                int fillBottomY = Math.Max(surfaceProfile[offset], desiredSurfaceY + supportDepth - 1);
+
+                for (int y = clearStartY; y < desiredSurfaceY; y++)
+                    FastRemoveTile(worldX, y);
+
+                for (int y = desiredSurfaceY; y <= fillBottomY; y++)
+                    FastPlaceTile(worldX, y, regolithType);
+            }
+        }
+
+        int chosenX = -1;
+        int chosenTargetY = 0;
+        int[] chosenProfile = null;
+        int bestScore = int.MaxValue;
+
+        int tries = 0;
+        while (tries < 1000)
+        {
+            tries++;
+
+            int landerX = WorldGen.genRand.Next(80 + slopeWidth, Main.maxTilesX - landerWidth - slopeWidth - 80);
+            if (Math.Abs(landerX - spawnX) < gen_SpawnFlatArea + slopeWidth + landerWidth)
+                continue;
+
+            if (!TryGetSurfaceProfile(landerX, out int[] surfaceProfile))
+                continue;
+
+            int targetY = GetTargetY(surfaceProfile);
+            Rectangle protectedArea = GetProtectedArea(landerX, targetY);
+            if (!gen_StructureMap.CanPlace(protectedArea, padding: padding))
+                continue;
+
+            int centerMin = int.MaxValue;
+            int centerMax = int.MinValue;
+            for (int i = slopeWidth; i < slopeWidth + landerWidth; i++)
+            {
+                centerMin = Math.Min(centerMin, surfaceProfile[i]);
+                centerMax = Math.Max(centerMax, surfaceProfile[i]);
+            }
+
+            int centerDelta = centerMax - centerMin;
+            int overallDelta = surfaceProfile.Max() - surfaceProfile.Min();
+
+            if (centerDelta <= maxCenterDelta && overallDelta <= maxOverallDelta)
+            {
+                chosenX = landerX;
+                chosenTargetY = targetY;
+                chosenProfile = surfaceProfile;
+                break;
+            }
+
+            int score = centerDelta * 10 + overallDelta;
+            if (score < bestScore)
+            {
+                bestScore = score;
+                chosenX = landerX;
+                chosenTargetY = targetY;
+                chosenProfile = surfaceProfile;
+            }
+        }
+
+        if (chosenX < 0 || chosenProfile is null)
+            return;
+
+        SculptLandingPad(chosenX, chosenTargetY, chosenProfile);
+
+        if (WorldGen.PlaceTile(chosenX, chosenTargetY - 1, TileType<ApolloLander>(), mute: true)
+            || WorldGen.PlaceTile(chosenX, chosenTargetY - 1, TileType<ApolloLander>(), mute: true, forced: true))
+        {
+            gen_StructureMap.AddProtectedStructure(GetProtectedArea(chosenX, chosenTargetY), padding: padding);
+        }
+    }
+
+    [Task(weight: 0.1)]
     private void MonolithTask(GenerationProgress progress)
     {
         int tries = 0;

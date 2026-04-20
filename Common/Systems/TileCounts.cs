@@ -26,10 +26,12 @@ public class TileCounts : ModSystem
     public int IrradiatedRockCount { get; private set; } = 0;
     public int GraveyardExtraTileCount { get; private set; } = 0;
     public int MonolithCount { get; private set; } = 0;
+    public int ApolloLanderCount { get; private set; } = 0;
 
     public bool EnoughTilesForIrradiation => IrradiatedRockCount > 400;
 
     public bool HasMonolith => MonolithCount > 0;
+    public bool HasApolloLander => ApolloLanderCount > 0;
     public bool EnoughPollution => PollutionLevel > PollutionLevelThreshold;
 
     public float PollutionLevel
@@ -45,6 +47,7 @@ public class TileCounts : ModSystem
     {
         IrradiatedRockCount = 0;
         MonolithCount = 0;
+        ApolloLanderCount = 0;
         GraveyardExtraTileCount = 0;
 
         PollutionLevel = 0f;
@@ -54,6 +57,7 @@ public class TileCounts : ModSystem
     {
         IrradiatedRockCount = tileCounts[ModContent.TileType<IrradiatedRock>()];
         MonolithCount = tileCounts[ModContent.TileType<Monolith>()];
+        ApolloLanderCount = tileCounts[ModContent.TileType<ApolloLander>()];
 
         for (int type = 0; type < TileLoader.TileCount; type++)
         {

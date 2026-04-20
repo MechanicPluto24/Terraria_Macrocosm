@@ -7,6 +7,7 @@ namespace Macrocosm.Content.Achievements;
 
 public class TravelToMoon : ModAchievement
 {
+    public override string TextureName => (GetType().Namespace + "/Template").Replace('.', '/');
     public CustomFlagCondition Condition { get; private set; }
 
     public override void SetStaticDefaults()

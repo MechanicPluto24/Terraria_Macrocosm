@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Achievements;
 using Terraria.GameContent.Achievements;
@@ -18,6 +18,6 @@ public class SurviveMoon : ModAchievement
 
     public override IEnumerable<Position> GetModdedConstraints()
     {
-        yield return new After(ModContent.GetInstance<TravelToMoon>());
+        yield return new After(ModContent.GetInstance<FindApolloLander>());
     }
 }

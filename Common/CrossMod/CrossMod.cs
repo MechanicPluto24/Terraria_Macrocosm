@@ -1,5 +1,4 @@
-﻿using Macrocosm.Common.CrossMod;
-using Macrocosm.Common.Systems.Flags;
+﻿using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Content.Items.Armor.Vanity.BossMasks;
 using Macrocosm.Content.Items.Consumables.BossSummons;
 using Macrocosm.Content.Items.MusicBoxes;
@@ -28,7 +27,6 @@ public partial class CrossMod : ModSystem
     public static ModEntry TerrariaAmbience { get; } = new("TerrariaAmbience");
     public static ModEntry TerrariaAmbienceAPI { get; } = new("TerrariaAmbienceAPI");
     public static ModEntry Wikithis { get; } = new("Wikithis");
-    public static ModEntry TMLAchievements { get; } = new("TMLAchievements");
 
     /// <summary> The names and instances of loaded crossmod mods per <see cref="ModEntry"/>. </summary>
     public static Dictionary<string, Mod> LoadedMods { get; } = [];

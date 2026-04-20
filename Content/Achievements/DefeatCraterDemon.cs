@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Macrocosm.Content.NPCs.Bosses.CraterDemon;
 using Terraria.Achievements;
 using Terraria.ModLoader;

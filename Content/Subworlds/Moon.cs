@@ -55,6 +55,7 @@ public partial class Moon : MacrocosmSubworld
     private int meteorStormCounter = 0;
     private int meteorStormWaitTimeToStart;
     private int meteorStormWaitTimeToEnd;
+    private bool lastDemonSunActive;
 
     public override ChecklistConditionCollection LaunchConditions => new()
     {
@@ -78,12 +79,14 @@ public partial class Moon : MacrocosmSubworld
     {
         meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
         meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
+        lastDemonSunActive = WorldData.DemonSun;
 
         ModContent.GetInstance<TravelToMoon>()?.Condition?.Complete();
     }
 
     public override void OnExitSubworld()
     {
+        lastDemonSunActive = false;
     }
 
     public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
@@ -191,6 +194,9 @@ public partial class Moon : MacrocosmSubworld
 
     private void UpdateDemonSun()
     {
+        if (lastDemonSunActive && !WorldData.DemonSun)
+            ModContent.GetInstance<SurviveDemonSun>()?.Condition?.Complete();
+
         if (WorldData.DemonSun)
             DemonSunIntensity = 1f;
         else
@@ -201,6 +207,8 @@ public partial class Moon : MacrocosmSubworld
 
         if (DemonSunVisualIntensity > DemonSunIntensity)
             DemonSunVisualIntensity -= 0.005f;
+
+        lastDemonSunActive = WorldData.DemonSun;
     }
 
     //TODO 

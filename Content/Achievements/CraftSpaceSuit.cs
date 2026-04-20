@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
 using Macrocosm.Content.Items.Armor.Astronaut;
 using Terraria.Achievements;
+using Terraria.GameContent.Achievements;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Achievements;
@@ -17,8 +17,5 @@ internal class CraftSpaceSuit : ModAchievement
         ]);
     }
 
-    public override IEnumerable<Position> GetModdedConstraints()
-    {
-        yield return new After(ModContent.GetInstance<BuildRocket>());
-    }
+    public override Position GetDefaultPosition() => new After("TO_INFINITY_AND_BEYOND");
 }

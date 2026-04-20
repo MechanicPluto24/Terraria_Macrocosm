@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Achievements;
 
-public class BuildRocket : ModAchievement
+public class PlantFlag : ModAchievement
 {
     public CustomFlagCondition Condition { get; private set; }
 
@@ -15,10 +15,8 @@ public class BuildRocket : ModAchievement
         Condition = AddCondition();
     }
 
-    public override Position GetDefaultPosition() => new After("TO_INFINITY_AND_BEYOND");
-
     public override IEnumerable<Position> GetModdedConstraints()
     {
-        yield return new After(ModContent.GetInstance<CraftSpaceSuit>());
+        yield return new After(ModContent.GetInstance<TravelToMoon>());
     }
 }

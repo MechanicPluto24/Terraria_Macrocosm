@@ -204,6 +204,9 @@ public class MacrocosmPlayer : ModPlayer
             var surviveMoon = GetInstance<SurviveMoon>();
             if (surviveMoon?.Condition != null)
                 surviveMoon.Condition.Value += 1f;
+
+            if (TileCounts.Instance.HasApolloLander)
+                GetInstance<FindApolloLander>()?.Condition?.Complete();
         }
     }
 

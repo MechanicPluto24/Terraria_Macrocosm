@@ -1,24 +1,39 @@
 BuildRocket: {
-	Name: Rocket Science
 	Description: Build your first rocket.
+	FriendlyName: Rocket Science
 }
 
 CraftSpaceSuit: {
-	Name: Oxygen Not Included
 	Description: Fabricate your first spacesuit.
+	FriendlyName: Oxygen Not Included
 }
 
 DefeatCraterDemon: {
-	Name: Deep Impact
 	Description: Defeat Crater Demon, an elusive spirit that haunts the Moon.
+	FriendlyName: Deep Impact
 }
 
 SurviveMoon: {
-	Name: You Lunatic
 	Description: Survive a complete day and night on the Moon, from sunrise to sunrise.
+	FriendlyName: You Lunatic
+}
+
+SurviveDemonSun: {
+	Description: Survive a demon sun, a cathemeral cosmic event that brings forth legions of twisted, reanimated corpses.
+	FriendlyName: 1 VS 1,000,000
 }
 
 TravelToMoon: {
-	Name: One Giant Leap
 	Description: Reach the Moon, Earth's sole natural satellite. Hope you remembered to bring your spacesuit!
+	FriendlyName: One Giant Leap
+}
+
+PlantFlag: {
+	Description: Plant a flag on any world.
+	FriendlyName: Marking Territory
+}
+
+FindApolloLander: {
+	Description: Find the wreckage of the Apollo 11 lander.
+	FriendlyName: The Eagle Did Land!
 }

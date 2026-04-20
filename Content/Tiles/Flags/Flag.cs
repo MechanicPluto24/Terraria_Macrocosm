@@ -1,7 +1,8 @@
-﻿using Macrocosm.Common.Customization;
+using Macrocosm.Common.Customization;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Achievements;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -84,6 +85,11 @@ public class Flag : ModTile
             player.cursorItemIconEnabled = true;
             player.cursorItemIconID = TileLoader.GetItemDropFromTypeAndStyle(Type, TileObjectData.GetTileStyle(Main.tile[i, j]));
         }
+    }
+
+    public override void PlaceInWorld(int i, int j, Item item)
+    {
+        ModContent.GetInstance<PlantFlag>()?.Condition?.Complete();
     }
 
     public override void AnimateIndividualTile(int type, int i, int j, ref int frameXOffset, ref int frameYOffset)
