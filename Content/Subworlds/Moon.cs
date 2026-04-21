@@ -1,22 +1,16 @@
-﻿using Macrocosm.Common.DataStructures;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems.Flags;
 using Macrocosm.Common.UI.Rockets.Navigation.Checklist;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Achievements;
-using Macrocosm.Content.Projectiles.Environment.Meteors;
-using Macrocosm.Content.Skies.Ambience.Moon;
 using Macrocosm.Content.Skies.Moon;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.Enums;
 using Terraria.ID;
-using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 using Macrocosm.Content.Liquids;
@@ -43,23 +37,13 @@ public partial class Moon : MacrocosmSubworld
     }
 
     protected override float AtmosphericDensity(Vector2 position) => 0.1f;
-    public override int[] EvaporatingLiquidTypes => [LiquidID.Water, LiquidID.Honey,LiquidLoader.LiquidType<Oil>(),LiquidLoader.LiquidType<RocketFuel>()];
+    public override int[] EvaporatingLiquidTypes => [LiquidID.Water, LiquidID.Honey, LiquidLoader.LiquidType<Oil>(), LiquidLoader.LiquidType<RocketFuel>()];
     public override string CustomSky => nameof(MoonSky);
-
-    public float DemonSunIntensity { get; set; } = 0f;
-    public float DemonSunVisualIntensity { get; set; } = 0f;
-
-    public float MeteorBoost { get; set; } = 1f;
-
-    private double meteorTimePass = 0.0;
-    private int meteorStormCounter = 0;
-    private int meteorStormWaitTimeToStart;
-    private int meteorStormWaitTimeToEnd;
-    private bool lastDemonSunActive;
 
     public override ChecklistConditionCollection LaunchConditions => new()
     {
     };
+
     public override WorldSize GetSubworldSize(WorldSize earthWorldSize) => WorldSize.Small;
 
     protected override float AmbientTemperature(Vector2 position) => Utility.ScaleNoonToMidnight(-183f, 106f);
@@ -77,16 +61,11 @@ public partial class Moon : MacrocosmSubworld
 
     public override void OnEnterSubworld()
     {
-        meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
-        meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
-        lastDemonSunActive = WorldData.DemonSun;
-
         ModContent.GetInstance<TravelToMoon>()?.Condition?.Complete();
     }
 
     public override void OnExitSubworld()
     {
-        lastDemonSunActive = false;
     }
 
     public override bool GetLight(Tile tile, int x, int y, ref FastRandom rand, ref Vector3 color)
@@ -109,25 +88,25 @@ public partial class Moon : MacrocosmSubworld
         {
             // Daytime: 5 phases (20% each of DayLength)
             if (Main.time < DayLength * 0.2)
-                moonPhase = (int)MoonPhase.QuarterAtRight; // After Dawn -> Waxing Crescent
+                moonPhase = (int)MoonPhase.QuarterAtRight;
             else if (Main.time < DayLength * 0.4)
-                moonPhase = (int)MoonPhase.HalfAtRight; // Approaching Noon -> First Quarter
+                moonPhase = (int)MoonPhase.HalfAtRight;
             else if (Main.time < DayLength * 0.6)
-                moonPhase = (int)MoonPhase.ThreeQuartersAtRight; // Around Noon -> Waxing Gibbous
+                moonPhase = (int)MoonPhase.ThreeQuartersAtRight;
             else if (Main.time < DayLength * 0.8)
-                moonPhase = (int)MoonPhase.Full; // Approaching Dusk -> Full Moon
+                moonPhase = (int)MoonPhase.Full;
             else
-                moonPhase = (int)MoonPhase.ThreeQuartersAtLeft; // Before Dusk -> Waning Gibbous
+                moonPhase = (int)MoonPhase.ThreeQuartersAtLeft;
         }
         else
         {
             // Nighttime: 3 phases (33.33% each of NightLength)
             if (Main.time < NightLength * (1.0 / 3.0))
-                moonPhase = (int)MoonPhase.HalfAtLeft; // After Dusk -> Third Quarter
+                moonPhase = (int)MoonPhase.HalfAtLeft;
             else if (Main.time < NightLength * (2.0 / 3.0))
-                moonPhase = (int)MoonPhase.QuarterAtLeft; // Around Midnight -> Waning Crescent
+                moonPhase = (int)MoonPhase.QuarterAtLeft;
             else
-                moonPhase = (int)MoonPhase.Empty; // Approaching Dawn -> New Moon
+                moonPhase = (int)MoonPhase.Empty;
         }
 
         if (Main.moonPhase != moonPhase)
@@ -181,149 +160,5 @@ public partial class Moon : MacrocosmSubworld
     public override void PreUpdateWorld()
     {
         UpdateMoonPhase();
-
-        UpdateDemonSun();
-        UpdateMeteorStorm();
-        UpdateSolarStorm();
-    }
-
-    public override void PostUpdateWorld()
-    {
-        UpdateMeteorSpawn();
-    }
-
-    private void UpdateDemonSun()
-    {
-        if (lastDemonSunActive && !WorldData.DemonSun)
-            ModContent.GetInstance<SurviveDemonSun>()?.Condition?.Complete();
-
-        if (WorldData.DemonSun)
-            DemonSunIntensity = 1f;
-        else
-            DemonSunIntensity = 0f;
-
-        if (DemonSunVisualIntensity < DemonSunIntensity)
-            DemonSunVisualIntensity += 0.005f;
-
-        if (DemonSunVisualIntensity > DemonSunIntensity)
-            DemonSunVisualIntensity -= 0.005f;
-
-        lastDemonSunActive = WorldData.DemonSun;
-    }
-
-    //TODO 
-    private void UpdateSolarStorm() { }
-    private void UpdateMeteorStorm()
-    {
-        meteorStormCounter += Main.worldEventUpdates;
-
-        if (meteorStormWaitTimeToStart <= meteorStormCounter && !WorldData.Current.MeteorStorm)
-        {
-            Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.Start"), Color.Gray);
-            WorldData.Current.MeteorStorm = true;
-            meteorStormCounter = 0;
-            meteorStormWaitTimeToStart = Main.rand.Next(62000, 82000);
-        }
-
-        if (WorldData.Current.MeteorStorm && meteorStormWaitTimeToEnd <= meteorStormCounter)
-        {
-            Main.NewText(Language.GetTextValue("Mods.Macrocosm.StatusMessages.MeteorStorm.End"), Color.Gray);
-            WorldData.Current.MeteorStorm = false;
-            meteorStormCounter = 0;
-            meteorStormWaitTimeToEnd = Main.rand.Next(3600, 7200);
-        }
-
-        if (WorldData.Current.MeteorStorm)
-            MeteorBoost = 300f;
-        else
-            MeteorBoost = 1f;
-    }
-
-    private void UpdateMeteorSpawn()
-    {
-        meteorTimePass += Main.desiredWorldEventsUpdateRate;
-        for (int l = 1; l <= (int)meteorTimePass; l++)
-        {
-            int closestPlayer;
-            int chance = 10000;
-            float baseFrequency = 1f;
-            float frequency = baseFrequency * MeteorBoost;
-
-            if (Main.rand.Next(chance) < frequency)
-            {
-                Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)(Main.maxTilesY * 0.05)) * 16);
-
-                // 3/4 chance to spawn close to an active (not afk) player on the surface.
-                // In vanilla, this only happens with a 1/15 chance, only in expert mode
-                if (!Main.rand.NextBool(4))
-                {
-                    closestPlayer = Player.FindClosest(position, 1, 1);
-                    if (Main.player[closestPlayer].position.Y < Main.worldSurface * 16.0 && Main.player[closestPlayer].afkCounter < 3600)
-                    {
-                        int offset = Main.rand.Next(1, 640);
-                        position.X = Main.player[closestPlayer].position.X + (float)Main.rand.Next(-offset, offset + 1);
-                    }
-                }
-
-                if (!Collision.SolidCollision(position, 16, 16))
-                {
-                    float speedX = Main.rand.Next(-100, 101);
-                    float speedY = Main.rand.Next(200) + 100;
-                    float mult = 8 / (float)Math.Sqrt(speedX * speedX + speedY * speedY);
-                    speedX *= mult;
-                    speedY *= mult;
-
-                    WeightedRandom<int> choice = new(Main.rand);
-                    choice.Add(ProjectileID.FallingStar, 30.0);
-
-                    choice.Add(ModContent.ProjectileType<MoonMeteorSmall>(), 50.0);
-                    choice.Add(ModContent.ProjectileType<MoonMeteorMedium>(), 30.0);
-                    choice.Add(ModContent.ProjectileType<MoonMeteorLarge>(), 12.0);
-
-                    choice.Add(ModContent.ProjectileType<IronMeteorSmall>(), 50.0);
-                    choice.Add(ModContent.ProjectileType<IronMeteorMedium>(), 30.0);
-                    choice.Add(ModContent.ProjectileType<IronMeteorLarge>(), 12.0);
-
-                    choice.Add(ModContent.ProjectileType<TitaniumMeteorSmall>(), 50.0);
-                    choice.Add(ModContent.ProjectileType<TitaniumMeteorMedium>(), 30.0);
-                    choice.Add(ModContent.ProjectileType<TitaniumMeteorLarge>(), 12.0);
-
-                    choice.Add(ModContent.ProjectileType<SolarMeteor>(), 2.0);
-                    choice.Add(ModContent.ProjectileType<NebulaMeteor>(), 2.0);
-                    choice.Add(ModContent.ProjectileType<StardustMeteor>(), 2.0);
-                    choice.Add(ModContent.ProjectileType<VortexMeteor>(), 2.0);
-
-
-                    int type = choice;
-                    var source = type != ProjectileID.FallingStar ? new EntitySource_Misc("Meteor") : new EntitySource_Misc("FallingStar");
-                    int damage = 1500;
-
-                    if (type == ProjectileID.FallingStar)
-                        damage = 720;
-                    else if (type == ModContent.ProjectileType<MoonMeteorSmall>())
-                        damage = 500;
-                    else if (type == ModContent.ProjectileType<MoonMeteorMedium>())
-                        damage = 1000;
-                    else if (type == ModContent.ProjectileType<MoonMeteorLarge>())
-                        damage = 1500;
-
-                    Projectile.NewProjectile(source, position.X, position.Y, speedX, speedY, type, damage, 0f); break;
-                }
-            }
-
-            if (Main.rand.Next(chance / 3) < frequency)
-            {
-                Vector2 position = new((Main.rand.Next(Main.maxTilesX - 50) + 100) * 16, Main.rand.Next((int)(Main.maxTilesY * 0.05)) * 16);
-                closestPlayer = Player.FindClosest(position, 1, 1);
-                if (Main.player[closestPlayer].position.Y < Main.worldSurface * 16.0 && Main.player[closestPlayer].afkCounter < 3600)
-                {
-                    int offset = Main.rand.Next(60, 640);
-                    position.X = Main.player[closestPlayer].position.X + (float)Main.rand.Next(-offset, offset + 1);
-                }
-                MacrocosmAmbientSky.Instance.Spawn<MoonMeteor>(Main.player[closestPlayer], Main.rand.Next());
-            }
-        }
-
-        meteorTimePass %= 1.0;
     }
 }

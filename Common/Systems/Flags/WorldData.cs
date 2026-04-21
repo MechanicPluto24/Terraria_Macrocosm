@@ -1,4 +1,6 @@
-﻿using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Events;
+using Macrocosm.Common.Subworlds;
+using Macrocosm.Content.Events;
 using SubworldLibrary;
 using System.Collections.Generic;
 using System.IO;
@@ -6,13 +8,12 @@ using System.Linq;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Macrocosm.Common.Utils; // Utility
 
 namespace Macrocosm.Common.Systems.Flags;
 
 public class WorldData : ModSystem
 {
-    public static bool DemonSun { get; set; } = false;
+    private static readonly Dictionary<string, SubworldData> _subworldData = [];
 
     public static bool DownedCraterDemon { get; set; } = false;
     public static bool DownedMoonBeast { get; set; } = false;
@@ -33,32 +34,52 @@ public class WorldData : ModSystem
     public static bool FoundVulcan { get; set; } = false;
     public static bool DeimosReturn { get; set; } = false;
 
-    public record SubworldData
+    public class SubworldData
     {
+        public string ID { get; private set; }
         public bool Unlocked { get; set; }
-        public bool SolarStorm { get; set; }
-        public bool MeteorStorm { get; set; }
         public bool XaocRift { get; set; }
+
+        public bool SolarStorm
+        {
+            get => !string.IsNullOrEmpty(ID) && MacrocosmEventSystem.IsActive<SolarStormEvent>(ID);
+            set
+            {
+                if (string.IsNullOrEmpty(ID))
+                    return;
+
+                if (value)
+                    MacrocosmEventSystem.Start<SolarStormEvent>(ID);
+                else
+                    MacrocosmEventSystem.End<SolarStormEvent>(ID);
+            }
+        }
+
+        public SubworldData() { }
+
+        public SubworldData(string id)
+        {
+            ID = id;
+        }
 
         public TagCompound Save()
         {
             TagCompound tag = new();
 
-            if (Unlocked) tag[nameof(Unlocked)] = true;
-            if (SolarStorm) tag[nameof(SolarStorm)] = true;
-            if (MeteorStorm) tag[nameof(MeteorStorm)] = true;
-            if (XaocRift) tag[nameof(XaocRift)] = true;
+            if (Unlocked)
+                tag[nameof(Unlocked)] = true;
+
+            if (XaocRift)
+                tag[nameof(XaocRift)] = true;
 
             return tag;
         }
 
-        public static SubworldData Load(TagCompound tag)
+        public static SubworldData Load(string id, TagCompound tag)
         {
-            return new SubworldData()
+            return new SubworldData(id)
             {
                 Unlocked = tag.ContainsKey(nameof(Unlocked)),
-                SolarStorm = tag.ContainsKey(nameof(SolarStorm)),
-                MeteorStorm = tag.ContainsKey(nameof(MeteorStorm)),
                 XaocRift = tag.ContainsKey(nameof(XaocRift))
             };
         }
@@ -68,19 +89,15 @@ public class WorldData : ModSystem
             writer.WriteFlags
             (
                 Unlocked,
-                SolarStorm,
-                MeteorStorm,
                 XaocRift
             );
         }
 
-        public static SubworldData NetReceive(BinaryReader reader)
+        public static SubworldData NetReceive(string id, BinaryReader reader)
         {
-            SubworldData data = new();
+            SubworldData data = new(id);
             (
                 data.Unlocked,
-                data.SolarStorm,
-                data.MeteorStorm,
                 data.XaocRift
             )
             = reader.ReadBitsByte();
@@ -89,15 +106,16 @@ public class WorldData : ModSystem
         }
     }
 
-    private static readonly Dictionary<string, SubworldData> _subworldData = new();
     public static SubworldData Current => GetSubworldData(MacrocosmSubworld.CurrentID);
+
     public static SubworldData GetSubworldData(string subworldName)
     {
         if (!_subworldData.TryGetValue(subworldName, out var data))
         {
-            data = new SubworldData();
+            data = new SubworldData(subworldName);
             _subworldData[subworldName] = data;
         }
+
         return data;
     }
 
@@ -129,13 +147,14 @@ public class WorldData : ModSystem
 
     public static void SaveData(TagCompound tag)
     {
-        var subworldTags = new List<TagCompound>();
+        List<TagCompound> subworldTags = [];
         foreach (var (key, value) in _subworldData)
         {
-            var entry = value.Save();
+            TagCompound entry = value.Save();
             entry["ID"] = key;
             subworldTags.Add(entry);
         }
+
         tag["SubworldData"] = subworldTags;
 
         if (DownedCraterDemon) tag[nameof(DownedCraterDemon)] = true;
@@ -159,13 +178,14 @@ public class WorldData : ModSystem
 
     public static void LoadData(TagCompound tag)
     {
+        _subworldData.Clear();
+
         if (tag.ContainsKey("SubworldData"))
         {
-            var subworldTags = tag.GetList<TagCompound>("SubworldData");
-            foreach (var entry in subworldTags)
+            foreach (TagCompound entry in tag.GetList<TagCompound>("SubworldData"))
             {
                 string subworldName = entry.GetString("ID");
-                _subworldData[subworldName] = SubworldData.Load(entry);
+                _subworldData[subworldName] = SubworldData.Load(subworldName, entry);
             }
         }
 
@@ -224,11 +244,13 @@ public class WorldData : ModSystem
 
     public override void NetReceive(BinaryReader reader)
     {
+        _subworldData.Clear();
+
         int count = reader.ReadInt32();
         for (int i = 0; i < count; i++)
         {
             string subworldName = reader.ReadString();
-            _subworldData[subworldName] = SubworldData.NetReceive(reader);
+            _subworldData[subworldName] = SubworldData.NetReceive(subworldName, reader);
         }
 
         (

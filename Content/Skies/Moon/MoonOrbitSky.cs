@@ -4,6 +4,7 @@ using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -179,7 +180,7 @@ public class MoonOrbitSky : CustomSky, ILoadable
 
             stars.DrawAll(spriteBatch);
 
-            sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            sun.Color = new Color((int)(255 * (1f - DemonSunEvent.VisualIntensity)), (int)(255 * (1f - DemonSunEvent.VisualIntensity)), (int)(255 * (1f - DemonSunEvent.VisualIntensity))) * (1f - DemonSunEvent.VisualIntensity);
             if (Main.dayTime)
                 sun.Draw(spriteBatch);
 
@@ -288,9 +289,9 @@ public class MoonOrbitSky : CustomSky, ILoadable
         if (!SubworldSystem.IsActive<Subworlds.MoonOrbitSubworld>())
             active = false;
 
-        sun.Color = new Color(255, 255, 255) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
+        sun.Color = new Color(255, 255, 255) * (1f - DemonSunEvent.VisualIntensity);
 
-        earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));
+        earth.Color = new Color(255, (int)(255 * (1f - (DemonSunEvent.VisualIntensity * 0.6f))), (int)(255 * (1f - (DemonSunEvent.VisualIntensity * 0.6f))));
         intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
         UpdateTextures();
         RotateSun();

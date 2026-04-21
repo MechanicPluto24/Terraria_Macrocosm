@@ -1,4 +1,5 @@
-﻿using SubworldLibrary;
+using Macrocosm.Common.Events;
+using SubworldLibrary;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Subworlds;
@@ -100,7 +101,10 @@ class MacrocosmSubworldHooks : ModSystem
     public override void PreUpdateWorld()
     {
         if (SubworldSystem.AnyActive<Macrocosm>())
+        {
+            MacrocosmEventSystem.UpdateLocalEvents(MacrocosmSubworld.Current);
             MacrocosmSubworld.Current.PreUpdateWorld();
+        }
     }
 
     public override void PostUpdateWorld()
