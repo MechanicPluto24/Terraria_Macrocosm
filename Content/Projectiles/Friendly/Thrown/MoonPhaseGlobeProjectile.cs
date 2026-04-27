@@ -14,7 +14,7 @@ public class MoonPhaseGlobeProjectile : ModProjectile
     {
         Projectile.width = 18;
         Projectile.height = 18;
-        Projectile.aiStyle = 2;
+        Projectile.aiStyle = ProjAIStyleID.ThrownProjectile;
         Projectile.friendly = true;
         Projectile.penetrate = 1;
     }

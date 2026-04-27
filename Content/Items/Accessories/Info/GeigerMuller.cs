@@ -16,7 +16,7 @@ public class GeigerMuller : ModItem
         Item.rare = ModContent.RarityType<MoonRarity1>();
     }
 
-    public override void UpdateAccessory(Player player, bool hideVisual)
+    public override void UpdateInfoAccessory(Player player)
     {
         player.GetModPlayer<InfoDisplayPlayer>().GeigerMuller = true;
     }

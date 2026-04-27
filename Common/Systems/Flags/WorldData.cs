@@ -3,10 +3,8 @@ using SubworldLibrary;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Macrocosm.Common.Utils; // Utility
 
 namespace Macrocosm.Common.Systems.Flags;
 

@@ -16,7 +16,7 @@ public class Thermometer : ModItem
         Item.rare = ItemRarityID.Green;
     }
 
-    public override void UpdateAccessory(Player player, bool hideVisual)
+    public override void UpdateInfoAccessory(Player player)
     {
         player.GetModPlayer<InfoDisplayPlayer>().Thermometer = true;
     }

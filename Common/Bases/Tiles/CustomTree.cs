@@ -237,7 +237,7 @@ public abstract partial class CustomTree : ModTile
         if (!tile.HasTile || tile.IsHalfBlock || tile.Slope != SlopeType.Solid)
             return false;
 
-        if (tileAbove.WallType != 0 || tileAbove.LiquidAmount != 0)
+        if (tileAbove.WallType != WallID.None || tileAbove.LiquidAmount != 0)
             return false;
 
         if (!GroundTest(tile.TileType))

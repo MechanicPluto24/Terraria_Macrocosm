@@ -44,7 +44,7 @@ public partial class EarthOrbitSubworld
     [Task]
     private void MainTask(GenerationProgress progress)
     {
-        BaseOrbitSubworld.CommonGen(progress,gen_StructureMap,new List<ushort>{(ushort)TileType<Tiles.Ores.LithiumOre>(), (ushort)TileType<Tiles.Ores.AluminumOre>(),(ushort)TileID.Iron,(ushort)TileID.Gold,(ushort)TileID.Cobalt,(ushort)TileID.Titanium,(ushort)TileID.Meteorite},FleshMeteors:true);
+        BaseOrbitSubworld.CommonGen(progress,gen_StructureMap,new List<ushort>{(ushort)TileType<Tiles.Ores.LithiumOre>(), (ushort)TileType<Tiles.Ores.AluminumOre>(),(ushort)TileID.Iron,(ushort)TileID.Gold,(ushort)TileID.Cobalt,(ushort)TileID.Titanium,(ushort)TileID.Meteorite},fleshMeteors:true);
     }
     
 
@@ -112,8 +112,7 @@ public partial class EarthOrbitSubworld
                     {
                         if (gen_StructureMap.CanPlace(new Rectangle(x - 40, y - 40, 40, 40)))
                         {
-                            //int wallType = VariantWall.WallType<AstrolithWall>(WallSafetyType.Natural);
-                            int wallType = 0;
+                            int wallType = global::Macrocosm.Common.Bases.Walls.VariantWall.WallType<global::Macrocosm.Content.Walls.AstrolithWall>(global::Macrocosm.Common.Enums.WallSafetyType.Natural);
 
                             gen_StructureMap.AddProtectedStructure(new Rectangle(x - 40, y - 40, x + 40, y + 40), padding: 5);
                             BlobTileRunner(x, y, TileType<Astrolith>(), 5..12, 6..15, 20..30, 1f, 4, wallType: (ushort)wallType);

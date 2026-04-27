@@ -310,7 +310,7 @@ public static partial class Utility
             for (int y1 = leftY; y1 < rightY; y1++)
             {
                 Tile tile = Framing.GetTileSafely(x1, y1);
-                if (tile is { LiquidAmount: > 0 } && (liquidType == 0 ? tile.LiquidType == 1 : liquidType == 1 ? tile.LiquidType == 2 : tile.LiquidType == 3))
+                if (tile is { LiquidAmount: > 0 } && (liquidType == 0 ? tile.LiquidType == LiquidID.Lava : liquidType == 1 ? tile.LiquidType == LiquidID.Honey : tile.LiquidType == LiquidID.Shimmer))
                 {
                     liquidAmt += tile.LiquidAmount;
                 }

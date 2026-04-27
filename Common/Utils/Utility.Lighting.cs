@@ -29,14 +29,14 @@ public static partial class Utility
         float brightness = (tileR + tileG + tileB) / 3f;
         if (tile.HasTile && TileID.Sets.AllowLightInWater[tile.TileType])
         {
-            if (lightColor.X < brightness && (Main.wallLight[tile.WallType] || tile.WallType == 73 || tile.WallType == 227 || (tile.IsWallInvisible && !Main.ShouldShowInvisibleWalls())))
+            if (lightColor.X < brightness && (Main.wallLight[tile.WallType] || tile.WallType == WallID.Cloud || tile.WallType == WallID.SnowFall || (tile.IsWallInvisible && !Main.ShouldShowInvisibleWalls())))
             {
                 R = tileR;
                 G = tileG;
                 B = tileB;
             }
         }
-        else if ((!tile.HasTile || !Main.tileNoSunLight[tile.TileType] || ((tile.Slope != 0 || tile.IsHalfBlock || (tile.IsTileInvisible && !Main.ShouldShowInvisibleWalls())) && Main.tile[x, y - 1].LiquidAmount == 0 && Main.tile[x, y + 1].LiquidAmount == 0 && Main.tile[x - 1, y].LiquidAmount == 0 && Main.tile[x + 1, y].LiquidAmount == 0)) && lightColor.X < brightness && (Main.wallLight[tile.WallType] || tile.WallType == 73 || tile.WallType == 227 || (tile.IsWallInvisible && !Main.ShouldShowInvisibleWalls())))
+        else if ((!tile.HasTile || !Main.tileNoSunLight[tile.TileType] || ((tile.Slope != 0 || tile.IsHalfBlock || (tile.IsTileInvisible && !Main.ShouldShowInvisibleWalls())) && Main.tile[x, y - 1].LiquidAmount == 0 && Main.tile[x, y + 1].LiquidAmount == 0 && Main.tile[x - 1, y].LiquidAmount == 0 && Main.tile[x + 1, y].LiquidAmount == 0)) && lightColor.X < brightness && (Main.wallLight[tile.WallType] || tile.WallType == WallID.Cloud || tile.WallType == WallID.SnowFall || (tile.IsWallInvisible && !Main.ShouldShowInvisibleWalls())))
         {
             if (tile.LiquidAmount < 200)
             {
@@ -54,13 +54,13 @@ public static partial class Utility
             }
         }
 
-        if ((!tile.HasTile || tile.IsHalfBlock || !Main.tileNoSunLight[tile.TileType]) && ((tile.WallType >= 88 && tile.WallType <= 93) || tile.WallType == 241) && tile.LiquidAmount < byte.MaxValue)
+        if ((!tile.HasTile || tile.IsHalfBlock || !Main.tileNoSunLight[tile.TileType]) && ((tile.WallType >= WallID.PurpleStainedGlass && tile.WallType <= WallID.RainbowStainedGlass) || tile.WallType == WallID.OrangeStainedGlass) && tile.LiquidAmount < byte.MaxValue)
         {
             R = tileR;
             G = tileG;
             B = tileB;
             int wallLight = tile.WallType - 88;
-            if (tile.WallType == 241)
+            if (tile.WallType == WallID.OrangeStainedGlass)
                 wallLight = 6;
 
             switch (wallLight)

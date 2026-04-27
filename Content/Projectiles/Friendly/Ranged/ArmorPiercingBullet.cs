@@ -24,7 +24,7 @@ public class ArmorPiercingBullet : ModProjectile
     {
         Projectile.width = 6;
         Projectile.height = 6;
-        Projectile.aiStyle = 1;
+        Projectile.aiStyle = ProjAIStyleID.Arrow;
         Projectile.friendly = true;
         Projectile.penetrate = -1;
         Projectile.light = 0.5f;

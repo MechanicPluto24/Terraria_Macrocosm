@@ -347,6 +347,11 @@ IrradiatedRockWall: {
 	Tooltip: ""
 }
 
+Basalt: {
+	DisplayName: Basalt
+	Tooltip: ""
+}
+
 Protolith: {
 	DisplayName: Protolith
 	Tooltip: ""
@@ -3174,6 +3179,16 @@ CorrugatedSteelBrick: {
 	Tooltip: ""
 }
 
+CorrugatedSteelWall: {
+	DisplayName: Corrugated Steel Wall
+	Tooltip: ""
+}
+
+CorrugatedSteelWallUnsafe: {
+	DisplayName: Perilous Corrugated Steel Wall
+	Tooltip: ""
+}
+
 SteelCage: {
 	DisplayName: Steel Cage
 	Tooltip: ""
@@ -3221,6 +3236,16 @@ Pumpjack: {
 
 Astrolith: {
 	DisplayName: Astrolith
+	Tooltip: ""
+}
+
+AstrolithWall: {
+	DisplayName: Astrolith Wall
+	Tooltip: ""
+}
+
+AstrolithWallUnsafe: {
+	DisplayName: Perilous Astrolith Wall
 	Tooltip: ""
 }
 

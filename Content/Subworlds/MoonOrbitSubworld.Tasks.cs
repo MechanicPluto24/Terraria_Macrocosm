@@ -1,21 +1,5 @@
-﻿using Macrocosm.Common.WorldGeneration;
-using Macrocosm.Content.Tiles.Blocks.Terrain;
-using Macrocosm.Content.WorldGeneration.Structures;
-using Macrocosm.Content.WorldGeneration.Structures.Orbit.Moon;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Terraria;
-using Terraria.DataStructures;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.WorldBuilding;
-using static Macrocosm.Common.Utils.Utility;
-using static Terraria.ModLoader.ModContent;
-using Macrocosm.Content.Tiles.Furniture.Industrial;
-using Macrocosm.Content.Tiles.Furniture.Luminite;
-using Terraria.ModLoader;
+﻿using Macrocosm.Common.Utils;
+using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.Accessories;
 using Macrocosm.Content.Items.Armor.Vanity.Employee;
 using Macrocosm.Content.Items.Bars;
@@ -33,8 +17,18 @@ using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
-using Macrocosm.Common.Utils;
-using Macrocosm.Common.Enums;
+using Macrocosm.Content.Tiles.Furniture.Industrial;
+using Macrocosm.Content.Tiles.Furniture.Luminite;
+using Macrocosm.Content.WorldGeneration.Structures.Orbit.Moon;
+using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.WorldBuilding;
+using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Subworlds;
 
@@ -60,7 +54,7 @@ public partial class MoonOrbitSubworld
     [Task]
     private void MainTask(GenerationProgress progress)
     {
-        BaseOrbitSubworld.CommonGen(progress,gen_StructureMap,new List<ushort>{(ushort)TileType<Tiles.Ores.ArtemiteOre>(), (ushort)TileType<Tiles.Ores.SeleniteOre>(),(ushort)TileType<Tiles.Ores.DianiteOre>(),(ushort)TileType<Tiles.Ores.ChandriumOre>()},FleshMeteors:true);
+        BaseOrbitSubworld.CommonGen(progress, gen_StructureMap, new List<ushort> { (ushort)TileType<Tiles.Ores.ArtemiteOre>(), (ushort)TileType<Tiles.Ores.SeleniteOre>(), (ushort)TileType<Tiles.Ores.DianiteOre>(), (ushort)TileType<Tiles.Ores.ChandriumOre>() }, fleshMeteors: true);
     }
 
     [Task]
@@ -88,9 +82,9 @@ public partial class MoonOrbitSubworld
                         7 => Structure.Get<LCShip1>(),
                         8 => Structure.Get<LCShip2>(),
                         _ => Structure.Get<ManmadePod1>()
-                        
+
                     };
-                    
+
                     if (gen_StructureMap.CanPlace(new Rectangle(x - 10, y - 10, structure.Size.X + 10, structure.Size.Y + 10)))
                     {
                         structure.Place(new(x, y), gen_StructureMap);
@@ -108,9 +102,9 @@ public partial class MoonOrbitSubworld
             for (int j = 1; j < Main.maxTilesY; j++)
             {
                 Tile tile = Main.tile[i, j];
-                if(tile.TileType==ModContent.TileType<IndustrialChest>())
+                if (tile.TileType == ModContent.TileType<IndustrialChest>())
                     Utility.SetTileStyle(i, j, 0, 0);
-                if(tile.TileType==ModContent.TileType<LuminiteChest>())
+                if (tile.TileType == ModContent.TileType<LuminiteChest>())
                     Utility.SetTileStyle(i, j, 0, 0);
             }
         }
@@ -136,60 +130,60 @@ public partial class MoonOrbitSubworld
         int slot = 0;
         int random;
 
-            switch ((index % 9) + 1)
-            {
-                case 1:
-                    chest.item[slot++].SetDefaults(ItemType<RyuguStaff>());
-                    break;
-                case 2:
-                    chest.item[slot++].SetDefaults(ItemType<CrescentMoon>());
-                    break;
-                case 3:
-                    chest.item[slot++].SetDefaults(ItemType<ArmstrongGauntlets>());
-                    break;
-                case 4:
-                    chest.item[slot++].SetDefaults(ItemType<WornLunarianDagger>());
-                    break;
-                case 5:
-                    chest.item[slot].SetDefaults(ItemType<RocheChakram>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(50, 251);
-                    break;
-                case 6:
-                    chest.item[slot++].SetDefaults(ItemType<ArcaneBarnacle>());
-                    break;
-                case 7:
-                    chest.item[slot++].SetDefaults(ItemType<MomentumLash>());
-                    break;
-                case 8:
-                    chest.item[slot++].SetDefaults(ItemType<TempestuousBand>());
-                    break;
-                case 9:
-                    chest.item[slot++].SetDefaults(ItemType<ThaumaturgicWard>());
-                    break;
-            }
+        switch ((index % 9) + 1)
+        {
+            case 1:
+                chest.item[slot++].SetDefaults(ItemType<RyuguStaff>());
+                break;
+            case 2:
+                chest.item[slot++].SetDefaults(ItemType<CrescentMoon>());
+                break;
+            case 3:
+                chest.item[slot++].SetDefaults(ItemType<ArmstrongGauntlets>());
+                break;
+            case 4:
+                chest.item[slot++].SetDefaults(ItemType<WornLunarianDagger>());
+                break;
+            case 5:
+                chest.item[slot].SetDefaults(ItemType<RocheChakram>());
+                chest.item[slot++].stack = WorldGen.genRand.Next(50, 251);
+                break;
+            case 6:
+                chest.item[slot++].SetDefaults(ItemType<ArcaneBarnacle>());
+                break;
+            case 7:
+                chest.item[slot++].SetDefaults(ItemType<MomentumLash>());
+                break;
+            case 8:
+                chest.item[slot++].SetDefaults(ItemType<TempestuousBand>());
+                break;
+            case 9:
+                chest.item[slot++].SetDefaults(ItemType<ThaumaturgicWard>());
+                break;
+        }
 
-            random = WorldGen.genRand.Next(1, 5);
-            switch (random)
-            {
-                case 1:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
-                    break;
-                case 2:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.ChandriumOre>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
-                    break;
-                case 3:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.DianiteOre>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
-                    break;
-                case 4:
-                    chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
-                    chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
-                    break;
-            }
-        
-        
+        random = WorldGen.genRand.Next(1, 5);
+        switch (random)
+        {
+            case 1:
+                chest.item[slot].SetDefaults(ItemType<Items.Ores.SeleniteOre>());
+                chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
+                break;
+            case 2:
+                chest.item[slot].SetDefaults(ItemType<Items.Ores.ChandriumOre>());
+                chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
+                break;
+            case 3:
+                chest.item[slot].SetDefaults(ItemType<Items.Ores.DianiteOre>());
+                chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
+                break;
+            case 4:
+                chest.item[slot].SetDefaults(ItemType<Items.Ores.ArtemiteOre>());
+                chest.item[slot++].stack = WorldGen.genRand.Next(12, 20);
+                break;
+        }
+
+
         if (WorldGen.genRand.NextBool())
         {
             chest.item[slot].SetDefaults(ItemID.LunarOre);

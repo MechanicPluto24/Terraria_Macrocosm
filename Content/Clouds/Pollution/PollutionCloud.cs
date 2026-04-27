@@ -25,13 +25,10 @@ public abstract class PollutionCloud : ModCloud
         }
         else
         {
-            opacity = 0.7f;
+            opacity = 0.8f;
         }
 
         drawData.color *= opacity;
-        if (drawData.color.A > 200)
-            drawData.color.A = 200;
-
         return true;
     }
 }

@@ -44,13 +44,13 @@ public abstract class LooseWiresLarge : ModTile
         TileObjectData.newTile.DrawYOffset = -2;
         TileObjectData.addTile(Type);
 
-        DustType = 50;
+        DustType = DustID.Adamantite;
         AddMapEntry(new Color(136, 136, 136));
     }
 
     public override bool CreateDust(int i, int j, ref int type)
     {
-        type = j % 2 == 0 ? 48 : 50;
+        type = j % 2 == 0 ? DustID.Cobalt : DustID.Adamantite;
         return true;
     }
 

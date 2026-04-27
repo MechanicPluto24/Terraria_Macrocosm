@@ -489,7 +489,7 @@ public static partial class Utility
 
         if (Main.tileMoss[tile.TileType])
         {
-            dustType = (tile.TileType == TileID.LavaMoss) ? 258 : ((tile.TileType == TileID.KryptonMoss) ? 299 : ((tile.TileType == TileID.XenonMoss) ? 300 : ((tile.TileType == TileID.ArgonMoss) ? 301 : ((tile.TileType == TileID.VioletMoss) ? 305 : ((tile.TileType != 627) ? (tile.TileType - 179 + 93) : 267)))));
+            dustType = (tile.TileType == TileID.LavaMoss) ? 258 : ((tile.TileType == TileID.KryptonMoss) ? 299 : ((tile.TileType == TileID.XenonMoss) ? 300 : ((tile.TileType == TileID.ArgonMoss) ? 301 : ((tile.TileType == TileID.VioletMoss) ? 305 : ((tile.TileType != TileID.RainbowMoss) ? (tile.TileType - 179 + 93) : 267)))));
         }
 
         if (tile.TileType == TileID.Painting3X3)
@@ -1571,43 +1571,43 @@ public static partial class Utility
 
                 if (Main.tile[tileX, k] != null)
                 {
-                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == 23)
+                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == TileID.CorruptGrass)
                     {
                         dustType = 77;
                     }
 
-                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == 661)
+                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == TileID.CorruptJungleGrass)
                     {
                         dustType = 77;
                     }
 
-                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == 60)
+                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == TileID.JungleGrass)
                     {
                         dustType = DustID.t_PearlWood;
                     }
 
-                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == 70)
+                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == TileID.MushroomGrass)
                     {
                         dustType = DustID.Bone;
                     }
 
-                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == 109)
+                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == TileID.HallowedGrass)
                     {
                         dustType = 79;
                     }
 
-                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == 199)
+                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == TileID.CrimsonGrass)
                     {
                         dustType = 121;
                     }
 
-                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == 662)
+                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == TileID.CrimsonJungleGrass)
                     {
                         dustType = 121;
                     }
 
                     // Extra patch context.
-                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == 147)
+                    if (Main.tile[tileX, k].HasTile && Main.tile[tileX, k].TileType == TileID.SnowBlock)
                     {
                         dustType = 122;
                     }
@@ -1629,18 +1629,18 @@ public static partial class Utility
 
                 if (Main.tile[i, l] != null)
                 {
-                    if (Main.tile[i, l].HasTile && Main.tile[i, l].TileType == 234)
+                    if (Main.tile[i, l].HasTile && Main.tile[i, l].TileType == TileID.Crimsand)
                     {
                         dustType = 121;
                     }
 
-                    if (Main.tile[i, l].HasTile && Main.tile[i, l].TileType == 116)
+                    if (Main.tile[i, l].HasTile && Main.tile[i, l].TileType == TileID.Pearlsand)
                     {
                         dustType = 79;
                     }
 
                     // Extra patch context.
-                    if (Main.tile[i, l].HasTile && Main.tile[i, l].TileType == 112)
+                    if (Main.tile[i, l].HasTile && Main.tile[i, l].TileType == TileID.Ebonsand)
                     {
                         dustType = 77;
                     }

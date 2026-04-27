@@ -29,7 +29,7 @@ public class Fridge : ModTile
 
         TileSets.CustomContainer[Type] = true;
 
-        DustType = 84;
+        DustType = DustID.Platinum;
         AdjTiles = [TileID.Containers];
 
         AddMapEntry(new Color(107, 115, 125), CreateMapEntryName());
@@ -169,7 +169,7 @@ public class Fridge : ModTile
         if (player.cursorItemIconText == "")
         {
             player.cursorItemIconEnabled = false;
-            player.cursorItemIconID = 0;
+            player.cursorItemIconID = ItemID.None;
         }
     }
 }
