@@ -3461,6 +3461,11 @@ SeleniteBrick: {
 	Tooltip: ""
 }
 
+DianiteBrick: {
+	DisplayName: Dianite Brick
+	Tooltip: ""
+}
+
 MineralizedProtolith: {
 	DisplayName: Mineralized Protolith
 	Tooltip: ""
