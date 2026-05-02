@@ -12,6 +12,9 @@
 *.userosscache
 *.sln.docstates
 
+/.dotnet
+/.dotnet_home/.dotnet
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -350,6 +353,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-/Assets/Effects/SunAnimatrionEffectTest.fx
-/Assets/Effects/SunAnimatrionEffect.fx
-/.dotnet
+
+
