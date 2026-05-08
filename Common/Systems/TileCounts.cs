@@ -34,10 +34,12 @@ public class TileCounts : ModSystem
     public bool HasApolloLander => ApolloLanderCount > 0;
     public bool EnoughPollution => PollutionLevel > PollutionLevelThreshold;
 
+    private float pollutionLevel;
+
     public float PollutionLevel
     {
-        get => field;
-        set => field = MathHelper.Clamp(value, 0f, PollutionLevelMax);
+        get => pollutionLevel;
+        set => pollutionLevel = MathHelper.Clamp(value, 0f, PollutionLevelMax);
     }
     public float Pollution01 => PollutionLevelMax <= 0f ? 0f : PollutionLevel / PollutionLevelMax;
     public const float PollutionLevelMax = 500f;

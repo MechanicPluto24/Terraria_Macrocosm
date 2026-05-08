@@ -4,7 +4,7 @@
 	
 	<PropertyGroup>
 		<AssemblyName>Macrocosm</AssemblyName>
-		<LangVersion>latest</LangVersion>
+		<LangVersion>12.0</LangVersion>
 		<Platforms>AnyCPU;x86</Platforms>
 	</PropertyGroup>
 	
