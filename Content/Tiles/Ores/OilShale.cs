@@ -23,7 +23,7 @@ public class OilShale : ModTile
         LocalizedText name = CreateMapEntryName();
         AddMapEntry(new Color(45, 46, 45), name);
 
-        DustType = 84;
+        DustType = DustID.Platinum;
         HitSound = SoundID.Tink;
 
         MinPick = 35;

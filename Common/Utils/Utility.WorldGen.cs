@@ -200,7 +200,7 @@ public static partial class Utility
             {
                 for (int l = top; l < bottom; l++)
                 {
-                    if (Math.Abs((double)k - position.X) + Math.Abs((double)l - position.Y) < strength * 0.5 * (1.0 + (double)genRand.Next(-10, 11) * 0.015) && Main.tile[k, l].HasTile && (TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[k, l].TileType] || (Main.remixWorld && Main.tile[k, l].TileType == 230) || (Main.tile[k, l].TileType == 225 && Main.tile[k, l].TileType != 108)))
+                    if (Math.Abs((double)k - position.X) + Math.Abs((double)l - position.Y) < strength * 0.5 * (1.0 + (double)genRand.Next(-10, 11) * 0.015) && Main.tile[k, l].HasTile && (TileID.Sets.CanBeClearedDuringOreRunner[Main.tile[k, l].TileType] || (Main.remixWorld && Main.tile[k, l].TileType == TileID.CrispyHoneyBlock) || (Main.tile[k, l].TileType == TileID.Hive && Main.tile[k, l].TileType != TileID.Mythril)))
                     {
                         if (type > 0)
                         {
@@ -885,11 +885,11 @@ public static partial class Utility
                         {
                             int x2 = newPos.X + x1;
                             int y2 = newPos.Y + y1;
-                            if (x1 == 0 && y1 == 0 && Main.tile[x2, y2].TileType == 21) //is a chest, special case to prevent dupe glitch
+                            if (x1 == 0 && y1 == 0 && Main.tile[x2, y2].TileType == TileID.Containers) //is a chest, special case to prevent dupe glitch
                             {
                                 KillChestAndItems(x2, y2);
                             }
-                            Main.tile[x, y].TileType = 0;
+                            Main.tile[x, y].TileType = TileID.Dirt;
                             if (!silent) { KillTile(x, y, false, false, true); }
                             if (removeLiquid)
                             {
@@ -961,7 +961,7 @@ public static partial class Utility
             if (wall != -1)
             {
                 if (wall == -2) { wall = 0; }
-                Main.tile[x, y].WallType = 0;
+                Main.tile[x, y].WallType = WallID.None;
                 PlaceWall(x, y, wall, true);
             }
             if (sync && Main.netMode != NetmodeID.SinglePlayer)
@@ -1652,9 +1652,9 @@ public static partial class Utility
                     }
                     else if (wallType > 0)
                     {
-                        if (addWall || !addWall && Main.tile[k, l].WallType != 0)
+                        if (addWall || !addWall && Main.tile[k, l].WallType != WallID.None)
                         {
-                            if (Main.tile[k, l].WallType != 0)
+                            if (Main.tile[k, l].WallType != WallID.None)
                                 Main.tile[k, l].Clear(TileDataType.Wall);
 
                             PlaceWall(k, l, wallType, mute: true);

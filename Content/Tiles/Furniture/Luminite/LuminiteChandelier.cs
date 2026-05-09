@@ -39,7 +39,7 @@ public class LuminiteChandelier : ModTile, IToggleableTile
         DustType = DustID.LunarOre;
 
         foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
-            AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.Chandelier"));
+            AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Chandelier"));
     }
 
     public override bool CreateDust(int i, int j, ref int type)

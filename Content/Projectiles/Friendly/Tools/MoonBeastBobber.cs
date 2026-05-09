@@ -1,4 +1,5 @@
 ﻿using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Tools;
@@ -9,7 +10,7 @@ public class MoonBeastBobber : ModProjectile
     {
         Projectile.width = 14;
         Projectile.height = 14;
-        Projectile.aiStyle = 61;
+        Projectile.aiStyle = ProjAIStyleID.Bobber;
         Projectile.bobber = true;
         Projectile.penetrate = -1;
         Projectile.netImportant = true;

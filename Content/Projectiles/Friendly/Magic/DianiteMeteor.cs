@@ -27,7 +27,7 @@ public class DianiteMeteor : ModProjectile
     {
         Projectile.width = 26;
         Projectile.height = 26;
-        Projectile.aiStyle = 56;
+        Projectile.aiStyle = ProjAIStyleID.FlamingScythe;
         Projectile.friendly = true;
         Projectile.DamageType = DamageClass.Magic;
         Projectile.ignoreWater = true;

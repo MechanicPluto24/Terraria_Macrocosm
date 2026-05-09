@@ -23,7 +23,7 @@ public class LithiumOre : ModTile
         LocalizedText name = CreateMapEntryName();
         AddMapEntry(new Color(108, 101, 112), name);
 
-        DustType = 84;
+        DustType = DustID.Platinum;
         HitSound = SoundID.Tink;
 
         MinPick = 45;

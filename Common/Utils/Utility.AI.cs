@@ -3562,7 +3562,7 @@ public static partial class Utility
             int tileX2 = (int)((npc.Center.X + (15 * npc.direction)) / 16f);
             int tileY2 = (int)((npc.position.Y + npc.height - 16f) / 16f);
             //Main.tile[tileX2 - npc.direction, tileY2 + 1].halfBrick();
-            if (canOpenDoors && Main.tile[tileX2, tileY2 - 2].HasUnactuatedTile && Main.tile[tileX2, tileY2 - 2].TileType == 10 && (Main.rand.NextBool(10) || seekHouse))
+            if (canOpenDoors && Main.tile[tileX2, tileY2 - 2].HasUnactuatedTile && Main.tile[tileX2, tileY2 - 2].TileType == TileID.ClosedDoor && (Main.rand.NextBool(10) || seekHouse))
             {
                 if (Main.netMode == NetmodeID.MultiplayerClient)
                 {
@@ -3928,7 +3928,7 @@ public static partial class Utility
             {
                 for (int y = centerTileY - 1; y <= centerTileY + 1; ++y)
                 {
-                    if (Main.tile[x, y].WallType > 0) { wallExists = true; break; }
+                    if (Main.tile[x, y].WallType > WallID.None) { wallExists = true; break; }
                 }
             }
             if (!wallExists)
@@ -4865,7 +4865,7 @@ public static partial class Utility
                 {
                     if ((tpY < playerTileY - 4 || tpY > playerTileY + 4 || tpTileX < playerTileX - 4 || tpTileX > playerTileX + 4) && (tpY < tileY - 1 || tpY > tileY + 1 || tpTileX < tileX - 1 || tpTileX > tileX + 1) && (!checkGround || Main.tile[tpTileX, tpY].HasUnactuatedTile))
                     {
-                        if (canTeleportTo != null && canTeleportTo(tpTileX, tpY) || Main.tile[tpTileX, tpY - 1].LiquidType != 2 && (!checkGround || Main.tileSolid[Main.tile[tpTileX, tpY].TileType]) && !Collision.SolidTiles(tpTileX - 1, tpTileX + 1, tpY - 4, tpY - 1))
+                        if (canTeleportTo != null && canTeleportTo(tpTileX, tpY) || Main.tile[tpTileX, tpY - 1].LiquidType != LiquidID.Honey && (!checkGround || Main.tileSolid[Main.tile[tpTileX, tpY].TileType]) && !Collision.SolidTiles(tpTileX - 1, tpTileX + 1, tpY - 4, tpY - 1))
                         {
                             if (attackInterval != -1) { ai[1] = 20f; }
                             ai[2] = tpTileX;

@@ -24,7 +24,7 @@ public class AluminumOre : ModTile
         LocalizedText name = CreateMapEntryName();
         AddMapEntry(new Color(225, 217, 228), name);
 
-        DustType = 84;
+        DustType = DustID.Platinum;
         HitSound = SoundID.Tink;
 
         MinPick = 35;

@@ -49,7 +49,7 @@ public class Sledgehammer : ModItem
                 for (int j = wY - 1; j <= wY + 1; j++)
                 {
                     if (
-                        Main.tile[i, j].WallType > 0 &&
+                        Main.tile[i, j].WallType > WallID.None &&
                         (!Main.tile[i, j].HasTile || wX != Player.tileTargetX || wY != Player.tileTargetY || !Main.tileHammer[Main.tile[i, j].TileType] && !player.poundRelease) &&
                         player.toolTime == 0 && player.itemAnimation > 0 && player.controlUseItem && item.hammer > 0 && Player.CanPlayerSmashWall(i, j)
                     )

@@ -63,7 +63,7 @@ public class StarDestroyerBeam : ModProjectile
     public override void OnKill(int timeLeft)
     {
         for (float i = 0f; i < 1f; i += 0.33f)
-            Dust.NewDustPerfect(Projectile.Center, 278, Projectile.oldVelocity.RotatedByRandom(0.2) * Main.rand.NextFloat(0.3f), 0, color * 0.5f).noGravity = true;
+            Dust.NewDustPerfect(Projectile.Center, DustID.FireworksRGB, Projectile.oldVelocity.RotatedByRandom(0.2) * Main.rand.NextFloat(0.3f), 0, color * 0.5f).noGravity = true;
     }
 
     private SpriteBatchState state;

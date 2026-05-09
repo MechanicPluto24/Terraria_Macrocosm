@@ -44,9 +44,6 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
 
     private UILaunchDestinationInfoElement spawnInfoElement;
 
-    private bool ShowExistingStations = false; // guard flag
-    private bool AllowUnmannedPlanetLanding = false; // reserved for future
-
     public UINavigationTab()
     {
     }
@@ -412,8 +409,8 @@ public class UINavigationTab : UIElement, ITabUIElement, IRocketUIDataConsumer
             var createStationElement = new UILaunchDestinationInfoElement(true)
             {
                 FocusContext = "LaunchLocations",
+                IsReachable = true
             };
-            createStationElement.IsReachable = true;
             createStationElement.OnLeftClick += InfoElement_OnLeftClick;
             createStationElement.OnRightClick += InfoElement_OnRightClick;
             orbitSubworlds.Add(createStationElement);

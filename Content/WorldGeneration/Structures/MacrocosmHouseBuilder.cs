@@ -426,7 +426,7 @@ public abstract class MacrocosmHouseBuilder : MicroBiome
 
         foreach (Rectangle item in CreateSupportBeamList())
         {
-            if (item.Height > 1 && Tiles[item.X, item.Y - 1].TileType != 19)
+            if (item.Height > 1 && Tiles[item.X, item.Y - 1].TileType != TileID.Platforms)
             {
                 WorldUtils.Gen(new Point(item.X, item.Y), new Shapes.Rectangle(item.Width, item.Height), Actions.Chain(new Actions.SetTileKeepWall(BeamType), new Actions.SetFrames(frameNeighbors: true)));
                 Tile tile = Tiles[item.X, item.Y + item.Height];

@@ -26,6 +26,6 @@ public class HeveaWood : ModTile
         AddMapEntry(new Color(90, 44, 30));
 
         HitSound = SoundID.Dig;
-        DustType = 7;
+        DustType = DustID.WoodFurniture;
     }
 }

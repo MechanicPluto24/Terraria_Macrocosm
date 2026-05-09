@@ -80,7 +80,7 @@ public class TurretTaserProjectile : ModProjectile
 
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
-        target.AddBuff(144, 300);
+        target.AddBuff(BuffID.Electrified, 300);
         target.AddBuff(ModContent.BuffType<Paralysis>(), 60);
     }
 

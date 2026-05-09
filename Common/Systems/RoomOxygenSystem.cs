@@ -126,7 +126,7 @@ public class RoomOxygenSystem : ModSystem
         visitedTiles.Add(coords);
 
         Tile tile = Main.tile[x, y];
-        if (!tile.HasTile && tile.WallType <= 0)
+        if (!tile.HasTile && tile.WallType <= WallID.None)
         {
             canValidateRoom = false;
             return;

@@ -13,6 +13,6 @@ public class HeveaWall : ModWall
         Main.wallHouse[Type] = true;
         AddMapEntry(new Color(82, 44, 30));
 
-        DustType = 7;
+        DustType = DustID.WoodFurniture;
     }
 }

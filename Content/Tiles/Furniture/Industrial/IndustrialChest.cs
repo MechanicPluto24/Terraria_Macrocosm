@@ -283,15 +283,12 @@ public class IndustrialChest : ModTile
         if (player.cursorItemIconText == "")
         {
             player.cursorItemIconEnabled = false;
-            player.cursorItemIconID = 0;
+            player.cursorItemIconID = ItemID.None;
         }
     }
 
     public override void PostDraw(int i, int j, SpriteBatch spriteBatch)
     {
-        if (GetState(i, j) is not State.Unlocked or State.Locked)
-            return;
-
         Tile tile = Main.tile[i, j];
         Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange);
 

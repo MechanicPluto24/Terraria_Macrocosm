@@ -18,15 +18,31 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.NPCs.Enemies.Pollution;
 
+public enum WyrmwoodSizeTier
+{
+    Unset,
+    Small,
+    Medium,
+    Large
+}
+
 public class WyrmwoodHead : WormHead
 {
     private const int BestiaryFrameCount = 4;
     private const int BestiaryTicksPerFrame = 8;
+    private const int BaseLifeMax = 1200;
+    private const int BaseSegmentLength = 5;
+    private const int LifePerExtraSegment = 100;
 
     public int WingsType => ModContent.NPCType<WyrmwoodWings>();
     public override int BodyType => ModContent.NPCType<WyrmwoodBody>();
     public override int TailType => ModContent.NPCType<WyrmwoodTail>();
     public override bool HasCustomBodySegments => true;
+    public WyrmwoodSizeTier SizeTier
+    {
+        get => GetSizeTier(NPC.ai[2]);
+        set => NPC.ai[2] = (int)value;
+    }
 
     public override void SetStaticDefaults()
     {
@@ -49,7 +65,7 @@ public class WyrmwoodHead : WormHead
     public override void SetDefaults()
     {
         NPC.CloneDefaults(NPCID.DiggerHead);
-        NPC.lifeMax = 1200;
+        NPC.lifeMax = BaseLifeMax;
         NPC.damage = 40;
         NPC.defense = 10;
         NPC.width = 16;
@@ -110,10 +126,13 @@ public class WyrmwoodHead : WormHead
 
     public override void Init()
     {
-        // Set the segment variance
-        // If you want the segment length to be constant, set these two properties to the same value
-        MinSegmentLength = 5;
-        MaxSegmentLength = 9;
+        if (Main.netMode != NetmodeID.MultiplayerClient)
+        {
+            SizeTier = SelectSizeTier();
+            NPC.netUpdate = true;
+        }
+
+        ApplySizeTier();
         CanFly = true;
         CommonWormInit(this);
     }
@@ -123,21 +142,127 @@ public class WyrmwoodHead : WormHead
         int latestNPC = NPC.whoAmI;
         int wingsSegmentIndex = 0;
         IEntitySource source = NPC.GetSource_FromAI();
+        WyrmwoodSizeTier sizeTier = SizeTier;
+        ApplyLifeForSegmentCount(segmentCount + 2);
 
         for (int i = 0; i < segmentCount; i++)
         {
             int type = i == wingsSegmentIndex ? WingsType : BodyType;
-            latestNPC = SpawnSegment(source, type, latestNPC);
+            latestNPC = SpawnSegment(source, type, latestNPC, sizeTier);
         }
 
         return latestNPC;
     }
 
+    private WyrmwoodSizeTier SelectSizeTier()
+    {
+        int roll = Main.rand.Next(100);
+
+        if (roll < 50)
+            return WyrmwoodSizeTier.Small;
+
+        if (roll < 85)
+            return WyrmwoodSizeTier.Medium;
+
+        return WyrmwoodSizeTier.Large;
+    }
+
+    private void ApplyLifeForSegmentCount(int segmentCount)
+    {
+        int extraSegments = segmentCount - BaseSegmentLength;
+
+        if (extraSegments < 0)
+            extraSegments = 0;
+
+        float lifeScale = NPC.lifeMax / (float)BaseLifeMax;
+        int scaledLifePerExtraSegment = (int)(LifePerExtraSegment * lifeScale);
+
+        NPC.lifeMax += extraSegments * scaledLifePerExtraSegment;
+        NPC.life = NPC.lifeMax;
+    }
+
+    private void ApplySizeTier()
+    {
+        switch (SizeTier)
+        {
+            case WyrmwoodSizeTier.Small:
+                MinSegmentLength = 5;
+                MaxSegmentLength = 6;
+                break;
+            case WyrmwoodSizeTier.Medium:
+                MinSegmentLength = 7;
+                MaxSegmentLength = 9;
+                break;
+            case WyrmwoodSizeTier.Large:
+                MinSegmentLength = 10;
+                MaxSegmentLength = 12;
+                break;
+        }
+    }
+
+    private int SpawnSegment(IEntitySource source, int type, int latestNPC, WyrmwoodSizeTier sizeTier)
+    {
+        int oldLatest = latestNPC;
+        latestNPC = NPC.NewNPC(source, (int)NPC.Center.X, (int)NPC.Center.Y, type, NPC.whoAmI, 0f, latestNPC, (int)sizeTier);
+
+        Main.npc[oldLatest].ai[0] = latestNPC;
+
+        NPC latest = Main.npc[latestNPC];
+        latest.realLife = NPC.whoAmI;
+
+        return latestNPC;
+    }
+
+    public static WyrmwoodSizeTier GetSizeTier(NPC npc)
+    {
+        if (npc.realLife >= 0 && npc.realLife < Main.maxNPCs && npc.realLife != npc.whoAmI && Main.npc[npc.realLife].active)
+            return GetSizeTier(Main.npc[npc.realLife].ai[2]);
+
+        return GetSizeTier(npc.ai[2]);
+    }
+
+    private static WyrmwoodSizeTier GetSizeTier(float sizeTierValue)
+    {
+        int sizeTier = (int)sizeTierValue;
+
+        if (sizeTier < (int)WyrmwoodSizeTier.Small || sizeTier > (int)WyrmwoodSizeTier.Large)
+            return WyrmwoodSizeTier.Medium;
+
+        return (WyrmwoodSizeTier)sizeTier;
+    }
+
+    public static int NextInitialAttackCooldown(WyrmwoodSizeTier sizeTier) => GetSizeTierAttackCooldown(sizeTier, initial: true);
+
+    public static int NextAttackCooldown(WyrmwoodSizeTier sizeTier) => GetSizeTierAttackCooldown(sizeTier, initial: false);
+
+    private static int GetSizeTierAttackCooldown(WyrmwoodSizeTier sizeTier, bool initial)
+    {
+        return sizeTier switch
+        {
+            WyrmwoodSizeTier.Small => initial ? Main.rand.Next(480, 620) : Main.rand.Next(150, 240),
+            WyrmwoodSizeTier.Medium => initial ? Main.rand.Next(400, 500) : Main.rand.Next(110, 190),
+            WyrmwoodSizeTier.Large => initial ? Main.rand.Next(300, 420) : Main.rand.Next(80, 150),
+            _ => initial ? Main.rand.Next(400, 500) : Main.rand.Next(100, 200),
+        };
+    }
+
     public static void CommonWormInit(Worm worm)
     {
-        // These two properties handle the movement of the worm
-        worm.MoveSpeed = 5.5f;
-        worm.Acceleration = 0.04f;
+        switch (GetSizeTier(worm.NPC))
+        {
+            case WyrmwoodSizeTier.Small:
+                worm.MoveSpeed = 6.35f;
+                worm.Acceleration = 0.055f;
+                break;
+            case WyrmwoodSizeTier.Medium:
+                worm.MoveSpeed = 5.5f;
+                worm.Acceleration = 0.04f;
+                break;
+            case WyrmwoodSizeTier.Large:
+                worm.MoveSpeed = 4.85f;
+                worm.Acceleration = 0.035f;
+                break;
+        }
     }
 
     private int attackCounter;
@@ -176,6 +301,12 @@ public class WyrmwoodHead : WormHead
 
 public class WyrmwoodBody : WormBody
 {
+    public WyrmwoodSizeTier SizeTier
+    {
+        get => WyrmwoodHead.GetSizeTier(NPC);
+        set => NPC.ai[2] = (int)value;
+    }
+
     public override void SetStaticDefaults()
     {
         Main.npcFrameCount[Type] = 1;
@@ -207,12 +338,12 @@ public class WyrmwoodBody : WormBody
         NPC.width = 16;
         NPC.height = 18;
         NPC.aiStyle = -1;
-        attackCounter = Main.rand.Next(400, 500);
     }
 
     public override void Init()
     {
         FlipSprite = true;
+        attackCounter = WyrmwoodHead.NextInitialAttackCooldown(SizeTier);
         WyrmwoodHead.CommonWormInit(this);
     }
     public override void CustomBodyAI(Worm worm)
@@ -227,7 +358,7 @@ public class WyrmwoodBody : WormBody
             if (attackCounter <= 0 && Vector2.Distance(NPC.Center, target.Center) < 1000f)
             {
                 Projectile.NewProjectileDirect(NPC.GetSource_FromAI(), NPC.Center, new Vector2(0, 5), ModContent.ProjectileType<WyrmwoodProjectile>(), Utility.TrueDamage((int)(NPC.damage * 0.9f)), 1f, Main.myPlayer);
-                attackCounter = Main.rand.Next(100, 200);
+                attackCounter = WyrmwoodHead.NextAttackCooldown(SizeTier);
             }
         }
     }

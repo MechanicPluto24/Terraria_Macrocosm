@@ -19,7 +19,7 @@ public class PollutionBiome : ModBiome
     public override string MapBackground => BackgroundPath;
     public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/Pollution");
 
-    public override ModWaterStyle WaterStyle => ModContent.GetInstance<PollutionWaterStyle>();
+    public override ModWaterStyle WaterStyle => PollutionWaterStyle.GetCurrentStyle();
     public override CaptureBiome.TileColorStyle TileColorStyle => CaptureBiome.TileColorStyle.Normal;
 
     public override bool IsBiomeActive(Player player) => !SubworldSystem.AnyActive<Macrocosm>() && player.ZoneOverworldHeight && TileCounts.Instance.EnoughPollution;

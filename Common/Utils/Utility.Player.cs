@@ -148,7 +148,7 @@ public static partial class Utility
         SoundEngine.PlaySound(SoundID.Splash, new Vector2(x, y) * 16f);
 
         tile.LiquidAmount = 0;
-        tile.LiquidType = 0;
+        tile.LiquidType = LiquidID.Water;
 
         WorldGen.SquareTileFrame(x, y, resetFrame: false);
 

@@ -72,7 +72,7 @@ public class Hermite : ModNPC
 
                     for (int i = num - 1; i <= num + 1; i++)
                         for (int j = num2 - 1; j <= num2 + 1; j++)
-                            if (Main.tile[i, j] != null && Main.tile[i, j].WallType > 0)
+                            if (Main.tile[i, j] != null && Main.tile[i, j].WallType > WallID.None)
                                 flag = true;
 
                     if (flag)
@@ -216,7 +216,7 @@ public class Hermite : ModNPC
                         if (Main.tile[i, j] == null)
                             break;
 
-                        if (Main.tile[i, j].WallType > 0)
+                        if (Main.tile[i, j].WallType > WallID.None)
                             flag = true;
                     }
 

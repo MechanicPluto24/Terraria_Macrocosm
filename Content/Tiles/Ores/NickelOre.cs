@@ -27,7 +27,7 @@ public class NickelOre : ModTile
         LocalizedText name = CreateMapEntryName();
         AddMapEntry(new Color(220, 215, 205), name);
 
-        DustType = ModContent.DustType<RegolithDust>();
+        DustType = ModContent.DustType<NickelDust>();
         HitSound = SoundID.Tink;
 
         MinPick = 225;

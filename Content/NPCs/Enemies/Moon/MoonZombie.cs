@@ -35,7 +35,7 @@ public class MoonZombie : ModNPC
         NPC.HitSound = SoundID.NPCHit1;
         NPC.DeathSound = SFX.ZombieDeath;
         NPC.knockBackResist = 0.5f;
-        NPC.aiStyle = 3;
+        NPC.aiStyle = NPCAIStyleID.Fighter;
         AIType = NPCID.ZombieMushroom;
         SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
         Banner = Item.NPCtoBanner(NPCID.Zombie);

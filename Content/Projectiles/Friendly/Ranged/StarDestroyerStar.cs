@@ -152,7 +152,7 @@ public class StarDestroyerStar : ModProjectile
         if (StarType is StarVariant.Blue)
         {
             for (float i = 0f; i < 1.75f; i += 0.0125f)
-                Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(6f), 0, color.WithAlpha(0) * 0.75f).noGravity = true;
+                Dust.NewDustPerfect(Projectile.Center, DustID.FireworksRGB, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(6f), 0, color.WithAlpha(0) * 0.75f).noGravity = true;
 
             for (int i = 0; i < 8; i++)
                 Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 2).RotatedByRandom(MathHelper.TwoPi), 17);
@@ -160,7 +160,7 @@ public class StarDestroyerStar : ModProjectile
         else if (StarType is StarVariant.Yellow)
         {
             for (float i = 0f; i < 3f; i += 0.0125f)
-                Dust.NewDustPerfect(Projectile.Center, 278, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(12f), 0, color.WithAlpha(0) * 0.75f).noGravity = true;
+                Dust.NewDustPerfect(Projectile.Center, DustID.FireworksRGB, Vector2.UnitY.RotatedBy(i * ((float)Math.PI * 2f)) * Main.rand.NextFloat(12f), 0, color.WithAlpha(0) * 0.75f).noGravity = true;
 
             for (int i = 0; i < 24; i++)
                 Gore.NewGore(Projectile.GetSource_Death(), Projectile.position, new Vector2(0, 4).RotatedByRandom(MathHelper.TwoPi), 16);

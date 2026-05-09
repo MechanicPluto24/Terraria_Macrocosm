@@ -51,7 +51,7 @@ public class RadioactiveSlime : ModNPC
         NPC.DeathSound = SoundID.NPCDeath1;
         NPC.value = 60f;
         NPC.knockBackResist = 0.5f;
-        NPC.aiStyle = 1;
+        NPC.aiStyle = NPCAIStyleID.Slime;
         AIType = NPCID.BlueSlime;
         AnimationType = NPCID.BlueSlime;
         Banner = Item.NPCtoBanner(NPCID.BlueSlime);
