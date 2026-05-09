@@ -17,13 +17,16 @@ public class Basalt : ModTile
 
         TileID.Sets.ChecksForMerge[Type] = true;
         Regolith.TileMerge[Type] = true;
-
+        Main.tileMerge[Type][ModContent.TileType<Chalcedony>()] = true;
+        Main.tileMerge[ModContent.TileType<Chalcedony>()][Type] = true;
+        Main.tileMerge[Type][ModContent.TileType<Protolith>()] = true;
+        Main.tileMerge[ModContent.TileType<Protolith>()][Type] = true;
         TileID.Sets.CanBeClearedDuringOreRunner[Type] = true;
 
         MinPick = 225;
         MineResist = 3f;
 
-        AddMapEntry(new Color(65, 65, 68));
+        AddMapEntry(new Color(75, 65, 78));
 
         HitSound = SoundID.Tink;
         DustType = ModContent.DustType<BasaltDust>();
