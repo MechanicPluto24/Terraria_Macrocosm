@@ -36,7 +36,7 @@ public class CheeseChandelier : ModTile, IToggleableTile
 
         DustType = ModContent.DustType<CheeseDust>();
 
-        AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Chandelier"));
+        AddMapEntry(new Color(220, 216, 121), Language.GetText("MapObject.Chandelier"));
     }
 
     public void ToggleTile(int i, int j, bool skipWire = false)

@@ -36,7 +36,7 @@ public class RegolithChandelier : ModTile, IToggleableTile
         AdjTiles = [TileID.Chandeliers];
         AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
         DustType = ModContent.DustType<RegolithDust>();
-        AddMapEntry(new(201, 201, 204), Language.GetText("ItemName.Chandelier"));
+        AddMapEntry(new(201, 201, 204), Language.GetText("MapObject.Chandelier"));
     }
 
     public void ToggleTile(int i, int j, bool skipWire = false)
