@@ -60,7 +60,7 @@ public class SmogWisp : ModNPC
     {
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<PollutionBiome>() && (spawnInfo.SpawnTileY < spawnInfo.Player.Center.Y + 40) ? 1f : 0f;
+    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<PollutionBiome>() ||  spawnInfo.Player.InModBiome<UndergroundPollutionBiome>() && (spawnInfo.SpawnTileY < spawnInfo.Player.Center.Y + 40) ? 1f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {
