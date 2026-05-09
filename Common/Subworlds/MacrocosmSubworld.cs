@@ -69,6 +69,9 @@ public abstract partial class MacrocosmSubworld : Subworld
     /// <summary> Whether wiring should function in this subworld. Useful for solar storms :) </summary>
     public virtual bool ShouldUpdateWiring { get; set; } = true;
 
+    /// <summary> Whether this subworld can naturally run meteor storms. </summary>
+    public virtual bool SupportsMeteorStorms => false;
+
     /// <summary> Collection of LiquidIDs that should evaporate in this subworld </summary>
     public virtual int[] EvaporatingLiquidTypes => [];
 

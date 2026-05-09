@@ -1,5 +1,6 @@
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Events;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Projectiles.Environment.Meteors;
 using Macrocosm.Content.Skies.Ambience.Moon;
 using Microsoft.Xna.Framework;
@@ -29,6 +30,9 @@ public class MeteorStormEvent : MacrocosmEvent
 
     public override void Update(MacrocosmEventContext context, MacrocosmEventState state)
     {
+        if (context.CurrentSubworld?.SupportsMeteorStorms != true)
+            return;
+
         MeteorStormEventState meteorStormState = (MeteorStormEventState)state;
         meteorStormState.FrequencyMultiplier = meteorStormState.Active ? 300f : 1f;
 

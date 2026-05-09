@@ -37,6 +37,7 @@ public partial class Moon : MacrocosmSubworld
     }
 
     protected override float AtmosphericDensity(Vector2 position) => 0.1f;
+    public override bool SupportsMeteorStorms => true;
     public override int[] EvaporatingLiquidTypes => [LiquidID.Water, LiquidID.Honey, LiquidLoader.LiquidType<Oil>(), LiquidLoader.LiquidType<RocketFuel>()];
     public override string CustomSky => nameof(MoonSky);
 
