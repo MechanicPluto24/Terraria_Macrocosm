@@ -11,7 +11,7 @@ public class TheInterloper : ModItem
 
     public override void SetDefaults()
     {
-        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.TheEye>());
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.Paintings.TheInterloper>());
         Item.width = 42;
         Item.height = 34;
     }

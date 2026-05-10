@@ -2,10 +2,12 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -34,7 +36,10 @@ public class StardustStaffMeteor : ModProjectile
     public override void OnKill(int timeLeft)
     {
         if (Main.netMode != NetmodeID.Server)
+        {
             ImpactEffects();
+            SoundEngine.PlaySound(SFX.BigExplosion with { Volume = 0.1f, PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
+        }
     }
 
     public override void AI()
@@ -61,6 +66,8 @@ public class StardustStaffMeteor : ModProjectile
 
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
+        // TODO: Re-enable in a later patch
+        /*
         //Check to see if there even IS a worm.
         if (Projectile.owner == Main.myPlayer)
         {
@@ -86,6 +93,7 @@ public class StardustStaffMeteor : ModProjectile
                 p.timeLeft = 1000;
             }
         }
+        */
     }
 
     public void ImpactEffects()

@@ -2,6 +2,7 @@ using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Trails;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -12,12 +13,14 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries;
 
-public class MoonChampionSentryBullet : ModProjectile
+public class MoonChampionSentryRocket : ModProjectile
 {
+    private MissileTrail trail;
+
     public override void SetStaticDefaults()
     {
-        ProjectileID.Sets.TrailCacheLength[Type] = 15;
-        ProjectileID.Sets.TrailingMode[Type] = 2;
+        ProjectileID.Sets.TrailCacheLength[Type] = 12;
+        ProjectileID.Sets.TrailingMode[Type] = 3;
 
         ProjectileID.Sets.RocketsSkipDamageForPlayers[Type] = true;
         ProjectileID.Sets.Explosive[Type] = false;
@@ -36,6 +39,10 @@ public class MoonChampionSentryBullet : ModProjectile
         Projectile.hostile = false;
         Projectile.friendly = true;
         Projectile.alpha=0;
+        trail = new()
+        {
+            TrailWidth = 24f
+        };
     }
 
     public override bool PreAI()
@@ -45,14 +52,19 @@ public class MoonChampionSentryBullet : ModProjectile
 
         Projectile.rotation = Projectile.velocity.ToRotation();
         Projectile.velocity.Y += 0.01f;
-            Dust dust = Dust.NewDustDirect(Projectile.Center, 1, 1, DustID.Flare, Main.rand.NextFloat(), Main.rand.NextFloat(), 100, default, 1.1f);
-            dust.noGravity = true;
-            dust.velocity *= 0f;
         Projectile.alpha=0;
 
 
 
         return false;
+    }
+
+    public override bool PreDraw(ref Color lightColor)
+    {
+        if (Projectile.alpha < 1 && Projectile.timeLeft > 3)
+            trail?.Draw(Projectile, Projectile.Size / 2f);
+
+        return true;
     }
 
     public override void PrepareBombToBlow()

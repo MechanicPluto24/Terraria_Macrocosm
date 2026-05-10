@@ -42,3 +42,8 @@ PollutionBiome: {
 	DisplayName: Pollution Biome
 	TownNPCDialogueName: the Pollution Biome
 }
+
+UndergroundPollutionBiome: {
+	DisplayName: Underground Pollution Biome
+	TownNPCDialogueName: the Underground Pollution Biome
+}

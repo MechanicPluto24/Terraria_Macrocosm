@@ -10,6 +10,14 @@ namespace Macrocosm.Content.Projectiles.Friendly.Summon.Sentries;
 
 public class MoonChampionSentry : ModProjectile
 {
+    private const float TargetRange = 4000f;
+    private static readonly Vector2[] MuzzleOffsets =
+    [
+        new(15f, -11f),
+        new(15f, -3f),
+        new(15f, 5f)
+    ];
+
     private static Asset<Texture2D> turretTexture;
     private static Asset<Texture2D> backTexture;
 
@@ -39,6 +47,9 @@ public class MoonChampionSentry : ModProjectile
     private float turretRotation = 0f;
     private int timer = 0;
     private float offset = 0f;
+    private int muzzleIndex = 0;
+    private Vector2 TurretHeadCenter => Projectile.Center + new Vector2(0f, -14f);
+    private Vector2 CurrentMuzzleOffset => MuzzleOffsets[muzzleIndex] * new Vector2(1f, Projectile.spriteDirection == -1 ? -1f : 1f);
 
     public override void AI()
     {
@@ -51,15 +62,18 @@ public class MoonChampionSentry : ModProjectile
 
         Projectile.velocity.Y += 1;
         SearchForTargets(owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter);
-        if (foundTarget && Projectile.spriteDirection == -1 ? targetCenter.X < Projectile.Center.X : targetCenter.X > Projectile.Center.X)
+        if (foundTarget)
         {
-            Vector2 turningVector = (targetCenter - Projectile.Center).SafeNormalize(Vector2.UnitX);
+            Projectile.spriteDirection = targetCenter.X < Projectile.Center.X ? -1 : 1;
+            Vector2 turningVector = (targetCenter - TurretHeadCenter).SafeNormalize(Vector2.UnitX);
             turretRotation = (new Vector2(5, 0).RotatedBy(turretRotation) + (turningVector * 0.6f)).ToRotation();
             timer++;
             if (timer % 10 == 0 && timer > 59)
             {
-                Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), Projectile.Center + new Vector2(14*Projectile.direction, -20), new Vector2(16f, 0).RotatedBy(turretRotation), ModContent.ProjectileType<MoonChampionSentryBullet>(), Projectile.damage / 2, 1f, Main.myPlayer);
+                Vector2 muzzlePosition = TurretHeadCenter + CurrentMuzzleOffset.RotatedBy(turretRotation);
+                Projectile p = Projectile.NewProjectileDirect(Projectile.GetSource_FromAI(), muzzlePosition, new Vector2(16f, 0).RotatedBy(turretRotation), ModContent.ProjectileType<MoonChampionSentryRocket>(), Projectile.damage / 2, 1f, Main.myPlayer);
                 p.DamageType = DamageClass.Summon;
+                muzzleIndex = (muzzleIndex + 1) % MuzzleOffsets.Length;
                 offset = 5f;
             }
             if (timer > 101)
@@ -79,18 +93,18 @@ public class MoonChampionSentry : ModProjectile
 
     private void SearchForTargets(Player owner, out bool foundTarget, out float distanceFromTarget, out Vector2 targetCenter)
     {
-        distanceFromTarget = 700f;
-        targetCenter = Projectile.position;
+        distanceFromTarget = TargetRange;
+        targetCenter = Projectile.Center;
         foundTarget = false;
 
         // This code is required if your minion weapon has the targeting feature
         if (owner.HasMinionAttackTargetNPC)
         {
             NPC npc = Main.npc[owner.MinionAttackTargetNPC];
-            float between = Vector2.Distance(npc.Center, Projectile.Center);
+            float between = Vector2.Distance(npc.Center, TurretHeadCenter);
 
             // Reasonable distance away so it doesn't target across multiple screens
-            if (between < 2000f)
+            if (between < TargetRange)
             {
                 distanceFromTarget = between;
                 targetCenter = npc.Center;
@@ -105,10 +119,10 @@ public class MoonChampionSentry : ModProjectile
             {
                 NPC npc = Main.npc[i];
 
-                if (npc.CanBeChasedBy() && Vector2.Distance(npc.Center, Projectile.Center) < 4000f)
+                if (npc.CanBeChasedBy() && Vector2.Distance(npc.Center, TurretHeadCenter) < TargetRange)
                 {
-                    float between = Vector2.Distance(npc.Center, Projectile.Center);
-                    bool closest = Vector2.Distance(Projectile.Center, targetCenter) > between;
+                    float between = Vector2.Distance(npc.Center, TurretHeadCenter);
+                    bool closest = Vector2.Distance(TurretHeadCenter, targetCenter) > between;
                     bool inRange = between < distanceFromTarget;
                     bool lineOfSight = Collision.CanHitLine(Projectile.position, Projectile.width, Projectile.height, npc.position, npc.width, npc.height);
                     // Additional check for this specific minion behavior, otherwise it will stop attacking once it dashed through an enemy while flying though tiles afterwards
@@ -133,7 +147,7 @@ public class MoonChampionSentry : ModProjectile
         SpriteEffects effect2 = Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None;
 
         Main.EntitySpriteDraw(backTexture.Value, Projectile.Center - Main.screenPosition, null, lightColor, 0f, backTexture.Size() / 2, Projectile.scale, effect, 0f);
-        Main.EntitySpriteDraw(turretTexture.Value, Projectile.Center + new Vector2(0, -14) - Main.screenPosition + new Vector2(-offset, 0).RotatedBy(turretRotation), null, lightColor, turretRotation, turretTexture.Size() / 2, Projectile.scale, effect2, 0f);
+        Main.EntitySpriteDraw(turretTexture.Value, TurretHeadCenter - Main.screenPosition + new Vector2(-offset, 0).RotatedBy(turretRotation), null, lightColor, turretRotation, turretTexture.Size() / 2, Projectile.scale, effect2, 0f);
 
         return true;
     }

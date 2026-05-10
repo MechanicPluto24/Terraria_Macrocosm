@@ -2,9 +2,11 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,10 +34,16 @@ public class VortexStaffMeteor : ModProjectile
     public override void OnKill(int timeLeft)
     {
         if (Main.netMode != NetmodeID.Server)
+        {
             ImpactEffects();
+            SoundEngine.PlaySound(SFX.BigExplosion with { Volume = 0.1f, PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
+        }
 
+        // TODO: Re-enable in a later patch
+        /*
         if (Projectile.owner == Main.myPlayer)
             Projectile.NewProjectileDirect(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<VortexPortal>(), (int)(Projectile.damage / 5), 0, Projectile.owner);
+        */
 
     }
 

@@ -21,6 +21,7 @@ public class WeCanDoIt : ModTile
         Main.tileLavaDeath[Type] = true;
 
         TileObjectData.newTile.DefaultToPainting(2, 3);
+        TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.addTile(Type);
 
         TileID.Sets.DisableSmartCursor[Type] = true;
