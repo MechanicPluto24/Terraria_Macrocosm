@@ -9,7 +9,7 @@ namespace Macrocosm.Content.Rockets.Modules.Engine;
 public class EngineModuleMk1 : BaseEngineModule
 {
     public override SlotType Slot => SlotType.Engine;
-    public override int Tier => 2;
+    public override int Tier => 1;
     public override ConfigurationType Configuration => ConfigurationType.Any;
 
     public override int DrawPriority => 0;

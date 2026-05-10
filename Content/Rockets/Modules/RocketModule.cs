@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -119,6 +120,7 @@ public abstract partial class RocketModule : ModTexturedType, ILocalizedModType
     public virtual string BlueprintPath => (Texture + "_Blueprint").Replace(".", "/");
     private Asset<Texture2D> _blueprint;
     public Texture2D Blueprint => (_blueprint ??= ModContent.RequestIfExists<Texture2D>(BlueprintPath, out var asset, AssetRequestMode.ImmediateLoad) ? asset : Macrocosm.EmptyTex).Value;
+    public virtual Vector2 BlueprintDrawOffset => Vector2.Zero;
 
     public bool BlueprintHighlighted { get; set; } = false;
 
@@ -175,7 +177,7 @@ public abstract partial class RocketModule : ModTexturedType, ILocalizedModType
         spriteBatch.Begin(SpriteSortMode.Immediate, state.BlendState, SamplerState.PointClamp, state.DepthStencilState, state.RasterizerState, null, state.Matrix);
 
         blueprint.Apply();
-        spriteBatch.Draw(Blueprint, Position + position, null, Color.White, 0f, Origin, 1f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(Blueprint, position + BlueprintDrawOffset.RotatedBy(Rocket.Rotation), null, Color.White, Rocket.Rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 
         spriteBatch.End();
         spriteBatch.Begin(state);

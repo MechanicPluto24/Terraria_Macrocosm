@@ -40,6 +40,7 @@ public class BoosterLeft : BaseBooster
 
     public override Vector2? ExhaustOffset => new(14f, -28f);
     protected override Vector2? LandingLegDrawOffset => new(-78, 208);
+    public override Vector2 BlueprintDrawOffset => new(-78, 0);
     protected override int Direction => -1;
 
 
