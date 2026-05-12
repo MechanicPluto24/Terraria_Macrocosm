@@ -35,9 +35,9 @@ public class TarSlime : ModNPC
 
         NPC.width = 44;
         NPC.height = 30;
-        NPC.damage = 20;
+        NPC.damage = 10;
         NPC.defense = 2;
-        NPC.lifeMax = 50;
+        NPC.lifeMax = 40;
         NPC.HitSound = SoundID.NPCHit1;
         NPC.DeathSound = SoundID.NPCDeath1;
         NPC.value = 60f;
