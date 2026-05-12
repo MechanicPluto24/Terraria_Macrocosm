@@ -1,6 +1,7 @@
 ﻿using Macrocosm.Common.Customization;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
+using Macrocosm.Common.Events;
 using Macrocosm.Common.Global.Tiles;
 using Macrocosm.Common.Systems;
 using Macrocosm.Common.Systems.Flags;
@@ -67,6 +68,9 @@ public abstract partial class MacrocosmSubworld : Subworld
 
     /// <summary> Whether wiring should function in this subworld. Useful for solar storms :) </summary>
     public virtual bool ShouldUpdateWiring { get; set; } = true;
+
+    /// <summary> Whether this subworld can naturally run meteor storms. </summary>
+    public virtual bool SupportsMeteorStorms => false;
 
     /// <summary> Collection of LiquidIDs that should evaporate in this subworld </summary>
     public virtual int[] EvaporatingLiquidTypes => [];
@@ -246,7 +250,7 @@ public abstract partial class MacrocosmSubworld : Subworld
 
     private void UpdateInvasions()
     {
-        Main.bloodMoon = false;
+        Main.bloodMoon = MacrocosmEventSystem.IsActive<Content.Events.DemonSunEvent>();
         Main.pumpkinMoon = false;
         Main.snowMoon = false;
         Main.eclipse = false;
@@ -341,6 +345,7 @@ public abstract partial class MacrocosmSubworld : Subworld
         TagCompound data = new();
 
         WorldData.SaveData(data);
+        MacrocosmEventSystem.SaveData(data);
         RocketManager.SaveData(data);
         LaunchPadManager.SaveData(data);
         TownNPCSystem.SaveData(data);
@@ -355,6 +360,7 @@ public abstract partial class MacrocosmSubworld : Subworld
         TagCompound data = SubworldSystem.ReadCopiedWorldData<TagCompound>($"{nameof(Macrocosm)}:{nameof(data)}");
 
         WorldData.LoadData(data);
+        MacrocosmEventSystem.LoadData(data);
         RocketManager.LoadData(data);
         LaunchPadManager.LoadData(data);
         TownNPCSystem.LoadData(data);

@@ -115,6 +115,7 @@ public partial class LaunchPad : IInventoryOwner
     {
         CheckMarkers();
         CheckRocket();
+        NormalizeLinkedAssemblyModules();
         CheckBlueprint();
 
         if (spawned)
@@ -239,6 +240,8 @@ public partial class LaunchPad : IInventoryOwner
 
     private void CheckBlueprint()
     {
+        NormalizeLinkedAssemblyModules();
+
         foreach (var module in Rocket.Modules)
         {
             if (HasActiveRocket)
@@ -251,6 +254,8 @@ public partial class LaunchPad : IInventoryOwner
                 module.IsBlueprint = !module.Recipe.Check(consume: false, Inventory.Items[range]);
             }
         }
+
+        SyncSideModuleBlueprintStates();
     }
 
     private void Interact()
@@ -455,8 +460,7 @@ public partial class LaunchPad : IInventoryOwner
         if (!justCheck)
         {
             RocketModule newModule = availableModules[newIndex].Clone();
-            Rocket.Modules[(int)newModule.Slot] = newModule;
-            Rocket.Modules[(int)newModule.Slot].Rocket = Rocket;
+            SetAssemblyModule(newModule);
 
             NetSync(MacrocosmSubworld.CurrentID);
             return true;
@@ -493,8 +497,7 @@ public partial class LaunchPad : IInventoryOwner
 
                 if (replacementModule != null)
                 {
-                    Rocket.Modules[(int)module.Slot] = replacementModule.Clone();
-                    Rocket.Modules[(int)module.Slot].Rocket = Rocket;
+                    SetAssemblyModule(replacementModule.Clone());
                 }
             }
 
@@ -503,6 +506,85 @@ public partial class LaunchPad : IInventoryOwner
         }
 
         return true;
+    }
+
+    private void SetAssemblyModule(RocketModule module)
+    {
+        Rocket.Modules[(int)module.Slot] = module;
+        module.Rocket = Rocket;
+
+        SyncLinkedAssemblyModules(module);
+    }
+
+    private void SyncLinkedAssemblyModules(RocketModule linkedResult)
+    {
+        foreach (var linkedTemplate in RocketModule.Templates.Where(m => m.Recipe.Linked && m.Recipe.LinkedResult.Name == linkedResult.Name))
+        {
+            RocketModule linkedModule = linkedTemplate.Clone();
+            Rocket.Modules[(int)linkedModule.Slot] = linkedModule;
+            linkedModule.Rocket = Rocket;
+        }
+
+        if (linkedResult.Slot == RocketModule.SlotType.Engine)
+            SyncSideAssemblyModules(linkedResult);
+    }
+
+    private void NormalizeLinkedAssemblyModules()
+    {
+        if (HasActiveRocket)
+            return;
+
+        foreach (var module in Rocket.Modules.Where(m => !m.Recipe.Linked).ToArray())
+        {
+            foreach (var linkedTemplate in RocketModule.Templates.Where(m => m.Recipe.Linked && m.Recipe.LinkedResult.Name == module.Name))
+            {
+                RocketModule currentLinkedModule = Rocket.Modules[(int)linkedTemplate.Slot];
+                if (currentLinkedModule.Name == linkedTemplate.Name)
+                    continue;
+
+                RocketModule linkedModule = linkedTemplate.Clone();
+                Rocket.Modules[(int)linkedModule.Slot] = linkedModule;
+                linkedModule.Rocket = Rocket;
+            }
+        }
+
+        RocketModule engineModule = Rocket.Modules.FirstOrDefault(m => m.Slot == RocketModule.SlotType.Engine);
+        if (engineModule is not null)
+            SyncSideAssemblyModules(engineModule);
+    }
+
+    private void SyncSideAssemblyModules(RocketModule engineModule)
+    {
+        foreach (RocketModule.SlotType sideSlot in new[] { RocketModule.SlotType.LeftSide, RocketModule.SlotType.RightSide })
+        {
+            RocketModule sideTemplate = RocketModule.Templates.FirstOrDefault(m =>
+                m.Slot == sideSlot &&
+                m.Tier == engineModule.Tier &&
+                (m.Configuration == engineModule.Configuration || m.Configuration == RocketModule.ConfigurationType.Any));
+
+            if (sideTemplate is null)
+                continue;
+
+            RocketModule currentSideModule = Rocket.Modules[(int)sideSlot];
+            if (currentSideModule.Name == sideTemplate.Name)
+                continue;
+
+            RocketModule sideModule = sideTemplate.Clone();
+            Rocket.Modules[(int)sideSlot] = sideModule;
+            sideModule.Rocket = Rocket;
+        }
+    }
+
+    private void SyncSideModuleBlueprintStates()
+    {
+        RocketModule engineModule = Rocket.Modules.FirstOrDefault(m => m.Slot == RocketModule.SlotType.Engine);
+        if (engineModule is null)
+            return;
+
+        foreach (RocketModule sideModule in Rocket.Modules.Where(m => m.Slot is RocketModule.SlotType.LeftSide or RocketModule.SlotType.RightSide && m.Tier == engineModule.Tier))
+        {
+            sideModule.IsBlueprint = engineModule.IsBlueprint;
+        }
     }
 
     public void Draw(SpriteBatch spriteBatch, Vector2 screenPosition)

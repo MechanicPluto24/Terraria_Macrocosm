@@ -1,7 +1,10 @@
-﻿using Macrocosm.Common.Systems;
+using Macrocosm.Common.Events;
+using Macrocosm.Common.Subworlds;
+using Macrocosm.Common.Systems;
+using Macrocosm.Content.Events;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
-using Macrocosm.Common.Systems.Flags;
 
 namespace Macrocosm.Content.Biomes;
 
@@ -9,5 +12,8 @@ public class MeteorSceneEffect : ModSceneEffect
 {
     public override SceneEffectPriority Priority => SceneEffectPriority.Event;
     public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/CollisionCourse");
-    public override bool IsSceneEffectActive(Player player) => WorldData.Current.MeteorStorm;
+    public override bool IsSceneEffectActive(Player player)
+        => SubworldSystem.AnyActive<Macrocosm>()
+        && MacrocosmSubworld.Current.SupportsMeteorStorms
+        && MacrocosmEventSystem.IsActive<MeteorStormEvent>();
 }

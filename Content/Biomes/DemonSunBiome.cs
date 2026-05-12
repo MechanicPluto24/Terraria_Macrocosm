@@ -1,5 +1,9 @@
-﻿using Macrocosm.Content.Backgrounds.Moon;
+using Macrocosm.Common.Events;
+using Macrocosm.Content.Backgrounds.Moon;
+using Macrocosm.Content.Events;
+using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
+using SubworldLibrary;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -17,13 +21,11 @@ public class DemonSunBiome : ModBiome
     public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<MoonSurfaceBackgroundStyle>();
     public override ModUndergroundBackgroundStyle UndergroundBackgroundStyle => ModContent.GetInstance<MoonUndergroundBackgroundStyle>();
 
-    //public override int Music => MusicLoader.GetMusicSlot(Mod, "Assets/Music/DemonSunTheme");
-
     public override void SetStaticDefaults()
     {
     }
 
-    public override bool IsBiomeActive(Player player) => false; /* SubworldSystem.IsActive<Moon>() && WorldFlagSystem.DemonSunActive; */
+    public override bool IsBiomeActive(Player player) => SubworldSystem.IsActive<Moon>() && MacrocosmEventSystem.IsActive<DemonSunEvent>();
 
     public override void OnInBiome(Player player)
     {

@@ -2,8 +2,9 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Subworlds;
-using Macrocosm.Common.Systems.Flags;
+using Macrocosm.Common.Events;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Events;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
@@ -146,11 +147,11 @@ public class MoonSky : CustomSky, ILoadable
         Color darkColor = new Color(35, 35, 35);
         Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
         if (Main.time < MacrocosmSubworld.GetDayLength() * 0.1)
-            return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.GetDayLength() * 0.1))), new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)(Main.time / (MacrocosmSubworld.GetDayLength() * 0.1))), new Color(150, 80, 80), DemonSunEvent.VisualIntensity);
         else if (Main.time > MacrocosmSubworld.GetDayLength() * 0.9)
-            return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.GetDayLength() - Main.time) / (MacrocosmSubworld.GetDayLength() - MacrocosmSubworld.GetDayLength() * 0.9))), new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            return Color.Lerp(Color.Lerp(darkColor, Color.White, (float)((MacrocosmSubworld.GetDayLength() - Main.time) / (MacrocosmSubworld.GetDayLength() - MacrocosmSubworld.GetDayLength() * 0.9))), new Color(150, 80, 80), DemonSunEvent.VisualIntensity);
         else
-            return Color.Lerp(Color.White, new Color(150, 80, 80), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            return Color.Lerp(Color.White, new Color(150, 80, 80), DemonSunEvent.VisualIntensity);
     }
 
     public Color GetDemonSunNightColour()
@@ -158,11 +159,11 @@ public class MoonSky : CustomSky, ILoadable
         Color darkColor = new Color(35, 35, 35);
         Color earthshineBlue = Color.Lerp(new Color(39, 87, 155), darkColor, 0.6f);
         if (Main.time < MacrocosmSubworld.GetNightLength() * 0.2)
-            return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.GetNightLength() * 0.2))), new Color(40, 12, 12), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)(Main.time / (MacrocosmSubworld.GetNightLength() * 0.2))), new Color(40, 12, 12), DemonSunEvent.VisualIntensity);
         else if (Main.time > MacrocosmSubworld.GetNightLength() * 0.8)
-            return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.GetNightLength() - Main.time) / (MacrocosmSubworld.GetNightLength() - MacrocosmSubworld.GetNightLength() * 0.8))), new Color(40, 12, 12), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            return Color.Lerp(Color.Lerp(darkColor, earthshineBlue, (float)((MacrocosmSubworld.GetNightLength() - Main.time) / (MacrocosmSubworld.GetNightLength() - MacrocosmSubworld.GetNightLength() * 0.8))), new Color(40, 12, 12), DemonSunEvent.VisualIntensity);
         else
-            return Color.Lerp(earthshineBlue, new Color(40, 12, 12), Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            return Color.Lerp(earthshineBlue, new Color(40, 12, 12), DemonSunEvent.VisualIntensity);
     }
 
 
@@ -173,7 +174,7 @@ public class MoonSky : CustomSky, ILoadable
 
         if (Main.dayTime)
         {
-            if (WorldData.DemonSun)
+            if (MacrocosmEventSystem.IsActive<DemonSunEvent>())
                 return GetDemonSunDayColour();
 
             if (Main.time < MacrocosmSubworld.GetDayLength() * 0.1)
@@ -186,7 +187,7 @@ public class MoonSky : CustomSky, ILoadable
         }
         else
         {
-            if (WorldData.DemonSun)
+            if (MacrocosmEventSystem.IsActive<DemonSunEvent>())
                 return GetDemonSunNightColour();
 
             if (Main.time < MacrocosmSubworld.GetNightLength() * 0.2)
@@ -217,9 +218,9 @@ public class MoonSky : CustomSky, ILoadable
             starsDay.DrawAll(spriteBatch);
             starsNight.DrawAll(spriteBatch, nightStarBrightness);
 
-            sun.Color = new Color((int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity)), (int)(255 * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity))) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
+            sun.Color = new Color((int)(255 * (1f - DemonSunEvent.VisualIntensity)), (int)(255 * (1f - DemonSunEvent.VisualIntensity)), (int)(255 * (1f - DemonSunEvent.VisualIntensity))) * (1f - DemonSunEvent.VisualIntensity);
 
-            if (WorldData.DemonSun && Main.dayTime)
+            if (MacrocosmEventSystem.IsActive<DemonSunEvent>() && Main.dayTime)
                 DrawDemonSunEffects(spriteBatch, sun);
 
             sun.Draw(spriteBatch);
@@ -277,7 +278,7 @@ public class MoonSky : CustomSky, ILoadable
 
     private void DrawDemonSunEffects(SpriteBatch spriteBatch, CelestialBody Sun)
     {
-        float intensity = Subworlds.Moon.Instance.DemonSunVisualIntensity;
+        float intensity = DemonSunEvent.VisualIntensity;
         var flare = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Flare3").Value;
         var scorch1 = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch1").Value;
         var scorch2 = ModContent.Request<Texture2D>(Macrocosm.FancyHighResTexturesPath + "Scorch2").Value;
@@ -295,7 +296,7 @@ public class MoonSky : CustomSky, ILoadable
 
     private void DrawDemonSunFrontEffects(SpriteBatch spriteBatch, CelestialBody Sun)
     {
-        float intensity = Subworlds.Moon.Instance.DemonSunVisualIntensity;
+        float intensity = DemonSunEvent.VisualIntensity;
         var circle = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "LowRes/Circle7").Value;
         var portal = ModContent.Request<Texture2D>(Path + "DemonSunFront").Value;
         spriteBatch.Draw(portal, Sun.Center, null, new Color(255, 255, 255) * intensity, 0f, portal.Size() / 2f, 1f * intensity, SpriteEffects.None, 0);
@@ -315,9 +316,9 @@ public class MoonSky : CustomSky, ILoadable
         if (!SubworldSystem.IsActive<Subworlds.Moon>())
             active = false;
 
-        sun.Color = new Color(255, 255, 255) * (1f - Subworlds.Moon.Instance.DemonSunVisualIntensity);
+        sun.Color = new Color(255, 255, 255) * (1f - DemonSunEvent.VisualIntensity);
 
-        earth.Color = new Color(255, (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))), (int)(255 * (1f - (Subworlds.Moon.Instance.DemonSunVisualIntensity * 0.6f))));
+        earth.Color = new Color(255, (int)(255 * (1f - (DemonSunEvent.VisualIntensity * 0.6f))), (int)(255 * (1f - (DemonSunEvent.VisualIntensity * 0.6f))));
         intensity = active ? Math.Min(1f, intensity + 0.01f) : Math.Max(0f, intensity - 0.01f);
         UpdateTextures();
 

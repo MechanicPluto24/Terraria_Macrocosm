@@ -2,9 +2,11 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.Drawing;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -32,7 +34,10 @@ public class SolarStaffMeteor : ModProjectile
     public override void OnKill(int timeLeft)
     {
         if (Main.netMode != NetmodeID.Server)
+        {
             ImpactEffects();
+            SoundEngine.PlaySound(SFX.BigExplosion with { Volume = 0.1f, PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
+        }
     }
 
     public override void AI()
@@ -58,7 +63,10 @@ public class SolarStaffMeteor : ModProjectile
     }
     public override bool OnTileCollide(Vector2 oldVelocity)
     {
+        // TODO: Re-enable in a later patch
+        /*
         Projectile.NewProjectileDirect(Terraria.Entity.InheritSource(Projectile), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<SolarGlob>(), (int)(Projectile.damage / 3), 0, Projectile.owner);
+        */
         return true;
     }
     public void ImpactEffects()

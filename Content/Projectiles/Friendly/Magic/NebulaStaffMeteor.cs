@@ -2,9 +2,11 @@
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
+using Macrocosm.Content.Sounds;
 using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -32,8 +34,13 @@ public class NebulaStaffMeteor : ModProjectile
     public override void OnKill(int timeLeft)
     {
         if (Main.netMode != NetmodeID.Server)
+        {
             ImpactEffects();
+            SoundEngine.PlaySound(SFX.BigExplosion with { Volume = 0.1f, PitchRange = (-0.5f, 0.5f) }, Projectile.Center);
+        }
 
+        // TODO: Re-enable in a later patch
+        /*
         if (Projectile.owner == Main.myPlayer)
         {
             int impactDustCount = Main.rand.Next(10, 16);
@@ -46,6 +53,7 @@ public class NebulaStaffMeteor : ModProjectile
                 Projectile.NewProjectileDirect(Terraria.Entity.InheritSource(Projectile), dustPosition, velocity, ModContent.ProjectileType<NebulaRemnantProjectile>(), (int)(Projectile.damage / 8), 0, Projectile.owner);
             }
         }
+        */
     }
 
     public override void AI()

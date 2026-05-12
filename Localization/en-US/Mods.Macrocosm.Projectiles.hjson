@@ -130,13 +130,13 @@ ManisolBladeSolExplosion.DisplayName: Manisol Blade Sol Explosion
 ManisolBladeShadow.DisplayName: Manisol Blade Shadow
 LuminiteRune.DisplayName: Luminite Rune
 ChampionsBladeHeldProjectile.DisplayName: Champion's Blade
-ChampionsBladeBoltProjectile.DisplayName: Champion's Blade Bolt
+ChampionsBladeBoltProjectile.DisplayName: Champion's Blade
 ArmstrongGauntletProjectile.DisplayName: Armstrong Gauntlet
 LuminiteBolt.DisplayName: Luminite Bolt
 WornLunarianDaggerHeld.DisplayName: Worn Lunarian Dagger
 DroneLaser.DisplayName: P.D.C.D. "Hummingbird"
 DroneMinion.DisplayName: P.D.C.D. "Hummingbird"
-ExsanguinatorProjectile.DisplayName: Exsanguinator Projectile
+ExsanguinatorProjectile.DisplayName: Exsanguinator
 IlmeniteHeld.DisplayName: Ilmenite
 IlmeniteExplosion.DisplayName: Ilmenite
 IlmeniteProjectile.DisplayName: Ilmenite
@@ -168,30 +168,31 @@ ProcellarumLightBolt.DisplayName: Procellarum
 ProcellarumExplosion.DisplayName: Procellarum
 LaserTurretProjectile.DisplayName: Laser Turret
 TurretTaserProjectile.DisplayName: Turret Taser
-PhantasmalSkullTomeProjectile.DisplayName: Phantasmal Skull Tome Projectile
+PhantasmalSkullTomeProjectile.DisplayName: Phantasmal Skull
 TrashnadoProjectile.DisplayName: Trashnado Projectile
 WyrmwoodProjectile.DisplayName: Wyrmwood Projectile
 IndustrialBobber.DisplayName: Industrial Bobber
 MoonBeastBobber.DisplayName: Moon Beast Bobber
 LuminitePebble.DisplayName: Luminite Pebble
 MoonChampionSentry.DisplayName: Moon Champion Sentry
+MoonChampionSentryRocket.DisplayName: Moon Champion Sentry
 LightningBolt.DisplayName: Lightning Bolt
 BLPShot.DisplayName: BLP Asterix
 StasisGrenade.DisplayName: Stasis Grenade
-CelestialMeteorStaffProjectileNebula.DisplayName: Celestial Meteor Staff Projectile Nebula
-CelestialMeteorStaffProjectileSolar.DisplayName: Celestial Meteor Staff Projectile Solar
-CelestialMeteorStaffProjectileStardust.DisplayName: Celestial Meteor Staff Projectile Stardust
-CelestialMeteorStaffProjectileVortex.DisplayName: Celestial Meteor Staff Projectile Vortex
+CelestialMeteorStaffProjectileNebula.DisplayName: Nebula Meteor
+CelestialMeteorStaffProjectileSolar.DisplayName: Solar Meteor
+CelestialMeteorStaffProjectileStardust.DisplayName: Stardust Meteor
+CelestialMeteorStaffProjectileVortex.DisplayName: Vortex Meteor
 EMGunBolt.DisplayName: E M Gun Bolt
-LockOnStaffBolt.DisplayName: Lock On Staff Bolt
-LockOnStaffProjectile.DisplayName: Lock On Staff Projectile
-NebulaRemnantProjectile.DisplayName: Nebula Remnant Projectile
+LockOnStaffBolt.DisplayName: Lock-On Staff
+LockOnStaffProjectile.DisplayName: Lock-On Staff
+NebulaRemnantProjectile.DisplayName: Nebula Remnant
 SolarGlob.DisplayName: Solar Glob
-StardustWormProjectile.DisplayName: Stardust Worm Projectile
+StardustWormProjectile.DisplayName: Stardust Worm
 VortexPortal.DisplayName: Vortex Portal
-MegaBladeProjectile.DisplayName: Mega Blade Projectile
-AtomicWaveProjectile.DisplayName: Atomic Wave Projectile
-MageBoosterProjectile.DisplayName: Mage Booster Projectile
+MegaBladeProjectile.DisplayName: Mega Blade
+AtomicWaveProjectile.DisplayName: Atomic Wave
+MageBoosterProjectile.DisplayName: Mage Booster
 NebulaStaffMeteor.DisplayName: Nebula Staff Meteor
 SolarStaffMeteor.DisplayName: Solar Staff Meteor
 StardustStaffMeteor.DisplayName: Stardust Staff Meteor
@@ -200,6 +201,5 @@ ArmorPiercingBullet.DisplayName: Armor Piercing Bullet
 RailgunBolt.DisplayName: Railgun Bolt
 ShredderBullet.DisplayName: Shredder Bullet
 ScrapShrapnel.DisplayName: Scrap Shrapnel
-LightningSpearProjectile.DisplayName: Lightning Spear Projectile
-MetalCutterProjectile.DisplayName: Metal Cutter Projectile
-MoonChampionSentryBullet.DisplayName: Moon Champion Sentry Bullet
+LightningSpearProjectile.DisplayName: Lightning Spear
+MetalCutterProjectile.DisplayName: Metal Cutter

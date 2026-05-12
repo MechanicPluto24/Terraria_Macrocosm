@@ -68,6 +68,8 @@ public static partial class Utility
         Main.tile[i, j].WallType = (ushort)wallType;
     }
 
+    public static int CheckWalls(int i, int j) => new TileNeighbourInfo(i, j).Wall.Count4Way;
+
     public static void ForEachInCircle(int i, int j, int width, int height, Action<int, int> action)
     {
         ForEachInRectangle(

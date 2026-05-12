@@ -66,8 +66,6 @@ class DevOmnitool : ModItem
 
         //var data = TileObjectData.GetTileData(type, 0);
 
-        //WorldData.DemonSun = !WorldData.DemonSun;
-
         bool message = true;
         foreach (var subworld in OrbitSubworld.GetOrbitSubworlds(Earth.ID))
         {

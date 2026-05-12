@@ -21,8 +21,8 @@ using Macrocosm.Content.Items.Weapons.Melee;
 using Macrocosm.Content.Items.Weapons.Ranged;
 using Macrocosm.Content.Items.Weapons.Summon;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
-using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.Tiles.Furniture.Cheese;
+using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.Tiles.Furniture.Luminite;
 using Macrocosm.Content.Tiles.Misc;
 using Macrocosm.Content.Tiles.Rubble;
@@ -39,11 +39,10 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
-using Terraria.GameContent.Generation;
-using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Subworlds;
 
@@ -182,6 +181,7 @@ public partial class Moon
     private void CraterTask(GenerationProgress progress)
     {
         progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterTask");
+        int regolithWall = (ushort)VariantWall.WallType<RegolithWall>(WallSafetyType.Natural);
 
         void CarveCraters(Range minMaxCount, Range minMaxRadius)
         {
@@ -198,18 +198,54 @@ public partial class Moon
                     if (Main.tile[i, j].HasTile)
                     {
                         int radius = WorldGen.genRand.Next(minMaxRadius);
-                        ForEachInCircle(
-                            i,
-                            j - (int)(radius * 0.6f),
-                            radius,
-                            (i1, j1) =>
+                        for (int count2 = 0; count2 < 5; count2++)
+                        {
+                            ForEachInCircle(
+                                i + (int)(radius / 3f) - ((int)(radius / 6f) * count),
+                                j - (int)(radius * 0.6f),
+                                radius,
+                                (i1, j1) =>
+                                {
+                                    float iDistance = (float)Math.Abs(i - i1) / radius;
+                                    float jDistance = (float)Math.Abs(j - j1) / radius;
+                                    FastRemoveTile(i1, j1);
+                                    if (Vector2.Distance(new Vector2(i1, j1), new Vector2(i, j - (int)(radius * 0.6f))) > (radius * 0.9f) && radius > 60)
+                                    {
+                                        ForEachInCircle(
+                                            i1 + WorldGen.genRand.Next(-6, 7),
+                                            j1 + WorldGen.genRand.Next(-6, 7),
+                                            WorldGen.genRand.Next(1, 5),
+                                            (i2, j2) =>
+                                            {
+                                                FastRemoveTile(i2, j2);
+
+                                            }
+                                        );
+                                    }
+                                }
+                            );
+                        }
+
+                        if (WorldGen.genRand.NextBool(2))
+                        {
+                            for (int jj = 0; jj < Main.maxTilesY; jj++)
                             {
-                                FastRemoveWall(i1, j1);
-                                float iDistance = (float)Math.Abs(i - i1) / radius;
-                                float jDistance = (float)Math.Abs(j - j1) / radius;
-                                FastRemoveTile(i1, j1);
+                                if (Main.tile[i, jj].HasTile)
+                                {
+                                    ForEachInCircle(
+                                        i,
+                                        jj + (int)(radius / 10f),
+                                        (int)(radius / 5f),
+                                        (i2, j2) =>
+                                        {
+                                            FastPlaceTile(i2, j2, (ushort)ModContent.TileType<Regolith>());
+                                        }
+                                    );
+                                    break;
+                                }
                             }
-                        );
+                        }
+
 
                         break;
                     }
@@ -219,7 +255,7 @@ public partial class Moon
 
         progress.Set(0.0);
 
-        CarveCraters(2..5, 100..150);
+        CarveCraters(2..5, 80..100);
         progress.Set(0.1);
 
         CarveCraters(5..6, 30..40);
@@ -623,6 +659,7 @@ public partial class Moon
         int geodes = WorldGen.genRand.Next(10, 14);
         int quartzType = TileType<QuartzBlock>();
         int chalcType = TileType<Chalcedony>();
+        int basaltType = TileType<Basalt>();
 
         while (geodes > 1 && tries < 100)
         {
@@ -641,14 +678,31 @@ public partial class Moon
                     ForEachInCircle(
                         iOffset2,
                         jOffset2,
-                        radius+10,
+                        radius + 20,
                         (i1, j1) =>
                         {
                             if (!WorldGen.InWorld(i1, j1))
                                 return;
 
-                            float iDistance = Math.Abs(iOffset2 - i) / ((radius+10) * 0.5f);
-                            float jDistance = Math.Abs(jOffset2 - j) / ((radius+10) * 0.5f);
+
+
+                            if (Main.tile[i1, j1].HasTile)
+                            {
+                                FastPlaceTile(i1, j1, (ushort)basaltType);
+                            }
+                        }
+                    );
+                    ForEachInCircle(
+                        iOffset2,
+                        jOffset2,
+                        radius + 10,
+                        (i1, j1) =>
+                        {
+                            if (!WorldGen.InWorld(i1, j1))
+                                return;
+
+                            float iDistance = Math.Abs(iOffset2 - i) / ((radius + 10) * 0.5f);
+                            float jDistance = Math.Abs(jOffset2 - j) / ((radius + 10) * 0.5f);
 
                             if (WorldGen.genRand.NextFloat() < 0.2f)
                             {
@@ -750,16 +804,16 @@ public partial class Moon
                             {
                                 return;
                             }
-                            float x=i1;
-                            float y=j1;
-                            Vector2 direction = new Vector2(i-x,j-y).SafeNormalize(Vector2.UnitX);
-                            float Size=WorldGen.genRand.NextFloat(2f,3.5f);
-                            float decrease=WorldGen.genRand.NextFloat(0.1f,0.2f);
-                            while(Size>0.05f)
+                            float x = i1;
+                            float y = j1;
+                            Vector2 direction = new Vector2(i - x, j - y).SafeNormalize(Vector2.UnitX);
+                            float Size = WorldGen.genRand.NextFloat(2f, 3.5f);
+                            float decrease = WorldGen.genRand.NextFloat(0.1f, 0.2f);
+                            while (Size > 0.05f)
                             {
                                 ForEachInCircle(
                                     (int)x,
-                                    (int)y ,
+                                    (int)y,
                                     (int)Size,
                                     (i2, j2) =>
                                     {
@@ -770,14 +824,14 @@ public partial class Moon
                                     }
                                 );
 
-                                Size-=decrease;
-                                x+=direction.X;
-                                y+=direction.Y;
+                                Size -= decrease;
+                                x += direction.X;
+                                y += direction.Y;
                             }
 
                         }
                     );
-                    
+
                     geodes--;
                 }
                 else
@@ -810,7 +864,7 @@ public partial class Moon
                     int radius = WorldGen.genRand.Next(8, 10);
 
                     int radius2 = WorldGen.genRand.Next(4, 7);
-                    WorldUtils.Gen(new Point(i,j), new Shapes.Circle( WorldGen.genRand.Next(10, 14)), Actions.Chain(new GenAction[]
+                    WorldUtils.Gen(new Point(i, j), new Shapes.Circle(WorldGen.genRand.Next(10, 14)), Actions.Chain(new GenAction[]
                     {
                         new Modifiers.OnlyTiles(new ushort[]{(ushort)TileType<Protolith>()}),
                         new Modifiers.RadialDither(WorldGen.genRand.Next(10, 14) - 2,  WorldGen.genRand.Next(10, 14)),
@@ -835,6 +889,19 @@ public partial class Moon
     private void SmoothTask(GenerationProgress progress)
     {
         progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.SmoothTask");
+        //Smooth all walls on the surface
+        for (int i = 1; i < Main.maxTilesX - 1; i++)
+        {
+            for (int j = 1; j < Main.worldSurface - 1; j++)
+            {
+                int wallCount = Utility.CheckWalls(i, j);
+                if (wallCount < 4) // Less than 4 neighbors? kill the tile
+                {
+                    FastRemoveWall(i, j);
+                }
+            }
+        }
+
         SmoothWorld(progress);
     }
 
@@ -858,7 +925,7 @@ public partial class Moon
             WorldUtils.Gen(new Point(x + shrine.Size.X / 2, y + shrine.Size.Y / 2), new CustomShapes.ChasmSideways(12, 8, 80, 2, 0, dir: false), new CustomActions.ClearTileSafelyPostGen());
 
             bool solidDown = WorldUtils.Find(new(x, y), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
-            Point16 origin = new(solidGround.X - shrine.Size.X / 2, y +shrine.Size.Y/2);
+            Point16 origin = new(solidGround.X - shrine.Size.X / 2, y + shrine.Size.Y / 2);
 
             validPositionFound = solidDown && gen_StructureMap.CanPlace(new Rectangle(origin.X, origin.Y, shrine.Size.X, shrine.Size.Y), padding: 50);
 
@@ -1174,14 +1241,14 @@ public partial class Moon
 
         int maxAttempts = 10000;
         int attempts = 0;
-        while ( attempts < maxAttempts)
+        while (attempts < maxAttempts)
         {
             attempts++;
-        int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
-        int tileY = WorldGen.genRand.Next((int)(GetSurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);
-        Structure outpost = Structure.Get<CheeseHouse>();
-        progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
-        bool solidDown = WorldUtils.Find(new Point(tileX, tileY), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
+            int tileX = WorldGen.genRand.Next(80, Main.maxTilesX - 80);
+            int tileY = WorldGen.genRand.Next((int)(GetSurfaceHeight(tileX) + RegolithLayerHeight + 20.0), Main.maxTilesY - 230);
+            Structure outpost = Structure.Get<CheeseHouse>();
+            progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.Horror");
+            bool solidDown = WorldUtils.Find(new Point(tileX, tileY), Searches.Chain(new Searches.Down(150), new Conditions.IsSolid()), out Point solidGround);
             if (solidDown)
             {
                 Point16 origin = new((tileX - outpost.Size.X / 2), (solidGround.Y - outpost.Size.Y));
@@ -1195,7 +1262,7 @@ public partial class Moon
         }
     }
 
-    [Task(weight: 20.0)]
+    //[Task(weight: 20.0)]
     private void AmbientTask(GenerationProgress progress)
     {
         progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.AmbientTask");
@@ -1220,7 +1287,7 @@ public partial class Moon
                 Tile tile = Main.tile[i, j];
                 if (tile.HasTile && Main.tileSolid[tile.TileType] && !tile.IsActuated)
                 {
-                    if (tile.TileType ==  (ushort)TileType<MineralizedProtolith>())
+                    if (tile.TileType == (ushort)TileType<MineralizedProtolith>())
                     {
                         Point[] directions = [
                         new Point(0, -1), // up
@@ -1228,19 +1295,19 @@ public partial class Moon
                         new Point(-1, 0), // left
                         new Point(1, 0),  // right
                     ];
-                    Utility.Shuffle(WorldGen.genRand, directions);
+                        Utility.Shuffle(WorldGen.genRand, directions);
 
-                    foreach (var offset in directions)
-                    {
-                        int x = i + offset.X;
-                        int y = j + offset.Y;
-                        Tile target = Main.tile[x, y];
-                        if (!target.HasTile && WorldGen.SolidTile(tile))
+                        foreach (var offset in directions)
                         {
-                            WorldGen.PlaceTile(x, y, TileType<LuminiteCrystalNatural>(), mute: true, forced: false);
-                                                         NetMessage.SendTileSquare(-1, x, y, 1, 1);
-                                                         break;
-                        }
+                            int x = i + offset.X;
+                            int y = j + offset.Y;
+                            Tile target = Main.tile[x, y];
+                            if (!target.HasTile && WorldGen.SolidTile(tile))
+                            {
+                                WorldGen.PlaceTile(x, y, TileType<LuminiteCrystalNatural>(), mute: true, forced: false);
+                                NetMessage.SendTileSquare(-1, x, y, 1, 1);
+                                break;
+                            }
                         }
                     }
                 }
@@ -1530,7 +1597,7 @@ public partial class Moon
                 {
                     ManageIndustrialChest(chest, i);
                 }
-                  if (Main.tile[chest.x, chest.y].TileType == TileType<CheeseChest>())
+                if (Main.tile[chest.x, chest.y].TileType == TileType<CheeseChest>())
                 {
                     ManageIndustrialChest(chest, i);
                 }

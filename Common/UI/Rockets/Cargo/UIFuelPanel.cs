@@ -226,29 +226,29 @@ public class UIFuelPanel : UIPanel, IRocketUIDataConsumer, IFixedUpdateable
         LiquidContainerData data = ItemSets.LiquidContainerData[liquidContainerItemSlot.Item.type];
         if (data.Valid && !data.Empty)
         {
-            float fuelPerCanister = data.Capacity;
-            int availableCanisters = liquidContainerItemSlot.Item.stack;
+            float fuelPerContainer = data.Capacity;
+            int availableContainers = liquidContainerItemSlot.Item.stack;
             float neededFuel = Rocket.FuelCapacity - Rocket.Fuel;
 
             if (neededFuel <= 0)
                 return;
 
-            int canistersUsed = (int)Math.Min(availableCanisters, Math.Floor(neededFuel / fuelPerCanister));
+            int containersUsed = (int)Math.Min(availableContainers, Math.Ceiling(neededFuel / fuelPerContainer));
 
-            if (canistersUsed == 0)
+            if (containersUsed == 0)
                 return;
 
-            float addedFuel = canistersUsed * fuelPerCanister;
+            float addedFuel = Math.Min(containersUsed * fuelPerContainer, neededFuel);
             Rocket.Fuel += addedFuel;
 
-            liquidContainerItemSlot.Item.DecreaseStack(canistersUsed);
-
             int emptyType = LiquidContainerData.GetEmptyType(ItemSets.LiquidContainerData, liquidContainerItemSlot.Item.type);
-            Item emptyCanisters = new(emptyType, canistersUsed);
+            liquidContainerItemSlot.Item.DecreaseStack(containersUsed);
 
-            bool addedToInventory = Rocket.Inventory.TryPlacingItem(ref emptyCanisters);
+            Item emptyContainers = new(emptyType, containersUsed);
+
+            bool addedToInventory = Rocket.Inventory.TryPlacingItem(ref emptyContainers);
             if (!addedToInventory)
-                Main.LocalPlayer.QuickSpawnItem(new EntitySource_OverfullInventory(Main.LocalPlayer), emptyType, canistersUsed);
+                Main.LocalPlayer.QuickSpawnItem(new EntitySource_OverfullInventory(Main.LocalPlayer), emptyType, containersUsed);
 
             RefreshItemSlot();
 
