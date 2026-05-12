@@ -16,7 +16,7 @@ public class ScrapshotBow : ModItem
         Item.DefaultToBow(16, 18, hasAutoReuse: true);
         Item.width = 26;
         Item.height = 62;
-        Item.damage = 80;
+        Item.damage = 110;
         Item.knockBack = 4;
         Item.value = 10000;
         Item.rare = ModContent.RarityType<MoonRarity1>();
