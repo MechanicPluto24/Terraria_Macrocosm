@@ -42,9 +42,9 @@ public class SmogWisp : ModNPC
 
         NPC.width = 44;
         NPC.height = 38;
-        NPC.damage = 12;
-        NPC.defense = 10;
-        NPC.lifeMax = 30;
+        NPC.damage = 15;
+        NPC.defense = 5;
+        NPC.lifeMax = 50;
         NPC.HitSound = SoundID.NPCHit1;
         NPC.DeathSound = SoundID.NPCDeath52;
         NPC.value = 60f;

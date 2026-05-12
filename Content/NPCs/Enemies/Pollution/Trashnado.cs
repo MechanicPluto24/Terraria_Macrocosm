@@ -49,8 +49,8 @@ public partial class Trashnado : ModNPC
         NPC.width = 52;
         NPC.height = 68;
         NPC.damage = 30;
-        NPC.defense = 10;
-        NPC.lifeMax = 400;
+        NPC.defense = 5;
+        NPC.lifeMax = 160;
 
         NPC.value = 60f;
         NPC.knockBackResist = 0f;
