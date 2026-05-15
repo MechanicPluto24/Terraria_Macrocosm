@@ -16,7 +16,7 @@ public class MoonChampionSentry : ModItem
     public override void SetDefaults()
     {
         Item.DamageType = DamageClass.Summon;
-        Item.damage = 300;
+        Item.damage = 350;
         Item.width = 96;
         Item.height = 96;
         Item.value = Item.sellPrice(gold: 30);

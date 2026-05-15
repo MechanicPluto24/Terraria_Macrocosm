@@ -4,6 +4,7 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -182,6 +183,7 @@ public class Shade : ModNPC
     public override void ModifyNPCLoot(NPCLoot loot)
     {
         loot.Add(ItemDropRule.Common(ModContent.ItemType<SpaceDust>(), 4));
+        loot.Add(ItemDropRule.Common(ModContent.ItemType<TrailScepter>(), 50));
     }
 
     public override void HitEffect(NPC.HitInfo hit)

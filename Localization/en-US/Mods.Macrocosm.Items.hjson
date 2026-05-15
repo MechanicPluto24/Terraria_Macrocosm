@@ -2754,8 +2754,8 @@ Schroteri: {
 	DisplayName: Schroteri
 	Tooltip:
 		'''
-		Repeated hits with the blade strengthen it and increase its range
-		This effect wears off after some time if the blade is not used
+		Repeated hits with the blade increase its reach
+		This effect wears off after some time while the blade is not used
 		'''
 }
 

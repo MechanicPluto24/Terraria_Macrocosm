@@ -66,7 +66,7 @@ public class WyrmwoodHead : WormHead
     {
         NPC.CloneDefaults(NPCID.DiggerHead);
         NPC.lifeMax = BaseLifeMax;
-        NPC.damage = 40;
+        NPC.damage = 70;
         NPC.defense = 10;
         NPC.width = 16;
         NPC.height = 16;
