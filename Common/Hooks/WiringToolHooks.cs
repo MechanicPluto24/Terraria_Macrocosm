@@ -38,7 +38,7 @@ public class WiringToolHooks : ILoadable
                 // If the Wire Cutter didn't do anything, try removing Pipes, Inlets, Outlets
                 //if (!targetTile.HasWire() && !targetTile.HasActuator)
                 if (player.ItemTimeIsZero && ConveyorSystem.Remove(pos))
-                    player.ApplyItemTime(item);
+                    ApplyWiringToolTime(player, item);
 
                 return;
             }
@@ -61,7 +61,7 @@ public class WiringToolHooks : ILoadable
                         if(Main.netMode == NetmodeID.MultiplayerClient)
                             ConveyorSystem.SyncConveyor(pos.X, pos.Y, dustEffects: true);
 
-                        player.ApplyItemTime(item);
+                        ApplyWiringToolTime(player, item);
                         return;
                     }
                 }
@@ -70,13 +70,19 @@ public class WiringToolHooks : ILoadable
             {
                 if (TryPlace(player, type, sync: true))
                 {
-                    player.ApplyItemTime(item);
+                    ApplyWiringToolTime(player, item);
                     return;
                 }
             }
         }
 
         orig(player, item);
+    }
+
+    private static void ApplyWiringToolTime(Player player, Item item)
+    {
+        player.ApplyItemTime(item);
+        player.toolTime = item.useTime;
     }
 
     private static bool TryPlace(Player player, ConveyorPipeType pipeType, bool sync, WiresUI.Settings.MultiToolMode mode = 0)

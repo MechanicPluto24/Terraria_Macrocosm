@@ -8,13 +8,17 @@ using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Blocks.Sands;
 using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Ores;
+using Macrocosm.Content.Sounds;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Utilities;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -51,6 +55,8 @@ public abstract class BaseDrillTE : ConsumerTE
 
     public override void MachineUpdate()
     {
+        UpdateActiveSounds();
+
         // Capture current scene
         scene ??= new(Position);
 
@@ -83,6 +89,73 @@ public abstract class BaseDrillTE : ConsumerTE
                 scene?.Scan();
             }
         }
+    }
+
+    public override void OnKill()
+    {
+        StopActiveSounds();
+        base.OnKill();
+    }
+
+    protected Vector2 ActiveSoundPosition => Position.ToVector2() * 16f + new Vector2(MachineTile.Width, MachineTile.Height) * 8f;
+
+    protected float ActiveSoundPowerProgress => PowerProgress > 0f ? PowerProgress : 1f;
+
+    protected bool ShouldPlayActiveSound => !Main.dedServ && PoweredOn;
+
+    protected virtual void UpdateActiveSounds()
+    {
+    }
+
+    protected virtual void StopActiveSounds()
+    {
+    }
+
+    protected void UpdateLoopedActiveSound(ref SlotId slot, SoundStyle soundStyle, string identifier, Func<float> getVolume, Func<float> getPitch)
+    {
+        if (!ShouldPlayActiveSound)
+        {
+            StopLoopedActiveSound(ref slot);
+            return;
+        }
+
+        if (SoundEngine.TryGetActiveSound(slot, out ActiveSound activeSound))
+        {
+            UpdateLoopedActiveSound(activeSound, getVolume, getPitch);
+            return;
+        }
+
+        slot = SoundEngine.PlaySound(soundStyle with
+        {
+            IsLooped = true,
+            Volume = 1f,
+            Pitch = getPitch(),
+            MaxInstances = 1,
+            Identifier = $"Macrocosm/{identifier}/{GetType().FullName}/{ID}"
+        },
+        ActiveSoundPosition, updateCallback: (sound) =>
+        {
+            if (!ShouldPlayActiveSound)
+                return false;
+
+            UpdateLoopedActiveSound(sound, getVolume, getPitch);
+            return true;
+        });
+    }
+
+    private void UpdateLoopedActiveSound(ActiveSound activeSound, Func<float> getVolume, Func<float> getPitch)
+    {
+        activeSound.Position = ActiveSoundPosition;
+        activeSound.Volume = getVolume();
+        activeSound.Pitch = getPitch();
+    }
+
+    protected void StopLoopedActiveSound(ref SlotId slot)
+    {
+        if (SoundEngine.TryGetActiveSound(slot, out ActiveSound activeSound))
+            activeSound.Stop();
+
+        slot = SlotId.Invalid;
     }
 
     protected override void ConsumerNetSend(BinaryWriter writer)

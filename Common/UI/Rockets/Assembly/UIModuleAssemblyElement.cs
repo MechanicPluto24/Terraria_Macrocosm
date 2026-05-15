@@ -19,16 +19,18 @@ public class UIModuleAssemblyElement : UIPanel
 {
     private readonly RocketModule module;
     private readonly LaunchPad launchPad;
+    private readonly Action refreshAssemblyElements;
     private readonly List<UIInventorySlot> slots;
 
     private UIText uITitle;
     private UIHoverImageButton leftArrow;
     private UIHoverImageButton rightArrow;
 
-    public UIModuleAssemblyElement(RocketModule module, LaunchPad launchPad)
+    public UIModuleAssemblyElement(RocketModule module, LaunchPad launchPad, Action refreshAssemblyElements)
     {
         this.module = module;
         this.launchPad = launchPad;
+        this.refreshAssemblyElements = refreshAssemblyElements;
 
         slots = new();
         if (this.launchPad.TryGetAssemblySlotRangeForModule(module, out Range range))
@@ -77,10 +79,7 @@ public class UIModuleAssemblyElement : UIPanel
         leftArrow.OnLeftClick += (_, _) =>
         {
             launchPad.SwitchAssemblyModuleTier(module, -1);
-
-            if (Parent is UIAssemblyTab tab)
-                tab.RefreshAssemblyElements();
-
+            refreshAssemblyElements?.Invoke();
         };
         Append(leftArrow);
 
@@ -99,9 +98,7 @@ public class UIModuleAssemblyElement : UIPanel
         rightArrow.OnLeftClick += (_, _) =>
         {
             launchPad.SwitchAssemblyModuleTier(module, +1);
-
-            if (Parent is UIAssemblyTab tab)
-                tab.RefreshAssemblyElements();
+            refreshAssemblyElements?.Invoke();
         };
         Append(rightArrow);
     }

@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Content.Biomes;
+using Macrocosm.Common.Subworlds;
 using Macrocosm.Content.Items.Fishes;
 using Macrocosm.Content.Items.Furniture.Industrial;
 using Macrocosm.Content.Subworlds;
@@ -35,29 +36,15 @@ public class FishingPlayer : ModPlayer
     {
         bool inWater = !attempt.inLava && !attempt.inHoney;
 
-        // Earth fishing
-        if (SubworldSystem.AnyActive<Macrocosm>())
+        if (OrbitSubworld.AnyActive()) // No fishing, for now
         {
-            if (inWater)
-            {
-                if (Player.InModBiome<PollutionBiome>())
-                {
-                    int[] pollutionQuestFishes = [
-                        ModContent.ItemType<SmogWispfish>(),
-                        ModContent.ItemType<HermitCan>(),
-                        ModContent.ItemType<MutatedGoldfish>()
-                    ];
-
-                    if (attempt.uncommon && pollutionQuestFishes.Contains(attempt.questFish))
-                    {
-                        itemDrop = attempt.questFish;
-                        return;
-                    }
-                }
-            }
+            itemDrop = -1;
+            npcSpawn = -1;
+            return;
         }
+
         // Moon fishing
-        else if (SubworldSystem.IsActive<Moon>())
+        if (SubworldSystem.IsActive<Moon>())
         {
             if (inWater)
             {
@@ -80,6 +67,32 @@ public class FishingPlayer : ModPlayer
 
                 itemDrop = ModContent.ItemType<Craterfish>();
                 return;
+            }
+        }
+
+        if (SubworldSystem.AnyActive<Macrocosm>())
+        {
+            itemDrop = -1;
+            npcSpawn = -1;
+            return;
+        }
+
+        // Earth fishing
+        if (inWater)
+        {
+            if (Player.InModBiome<PollutionBiome>())
+            {
+                int[] pollutionQuestFishes = [
+                    ModContent.ItemType<SmogWispfish>(),
+                    ModContent.ItemType<HermitCan>(),
+                    ModContent.ItemType<MutatedGoldfish>()
+                ];
+
+                if (attempt.uncommon && pollutionQuestFishes.Contains(attempt.questFish))
+                {
+                    itemDrop = attempt.questFish;
+                    return;
+                }
             }
         }
     }

@@ -370,7 +370,7 @@ public class UIAssemblyTab : UIElement, ITabUIElement
             RocketModule module = m.Clone();
             if (!module.Recipe.Linked)
             {
-                UIModuleAssemblyElement assemblyElement = new(module, LaunchPad)
+                UIModuleAssemblyElement assemblyElement = new(module, LaunchPad, RefreshAssemblyElements)
                 {
                     Top = new(0, 0.19f + 0.175f * (int)module.Slot),
                     HAlign = 0.5f,
@@ -390,7 +390,7 @@ public class UIAssemblyTab : UIElement, ITabUIElement
 
     public void RefreshAssemblyElements()
     {
-        this.RemoveAllChildrenWhere(element => element is UIModuleAssemblyElement);
+        uiAssemblyPanel.RemoveAllChildrenWhere(element => element is UIModuleAssemblyElement);
         assemblyElements = CreateAssemblyElements();
     }
 }

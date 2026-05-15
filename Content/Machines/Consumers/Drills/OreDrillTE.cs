@@ -6,9 +6,11 @@ using Macrocosm.Common.Systems.Power;
 using Macrocosm.Content.Items.Blocks.Sands;
 using Macrocosm.Content.Items.Blocks.Terrain;
 using Macrocosm.Content.Items.Ores;
+using Macrocosm.Content.Sounds;
 using Macrocosm.Content.Subworlds;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Utilities;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
@@ -18,6 +20,8 @@ namespace Macrocosm.Content.Machines.Consumers.Drills;
 
 public class OreDrillTE : BaseDrillTE
 {
+    private SlotId activeSoundSlot = SlotId.Invalid;
+
     public override MachineTile MachineTile => ModContent.GetInstance<OreDrill>();
     protected override float ExcavateRate => 120;
     public override int InventorySize => 30;
@@ -27,6 +31,22 @@ public class OreDrillTE : BaseDrillTE
         MinPower = 1f;
         MaxPower = 10f;
         base.MachineUpdate();
+    }
+
+    protected override void UpdateActiveSounds()
+    {
+        UpdateLoopedActiveSound(
+            ref activeSoundSlot,
+            SFX.DrillLoop,
+            nameof(OreDrillTE),
+            () => MathHelper.Lerp(0.55f, 0.75f, ActiveSoundPowerProgress),
+            () => MathHelper.Lerp(0f, 0.25f, ActiveSoundPowerProgress)
+        );
+    }
+
+    protected override void StopActiveSounds()
+    {
+        StopLoopedActiveSound(ref activeSoundSlot);
     }
 
     protected override void PopulateItemLoot(LootTable loot)

@@ -22,7 +22,7 @@ public class RocketFuelLookup : ILoadable
     public static float GetFuelCost(string location, string destination)
     {
         location = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(location), out _);
-        destination = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(location), out _);
+        destination = MacrocosmSubworld.SanitizeID(OrbitSubworld.GetParentID(destination), out _);
 
         string key = location + "_" + destination;
 

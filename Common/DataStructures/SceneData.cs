@@ -102,7 +102,7 @@ public class SceneData
     public bool HasBanner;
 
     private readonly int[] tileCounts = new int[TileLoader.TileCount];
-    private readonly int[] liquidCounts = new int[LiquidID.Count];
+    private int[] liquidCounts = new int[LiquidID.Count];
 
     public SceneData(Vector2 scanCenterWorldCoordinates)
     {
@@ -115,7 +115,7 @@ public class SceneData
 
 
     public int GetTileCount(ushort tileId) => tileCounts[tileId];
-    public int GetLiquidCount(short liquidType) => liquidCounts[liquidType];
+    public int GetLiquidCount(int liquidType) => liquidType >= 0 && liquidType < liquidCounts.Length ? liquidCounts[liquidType] : 0;
 
     public void Scan(Vector2 scanCenterWorldCoordinates)
     {
@@ -141,7 +141,7 @@ public class SceneData
                 if (!tile.HasTile)
                 {
                     if (tile.LiquidAmount > 0)
-                        liquidCounts[tile.LiquidType]++;
+                        IncrementLiquidCount(tile.LiquidType);
 
                     continue;
                 }
@@ -316,5 +316,16 @@ public class SceneData
             Array.Resize(ref NPCBannerBuff, NPCLoader.NPCCount);
 
         macrocosmTileCounts.ResetNearbyTileEffects();
+    }
+
+    private void IncrementLiquidCount(int liquidType)
+    {
+        if (liquidType < 0)
+            return;
+
+        if (liquidType >= liquidCounts.Length)
+            Array.Resize(ref liquidCounts, liquidType + 1);
+
+        liquidCounts[liquidType]++;
     }
 }
