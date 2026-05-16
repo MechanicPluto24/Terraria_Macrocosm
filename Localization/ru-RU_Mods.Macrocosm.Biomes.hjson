@@ -1,0 +1,34 @@
+{
+  "EarthBiome": {
+    "DisplayName": "Земля",
+    "TownNPCDialogueName": "Землю"
+  },
+  "MoonBiome": {
+    "DisplayName": "Луна",
+    "TownNPCDialogueName": "Луну"
+  },
+  "BloodMoonBiome": {
+    "DisplayName": "Кровавая Луна",
+    "TownNPCDialogueName": "Кровавую Луну"
+  },
+  "BasaltBiome": {
+    "DisplayName": "Базальт",
+    "TownNPCDialogueName": "Базальт"
+  },
+  "IrradiationBiome": {
+    "DisplayName": "Облучение",
+    "TownNPCDialogueName": "Облучение"
+  },
+  "DemonSunBiome": {
+    "DisplayName": "Биом Демонического Солнца",
+    "TownNPCDialogueName": "Демоническое Солнце"
+  },
+  "MoonNightBiome": {
+    "DisplayName": "Лунная Ночь",
+    "TownNPCDialogueName": "Лунную Ночь"
+  },
+  "MoonUndergroundBiome": {
+    "DisplayName": "Подземелье Луны",
+    "TownNPCDialogueName": "Подземелье Луны"
+  }
+}

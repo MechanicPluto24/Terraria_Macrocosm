@@ -1,0 +1,2105 @@
+{
+  "SetBonuses": {
+    "SpaceProtection_1": "Скафандр с избыточным давлением позволяет исследовать другие небесные тела.",
+    "SpaceProtection_2": "Костюм с свинцовым покрытием позволяет безопасно исследовать сильно облучённые среды."
+  },
+  "CelestialBulwark": {
+    "DisplayName": "Небесный Щит",
+    "Tooltip": "Позволяет игроку совершать рывок в сторону врага\nПозволяет выполнять горизонтальные и вертикальные рывки\nДважды нажмите в любом направлении, чтобы совершить рывок"
+  },
+  "AluminumBoots": {
+    "DisplayName": "Алюминиевые Ботинки",
+    "Tooltip": ""
+  },
+  "AluminumBreastplate": {
+    "DisplayName": "Алюминиевый Нагрудник",
+    "Tooltip": ""
+  },
+  "AluminumHelmet": {
+    "DisplayName": "Алюминиевый Шлем",
+    "Tooltip": ""
+  },
+  "SeleniteBreastplate": {
+    "DisplayName": "Селенитовый Нагрудник",
+    "Tooltip": "Увеличивает шанс критического удара melee на 6%"
+  },
+  "SeleniteHelmet": {
+    "DisplayName": "Селенитовый Шлем",
+    "Tooltip": "Увеличивает урон melee на 18%"
+  },
+  "SeleniteLeggings": {
+    "DisplayName": "Селенитовые Леггинсы",
+    "Tooltip": "Увеличивает скорость melee и передвижения на 15%"
+  },
+  "AstronautHelmet": {
+    "DisplayName": "Шлем Астронавта",
+    "Tooltip": ""
+  },
+  "AstronautLeggings": {
+    "DisplayName": "Леггинсы Астронавта",
+    "Tooltip": ""
+  },
+  "AstronautSuit": {
+    "DisplayName": "Костюм Астронавта",
+    "Tooltip": ""
+  },
+  "ChandriumBreastplate": {
+    "DisplayName": "Чандриум Нагрудник",
+    "Tooltip": "Увеличивает максимальное количество миньонов на 1\nУвеличивает дальность и скорость хлыста на 15%"
+  },
+  "ChandriumHelm": {
+    "DisplayName": "Чандриум Шлем",
+    "Tooltip": "Увеличивает максимальное количество миньонов на 1\nУвеличивает урон призыва на 25%"
+  },
+  "ChandriumLeggings": {
+    "DisplayName": "Чандриум Леггинсы",
+    "Tooltip": "Увеличивает максимальное количество миньонов на 1\nУвеличивает скорость передвижения на 10%"
+  },
+  "DianiteBreastplate": {
+    "DisplayName": "Дианитовый Нагрудник",
+    "Tooltip": "Увеличивает шанс критического удара магией на 12%"
+  },
+  "DianiteLeggings": {
+    "DisplayName": "Дианитовые Леггинсы",
+    "Tooltip": "Увеличивает магический урон на 5%\nУвеличивает скорость передвижения на 10%"
+  },
+  "DianiteVisor": {
+    "DisplayName": "Дианитовый Визор",
+    "Tooltip": "Увеличивает максимальную ману на 50\nУвеличивает магический урон на 10%"
+  },
+  "ArtemiteBreastplate": {
+    "DisplayName": "Артемитовый Нагрудник",
+    "Tooltip": "Увеличивает шанс критического удара на расстоянии на 12%"
+  },
+  "ArtemiteHeadgear": {
+    "DisplayName": "Артемитовая Головная Уборка",
+    "Tooltip": "Увеличивает урон на расстоянии на 10%\n15% шанс сохранить патрон"
+  },
+  "ArtemiteLeggings": {
+    "DisplayName": "Артемитовые Леггинсы",
+    "Tooltip": "Увеличивает урон на расстоянии на 5%\nУвеличивает скорость передвижения на 20%"
+  },
+  "CraterDemonBossBag": {
+    "DisplayName": "Сумка Сокровищ (Кратерный Демон)",
+    "Tooltip": "{$CommonItemTooltip.RightClickToOpen}"
+  },
+  "CraterDemonSummon": {
+    "DisplayName": "Демонический Планшет",
+    "Tooltip": "Призывает Кратерного Демона\nДолжен использоваться на Луне"
+  },
+  "Moonstone": {
+    "DisplayName": "Лунный Камень",
+    "TooltipNoChampion": "Это валюта для Лунного Чемпиона, но, к сожалению, его нет с вами",
+    "TooltipChampion": "Это валюта для {0}, Лунного Чемпиона",
+    "Tooltip": ""
+  },
+  "BanHammer": {
+    "DisplayName": "Молот Запрета",
+    "Tooltip": "УБЕРИСЬ."
+  },
+  "DevPick": {
+    "DisplayName": "Разработческий Кирка",
+    "Tooltip": "На самом деле, это хорошее оружие"
+  },
+  "RocketPlacer": {
+    "DisplayName": "Установщик Ракет",
+    "Tooltip": "Устанавливает ракету. <правый клик> для удаления всех ракет в Солнечной системе"
+  },
+  "Rocket": {
+    "DisplayName": "Ракета",
+    "Tooltip": ""
+  },
+  "Teleporter": {
+    "DisplayName": "Телепорт",
+    "Tooltip": "Телепортирует пользователя на Луну и обратно"
+  },
+  "AluminumBar": {
+    "DisplayName": "Алюминиевый Слиток",
+    "Tooltip": ""
+  },
+  "AluminumOre": {
+    "DisplayName": "Алюминиевая Руда",
+    "Tooltip": ""
+  },
+  "SeleniteBar": {
+    "DisplayName": "Селенитовый Слиток",
+    "Tooltip": ""
+  },
+  "SeleniteOre": {
+    "DisplayName": "Селенитовая Руда",
+    "Tooltip": ""
+  },
+  "BrokenHeroShield": {
+    "DisplayName": "Сломанный Щит Героя",
+    "Tooltip": ""
+  },
+  "ChandriumBar": {
+    "DisplayName": "Чандриум Слиток",
+    "Tooltip": ""
+  },
+  "ChandriumOre": {
+    "DisplayName": "Чандриум Руда",
+    "Tooltip": ""
+  },
+  "CortexFragment": {
+    "DisplayName": "Фрагмент Кортекса",
+    "Tooltip": ""
+  },
+  "CosmicDust": {
+    "DisplayName": "Космическая Пыль",
+    "Tooltip": ""
+  },
+  "CosmicEssence": {
+    "DisplayName": "Космическая Суть",
+    "Tooltip": ""
+  },
+  "DeliriumPlating": {
+    "DisplayName": "Пластина Делирия",
+    "Tooltip": ""
+  },
+  "DianiteBar": {
+    "DisplayName": "Дианитовый Слиток",
+    "Tooltip": ""
+  },
+  "DianiteOre": {
+    "DisplayName": "Дианитовая Руда",
+    "Tooltip": ""
+  },
+  "LithiumOre": {
+    "DisplayName": "Литий",
+    "Tooltip": ""
+  },
+  "LuminiteCrystal": {
+    "DisplayName": "Кристалл Люминита",
+    "Tooltip": ""
+  },
+  "OilShale": {
+    "DisplayName": "Oil Shale",
+    "Tooltip": ""
+  },
+  "OxygenTank": {
+    "DisplayName": "Oxygen Tank",
+    "Tooltip": ""
+  },
+  "PrintedCircuitBoard": {
+    "DisplayName": "Printed Circuit Board",
+    "Tooltip": ""
+  },
+  "ArtemiteBar": {
+    "DisplayName": "Artemite Bar",
+    "Tooltip": ""
+  },
+  "ArtemiteOre": {
+    "DisplayName": "Artemite Ore",
+    "Tooltip": ""
+  },
+  "SiliconOre": {
+    "DisplayName": "Raw Silicon",
+    "Tooltip": ""
+  },
+  "Silicon": {
+    "DisplayName": "Silicon",
+    "Tooltip": ""
+  },
+  "MeteoricChunk": {
+    "DisplayName": "Lunar Meteoric Chunk",
+    "Tooltip": "<правый клик> чтобы разбить!"
+  },
+  "NebulaChunk": {
+    "DisplayName": "Nebula Meteoric Chunk",
+    "Tooltip": "<правый клик> чтобы разбить!"
+  },
+  "SolarChunk": {
+    "DisplayName": "Solar Meteoric Chunk",
+    "Tooltip": "<правый клик> чтобы разбить!"
+  },
+  "StardustChunk": {
+    "DisplayName": "Stardust Meteoric Chunk",
+    "Tooltip": "<правый клик> чтобы разбить!"
+  },
+  "VortexChunk": {
+    "DisplayName": "Vortex Meteoric Chunk",
+    "Tooltip": "<правый клик> чтобы разбить!"
+  },
+  "IronChunk": {
+    "DisplayName": "Ferrous Meteoric Chunk",
+    "Tooltip": "<правый клик> чтобы разбить!"
+  },
+  "TitaniumChunk": {
+    "DisplayName": "Ilmenite Meteoric Chunk",
+    "Tooltip": "<правый клик> чтобы разбить!"
+  },
+  "SpaceShuttle": {
+    "DisplayName": "Space Shuttle",
+    "Tooltip": "В память о STS-51-L и STS-107."
+  },
+  "IrradiatedBrick": {
+    "DisplayName": "Irradiated Brick",
+    "Tooltip": ""
+  },
+  "IrradiatedBrickWall": {
+    "DisplayName": "Irradiated Brick Wall",
+    "Tooltip": ""
+  },
+  "IrradiatedRock": {
+    "DisplayName": "Irradiated Rock",
+    "Tooltip": ""
+  },
+  "IrradiatedRockWall": {
+    "DisplayName": "Irradiated Rock Wall",
+    "Tooltip": ""
+  },
+  "Protolith": {
+    "DisplayName": "Protolith",
+    "Tooltip": ""
+  },
+  "ProtolithWall": {
+    "DisplayName": "Protolith Wall",
+    "Tooltip": ""
+  },
+  "Regolith": {
+    "DisplayName": "Regolith",
+    "Tooltip": ""
+  },
+  "RegolithBrick": {
+    "DisplayName": "Regolith Brick",
+    "Tooltip": ""
+  },
+  "RegolithBrickWall": {
+    "DisplayName": "Regolith Brick Wall",
+    "Tooltip": ""
+  },
+  "RegolithWall": {
+    "DisplayName": "Regolith Wall",
+    "Tooltip": ""
+  },
+  "AdamantiteLoom": {
+    "DisplayName": "Adamantite Loom",
+    "Tooltip": "Используется для изготовления ткани для скафандра"
+  },
+  "TitaniumLoom": {
+    "DisplayName": "Titanium Loom",
+    "Tooltip": "Используется для изготовления ткани для скафандра"
+  },
+  "SolarPanelLarge": {
+    "DisplayName": "Large Solar Panel",
+    "Tooltip": "Преобразует солнечную энергию в электричество"
+  },
+  "BloodSunRising": {
+    "DisplayName": "Blood Sun Rising",
+    "Tooltip": "'L. Reda'"
+  },
+  "DarkFortress": {
+    "DisplayName": "Dark Fortress",
+    "Tooltip": "'L. Reda'"
+  },
+  "Empress": {
+    "DisplayName": "Empress",
+    "Tooltip": "'L. Reda'"
+  },
+  "Overlord": {
+    "DisplayName": "Overlord",
+    "Tooltip": "'L. Reda'"
+  },
+  "Retributor": {
+    "DisplayName": "Retributor",
+    "Tooltip": "'L. Reda'"
+  },
+  "WhenDayBreaks": {
+    "DisplayName": "When Day Breaks",
+    "Tooltip": "'L. Reda'"
+  },
+  "Freedomfaller": {
+    "DisplayName": "Freedomfaller",
+    "Tooltip": "'T. Williams'"
+  },
+  "ShoresOfOblivion": {
+    "DisplayName": "Shores Of Oblivion",
+    "Tooltip": "'E. Bracht'"
+  },
+  "CraterDemonRelic": {
+    "DisplayName": "Crater Demon Relic",
+    "Tooltip": ""
+  },
+  "MoonGoldTombstone": {
+    "DisplayName": "Moon Gold Tombstone",
+    "Tooltip": ""
+  },
+  "MoonTombstone": {
+    "DisplayName": "Moon Tombstone",
+    "Tooltip": ""
+  },
+  "CraterDemonTrophy": {
+    "DisplayName": "Crater Demon Trophy",
+    "Tooltip": ""
+  },
+  "AluminumAxe": {
+    "DisplayName": "Aluminum Axe",
+    "Tooltip": ""
+  },
+  "AluminumHammer": {
+    "DisplayName": "Aluminum Hammer",
+    "Tooltip": ""
+  },
+  "AluminumPickaxe": {
+    "DisplayName": "Aluminum Pickaxe",
+    "Tooltip": ""
+  },
+  "SeleniteAxe": {
+    "DisplayName": "Selenite Axe",
+    "Tooltip": ""
+  },
+  "SeleniteDrill": {
+    "DisplayName": "Selenite Drill",
+    "Tooltip": ""
+  },
+  "SeleniteHammer": {
+    "DisplayName": "Selenite Hammer",
+    "Tooltip": ""
+  },
+  "SelenitePickaxe": {
+    "DisplayName": "Selenite Pickaxe",
+    "Tooltip": ""
+  },
+  "ChandriumAxe": {
+    "DisplayName": "Chandrium Axe",
+    "Tooltip": ""
+  },
+  "ChandriumDrill": {
+    "DisplayName": "Chandrium Drill",
+    "Tooltip": ""
+  },
+  "ChandriumHammer": {
+    "DisplayName": "Chandrium Hammer",
+    "Tooltip": ""
+  },
+  "ChandriumPickaxe": {
+    "DisplayName": "Chandrium Pickaxe",
+    "Tooltip": ""
+  },
+  "DianiteAxe": {
+    "DisplayName": "Dianite Axe",
+    "Tooltip": ""
+  },
+  "DianiteDrill": {
+    "DisplayName": "Dianite Drill",
+    "Tooltip": ""
+  },
+  "DianiteHammer": {
+    "DisplayName": "Dianite Hammer",
+    "Tooltip": ""
+  },
+  "DianitePickaxe": {
+    "DisplayName": "Dianite Pickaxe",
+    "Tooltip": ""
+  },
+  "ArtemiteAxe": {
+    "DisplayName": "Artemite Axe",
+    "Tooltip": ""
+  },
+  "ArtemiteDrill": {
+    "DisplayName": "Artemite Drill",
+    "Tooltip": ""
+  },
+  "ArtemiteHammer": {
+    "DisplayName": "Artemite Hammer",
+    "Tooltip": ""
+  },
+  "ArtemitePickaxe": {
+    "DisplayName": "Artemite Pickaxe",
+    "Tooltip": ""
+  },
+  "CraterDemonMask": {
+    "DisplayName": "Crater Demon Mask",
+    "Tooltip": ""
+  },
+  "DianiteFork": {
+    "DisplayName": "Dianite Fork",
+    "Tooltip": "Выпускает вращающуюся магию в ваших врагов"
+  },
+  "DianiteTome": {
+    "DisplayName": "Dianite Tome",
+    "Tooltip": "Создаёт портал, чтобы дождём сбрасывать\nогненные метеоры на ваших врагов"
+  },
+  "ImbriumJewel": {
+    "DisplayName": "Imbrium Jewel",
+    "Tooltip": "Выпускает фантазмальные черепа вокруг вас"
+  },
+  "AluminumBroadsword": {
+    "DisplayName": "Aluminum Broadsword",
+    "Tooltip": ""
+  },
+  "AluminumShortsword": {
+    "DisplayName": "Aluminum Shortsword",
+    "Tooltip": ""
+  },
+  "SeleniteGreatsword": {
+    "DisplayName": "Selenite Greatsword",
+    "Tooltip": "Удерживайте <правый клик> для заряженного удара"
+  },
+  "SeleniteSpear": {
+    "DisplayName": "Selenite Spear",
+    "Tooltip": "<правый клик> чтобы бросить копьё"
+  },
+  "SeleniteSword": {
+    "DisplayName": "Selenite Straightsword",
+    "Tooltip": ""
+  },
+  "ClawWrench": {
+    "DisplayName": "Claw Wrench",
+    "Tooltip": "<правый клик> чтобы бросить гаечный ключ"
+  },
+  "Crucible": {
+    "DisplayName": "Crucible",
+    "Tooltip": "Меч, выкованный из огней самого Ада\n'Единственное, чего они боятся, это ты.'"
+  },
+  "MoonSword": {
+    "DisplayName": "Moon Sword",
+    "Tooltip": ""
+  },
+  "Noxsaber": {
+    "DisplayName": "The Noxsaber",
+    "Tooltip": "Древний чёрный энергетический меч, украденный из храма давно умершего культа"
+  },
+  "AluminumBow": {
+    "DisplayName": "Aluminum Bow",
+    "Tooltip": ""
+  },
+  "ArchersLine": {
+    "DisplayName": "Archer's Line",
+    "Tooltip": "Пули отскакивают от одного врага к другому"
+  },
+  "Copernicus": {
+    "DisplayName": "Copernicus",
+    "Tooltip": "Каждый пятый выстрел также стреляет ракетой"
+  },
+  "Cruithne": {
+    "DisplayName": "Cruithne-3753",
+    "Tooltip": "Преобразует мушкетные шары в зелёные пули\nСтреляет взрывной делириумной сферой"
+  },
+  "LHBMinigun": {
+    "DisplayName": "LHB-59",
+    "Tooltip": "'Что более эффективно, чем пули?\nМного ПУЛЬ.'"
+  },
+  "NWARocketLauncher": {
+    "DisplayName": "NWA-5000",
+    "Tooltip": "<правый клик> для захвата цели"
+  },
+  "ArtemiteBow": {
+    "DisplayName": "Артемитовый Лук",
+    "Tooltip": "Выпускает две стрелы"
+  },
+  "ArtemiteMagnum": {
+    "DisplayName": "Артемитовый Магнум",
+    "Tooltip": "<правый клик> для быстрой стрельбы шестью пулями"
+  },
+  "CalcicCane": {
+    "DisplayName": "Кальциевый Посох",
+    "Tooltip": "Призывает Кратерного Импа для боя"
+  },
+  "ChandriumStaff": {
+    "DisplayName": "Чандриум Посох",
+    "Tooltip": "Призывает Полумесячного Призрака для боя"
+  },
+  "ChandriumWhip": {
+    "DisplayName": "Чандриум Кнут",
+    "Tooltip": "Наносит дополнительный урон каждую третью атаку"
+  },
+  "HandheldEngine": {
+    "DisplayName": "Ручной Двигатель",
+    "Tooltip": "Использует ману как охлаждающую жидкость\nДвигатель перегревается, если не снабжается маной слишком долго\n'Да, это РАКЕТНАЯ наука!'"
+  },
+  "HazardWall": {
+    "DisplayName": "Ограждающая Стена",
+    "Tooltip": ""
+  },
+  "SpaceDust": {
+    "DisplayName": "Космическая Пыль",
+    "Tooltip": ""
+  },
+  "MoonPhaseGlobe": {
+    "DisplayName": "Глобус Лунных Фаз",
+    "Tooltip": ""
+  },
+  "TychoDesertEagle": {
+    "DisplayName": "Tycho .50",
+    "Tooltip": ""
+  },
+  "ChampionsBladeBroken": {
+    "DisplayName": "Клинок Чемпиона",
+    "Tooltip": "Повторные удары клинком усиливают его\nЭтот эффект исчезает через некоторое время, если клинок не используется"
+  },
+  "ChampionsBladeRepaired": {
+    "DisplayName": "Клинок Чемпиона",
+    "Tooltip": "Повторные удары клинком усиливают его\nЭтот эффект исчезает через некоторое время, если клинок не используется"
+  },
+  "ChampionsBlade": {
+    "DisplayName": "Клинок Чемпиона",
+    "Tooltip": "Повторные удары клинком усиливают его\nЭтот эффект исчезает через некоторое время, если клинок не используется"
+  },
+  "SilicaCrimsand": {
+    "DisplayName": "Кремнистый Кримпесок",
+    "Tooltip": ""
+  },
+  "SilicaEbonsand": {
+    "DisplayName": "Кремнистый Эбонпесок",
+    "Tooltip": ""
+  },
+  "SilicaPearlsand": {
+    "DisplayName": "Кремнистый Жемчужный Песок",
+    "Tooltip": ""
+  },
+  "SilicaSand": {
+    "DisplayName": "Кремнистый Песок",
+    "Tooltip": ""
+  },
+  "LaunchPadMarker": {
+    "DisplayName": "Метка Пусковой Площадки",
+    "Tooltip": "Используется для создания пусковой площадки для ракет"
+  },
+  "SteelBar": {
+    "DisplayName": "Стальной Слиток",
+    "Tooltip": ""
+  },
+  "SteelHamaxe": {
+    "DisplayName": "Стальной Молот-Топор",
+    "Tooltip": ""
+  },
+  "SteelPickaxe": {
+    "DisplayName": "Стальная Кирка",
+    "Tooltip": ""
+  },
+  "SteelZweihander": {
+    "DisplayName": "Стальной Двуручный Меч",
+    "Tooltip": "Удерживайте <правый клик> для зарядки удара"
+  },
+  "SteelCrossbow": {
+    "DisplayName": "Стальной Арбалет",
+    "Tooltip": ""
+  },
+  "SteelRifle": {
+    "DisplayName": "Стальная Винтовка",
+    "Tooltip": ""
+  },
+  "IndustrialPlating": {
+    "DisplayName": "Промышленное Покрытие",
+    "Tooltip": ""
+  },
+  "IndustrialPlatform": {
+    "DisplayName": "Промышленная Платформа",
+    "Tooltip": ""
+  },
+  "IndustrialHazardWall": {
+    "DisplayName": "Промышленная Опасная Стена",
+    "Tooltip": ""
+  },
+  "IndustrialHazardWallUnsafe": {
+    "DisplayName": "Опасная Промышленная Опасная Стена",
+    "Tooltip": ""
+  },
+  "IndustrialPlatingWall": {
+    "DisplayName": "Промышленная Покрывающая Стена",
+    "Tooltip": ""
+  },
+  "IndustrialPlatingWallUnsafe": {
+    "DisplayName": "Опасная Промышленная Покрывающая Стена",
+    "Tooltip": ""
+  },
+  "IndustrialSquarePaneledWall": {
+    "DisplayName": "Промышленная Панельная Стена",
+    "Tooltip": ""
+  },
+  "IndustrialSquarePaneledWallUnsafe": {
+    "DisplayName": "Опасная Промышленная Панельная Стена",
+    "Tooltip": ""
+  },
+  "IndustrialTrimmingWall": {
+    "DisplayName": "Промышленная Отделочная Стена",
+    "Tooltip": ""
+  },
+  "IndustrialTrimmingWallUnsafe": {
+    "DisplayName": "Опасная Промышленная Отделочная Стена",
+    "Tooltip": ""
+  },
+  "IndustrialCandle": {
+    "DisplayName": "Промышленная Свеча",
+    "Tooltip": ""
+  },
+  "IndustrialLamp": {
+    "DisplayName": "Промышленная Лампа",
+    "Tooltip": ""
+  },
+  "IndustrialLantern": {
+    "DisplayName": "Промышленный Фонарь",
+    "Tooltip": ""
+  },
+  "IndustrialNeonTube": {
+    "DisplayName": "Промышленная Неоновая Трубка",
+    "Tooltip": ""
+  },
+  "IndustrialCrate": {
+    "DisplayName": "Промышленный Ящик",
+    "Tooltip": ""
+  },
+  "IndustrialGurney": {
+    "DisplayName": "Промышленная Кровать-каталка",
+    "Tooltip": ""
+  },
+  "IndustrialTable": {
+    "DisplayName": "Промышленный Стол",
+    "Tooltip": ""
+  },
+  "IndustrialWorkbench": {
+    "DisplayName": "Промышленный Верстак",
+    "Tooltip": ""
+  },
+  "IndustrialBed": {
+    "DisplayName": "Промышленная Кровать",
+    "Tooltip": ""
+  },
+  "IndustrialChair": {
+    "DisplayName": "Промышленный Приемный Стул",
+    "Tooltip": ""
+  },
+  "IndustrialChairSleek": {
+    "DisplayName": "Промышленный Гладкий Стул",
+    "Tooltip": ""
+  },
+  "IndustrialDeskLamp": {
+    "DisplayName": "Промышленная Настольная Лампа",
+    "Tooltip": ""
+  },
+  "IndustrialSofa": {
+    "DisplayName": "Промышленный Диван",
+    "Tooltip": ""
+  },
+  "IndustrialChest": {
+    "DisplayName": "Промышленный Блок Хранения",
+    "Tooltip": ""
+  },
+  "IndustrialChestElectronic": {
+    "DisplayName": "Промышленный Электронный Блок Хранения",
+    "Tooltip": ""
+  },
+  "IndustrialLocker": {
+    "DisplayName": "Промышленный Шкафчик",
+    "Tooltip": ""
+  },
+  "IndustrialDoor": {
+    "DisplayName": "Промышленная Дверь",
+    "Tooltip": ""
+  },
+  "IndustrialBulkhead": {
+    "DisplayName": "Промышленная Переборка",
+    "Tooltip": ""
+  },
+  "IndustrialBathtub": {
+    "DisplayName": "Промышленная Ванна",
+    "Tooltip": ""
+  },
+  "IndustrialControlPanel": {
+    "DisplayName": "Промышленная Панель Управления",
+    "Tooltip": ""
+  },
+  "IndustrialControlStation": {
+    "DisplayName": "Промышленная Станция Управления",
+    "Tooltip": ""
+  },
+  "IndustrialDeskClock": {
+    "DisplayName": "Промышленные Настольные Часы",
+    "Tooltip": ""
+  },
+  "IndustrialPiano": {
+    "DisplayName": "Промышленное Пианино",
+    "Tooltip": ""
+  },
+  "IndustrialSink": {
+    "DisplayName": "Промышленная Мойка",
+    "Tooltip": ""
+  },
+  "IndustrialBookcase": {
+    "DisplayName": "Промышленный Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "IndustrialCeilingMonitor": {
+    "DisplayName": "Промышленный Потолочный Монитор",
+    "Tooltip": ""
+  },
+  "IndustrialDeskMonitor": {
+    "DisplayName": "Промышленный Настольный Монитор",
+    "Tooltip": ""
+  },
+  "IndustrialWallMonitor": {
+    "DisplayName": "Промышленный Настенный Монитор",
+    "Tooltip": ""
+  },
+  "IndustrialDresser": {
+    "DisplayName": "Промышленный Комод",
+    "Tooltip": ""
+  },
+  "IndustrialToilet": {
+    "DisplayName": "Промышленный Туалет",
+    "Tooltip": ""
+  },
+  "OilRefinery": {
+    "DisplayName": "Нефтеперерабатывающий Завод",
+    "Tooltip": "Используется для переработки топлива и других жидкостей"
+  },
+  "SolarPanelSmall": {
+    "DisplayName": "Солнечная Панель",
+    "Tooltip": "Преобразует солнечную энергию в электричество"
+  },
+  "Procellarum": {
+    "DisplayName": "Procellarum",
+    "Tooltip": "<left> для удара, нанося метку молнии\n<right> для броска, заряжая удар 5 небесными молниями\nмолнии будут приоритетно наносить урон отмеченным врагам и наносить на 50% больше урона"
+  },
+  "LexanGlass": {
+    "DisplayName": "Стекло Lexan",
+    "Tooltip": ""
+  },
+  "QuestionMark": {
+    "DisplayName": "Вопросительный Знак",
+    "Tooltip": ""
+  },
+  "ZombieFinger": {
+    "DisplayName": "Палец Зомби",
+    "Tooltip": ""
+  },
+  "XFLR6": {
+    "DisplayName": "XFLR-6",
+    "Tooltip": "'Ну что, как вам это?\nПосмотрите, что создал козел.'"
+  },
+  "InvarArrow": {
+    "DisplayName": "Инваровая Стрела",
+    "Tooltip": "Высокоскоростные стрелы, пробивающие врагов"
+  },
+  "InvarBullet": {
+    "DisplayName": "Инваровая Пуля",
+    "Tooltip": "Может рикошетить между врагами"
+  },
+  "SpaceTeddy": {
+    "DisplayName": "Космический Мишка",
+    "Tooltip": ""
+  },
+  "TeddyBear": {
+    "DisplayName": "Мишка Тедди",
+    "Tooltip": ""
+  },
+  "SteelChestplate": {
+    "DisplayName": "Стальная Кирасса",
+    "Tooltip": ""
+  },
+  "SteelHelmet": {
+    "DisplayName": "Стальной Шлем",
+    "Tooltip": ""
+  },
+  "SteelLeggings": {
+    "DisplayName": "Стальные Поножи",
+    "Tooltip": ""
+  },
+  "RapaciousBrand": {
+    "DisplayName": "Хищный Бренд",
+    "Tooltip": ""
+  },
+  "Motor": {
+    "DisplayName": "Мотор",
+    "Tooltip": ""
+  },
+  "Apollo115": {
+    "DisplayName": "Apollo115",
+    "Tooltip": ""
+  },
+  "CraterDemonPet": {
+    "DisplayName": "Игрушечная Ракета",
+    "Tooltip": "Призывает Кратерного Черта\n'Унеси меня на Луну!'"
+  },
+  "MoonGoldCrescent": {
+    "DisplayName": "Лунный Золотой Полумесяц",
+    "Tooltip": ""
+  },
+  "MoonGoldLunarCross": {
+    "DisplayName": "Лунный Золотой Крест",
+    "Tooltip": ""
+  },
+  "MoonHeadstone": {
+    "DisplayName": "Лунная Надгробная Плита",
+    "Tooltip": ""
+  },
+  "Coal": {
+    "DisplayName": "Уголь",
+    "Tooltip": ""
+  },
+  "OxygenSystem": {
+    "DisplayName": "Кислородная Система",
+    "Tooltip": ""
+  },
+  "MercurianBanner": {
+    "DisplayName": "Меркурианский Баннер",
+    "Tooltip": ""
+  },
+  "DeadworldMusicBox": {
+    "DisplayName": "Музыкальная Шкатулка (Мертвый Мир)",
+    "Tooltip": ""
+  },
+  "RequiemMusicBox": {
+    "DisplayName": "Музыкальная Шкатулка (Реквием)",
+    "Tooltip": ""
+  },
+  "SpaceInvaderMusicBox": {
+    "DisplayName": "Музыкальная Шкатулка (Космический Захватчик)",
+    "Tooltip": ""
+  },
+  "StygiaMusicBox": {
+    "DisplayName": "Музыкальная Шкатулка (Стигия)",
+    "Tooltip": ""
+  },
+  "IntoTheUnknownMusicBox": {
+    "DisplayName": "Музыкальная Шкатулка (В Неизвестность)",
+    "Tooltip": ""
+  },
+  "OsmiumBoots": {
+    "DisplayName": "Осмиевые Ботинки",
+    "Tooltip": "Увеличивает скорость падения игрока\nДвойной тап вниз для дальнейшего увеличения скорости падения"
+  },
+  "EarthGlobe": {
+    "DisplayName": "Земной Глобус",
+    "Tooltip": "'Дом, милый дом!'"
+  },
+  "PowerJunction": {
+    "DisplayName": "Силовая Перекладка",
+    "Tooltip": ""
+  },
+  "Computer": {
+    "DisplayName": "Компьютер",
+    "Tooltip": ""
+  },
+  "HelixPatternDesign": {
+    "DisplayName": "Дизайн Спирали",
+    "Tooltip": ""
+  },
+  "Gear": {
+    "DisplayName": "Шестеренка",
+    "Tooltip": ""
+  },
+  "SpacesuitFabric": {
+    "DisplayName": "Ткань для Скафандра",
+    "Tooltip": ""
+  },
+  "ConstructionLight": {
+    "DisplayName": "Строительный Светильник",
+    "Tooltip": ""
+  },
+  "OreExcavator": {
+    "DisplayName": "Экскаватор Руды",
+    "Tooltip": "Автоматически извлекает руды и ресурсы из-под земли\nНе повреждает местность\nНесколько экскаваторов, размещенных на одной планете, будут давать уменьшающуюся отдачу"
+  },
+  "AlienResidue": {
+    "DisplayName": "Инопланетный Остаток",
+    "Tooltip": ""
+  },
+  "Plastic": {
+    "DisplayName": "Пластик",
+    "Tooltip": ""
+  },
+  "ReactorComponent": {
+    "DisplayName": "Компонент Реактора",
+    "Tooltip": ""
+  },
+  "ReactorHousing": {
+    "DisplayName": "Корпус Реактора",
+    "Tooltip": ""
+  },
+  "Fabricator": {
+    "DisplayName": "Фабрикатор",
+    "Tooltip": "Используется для создания продвинутых машин и компонентов ракеты"
+  },
+  "Battery": {
+    "DisplayName": "Батарея",
+    "Tooltip": ""
+  },
+  "CompactDisk": {
+    "DisplayName": "Компакт-диск",
+    "Tooltip": ""
+  },
+  "ElasticFiber": {
+    "DisplayName": "Эластичное Волокно",
+    "Tooltip": ""
+  },
+  "RocketLandingLeg": {
+    "DisplayName": "Посадочная Нога Ракеты",
+    "Tooltip": ""
+  },
+  "RocketPlating": {
+    "DisplayName": "Обшивка Ракеты",
+    "Tooltip": ""
+  },
+  "CoalBrick": {
+    "DisplayName": "Кирпич из Угля",
+    "Tooltip": ""
+  },
+  "LandingGear": {
+    "DisplayName": "Посадочное Оборудование",
+    "Tooltip": ""
+  },
+  "FuelCanister": {
+    "DisplayName": "Топливный Канистратор",
+    "Tooltip": "",
+    "CapacityTooltip": "Может содержать до {0} {1} топлива",
+    "AmountTooltip": "{0}/{1} {2}"
+  },
+  "EngineComponent": {
+    "DisplayName": "Компонент Двигателя",
+    "Tooltip": ""
+  },
+  "CopperWire": {
+    "DisplayName": "Медный Провод",
+    "Tooltip": ""
+  },
+  "GothicCoalBrick": {
+    "DisplayName": "Готический Угольный Кирпич",
+    "Tooltip": ""
+  },
+  "SpookyDookie": {
+    "DisplayName": "Жуткий Дуки",
+    "Tooltip": "'Ну, давай...'"
+  },
+  "CheeseBlock": {
+    "DisplayName": "Блок Сыра",
+    "Tooltip": ""
+  },
+  "Cheese": {
+    "DisplayName": "Сыр",
+    "Tooltip": "{$CommonItemTooltip.MajorStats}"
+  },
+  "CapstoneRush": {
+    "DisplayName": "Капстон Раш",
+    "Tooltip": "{$CommonItemTooltip.MajorStats}"
+  },
+  "CheeseBathtub": {
+    "DisplayName": "Сырная Ванна",
+    "Tooltip": ""
+  },
+  "CheeseBed": {
+    "DisplayName": "Сырная Кровать",
+    "Tooltip": ""
+  },
+  "CheeseBookcase": {
+    "DisplayName": "Сырный Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "CheeseCandelabra": {
+    "DisplayName": "Сырный Канделябр",
+    "Tooltip": ""
+  },
+  "CheeseCandle": {
+    "DisplayName": "Сырная Свеча",
+    "Tooltip": ""
+  },
+  "CheeseChair": {
+    "DisplayName": "Сырный Стул",
+    "Tooltip": ""
+  },
+  "CheeseChandelier": {
+    "DisplayName": "Сырная Люстра",
+    "Tooltip": ""
+  },
+  "CheeseChest": {
+    "DisplayName": "Сырный Сундук",
+    "Tooltip": ""
+  },
+  "CheeseClock": {
+    "DisplayName": "Сырные Часы",
+    "Tooltip": ""
+  },
+  "CheeseDoor": {
+    "DisplayName": "Сырная Дверь",
+    "Tooltip": ""
+  },
+  "CheeseDresser": {
+    "DisplayName": "Сырный Комод",
+    "Tooltip": ""
+  },
+  "CheeseLamp": {
+    "DisplayName": "Сырная Лампа",
+    "Tooltip": ""
+  },
+  "CheeseLantern": {
+    "DisplayName": "Сырный Фонарь",
+    "Tooltip": ""
+  },
+  "CheesePiano": {
+    "DisplayName": "Сырное Пианино",
+    "Tooltip": ""
+  },
+  "CheeseSink": {
+    "DisplayName": "Сырная Мойка",
+    "Tooltip": ""
+  },
+  "CheeseSofa": {
+    "DisplayName": "Сырный Диван",
+    "Tooltip": ""
+  },
+  "CheeseTable": {
+    "DisplayName": "Сырный Стол",
+    "Tooltip": ""
+  },
+  "CheeseToilet": {
+    "DisplayName": "Сырный Туалет",
+    "Tooltip": "'Это ужасная идея.'"
+  },
+  "CheeseWorkbench": {
+    "DisplayName": "Сырный Верстак",
+    "Tooltip": ""
+  },
+  "LuminiteBookcase": {
+    "DisplayName": "Люминитовый Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "LuminiteChair": {
+    "DisplayName": "Люминитовый Стул",
+    "Tooltip": ""
+  },
+  "LuminiteClock": {
+    "DisplayName": "Люминитовые Часы",
+    "Tooltip": ""
+  },
+  "LuminiteToilet": {
+    "DisplayName": "Люминитовый Туалет",
+    "Tooltip": ""
+  },
+  "WindTurbine": {
+    "DisplayName": "Ветряная Турбина",
+    "Tooltip": ""
+  },
+  "EmployeeBoots": {
+    "DisplayName": "Ботинки Сотрудника",
+    "Tooltip": ""
+  },
+  "EmployeeSuit": {
+    "DisplayName": "Костюм Сотрудника",
+    "Tooltip": ""
+  },
+  "EmployeeVisor": {
+    "DisplayName": "Козырек Сотрудника",
+    "Tooltip": ""
+  },
+  "Boombox": {
+    "DisplayName": "Бумбокс",
+    "Tooltip": ""
+  },
+  "StopSign": {
+    "DisplayName": "Знак Стоп",
+    "Tooltip": "'Стой прямо здесь!'"
+  },
+  "WindTurbineLarge": {
+    "DisplayName": "Большая Ветряная Турбина",
+    "Tooltip": "Преобразует энергию ветра в электричество"
+  },
+  "WindTurbineSmall": {
+    "DisplayName": "Ветряная Турбина",
+    "Tooltip": "Преобразует энергию ветра в электричество"
+  },
+  "WeCanDoItBlue": {
+    "DisplayName": "Мы Можем Это Сделать!",
+    "Tooltip": "Теперь в синем цвете!"
+  },
+  "WeCanDoItYellow": {
+    "DisplayName": "Мы Можем Это Сделать!",
+    "Tooltip": "Теперь в желтом цвете!"
+  },
+  "DisplayScreen": {
+    "DisplayName": "Экран Отображения",
+    "Tooltip": ""
+  },
+  "BurnerGenerator": {
+    "DisplayName": "Генератор Горелки",
+    "Tooltip": "Преобразует горючее топливо в электричество"
+  },
+  "IndustrialServer": {
+    "DisplayName": "Промышленный Сервер",
+    "Tooltip": ""
+  },
+  "InANutshell": {
+    "DisplayName": "В Кратце",
+    "Tooltip": ""
+  },
+  "Medkit": {
+    "DisplayName": "Аптечка",
+    "Tooltip": "",
+    "RestoreLifeText": "{0} за {1} {^1:секунду;секунд}"
+  },
+  "FrigorianGaze": {
+    "DisplayName": "Фригорианский Взор",
+    "Tooltip": "Поглотите своих врагов вихрем ледяных снарядов"
+  },
+  "StarDestroyer": {
+    "DisplayName": "Звездный Разрушитель",
+    "Tooltip": "Выпускает легион звезд по вашим врагам"
+  },
+  "WaveGunBlue": {
+    "DisplayName": "Синий Пистолет Волны",
+    "Tooltip": ""
+  },
+  "WaveGunRed": {
+    "DisplayName": "Красный Пистолет Волны",
+    "Tooltip": ""
+  },
+  "WaveGunDual": {
+    "DisplayName": "Пистолет Волны",
+    "Tooltip": "Правая кнопка мыши для переключения режима стрельбы",
+    "DisplayNameDual": "Двойной Пистолет Волны",
+    "DisplayNameRifle": "Пистолет Волны"
+  },
+  "Cynthalith": {
+    "DisplayName": "Цинталит",
+    "Tooltip": ""
+  },
+  "AstraBookcase": {
+    "DisplayName": "Астра Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "AstraChair": {
+    "DisplayName": "Астра Стул",
+    "Tooltip": ""
+  },
+  "AstraChest": {
+    "DisplayName": "Астра Сундук",
+    "Tooltip": ""
+  },
+  "AstraClock": {
+    "DisplayName": "Астра Часы",
+    "Tooltip": ""
+  },
+  "AstraToilet": {
+    "DisplayName": "Астра Туалет",
+    "Tooltip": ""
+  },
+  "CosmicEmberBookcase": {
+    "DisplayName": "Космическая Искра Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "CosmicEmberChair": {
+    "DisplayName": "Космическая Искра Стул",
+    "Tooltip": ""
+  },
+  "CosmicEmberChest": {
+    "DisplayName": "Космическая Искра Сундук",
+    "Tooltip": ""
+  },
+  "CosmicEmberClock": {
+    "DisplayName": "Космическая Искра Часы",
+    "Tooltip": ""
+  },
+  "CosmicEmberToilet": {
+    "DisplayName": "Космическая Искра Туалет",
+    "Tooltip": ""
+  },
+  "CryocoreBookcase": {
+    "DisplayName": "Криоядро Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "CryocoreChair": {
+    "DisplayName": "Криоядро Стул",
+    "Tooltip": ""
+  },
+  "CryocoreChest": {
+    "DisplayName": "Криоядро Сундук",
+    "Tooltip": ""
+  },
+  "CryocoreClock": {
+    "DisplayName": "Криоядро Часы",
+    "Tooltip": ""
+  },
+  "CryocoreToilet": {
+    "DisplayName": "Криоядро Туалет",
+    "Tooltip": ""
+  },
+  "DarkCelestialBookcase": {
+    "DisplayName": "Тёмное Небесное Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "DarkCelestialChair": {
+    "DisplayName": "Тёмное Небесное Стул",
+    "Tooltip": ""
+  },
+  "DarkCelestialChest": {
+    "DisplayName": "Тёмное Небесное Сундук",
+    "Tooltip": ""
+  },
+  "DarkCelestialClock": {
+    "DisplayName": "Тёмное Небесное Часы",
+    "Tooltip": ""
+  },
+  "DarkCelestialToilet": {
+    "DisplayName": "Тёмное Небесное Туалет",
+    "Tooltip": ""
+  },
+  "HeavenforgeBookcase": {
+    "DisplayName": "Небесная Кузница Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "HeavenforgeChair": {
+    "DisplayName": "Небесная Кузница Стул",
+    "Tooltip": ""
+  },
+  "HeavenforgeChest": {
+    "DisplayName": "Небесная Кузница Сундук",
+    "Tooltip": ""
+  },
+  "HeavenforgeClock": {
+    "DisplayName": "Небесная Кузница Часы",
+    "Tooltip": ""
+  },
+  "HeavenforgeToilet": {
+    "DisplayName": "Небесная Кузница Туалет",
+    "Tooltip": ""
+  },
+  "LuminiteChest": {
+    "DisplayName": "Люминитовый Сундук",
+    "Tooltip": ""
+  },
+  "LunarRustBookcase": {
+    "DisplayName": "Лунная Ржавчина Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "LunarRustChair": {
+    "DisplayName": "Лунная Ржавчина Стул",
+    "Tooltip": ""
+  },
+  "LunarRustChest": {
+    "DisplayName": "Лунная Ржавчина Сундук",
+    "Tooltip": ""
+  },
+  "LunarRustClock": {
+    "DisplayName": "Лунная Ржавчина Часы",
+    "Tooltip": ""
+  },
+  "LunarRustToilet": {
+    "DisplayName": "Лунная Ржавчина Туалет",
+    "Tooltip": ""
+  },
+  "MercuryBookcase": {
+    "DisplayName": "Меркурий Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "MercuryChair": {
+    "DisplayName": "Меркурий Стул",
+    "Tooltip": ""
+  },
+  "MercuryChest": {
+    "DisplayName": "Меркурий Сундук",
+    "Tooltip": ""
+  },
+  "MercuryClock": {
+    "DisplayName": "Меркурий Часы",
+    "Tooltip": ""
+  },
+  "MercuryToilet": {
+    "DisplayName": "Меркурий Туалет",
+    "Tooltip": ""
+  },
+  "StarRoyaleBookcase": {
+    "DisplayName": "Звёздный Королевский Книжный Шкаф",
+    "Tooltip": ""
+  },
+  "StarRoyaleChair": {
+    "DisplayName": "Звёздный Королевский Стул",
+    "Tooltip": ""
+  },
+  "StarRoyaleChest": {
+    "DisplayName": "Звёздный Королевский Сундук",
+    "Tooltip": ""
+  },
+  "StarRoyaleClock": {
+    "DisplayName": "Звёздный Королевский Часы",
+    "Tooltip": ""
+  },
+  "StarRoyaleToilet": {
+    "DisplayName": "Звёздный Королевский Туалет",
+    "Tooltip": ""
+  },
+  "XaocKey": {
+    "DisplayName": "Ключ Хаоса",
+    "Tooltip": "Открывает все Люминитовые Сундуки"
+  },
+  "AstraCandelabra": {
+    "DisplayName": "Астра Канделябр",
+    "Tooltip": ""
+  },
+  "AstraCandle": {
+    "DisplayName": "Астра Свеча",
+    "Tooltip": ""
+  },
+  "AstraLantern": {
+    "DisplayName": "Астра Фонарь",
+    "Tooltip": ""
+  },
+  "CosmicEmberCandelabra": {
+    "DisplayName": "Космическая Искра Канделябр",
+    "Tooltip": ""
+  },
+  "CosmicEmberCandle": {
+    "DisplayName": "Космическая Искра Свеча",
+    "Tooltip": ""
+  },
+  "CosmicEmberLantern": {
+    "DisplayName": "Космическая Искра Фонарь",
+    "Tooltip": ""
+  },
+  "CryocoreCandelabra": {
+    "DisplayName": "Криоядро Канделябр",
+    "Tooltip": ""
+  },
+  "CryocoreCandle": {
+    "DisplayName": "Криоядро Свеча",
+    "Tooltip": ""
+  },
+  "CryocoreLantern": {
+    "DisplayName": "Криоядро Фонарь",
+    "Tooltip": ""
+  },
+  "DarkCelestialCandelabra": {
+    "DisplayName": "Тёмное Небесное Канделябр",
+    "Tooltip": ""
+  },
+  "DarkCelestialCandle": {
+    "DisplayName": "Тёмное Небесное Свеча",
+    "Tooltip": ""
+  },
+  "DarkCelestialLantern": {
+    "DisplayName": "Тёмное Небесное Фонарь",
+    "Tooltip": ""
+  },
+  "HeavenforgeCandelabra": {
+    "DisplayName": "Небесная Кузница Канделябр",
+    "Tooltip": ""
+  },
+  "HeavenforgeCandle": {
+    "DisplayName": "Небесная Кузница Свеча",
+    "Tooltip": ""
+  },
+  "HeavenforgeLantern": {
+    "DisplayName": "Небесная Кузница Фонарь",
+    "Tooltip": ""
+  },
+  "LuminiteCandelabra": {
+    "DisplayName": "Люминитовый Канделябр",
+    "Tooltip": ""
+  },
+  "LuminiteCandle": {
+    "DisplayName": "Люминитовая Свеча",
+    "Tooltip": ""
+  },
+  "LuminiteLantern": {
+    "DisplayName": "Люминитовый Фонарь",
+    "Tooltip": ""
+  },
+  "LunarRustCandelabra": {
+    "DisplayName": "Лунная Ржавчина Канделябр",
+    "Tooltip": ""
+  },
+  "LunarRustCandle": {
+    "DisplayName": "Лунная Ржавчина Свеча",
+    "Tooltip": ""
+  },
+  "LunarRustLantern": {
+    "DisplayName": "Лунная Ржавчина Фонарь",
+    "Tooltip": ""
+  },
+  "MercuryCandelabra": {
+    "DisplayName": "Меркурий Канделябр",
+    "Tooltip": ""
+  },
+  "MercuryCandle": {
+    "DisplayName": "Меркурий Свеча",
+    "Tooltip": ""
+  },
+  "MercuryLantern": {
+    "DisplayName": "Меркурий Фонарь",
+    "Tooltip": ""
+  },
+  "StarRoyaleCandelabra": {
+    "DisplayName": "Звёздный Королевский Канделябр",
+    "Tooltip": ""
+  },
+  "StarRoyaleCandle": {
+    "DisplayName": "Звёздный Королевский Свеча",
+    "Tooltip": ""
+  },
+  "StarRoyaleLantern": {
+    "DisplayName": "Звёздный Королевский Фонарь",
+    "Tooltip": ""
+  },
+  "AntiRadiationPills": {
+    "DisplayName": "Антирадиационные Таблетки",
+    "Tooltip": ""
+  },
+  "AirVent": {
+    "DisplayName": "Вентиляционная Решетка",
+    "Tooltip": ""
+  },
+  "Sledgehammer": {
+    "DisplayName": "Кувалда",
+    "Tooltip": "Разбивает больше стен, чем обычный молот"
+  },
+  "IrradiatedAltar": {
+    "DisplayName": "Облучённый Алтарь",
+    "Tooltip": ""
+  },
+  "IrradiatedBrickWallUnsafe": {
+    "DisplayName": "Опасная Облучённая Кирпичная Стена",
+    "Tooltip": ""
+  },
+  "IrradiatedRockWallUnsafe": {
+    "DisplayName": "Опасная Облучённая Каменная Стена",
+    "Tooltip": ""
+  },
+  "ProtolithWallUnsafe": {
+    "DisplayName": "Опасная Протолитовая Стена",
+    "Tooltip": ""
+  },
+  "RegolithBrickWallUnsafe": {
+    "DisplayName": "Опасная Реголитовая Кирпичная Стена",
+    "Tooltip": ""
+  },
+  "RegolithWallUnsafe": {
+    "DisplayName": "Опасная Реголитовая Стена",
+    "Tooltip": ""
+  },
+  "Micronova": {
+    "DisplayName": "Микронова",
+    "Tooltip": "Создаёт два портала для стрельбы лучами по вашему курсору"
+  },
+  "LexanGlassWall": {
+    "DisplayName": "Лексановое Стекло",
+    "Tooltip": ""
+  },
+  "KyaniteScarabCritter": {
+    "DisplayName": "Кианитовый Скарабей",
+    "Tooltip": ""
+  },
+  "Fridge": {
+    "DisplayName": "Холодильник",
+    "Tooltip": ""
+  },
+  "IVPole": {
+    "DisplayName": "Капельница",
+    "Tooltip": ""
+  },
+  "DevOmnitool": {
+    "DisplayName": "Разработческий Многофункциональный Инструмент",
+    "Tooltip": ""
+  },
+  "LunarCrystal": {
+    "DisplayName": "Лунный Кристалл",
+    "Tooltip": ""
+  },
+  "CrescentMoon": {
+    "DisplayName": "Полумесяц",
+    "Tooltip": ""
+  },
+  "RocheChakram": {
+    "DisplayName": "Роше",
+    "Tooltip": ""
+  },
+  "CrescentScripture": {
+    "DisplayName": "Писание Полумесяца",
+    "Tooltip": "'Выцарапано древними символами из давно утраченного лунянского текста.'"
+  },
+  "Totality": {
+    "DisplayName": "Тотальность",
+    "Tooltip": "Удары оставляют за собой разрывы тёмной магии"
+  },
+  "AstraWorkbench": {
+    "DisplayName": "Астра Верстак",
+    "Tooltip": ""
+  },
+  "CosmicEmberWorkbench": {
+    "DisplayName": "Космическая Искра Верстак",
+    "Tooltip": ""
+  },
+  "CryocoreWorkbench": {
+    "DisplayName": "Криоядро Верстак",
+    "Tooltip": ""
+  },
+  "DarkCelestialWorkbench": {
+    "DisplayName": "Тёмное Небесное Верстак",
+    "Tooltip": ""
+  },
+  "HeavenforgeWorkbench": {
+    "DisplayName": "Небесная Кузница Верстак",
+    "Tooltip": ""
+  },
+  "LuminiteWorkbench": {
+    "DisplayName": "Люминитовый Верстак",
+    "Tooltip": ""
+  },
+  "LunarRustWorkbench": {
+    "DisplayName": "Лунная Ржавчина Верстак",
+    "Tooltip": ""
+  },
+  "MercuryWorkbench": {
+    "DisplayName": "Меркурий Верстак",
+    "Tooltip": ""
+  },
+  "StarRoyaleWorkbench": {
+    "DisplayName": "Звёздный Королевский Верстак",
+    "Tooltip": ""
+  },
+  "InvarBar": {
+    "DisplayName": "Инваровый Слиток",
+    "Tooltip": ""
+  },
+  "NickelOre": {
+    "DisplayName": "Никелевая Руда",
+    "Tooltip": ""
+  },
+  "InhibitorFieldGrenade": {
+    "DisplayName": "Граната Стазиса",
+    "Tooltip": ""
+  },
+  "QuartzFragment": {
+    "DisplayName": "Фрагмент Кварца",
+    "Tooltip": ""
+  },
+  "ManisolBlades": {
+    "DisplayName": "Лезвия Манисол",
+    "Tooltip": "Метайте лезвия в своих врагов\nСолнечные лезвия прилипают к врагам и взрываются при возвращении\nЛунные лезвия пронзают врагов при броске и возвращении"
+  },
+  "ArmstrongGauntlets": {
+    "DisplayName": "Перчатки Армстронга",
+    "Tooltip": "Бросает град ударов\nКаждые несколько ударов вы будете прыгать вперед\n'Ты ожидаешь, что я убегу?!'"
+  },
+  "WornLunarianDagger": {
+    "DisplayName": "Изношенный Лунянский Кинжал",
+    "Tooltip": "'Изношенный кинжал когда-то имел множество применений. \nТеперь остались только его магические способности.'"
+  },
+  "Canister": {
+    "DisplayName": "Канистра",
+    "Tooltip": ""
+  },
+  "RocketFuelCanister": {
+    "DisplayName": "Канистра Ракетного Топлива",
+    "Tooltip": ""
+  },
+  "TempestuousBand": {
+    "DisplayName": "Бурное Кольцо",
+    "Tooltip": "Критические удары наносят на 20% больше урона\nНекритические удары наносят на 20% меньше урона\nУвеличивает шанс критического удара на 15%"
+  },
+  "ArcaneBarnacle": {
+    "DisplayName": "Магический Барнакл",
+    "Tooltip": "Увеличивает магический урон на 10%\nУвеличивает расход маны на 70%\nПопадание по врагу высасывает 2% урона как ману\nПредметы, мгновенно восстанавливающие ману, отключены"
+  },
+  "MomentumLash": {
+    "DisplayName": "Импульсный Хлыст",
+    "Tooltip": "Повторные удары по врагам хлыстом увеличивают урон призыва и скорость хлыста до +18%"
+  },
+  "Ilmenite": {
+    "DisplayName": "Ильменит",
+    "Tooltip": "<left> для стрельбы световыми болтами\nHold <right> для зарядки взрывного вихря света"
+  },
+  "StalwartTowerShield": {
+    "DisplayName": "Стойкий Башенный Щит",
+    "Tooltip": "Повторные удары будут увеличивать защиту на +3 до +12"
+  },
+  "ThaumaturgicWard": {
+    "DisplayName": "Теургический Щит",
+    "Tooltip": "При уровне жизни ниже 30% от максимума, 50% урона берётся из маны\nЛюбой избыток урона для маны затем применяется обратно к вашей жизни\nНе наносит немагический урон\nНе может быть экипирован с Магическими Наручами"
+  },
+  "HummingbirdDroneRemote": {
+    "DisplayName": "Контроллер P.D.C.D.",
+    "Tooltip": "Призывает дрон Колибри для борьбы за вас\nПри низком уровне здоровья они будут окружать вас в оборонительной позиции"
+  },
+  "GreatstaffOfHorus": {
+    "DisplayName": "Великий Посох Хоруса",
+    "Tooltip": "Призывает Младший Гранул для борьбы за вас"
+  },
+  "LuminiteTorch": {
+    "DisplayName": "Люминитовый Факел",
+    "Tooltip": "Может использоваться в безвоздушных средах"
+  },
+  "RyuguStaff": {
+    "DisplayName": "Посох Миномета",
+    "Tooltip": "Призывает Рюгу, чтобы сражаться за вас"
+  },
+  "AstraDoor": {
+    "DisplayName": "Дверь Астра",
+    "Tooltip": ""
+  },
+  "CosmicEmberDoor": {
+    "DisplayName": "Дверь Космического Угля",
+    "Tooltip": ""
+  },
+  "CryocoreDoor": {
+    "DisplayName": "Дверь Криокора",
+    "Tooltip": ""
+  },
+  "DarkCelestialDoor": {
+    "DisplayName": "Дверь Темного Небесного",
+    "Tooltip": ""
+  },
+  "HeavenforgeDoor": {
+    "DisplayName": "Дверь Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "LuminiteDoor": {
+    "DisplayName": "Люминитовая Дверь",
+    "Tooltip": ""
+  },
+  "LunarRustDoor": {
+    "DisplayName": "Лунная Ржавая Дверь",
+    "Tooltip": ""
+  },
+  "MercuryDoor": {
+    "DisplayName": "Ртутная Дверь",
+    "Tooltip": ""
+  },
+  "StarRoyaleDoor": {
+    "DisplayName": "Дверь Королевской Звезды",
+    "Tooltip": ""
+  },
+  "SolarCell": {
+    "DisplayName": "Солнечная Ячейка",
+    "Tooltip": ""
+  },
+  "LaserSight": {
+    "DisplayName": "Лазерный Прицел",
+    "Tooltip": "На 30% уменьшает разброс стрелкового оружия"
+  },
+  "ProtolithBrick": {
+    "DisplayName": "Протолитовый Кирпич",
+    "Tooltip": ""
+  },
+  "ProtolithBrickWall": {
+    "DisplayName": "Протолитовая Кирпичная Стена",
+    "Tooltip": ""
+  },
+  "ProtolithBrickWallUnsafe": {
+    "DisplayName": "Опасная Протолитовая Кирпичная Стена",
+    "Tooltip": ""
+  },
+  "AstraBathtub": {
+    "DisplayName": "Ванна Астра",
+    "Tooltip": ""
+  },
+  "AstraBed": {
+    "DisplayName": "Кровать Астра",
+    "Tooltip": ""
+  },
+  "AstraChandelier": {
+    "DisplayName": "Люстра Астра",
+    "Tooltip": ""
+  },
+  "AstraDresser": {
+    "DisplayName": "Комод Астра",
+    "Tooltip": ""
+  },
+  "AstraLamp": {
+    "DisplayName": "Лампа Астра",
+    "Tooltip": ""
+  },
+  "AstraPiano": {
+    "DisplayName": "Пианино Астра",
+    "Tooltip": ""
+  },
+  "AstraSink": {
+    "DisplayName": "Раковина Астра",
+    "Tooltip": ""
+  },
+  "AstraSofa": {
+    "DisplayName": "Диван Астра",
+    "Tooltip": ""
+  },
+  "AstraTable": {
+    "DisplayName": "Стол Астра",
+    "Tooltip": ""
+  },
+  "CosmicEmberBathtub": {
+    "DisplayName": "Ванна Космического Углерода",
+    "Tooltip": ""
+  },
+  "CosmicEmberBed": {
+    "DisplayName": "Кровать Космического Углерода",
+    "Tooltip": ""
+  },
+  "CosmicEmberChandelier": {
+    "DisplayName": "Люстра Космического Углерода",
+    "Tooltip": ""
+  },
+  "CosmicEmberDresser": {
+    "DisplayName": "Комод Космического Углерода",
+    "Tooltip": ""
+  },
+  "CosmicEmberLamp": {
+    "DisplayName": "Лампа Космического Углерода",
+    "Tooltip": ""
+  },
+  "CosmicEmberPiano": {
+    "DisplayName": "Пианино Космического Углерода",
+    "Tooltip": ""
+  },
+  "CosmicEmberSink": {
+    "DisplayName": "Раковина Космического Углерода",
+    "Tooltip": ""
+  },
+  "CosmicEmberSofa": {
+    "DisplayName": "Диван Космического Углерода",
+    "Tooltip": ""
+  },
+  "CosmicEmberTable": {
+    "DisplayName": "Стол Космического Углерода",
+    "Tooltip": ""
+  },
+  "CryocoreBathtub": {
+    "DisplayName": "Ванна Криокора",
+    "Tooltip": ""
+  },
+  "CryocoreBed": {
+    "DisplayName": "Кровать Криокора",
+    "Tooltip": ""
+  },
+  "CryocoreChandelier": {
+    "DisplayName": "Люстра Криокора",
+    "Tooltip": ""
+  },
+  "CryocoreDresser": {
+    "DisplayName": "Комод Криокора",
+    "Tooltip": ""
+  },
+  "CryocoreLamp": {
+    "DisplayName": "Лампа Криокора",
+    "Tooltip": ""
+  },
+  "CryocorePiano": {
+    "DisplayName": "Пианино Криокора",
+    "Tooltip": ""
+  },
+  "CryocoreSink": {
+    "DisplayName": "Раковина Криокора",
+    "Tooltip": ""
+  },
+  "CryocoreSofa": {
+    "DisplayName": "Диван Криокора",
+    "Tooltip": ""
+  },
+  "CryocoreTable": {
+    "DisplayName": "Стол Криокора",
+    "Tooltip": ""
+  },
+  "DarkCelestialBathtub": {
+    "DisplayName": "Ванна Темного Небесного",
+    "Tooltip": ""
+  },
+  "DarkCelestialBed": {
+    "DisplayName": "Кровать Темного Небесного",
+    "Tooltip": ""
+  },
+  "DarkCelestialChandelier": {
+    "DisplayName": "Люстра Темного Небесного",
+    "Tooltip": ""
+  },
+  "DarkCelestialDresser": {
+    "DisplayName": "Комод Темного Небесного",
+    "Tooltip": ""
+  },
+  "DarkCelestialLamp": {
+    "DisplayName": "Лампа Темного Небесного",
+    "Tooltip": ""
+  },
+  "DarkCelestialPiano": {
+    "DisplayName": "Пианино Темного Небесного",
+    "Tooltip": ""
+  },
+  "DarkCelestialSink": {
+    "DisplayName": "Раковина Темного Небесного",
+    "Tooltip": ""
+  },
+  "DarkCelestialSofa": {
+    "DisplayName": "Диван Темного Небесного",
+    "Tooltip": ""
+  },
+  "DarkCelestialTable": {
+    "DisplayName": "Стол Темного Небесного",
+    "Tooltip": ""
+  },
+  "HeavenforgeBathtub": {
+    "DisplayName": "Ванна Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "HeavenforgeBed": {
+    "DisplayName": "Кровать Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "HeavenforgeChandelier": {
+    "DisplayName": "Люстра Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "HeavenforgeDresser": {
+    "DisplayName": "Комод Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "HeavenforgeLamp": {
+    "DisplayName": "Лампа Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "HeavenforgePiano": {
+    "DisplayName": "Пианино Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "HeavenforgeSink": {
+    "DisplayName": "Раковина Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "HeavenforgeSofa": {
+    "DisplayName": "Диван Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "HeavenforgeTable": {
+    "DisplayName": "Стол Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "LuminiteBathtub": {
+    "DisplayName": "Люминитовая Ванна",
+    "Tooltip": ""
+  },
+  "LuminiteBed": {
+    "DisplayName": "Люминитовая Кровать",
+    "Tooltip": ""
+  },
+  "LuminiteChandelier": {
+    "DisplayName": "Люминитовая Люстра",
+    "Tooltip": ""
+  },
+  "LuminiteDresser": {
+    "DisplayName": "Люминитовый Комод",
+    "Tooltip": ""
+  },
+  "LuminiteLamp": {
+    "DisplayName": "Люминитовая Лампа",
+    "Tooltip": ""
+  },
+  "LuminitePiano": {
+    "DisplayName": "Люминитовое Пианино",
+    "Tooltip": ""
+  },
+  "LuminiteSink": {
+    "DisplayName": "Люминитовая Раковина",
+    "Tooltip": ""
+  },
+  "LuminiteSofa": {
+    "DisplayName": "Люминитовый Диван",
+    "Tooltip": ""
+  },
+  "LuminiteTable": {
+    "DisplayName": "Люминитовый Стол",
+    "Tooltip": ""
+  },
+  "LunarRustBathtub": {
+    "DisplayName": "Лунная Ржавая Ванна",
+    "Tooltip": ""
+  },
+  "LunarRustBed": {
+    "DisplayName": "Лунная Ржавая Кровать",
+    "Tooltip": ""
+  },
+  "LunarRustChandelier": {
+    "DisplayName": "Лунная Ржавая Люстра",
+    "Tooltip": ""
+  },
+  "LunarRustDresser": {
+    "DisplayName": "Лунный Ржавый Комод",
+    "Tooltip": ""
+  },
+  "LunarRustLamp": {
+    "DisplayName": "Лунная Ржавая Лампа",
+    "Tooltip": ""
+  },
+  "LunarRustPiano": {
+    "DisplayName": "Лунное Ржавое Пианино",
+    "Tooltip": ""
+  },
+  "LunarRustSink": {
+    "DisplayName": "Лунная Ржавая Раковина",
+    "Tooltip": ""
+  },
+  "LunarRustSofa": {
+    "DisplayName": "Лунный Ржавый Диван",
+    "Tooltip": ""
+  },
+  "LunarRustTable": {
+    "DisplayName": "Лунный Ржавый Стол",
+    "Tooltip": ""
+  },
+  "MercuryBathtub": {
+    "DisplayName": "Ртутная Ванна",
+    "Tooltip": ""
+  },
+  "MercuryBed": {
+    "DisplayName": "Ртутная Кровать",
+    "Tooltip": ""
+  },
+  "MercuryChandelier": {
+    "DisplayName": "Ртутная Люстра",
+    "Tooltip": ""
+  },
+  "MercuryDresser": {
+    "DisplayName": "Ртутный Комод",
+    "Tooltip": ""
+  },
+  "MercuryLamp": {
+    "DisplayName": "Ртутная Лампа",
+    "Tooltip": ""
+  },
+  "MercuryPiano": {
+    "DisplayName": "Ртутное Пианино",
+    "Tooltip": ""
+  },
+  "MercurySink": {
+    "DisplayName": "Ртутная Раковина",
+    "Tooltip": ""
+  },
+  "MercurySofa": {
+    "DisplayName": "Ртутный Диван",
+    "Tooltip": ""
+  },
+  "MercuryTable": {
+    "DisplayName": "Ртутный Стол",
+    "Tooltip": ""
+  },
+  "StarRoyaleBathtub": {
+    "DisplayName": "Ванна Королевской Звезды",
+    "Tooltip": ""
+  },
+  "StarRoyaleBed": {
+    "DisplayName": "Кровать Королевской Звезды",
+    "Tooltip": ""
+  },
+  "StarRoyaleChandelier": {
+    "DisplayName": "Люстра Королевской Звезды",
+    "Tooltip": ""
+  },
+  "StarRoyaleDresser": {
+    "DisplayName": "Комод Королевской Звезды",
+    "Tooltip": ""
+  },
+  "StarRoyaleLamp": {
+    "DisplayName": "Лампа Королевской Звезды",
+    "Tooltip": ""
+  },
+  "StarRoyalePiano": {
+    "DisplayName": "Пианино Королевской Звезды",
+    "Tooltip": ""
+  },
+  "StarRoyaleSink": {
+    "DisplayName": "Раковина Королевской Звезды",
+    "Tooltip": ""
+  },
+  "StarRoyaleSofa": {
+    "DisplayName": "Диван Королевской Звезды",
+    "Tooltip": ""
+  },
+  "StarRoyaleTable": {
+    "DisplayName": "Стол Королевской Звезды",
+    "Tooltip": ""
+  },
+  "AstraPlatform": {
+    "DisplayName": "Платформа Астра",
+    "Tooltip": ""
+  },
+  "CosmicEmberPlatform": {
+    "DisplayName": "Платформа Космического Углерода",
+    "Tooltip": ""
+  },
+  "CryocorePlatform": {
+    "DisplayName": "Платформа Криокора",
+    "Tooltip": ""
+  },
+  "DarkCelestialPlatform": {
+    "DisplayName": "Платформа Темного Небесного",
+    "Tooltip": ""
+  },
+  "HeavenforgePlatform": {
+    "DisplayName": "Платформа Небесной Кузницы",
+    "Tooltip": ""
+  },
+  "LuminitePlatform": {
+    "DisplayName": "Люминитовая Платформа",
+    "Tooltip": ""
+  },
+  "LunarRustPlatform": {
+    "DisplayName": "Лунная Ржавая Платформа",
+    "Tooltip": ""
+  },
+  "MercuryPlatform": {
+    "DisplayName": "Ртутная Платформа",
+    "Tooltip": ""
+  },
+  "StarRoyalePlatform": {
+    "DisplayName": "Платформа Королевской Звезды",
+    "Tooltip": ""
+  },
+  "CheesePlatform": {
+    "DisplayName": "Сырная Платформа",
+    "Tooltip": ""
+  },
+  "CheeseWall": {
+    "DisplayName": "Сырная Стена",
+    "Tooltip": ""
+  },
+  "CircuitProbe": {
+    "DisplayName": "Пробник Цепи",
+    "Tooltip": "Используется для устранения неполадок в цепях"
+  },
+  "IndustrialBattery": {
+    "DisplayName": "Промышленная Батарея",
+    "Tooltip": ""
+  },
+  "AdvancedCircuitBoard": {
+    "DisplayName": "Продвинутая Печатная Плата",
+    "Tooltip": ""
+  },
+  "ClydersHood": {
+    "DisplayName": "Капюшон Клайдера",
+    "Tooltip": ""
+  },
+  "ClydersRobe": {
+    "DisplayName": "Мантия Клайдера",
+    "Tooltip": ""
+  },
+  "ClydersWings": {
+    "DisplayName": "Крылья Клайдера",
+    "Tooltip": ""
+  },
+  "Schroteri": {
+    "DisplayName": "Шротери",
+    "Tooltip": ""
+  },
+  "Conveyor": {
+    "DisplayName": "Конвейер",
+    "Tooltip": ""
+  },
+  "KeroseneGenerator": {
+    "DisplayName": "Керосиновый Генератор",
+    "Tooltip": ""
+  },
+  "Flag": {
+    "DisplayName": "Флаг",
+    "Tooltip": ""
+  },
+  "Barometer": {
+    "DisplayName": "Барометр",
+    "Tooltip": ""
+  },
+  "GeigerMuller": {
+    "DisplayName": "Гейгер-Мюллера",
+    "Tooltip": ""
+  },
+  "SolarPanelTile": {
+    "DisplayName": "Солнечная Панель",
+    "Tooltip": ""
+  },
+  "TrailScepter": {
+    "Tooltip": "Выпускает шквал разрушительных звезд",
+    "DisplayName": "Скипетр Тропа"
+  }
+}
