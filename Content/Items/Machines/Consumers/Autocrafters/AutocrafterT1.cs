@@ -22,5 +22,6 @@ public class AutocrafterT1 : ModItem
 
     public override void AddRecipes()
     {
+        // made in regular anvil
     }
 }

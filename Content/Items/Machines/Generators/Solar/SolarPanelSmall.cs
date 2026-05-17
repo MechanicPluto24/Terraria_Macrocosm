@@ -25,7 +25,7 @@ public class SolarPanelSmall : ModItem
            .AddIngredient<SolarCell>(4)
            .AddIngredient(ItemID.Glass, 3)
            .AddIngredient(ItemID.Wire, 4)
-           .AddTile<Tiles.Crafting.Fabricator>()
+           .AddTile(TileID.Anvils)
            .Register();
     }
 }

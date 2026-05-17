@@ -25,7 +25,7 @@ public class AutocrafterT2TE : AutocrafterTEBase
 
     public override void MachineUpdate()
     {
-        MaxPower = 35f;
+        MaxPower = 50f;
         base.MachineUpdate();
     }
 }

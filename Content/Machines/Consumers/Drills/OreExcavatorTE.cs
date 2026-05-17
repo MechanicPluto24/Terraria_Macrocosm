@@ -28,8 +28,8 @@ public class OreExcavatorTE : BaseDrillTE
 
     public override void MachineUpdate()
     {
-        MinPower = 1f;
-        MaxPower = 50f;
+        MinPower = 5f;
+        MaxPower = 300f;
         base.MachineUpdate();
     }
 

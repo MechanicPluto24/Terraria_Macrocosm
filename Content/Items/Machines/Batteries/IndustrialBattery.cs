@@ -25,13 +25,13 @@ public class IndustrialBattery : ModItem
         CreateRecipe()
            .AddIngredient<Battery>(6)
            .AddIngredient(ItemID.IronBar, 3)
-           .AddTile<Tiles.Crafting.Fabricator>()
+           .AddTile(TileID.Anvils)
            .Register();
 
         CreateRecipe()
            .AddIngredient<Battery>(6)
            .AddIngredient(ItemID.LeadBar, 3)
-           .AddTile<Tiles.Crafting.Fabricator>()
+           .AddTile(TileID.Anvils)
            .Register();
     }
 }

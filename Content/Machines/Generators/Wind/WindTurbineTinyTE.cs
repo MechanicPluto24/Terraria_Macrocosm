@@ -6,5 +6,5 @@ namespace Macrocosm.Content.Machines.Generators.Wind;
 public class WindTurbineTinyTE : WindTurbineTEBase
 {
     public override MachineTile MachineTile => ModContent.GetInstance<WindTurbineTiny>();
-    protected override float BaseGeneratedPower => 15f;
+    protected override float BaseGeneratedPower => 10f;
 }

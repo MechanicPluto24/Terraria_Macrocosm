@@ -27,14 +27,14 @@ public class Battery : ModItem
             .AddIngredient<LithiumOre>(10)
             .AddIngredient<Coal>(2)
             .AddIngredient(ItemID.TinBar, 4)
-            .AddTile<Tiles.Crafting.Fabricator>()
+            .AddTile(TileID.Anvils)
             .Register();
 
         CreateRecipe()
             .AddIngredient<LithiumOre>(10)
             .AddIngredient<Coal>(2)
             .AddIngredient(ItemID.CopperBar, 4)
-            .AddTile<Tiles.Crafting.Fabricator>()
+            .AddTile(TileID.Anvils)
             .Register();
     }
 }

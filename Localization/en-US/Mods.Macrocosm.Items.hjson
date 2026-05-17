@@ -2727,7 +2727,11 @@ CircuitProbe: {
 
 IndustrialBattery: {
 	DisplayName: Industrial Battery
-	Tooltip: ""
+	Tooltip:
+		'''
+		Stores excess energy from electrical networks
+		Energy is taken from batteries when the electrical network demands more than is produced
+		'''
 }
 
 AdvancedCircuitBoard: {
@@ -2761,12 +2765,12 @@ Schroteri: {
 
 Conveyor: {
 	DisplayName: Conveyor
-	Tooltip: ""
+	Tooltip: Connects containers, taking items from one place to another
 }
 
 KeroseneGenerator: {
 	DisplayName: Kerosene Generator
-	Tooltip: ""
+	Tooltip: Consumes rocket fuel to produce electricity
 }
 
 SteamEngine: {
@@ -2781,22 +2785,22 @@ Flag: {
 
 Barometer: {
 	DisplayName: Barometer
-	Tooltip: ""
+	Tooltip: Records the atmospheric pressure of your surroundings, measured in earth atmospheres
 }
 
 GeigerMuller: {
 	DisplayName: Geiger Muller
-	Tooltip: ""
+	Tooltip: Records radiation and alerts you of high radiation levels
 }
 
 Nephelometer: {
 	DisplayName: Nephelometer
-	Tooltip: ""
+	Tooltip: Records the air quality of your surroundings
 }
 
 SolarPanelTile: {
 	DisplayName: Solar Panel Tile
-	Tooltip: ""
+	Tooltip: Converts solar energy into electricity
 }
 
 TrailScepter: {
@@ -2951,12 +2955,12 @@ RubberWoodBow: {
 
 ConveyorInlet: {
 	DisplayName: Conveyor Inlet
-	Tooltip: ""
+	Tooltip: Connects to a conveyor and puts items into chests and machines
 }
 
 ConveyorOutlet: {
 	DisplayName: Conveyor Outlet
-	Tooltip: ""
+	Tooltip: Connects to a conveyor and takes items from chests and machines
 }
 
 HoneyCanister: {
@@ -3006,7 +3010,11 @@ EngineComponentMk2: {
 
 MannedManeuveringUnit: {
 	DisplayName: Manned Maneuvering Unit
-	Tooltip: ""
+	Tooltip:
+		'''
+		Allows flight and slow fall
+		Grants greater maneuverability in zero gravity
+		'''
 }
 
 MoonChampionHelmet: {
@@ -3171,7 +3179,7 @@ RegolithWorkbench: {
 
 Thermometer: {
 	DisplayName: Thermometer
-	Tooltip: ""
+	Tooltip: Records the temperature of your surroundings
 }
 
 CorrugatedSteelBrick: {
@@ -3206,32 +3214,53 @@ StasisGrenade: {
 
 AutocrafterT1: {
 	DisplayName: Autocrafter
-	Tooltip: ""
+	Tooltip:
+		'''
+		Crafts items automatically
+		Crafts most pre-hardmode recipes
+		'''
 }
 
 AutocrafterT2Cobalt: {
 	DisplayName: Cobalt Autocrafter
-	Tooltip: ""
+	Tooltip:
+		'''
+		Crafts items automatically
+		Can craft recipes from mythril anvils
+		'''
 }
 
 AutocrafterT2Palladium: {
 	DisplayName: Palladium Autocrafter
-	Tooltip: ""
+	Tooltip:
+		'''
+		Crafts items automatically
+		Can craft recipes from mythril anvils
+		'''
 }
 
 AutocrafterT3: {
 	DisplayName: Advanced Autocrafter
-	Tooltip: ""
+	Tooltip:
+		'''
+		Crafts items automatically
+		Can craft recipes from the ancient manipulator
+		'''
 }
 
 OreDrill: {
 	DisplayName: Ore Drill
-	Tooltip: ""
+	Tooltip:
+		'''
+		Automatically extracts ores and resources from underground
+		Does not damage terrain
+		Multiple drills deployed on the same planet will yield diminishing results
+		'''
 }
 
 Pumpjack: {
 	DisplayName: Pumpjack
-	Tooltip: ""
+	Tooltip: Pumps oil from the ground
 }
 
 Astrolith: {
@@ -3334,42 +3363,42 @@ Choronzon: {
 
 AtomicWavePotion: {
 	DisplayName: Atomic Wave Potion
-	Tooltip: ""
+	Tooltip: Periodically releases an atomic wave that damages nearby enemies
 }
 
 BoosterPotion: {
 	DisplayName: Booster Potion
-	Tooltip: ""
+	Tooltip: Spawns boosters from the nebula armor set bonus, but less powerful
 }
 
 DensityPotion: {
 	DisplayName: Density Potion
-	Tooltip: ""
+	Tooltip: Increases gravity
 }
 
 LifelinePotion: {
 	DisplayName: Lifeline Potion
-	Tooltip: ""
+	Tooltip: Chance for enemies to drop hearts on hit
 }
 
 ManiaPotion: {
 	DisplayName: Mania Potion
-	Tooltip: ""
+	Tooltip: Increases attack speed
 }
 
 PointBlankPotion: {
 	DisplayName: Point Blank Potion
-	Tooltip: ""
+	Tooltip: Increased ranged damage to close targets, decreased damage to targets far away
 }
 
 SafeguardPotion: {
 	DisplayName: Safeguard Potion
-	Tooltip: ""
+	Tooltip: Protects from the next hit, with a cooldown before you can drink another
 }
 
 ZoningPotion: {
 	DisplayName: Zoning Potion
-	Tooltip: ""
+	Tooltip: Increased ranged damage to faraway targets, decreased damage to targets up close
 }
 
 RegolithToilet: {
@@ -3398,23 +3427,39 @@ IndustrialBeam: {
 }
 
 AutosmelterT1: {
-	DisplayName: Autosmelter T1
-	Tooltip: ""
+	DisplayName: Autosmelter
+	Tooltip:
+		'''
+		Smelts ores automatically
+		Can craft all the recipes of a stone furnace
+		'''
 }
 
 AutosmelterT2Adamantite: {
-	DisplayName: Autosmelter T2 Adamantite
-	Tooltip: ""
+	DisplayName: Adamantite Autosmelter
+	Tooltip:
+		'''
+		Smelts ores automatically
+		Can craft all the recipes of an adamantite furnace
+		'''
 }
 
 AutosmelterT2Titanium: {
-	DisplayName: Autosmelter T2 Titanium
-	Tooltip: ""
+	DisplayName: Titanium Autosmelter
+	Tooltip:
+		'''
+		Smelts ores automatically
+		Can craft all the recipes of a titanium furnace
+		'''
 }
 
 AutosmelterT3: {
-	DisplayName: Autosmelter T3
-	Tooltip: ""
+	DisplayName: Advanced Autosmelter
+	Tooltip:
+		'''
+		Smelts ores automatically
+		Can smelt luminite and moon ores
+		'''
 }
 
 OilBarrel: {
@@ -3424,12 +3469,12 @@ OilBarrel: {
 
 SolarPanelExtraLarge: {
 	DisplayName: Solar Panel Extra Large
-	Tooltip: ""
+	Tooltip: Converts solar energy into electricity
 }
 
 Dropper: {
 	DisplayName: Dropper
-	Tooltip: ""
+	Tooltip: Drops items from chests and machines
 }
 
 ScrapshotBow: {
@@ -3527,7 +3572,7 @@ ProtoRailgun: {
 
 Hopper: {
 	DisplayName: Hopper
-	Tooltip: ""
+	Tooltip: Takes items and puts them into chests and machines
 }
 
 SteelPipe: {
@@ -3537,12 +3582,16 @@ SteelPipe: {
 
 IndustrialBatteryLarge: {
 	DisplayName: Large Industrial Battery
-	Tooltip: ""
+	Tooltip:
+		'''
+		Stores excess energy from electrical networks
+		Energy is taken from batteries when the electrical network demands more than is produced
+		'''
 }
 
 WindTurbineTiny: {
 	DisplayName: Tiny Wind Turbine
-	Tooltip: ""
+	Tooltip: Converts wind energy into electricity
 }
 
 RegolithPlatform: {

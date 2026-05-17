@@ -56,7 +56,7 @@ public class PumpjackTE : ConsumerTE
 
     public override void MachineUpdate()
     {
-        MaxPower = 5f;
+        MaxPower = 80f;
 
         Extract();
         FillContainers();

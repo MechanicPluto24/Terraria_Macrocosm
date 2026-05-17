@@ -26,7 +26,7 @@ public class WindTurbineSmall : ModItem
            .AddIngredient<SteelBar>(10)
            .AddIngredient(ItemID.Wire, 8)
            .AddIngredient<Plastic>(2)
-           .AddTile<Tiles.Crafting.Fabricator>()
+           .AddTile(TileID.Anvils)
            .Register();
     }
 }

@@ -25,7 +25,7 @@ public class BurnerGenerator : ModItem
             .AddIngredient<SteelBar>(8)
             .AddIngredient(ItemID.Wire, 10)
             .AddIngredient<AluminumBar>(6)
-            .AddTile<Tiles.Crafting.Fabricator>()
+            .AddTile(TileID.Anvils)
             .Register();
     }
 

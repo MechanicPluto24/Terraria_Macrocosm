@@ -21,7 +21,7 @@ public class WindTurbineTiny : ModItem
         CreateRecipe()
         .AddIngredient<AluminumBar>(6)
         .AddIngredient(ItemID.Wire, 4)
-        .AddTile<Tiles.Crafting.Fabricator>()
+        .AddTile(TileID.Anvils)
         .Register();
     }
 }

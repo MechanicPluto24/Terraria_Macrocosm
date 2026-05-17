@@ -6,5 +6,5 @@ namespace Macrocosm.Content.Machines.Generators.Solar;
 public class SolarPanelLargeTE : SolarPanelTEBase
 {
     public override MachineTile MachineTile => ModContent.GetInstance<SolarPanelLarge>();
-    protected override float BaseGeneratedPower => 25f;
+    protected override float BaseGeneratedPower => 30f;
 }

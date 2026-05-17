@@ -27,7 +27,7 @@ public class SolarCell : ModItem
         CreateRecipe(4)
             .AddIngredient<Silicon>(3)
             .AddIngredient(ItemID.Wire)
-            .AddTile<Tiles.Crafting.Fabricator>()
+            .AddTile(TileID.Anvils)
             .Register();
     }
 }

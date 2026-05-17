@@ -19,7 +19,7 @@ public class AutosmelterT2TE : AutocrafterTEBase
 
     public override void MachineUpdate()
     {
-        MaxPower = 50f;
+        MaxPower = 60f;
         base.MachineUpdate();
     }
 }

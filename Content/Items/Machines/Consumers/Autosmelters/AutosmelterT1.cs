@@ -13,5 +13,6 @@ public class AutosmelterT1 : ModItem
         Item.value = Item.sellPrice(gold: 1);
         Item.mech = true;
     }
+// made in regular anvil
 }
 

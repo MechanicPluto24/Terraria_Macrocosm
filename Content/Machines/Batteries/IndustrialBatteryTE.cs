@@ -7,7 +7,7 @@ public class IndustrialBatteryTE : BatteryTE
 {
     public override MachineTile MachineTile => ModContent.GetInstance<IndustrialBattery>();
 
-    public override float EnergyCapacity => 1000f;
+    public override float EnergyCapacity => 5000f;
 
     public override void OnFirstUpdate()
     {
