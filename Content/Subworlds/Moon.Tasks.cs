@@ -253,18 +253,19 @@ public partial class Moon
                     {
                         int radius = WorldGen.genRand.Next(minMaxRadius);
                         for(int count2 =0; count2 < 5; count2++){
+                        int craterHeight = j - (int)((radius * 0.6f)+6);
                         ForEachInCircle(
                             i + (int)(radius/3f)-((int)(radius/6f)*count),
-                            j - (int)(radius * 0.6f),
+                            craterHeight,
                             radius,
                             (i1, j1) =>
                             {
                                 float iDistance = (float)Math.Abs(i - i1) / radius;
-                                float jDistance = (float)Math.Abs(j - j1) / radius;
+                                float jDistance = (float)Math.Abs(craterHeight - j1) / radius;
                                 FastRemoveTile(i1, j1);
                                 FastRemoveWall(i1, j1);
 
-                                if(Vector2.Distance(new Vector2(i1, j1), new Vector2(i, j - (int)(radius * 0.6f)))>(radius*0.9f))
+                                if(Vector2.Distance(new Vector2(i1, j1), new Vector2(i, craterHeight))>(radius*0.9f))
                                 {
                                     ForEachInCircle(
                                         i1+WorldGen.genRand.Next(-2,3),
@@ -282,12 +283,10 @@ public partial class Moon
                         }
                         ForEachInCircle(
                             i,
-                            j - (int)(radius),
+                            j -(int)(radius+6),
                             (int)(radius*1.4f),
                             (i1, j1) =>
                             {
-                                float iDistance = (float)Math.Abs(i - i1) / radius;
-                                float jDistance = (float)Math.Abs(j - j1) / radius;
                                 FastRemoveTile(i1, j1);
                                 FastRemoveWall(i1, j1);
                             }
@@ -415,13 +414,13 @@ public partial class Moon
             if (WorldGen.genRand.NextFloat() < verticalTunnelSpawnChance)
             {
                 skipI = verticalTunnelSpread;
-                int surfaceHeight = GetSurfaceHeight(i);
+                int surfaceHeight = GetSurfaceHeight(i)-8;
                 float eqOffset = WorldGen.genRand.NextFloat() * 10.25f;
                 float tunnelLength = verticalTunnelLength * WorldGen.genRand.NextFloat(0.45f, 1.2f);
                 float tunnelSize = verticalTunnelSize * WorldGen.genRand.NextFloat(0.6f, 1f);
                 for (int j = 0; j < tunnelLength; j += (int)(tunnelSize * 0.66f))
                 {
-                    int radius = (int)(((SurfaceEquation(j * 0.01f + eqOffset * 2f) + 1f) * 0.1f + 0.8f) * tunnelSize);
+                    int radius = (int)((((SurfaceEquation(j * 0.01f + eqOffset * 2f) + 1f) * 0.1f + 0.8f) * tunnelSize)+WorldGen.genRand.Next(-2, 3));
 
                     int iPos = i + (int)(SurfaceEquation(j * 0.005f + eqOffset) * tunnelSize * 3.5f);
                     int jPos = surfaceHeight + j;
