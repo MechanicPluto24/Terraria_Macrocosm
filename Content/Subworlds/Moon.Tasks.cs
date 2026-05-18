@@ -178,6 +178,60 @@ public partial class Moon
     }
 
     [Task(weight: 4.0)]
+    private void RegolithTask(GenerationProgress progress)//I think putting this here makes things a bit more smooth for lack of a better word
+    {
+        progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CaveTask");
+
+        float randomOffset = WorldGen.genRand.NextFloat() * 4.23f;
+        ushort regolithType = (ushort)TileType<Regolith>();
+
+        for (int i = 0; i < Main.maxTilesX; i++)
+        {
+            progress.Set(i / (float)Main.maxTilesX);
+
+            int offset = (int)(SurfaceEquation(i * 0.02f + randomOffset) * 9f);
+            int surfaceHeight = GetSurfaceHeight(i);
+            for (int j = surfaceHeight; j < surfaceHeight + RegolithLayerHeight; j++)
+            {
+                if (!Main.tile[i, j].HasTile)
+                {
+                    continue;
+                }
+
+                if (j == surfaceHeight + RegolithLayerHeight - 1 && j % 2 == 0)
+                {
+                    int veinLength = WorldGen.genRand.Next(10) switch
+                    {
+                        > 7 => 26,
+                        _ => 8,
+                    };
+                    float veinEqOffset = WorldGen.genRand.NextFloat() * 12.2f;
+                    int jOffset = 0;
+                    while (jOffset < veinLength)
+                    {
+                        ForEachInCircle(
+                            i + (int)(SurfaceEquation(jOffset * 0.1f + veinEqOffset) * 2f),
+                            j + jOffset,
+                            (float)jOffset / veinLength > 0.6f ? 1 : 2,
+                            (i1, j1) =>
+                            {
+                                if (!WorldGen.InWorld(i1, j1) || !Main.tile[i1, j1].HasTile)
+                                    return;
+
+                                FastPlaceTile(i1, j1, regolithType);
+                            }
+                        );
+
+                        jOffset += 1;
+                    }
+                }
+
+                FastPlaceTile(i, j, regolithType);
+            }
+        }
+    }
+
+   [Task(weight: 4.0)]
     private void CraterTask(GenerationProgress progress)
     {
         progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CraterTask");
@@ -198,35 +252,47 @@ public partial class Moon
                     if (Main.tile[i, j].HasTile)
                     {
                         int radius = WorldGen.genRand.Next(minMaxRadius);
-                        for (int count2 = 0; count2 < 5; count2++)
-                        {
-                            ForEachInCircle(
-                                i + (int)(radius / 3f) - ((int)(radius / 6f) * count),
-                                j - (int)(radius * 0.6f),
-                                radius,
-                                (i1, j1) =>
+                        for(int count2 =0; count2 < 5; count2++){
+                        ForEachInCircle(
+                            i + (int)(radius/3f)-((int)(radius/6f)*count),
+                            j - (int)(radius * 0.6f),
+                            radius,
+                            (i1, j1) =>
+                            {
+                                float iDistance = (float)Math.Abs(i - i1) / radius;
+                                float jDistance = (float)Math.Abs(j - j1) / radius;
+                                FastRemoveTile(i1, j1);
+                                FastRemoveWall(i1, j1);
+
+                                if(Vector2.Distance(new Vector2(i1, j1), new Vector2(i, j - (int)(radius * 0.6f)))>(radius*0.9f))
                                 {
-                                    float iDistance = (float)Math.Abs(i - i1) / radius;
-                                    float jDistance = (float)Math.Abs(j - j1) / radius;
-                                    FastRemoveTile(i1, j1);
-                                    if (Vector2.Distance(new Vector2(i1, j1), new Vector2(i, j - (int)(radius * 0.6f))) > (radius * 0.9f) && radius > 60)
-                                    {
-                                        ForEachInCircle(
-                                            i1 + WorldGen.genRand.Next(-6, 7),
-                                            j1 + WorldGen.genRand.Next(-6, 7),
-                                            WorldGen.genRand.Next(1, 5),
-                                            (i2, j2) =>
-                                            {
-                                                FastRemoveTile(i2, j2);
+                                    ForEachInCircle(
+                                        i1+WorldGen.genRand.Next(-2,3),
+                                        j1+WorldGen.genRand.Next(-2,3),
+                                        WorldGen.genRand.Next(1,5),
+                                        (i2, j2) =>
+                                        {
+                                            FastRemoveTile(i2, j2);
 
-                                            }
-                                        );
-                                    }
+                                        }
+                                    );
                                 }
-                            );
+                            }
+                        );
                         }
-
-                        if (WorldGen.genRand.NextBool(2))
+                        ForEachInCircle(
+                            i,
+                            j - (int)(radius),
+                            (int)(radius*1.4f),
+                            (i1, j1) =>
+                            {
+                                float iDistance = (float)Math.Abs(i - i1) / radius;
+                                float jDistance = (float)Math.Abs(j - j1) / radius;
+                                FastRemoveTile(i1, j1);
+                                FastRemoveWall(i1, j1);
+                            }
+                        );
+                        if(WorldGen.genRand.NextBool(2))
                         {
                             for (int jj = 0; jj < Main.maxTilesY; jj++)
                             {
@@ -234,8 +300,8 @@ public partial class Moon
                                 {
                                     ForEachInCircle(
                                         i,
-                                        jj + (int)(radius / 10f),
-                                        (int)(radius / 5f),
+                                        jj+(int)(radius/10f),
+                                        (int)(radius/5f),
                                         (i2, j2) =>
                                         {
                                             FastPlaceTile(i2, j2, (ushort)ModContent.TileType<Regolith>());
@@ -245,6 +311,8 @@ public partial class Moon
                                 }
                             }
                         }
+                        
+                        
 
 
                         break;
@@ -255,14 +323,16 @@ public partial class Moon
 
         progress.Set(0.0);
 
-        CarveCraters(2..5, 80..100);
+        CarveCraters(25..36, 7..15);
         progress.Set(0.1);
-
+        
         CarveCraters(5..6, 30..40);
         progress.Set(0.2);
 
-        CarveCraters(25..36, 7..15);
+        CarveCraters(2..5, 80..100);
         progress.Set(1.0);
+
+
     }
 
     [Task(weight: 7.0)]
@@ -398,59 +468,7 @@ public partial class Moon
         }
     }
 
-    [Task(weight: 4.0)]
-    private void RegolithTask(GenerationProgress progress)
-    {
-        progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.CaveTask");
-
-        float randomOffset = WorldGen.genRand.NextFloat() * 4.23f;
-        ushort regolithType = (ushort)TileType<Regolith>();
-
-        for (int i = 0; i < Main.maxTilesX; i++)
-        {
-            progress.Set(i / (float)Main.maxTilesX);
-
-            int offset = (int)(SurfaceEquation(i * 0.02f + randomOffset) * 9f);
-            int surfaceHeight = GetSurfaceHeight(i);
-            for (int j = surfaceHeight; j < surfaceHeight + RegolithLayerHeight; j++)
-            {
-                if (!Main.tile[i, j].HasTile)
-                {
-                    continue;
-                }
-
-                if (j == surfaceHeight + RegolithLayerHeight - 1 && j % 2 == 0)
-                {
-                    int veinLength = WorldGen.genRand.Next(10) switch
-                    {
-                        > 7 => 26,
-                        _ => 8,
-                    };
-                    float veinEqOffset = WorldGen.genRand.NextFloat() * 12.2f;
-                    int jOffset = 0;
-                    while (jOffset < veinLength)
-                    {
-                        ForEachInCircle(
-                            i + (int)(SurfaceEquation(jOffset * 0.1f + veinEqOffset) * 2f),
-                            j + jOffset,
-                            (float)jOffset / veinLength > 0.6f ? 1 : 2,
-                            (i1, j1) =>
-                            {
-                                if (!WorldGen.InWorld(i1, j1) || !Main.tile[i1, j1].HasTile)
-                                    return;
-
-                                FastPlaceTile(i1, j1, regolithType);
-                            }
-                        );
-
-                        jOffset += 1;
-                    }
-                }
-
-                FastPlaceTile(i, j, regolithType);
-            }
-        }
-    }
+    
 
     [Task(weight: 6.0)]
     private void CynthalithTask(GenerationProgress progress)
@@ -656,7 +674,7 @@ public partial class Moon
         progress.Message = Language.GetTextValue("Mods.Macrocosm.WorldGen.Moon.OreTask");
 
         int tries = 0;
-        int geodes = WorldGen.genRand.Next(10, 14);
+        int geodes = WorldGen.genRand.Next(6, 10);
         int quartzType = TileType<QuartzBlock>();
         int chalcType = TileType<Chalcedony>();
         int basaltType = TileType<Basalt>();
