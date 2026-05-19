@@ -17,7 +17,6 @@ namespace Macrocosm.Content.NPCs.Enemies.Moon.Dweller;
 
 public class Dweller : ModNPC
 {
-    public override bool IsLoadingEnabled(Mod mod) => false;
 
     private const int LegCount = 6;
     private readonly Leg[] Legs = new Leg[LegCount];
@@ -64,7 +63,7 @@ public class Dweller : ModNPC
         private Vector2 basePosition, joint1Position, joint2Position;
         private Vector2 prevBasePosition, prevJoint1Position, prevJoint2Position;
 
-        private readonly Asset<Texture2D> leg1, leg2, leg3;
+        private readonly Asset<Texture2D> leg1, leg2, leg3, leg1_Patrol, leg2_Patrol, leg3_Patrol, leg1_Glow, leg2_Glow, leg3_Glow;
         private Vector2 leg1Length, leg2Length, leg3Length;
 
         private float lastExtensionDistance;
@@ -84,16 +83,42 @@ public class Dweller : ModNPC
                     leg1 = legBack1;
                     leg2 = legBack2;
                     leg3 = legBack3;
+
+                    leg1_Patrol = empty; 
+                    leg2_Patrol = empty; 
+                    leg3_Patrol = empty; 
+
+                    leg1_Glow = legBack1Glow; 
+                    leg2_Glow = empty; 
+                    leg3_Glow = empty; 
+
                     break;
                 case LegType.Mid:
                     leg1 = legMid1;
                     leg2 = legMid2;
                     leg3 = legMid3;
+
+                    leg1_Patrol = legMid1Patrol;
+                    leg2_Patrol = empty;
+                    leg3_Patrol = empty;
+
+                    leg1_Glow = legMid1Glow;
+                    leg2_Glow = empty;
+                    leg3_Glow = empty;
+
                     break;
                 case LegType.Front:
                     leg1 = legFront1;
                     leg2 = legFront2;
                     leg3 = legFront3;
+
+                    leg1_Patrol = legFront1Patrol;
+                    leg2_Patrol = empty;
+                    leg3_Patrol = legFront3Patrol;
+
+                    leg1_Glow = legFront1Glow;
+                    leg2_Glow = empty;
+                    leg3_Glow = legFront3Glow;
                     break;
             }
         }
@@ -120,86 +145,86 @@ public class Dweller : ModNPC
                     break;
             }
 
-            bool leftLeg = index >= 3;
-            basePosition = new Vector2(npc.Center.X, npc.position.Y) + npc.velocity + baseOffset;
+                bool leftLeg = index >= 3;
+                basePosition = new Vector2(npc.Center.X, npc.position.Y) + npc.velocity + baseOffset;
 
-            if (!firstUpdate)
-            {
-                prevBasePosition = prevJoint1Position = prevJoint2Position = TipPosition = basePosition;
-                prevRotationLeg1 = prevRotationLeg2 = prevRotationFoot = 0f;
-                firstUpdate = true;
-            }
+                if (!firstUpdate)
+                {
+                    prevBasePosition = prevJoint1Position = prevJoint2Position = TipPosition = basePosition;
+                    prevRotationLeg1 = prevRotationLeg2 = prevRotationFoot = 0f;
+                    firstUpdate = true;
+                }
 
-            float smoothingFactor = 0.35f;
-            float totalLegLength = leg1Length.Length() + leg2Length.Length() + leg3Length.Length();
+                float smoothingFactor = 0.35f;
+                float totalLegLength = leg1Length.Length() + leg2Length.Length() + leg3Length.Length();
 
-            Vector2 baseToTipVector = TipPosition - basePosition;
-            Vector2 baseToTargetVector = targetPosition - basePosition;
-            float baseToTipDistance = baseToTipVector.Length();
-            float baseToTargetDistance = baseToTargetVector.Length();
+                Vector2 baseToTipVector = TipPosition - basePosition;
+                Vector2 baseToTargetVector = targetPosition - basePosition;
+                float baseToTipDistance = baseToTipVector.Length();
+                float baseToTargetDistance = baseToTargetVector.Length();
 
-            if (baseToTipDistance > totalLegLength)
-            {
-                baseToTipVector.Normalize();
-                baseToTipVector *= totalLegLength;
-                TipPosition = basePosition + baseToTipVector;
-            }
+                if (baseToTipDistance > totalLegLength)
+                {
+                    baseToTipVector.Normalize();
+                    baseToTipVector *= totalLegLength;
+                    TipPosition = basePosition + baseToTipVector;
+                }
 
-            TargetOutOfRange = baseToTargetDistance > totalLegLength;
-            AtTargetPosition = baseToTargetDistance < 100;
+                TargetOutOfRange = baseToTargetDistance > totalLegLength;
+                AtTargetPosition = baseToTargetDistance < 100;
 
-            float tipToTargetDistance = Vector2.Distance(targetPosition, TipPosition);
+                float tipToTargetDistance = Vector2.Distance(targetPosition, TipPosition);
 
-            if (tipToTargetDistance > 5f)
-                Velocity = Vector2.Lerp(Velocity, (targetPosition - TipPosition).SafeNormalize(default) * SpeedTowardsTarget, 0.4f);
-            else
-                Velocity = Vector2.Zero;
+                if (tipToTargetDistance > 5f)
+                    Velocity = Vector2.Lerp(Velocity, (targetPosition - TipPosition).SafeNormalize(default) * SpeedTowardsTarget, 0.4f);
+                else
+                    Velocity = Vector2.Zero;
 
-            TipPosition += Velocity;
+                TipPosition += Velocity;
 
-            Vector2 desiredTipPosition = prevJoint1Position + leg3Length.RotatedBy(prevRotationFoot);
-            baseToTipVector = desiredTipPosition - basePosition;
-            baseToTipDistance = baseToTipVector.Length();
+                Vector2 desiredTipPosition = prevJoint1Position + leg3Length.RotatedBy(prevRotationFoot);
+                baseToTipVector = desiredTipPosition - basePosition;
+                baseToTipDistance = baseToTipVector.Length();
 
-            float length1 = leg1Length.Length();
-            float length2 = leg2Length.Length();
+                float length1 = leg1Length.Length();
+                float length2 = leg2Length.Length();
 
-            float cosAngleJoint1 = (baseToTipDistance * baseToTipDistance + length1 * length1 - length2 * length2) / (2 * baseToTipDistance * length1);
-            float angleJoint1 = (float)Math.Acos(MathHelper.Clamp(cosAngleJoint1, -1f, 1f));
+                float cosAngleJoint1 = (baseToTipDistance * baseToTipDistance + length1 * length1 - length2 * length2) / (2 * baseToTipDistance * length1);
+                float angleJoint1 = (float)Math.Acos(MathHelper.Clamp(cosAngleJoint1, -1f, 1f));
 
-            rotationLeg1 = baseToTipVector.ToRotation() + angleJoint1;
+                rotationLeg1 = baseToTipVector.ToRotation() + angleJoint1;
 
-            float cosAngleJoint2 = (length1 * length1 + length2 * length2 - baseToTipDistance * baseToTipDistance) / (2 * length1 * length2);
-            float angleJoint2 = (float)Math.Acos(MathHelper.Clamp(cosAngleJoint2, -1f, 1f));
+                float cosAngleJoint2 = (length1 * length1 + length2 * length2 - baseToTipDistance * baseToTipDistance) / (2 * length1 * length2);
+                float angleJoint2 = (float)Math.Acos(MathHelper.Clamp(cosAngleJoint2, -1f, 1f));
 
-            rotationLeg2 = rotationLeg1 + angleJoint2;
-            float extensionAdjustment = (leftLeg ? -MathHelper.Pi : MathHelper.Pi) * lastExtensionDistance;
-            rotationLeg2 += extensionAdjustment;
+                rotationLeg2 = rotationLeg1 + angleJoint2;
+                float extensionAdjustment = (leftLeg ? -MathHelper.Pi : MathHelper.Pi) * lastExtensionDistance;
+                rotationLeg2 += extensionAdjustment;
 
-            joint1Position = basePosition + leg1Length.RotatedBy(rotationLeg1);
-            joint2Position = joint1Position + leg2Length.RotatedBy(rotationLeg2);
+                joint1Position = basePosition + leg1Length.RotatedBy(rotationLeg1);
+                joint2Position = joint1Position + leg2Length.RotatedBy(rotationLeg2);
 
-            rotationFoot = (TipPosition - joint2Position).ToRotation();
+                rotationFoot = (TipPosition - joint2Position).ToRotation();
 
-            float extensionDist = Vector2.Distance(joint2Position, targetPosition) / leg3Length.Length();
-            lastExtensionDistance = MathHelper.Lerp(lastExtensionDistance, extensionDist, smoothingFactor);
-            lastExtensionDistance = MathHelper.Clamp(lastExtensionDistance * lastExtensionDistance, 0.0f, 1.0f);
+                float extensionDist = Vector2.Distance(joint2Position, targetPosition) / leg3Length.Length();
+                lastExtensionDistance = MathHelper.Lerp(lastExtensionDistance, extensionDist, smoothingFactor);
+                lastExtensionDistance = MathHelper.Clamp(lastExtensionDistance * lastExtensionDistance, 0.0f, 1.0f);
 
-            joint1Position = Vector2.Lerp(prevJoint1Position, joint1Position, 0.9f);
-            joint2Position = Vector2.Lerp(prevJoint2Position, joint2Position, 0.8f);
+                joint1Position = Vector2.Lerp(prevJoint1Position, joint1Position, 0.9f);
+                joint2Position = Vector2.Lerp(prevJoint2Position, joint2Position, 0.8f);
 
-            rotationLeg1 = Utility.WrapLerpAngle(prevRotationLeg1, rotationLeg1, smoothingFactor);
-            rotationLeg2 = Utility.WrapLerpAngle(prevRotationLeg2, rotationLeg2, smoothingFactor);
-            rotationFoot = Utility.WrapLerpAngle(prevRotationFoot, rotationFoot, smoothingFactor);
+                rotationLeg1 = Utility.WrapLerpAngle(prevRotationLeg1, rotationLeg1, smoothingFactor);
+                rotationLeg2 = Utility.WrapLerpAngle(prevRotationLeg2, rotationLeg2, smoothingFactor);
+                rotationFoot = Utility.WrapLerpAngle(prevRotationFoot, rotationFoot, smoothingFactor);
 
-            prevJoint1Position = joint1Position;
-            prevJoint2Position = joint2Position;
-            prevRotationLeg1 = rotationLeg1;
-            prevRotationLeg2 = rotationLeg2;
-            prevRotationFoot = rotationFoot;
+                prevJoint1Position = joint1Position;
+                prevJoint2Position = joint2Position;
+                prevRotationLeg1 = rotationLeg1;
+                prevRotationLeg2 = rotationLeg2;
+                prevRotationFoot = rotationFoot;
         }
 
-        public void Draw(SpriteBatch spriteBatch, NPC npc, Vector2 screenPos, Color drawColor)
+        public void Draw(SpriteBatch spriteBatch, NPC npc, Vector2 screenPos, Color drawColor, Color patrolColor, Color glowColor)
         {
             bool leftLeg = index > 2;
 
@@ -257,6 +282,13 @@ public class Dweller : ModNPC
             spriteBatch.Draw(leg2.Value, joint1Position - screenPos, null, drawColor, rotationLeg2 + rotationOffsetLeg2, originLeg2, npc.scale, effectsLeg2, 0f);
             spriteBatch.Draw(leg3.Value, joint2Position - screenPos, null, drawColor, rotationFoot + rotationOffsetLeg3, originFoot, npc.scale, effectsLeg3, 0f);
 
+            spriteBatch.Draw(leg1_Patrol.Value, basePosition - screenPos, null, patrolColor, rotationLeg1 + rotationOffsetLeg1, originLeg1, npc.scale, effectsLeg1, 0f);
+            spriteBatch.Draw(leg2_Patrol.Value, joint1Position - screenPos, null, patrolColor, rotationLeg2 + rotationOffsetLeg2, originLeg2, npc.scale, effectsLeg2, 0f);
+            spriteBatch.Draw(leg3_Patrol.Value, joint2Position - screenPos, null, patrolColor, rotationFoot + rotationOffsetLeg3, originFoot, npc.scale, effectsLeg3, 0f);
+
+            spriteBatch.Draw(leg1_Glow.Value, basePosition - screenPos, null, glowColor, rotationLeg1 + rotationOffsetLeg1, originLeg1, npc.scale, effectsLeg1, 0f);
+            spriteBatch.Draw(leg2_Glow.Value, joint1Position - screenPos, null, glowColor, rotationLeg2 + rotationOffsetLeg2, originLeg2, npc.scale, effectsLeg2, 0f);
+            spriteBatch.Draw(leg3_Glow.Value, joint2Position - screenPos, null, glowColor, rotationFoot + rotationOffsetLeg3, originFoot, npc.scale, effectsLeg3, 0f);
             //DebugDraw(spriteBatch, screenPos);
         }
 
@@ -278,51 +310,84 @@ public class Dweller : ModNPC
             //spriteBatch.Draw(cross, lastTargetPosition - screenPos, null, Utility.HSLToRGB(new((index + 1) / 6f, 1f, 0.2f)), 0f, cross.Size() / 2f, 2f, SpriteEffects.None, 0);
         }
     }
+    private static Asset<Texture2D> empty;
 
-    private static Asset<Texture2D> headBack;
-    private static Asset<Texture2D> headJawLeft;
-    private static Asset<Texture2D> headJawRight;
+    private static Asset<Texture2D> headBack, headBackPatrol, headBackGlow;
+
+
+
+
+    private static Asset<Texture2D> headJawLeft, headJawLeftGlow;
+    private static Asset<Texture2D> headJawRight, headJawRightGlow;
+
     private static Asset<Texture2D> headShellLeft;
     private static Asset<Texture2D> headShellRight;
     private static Asset<Texture2D> headShellLeftGlow;
     private static Asset<Texture2D> headShellRightGlow;
 
-    private static Asset<Texture2D> legBack1;
+    private static Asset<Texture2D> headPatrol;
+
+
+    private static Asset<Texture2D> legBack1, legBack1Glow;
     private static Asset<Texture2D> legBack2;
     private static Asset<Texture2D> legBack3;
 
-    private static Asset<Texture2D> legMid1;
+
+
+    private static Asset<Texture2D> legMid1, legMid1Patrol, legMid1Glow;
     private static Asset<Texture2D> legMid2;
     private static Asset<Texture2D> legMid3;
 
-    private static Asset<Texture2D> legFront1;
+    private static Asset<Texture2D> legFront1, legFront1Patrol, legFront1Glow;
     private static Asset<Texture2D> legFront2;
-    private static Asset<Texture2D> legFront3;
+    private static Asset<Texture2D> legFront3, legFront3Patrol, legFront3Glow;
 
     public override string Texture => Macrocosm.EmptyTexPath;
     private string TexturePath => this.GetNamespacePath();
 
     public override void Load()
     {
-        headBack = ModContent.Request<Texture2D>(TexturePath + "_Head_Back");
+        empty = ModContent.Request<Texture2D>(Macrocosm.EmptyTexPath);
+
+        headBack = ModContent.Request<Texture2D>(TexturePath + "_Core");
+        headBackGlow = ModContent.Request<Texture2D>(TexturePath + "_Core");
+        headBackPatrol = ModContent.Request<Texture2D>(TexturePath + "_Core_PatrolGlow");
+
+
         headJawLeft = ModContent.Request<Texture2D>(TexturePath + "_Head_JawLeft");
         headJawRight = ModContent.Request<Texture2D>(TexturePath + "_Head_JawRight");
+
+        headJawLeftGlow = ModContent.Request<Texture2D>(TexturePath + "_Head_JawLeft_Glow");
+        headJawRightGlow = ModContent.Request<Texture2D>(TexturePath + "_Head_JawRight_Glow");
+
         headShellLeft = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellLeft");
         headShellRight = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellRight");
         headShellLeftGlow = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellLeft_Glow");
         headShellRightGlow = ModContent.Request<Texture2D>(TexturePath + "_Head_ShellRight_Glow");
 
+        headPatrol = ModContent.Request<Texture2D>(TexturePath + "_Head_PatrolGlow");
+
         legBack1 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back1");
         legBack2 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back2");
         legBack3 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back3");
+        legBack1Glow = ModContent.Request<Texture2D>(TexturePath + "_Leg_Back1_Glow");
 
         legMid1 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Mid1");
         legMid2 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Mid2");
         legMid3 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Mid3");
+        legMid1Glow = ModContent.Request<Texture2D>(TexturePath + "_Leg_Mid1_Glow");
+        legMid1Patrol = ModContent.Request<Texture2D>(TexturePath + "_Leg_Mid1_PatrolGlow");
+
 
         legFront1 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front1");
         legFront2 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front2");
         legFront3 = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front3");
+
+        legFront1Glow = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front1_Glow");
+        legFront3Glow = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front3_Glow");
+
+        legFront1Patrol = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front1_PatrolGlow");
+        legFront3Patrol = ModContent.Request<Texture2D>(TexturePath + "_Leg_Front3_PatrolGlow");
     }
 
     public enum ActionState
@@ -399,6 +464,10 @@ public class Dweller : ModNPC
     public Vector2 ToPlayer;
     public float HeadRotation;
     public float Corpreal = 1f;
+    public float StalkGlow = 1f;
+    public float RageGlow = 1f;
+
+
     float speed = 1f;
     int Timer = 0;
     float Rage = 0f;
@@ -447,6 +516,7 @@ public class Dweller : ModNPC
         if (Rage < 0.3f)
         {
             AI_State = ActionState.Stalk;
+
         }
         else if (Rage < 5f)
         {
@@ -454,10 +524,12 @@ public class Dweller : ModNPC
                 AI_State = ActionState.Stalk;
             else if (Vector2.Distance(NPC.Center, target.Center) < 250f && Lighting.GetColor(NPC.Center.ToTileCoordinates()).GetBrightness() > 0.1f)
                 AI_State = ActionState.Flee;
+            
         }
         else
         {
             AI_State = ActionState.Enrage;
+            
         }
 
         if (NPC.life < (int)(NPC.lifeMax * .75))
@@ -494,6 +566,10 @@ public class Dweller : ModNPC
                     NPC.velocity.X = direction.X * speed;
                     NPC.velocity.Y = NPC.gravity;
                 }
+                if (RageGlow > 0f)
+                    RageGlow -= 0.05f;
+                if (StalkGlow < 1f)
+                    StalkGlow += 0.01f;
             }
             if (AI_State == ActionState.Flee)
             {
@@ -509,9 +585,17 @@ public class Dweller : ModNPC
                     NPC.velocity.X = direction.X * speed;
                     NPC.velocity.Y = NPC.gravity;
                 }
+                if (RageGlow > 0f)
+                    RageGlow -= 0.05f;
+                if (StalkGlow < 1f)
+                    StalkGlow += 0.01f;
             }
             if (AI_State == ActionState.Enrage)
             {
+                if (StalkGlow > 0f)
+                    StalkGlow -= 0.1f;
+                if (RageGlow < 1f)
+                    RageGlow += 0.02f;
                 speed += 0.1f;
                 speed = Math.Clamp(speed, -4f, 8f);
                 if (anyLegTouchingGround)
@@ -630,22 +714,35 @@ public class Dweller : ModNPC
     {
         SpriteEffects effects = NPC.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
-        Legs[2].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal);
-        Legs[3].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal);
+        Legs[2].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal, Color.White * Corpreal * StalkGlow, Color.White * Corpreal * RageGlow);
+        Legs[3].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal, Color.White * Corpreal * StalkGlow, Color.White * Corpreal * RageGlow);
 
-        Legs[1].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal);
-        Legs[4].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal);
+        Legs[1].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal, Color.White * Corpreal * StalkGlow, Color.White * Corpreal * RageGlow);
+        Legs[4].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal, Color.White * Corpreal * StalkGlow, Color.White * Corpreal * RageGlow);
 
-        Legs[0].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal);
-        Legs[5].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal);
+        Legs[0].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal, Color.White * Corpreal * StalkGlow, Color.White * Corpreal * RageGlow);
+        Legs[5].Draw(spriteBatch, NPC, screenPos, drawColor * Corpreal, Color.White * Corpreal * StalkGlow, Color.White * Corpreal * RageGlow);
 
         spriteBatch.Draw(headBack.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor * Corpreal, HeadRotation, headBack.Size() / 2f, NPC.scale, effects, 0);
+        spriteBatch.Draw(headBackPatrol.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal * StalkGlow, HeadRotation, headBack.Size() / 2f, NPC.scale, effects, 0);
+        spriteBatch.Draw(headBackGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal * RageGlow, HeadRotation, headBack.Size() / 2f, NPC.scale, effects, 0);
+
         spriteBatch.Draw(headJawRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, drawColor * Corpreal, HeadRotation - JawRotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
-        spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor * Corpreal, HeadRotation + JawRotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
+        spriteBatch.Draw(headJawLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, drawColor * Corpreal * RageGlow, HeadRotation + JawRotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
+
+        spriteBatch.Draw(headJawRightGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawRight.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal, HeadRotation - JawRotation, headJawRight.Size() / 2f, NPC.scale, effects, 0);
+        spriteBatch.Draw(headJawLeftGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headJawLeft.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal * RageGlow, HeadRotation + JawRotation, headJawLeft.Size() / 2f, NPC.scale, effects, 0);
+
         spriteBatch.Draw(headShellRight.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor * Corpreal, HeadRotation - JawRotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
         spriteBatch.Draw(headShellLeft.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, drawColor * Corpreal, HeadRotation + JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
-        spriteBatch.Draw(headShellRightGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal, HeadRotation - JawRotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
-        spriteBatch.Draw(headShellLeftGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal, HeadRotation + JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
+
+        
+
+        spriteBatch.Draw(headShellRightGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal * RageGlow, HeadRotation - JawRotation, headShellRight.Size() / 2f, NPC.scale, effects, 0);
+        spriteBatch.Draw(headShellLeftGlow.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal * RageGlow, HeadRotation + JawRotation, headShellLeft.Size() / 2f, NPC.scale, effects, 0);
+
+        spriteBatch.Draw(headPatrol.Value, new Vector2(NPC.Center.X, NPC.position.Y + headBack.Height() / 2) - Main.screenPosition, null, Color.White * Corpreal * StalkGlow, HeadRotation, headBack.Size() / 2f, NPC.scale, effects, 0);
+
         /*
         var lastPosition = NPC.Center;
         foreach (var position in path)
