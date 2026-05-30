@@ -64,7 +64,7 @@ public class ZombieScientist : ModNPC
 
     public override void FindFrame(int frameHeight)
     {
-        NPC.spriteDirection = NPC.velocity.X > 0f ? -1 : 1;
+        NPC.spriteDirection = NPC.direction * -1; // he moonwalks if I don't multiply this by -1
         int frameIndex = NPC.frame.Y / frameHeight;
         NPC.frameCounter++;
         switch (AI_State)
@@ -110,13 +110,19 @@ public class ZombieScientist : ModNPC
         }
     }
 
+    private int throwTimer = 0;
+    private bool onCooldown = false;
     public override void AI()
     {
+        if (!(throwTimer <= 0))
+        {
+            throwTimer--;
+        }
         NPC.TargetClosest();
         NPC.FaceTarget();
         Player target = Main.player[NPC.target];
         bool clearLineOfSight = Collision.CanHitLine(NPC.position, NPC.width, NPC.height, target.position, target.width, target.height);
-        if (clearLineOfSight && Vector2.Distance(NPC.Center, target.Center) < 400f)
+        if (clearLineOfSight && Vector2.Distance(NPC.Center, target.Center) < 400f && !onCooldown && NPC.velocity.Y == 0)
         {
             NPC.aiStyle = -1;
             AI_State = (float)ActionState.throwing;
@@ -124,6 +130,10 @@ public class ZombieScientist : ModNPC
         else
         {
             AI_State = (float)ActionState.walk;
+        }
+        if (throwTimer == 0)
+        {
+            onCooldown = false;
         }
         switch (AI_State)
         {
@@ -150,24 +160,27 @@ public class ZombieScientist : ModNPC
         confetti
     }
 
-    private float[] lastFlask = new float[5]; // stores the last 5 thrown flasks
-    private void updateLastFlask(float justThrew) // updates lastFlask
+    private float calculateNextFlask(float flask) // decides what to throw next based on the last thrown projectiles
     {
-        for (int i = lastFlask.Length - 2; i > -1; i--)
+        if (Main.rand.Next(1,500) == 1)
         {
-            lastFlask[i + 1] = lastFlask[i];
-        }
-        lastFlask[0] = justThrew;
-    }
-
-    private float calculateNextFlask() // decides what to throw next based on the last thrown projectiles
-    {
-        if (lastFlask[0] == (float)Flasks.oil)
-        {
-            return (float)Flasks.prometheum;
+            return (float)Flasks.confetti;
         }
         else
         {
+            switch (flask)
+            {
+                case (float)Flasks.acid:
+                    return (float)Flasks.oil;
+                case (float)Flasks.oil:
+                    return (float)Flasks.prometheum;
+                case (float)Flasks.prometheum:
+                    return (float)Flasks.distortion;
+                case (float)Flasks.distortion:
+                    return (float)Flasks.acid;
+                case (float)Flasks.confetti:
+                    return (float)Flasks.acid;
+            }
             return (float)Flasks.acid;
         }
     }
@@ -177,52 +190,68 @@ public class ZombieScientist : ModNPC
         switch (flask)
         {
             case (float)Flasks.acid:
-                return 6f;
+                return 7.7f;
             case (float)Flasks.oil:
                 return 7f;
             case (float)Flasks.prometheum:
-                return 10f;
+                return 11f;
             case (float)Flasks.distortion:
-                return 5f;
+                return 6.5f;
             case (float)Flasks.confetti:
-                return 4f;
+                return 6f;
         }
         return 6f;
     }
 
+    private int calculateDamage(float flask) // changes damage based on what flask is being thrown
+    {
+        switch (flask)
+        {
+            case (float)Flasks.acid:
+                return 1;
+            case (float)Flasks.oil:
+                return 8/10;
+            case (float)Flasks.prometheum:
+                return 11/10;
+            case (float)Flasks.distortion:
+                return 9/10;
+            case (float)Flasks.confetti:
+                return 0;
+        }
+        return 1;
+    }
+
+    private float lastFlask = (float)Flasks.distortion;
     private void throwing()
     {
         Player target = Main.player[NPC.target];
-        if (NPC.velocity.Y == 0)
+        NPC.velocity.X = 0;
+        AI_Timer++;
+        int timeLimit = 50; // throw constantly at this interval
+
+        if (AI_Timer == timeLimit - 10)
         {
-            NPC.velocity.X = 0;
-            AI_Timer++;
-            int timeLimit = 60; // throw constantly at this interval
-
-            if (AI_Timer == timeLimit - 20)
+            Vector2 playerDirection = target.Center - NPC.Center;
+            float nextFlask = calculateNextFlask(lastFlask);
+            float speed = calculateSpeed(nextFlask);
+            int damage = calculateDamage(nextFlask);
+            if (nextFlask == (float)Flasks.oil)
             {
-                Vector2 playerDirection = target.Center - NPC.Center;
-                float nextFlask = calculateNextFlask();
-                float speed = calculateSpeed(nextFlask);
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage, 2, -1, nextFlask);
-                updateLastFlask(nextFlask);
-
+                // triple throw if throwing oil
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed*0.8f, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage*damage, 2, -1, 0, nextFlask);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage*damage, 2, -1, 0, nextFlask);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed*1.2f, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage*damage, 2, -1, 0, nextFlask);
             }
-            else if (AI_Timer >= timeLimit)
-            {
-                // if the throwing conditions arent met anymore then stop throwing
-                AI_Timer = 0;
-                // otherwise keep throwing
+            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage*damage, 2, -1, 0, nextFlask);
+            lastFlask = nextFlask;
             }
-        }
-        else
+        else if (AI_Timer >= timeLimit)
         {
             AI_Timer = 0;
+            onCooldown = true;
+            throwTimer = 70;
         }
     }
-
-    // CURRENT ISSUES: flask things not done, flask not done, issue with direction and transitioning from walk to jump
-
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {
