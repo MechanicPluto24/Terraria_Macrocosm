@@ -255,3 +255,8 @@ WyrmwoodHead: {
 WyrmwoodBody.DisplayName: Wyrmwood
 WyrmwoodTail.DisplayName: Wyrmwood
 WyrmwoodWings.DisplayName: Wyrmwood
+
+ZombieScientist: {
+	DisplayName: Zombie Scientist
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.ZombieScientist.BestiaryFlavorText
+}
