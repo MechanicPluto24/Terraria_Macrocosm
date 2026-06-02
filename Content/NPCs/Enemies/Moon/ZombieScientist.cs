@@ -203,18 +203,18 @@ public class ZombieScientist : ModNPC
         return 6f;
     }
 
-    private int calculateDamage(float flask) // changes damage based on what flask is being thrown
+    private float calculateDamage(float flask) // changes damage based on what flask is being thrown
     {
         switch (flask)
         {
             case (float)Flasks.acid:
                 return 1;
             case (float)Flasks.oil:
-                return 8/10;
+                return 0.8f;
             case (float)Flasks.prometheum:
-                return 11/10;
+                return 1.1f;
             case (float)Flasks.distortion:
-                return 9/10;
+                return 0.9f;
             case (float)Flasks.confetti:
                 return 0;
         }
@@ -234,15 +234,16 @@ public class ZombieScientist : ModNPC
             Vector2 playerDirection = target.Center - NPC.Center;
             float nextFlask = calculateNextFlask(lastFlask);
             float speed = calculateSpeed(nextFlask);
-            int damage = calculateDamage(nextFlask);
+            float damage = calculateDamage(nextFlask);
+            float finalDamage = damage * NPC.damage;
             if (nextFlask == (float)Flasks.oil)
             {
                 // triple throw if throwing oil
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed*0.8f, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage*damage, 2, -1, 0, nextFlask);
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage*damage, 2, -1, 0, nextFlask);
-                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed*1.2f, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage*damage, 2, -1, 0, nextFlask);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed*0.8f, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), (int)finalDamage, 2, -1, 0, nextFlask);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), (int)finalDamage, 2, -1, 0, nextFlask);
+                Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed*1.2f, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), (int)finalDamage, 2, -1, 0, nextFlask);
             }
-            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), NPC.damage*damage, 2, -1, 0, nextFlask);
+            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * speed, ModContent.ProjectileType<Projectiles.Hostile.ZombieChemistVial>(), (int)finalDamage, 2, -1, 0, nextFlask);
             lastFlask = nextFlask;
             }
         else if (AI_Timer >= timeLimit)
