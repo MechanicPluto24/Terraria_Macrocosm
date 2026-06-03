@@ -54,61 +54,61 @@ public class FlaskCloud : ModProjectile
     private bool exploding = false;
     public override void AI()
     {
-        timer++;
+        Projectile.frameCounter++;
         switch (cloudType)
         {
             case (float)Clouds.acid:
-                if (timer <= 10)
+                if (Projectile.frameCounter <= 10)
                 {
                     Projectile.frame = 0;
                 }
-                else if (timer <= 20)
+                else if (Projectile.frameCounter <= 20)
                 {
                     Projectile.frame = 1;
                 }
-                else if (timer <= 30)
+                else if (Projectile.frameCounter <= 30)
                 {
                     Projectile.frame = 2;
                 }
                 else
                 {
-                    timer = 0;
+                    Projectile.frameCounter = 0;
                 }
                 break;
             case (float)Clouds.oil:
-                if (timer <= 10)
+                if (Projectile.frameCounter <= 10)
                 {
                     Projectile.frame = 3;
                 }
-                else if (timer <= 20)
+                else if (Projectile.frameCounter <= 20)
                 {
                     Projectile.frame = 4;
                 }
-                else if (timer <= 30)
+                else if (Projectile.frameCounter <= 30)
                 {
                     Projectile.frame = 5;
                 }
                 else
                 {
-                    timer = 0;
+                    Projectile.frameCounter = 0;
                 }
                 break;
             case (float)Clouds.distortion:
-                if (timer <= 10)
+                if (Projectile.frameCounter <= 10)
                 {
                     Projectile.frame = 6;
                 }
-                else if (timer <= 20)
+                else if (Projectile.frameCounter <= 20)
                 {
                     Projectile.frame = 7;
                 }
-                else if (timer <= 30)
+                else if (Projectile.frameCounter <= 30)
                 {
                     Projectile.frame = 8;
                 }
                 else
                 {
-                    timer = 0;
+                    Projectile.frameCounter = 0;
                 }
                 break;
         }
@@ -129,7 +129,7 @@ public class FlaskCloud : ModProjectile
             else
             {
                 timer++;
-                if (timer >= 60) 
+                if (timer >= 30) 
                 {
                     Projectile.NewProjectile(Projectile.GetSource_Death(), Projectile.position, Vector2.Zero, ModContent.ProjectileType<ZombieEngineerExplosion>(), Projectile.damage, Projectile.knockBack);
                     Projectile.Kill();
