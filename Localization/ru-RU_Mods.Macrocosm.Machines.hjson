@@ -1,0 +1,33 @@
+{
+  "OilRefinery.DisplayName": "Нефтеперерабатывающий Завод",
+  "OreExcavator.DisplayName": "Рудоэкскаватор",
+  "BurnerGenerator": {
+    "DisplayName": "Генератор сжигания",
+    "HullHeatMetric": "Температура корпуса: {0}°C",
+    "HullHeatImperial": "Температура корпуса: {0}°F"
+  },
+  "KeroseneGenerator": {
+    "DisplayName": "Генератор керосина",
+    "HullHeatMetric": "Температура корпуса: {0}°C",
+    "HullHeatImperial": "Температура корпуса: {0}°F"
+  },
+  "Common": {
+    "ConsumedPower": "Потребляемая мощность: {0}kW",
+    "GeneratedPower": "Сгенерированная мощность: {0}kW",
+    "StoredEnergy": "Сохранённая энергия: {0}kJ",
+    "LiquidExtract": "Извлекаемая",
+    "LiquidContainer": "Жидкостный контейнер",
+    "BurnFuel": "Горючий",
+    "TemperatureMetric": "{0}°C",
+    "TemperatureImperial": "{0}°F",
+    "PowerInfo": {
+      "Simple": "{0}kW",
+      "Energy": "{0}kJ",
+      "Common": "{0}kW / {1}kW",
+      "Consumer": "Потреблено: {0}kW / Требуется: {1}kW",
+      "Generator": "Сгенерировано: {0}kW / Макс: {1}kW",
+      "Battery": "Сохранено: {0}kJ / Ёмкость: {1}kJ",
+      "Controller": ""
+    }
+  }
+}
