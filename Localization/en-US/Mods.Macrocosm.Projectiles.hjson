@@ -207,3 +207,5 @@ CrudePhaserBolt.DisplayName: Crude Phaser Bolt
 CrudePhaserHeld.DisplayName: Crude Phaser Held
 ZombieChemistVial.DisplayName: Zombie Chemist Vial
 FlaskCloud.DisplayName: Flask Cloud
+ZombieBotanistVineBase.DisplayName: Zombie Botanist Vine Base
+ZombieBotanistVineTip.DisplayName: Zombie Botanist Vine Tip

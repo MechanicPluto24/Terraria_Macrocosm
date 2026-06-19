@@ -260,3 +260,8 @@ ZombieScientist: {
 	DisplayName: Zombie Scientist
 	BestiaryFlavorText: Mods.Macrocosm.NPCs.ZombieScientist.BestiaryFlavorText
 }
+
+ZombieBotanist: {
+	DisplayName: Zombie Botanist
+	BestiaryFlavorText: Mods.Macrocosm.NPCs.ZombieBotanist.BestiaryFlavorText
+}
