@@ -162,7 +162,8 @@ public class ZombieBotanist : ModNPC
         if (AI_Timer == timeLimit - 10)
         {
             Vector2 playerDirection = target.Center - NPC.Center;
-            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX) * 6f, ModContent.ProjectileType<Projectiles.Hostile.ZombieBotanistVineBase>(), NPC.damage, 2);
+            int vineLength = Main.rand.Next(10, 15);
+            Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, playerDirection.SafeNormalize(Vector2.UnitX), ModContent.ProjectileType<Projectiles.Hostile.ZombieBotanistVineBase>(), NPC.damage, 2, -1, 0, vineLength);
         }
         else if (AI_Timer >= timeLimit)
         {
