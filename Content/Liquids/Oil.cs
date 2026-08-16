@@ -23,9 +23,16 @@ public class Oil : ModLiquid
 
         AddMapEntry(Color.Black, CreateMapEntryName());
     }
+    //TODO: The liquid needs to merge to stone during the world gen so that the game doesn't take an infinite amount of time to settle during world gen
+    // However, it needs to not merge afterwards
     public override bool PreLiquidMerge(int liquidX, int liquidY, int tileX, int tileY, int otherLiquid)
 	{
-		return false; //Keep this like so unless we want the liquids to merge with something specific.
+		return true; //Keep this like so unless we want the liquids to merge with something specific.
 	}
+    
+    public override int LiquidMerge(int i, int j, int otherLiquid)
+		{
+            return TileID.Stone;
+        }
     public override int ChooseWaterfallStyle(int i, int j) => ModContent.GetInstance<OilFall>().Slot;
 }
