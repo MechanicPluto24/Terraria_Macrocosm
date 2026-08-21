@@ -52,17 +52,30 @@ public class OilRefineryTE : ConsumerTE
     {
         get
         {
-            if (InputTankAmount >= SourceTankCapacity)
-                return false;
-
             for (int i = 2; i < Inventory.Size; i++)
             {
-                if (ItemSets.LiquidExtractData[Inventory[i].type].Valid)
+                if (CanExtractItem(Inventory[i]))
                     return true;
             }
 
             return false;
         }
+    }
+
+    private static bool IsExtractableItem(Item item)
+    {
+        if (item is null || item.IsAir)
+            return false;
+
+        return ItemSets.LiquidExtractData[item.type].Valid;
+    }
+
+    private bool CanExtractItem(Item item)
+    {
+        if (!IsExtractableItem(item))
+            return false;
+
+        return InputTankAmount + ItemSets.LiquidExtractData[item.type].ExtractedAmount <= SourceTankCapacity;
     }
 
     private bool CanRefineWork => InputTankAmount > 0f && OutputTankAmount < ResultTankCapacity;
@@ -108,7 +121,7 @@ public class OilRefineryTE : ConsumerTE
         {
             Inventory.SetReserved(
                 i,
-                (item) => item.type >= ItemID.None && ItemSets.LiquidExtractData[item.type].Valid,
+                IsExtractableItem,
                 Language.GetText("Mods.Macrocosm.Machines.Common.LiquidExtract"),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/LiquidExtract")
             );
@@ -135,7 +148,7 @@ public class OilRefineryTE : ConsumerTE
         {
             Item inputItem = Inventory[i];
             LiquidExtractData data = ItemSets.LiquidExtractData[inputItem.type];
-            if (IsRunning && InputTankAmount < SourceTankCapacity && data.Valid)
+            if (IsRunning && CanExtractItem(inputItem))
             {
                 inputExtractTimer += 1f * RatedPowerProgress;
                 if (inputExtractTimer >= ExtractRate)
