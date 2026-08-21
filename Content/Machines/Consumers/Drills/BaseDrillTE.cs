@@ -2,6 +2,7 @@ using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.ItemCreationContexts;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Particles;
@@ -185,7 +186,7 @@ public abstract class BaseDrillTE : ConsumerTE
             dropPosition = new(dropPosition.X + tileData.Width * 16 / 2f, dropPosition.Y + (tileData.Height + 3) * 16);
 
         Item item = new(selectedItemId);
-        bool placed = InventorySize > 0 && Inventory.TryPlacingItem(ref item, sound: false);
+        bool placed = InventorySize > 0 && Inventory.TryPlacingItem(ref item, InventoryPlacementSource.Internal, sound: false);
 
         if (placed)
         {

@@ -1,3 +1,4 @@
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
@@ -58,6 +59,9 @@ public class UIInventorySlot : UIElement
 
     public bool DrawIndexNumber { get; set; } = false;
     public string CustomIndexLabel { get; set; } = null;
+
+    public bool GrayscaleReservedItem { get; set; }
+    public float ReservedItemOpacity { get; set; } = 1f;
 
     public UIInventorySlot(ref Item item, int itemSlotContext = Context.ChestItem, float scale = default) : this(new Inventory(1), 0, itemSlotContext, scale)
     {
@@ -402,7 +406,7 @@ public class UIInventorySlot : UIElement
             if (inventory.TryGetReservedItemClone(itemIndex, out Item reservedItem))
             {
                 Vector2 vector = slotTexture.Size() * Main.inventoryScale;
-                DrawItemIcon(reservedItem, itemSlotContext, spriteBatch, position + vector / 2f, Main.inventoryScale, SizeLimit, color);
+                DrawReservedItemIcon(reservedItem, spriteBatch, position + vector / 2f, color);
             }
             else
             {
@@ -417,6 +421,26 @@ public class UIInventorySlot : UIElement
         if (item.favorited)
             spriteBatch.Draw(slotFavoritedTexture.Value, position, null, slotFavoritedColor, 0f, default, Main.inventoryScale, SpriteEffects.None, 0f);
 
+    }
+
+    private void DrawReservedItemIcon(Item item, SpriteBatch spriteBatch, Vector2 position, Color color)
+    {
+        color *= MathHelper.Clamp(ReservedItemOpacity, 0f, 1f);
+
+        if (!GrayscaleReservedItem)
+        {
+            DrawItemIcon(item, itemSlotContext, spriteBatch, position, Main.inventoryScale, SizeLimit, color);
+            return;
+        }
+
+        SpriteBatchState state = new();
+        state.SaveState(spriteBatch);
+
+        spriteBatch.End();
+        spriteBatch.Begin(Macrocosm.GetShader("Grayscale"), state);
+        DrawItemIcon(item, itemSlotContext, spriteBatch, position, Main.inventoryScale, SizeLimit, color);
+        spriteBatch.End();
+        spriteBatch.Begin(state);
     }
 
     protected virtual Color GetSlotGlow(Item item, Color baseColor, float multiplier = 1f)

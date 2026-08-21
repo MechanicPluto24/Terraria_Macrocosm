@@ -3062,15 +3062,13 @@ Craterfish: {
 DunceCraterfish: {
 	DisplayName: Глупая кратерная рыба
 	Tooltip: ""
-	AnglerDescription: ""
 	AnglerLocation: Caught on the Moon
 }
 
 HermitCan: {
 	DisplayName: Банка-отшельник
 	Tooltip: ""
-	AnglerDescription: ""
-	AnglerLocation: Caught on the Moon
+	AnglerLocation: Caught in the Pollution
 }
 
 MutatedGoldfish: {
@@ -3083,7 +3081,6 @@ MutatedGoldfish: {
 SmogWispfish: {
 	DisplayName: Блуждающая рыба-смог
 	Tooltip: ""
-	AnglerDescription: ""
 	AnglerLocation: Caught in the Pollution
 }
 

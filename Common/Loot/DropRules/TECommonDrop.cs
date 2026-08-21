@@ -61,7 +61,7 @@ public class TECommonDrop : CommonDrop, IBlacklistable
             item.OnCreated(new MachineItemCreationContext(item, MachineTE));
             bool placed = false;
             if (MachineTE.InventorySize > 0)
-                placed = MachineTE.Inventory.TryPlacingItem(ref item, sound: false);
+                placed = MachineTE.Inventory.TryPlacingItem(ref item, InventoryPlacementSource.Internal, sound: false);
 
             if (placed)
             {

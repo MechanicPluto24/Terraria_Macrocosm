@@ -7,11 +7,21 @@ using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 
 namespace Macrocosm.Common.Systems.Connectors;
 
 public class ConveyorCircuit : Circuit<ConveyorNode>
 {
+    private static readonly SoundStyle ItemTransferSound = SoundID.Grab with
+    {
+        Volume = 0.35f,
+        PitchVariance = 0.08f,
+        MaxInstances = 4,
+        SoundLimitBehavior = SoundLimitBehavior.ReplaceOldest
+    };
+
     public ConveyorPipeType PipeType { get; }
 
     public ConveyorCircuit(ConveyorPipeType type)
@@ -88,7 +98,7 @@ public class ConveyorCircuit : Circuit<ConveyorNode>
                 }
                 else if (inletNode.Entity is IInventoryOwner inletOwner)
                 {
-                    if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, justCheck: false))
+                    if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, InventoryPlacementSource.Automation, sound: false))
                     {
                         Vector2 inletPosition = inletOwner.InventoryPosition;
                         ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, null);
@@ -109,6 +119,10 @@ public class ConveyorCircuit : Circuit<ConveyorNode>
             int transferAmount = 1;
             for (int slot = 0; slot < sourceOwner.Inventory.Size; slot++)
             {
+                InventorySlotRole role = sourceOwner.Inventory.GetSlotRole(slot);
+                if (role is not (InventorySlotRole.General or InventorySlotRole.Output))
+                    continue;
+
                 Item sourceItem = sourceOwner.Inventory[slot];
                 if (sourceItem == null || sourceItem.IsAir)
                     continue;
@@ -129,7 +143,7 @@ public class ConveyorCircuit : Circuit<ConveyorNode>
                 }
                 else if (inletNode.Entity is IInventoryOwner inletOwner)
                 {
-                    if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, justCheck: false))
+                    if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, InventoryPlacementSource.Automation, sound: false))
                     {
                         Vector2 inletPosition = inletOwner.InventoryPosition;
                         ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, null);
@@ -154,6 +168,9 @@ public class ConveyorCircuit : Circuit<ConveyorNode>
                 p.TimeToLive = Main.rand.Next(60, 80);
             });
         }
+
+        if (Main.netMode != NetmodeID.Server)
+            SoundEngine.PlaySound(ItemTransferSound, endPosition);
 
         if (sourceChest != null)
         {

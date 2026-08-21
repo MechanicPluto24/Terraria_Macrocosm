@@ -20,9 +20,9 @@ namespace Macrocosm.Content.Machines.Consumers.Autocrafters;
 public abstract class AutocrafterTEBase : ConsumerTE
 {
     public abstract int OutputSlots { get; }
-    public virtual int InputPoolSize => 100;
+    public const int InputSlotsPerOutput = 15;
+    public virtual int InputPoolSize => OutputSlots * InputSlotsPerOutput;
     public sealed override int InventorySize => OutputSlots + InputPoolSize;
-    public Dictionary<int, List<int>> InputSlotAllocation { get; private set; } = new();
 
     protected virtual bool AllowHandCrafting => false;
     protected virtual int[] AvailableCraftingStations => [];
@@ -50,17 +50,23 @@ public abstract class AutocrafterTEBase : ConsumerTE
         if (slot < OutputSlots)
             return false;
 
-        if (SelectedRecipes is null)
+        if (SelectedRecipes is null || item is null || item.IsAir)
             return false;
 
-        return InputSlotAllocation.Values
-            .SelectMany(slots => slots)
-            .Contains(slot)
-            && Inventory.ReservedCheck(slot, item);
+        return SelectedRecipes.Any(recipe => recipe is not null && recipe.requiredItem.Any(requiredItem => requiredItem.type == item.type));
     }
 
     public virtual bool RecipeAllowed(Recipe recipe)
     {
+        int requiredInputSlots = recipe.requiredItem
+            .Where(item => item.type > ItemID.None && item.stack > 0)
+            .Select(item => item.type)
+            .Distinct()
+            .Count();
+
+        if (requiredInputSlots > InputPoolSize)
+            return false;
+
         int[] requiredTiles = recipe.requiredTile.Where(tile => tile != -1).ToArray();
 
         if (requiredTiles.Length == 0)
@@ -77,13 +83,8 @@ public abstract class AutocrafterTEBase : ConsumerTE
         if (!Inventory[outputSlot].IsAir)
             return false;
 
-        if (!InputSlotAllocation.TryGetValue(outputSlot, out var slots))
-            return true;
-
-        return slots.All(i => Inventory[i].IsAir);
+        return true;
     }
-
-    public bool IsInputSlotReserved(int slot, int outputSlot) => InputSlotAllocation.Where(kv => kv.Key != outputSlot).SelectMany(kv => kv.Value).Contains(slot);
 
     public bool SelectRecipeInFreeSlot(Recipe recipe)
     {
@@ -108,20 +109,22 @@ public abstract class AutocrafterTEBase : ConsumerTE
         return SelectRecipeInSlot(outputSlot, recipe);
     }
 
-    public bool SelectRecipeInSlot(int outputSlot, Recipe recipe)
+    public bool SelectRecipeInSlot(int outputSlot, Recipe recipe) => SelectRecipeInSlot(outputSlot, recipe, restoring: false);
+
+    private bool SelectRecipeInSlot(int outputSlot, Recipe recipe, bool restoring)
     {
         if (recipe is null)
             return ClearRecipeSlot(outputSlot);
 
         EnsureSelectedRecipes();
 
-        if (!CanOverwriteRecipeAt(outputSlot))
+        if (!restoring && !CanOverwriteRecipeAt(outputSlot))
             return false;
 
         if (outputSlot < 0 || outputSlot >= OutputSlots)
             return false;
 
-        ClearRecipeSlotReservations(outputSlot);
+        Inventory.ClearReserved(outputSlot);
 
         SelectedRecipes[outputSlot] = recipe;
 
@@ -130,37 +133,10 @@ public abstract class AutocrafterTEBase : ConsumerTE
             recipe.createItem.type,
             tooltip: null,
             texture: TextureAssets.Item[recipe.createItem.type],
-            color: Color.White * 0.8f,
+            color: Color.White,
             stack: recipe.createItem.stack
         );
 
-        List<int> allocatedInputs = new();
-        int inputIndex = OutputSlots; // start after output slots
-        foreach (var requiredItem in recipe.requiredItem)
-        {
-            if (requiredItem.type <= ItemID.None)
-                continue;
-
-            while (inputIndex < Inventory.Size && (!Inventory[inputIndex].IsAir || IsInputSlotReserved(inputIndex, outputSlot)))
-                inputIndex++;
-
-            if (inputIndex >= Inventory.Size)
-                break;
-
-            allocatedInputs.Add(inputIndex);
-            Inventory.SetReserved(
-                inputIndex,
-                requiredItem.type,
-                tooltip: null,
-                texture: TextureAssets.Item[requiredItem.type],
-                color: Color.White * 0.5f,
-                stack: requiredItem.stack
-            );
-
-            inputIndex++;
-        }
-
-        InputSlotAllocation[outputSlot] = allocatedInputs;
         SyncRecipeSelection();
         return true;
     }
@@ -178,9 +154,8 @@ public abstract class AutocrafterTEBase : ConsumerTE
         if (!CanOverwriteRecipeAt(outputSlot))
             return false;
 
-        ClearRecipeSlotReservations(outputSlot);
+        Inventory.ClearReserved(outputSlot);
         SelectedRecipes[outputSlot] = null;
-        InputSlotAllocation.Remove(outputSlot);
         SyncRecipeSelection();
         return true;
     }
@@ -189,16 +164,6 @@ public abstract class AutocrafterTEBase : ConsumerTE
     {
         if (SelectedRecipes == null || SelectedRecipes.Length != OutputSlots)
             SelectedRecipes = new Recipe[OutputSlots];
-    }
-
-    private void ClearRecipeSlotReservations(int outputSlot)
-    {
-        Inventory.ClearReserved(outputSlot);
-        if (InputSlotAllocation.TryGetValue(outputSlot, out var oldInputSlots))
-            foreach (var slot in oldInputSlots)
-                Inventory.ClearReserved(slot);
-
-        InputSlotAllocation.Remove(outputSlot);
     }
 
     private void SyncRecipeSelection()
@@ -224,40 +189,29 @@ public abstract class AutocrafterTEBase : ConsumerTE
             if (recipe is null)
                 continue;
 
-            if (!CanCraftRecipe(outputSlot, recipe))
+            if (!CanCraftRecipe(recipe))
                 continue;
 
             if (!CanStoreRecipeOutput(outputSlot, recipe))
                 continue;
 
-            ConsumeRecipeIngredients(outputSlot, recipe);
+            ConsumeRecipeIngredients(recipe);
 
             Item result = recipe.createItem.Clone();
             result.OnCreated(new MachineItemCreationContext(result, this));
-            if (!Inventory.TryPlacingItemInSlot(ref result, outputSlot, sound: false, serverSync: true) && result.stack > 0)
+            if (!Inventory.TryPlacingItemInSlot(ref result, outputSlot, InventoryPlacementSource.Internal, sound: false, serverSync: true) && result.stack > 0)
                 Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, result);
         }
     }
 
-    private bool CanCraftRecipe(int outputSlot, Recipe recipe)
+    private bool CanCraftRecipe(Recipe recipe)
     {
-        if (!InputSlotAllocation.TryGetValue(outputSlot, out var inputSlots))
-            return false;
-
-        foreach (var requiredItem in recipe.requiredItem)
+        foreach (var requiredItem in GetRequiredItems(recipe))
         {
-            if (requiredItem.type <= ItemID.None || requiredItem.stack <= 0)
-                continue;
-
-            int found = 0;
-            foreach (var slot in inputSlots)
-            {
-                if (Inventory[slot].type == requiredItem.type)
-                    found += Inventory[slot].stack;
-            }
-            if (found < requiredItem.stack)
+            if (Inventory.CountItems(requiredItem.Type, startIndex: OutputSlots) < requiredItem.Stack)
                 return false;
         }
+
         return true;
     }
 
@@ -269,7 +223,7 @@ public abstract class AutocrafterTEBase : ConsumerTE
         for (int outputSlot = 0; outputSlot < SelectedRecipes.Length; outputSlot++)
         {
             Recipe recipe = SelectedRecipes[outputSlot];
-            if (recipe is not null && CanCraftRecipe(outputSlot, recipe) && CanStoreRecipeOutput(outputSlot, recipe))
+            if (recipe is not null && CanCraftRecipe(recipe) && CanStoreRecipeOutput(outputSlot, recipe))
                 return true;
         }
 
@@ -279,23 +233,17 @@ public abstract class AutocrafterTEBase : ConsumerTE
     private bool CanStoreRecipeOutput(int outputSlot, Recipe recipe)
     {
         Item result = recipe.createItem.Clone();
-        return Inventory.TryPlacingItemInSlot(ref result, outputSlot, justCheck: true, sound: false, serverSync: false);
+        return Inventory.TryPlacingItemInSlot(ref result, outputSlot, InventoryPlacementSource.Internal, justCheck: true, sound: false, serverSync: false);
     }
 
-    private void ConsumeRecipeIngredients(int outputSlot, Recipe recipe)
+    private void ConsumeRecipeIngredients(Recipe recipe)
     {
-        if (!InputSlotAllocation.TryGetValue(outputSlot, out var inputSlots))
-            return;
-
-        foreach (var requiredItem in recipe.requiredItem)
+        foreach (var requiredItem in GetRequiredItems(recipe))
         {
-            if (requiredItem.type <= ItemID.None || requiredItem.stack <= 0)
-                continue;
-
-            int toConsume = requiredItem.stack;
-            foreach (var slot in inputSlots)
+            int toConsume = requiredItem.Stack;
+            for (int slot = OutputSlots; slot < Inventory.Size; slot++)
             {
-                if (Inventory[slot].type == requiredItem.type)
+                if (Inventory[slot].type == requiredItem.Type)
                 {
                     int consume = Math.Min(toConsume, Inventory[slot].stack);
                     Inventory[slot].DecreaseStack(consume);
@@ -306,6 +254,12 @@ public abstract class AutocrafterTEBase : ConsumerTE
             }
         }
     }
+
+    private static IEnumerable<(int Type, int Stack)> GetRequiredItems(Recipe recipe)
+        => recipe.requiredItem
+            .Where(item => item.type > ItemID.None && item.stack > 0)
+            .GroupBy(item => item.type)
+            .Select(group => (Type: group.Key, Stack: group.Sum(item => item.stack)));
 
     protected override void ConsumerSaveData(TagCompound tag)
     {
@@ -360,7 +314,7 @@ public abstract class AutocrafterTEBase : ConsumerTE
                 });
 
                 if (matchingRecipe != null && RecipeAllowed(matchingRecipe))
-                    SelectRecipeInSlotWithoutSync(i, matchingRecipe);
+                    SelectRecipeInSlotWithoutSync(i, matchingRecipe, restoring: true);
             }
         }
     }
@@ -466,7 +420,6 @@ public abstract class AutocrafterTEBase : ConsumerTE
     private void RebuildSelectedRecipes(Recipe[] recipes)
     {
         SelectedRecipes = new Recipe[OutputSlots];
-        InputSlotAllocation.Clear();
         for (int i = 0; i < Inventory.Size; i++)
             Inventory.ClearReserved(i);
 
@@ -476,7 +429,7 @@ public abstract class AutocrafterTEBase : ConsumerTE
             for (int i = 0; i < Math.Min(recipes.Length, OutputSlots); i++)
             {
                 if (recipes[i] is not null)
-                    SelectRecipeInSlot(i, recipes[i]);
+                    SelectRecipeInSlot(i, recipes[i], restoring: true);
             }
         }
         finally
@@ -485,12 +438,12 @@ public abstract class AutocrafterTEBase : ConsumerTE
         }
     }
 
-    private bool SelectRecipeInSlotWithoutSync(int outputSlot, Recipe recipe)
+    private bool SelectRecipeInSlotWithoutSync(int outputSlot, Recipe recipe, bool restoring = false)
     {
         suppressRecipeSync = true;
         try
         {
-            return SelectRecipeInSlot(outputSlot, recipe);
+            return SelectRecipeInSlot(outputSlot, recipe, restoring);
         }
         finally
         {
