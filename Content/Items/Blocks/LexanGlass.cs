@@ -1,4 +1,4 @@
-using Macrocosm.Content.Items.Refined;
+using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Items.Walls;
 using Terraria;
 using Terraria.ID;

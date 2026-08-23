@@ -3,7 +3,7 @@ using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
-using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Items.Weapons.Magic;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Microsoft.Xna.Framework;

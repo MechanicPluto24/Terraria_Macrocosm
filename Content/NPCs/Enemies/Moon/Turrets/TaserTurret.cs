@@ -1,7 +1,7 @@
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Tech;
+using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;

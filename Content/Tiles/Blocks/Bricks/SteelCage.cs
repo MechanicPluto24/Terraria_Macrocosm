@@ -1,6 +1,6 @@
-using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
 using Microsoft.Xna.Framework;
+using ModLiquidLib.ID;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,7 +14,8 @@ public class SteelCage : ModTile
         Main.tileSolid[Type] = true;
         Main.tileBlockLight[Type] = false;
 
-        TileSets.AllowLiquids[Type] = true;
+        LiquidID_TLmod.Sets.IgnoresWater.Add(Type);
+        LiquidID_TLmod.Sets.IgnoresWaterDuringWorldgen.Add(Type);
 
         AddMapEntry(new Color(103, 120, 138));
 

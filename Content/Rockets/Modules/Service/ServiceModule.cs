@@ -2,7 +2,7 @@
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Machines;
 using Macrocosm.Content.Items.Machines.Consumers.Oxygen;
-using Macrocosm.Content.Items.Tech;
+using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using System.Linq;
 using Terraria.Localization;

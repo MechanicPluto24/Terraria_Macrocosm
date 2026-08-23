@@ -1,9 +1,8 @@
-﻿using Macrocosm.Content.Items.Tech;
+﻿using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Items.Bars;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Macrocosm.Content.Items.Refined;
 using Macrocosm.Content.Tiles.Crafting;
 
 namespace Macrocosm.Content.Items.Machines.Consumers.Autocrafters;

@@ -9,6 +9,9 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Macrocosm.Content.Liquids;
+using ModLiquidLib.ID;
+using ModLiquidLib.ModLoader;
 using static Terraria.ModLoader.ModContent;
 
 namespace Macrocosm.Content.Subworlds;
@@ -25,6 +28,67 @@ class EarthWorldGen : ModSystem
         if (oceanIndex != -1)
             tasks.Insert(oceanIndex + 1, new PassLegacy("Macrocosm: Silica", GenerateSilicaSand_Ocean));
 
+        int slushIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Slush"));
+        if (slushIndex != -1)
+            tasks.Insert(slushIndex + 1, new PassLegacy("Macrocosm: Oil", GenerateOil));
+
+        int finalIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Final Cleanup"));
+        if (finalIndex != -1)
+            tasks.Insert(finalIndex + 1, new PassLegacy("Macrocosm: Desert Oil", GenerateDesertOil));
+
+    }
+
+    private void GenerateOil(GenerationProgress progress, GameConfiguration configuration)
+    {
+        for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.00012); i++){
+            int X = WorldGen.genRand.Next(30, Main.maxTilesX-30);
+            int Y= WorldGen.genRand.Next((int)Main.rockLayer, Main.UnderworldLayer - 30);
+
+            if(Main.tile[X,Y].HasTile){
+            WorldGen.TileRunner(X, Y, WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(3, 15), -1);
+
+            Utility.ForEachInCircle(
+                X,
+                Y,
+                5,
+                (i1, j1) =>
+                {
+                    if (!WorldGen.InWorld(i1, j1))
+                        return;
+
+                    if (!Main.tile[i1, j1].HasTile)
+                    {
+                        WorldGen.PlaceLiquid(i1, j1, (byte)LiquidLoader.LiquidType<Oil>(), byte.MaxValue); 
+                    }
+                }
+            );
+            }
+        }
+    }
+    
+    private void GenerateDesertOil(GenerationProgress progress, GameConfiguration configuration)
+    {
+    
+        for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.000005); i++){
+            int X = WorldGen.genRand.Next(GenVars.desertHiveLeft, GenVars.desertHiveRight);
+            int Y= WorldGen.genRand.Next((int)Main.worldSurface, GenVars.desertHiveLow);
+
+            Utility.ForEachInCircle(
+                X,
+                Y,
+                5,
+                (i1, j1) =>
+                {
+                    if (!WorldGen.InWorld(i1, j1))
+                        return;
+
+                    if (!Main.tile[i1, j1].HasTile)
+                    {
+                        WorldGen.PlaceLiquid(i1, j1, (byte)LiquidLoader.LiquidType<Oil>(), byte.MaxValue); 
+                    }
+                }
+            ); 
+        }
     }
 
     private void GenerateOres(GenerationProgress progress, GameConfiguration configuration)
@@ -57,7 +121,7 @@ class EarthWorldGen : ModSystem
     private void GenerateCoal(GenerationProgress progress, GameConfiguration configuration)
     {
         for (int i = 0; i < (int)(Main.maxTilesX * Main.maxTilesY * 0.00016); i++)
-            WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY), WorldGen.genRand.Next(5, 10), WorldGen.genRand.Next(5, 10), TileType<Coal>());
+            WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY), WorldGen.genRand.Next(7, 12), WorldGen.genRand.Next(5, 10), TileType<Coal>());
     }
 
     private void GenerateOilShales(GenerationProgress progress, GameConfiguration configuration)
@@ -73,7 +137,7 @@ class EarthWorldGen : ModSystem
             GenVars.desertHiveLeft == Main.maxTilesX)
             return;
 
-        for (int i = 0; i < Main.maxTilesX * Main.maxTilesY * 0.0005; i++)
+        for (int i = 0; i < Main.maxTilesX * Main.maxTilesY * 0.00035; i++)
         {
             int tileX = WorldGen.genRand.Next(GenVars.desertHiveLeft, GenVars.desertHiveRight);
             int tileY = WorldGen.genRand.Next(GenVars.desertHiveHigh, GenVars.desertHiveLow);
@@ -84,7 +148,7 @@ class EarthWorldGen : ModSystem
             {
                 int type = Main.tile[tileX, tileY].TileType;
                 if (TileID.Sets.Conversion.HardenedSand[type] || TileID.Sets.Conversion.Sandstone[type])
-                    WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next(4, 6), WorldGen.genRand.Next(6, 14), TileType<OilShale>());
+                    WorldGen.TileRunner(tileX, tileY, WorldGen.genRand.Next(5, 7), WorldGen.genRand.Next(8, 17), TileType<OilShale>());
             }
         }
     }

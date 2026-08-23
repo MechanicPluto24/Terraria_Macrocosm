@@ -57,12 +57,15 @@ public class PumpjackTE : ConsumerTE
                 return false;
 
             Item filledItem = new(fillType);
-            return Inventory.TryPlacingItem(ref filledItem, justCheck: true, sound: false, serverSync: false, startIndex: 1, endIndex: 1);
+            return Inventory.TryPlacingItem(ref filledItem, InventoryPlacementSource.Internal, justCheck: true, sound: false, serverSync: false, startIndex: 1, endIndex: 1);
         }
     }
 
     public override void OnFirstUpdate()
     {
+        Inventory.SetSlotRole(0, InventorySlotRole.Input);
+        Inventory.SetSlotRole(1, InventorySlotRole.Output);
+
         for (int i = 0; i < InventorySize; i++)
         {
             Inventory.SetReserved(
@@ -117,7 +120,7 @@ public class PumpjackTE : ConsumerTE
             filledItem.OnCreated(new MachineItemCreationContext(filledItem, this));
 
             // Place result in OutputSlot
-            if (!Inventory.TryPlacingItem(ref filledItem, sound: false, serverSync: true, startIndex: 1, endIndex: 1) && filledItem.stack > 0)
+            if (!Inventory.TryPlacingItem(ref filledItem, InventoryPlacementSource.Internal, sound: false, serverSync: true, startIndex: 1, endIndex: 1) && filledItem.stack > 0)
                 Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, filledItem);
 
             ContainerSlot.DecreaseStack();

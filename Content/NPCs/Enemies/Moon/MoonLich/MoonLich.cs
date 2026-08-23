@@ -4,7 +4,7 @@ using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Hostile;
 using Macrocosm.Content.Tiles.Blocks.Terrain;

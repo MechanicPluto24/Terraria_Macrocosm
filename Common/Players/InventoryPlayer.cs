@@ -34,7 +34,7 @@ public class InventoryPlayer : ModPlayer
         {
             Item item = inventory[slot];
 
-            if (Inventory.ActiveInventory.TryPlacingItem(ref item, justCheck: true, fromPlayer: true))
+            if (Inventory.ActiveInventory.TryPlacingItem(ref item, InventoryPlacementSource.Player, justCheck: true))
                 Main.cursorOverride = CursorOverrideID.InventoryToChest;
 
             return true;
@@ -49,7 +49,7 @@ public class InventoryPlayer : ModPlayer
         if (Inventory.CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
         {
             Item item = inventory[slot];
-            if (Inventory.ActiveInventory.TryPlacingItem(ref item, fromPlayer: true))
+            if (Inventory.ActiveInventory.TryPlacingItem(ref item, InventoryPlacementSource.Player))
                 return true;
         }
 

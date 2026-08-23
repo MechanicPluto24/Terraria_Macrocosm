@@ -65,6 +65,7 @@ public class IndustrialPlating : ModTile
         else if (new TileNeighbourInfo(i, j).GetPredicateNeighbourInfo((t) => 
             WorldGen.SolidTile(t)
             && t.TileType != Type
+            && t.TileType != ModContent.TileType<IndustrialPlatingBroken>()
             || TileID.Sets.NotReallySolid[t.TileType]
             || Utility.IsPlatform(t.TileType)
         ).Count4Way > 0)

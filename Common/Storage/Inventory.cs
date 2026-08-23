@@ -329,7 +329,7 @@ public partial class Inventory : IEnumerable<Item>
     public Color? GetReservedColor(int index) => index >= 0 && index < reservedColors.Length ? reservedColors[index] : null;
     public int GetReservedStack(int index) => index >= 0 && index < reservedStacks.Length ? reservedStacks[index] : 1;
 
-    public bool TryPlacingItem(ref Item item, bool justCheck = false, bool fromPlayer = false, bool sound = true, bool serverSync = true, int startIndex = 0, int? endIndex = null, bool ignoreReserved = false)
+    public bool TryPlacingItem(ref Item item, InventoryPlacementSource insertionSource, bool justCheck = false, bool sound = true, bool serverSync = true, int startIndex = 0, int? endIndex = null, bool ignoreReserved = false)
     {
         if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
             return false;
@@ -342,10 +342,10 @@ public partial class Inventory : IEnumerable<Item>
         {
             for (int i = startIndex; i <= Math.Min(Size - 1, endIndex ?? Size - 1); i++)
             {
-                if (fromPlayer && !uiItemSlots[i].CanInteractWithItem)
+                if (insertionSource == InventoryPlacementSource.Player && !uiItemSlots[i].CanInteractWithItem)
                     continue;
 
-                if (!CanPlaceIntoSlot(i, item, fromPlayer))
+                if (!CanPlaceIntoSlot(i, item, insertionSource))
                     continue;
 
                 if (!ignoreReserved && !ReservedCheck(i, item))
@@ -404,7 +404,7 @@ public partial class Inventory : IEnumerable<Item>
                 if (!uiItemSlots[j].CanInteractWithItem)
                     continue;
 
-                if (!CanPlaceIntoSlot(j, item, fromPlayer))
+                if (!CanPlaceIntoSlot(j, item, insertionSource))
                     continue;
 
                 if (!ignoreReserved && !ReservedCheck(j, item))
@@ -437,9 +437,16 @@ public partial class Inventory : IEnumerable<Item>
         return result;
     }
 
-    private bool CanPlaceIntoSlot(int slot, Item item, bool fromPlayer)
+    private bool CanPlaceIntoSlot(int slot, Item item, InventoryPlacementSource insertionSource)
     {
-        if (!fromPlayer)
+        if (insertionSource == InventoryPlacementSource.Automation)
+        {
+            InventorySlotRole role = GetSlotRole(slot);
+            return role is InventorySlotRole.General or InventorySlotRole.Input
+                && (CanInsertIntoSlot?.Invoke(slot, item) ?? true);
+        }
+
+        if (insertionSource == InventoryPlacementSource.Internal)
             return true;
 
         if (GetSlotRole(slot) == InventorySlotRole.OutputLocked)
@@ -448,8 +455,8 @@ public partial class Inventory : IEnumerable<Item>
         return CanInsertIntoSlot?.Invoke(slot, item) ?? true;
     }
 
-    public bool TryPlacingItemInSlot(ref Item item, int slot, bool justCheck = false, bool fromPlayer = false, bool sound = true, bool serverSync = true, bool ignoreReserved = false)
-        => TryPlacingItem(ref item, justCheck, fromPlayer, sound, serverSync, slot, slot, ignoreReserved);
+    public bool TryPlacingItemInSlot(ref Item item, int slot, InventoryPlacementSource insertionSource, bool justCheck = false, bool sound = true, bool serverSync = true, bool ignoreReserved = false)
+        => TryPlacingItem(ref item, insertionSource, justCheck, sound, serverSync, slot, slot, ignoreReserved);
 
     /// <summary> Loot all items from this inventory, to the player's </summary>
     public void LootAll()

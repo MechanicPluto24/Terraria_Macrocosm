@@ -11,6 +11,7 @@ public class IndustrialPlating : ModItem
     public override void SetStaticDefaults()
     {
         Item.ResearchUnlockCount = 100;
+        ItemID.Sets.ShimmerTransformToItem[Type] = ModContent.ItemType<IndustrialPlatingBroken>();
     }
 
     public override void SetDefaults()

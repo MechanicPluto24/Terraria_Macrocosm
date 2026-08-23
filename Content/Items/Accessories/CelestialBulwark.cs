@@ -5,7 +5,7 @@ using Macrocosm.Common.Graphics;
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

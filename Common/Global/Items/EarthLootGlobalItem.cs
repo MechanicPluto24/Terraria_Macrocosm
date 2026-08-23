@@ -1,4 +1,5 @@
 using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Blocks.Sands;
 using Macrocosm.Content.Items.Ores;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -54,7 +55,7 @@ public class EarthLootGlobalItem : GlobalItem
         }
 
         // Silicon extractable items (e.g. silica sand)
-        if (extractType == ModContent.ItemType<Silicon>())
+        if (extractType == ModContent.ItemType<SilicaSand>())
         {
             // 20% chance to override result with (1-10) silicon
             if (Main.rand.NextBool(5))

@@ -3,7 +3,7 @@ using Macrocosm.Common.Enums;
 using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Terraria;
 using Terraria.GameContent.ItemDropRules;
@@ -16,7 +16,7 @@ public class RegolithSlime : ModNPC
 {
     public override void SetStaticDefaults()
     {
-        Main.npcFrameCount[NPC.type] = Main.npcFrameCount[NPCID.BlueSlime];
+        Main.npcFrameCount[Type] = 3;
 
         NPC.ApplyBuffImmunity
         (
@@ -46,13 +46,26 @@ public class RegolithSlime : ModNPC
         NPC.knockBackResist = 0.5f;
         NPC.aiStyle = NPCAIStyleID.Slime;
         AIType = NPCID.BlueSlime;
-        AnimationType = NPCID.BlueSlime;
         Banner = Item.NPCtoBanner(NPCID.BlueSlime);
         BannerItem = Item.BannerToItem(Banner);
     }
 
     public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
     {
+    }
+
+    public override void FindFrame(int frameHeight)
+    {
+        const int ticksPerFrame = 6;
+
+        if (++NPC.frameCounter >= ticksPerFrame)
+        {
+            NPC.frameCounter = 0;
+            NPC.frame.Y += frameHeight;
+
+            if (NPC.frame.Y >= Main.npcFrameCount[Type] * frameHeight)
+                NPC.frame.Y = 0;
+        }
     }
 
     public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() && Main.dayTime ? 0.1f : 0f;

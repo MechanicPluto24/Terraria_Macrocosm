@@ -6,7 +6,7 @@ using Macrocosm.Common.Sets;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Biomes;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Particles;
 using Macrocosm.Content.Projectiles.Environment.Debris;
 using Macrocosm.Content.Projectiles.Hostile;

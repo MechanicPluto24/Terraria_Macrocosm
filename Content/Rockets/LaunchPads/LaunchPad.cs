@@ -393,7 +393,7 @@ public partial class LaunchPad : IInventoryOwner
                     item = new(defaultType, recipeEntry.RequiredAmount);
                 }
 
-                bool addedToInventory = Inventory.TryPlacingItem(ref item, sound: true);
+                bool addedToInventory = Inventory.TryPlacingItem(ref item, InventoryPlacementSource.Internal, sound: true);
                 if (!addedToInventory)
                     Main.LocalPlayer.QuickSpawnItem(item.GetSource_DropAsItem("Launchpad"), item.type, item.stack);
 

@@ -1,7 +1,7 @@
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Refined;
+using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

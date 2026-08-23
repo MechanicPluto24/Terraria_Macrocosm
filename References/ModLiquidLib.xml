@@ -7,6 +7,12 @@
         <member name="F:ModLiquidLib.ID.LiquidID_TLmod.Sets.CountsAsLiquidSource">
             <summary> Whether or not this tile counts as a this liquid's source for crafting purposes. </summary>
         </member>
+        <member name="F:ModLiquidLib.ID.LiquidID_TLmod.Sets.IgnoresWater">
+            <summary> Whether or not the tile is non-solid to liquids, allowing them to flow through. </summary>
+        </member>
+        <member name="F:ModLiquidLib.ID.LiquidID_TLmod.Sets.IgnoresWaterDuringWorldgen">
+            <summary> Whether or not the tile is non-solid to liquids during worldgen. </summary>
+        </member>
         <member name="F:ModLiquidLib.ID.LiquidID_TLmod.Sets.CreateLiquidBucketItem">
             <summary> The Item created when a bucket is used on a liquid selected </summary>
         </member>

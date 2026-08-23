@@ -1,6 +1,6 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
-using Macrocosm.Content.Items.Refined;
+using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;

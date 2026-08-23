@@ -1,6 +1,5 @@
 using Macrocosm.Content.Items.Bars;
-using Macrocosm.Content.Items.Refined;
-using Macrocosm.Content.Items.Tech;
+using Macrocosm.Content.Items.Materials;
 using Macrocosm.Content.Tiles.Crafting;
 using Terraria;
 using Terraria.ID;

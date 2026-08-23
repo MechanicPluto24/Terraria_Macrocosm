@@ -834,6 +834,11 @@ IndustrialPlating: {
 	Tooltip: ""
 }
 
+IndustrialPlatingBroken: {
+	DisplayName: Broken Industrial Plating
+	Tooltip: ""
+}
+
 IndustrialPlatform: {
 	DisplayName: Industrial Platform
 	Tooltip: ""
@@ -3085,15 +3090,15 @@ Craterfish: {
 DunceCraterfish: {
 	DisplayName: Dunce Craterfish
 	Tooltip: ""
-	AnglerDescription: ""
+	AnglerDescription: This’ll take a while, so listen to me. The moon can have an aquatic ecosystem if we—I mean YOU can bring water all the way here. I know fish can be stupid, but there’s one with a crater where its forehead should be. Fetch me that fish, now!
 	AnglerLocation: Caught on the Moon
 }
 
 HermitCan: {
 	DisplayName: Hermit Can
 	Tooltip: ""
-	AnglerDescription: ""
-	AnglerLocation: Caught on the Moon
+	AnglerDescription: I’ve been walking by some garbage and I must’ve scared off something, I saw a tin can just scuttle into the polluted water. I never saw it since, and I need you to catch it for me!
+	AnglerLocation: Caught in the Pollution
 }
 
 MutatedGoldfish: {
@@ -3106,7 +3111,7 @@ MutatedGoldfish: {
 SmogWispfish: {
 	DisplayName: Smog Wispfish
 	Tooltip: ""
-	AnglerDescription: ""
+	AnglerDescription: You know those smog wisps? There’s some of them that adapt to dirty waters and feed on fish…and trash! You know what to do, pollute the waters with your crappy machines and get me one of those evasive wispfish!
 	AnglerLocation: Caught in the Pollution
 }
 
@@ -3274,7 +3279,7 @@ AutocrafterT1: {
 		'''
 }
 
-AutocrafterT2Cobalt: {
+AutocrafterT2Mythril: {
 	DisplayName: Tier 2 Assembler
 	Tooltip:
 		'''
@@ -3283,7 +3288,7 @@ AutocrafterT2Cobalt: {
 		'''
 }
 
-AutocrafterT2Palladium: {
+AutocrafterT2Orichalcum: {
 	DisplayName: Tier 2 Assembler
 	Tooltip:
 		'''
@@ -3763,5 +3768,20 @@ HeveaWorkbench: {
 
 HeveaFence: {
 	DisplayName: Hevea Fence
+	Tooltip: ""
+}
+
+QuartzWall: {
+	DisplayName: Quartz Wall
+	Tooltip: ""
+}
+
+QuartzWallUnsafe: {
+	DisplayName: Perilous Quartz Wall
+	Tooltip: ""
+}
+
+Sunclot: {
+	DisplayName: Sunclot
 	Tooltip: ""
 }

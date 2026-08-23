@@ -1,5 +1,5 @@
 using Macrocosm.Common.Sets;
-using Macrocosm.Content.Items.Tech;
+using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.ModLoader;
 

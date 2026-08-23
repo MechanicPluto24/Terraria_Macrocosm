@@ -178,7 +178,7 @@ public class BurnerGeneratorTE : GeneratorTE
             return;
 
         Item emptyContainer = new(emptyType);
-        if (!Inventory.TryPlacingItem(ref emptyContainer, sound: false, serverSync: true, ignoreReserved: true) && emptyContainer.stack > 0)
+        if (!Inventory.TryPlacingItem(ref emptyContainer, InventoryPlacementSource.Internal, sound: false, serverSync: true, ignoreReserved: true) && emptyContainer.stack > 0)
             Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, emptyContainer);
     }
 }

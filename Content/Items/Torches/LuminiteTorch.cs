@@ -1,6 +1,6 @@
 using Macrocosm.Common.Sets;
 using Macrocosm.Content.Dusts;
-using Macrocosm.Content.Items.Drops;
+using Macrocosm.Content.Items.Materials;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;

@@ -24,7 +24,11 @@ public class AutocrafterUI : MachineUI
     private UIPanel bottomPanel;
     private UIPanel recipeBrowserPanel;
     private UIAutocrafterRecipeBrowser recipeBrowser;
+    private UIPanel inputInventoryPanel;
+    private UITextPanel<string> sharedPanelToggle;
     private UIPanel infoPanel;
+
+    private bool showingInputInventory;
 
     private readonly Dictionary<int, UIPanel> outputSlotPanels = new();
     private readonly List<Recipe> selectedRecipeOptions = new();
@@ -93,9 +97,35 @@ public class AutocrafterUI : MachineUI
         {
             Width = new(0f, 1f),
             Height = new(0f, 1f),
+            Top = new(0f, 0f),
             OnResultClicked = OnResultClicked
         };
-        recipeBrowserPanel.Append(recipeBrowser);
+
+        inputInventoryPanel = AutocrafterTE.Inventory.ProvideUI(
+            start: AutocrafterTE.OutputSlots,
+            end: AutocrafterTE.Inventory.Size,
+            iconsPerRow: 10,
+            rowsWithoutScrollbar: 5
+        );
+        inputInventoryPanel.Width = new(0f, 1f);
+        inputInventoryPanel.Height = new(0f, 1f);
+        inputInventoryPanel.Top = new(0f, 0f);
+        inputInventoryPanel.BackgroundColor = Color.Transparent;
+        inputInventoryPanel.BorderColor = Color.Transparent;
+        inputInventoryPanel.Activate();
+
+        sharedPanelToggle = new UITextPanel<string>("Inventory", 0.75f)
+        {
+            Width = new(90f, 0f),
+            Height = new(26f, 0f),
+            HAlign = 1f,
+            Left = new(-8f, 0f),
+            Top = new(-30f, 0f),
+            BackgroundColor = UITheme.Current.PanelButtonStyle.BackgroundColor,
+            BorderColor = UITheme.Current.PanelButtonStyle.BorderColor
+        };
+        sharedPanelToggle.OnLeftClick += (_, _) => ToggleSharedPanel();
+        RefreshSharedPanel();
 
         infoPanel = new UIPanel()
         {
@@ -138,13 +168,12 @@ public class AutocrafterUI : MachineUI
         {
             var recipe = AutocrafterTE.SelectedRecipes?[outputIndex];
 
-            List<int> inputSlots = null;
-            if (recipe is not null)
-                AutocrafterTE.InputSlotAllocation.TryGetValue(outputIndex, out inputSlots);
+            List<Item> requiredItems = recipe?.requiredItem
+                .Where(item => item.type > ItemID.None && item.stack > 0)
+                .Select(item => item.Clone())
+                .ToList() ?? new();
 
-            inputSlots ??= new();
-
-            int inputs = inputSlots.Count;
+            int inputs = requiredItems.Count;
             float slotSize = 48f;
             float slotSpacing = 6f;
             float arrowWidth = 56f;
@@ -180,10 +209,23 @@ public class AutocrafterUI : MachineUI
                 : inputSlotsWidth + (inputs > 0 ? arrowSpacing : 0f) + arrowWidth + arrowSpacing + slotSize;
             float rowContentWidth = Width.Pixels - 20f - rowPanel.PaddingLeft - rowPanel.PaddingRight - clearButtonArea;
             float startX = (rowContentWidth - totalRowWidth) / 2f;
+
             for (int inputIndex = 0; inputIndex < inputs; inputIndex++)
             {
-                int inventoryIndex = inputSlots[inputIndex];
-                var inputSlot = AutocrafterTE.Inventory.ProvideItemSlot(inventoryIndex);
+                Item requiredItem = requiredItems[inputIndex];
+                int requiredType = requiredItem.type;
+                int requiredStack = requiredItem.stack;
+                int available = AutocrafterTE.Inventory.CountItems(requiredType, startIndex: AutocrafterTE.OutputSlots);
+                requiredItem.stack = 1;
+
+                UIInventorySlot inputSlot = CreateDisplayOnlySlot(ref requiredItem);
+                inputSlot.DrawIndexNumber = true;
+                inputSlot.CustomIndexLabel = $"{available}/{requiredStack}";
+                inputSlot.OnUpdate += element =>
+                {
+                    int currentAvailable = AutocrafterTE.Inventory.CountItems(requiredType, startIndex: AutocrafterTE.OutputSlots);
+                    ((UIInventorySlot)element).CustomIndexLabel = $"{currentAvailable}/{requiredStack}";
+                };
 
                 inputSlot.SetPadding(0f);
                 inputSlot.Top.Set(0f, 0f);
@@ -214,6 +256,8 @@ public class AutocrafterUI : MachineUI
             }
 
             var outputSlot = AutocrafterTE.Inventory.ProvideItemSlot(outputIndex);
+            outputSlot.GrayscaleReservedItem = true;
+            outputSlot.ReservedItemOpacity = 0.5f;
             outputSlot.SetPadding(0f);
             outputSlot.Top.Set(0f, 0f);
             outputSlot.Left.Set(outputLeft, 0f);
@@ -223,6 +267,20 @@ public class AutocrafterUI : MachineUI
 
             topPanel.Append(rowPanel);
         }
+    }
+
+    private void ToggleSharedPanel()
+    {
+        showingInputInventory = !showingInputInventory;
+        RefreshSharedPanel();
+    }
+
+    private void RefreshSharedPanel()
+    {
+        recipeBrowserPanel.RemoveAllChildren();
+        recipeBrowserPanel.Append(showingInputInventory ? inputInventoryPanel : recipeBrowser);
+        sharedPanelToggle.SetText(showingInputInventory ? "Recipes" : "Inventory");
+        recipeBrowserPanel.Append(sharedPanelToggle);
     }
 
     private UIPanelIconButton CreateClearRecipeButton(int outputIndex)

@@ -47,8 +47,8 @@ public class AutocrafterT2 : MachineTile
         DustType = -1;
 
         LocalizedText name = CreateMapEntryName();
-        AddMapEntry(new Color(0, 35, 69), name);
-        AddMapEntry(new Color(82, 17, 7), name);
+        AddMapEntry(new Color(10, 84, 106), name);
+        AddMapEntry(new Color(205, 30, 199), name);
     }
 
     public override ushort GetMapOption(int i, int j) => (ushort)(Main.tile[i, j].TileFrameX / (Width * 18));

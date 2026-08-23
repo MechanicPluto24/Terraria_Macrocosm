@@ -1,4 +1,4 @@
-﻿using Macrocosm.Content.Items.Tech;
+﻿using Macrocosm.Content.Items.Materials;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

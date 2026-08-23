@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Sets;
+using Macrocosm.Common.Storage;
 using Macrocosm.Common.UI.Themes;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Liquids;
@@ -246,7 +247,7 @@ public class UIFuelPanel : UIPanel, IRocketUIDataConsumer, IFixedUpdateable
 
             Item emptyContainers = new(emptyType, containersUsed);
 
-            bool addedToInventory = Rocket.Inventory.TryPlacingItem(ref emptyContainers);
+            bool addedToInventory = Rocket.Inventory.TryPlacingItem(ref emptyContainers, InventoryPlacementSource.Internal);
             if (!addedToInventory)
                 Main.LocalPlayer.QuickSpawnItem(new EntitySource_OverfullInventory(Main.LocalPlayer), emptyType, containersUsed);
 

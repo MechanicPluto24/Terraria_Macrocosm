@@ -8,7 +8,8 @@ public readonly struct LiquidExtractData
 
     public LiquidExtractData()
     {
-        LiquidType = 0;
+        LiquidType = -1;
+        ExtractedAmount = 0f;
     }
 
     public LiquidExtractData(int liquidType, float extractedAmount)
@@ -17,5 +18,5 @@ public readonly struct LiquidExtractData
         ExtractedAmount = extractedAmount;
     }
 
-    public bool Valid => LiquidType >= 0;
+    public bool Valid => LiquidType >= 0 && ExtractedAmount > 0f;
 }

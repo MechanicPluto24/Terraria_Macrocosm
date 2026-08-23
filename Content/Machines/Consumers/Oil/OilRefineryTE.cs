@@ -43,6 +43,9 @@ public class OilRefineryTE : ConsumerTE
     private float RefineRate => 60;
     private float FillRate => 60;
 
+    private const float OilConsumedPerBatch = 20f;
+    private const float RocketFuelProducedPerBatch = 15f;
+
     public float ExtractProgress => inputExtractTimer / ExtractRate;
     public float RefineProgress => refineTimer / RefineRate;
 
@@ -52,12 +55,9 @@ public class OilRefineryTE : ConsumerTE
     {
         get
         {
-            if (InputTankAmount >= SourceTankCapacity)
-                return false;
-
             for (int i = 2; i < Inventory.Size; i++)
             {
-                if (ItemSets.LiquidExtractData[Inventory[i].type].Valid)
+                if (CanExtractItem(Inventory[i]))
                     return true;
             }
 
@@ -65,7 +65,24 @@ public class OilRefineryTE : ConsumerTE
         }
     }
 
-    private bool CanRefineWork => InputTankAmount > 0f && OutputTankAmount < ResultTankCapacity;
+    private static bool IsExtractableItem(Item item)
+    {
+        if (item is null || item.IsAir)
+            return false;
+
+        return ItemSets.LiquidExtractData[item.type].Valid;
+    }
+
+    private bool CanExtractItem(Item item)
+    {
+        if (!IsExtractableItem(item))
+            return false;
+
+        return InputTankAmount + ItemSets.LiquidExtractData[item.type].ExtractedAmount <= SourceTankCapacity;
+    }
+
+    private bool CanRefineWork => InputTankAmount >= OilConsumedPerBatch
+        && OutputTankAmount + RocketFuelProducedPerBatch <= ResultTankCapacity;
 
     private bool CanFillOutputContainer
     {
@@ -79,8 +96,12 @@ public class OilRefineryTE : ConsumerTE
             if (fillType <= 0)
                 return false;
 
+            LiquidContainerData filledData = ItemSets.LiquidContainerData[fillType];
+            if (!filledData.Valid || OutputTankAmount < filledData.Capacity)
+                return false;
+
             Item filledItem = new(fillType);
-            return Inventory.TryPlacingItem(ref filledItem, justCheck: true, sound: false, serverSync: false, startIndex: 1, endIndex: 1);
+            return Inventory.TryPlacingItem(ref filledItem, InventoryPlacementSource.Internal, justCheck: true, sound: false, serverSync: false, startIndex: 1, endIndex: 1);
         }
     }
 
@@ -94,6 +115,9 @@ public class OilRefineryTE : ConsumerTE
 
     public override void OnFirstUpdate()
     {
+        Inventory.SetSlotRole(0, InventorySlotRole.Input);
+        Inventory.SetSlotRole(1, InventorySlotRole.Output);
+
         for (int i = 0; i <= 1; i++)
         {
             Inventory.SetReserved(
@@ -106,9 +130,10 @@ public class OilRefineryTE : ConsumerTE
 
         for (int i = 2; i < Inventory.Size; i++)
         {
+            Inventory.SetSlotRole(i, InventorySlotRole.Input);
             Inventory.SetReserved(
                 i,
-                (item) => item.type >= ItemID.None && ItemSets.LiquidExtractData[item.type].Valid,
+                IsExtractableItem,
                 Language.GetText("Mods.Macrocosm.Machines.Common.LiquidExtract"),
                 ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "UI/Blueprints/LiquidExtract")
             );
@@ -135,7 +160,7 @@ public class OilRefineryTE : ConsumerTE
         {
             Item inputItem = Inventory[i];
             LiquidExtractData data = ItemSets.LiquidExtractData[inputItem.type];
-            if (IsRunning && InputTankAmount < SourceTankCapacity && data.Valid)
+            if (IsRunning && CanExtractItem(inputItem))
             {
                 inputExtractTimer += 1f * RatedPowerProgress;
                 if (inputExtractTimer >= ExtractRate)
@@ -164,8 +189,8 @@ public class OilRefineryTE : ConsumerTE
             {
                 refineTimer -= RefineRate;
 
-                InputTankAmount -= 20f;
-                OutputTankAmount += 15f;
+                InputTankAmount -= OilConsumedPerBatch;
+                OutputTankAmount += RocketFuelProducedPerBatch;
             }
         }
         else
@@ -189,7 +214,7 @@ public class OilRefineryTE : ConsumerTE
                     Item filledItem = new(fillType);
                     filledItem.OnCreated(new MachineItemCreationContext(filledItem, this));
 
-                    if (!Inventory.TryPlacingItem(ref filledItem, sound: false, serverSync: true, startIndex: 1, endIndex: 1) && filledItem.stack > 0)
+                    if (!Inventory.TryPlacingItem(ref filledItem, InventoryPlacementSource.Internal, sound: false, serverSync: true, startIndex: 1, endIndex: 1) && filledItem.stack > 0)
                         Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, filledItem);
 
                     ContainerSlot.DecreaseStack();

@@ -1,7 +1,6 @@
 ﻿using Macrocosm.Common.WorldGeneration;
 using Macrocosm.Content.Items.Bars;
 using Macrocosm.Content.Items.LiquidContainers;
-using Macrocosm.Content.Items.Refined;
 using Macrocosm.Content.Tiles.Blocks.Terrain;
 using Macrocosm.Content.Tiles.Furniture.Industrial;
 using Macrocosm.Content.WorldGeneration.Structures;
@@ -19,6 +18,7 @@ using static Macrocosm.Common.Utils.Utility;
 using static Terraria.ModLoader.ModContent;
 using Terraria.ModLoader;
 using Macrocosm.Common.Utils;
+using Macrocosm.Content.Items.Materials;
 
 namespace Macrocosm.Content.Subworlds;
 
