@@ -188,7 +188,7 @@ public class OilRefineryUI : MachineUI
     {
         base.Update(gameTime);
 
-        Inventory.ActiveInventory = OilRefinery.Inventory;
+        Inventory.ActiveInventories.Add(OilRefinery.Inventory);
         outputSlot.CanInteractWithItem = true;
 
         extractArrowProgressBar.Progress = OilRefinery.RefineProgress;

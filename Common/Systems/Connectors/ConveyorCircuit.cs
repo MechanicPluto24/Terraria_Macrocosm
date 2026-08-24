@@ -98,7 +98,7 @@ public class ConveyorCircuit : Circuit<ConveyorNode>
                 }
                 else if (inletNode.Entity is IInventoryOwner inletOwner)
                 {
-                    if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, InventoryPlacementSource.Automation, sound: false))
+                    if (inletOwner.TryInsertFromAutomation(ref sourceClone, sound: false))
                     {
                         Vector2 inletPosition = inletOwner.InventoryPosition;
                         ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, sourceChest, null);
@@ -117,13 +117,13 @@ public class ConveyorCircuit : Circuit<ConveyorNode>
         foreach (var inletNode in inlets)
         {
             int transferAmount = 1;
-            for (int slot = 0; slot < sourceOwner.Inventory.Size; slot++)
+            foreach (Inventory sourceInventory in sourceOwner.GetAutomationOutputInventories())
+            for (int slot = 0; slot < sourceInventory.Size; slot++)
             {
-                InventorySlotRole role = sourceOwner.Inventory.GetSlotRole(slot);
-                if (role is not (InventorySlotRole.General or InventorySlotRole.Output))
+                if (!sourceInventory.CanExtractItem(slot, InventoryExtractionSource.Automation))
                     continue;
 
-                Item sourceItem = sourceOwner.Inventory[slot];
+                Item sourceItem = sourceInventory[slot];
                 if (sourceItem == null || sourceItem.IsAir)
                     continue;
 
@@ -138,16 +138,18 @@ public class ConveyorCircuit : Circuit<ConveyorNode>
                         Vector2 inletPosition = new Vector2(inletChest.x, inletChest.y) * 16f + new Vector2(8, 8);
                         ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, inletChest);
                         sourceItem.DecreaseStack(transferAmount);
+                        sourceInventory.SyncItem(slot);
                         break;
                     }
                 }
                 else if (inletNode.Entity is IInventoryOwner inletOwner)
                 {
-                    if (inletOwner.Inventory.TryPlacingItem(ref sourceClone, InventoryPlacementSource.Automation, sound: false))
+                    if (inletOwner.TryInsertFromAutomation(ref sourceClone, sound: false))
                     {
                         Vector2 inletPosition = inletOwner.InventoryPosition;
                         ItemTransferVisuals(visualClone.type, visualClone.stack, sourcePosition, inletPosition, null, null);
                         sourceItem.DecreaseStack(transferAmount);
+                        sourceInventory.SyncItem(slot);
                         break;
                     }
                 }

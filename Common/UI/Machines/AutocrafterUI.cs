@@ -24,11 +24,8 @@ public class AutocrafterUI : MachineUI
     private UIPanel bottomPanel;
     private UIPanel recipeBrowserPanel;
     private UIAutocrafterRecipeBrowser recipeBrowser;
-    private UIPanel inputInventoryPanel;
-    private UITextPanel<string> sharedPanelToggle;
     private UIPanel infoPanel;
-
-    private bool showingInputInventory;
+    private int displayedLayoutVersion = -1;
 
     private readonly Dictionary<int, UIPanel> outputSlotPanels = new();
     private readonly List<Recipe> selectedRecipeOptions = new();
@@ -101,31 +98,7 @@ public class AutocrafterUI : MachineUI
             OnResultClicked = OnResultClicked
         };
 
-        inputInventoryPanel = AutocrafterTE.Inventory.ProvideUI(
-            start: AutocrafterTE.OutputSlots,
-            end: AutocrafterTE.Inventory.Size,
-            iconsPerRow: 10,
-            rowsWithoutScrollbar: 5
-        );
-        inputInventoryPanel.Width = new(0f, 1f);
-        inputInventoryPanel.Height = new(0f, 1f);
-        inputInventoryPanel.Top = new(0f, 0f);
-        inputInventoryPanel.BackgroundColor = Color.Transparent;
-        inputInventoryPanel.BorderColor = Color.Transparent;
-        inputInventoryPanel.Activate();
-
-        sharedPanelToggle = new UITextPanel<string>("Inventory", 0.75f)
-        {
-            Width = new(90f, 0f),
-            Height = new(26f, 0f),
-            HAlign = 1f,
-            Left = new(-8f, 0f),
-            Top = new(-30f, 0f),
-            BackgroundColor = UITheme.Current.PanelButtonStyle.BackgroundColor,
-            BorderColor = UITheme.Current.PanelButtonStyle.BorderColor
-        };
-        sharedPanelToggle.OnLeftClick += (_, _) => ToggleSharedPanel();
-        RefreshSharedPanel();
+        recipeBrowserPanel.Append(recipeBrowser);
 
         infoPanel = new UIPanel()
         {
@@ -152,30 +125,36 @@ public class AutocrafterUI : MachineUI
         PopulateInfoPanel();
     }
 
-    private void PopulateSlots()
+    private void PopulateSlots(int? affectedOutputIndex = null)
     {
         if (AutocrafterTE?.Inventory is null)
             return;
 
-        outputSlotPanels.Clear();
-        topPanel.RemoveAllChildren();
+        if (affectedOutputIndex.HasValue)
+        {
+            if (outputSlotPanels.Remove(affectedOutputIndex.Value, out UIPanel oldPanel))
+                topPanel.RemoveChild(oldPanel);
+        }
+        else
+        {
+            outputSlotPanels.Clear();
+            topPanel.RemoveAllChildren();
+        }
+        displayedLayoutVersion = AutocrafterTE.InventoryLayoutVersion;
 
         if (selectedOutputSlot >= AutocrafterTE.OutputSlots)
             selectedOutputSlot = -1;
 
         int outputs = AutocrafterTE.OutputSlots;
-        for (int outputIndex = 0; outputIndex < outputs; outputIndex++)
+        int firstOutput = affectedOutputIndex ?? 0;
+        int lastOutput = affectedOutputIndex ?? (outputs - 1);
+        for (int outputIndex = firstOutput; outputIndex <= lastOutput; outputIndex++)
         {
-            var recipe = AutocrafterTE.SelectedRecipes?[outputIndex];
-
-            List<Item> requiredItems = recipe?.requiredItem
-                .Where(item => item.type > ItemID.None && item.stack > 0)
-                .Select(item => item.Clone())
-                .ToList() ?? new();
-
-            int inputs = requiredItems.Count;
-            float slotSize = 48f;
+            AutocrafterLane lane = AutocrafterTE.Lanes[outputIndex];
+            Recipe recipe = lane.SelectedRecipe;
+            int inputs = lane.InputInventory.Size;
             float slotSpacing = 6f;
+            float slotSize = inputs > 0 ? Math.Min(48f, (650f - (inputs - 1) * slotSpacing) / inputs) : 48f;
             float arrowWidth = 56f;
             float arrowSpacing = 10f;
             float clearButtonArea = 42f;
@@ -212,21 +191,9 @@ public class AutocrafterUI : MachineUI
 
             for (int inputIndex = 0; inputIndex < inputs; inputIndex++)
             {
-                Item requiredItem = requiredItems[inputIndex];
-                int requiredType = requiredItem.type;
-                int requiredStack = requiredItem.stack;
-                int available = AutocrafterTE.Inventory.CountItems(requiredType, startIndex: AutocrafterTE.OutputSlots);
-                requiredItem.stack = 1;
-
-                UIInventorySlot inputSlot = CreateDisplayOnlySlot(ref requiredItem);
-                inputSlot.DrawIndexNumber = true;
-                inputSlot.CustomIndexLabel = $"{available}/{requiredStack}";
-                inputSlot.OnUpdate += element =>
-                {
-                    int currentAvailable = AutocrafterTE.Inventory.CountItems(requiredType, startIndex: AutocrafterTE.OutputSlots);
-                    ((UIInventorySlot)element).CustomIndexLabel = $"{currentAvailable}/{requiredStack}";
-                };
-
+                UIInventorySlot inputSlot = lane.InputInventory.ProvideItemSlot(inputIndex);
+                inputSlot.Width.Set(slotSize, 0f);
+                inputSlot.Height.Set(slotSize, 0f);
                 inputSlot.SetPadding(0f);
                 inputSlot.Top.Set(0f, 0f);
                 inputSlot.Left.Set(startX + (slotSize + slotSpacing) * inputIndex, 0f);
@@ -269,20 +236,6 @@ public class AutocrafterUI : MachineUI
         }
     }
 
-    private void ToggleSharedPanel()
-    {
-        showingInputInventory = !showingInputInventory;
-        RefreshSharedPanel();
-    }
-
-    private void RefreshSharedPanel()
-    {
-        recipeBrowserPanel.RemoveAllChildren();
-        recipeBrowserPanel.Append(showingInputInventory ? inputInventoryPanel : recipeBrowser);
-        sharedPanelToggle.SetText(showingInputInventory ? "Recipes" : "Inventory");
-        recipeBrowserPanel.Append(sharedPanelToggle);
-    }
-
     private UIPanelIconButton CreateClearRecipeButton(int outputIndex)
     {
         var clearButton = new UIPanelIconButton(clearRecipeIcon)
@@ -315,7 +268,7 @@ public class AutocrafterUI : MachineUI
         if (!AutocrafterTE.ClearRecipeSlot(outputSlot))
             return;
 
-        PopulateSlots();
+        PopulateSlots(outputSlot);
         PopulateInfoPanel();
     }
 
@@ -511,6 +464,9 @@ public class AutocrafterUI : MachineUI
     {
         base.Update(gameTime);
 
+        if (displayedLayoutVersion != AutocrafterTE.InventoryLayoutVersion)
+            PopulateSlots(selectedOutputSlot);
+
         foreach (var (outputIndex, panel) in outputSlotPanels)
         {
             if (outputIndex == selectedOutputSlot)
@@ -521,6 +477,6 @@ public class AutocrafterUI : MachineUI
                 panel.BorderColor = UITheme.Current.PanelStyle.BorderColor * 0.5f;
         }
 
-        Inventory.ActiveInventory = AutocrafterTE.Inventory;
+        Inventory.ActiveInventories.AddRange(AutocrafterTE.Inventories);
     }
 }

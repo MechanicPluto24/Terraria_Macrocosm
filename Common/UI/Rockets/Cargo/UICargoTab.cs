@@ -85,7 +85,7 @@ public class UICargoTab : UIElement, ITabUIElement, IRocketUIDataConsumer
         UpdateCrewPanel();
         UpdateInventory();
 
-        Inventory.ActiveInventory = Rocket.Inventory;
+        Inventory.ActiveInventories.Add(Rocket.Inventory);
     }
 
     private void UpdateCrewPanel()

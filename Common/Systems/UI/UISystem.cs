@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -180,7 +181,7 @@ public class UISystem : ModSystem
         (
             UIMachineState is not null
             && UIMachineState.MachineUI.MachineTE is IInventoryOwner inventoryOwner
-            && !(inventoryOwner.Inventory.InteractingPlayer == Main.myPlayer || inventoryOwner.Inventory.InteractingPlayer == 255)
+            && inventoryOwner.GetInventories().Any(inventory => !(inventory.InteractingPlayer == Main.myPlayer || inventory.InteractingPlayer == 255))
         )
         {
             return;
@@ -191,7 +192,8 @@ public class UISystem : ModSystem
         if (UIMachineState.MachineUI.MachineTE is IInventoryOwner inventoryOwner1)
         {
             Main.stackSplit = 600;
-            inventoryOwner1.Inventory.InteractingPlayer = Main.myPlayer;
+            foreach (Inventory inventory in inventoryOwner1.GetInventories())
+                inventory.InteractingPlayer = Main.myPlayer;
         }
 
         UIMachineState.Initialize();
@@ -215,7 +217,7 @@ public class UISystem : ModSystem
 
     public override void UpdateUI(GameTime gameTime)
     {
-        Inventory.ActiveInventory = null;
+        Inventory.ActiveInventories.Clear();
 
         // press Ctrl + Shift + E to reset UI
         if (UserInterface.CurrentState is not null &&

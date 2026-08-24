@@ -20,14 +20,14 @@ namespace Macrocosm.Common.Storage;
 public partial class Inventory : IEnumerable<Item>
 {
     /// <summary>
-    /// <br> The currently displayed inventory, reset every UI update. Allows for logic such as shift clicking items. </br>
-    /// <br> Set this in the UI update hook when dispalying a particular Inventory UI. </br>
-    /// <br> When accessing, check for <see cref="CustomInventoryActive"/> beforehand. </br>
+    /// <br> The inventories currently displayed by custom UI, reset every UI update. </br>
+    /// <br> Set this in the UI update hook when displaying one or more inventory UIs. </br>
+    /// <br> When accessing, check <see cref="CustomInventoriesActive"/> first. </br>
     /// </summary>
-    public static Inventory ActiveInventory { get; set; }
+    public static List<Inventory> ActiveInventories { get; } = new();
 
-    /// <summary> Whether there is a custom inventory currently being displayed </summary>
-    public static bool CustomInventoryActive => ActiveInventory is not null;
+    /// <summary> Whether one or more custom inventories are currently being displayed. </summary>
+    public static bool CustomInventoriesActive => ActiveInventories.Count > 0;
 
     private Item[] items;
     private UIInventorySlot[] uiItemSlots;
@@ -78,18 +78,18 @@ public partial class Inventory : IEnumerable<Item>
     public int InteractingPlayer
     {
         get => interactingPlayer;
+        set => SetInteractingPlayer(value, sync: true);
+    }
 
-        set
-        {
-            if (value < 0 || value > Main.maxPlayers)
-                return;
+    internal void SetInteractingPlayer(int value, bool sync)
+    {
+        if (value < 0 || value > Main.maxPlayers)
+            return;
 
-            int last = interactingPlayer;
-            interactingPlayer = value;
-
-            if (last != value && Main.netMode != NetmodeID.SinglePlayer)
-                SyncInteraction();
-        }
+        int last = interactingPlayer;
+        interactingPlayer = value;
+        if (sync && last != value && Main.netMode != NetmodeID.SinglePlayer)
+            SyncInteraction();
     }
 
     public bool IsEmpty => items.All(item => item.type == ItemID.None);
@@ -329,6 +329,48 @@ public partial class Inventory : IEnumerable<Item>
     public Color? GetReservedColor(int index) => index >= 0 && index < reservedColors.Length ? reservedColors[index] : null;
     public int GetReservedStack(int index) => index >= 0 && index < reservedStacks.Length ? reservedStacks[index] : 1;
 
+    public bool CanAcceptItem(int slot, Item item, InventoryPlacementSource insertionSource, bool ignoreReserved = false)
+    {
+        if (slot < 0 || slot >= Size || item is null || item.IsAir)
+            return false;
+
+        if (insertionSource == InventoryPlacementSource.Player && !uiItemSlots[slot].CanInteractWithItem)
+            return false;
+
+        InventorySlotRole role = GetSlotRole(slot);
+        bool roleAllowsInsertion = insertionSource switch
+        {
+            InventoryPlacementSource.Internal => true,
+            InventoryPlacementSource.Player or InventoryPlacementSource.Automation => role is InventorySlotRole.General or InventorySlotRole.Input,
+            _ => false
+        };
+
+        if (!roleAllowsInsertion)
+            return false;
+
+        if (insertionSource != InventoryPlacementSource.Internal && !(CanInsertIntoSlot?.Invoke(slot, item) ?? true))
+            return false;
+
+        return ignoreReserved || ReservedCheck(slot, item);
+    }
+
+    public bool CanExtractItem(int slot, InventoryExtractionSource extractionSource)
+    {
+        if (slot < 0 || slot >= Size)
+            return false;
+
+        if (extractionSource == InventoryExtractionSource.Player && !uiItemSlots[slot].CanInteractWithItem)
+            return false;
+
+        InventorySlotRole role = GetSlotRole(slot);
+        return extractionSource switch
+        {
+            InventoryExtractionSource.Internal or InventoryExtractionSource.Player => true,
+            InventoryExtractionSource.Automation => role is InventorySlotRole.General or InventorySlotRole.Output,
+            _ => false
+        };
+    }
+
     public bool TryPlacingItem(ref Item item, InventoryPlacementSource insertionSource, bool justCheck = false, bool sound = true, bool serverSync = true, int startIndex = 0, int? endIndex = null, bool ignoreReserved = false)
     {
         if (ChestUI.IsBlockedFromTransferIntoChest(item, items))
@@ -342,13 +384,7 @@ public partial class Inventory : IEnumerable<Item>
         {
             for (int i = startIndex; i <= Math.Min(Size - 1, endIndex ?? Size - 1); i++)
             {
-                if (insertionSource == InventoryPlacementSource.Player && !uiItemSlots[i].CanInteractWithItem)
-                    continue;
-
-                if (!CanPlaceIntoSlot(i, item, insertionSource))
-                    continue;
-
-                if (!ignoreReserved && !ReservedCheck(i, item))
+                if (!CanAcceptItem(i, item, insertionSource, ignoreReserved))
                     continue;
 
                 if (items[i].stack >= items[i].maxStack || item.type != items[i].type)
@@ -401,13 +437,7 @@ public partial class Inventory : IEnumerable<Item>
         {
             for (int j = startIndex; j <= Math.Min(Size - 1, endIndex ?? Size - 1); j++)
             {
-                if (!uiItemSlots[j].CanInteractWithItem)
-                    continue;
-
-                if (!CanPlaceIntoSlot(j, item, insertionSource))
-                    continue;
-
-                if (!ignoreReserved && !ReservedCheck(j, item))
+                if (!CanAcceptItem(j, item, insertionSource, ignoreReserved))
                     continue;
 
                 if (items[j].stack != 0)
@@ -437,24 +467,6 @@ public partial class Inventory : IEnumerable<Item>
         return result;
     }
 
-    private bool CanPlaceIntoSlot(int slot, Item item, InventoryPlacementSource insertionSource)
-    {
-        if (insertionSource == InventoryPlacementSource.Automation)
-        {
-            InventorySlotRole role = GetSlotRole(slot);
-            return role is InventorySlotRole.General or InventorySlotRole.Input
-                && (CanInsertIntoSlot?.Invoke(slot, item) ?? true);
-        }
-
-        if (insertionSource == InventoryPlacementSource.Internal)
-            return true;
-
-        if (GetSlotRole(slot) == InventorySlotRole.OutputLocked)
-            return false;
-
-        return CanInsertIntoSlot?.Invoke(slot, item) ?? true;
-    }
-
     public bool TryPlacingItemInSlot(ref Item item, int slot, InventoryPlacementSource insertionSource, bool justCheck = false, bool sound = true, bool serverSync = true, bool ignoreReserved = false)
         => TryPlacingItem(ref item, insertionSource, justCheck, sound, serverSync, slot, slot, ignoreReserved);
 
@@ -466,7 +478,7 @@ public partial class Inventory : IEnumerable<Item>
         {
             if (items[i].type > ItemID.None)
             {
-                if (!uiItemSlots[i].CanInteractWithItem)
+                if (!CanExtractItem(i, InventoryExtractionSource.Player))
                     continue;
 
                 items[i].position = player.Center;
@@ -484,214 +496,58 @@ public partial class Inventory : IEnumerable<Item>
     public void DepositAll(ContainerTransferContext context)
     {
         Player player = Main.LocalPlayer;
+        bool transferredAny = false;
 
         for (int slot = 49; slot >= 10; slot--)
         {
-            if (player.inventory[slot].stack > 0 && player.inventory[slot].type > ItemID.None && !player.inventory[slot].favorited)
-            {
-                if (player.inventory[slot].maxStack > 1)
-                {
-                    for (int i = 0; i < Size; i++)
-                    {
-                        if (!uiItemSlots[i].CanInteractWithItem)
-                            continue;
+            Item item = player.inventory[slot];
+            if (item.IsAir || item.favorited)
+                continue;
 
-                        if (GetSlotRole(i) == InventorySlotRole.OutputLocked)
-                            continue;
-
-                        if (items[i].stack >= items[i].maxStack || player.inventory[slot].type != items[i].type)
-                            continue;
-
-                        if (!ItemLoader.TryStackItems(items[i], player.inventory[slot], out _))
-                            continue;
-
-                        SoundEngine.PlaySound(SoundID.Grab);
-                        if (player.inventory[slot].stack <= 0)
-                        {
-                            player.inventory[slot].SetDefaults();
-                            if (Main.netMode == NetmodeID.MultiplayerClient)
-                                SyncItem(i);
-
-                            break;
-                        }
-
-                        if (items[i].type == ItemID.None)
-                        {
-                            items[i] = player.inventory[slot].Clone();
-                            player.inventory[slot].SetDefaults();
-                        }
-
-                        if (Main.netMode == NetmodeID.MultiplayerClient)
-                            SyncItem(i);
-                    }
-                }
-
-                if (player.inventory[slot].stack > 0)
-                {
-                    for (int i = 0; i < Size; i++)
-                    {
-                        if (!uiItemSlots[i].CanInteractWithItem)
-                            continue;
-
-                        if (items[i].stack == 0)
-                        {
-                            SoundEngine.PlaySound(SoundID.Grab);
-
-                            items[i] = player.inventory[slot].Clone();
-                            player.inventory[slot].SetDefaults();
-
-                            if (Main.netMode == NetmodeID.MultiplayerClient)
-                                SyncItem(i);
-
-                            break;
-                        }
-                    }
-                }
-            }
+            int stackBefore = item.stack;
+            if (TryPlacingItem(ref player.inventory[slot], InventoryPlacementSource.Player, sound: false) && player.inventory[slot].stack < stackBefore)
+                transferredAny = true;
         }
+
+        if (transferredAny)
+            SoundEngine.PlaySound(SoundID.Grab);
     }
 
     public void QuickStack(ContainerTransferContext context)
     {
         Player player = Main.LocalPlayer;
-        Item[] playerInventory = player.inventory;
-
-        Vector2 center = player.Center;
-        Vector2 containerWorldPosition = context.GetContainerWorldPosition();
-        bool canVisualizeTransfers = context.CanVisualizeTransfers;
-
-        List<int> itemTypes = new();
-        List<int> itemIndexes = new();
-        List<int> emptySlotIndexes = new();
-        List<int> zeroStackList = new();
-        Dictionary<int, int> itemTypesByIndex = new();
-
-        bool[] shouldSyncSlot = new bool[items.Length];
+        HashSet<int> eligibleTypes = new();
 
         for (int i = 0; i < Size; i++)
         {
-            if (!uiItemSlots[i].CanInteractWithItem)
+            Item existingItem = items[i];
+            if (!existingItem.IsAir && !Utility.IsCoin(i) && CanAcceptItem(i, existingItem, InventoryPlacementSource.Player))
+                eligibleTypes.Add(existingItem.netID);
+        }
+
+        bool transferredAny = false;
+        for (int slot = 10; slot < 50; slot++)
+        {
+            Item playerItem = player.inventory[slot];
+            if (playerItem.IsAir || playerItem.favorited || !eligibleTypes.Contains(playerItem.netID))
                 continue;
 
-            if (GetSlotRole(i) == InventorySlotRole.OutputLocked)
+            Item transferVisual = playerItem.Clone();
+            int stackBefore = playerItem.stack;
+            if (!TryPlacingItem(ref player.inventory[slot], InventoryPlacementSource.Player, sound: false))
                 continue;
 
-            bool empty = items[i].type == ItemID.None || items[i].stack <= 0;
-            if (!empty && !Utility.IsCoin(i))
-            {
-                itemIndexes.Add(i);
-                itemTypes.Add(items[i].netID);
-            }
-
-            if (empty) emptySlotIndexes.Add(i);
-        }
-
-        int endInventoryIndex = 50;
-        int startInventoryIndex = 10;
-
-        for (int i = startInventoryIndex; i < endInventoryIndex; i++)
-        {
-            if (itemTypes.Contains(playerInventory[i].netID) && !playerInventory[i].favorited)
-                itemTypesByIndex.Add(i, playerInventory[i].netID);
-        }
-
-        for (int i = 0; i < itemIndexes.Count; i++)
-        {
-            int idx = itemIndexes[i];
-            int type = items[idx].netID;
-            foreach (var kvp in itemTypesByIndex)
-            {
-                if (kvp.Value == type && playerInventory[kvp.Key].netID == type)
-                {
-                    int stack = playerInventory[kvp.Key].stack;
-                    int stackDifference = items[idx].maxStack - items[idx].stack;
-                    if (stackDifference == 0)
-                        break;
-
-                    if (stack > stackDifference)
-                        stack = stackDifference;
-
-                    SoundEngine.PlaySound(SoundID.Grab);
-
-                    ItemLoader.TryStackItems(items[idx], playerInventory[kvp.Key], out stack);
-
-                    if (canVisualizeTransfers && stack > 0)
-                        Chest.VisualizeChestTransfer(center, containerWorldPosition, items[idx], stack);
-
-                    shouldSyncSlot[idx] = true;
-                }
-            }
-        }
-
-        foreach (var kvp in itemTypesByIndex)
-        {
-            if (playerInventory[kvp.Key].stack == 0)
-                zeroStackList.Add(kvp.Key);
-        }
-
-        foreach (int idx in zeroStackList)
-        {
-            itemTypesByIndex.Remove(idx);
-        }
-
-        for (int i = 0; i < emptySlotIndexes.Count; i++)
-        {
-            int idx = emptySlotIndexes[i];
-            bool beginningOfStack = true;
-            int type = items[idx].netID;
-            if (type >= ItemID.CopperCoin && type <= ItemID.PlatinumCoin)
+            int transferred = stackBefore - player.inventory[slot].stack;
+            if (transferred <= 0)
                 continue;
 
-            foreach (var kvp in itemTypesByIndex)
-            {
-                if ((kvp.Value != type || playerInventory[kvp.Key].netID != type) && (!beginningOfStack || playerInventory[kvp.Key].stack <= 0))
-                    continue;
-
-                SoundEngine.PlaySound(SoundID.Grab);
-
-                if (beginningOfStack)
-                {
-                    type = kvp.Value;
-                    items[idx] = playerInventory[kvp.Key];
-                    playerInventory[kvp.Key] = new Item();
-
-                    if (canVisualizeTransfers)
-                        Chest.VisualizeChestTransfer(center, containerWorldPosition, items[idx], items[idx].stack);
-                }
-                else
-                {
-                    int stack = playerInventory[kvp.Key].stack;
-                    int stackDifference = items[idx].maxStack - items[idx].stack;
-
-                    if (stackDifference == 0)
-                        break;
-
-                    if (stack > stackDifference)
-                        stack = stackDifference;
-
-                    ItemLoader.TryStackItems(items[idx], playerInventory[kvp.Key], out stack);
-                    if (canVisualizeTransfers && stack > 0)
-                        Chest.VisualizeChestTransfer(center, containerWorldPosition, items[idx], stack);
-
-                    if (playerInventory[kvp.Key].stack == 0)
-                        playerInventory[kvp.Key] = new Item();
-                }
-
-                shouldSyncSlot[idx] = true;
-                beginningOfStack = false;
-            }
+            transferredAny = true;
+            if (context.CanVisualizeTransfers)
+                Chest.VisualizeChestTransfer(player.Center, context.GetContainerWorldPosition(), transferVisual, transferred);
         }
 
-        // Essentially this syncs all slots..?
-        if (Main.netMode == NetmodeID.MultiplayerClient)
-            for (int i = 0; i < shouldSyncSlot.Length; i++)
-                SyncItem(i);
-
-        itemTypes.Clear();
-        itemIndexes.Clear();
-        emptySlotIndexes.Clear();
-        itemTypesByIndex.Clear();
-        zeroStackList.Clear();
+        if (transferredAny)
+            SoundEngine.PlaySound(SoundID.Grab);
     }
 
     /// <summary> Restock items from the inventory to the player's inventory </summary>
@@ -723,7 +579,7 @@ public partial class Inventory : IEnumerable<Item>
         bool successfulTransfer = false;
         for (int i = 0; i < Size; i++)
         {
-            if (!uiItemSlots[i].CanInteractWithItem)
+            if (!CanExtractItem(i, InventoryExtractionSource.Player))
                 continue;
 
             if (items[i].stack < 1 || !foundItemIds.Contains(items[i].netID))

@@ -242,11 +242,13 @@ public static partial class Utility
     /// <param name="blobSize"></param>
     /// <param name="density"></param>
     /// <param name="smoothing"></param>
-    public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null, ushort wallType = 0)
+    /// <param name="smoothingPlacementCheck">Optional predicate restricting tiles added by smoothing. Initial placement still uses <paramref name="perTileCheck"/>.</param>
+    public static void BlobTileRunner(int i, int j, int tileType, Range repeatCount, Range sprayRadius, Range blobSize, float density = 0.5f, int smoothing = 4, Func<int, int, bool> perTileCheck = null, ushort wallType = 0, Func<int, int, bool> smoothingPlacementCheck = null)
     {
         int sprayRandom = genRand.Next(repeatCount);
 
         Dictionary<(int, int), ushort> replacedTypes = new();
+        HashSet<(int, int)> placedTiles = new();
 
         int posI = i;
         int posJ = j;
@@ -280,6 +282,9 @@ public static partial class Utility
                         }
                         else
                         {
+                            if (!Main.tile[i, j].HasTile || Main.tile[i, j].TileType != tileType)
+                                placedTiles.Add((i, j));
+
                             FastPlaceTile(i, j, (ushort)tileType);
                         }
                         if (wallType > 0)
@@ -317,6 +322,15 @@ public static partial class Utility
                         int solidCount = new TileNeighbourInfo(i, j).IsType((ushort)tileType).Count;
                         if (solidCount > 4)
                         {
+                            if (smoothingPlacementCheck is not null && !smoothingPlacementCheck(i, j))
+                                return;
+
+                            if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType != tileType && !replacedTypes.ContainsKey((i, j)))
+                                replacedTypes.Add((i, j), Main.tile[i, j].TileType);
+
+                            if (!Main.tile[i, j].HasTile || Main.tile[i, j].TileType != tileType)
+                                placedTiles.Add((i, j));
+
                             FastPlaceTile(i, j, (ushort)tileType);
                         }
                         else if (solidCount < 4)
@@ -325,7 +339,7 @@ public static partial class Utility
                             {
                                 FastPlaceTile(i, j, replacedType);
                             }
-                            else if (Main.tile[i, j].HasTile && Main.tile[i, j].TileType == tileType)
+                            else if (placedTiles.Contains((i, j)) && Main.tile[i, j].HasTile && Main.tile[i, j].TileType == tileType)
                             {
                                 FastRemoveTile(i, j);
                             }

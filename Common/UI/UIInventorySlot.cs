@@ -206,6 +206,9 @@ public class UIInventorySlot : UIElement
 
         if (Main.cursorOverride == CursorOverrideID.ChestToInventory)
         {
+            if (!inventory.CanExtractItem(itemIndex, InventoryExtractionSource.Player))
+                return;
+
             item = Main.player[Main.myPlayer].GetItem(Main.myPlayer, item, GetItemSettings.InventoryEntityToPlayerInventorySettings);
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -217,7 +220,10 @@ public class UIInventorySlot : UIElement
         if (!CanInteractWithItem)
             return;
 
-        if (!inventory.ReservedCheck(itemIndex, Main.mouseItem))
+        if (!Main.mouseItem.IsAir && !inventory.CanAcceptItem(itemIndex, Main.mouseItem, InventoryPlacementSource.Player))
+            return;
+
+        if (!item.IsAir && !inventory.CanExtractItem(itemIndex, InventoryExtractionSource.Player))
             return;
 
         if (!(Main.mouseItem.maxStack > 1 && item.type == Main.mouseItem.type && item.stack != item.maxStack && Main.mouseItem.stack != Main.mouseItem.maxStack))
@@ -264,6 +270,9 @@ public class UIInventorySlot : UIElement
             return;
 
         if (!Main.mouseRight)
+            return;
+
+        if (!item.IsAir && !inventory.CanExtractItem(itemIndex, InventoryExtractionSource.Player))
             return;
 
         if (CanRightClickSwap && Main.mouseRightRelease)

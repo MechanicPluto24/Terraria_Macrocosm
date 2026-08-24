@@ -40,7 +40,11 @@ public partial class Inventory
 
     public void SyncEverything(int toClient = -1, int ignoreClient = -1, bool toSubservers = false, int ignoreSubserver = -1)
     {
-        if (Main.netMode == NetmodeID.SinglePlayer)
+        if (Main.netMode == NetmodeID.SinglePlayer || Owner is null)
+            return;
+
+        int inventoryIndex = Owner.GetInventoryIndex(this);
+        if (inventoryIndex < 0)
             return;
 
         ModPacket packet = Macrocosm.Instance.GetPacket();
@@ -53,6 +57,8 @@ public partial class Inventory
 
         packet.Write((byte)Owner.InventoryOwnerType);
         packet.Write(Owner.InventoryIndex);
+        packet.Write((ushort)inventoryIndex);
+        packet.Write(Owner.GetInventoryRevision(inventoryIndex));
 
         packet.Write((ushort)Size);
         packet.Write((byte)interactingPlayer);
@@ -73,6 +79,8 @@ public partial class Inventory
 
         InventoryOwnerType ownerType = (InventoryOwnerType)reader.ReadByte();
         int ownerSerializationIndex = reader.ReadInt32();
+        int inventoryIndex = reader.ReadUInt16();
+        int inventoryRevision = reader.ReadInt32();
 
         int newSize = reader.ReadUInt16();
         int interactingPlayer = reader.ReadByte();
@@ -85,7 +93,10 @@ public partial class Inventory
         if (owner is not null)
         {
             Inventory inventory;
-            inventory = owner.Inventory;
+            inventory = owner.GetInventory(inventoryIndex);
+
+            if (inventory is null || owner.GetInventoryRevision(inventoryIndex) != inventoryRevision)
+                return;
 
             if (inventory.Size != newSize)
                 inventory.OnResize(inventory.Size, newSize);
@@ -104,10 +115,14 @@ public partial class Inventory
 
     public void SyncItem(int index, int toClient = -1, int ignoreClient = -1)
     {
-        if (Main.netMode == NetmodeID.SinglePlayer)
+        if (Main.netMode == NetmodeID.SinglePlayer || Owner is null)
             return;
 
         if (index < 0 || index > MaxInventorySize)
+            return;
+
+        int inventoryIndex = Owner.GetInventoryIndex(this);
+        if (inventoryIndex < 0)
             return;
 
         ModPacket packet = Macrocosm.Instance.GetPacket();
@@ -116,6 +131,8 @@ public partial class Inventory
         packet.Write((byte)InventoryMessageType.SyncItem);
         packet.Write((byte)Owner.InventoryOwnerType);
         packet.Write(Owner.InventoryIndex);
+        packet.Write((ushort)inventoryIndex);
+        packet.Write(Owner.GetInventoryRevision(inventoryIndex));
         packet.Write((ushort)index);
 
         ItemIO.Send(items[index], packet, writeStack: true, writeFavorite: false);
@@ -127,13 +144,17 @@ public partial class Inventory
     {
         InventoryOwnerType ownerType = (InventoryOwnerType)reader.ReadByte();
         int ownerSerializationIndex = reader.ReadInt32();
+        int inventoryIndex = reader.ReadUInt16();
+        int inventoryRevision = reader.ReadInt32();
         int itemIndex = reader.ReadUInt16();
         Item item = ItemIO.Receive(reader, readStack: true, readFavorite: false);
 
         IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
         if (owner is not null)
         {
-            Inventory inventory = owner.Inventory;
+            Inventory inventory = owner.GetInventory(inventoryIndex);
+            if (inventory is null || owner.GetInventoryRevision(inventoryIndex) != inventoryRevision || itemIndex < 0 || itemIndex >= inventory.Size)
+                return;
             inventory[itemIndex] = item;
 
             if (Main.netMode == NetmodeID.Server)
@@ -143,7 +164,11 @@ public partial class Inventory
 
     public void SyncInteraction(int toClient = -1, int ignoreClient = -1)
     {
-        if (Main.netMode == NetmodeID.SinglePlayer)
+        if (Main.netMode == NetmodeID.SinglePlayer || Owner is null)
+            return;
+
+        int inventoryIndex = Owner.GetInventoryIndex(this);
+        if (inventoryIndex < 0)
             return;
 
         ModPacket packet = Macrocosm.Instance.GetPacket();
@@ -152,6 +177,8 @@ public partial class Inventory
         packet.Write((byte)InventoryMessageType.SyncInteraction);
         packet.Write((byte)Owner.InventoryOwnerType);
         packet.Write(Owner.InventoryIndex);
+        packet.Write((ushort)inventoryIndex);
+        packet.Write(Owner.GetInventoryRevision(inventoryIndex));
         packet.Write((byte)interactingPlayer);
 
         packet.Send(toClient, ignoreClient);
@@ -161,12 +188,16 @@ public partial class Inventory
     {
         InventoryOwnerType ownerType = (InventoryOwnerType)reader.ReadByte();
         int ownerSerializationIndex = reader.ReadInt32();
+        int inventoryIndex = reader.ReadUInt16();
+        int inventoryRevision = reader.ReadInt32();
         int interactingPlayer = reader.ReadByte();
 
         IInventoryOwner owner = IInventoryOwner.GetInventoryOwnerInstance(ownerType, ownerSerializationIndex);
         if (owner is not null)
         {
-            Inventory inventory = owner.Inventory;
+            Inventory inventory = owner.GetInventory(inventoryIndex);
+            if (inventory is null || owner.GetInventoryRevision(inventoryIndex) != inventoryRevision)
+                return;
             inventory.interactingPlayer = interactingPlayer;
 
             if (Main.netMode == NetmodeID.Server)

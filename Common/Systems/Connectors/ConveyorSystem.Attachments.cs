@@ -8,7 +8,6 @@ using Macrocosm.Content.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
@@ -436,28 +435,30 @@ public partial class ConveyorSystem
     private static bool TryExtractFromInventory(IInventoryOwner owner, out Item result)
     {
         result = null;
-        Inventory inventory = owner?.Inventory;
-        if (inventory is null)
+        if (owner is null)
             return false;
 
-        for (int slot = 0; slot < inventory.Size; slot++)
+        foreach (Inventory inventory in owner.GetAutomationOutputInventories())
         {
-            if (!CanExtractFromInventorySlot(inventory, slot))
-                continue;
+            for (int slot = 0; slot < inventory.Size; slot++)
+            {
+                if (!inventory.CanExtractItem(slot, InventoryExtractionSource.Automation))
+                    continue;
 
-            Item item = inventory[slot];
-            if (item is null || item.IsAir)
-                continue;
+                Item item = inventory[slot];
+                if (item is null || item.IsAir)
+                    continue;
 
-            result = item.Clone();
-            result.stack = 1;
+                result = item.Clone();
+                result.stack = 1;
 
-            item.stack--;
-            if (item.stack <= 0)
-                item.TurnToAir();
+                item.stack--;
+                if (item.stack <= 0)
+                    item.TurnToAir();
 
-            inventory.SyncItem(slot);
-            return true;
+                inventory.SyncItem(slot);
+                return true;
+            }
         }
 
         return false;
@@ -525,65 +526,12 @@ public partial class ConveyorSystem
 
     private static bool TryDepositIntoInventory(IInventoryOwner owner, ref Item worldItem)
     {
-        Inventory inventory = owner?.Inventory;
-        if (inventory is null || worldItem is null || worldItem.IsAir)
+        if (owner is null || worldItem is null || worldItem.IsAir)
             return false;
 
-        // Try stack first
-        for (int slot = 0; slot < inventory.Size; slot++)
-        {
-            if (!CanDepositIntoInventorySlot(inventory, slot, worldItem))
-                continue;
-
-            Item invItem = inventory[slot];
-            if (invItem is null || invItem.IsAir)
-                continue;
-
-            if (invItem.type != worldItem.type)
-                continue;
-
-            if (!ItemLoader.CanStack(invItem, worldItem))
-                continue;
-
-            if (invItem.stack >= invItem.maxStack)
-                continue;
-
-            invItem.stack += 1;
-            inventory.SyncItem(slot);
-            return true;
-        }
-
-        // Try empty slot
-        for (int slot = 0; slot < inventory.Size; slot++)
-        {
-            if (!CanDepositIntoInventorySlot(inventory, slot, worldItem))
-                continue;
-
-            Item invItem = inventory[slot];
-            if (invItem is null || invItem.IsAir)
-            {
-                inventory[slot] = worldItem.Clone();
-                inventory[slot].stack = 1;
-                inventory.SyncItem(slot);
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private static bool CanDepositIntoInventorySlot(Inventory inventory, int slot, Item item)
-    {
-        InventorySlotRole role = inventory.GetSlotRole(slot);
-        return role is InventorySlotRole.General or InventorySlotRole.Input
-            && inventory.ReservedCheck(slot, item)
-            && (inventory.CanInsertIntoSlot?.Invoke(slot, item) ?? true);
-    }
-
-    private static bool CanExtractFromInventorySlot(Inventory inventory, int slot)
-    {
-        InventorySlotRole role = inventory.GetSlotRole(slot);
-        return role is InventorySlotRole.General or InventorySlotRole.Output;
+        Item transfer = worldItem.Clone();
+        transfer.stack = 1;
+        return owner.TryInsertFromAutomation(ref transfer, sound: false);
     }
 
     private static bool TryPickupWorldItem(Point16 pos, out int itemIndex)

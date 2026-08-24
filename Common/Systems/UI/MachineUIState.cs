@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
+using Macrocosm.Common.Storage;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
@@ -30,6 +31,9 @@ public class MachineUIState : UIState
 
     public void OnHide()
     {
+        if (MachineUI?.MachineTE is IInventoryOwner owner)
+            foreach (var inventory in owner.GetInventories())
+                inventory.InteractingPlayer = 255;
     }
 
     public override void Update(GameTime gameTime)
