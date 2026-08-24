@@ -128,7 +128,7 @@ public class UIAssemblyTab : UIElement, ITabUIElement
         UpdateAssembleButton();
         configurationSelector.SetText(Language.GetText("Mods.Macrocosm.UI.LaunchPad.Configurations." + LaunchPad.CurrentConfiguration.ToString()));
 
-        Inventory.ActiveInventory = LaunchPad.Inventory;
+        Inventory.ActiveInventories.Add(LaunchPad.Inventory);
     }
 
     private void UpdateAssembleButton()

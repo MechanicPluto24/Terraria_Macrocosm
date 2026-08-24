@@ -30,6 +30,7 @@ public abstract partial class MachineTE : ModTileEntity, IInventoryOwner
     public virtual int InventorySize => 0;
     public Inventory Inventory { get; set; } = new(0);
     public InventoryOwnerType InventoryOwnerType => InventoryOwnerType.TileEntity;
+    public int InventoryIndex => ID;
     public Vector2 InventoryPosition => Position.ToVector2() * 16 + new Vector2(MachineTile.Width, MachineTile.Height) * 16 / 2;
 
 
@@ -190,6 +191,7 @@ public abstract partial class MachineTE : ModTileEntity, IInventoryOwner
     {
         writer.Write(IsEnabledByPlayer);
         TagIO.ToStream(Inventory.SerializeData(), writer.BaseStream, compress: true);
+        writer.Write((byte)Inventory.InteractingPlayer);
 
         MachineNetSend(writer);
     }
@@ -200,10 +202,12 @@ public abstract partial class MachineTE : ModTileEntity, IInventoryOwner
     {
         IsEnabledByPlayer = reader.ReadBoolean();
         Inventory = Inventory.DeserializeData(TagIO.FromStream(reader.BaseStream, compressed: true));
+        int interactingPlayer = reader.ReadByte();
         if (Inventory.Size != InventorySize)
             Inventory = ResizeInventoryForNetReceive(Inventory);
         else
             Inventory.Owner = this;
+        Inventory.SetInteractingPlayer(interactingPlayer, sync: false);
 
         MachineNetReceive(reader);
     }
@@ -237,10 +241,10 @@ public abstract partial class MachineTE : ModTileEntity, IInventoryOwner
         if (tag.ContainsKey(nameof(IsEnabledByPlayer)))
             IsEnabledByPlayer = tag.GetBool(nameof(IsEnabledByPlayer));
         Inventory = tag.TryGet(nameof(Inventory), out Inventory inventory) ? inventory : new(InventorySize, this);
-        Inventory.Owner = this;
-        if(Inventory.Size != InventorySize)
-            Inventory.Size = InventorySize;
-
+        if (Inventory.Size != InventorySize)
+            Inventory = ResizeInventoryForNetReceive(Inventory);
+        else
+            Inventory.Owner = this;
         MachineLoadData(tag);
     }
 }

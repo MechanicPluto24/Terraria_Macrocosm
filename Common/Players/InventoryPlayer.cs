@@ -30,11 +30,11 @@ public class InventoryPlayer : ModPlayer
     // Quick store hover icon to custom inventory 
     public override bool HoverSlot(Item[] inventory, int context, int slot)
     {
-        if (Inventory.CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
+        if (Inventory.CustomInventoriesActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
         {
             Item item = inventory[slot];
 
-            if (Inventory.ActiveInventory.TryPlacingItem(ref item, InventoryPlacementSource.Player, justCheck: true))
+            if (Inventory.ActiveInventories.Any(active => active.TryPlacingItem(ref item, InventoryPlacementSource.Player, justCheck: true)))
                 Main.cursorOverride = CursorOverrideID.InventoryToChest;
 
             return true;
@@ -46,11 +46,12 @@ public class InventoryPlayer : ModPlayer
     // Shift click to custom inventory
     public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
     {
-        if (Inventory.CustomInventoryActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
+        if (Inventory.CustomInventoriesActive && ItemSlot.ShiftInUse && context == ItemSlot.Context.InventoryItem)
         {
             Item item = inventory[slot];
-            if (Inventory.ActiveInventory.TryPlacingItem(ref item, InventoryPlacementSource.Player))
-                return true;
+            foreach (Inventory active in Inventory.ActiveInventories)
+                if (active.TryPlacingItem(ref item, InventoryPlacementSource.Player))
+                    return true;
         }
 
         return false;
@@ -89,7 +90,8 @@ public class InventoryPlayer : ModPlayer
                 )
                 {
                     ContainerTransferContext transferContext = new(inventoryOwner.InventoryPosition);
-                    inventoryOwner.Inventory.QuickStack(transferContext);
+                    foreach (Inventory inventory in inventoryOwner.GetInventories())
+                        inventory.QuickStack(transferContext);
                 }
             }
         }
@@ -103,7 +105,7 @@ public class InventoryPlayer : ModPlayer
         bool sortRanOnPlayerInventory = ignoreSlots.Distinct().OrderBy(n => n).Take(10).SequenceEqual(Enumerable.Range(0, 10));
 
         // Don't sort it if a custom inventory is currently active
-        if (Inventory.CustomInventoryActive && sortRanOnPlayerInventory)
+        if (Inventory.CustomInventoriesActive && sortRanOnPlayerInventory)
             return;
 
         orig(inv, ignoreSlots);
@@ -112,10 +114,11 @@ public class InventoryPlayer : ModPlayer
     // If a custom inventory is currently active, apply the on-sort glow on the custom inventory instead
     private void On_ItemSlot_SetGlow(On_ItemSlot.orig_SetGlow orig, int index, float hue, bool chest)
     {
-        if (Inventory.CustomInventoryActive)
+        if (Inventory.CustomInventoriesActive)
         {
-            if (index < Inventory.ActiveInventory.Items.Length)
-                Inventory.ActiveInventory.SetGlow(index, 300, hue);
+            foreach (Inventory inventory in Inventory.ActiveInventories)
+                if (index < inventory.Items.Length)
+                    inventory.SetGlow(index, 300, hue);
 
             return;
         }

@@ -344,8 +344,9 @@ class EarthWorldGen : ModSystem
                 smoothingPlacementCheck: CanReplaceWithUndergroundSilica
             );
         }
+    }
 
-            private static bool CanReplaceWithUndergroundSilica(int i, int j)
+    private static bool CanReplaceWithUndergroundSilica(int i, int j)
     {
         if (!WorldGen.InWorld(i, j, 1) || !WorldGen.SolidTile(i, j))
             return false;
@@ -362,5 +363,4 @@ class EarthWorldGen : ModSystem
         ushort type = Main.tile[i, j].TileType;
         return TileID.Sets.Conversion.HardenedSand[type] || TileID.Sets.Conversion.Sandstone[type];
     }
-}
 }

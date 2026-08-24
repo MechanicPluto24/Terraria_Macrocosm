@@ -56,7 +56,7 @@ public class KeroseneGeneratorTE : GeneratorTE
             Inventory.SetSlotRole(i, InventorySlotRole.Input);
             Inventory.SetReserved(
                  i,
-                 CanUseAsRocketFuel,
+                 CanConsumeAsFuel,
                  Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
                  ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
             );
@@ -67,7 +67,7 @@ public class KeroseneGeneratorTE : GeneratorTE
             Inventory.SetSlotRole(i, InventorySlotRole.Output);
             Inventory.SetReserved(
                  i,
-                 (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid && ItemSets.LiquidContainerData[item.type].Empty,
+                 IsEmptyContainer,
                  Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
                  ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
             );
@@ -86,7 +86,7 @@ public class KeroseneGeneratorTE : GeneratorTE
                 if (item.stack <= 0)
                     continue;
 
-                if (CanConsumeRocketFuel(item))
+                if (CanConsumeAsFuel(item))
                 {
                     fuelFound = true;
                     break;
@@ -112,7 +112,7 @@ public class KeroseneGeneratorTE : GeneratorTE
                     if (item.stack <= 0)
                         continue;
 
-                    if (CanConsumeRocketFuel(item))
+                    if (CanConsumeAsFuel(item))
                     {
                         fuelFound = true;
                         ConsumedItem = new Item(item.type, 1);
@@ -130,7 +130,7 @@ public class KeroseneGeneratorTE : GeneratorTE
         }
         else
         {
-            if (CanUseAsRocketFuel(ConsumedItem))
+            if (CanConsumeAsFuel(ConsumedItem))
             {
                 RPMProgress += RPMRate * (float)RocketFuelPotency;
 
@@ -178,13 +178,20 @@ public class KeroseneGeneratorTE : GeneratorTE
             rpmProgress = tag.GetFloat(nameof(rpmProgress));
     }
 
-    private static bool CanConsumeRocketFuel(Item item)
-        => CanUseAsRocketFuel(item);
-
-    private static bool CanUseAsRocketFuel(Item item)
+    private static bool CanConsumeAsFuel(Item item)
     {
         LiquidContainerData data = ItemSets.LiquidContainerData[item.type];
         return !item.IsAir && data.Valid && !data.Empty && !data.Infinite && data.LiquidType == LiquidLoader.LiquidType<RocketFuel>();
+    }
+
+    private static bool IsEmptyContainer(Item item)
+    {
+        if (item is null || item.IsAir)
+            return false;
+
+        LiquidContainerData data = ItemSets.LiquidContainerData[item.type];
+        return data.Valid && data.Empty
+            && LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidLoader.LiquidType<RocketFuel>(), item.type) > ItemID.None;
     }
 
     private void ReturnEmptyContainer(int filledContainerType)

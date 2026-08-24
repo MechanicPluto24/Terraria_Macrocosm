@@ -66,6 +66,6 @@ public class DrillUI : MachineUI
     {
         base.Update(gameTime);
 
-        Inventory.ActiveInventory = Drill.Inventory;
+        Inventory.ActiveInventories.Add(Drill.Inventory);
     }
 }

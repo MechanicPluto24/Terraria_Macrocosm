@@ -61,20 +61,34 @@ public class PumpjackTE : ConsumerTE
         }
     }
 
+    private static bool IsFillableContainer(Item item)
+    {
+        if (item is null || item.IsAir)
+            return false;
+
+        LiquidContainerData data = ItemSets.LiquidContainerData[item.type];
+        return data.Valid && data.Empty
+            && LiquidContainerData.GetFillType(ItemSets.LiquidContainerData, LiquidLoader.LiquidType<Liquids.Oil>(), item.type) > ItemID.None;
+    }
+
+    private static bool IsFilledContainer(Item item)
+    {
+        if (item is null || item.IsAir)
+            return false;
+
+        LiquidContainerData data = ItemSets.LiquidContainerData[item.type];
+        return data.Valid && !data.Empty && !data.Infinite && data.LiquidType == LiquidLoader.LiquidType<Liquids.Oil>();
+    }
+
     public override void OnFirstUpdate()
     {
         Inventory.SetSlotRole(0, InventorySlotRole.Input);
         Inventory.SetSlotRole(1, InventorySlotRole.Output);
 
-        for (int i = 0; i < InventorySize; i++)
-        {
-            Inventory.SetReserved(
-                i,
-                (item) => item.type >= ItemID.None && ItemSets.LiquidContainerData[item.type].Valid,
-                Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer"),
-                ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint")
-            );
-        }
+        LocalizedText containerTooltip = Language.GetText("Mods.Macrocosm.Machines.Common.LiquidContainer");
+        var containerTexture = ModContent.Request<Texture2D>(ContentSamples.ItemsByType[ModContent.ItemType<Canister>()].ModItem.Texture + "_Blueprint");
+        Inventory.SetReserved(0, IsFillableContainer, containerTooltip, containerTexture);
+        Inventory.SetReserved(1, IsFilledContainer, containerTooltip, containerTexture);
 
     }
 

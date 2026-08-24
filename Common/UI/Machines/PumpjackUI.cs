@@ -120,7 +120,7 @@ public class PumpjackUI : MachineUI
     {
         base.Update(gameTime);
 
-        Inventory.ActiveInventory = Pumpjack.Inventory;
+        Inventory.ActiveInventories.Add(Pumpjack.Inventory);
         outputSlot.CanInteractWithItem = true;
 
         fillArrowProgressBar.Progress = Pumpjack.ExtractProgress;

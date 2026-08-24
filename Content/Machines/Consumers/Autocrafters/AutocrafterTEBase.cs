@@ -1,169 +1,152 @@
-﻿using Macrocosm.Common.ItemCreationContexts;
+using Macrocosm.Common.ItemCreationContexts;
 using Macrocosm.Common.Storage;
 using Macrocosm.Common.Systems.Power;
 using Macrocosm.Common.Utils;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using ReLogic.Content;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
 
 namespace Macrocosm.Content.Machines.Consumers.Autocrafters;
 
-public abstract class AutocrafterTEBase : ConsumerTE
+public abstract class AutocrafterTEBase : ConsumerTE, IMultiInventoryOwner, IInventoryAutomationOwner
 {
     public abstract int OutputSlots { get; }
     public const int InputSlotsPerOutput = 15;
-    public virtual int InputPoolSize => OutputSlots * InputSlotsPerOutput;
-    public sealed override int InventorySize => OutputSlots + InputPoolSize;
-
+    public sealed override int InventorySize => OutputSlots;
     protected virtual bool AllowHandCrafting => false;
     protected virtual int[] AvailableCraftingStations => [];
-    public Recipe[] SelectedRecipes { get; private set; }
+
+    public AutocrafterLane[] Lanes { get; private set; }
+    public Recipe[] SelectedRecipes => Lanes?.Select(lane => lane.SelectedRecipe).ToArray();
+    public int InventoryLayoutVersion { get; private set; }
+
+    public IReadOnlyList<Inventory> Inventories
+    {
+        get
+        {
+            EnsureLanes();
+            return [Inventory, .. Lanes.Select(lane => lane.InputInventory)];
+        }
+    }
 
     private float craftTimer;
-    private float CraftRate => 60f;
+    private const float CraftRate = 60f;
     private bool suppressRecipeSync;
+    private int automationLaneCursor;
 
     public override float PowerDemand => IsEnabledByPlayer && HasCraftingWork() ? MaxPower : 0f;
 
-    public override void OnFirstUpdate()
+    public int GetInventoryRevision(int inventoryIndex)
     {
-        for (int i = 0; i < OutputSlots; i++)
-            Inventory.SetSlotRole(i, InventorySlotRole.Output);
-
-        for (int i = OutputSlots; i < Inventory.Size; i++)
-            Inventory.SetSlotRole(i, InventorySlotRole.Input);
-
-        Inventory.CanInsertIntoSlot = CanInsertIntoSlot;
+        EnsureLanes();
+        int laneIndex = inventoryIndex - 1;
+        return laneIndex >= 0 && laneIndex < Lanes.Length ? Lanes[laneIndex].Revision : 0;
     }
 
-    private bool CanInsertIntoSlot(int slot, Item item)
+    public IEnumerable<Inventory> GetAutomationOutputInventories()
     {
-        if (slot < OutputSlots)
+        yield return Inventory;
+    }
+
+    public bool TryInsertFromAutomation(ref Item item, bool sound = false)
+    {
+        EnsureLanes();
+        if (item is null || item.IsAir || Lanes.Length == 0)
             return false;
 
-        if (SelectedRecipes is null || item is null || item.IsAir)
-            return false;
+        for (int offset = 0; offset < Lanes.Length; offset++)
+        {
+            int laneIndex = (automationLaneCursor + offset) % Lanes.Length;
+            Inventory input = Lanes[laneIndex].InputInventory;
+            if (input.Size == 0 || !input.TryPlacingItem(ref item, InventoryPlacementSource.Automation, sound: sound))
+                continue;
+            automationLaneCursor = (laneIndex + 1) % Lanes.Length;
+            return true;
+        }
+        return false;
+    }
 
-        return SelectedRecipes.Any(recipe => recipe is not null && recipe.requiredItem.Any(requiredItem => requiredItem.type == item.type));
+    public override void OnFirstUpdate()
+    {
+        EnsureLanes();
+        for (int i = 0; i < Inventory.Size; i++)
+            Inventory.SetSlotRole(i, InventorySlotRole.Output);
+    }
+
+    public override void OnKill()
+    {
+        base.OnKill();
+        EnsureLanes();
+        foreach (AutocrafterLane lane in Lanes)
+            lane.InputInventory.DropAllItems(InventoryPosition);
     }
 
     public virtual bool RecipeAllowed(Recipe recipe)
     {
-        int requiredInputSlots = recipe.requiredItem
-            .Where(item => item.type > ItemID.None && item.stack > 0)
-            .Select(item => item.type)
-            .Distinct()
-            .Count();
-
-        if (requiredInputSlots > InputPoolSize)
+        if (AutocrafterLane.GetRequirements(recipe).Count() > InputSlotsPerOutput)
             return false;
-
         int[] requiredTiles = recipe.requiredTile.Where(tile => tile != -1).ToArray();
-
-        if (requiredTiles.Length == 0)
-            return AllowHandCrafting;
-
-        return requiredTiles.All(tile => AvailableCraftingStations.Contains(tile));
+        return requiredTiles.Length == 0 ? AllowHandCrafting : requiredTiles.All(tile => AvailableCraftingStations.Contains(tile));
     }
 
     public bool CanOverwriteRecipeAt(int outputSlot)
     {
-        if (outputSlot < 0 || outputSlot >= OutputSlots)
-            return false;
-
-        if (!Inventory[outputSlot].IsAir)
-            return false;
-
-        return true;
+        EnsureLanes();
+        return outputSlot >= 0 && outputSlot < OutputSlots && Inventory[outputSlot].IsAir && Lanes[outputSlot].InputInventory.IsEmpty;
     }
 
     public bool SelectRecipeInFreeSlot(Recipe recipe)
     {
         if (recipe is null)
             return false;
-
-        EnsureSelectedRecipes();
-
-        int outputSlot = -1;
-        for (int i = 0; i < OutputSlots; i++)
-        {
-            if (SelectedRecipes[i] == null)
-            {
-                outputSlot = i;
-                break;
-            }
-        }
-
-        if (outputSlot == -1)
-            return false;
-
-        return SelectRecipeInSlot(outputSlot, recipe);
+        EnsureLanes();
+        int outputSlot = Array.FindIndex(Lanes, lane => lane.SelectedRecipe is null);
+        return outputSlot >= 0 && SelectRecipeInSlot(outputSlot, recipe);
     }
 
     public bool SelectRecipeInSlot(int outputSlot, Recipe recipe) => SelectRecipeInSlot(outputSlot, recipe, restoring: false);
 
     private bool SelectRecipeInSlot(int outputSlot, Recipe recipe, bool restoring)
     {
+        EnsureLanes();
+        if (outputSlot < 0 || outputSlot >= OutputSlots)
+            return false;
         if (recipe is null)
             return ClearRecipeSlot(outputSlot);
-
-        EnsureSelectedRecipes();
-
         if (!restoring && !CanOverwriteRecipeAt(outputSlot))
             return false;
 
-        if (outputSlot < 0 || outputSlot >= OutputSlots)
-            return false;
-
         Inventory.ClearReserved(outputSlot);
-
-        SelectedRecipes[outputSlot] = recipe;
-
-        Inventory.SetReserved(
-            outputSlot,
-            recipe.createItem.type,
-            tooltip: null,
-            texture: TextureAssets.Item[recipe.createItem.type],
-            color: Color.White,
-            stack: recipe.createItem.stack
-        );
-
+        Inventory.SetReserved(outputSlot, recipe.createItem.type, texture: Terraria.GameContent.TextureAssets.Item[recipe.createItem.type], stack: recipe.createItem.stack);
+        Lanes[outputSlot].Configure(recipe, this);
+        InventoryLayoutVersion++;
         SyncRecipeSelection();
         return true;
     }
 
     public bool ClearRecipeSlot(int outputSlot)
     {
-        EnsureSelectedRecipes();
-
-        if (outputSlot < 0 || outputSlot >= OutputSlots)
+        EnsureLanes();
+        if (outputSlot < 0 || outputSlot >= OutputSlots || Lanes[outputSlot].SelectedRecipe is null || !CanOverwriteRecipeAt(outputSlot))
             return false;
-
-        if (SelectedRecipes[outputSlot] is null)
-            return false;
-
-        if (!CanOverwriteRecipeAt(outputSlot))
-            return false;
-
         Inventory.ClearReserved(outputSlot);
-        SelectedRecipes[outputSlot] = null;
+        Lanes[outputSlot].Configure(null, this);
+        InventoryLayoutVersion++;
         SyncRecipeSelection();
         return true;
     }
 
-    private void EnsureSelectedRecipes()
+    private void EnsureLanes()
     {
-        if (SelectedRecipes == null || SelectedRecipes.Length != OutputSlots)
-            SelectedRecipes = new Recipe[OutputSlots];
+        if (Lanes is not null && Lanes.Length == OutputSlots)
+            return;
+        Lanes = Enumerable.Range(0, OutputSlots).Select(index => new AutocrafterLane(index, this)).ToArray();
+        InventoryLayoutVersion++;
     }
 
     private void SyncRecipeSelection()
@@ -174,60 +157,34 @@ public abstract class AutocrafterTEBase : ConsumerTE
 
     public override void MachineUpdate()
     {
-        if (!IsRunning || SelectedRecipes is null)
+        if (!IsRunning)
             return;
-
-        craftTimer += 1f * RatedPowerProgress;
+        EnsureLanes();
+        craftTimer += RatedPowerProgress;
         if (craftTimer < CraftRate)
             return;
-
         craftTimer -= CraftRate;
 
-        for (int outputSlot = 0; outputSlot < SelectedRecipes.Length; outputSlot++)
+        foreach (AutocrafterLane lane in Lanes)
         {
-            Recipe recipe = SelectedRecipes[outputSlot];
-            if (recipe is null)
+            Recipe recipe = lane.SelectedRecipe;
+            if (recipe is null || !CanCraftRecipe(lane) || !CanStoreRecipeOutput(lane.Index, recipe))
                 continue;
-
-            if (!CanCraftRecipe(recipe))
-                continue;
-
-            if (!CanStoreRecipeOutput(outputSlot, recipe))
-                continue;
-
-            ConsumeRecipeIngredients(recipe);
-
+            ConsumeRecipeIngredients(lane);
             Item result = recipe.createItem.Clone();
             result.OnCreated(new MachineItemCreationContext(result, this));
-            if (!Inventory.TryPlacingItemInSlot(ref result, outputSlot, InventoryPlacementSource.Internal, sound: false, serverSync: true) && result.stack > 0)
+            if (!Inventory.TryPlacingItemInSlot(ref result, lane.Index, InventoryPlacementSource.Internal, sound: false, serverSync: true) && result.stack > 0)
                 Item.NewItem(new EntitySource_TileEntity(this), InventoryPosition, result);
         }
     }
 
-    private bool CanCraftRecipe(Recipe recipe)
-    {
-        foreach (var requiredItem in GetRequiredItems(recipe))
-        {
-            if (Inventory.CountItems(requiredItem.Type, startIndex: OutputSlots) < requiredItem.Stack)
-                return false;
-        }
-
-        return true;
-    }
+    private static bool CanCraftRecipe(AutocrafterLane lane)
+        => AutocrafterLane.GetRequirements(lane.SelectedRecipe).All(requirement => lane.InputInventory.CountItems(requirement.Type) >= requirement.Stack);
 
     private bool HasCraftingWork()
     {
-        if (SelectedRecipes is null)
-            return false;
-
-        for (int outputSlot = 0; outputSlot < SelectedRecipes.Length; outputSlot++)
-        {
-            Recipe recipe = SelectedRecipes[outputSlot];
-            if (recipe is not null && CanCraftRecipe(recipe) && CanStoreRecipeOutput(outputSlot, recipe))
-                return true;
-        }
-
-        return false;
+        EnsureLanes();
+        return Lanes.Any(lane => lane.SelectedRecipe is not null && CanCraftRecipe(lane) && CanStoreRecipeOutput(lane.Index, lane.SelectedRecipe));
     }
 
     private bool CanStoreRecipeOutput(int outputSlot, Recipe recipe)
@@ -236,218 +193,171 @@ public abstract class AutocrafterTEBase : ConsumerTE
         return Inventory.TryPlacingItemInSlot(ref result, outputSlot, InventoryPlacementSource.Internal, justCheck: true, sound: false, serverSync: false);
     }
 
-    private void ConsumeRecipeIngredients(Recipe recipe)
+    private static void ConsumeRecipeIngredients(AutocrafterLane lane)
     {
-        foreach (var requiredItem in GetRequiredItems(recipe))
+        foreach (var requirement in AutocrafterLane.GetRequirements(lane.SelectedRecipe))
         {
-            int toConsume = requiredItem.Stack;
-            for (int slot = OutputSlots; slot < Inventory.Size; slot++)
+            int toConsume = requirement.Stack;
+            for (int slot = 0; slot < lane.InputInventory.Size && toConsume > 0; slot++)
             {
-                if (Inventory[slot].type == requiredItem.Type)
-                {
-                    int consume = Math.Min(toConsume, Inventory[slot].stack);
-                    Inventory[slot].DecreaseStack(consume);
-                    toConsume -= consume;
-                    if (toConsume <= 0)
-                        break;
-                }
+                Item item = lane.InputInventory[slot];
+                if (item.type != requirement.Type)
+                    continue;
+                int consume = Math.Min(toConsume, item.stack);
+                item.DecreaseStack(consume);
+                toConsume -= consume;
+                lane.InputInventory.SyncItem(slot);
             }
         }
     }
 
-    private static IEnumerable<(int Type, int Stack)> GetRequiredItems(Recipe recipe)
-        => recipe.requiredItem
-            .Where(item => item.type > ItemID.None && item.stack > 0)
-            .GroupBy(item => item.type)
-            .Select(group => (Type: group.Key, Stack: group.Sum(item => item.stack)));
-
     protected override void ConsumerSaveData(TagCompound tag)
     {
         base.ConsumerSaveData(tag);
-        if (SelectedRecipes is not null)
+        EnsureLanes();
+        tag[nameof(Lanes)] = Lanes.Select(lane => new TagCompound
         {
-            TagCompound[] recipeTags = new TagCompound[SelectedRecipes.Length];
-            for (int i = 0; i < SelectedRecipes.Length; i++)
-            {
-                var recipe = SelectedRecipes[i];
-                if (recipe is not null)
-                {
-                    recipeTags[i] = new TagCompound
-                    {
-                        [nameof(Recipe.createItem)] = ItemIO.Save(recipe.createItem),
-                        [nameof(Recipe.requiredItem)] = recipe.requiredItem
-                            .Where(item => item.type > ItemID.None && item.stack > 0)
-                            .Select(ItemIO.Save)
-                            .ToList()
-                    };
-                }
-                else
-                {
-                    recipeTags[i] = new TagCompound();
-                }
-            }
-            tag[nameof(SelectedRecipes)] = recipeTags;
-        }
+            [nameof(AutocrafterLane.SelectedRecipe)] = SaveRecipe(lane.SelectedRecipe),
+            [nameof(AutocrafterLane.InputInventory)] = lane.InputInventory.SerializeData()
+        }).ToArray();
     }
 
     protected override void ConsumerLoadData(TagCompound tag)
     {
         base.ConsumerLoadData(tag);
-        if (tag.TryGet(nameof(SelectedRecipes), out TagCompound[] recipeTags))
+        EnsureLanes();
+        TagCompound[] laneTags = tag.TryGet(nameof(Lanes), out TagCompound[] savedLanes) ? savedLanes : [];
+        bool hasSelfContainedLanes = laneTags.Any(laneTag => laneTag.ContainsKey(nameof(AutocrafterLane.InputInventory)));
+        TagCompound[] recipeTags = hasSelfContainedLanes
+            ? laneTags.Select(laneTag => laneTag.GetCompound(nameof(AutocrafterLane.SelectedRecipe))).ToArray()
+            : tag.TryGet(nameof(SelectedRecipes), out TagCompound[] savedRecipes) ? savedRecipes : [];
+        suppressRecipeSync = true;
+        try
         {
-            SelectedRecipes = new Recipe[OutputSlots];
-            for (int i = 0; i < Math.Min(recipeTags.Length, OutputSlots); i++)
+            RebuildRecipes(recipeTags.Select(FindSavedRecipe).ToArray());
+            for (int i = 0; i < Math.Min(laneTags.Length, Lanes.Length); i++)
             {
-                var recipeTag = recipeTags[i];
-                if (recipeTag.Count == 0)
-                    continue;
-
-                Item result = ItemIO.Load(recipeTag.Get<TagCompound>(nameof(Recipe.createItem)));
-                IEnumerable<Item> ingredients = recipeTag.GetList<TagCompound>(nameof(Recipe.requiredItem)).Select(ItemIO.Load);
-                Recipe matchingRecipe = Main.recipe.FirstOrDefault(r =>
-                {
-                    if (r.createItem.type != result.type)
-                        return false;
-                    IEnumerable<int> recipeIngredients = r.requiredItem.Where(item => item.type > ItemID.None && item.stack > 0).Select(item => item.type);
-                    IEnumerable<int> savedIngredients = ingredients.Where(item => item.type > ItemID.None).Select(item => item.type);
-                    return recipeIngredients.OrderBy(x => x).SequenceEqual(savedIngredients.OrderBy(x => x));
-                });
-
-                if (matchingRecipe != null && RecipeAllowed(matchingRecipe))
-                    SelectRecipeInSlotWithoutSync(i, matchingRecipe, restoring: true);
+                TagCompound inventoryTag = hasSelfContainedLanes
+                    ? laneTags[i].GetCompound(nameof(AutocrafterLane.InputInventory))
+                    : laneTags[i];
+                Lanes[i].RestoreInventory(Inventory.DeserializeData(inventoryTag), this);
             }
         }
+        finally { suppressRecipeSync = false; }
     }
 
     protected override void ConsumerNetSend(BinaryWriter writer)
     {
         base.ConsumerNetSend(writer);
-
+        EnsureLanes();
         writer.Write((byte)OutputSlots);
-        for (int i = 0; i < OutputSlots; i++)
-            WriteRecipe(writer, SelectedRecipes is not null && i < SelectedRecipes.Length ? SelectedRecipes[i] : null);
+        foreach (AutocrafterLane lane in Lanes)
+        {
+            writer.Write(lane.Revision);
+            writer.Write((byte)lane.InputInventory.InteractingPlayer);
+            WriteRecipe(writer, lane.SelectedRecipe);
+        }
+        foreach (AutocrafterLane lane in Lanes) TagIO.ToStream(lane.InputInventory.SerializeData(), writer.BaseStream, compress: true);
     }
 
     protected override void ConsumerNetReceive(BinaryReader reader)
     {
         base.ConsumerNetReceive(reader);
-
         int recipeCount = reader.ReadByte();
-        Recipe[] receivedRecipes = new Recipe[OutputSlots];
+        Recipe[] recipes = new Recipe[OutputSlots];
+        int[] revisions = new int[OutputSlots];
+        int[] interactingPlayers = new int[OutputSlots];
         for (int i = 0; i < recipeCount; i++)
         {
+            int revision = reader.ReadInt32();
+            int interactingPlayer = reader.ReadByte();
             Recipe recipe = ReadRecipe(reader);
-            if (i < OutputSlots)
-                receivedRecipes[i] = recipe;
+            if (i < recipes.Length)
+            {
+                recipes[i] = recipe;
+                revisions[i] = revision;
+                interactingPlayers[i] = interactingPlayer;
+            }
         }
+        suppressRecipeSync = true;
+        try
+        {
+            RebuildRecipes(recipes, revisions, interactingPlayers);
+            for (int i = 0; i < recipeCount; i++)
+            {
+                Inventory received = Inventory.DeserializeData(TagIO.FromStream(reader.BaseStream, compressed: true));
+                if (i < Lanes.Length) Lanes[i].RestoreInventory(received, this);
+            }
+        }
+        finally { suppressRecipeSync = false; }
+    }
 
-        RebuildSelectedRecipes(receivedRecipes);
+    private void RebuildRecipes(Recipe[] recipes, int[] revisions = null, int[] receivedInteractingPlayers = null)
+    {
+        int[] interactingPlayers = receivedInteractingPlayers ?? Lanes?.Select(lane => lane.InputInventory.InteractingPlayer).ToArray() ?? [];
+        Lanes = Enumerable.Range(0, OutputSlots).Select(index => new AutocrafterLane(index, this)).ToArray();
+        for (int i = 0; i < Math.Min(interactingPlayers.Length, Lanes.Length); i++)
+            Lanes[i].InputInventory.SetInteractingPlayer(interactingPlayers[i], sync: false);
+        for (int i = 0; i < Inventory.Size; i++)
+        {
+            Inventory.ClearReserved(i);
+            Inventory.SetSlotRole(i, InventorySlotRole.Output);
+        }
+        for (int i = 0; i < Math.Min(recipes.Length, OutputSlots); i++)
+            if (recipes[i] is not null) SelectRecipeInSlot(i, recipes[i], restoring: true);
+        if (revisions is not null)
+            for (int i = 0; i < Math.Min(revisions.Length, Lanes.Length); i++)
+                Lanes[i].SetRevision(revisions[i]);
+        InventoryLayoutVersion++;
+    }
+
+    private static TagCompound SaveRecipe(Recipe recipe) => recipe is null ? new TagCompound() : new TagCompound
+    {
+        [nameof(Recipe.createItem)] = ItemIO.Save(recipe.createItem),
+        [nameof(Recipe.requiredItem)] = recipe.requiredItem.Where(item => item.type > ItemID.None && item.stack > 0).Select(ItemIO.Save).ToList()
+    };
+
+    private Recipe FindSavedRecipe(TagCompound tag)
+    {
+        if (tag is null || tag.Count == 0) return null;
+        Item result = ItemIO.Load(tag.GetCompound(nameof(Recipe.createItem)));
+        var ingredients = tag.GetList<TagCompound>(nameof(Recipe.requiredItem)).Select(ItemIO.Load).Select(item => (item.type, item.stack));
+        return Main.recipe.FirstOrDefault(recipe => recipe.createItem.type == result.type && RecipeAllowed(recipe)
+            && NormalizedRequirements(recipe).SequenceEqual(NormalizedRequirements(ingredients)));
     }
 
     private static void WriteRecipe(BinaryWriter writer, Recipe recipe)
     {
         writer.Write(recipe is not null);
-        if (recipe is null)
-            return;
-
+        if (recipe is null) return;
         writer.Write(recipe.createItem.type);
         writer.Write(recipe.createItem.stack);
-
-        Item[] requiredItems = recipe.requiredItem.Where(item => item.type > ItemID.None && item.stack > 0).ToArray();
-        writer.Write(requiredItems.Length);
-        foreach (Item item in requiredItems)
-        {
-            writer.Write(item.type);
-            writer.Write(item.stack);
-        }
-
-        int[] requiredTiles = recipe.requiredTile.Where(tile => tile != -1).ToArray();
-        writer.Write(requiredTiles.Length);
-        foreach (int tile in requiredTiles)
-            writer.Write(tile);
+        var requirements = NormalizedRequirements(recipe).ToArray();
+        writer.Write(requirements.Length);
+        foreach (var item in requirements) { writer.Write(item.Type); writer.Write(item.Stack); }
+        int[] tiles = recipe.requiredTile.Where(tile => tile != -1).OrderBy(tile => tile).ToArray();
+        writer.Write(tiles.Length);
+        foreach (int tile in tiles) writer.Write(tile);
     }
 
     private Recipe ReadRecipe(BinaryReader reader)
     {
-        bool hasRecipe = reader.ReadBoolean();
-        if (!hasRecipe)
-            return null;
-
-        int createItemType = reader.ReadInt32();
-        int createItemStack = reader.ReadInt32();
-
-        int requiredItemCount = reader.ReadInt32();
-        (int type, int stack)[] requiredItems = new (int, int)[requiredItemCount];
-        for (int i = 0; i < requiredItemCount; i++)
-            requiredItems[i] = (reader.ReadInt32(), reader.ReadInt32());
-
-        int requiredTileCount = reader.ReadInt32();
-        int[] requiredTiles = new int[requiredTileCount];
-        for (int i = 0; i < requiredTileCount; i++)
-            requiredTiles[i] = reader.ReadInt32();
-
-        return Main.recipe.FirstOrDefault(recipe =>
-            recipe is not null &&
-            RecipeAllowed(recipe) &&
-            recipe.createItem.type == createItemType &&
-            recipe.createItem.stack == createItemStack &&
-            RecipeRequirementsMatch(recipe, requiredItems, requiredTiles)
-        );
+        if (!reader.ReadBoolean()) return null;
+        int resultType = reader.ReadInt32();
+        int resultStack = reader.ReadInt32();
+        var requirements = new (int Type, int Stack)[reader.ReadInt32()];
+        for (int i = 0; i < requirements.Length; i++) requirements[i] = (reader.ReadInt32(), reader.ReadInt32());
+        int[] tiles = new int[reader.ReadInt32()];
+        for (int i = 0; i < tiles.Length; i++) tiles[i] = reader.ReadInt32();
+        return Main.recipe.FirstOrDefault(recipe => RecipeAllowed(recipe) && recipe.createItem.type == resultType && recipe.createItem.stack == resultStack
+            && NormalizedRequirements(recipe).SequenceEqual(requirements.OrderBy(item => item.Type))
+            && recipe.requiredTile.Where(tile => tile != -1).OrderBy(tile => tile).SequenceEqual(tiles));
     }
 
-    private static bool RecipeRequirementsMatch(Recipe recipe, (int type, int stack)[] requiredItems, int[] requiredTiles)
-    {
-        var recipeItems = recipe.requiredItem
-            .Where(item => item.type > ItemID.None && item.stack > 0)
-            .Select(item => (item.type, item.stack))
-            .OrderBy(item => item.type)
-            .ThenBy(item => item.stack);
+    private static IEnumerable<(int Type, int Stack)> NormalizedRequirements(Recipe recipe)
+        => AutocrafterLane.GetRequirements(recipe).OrderBy(item => item.Type);
 
-        var receivedItems = requiredItems
-            .OrderBy(item => item.type)
-            .ThenBy(item => item.stack);
-
-        if (!recipeItems.SequenceEqual(receivedItems))
-            return false;
-
-        var recipeTiles = recipe.requiredTile
-            .Where(tile => tile != -1)
-            .OrderBy(tile => tile);
-
-        return recipeTiles.SequenceEqual(requiredTiles.OrderBy(tile => tile));
-    }
-
-    private void RebuildSelectedRecipes(Recipe[] recipes)
-    {
-        SelectedRecipes = new Recipe[OutputSlots];
-        for (int i = 0; i < Inventory.Size; i++)
-            Inventory.ClearReserved(i);
-
-        suppressRecipeSync = true;
-        try
-        {
-            for (int i = 0; i < Math.Min(recipes.Length, OutputSlots); i++)
-            {
-                if (recipes[i] is not null)
-                    SelectRecipeInSlot(i, recipes[i], restoring: true);
-            }
-        }
-        finally
-        {
-            suppressRecipeSync = false;
-        }
-    }
-
-    private bool SelectRecipeInSlotWithoutSync(int outputSlot, Recipe recipe, bool restoring = false)
-    {
-        suppressRecipeSync = true;
-        try
-        {
-            return SelectRecipeInSlot(outputSlot, recipe, restoring);
-        }
-        finally
-        {
-            suppressRecipeSync = false;
-        }
-    }
+    private static IEnumerable<(int Type, int Stack)> NormalizedRequirements(IEnumerable<(int type, int stack)> items)
+        => items.Where(item => item.type > ItemID.None && item.stack > 0).GroupBy(item => item.type)
+            .Select(group => (Type: group.Key, Stack: group.Sum(item => item.stack))).OrderBy(item => item.Type);
 }

@@ -199,7 +199,7 @@ public class KeroseneGeneratorUI : MachineUI
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        Inventory.ActiveInventory = KeroseneGenerator.Inventory;
+        Inventory.ActiveInventories.Add(KeroseneGenerator.Inventory);
 
         string power = $"{KeroseneGenerator.GeneratedPower:F2}";
         powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format(power));

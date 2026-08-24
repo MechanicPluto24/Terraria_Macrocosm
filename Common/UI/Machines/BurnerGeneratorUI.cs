@@ -147,7 +147,7 @@ public class BurnerGeneratorUI : MachineUI
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        Inventory.ActiveInventory = BurnerGenerator.Inventory;
+        Inventory.ActiveInventories.Add(BurnerGenerator.Inventory);
 
         string power = $"{BurnerGenerator.GeneratedPower:F2}";
         powerStatusText.SetText(Language.GetText("Mods.Macrocosm.Machines.Common.GeneratedPower").Format(power));
