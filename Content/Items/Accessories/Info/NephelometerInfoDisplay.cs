@@ -25,7 +25,7 @@ public class NephelometerInfoDisplay : InfoDisplay
 
     public override string DisplayValue(ref Color displayColor, ref Color displayShadowColor)
     {
-        pollution = MathHelper.Lerp(pollution, TileCounts.Instance.PollutionLevel, 0.1f);
+        pollution = MathHelper.Lerp(pollution, TileCounts.Instance.PollutionLevel, 0.01f);
         int pollutionValue = (int)Math.Round(pollution);
 
         displayColor = GetPollutionColor(pollutionValue);
