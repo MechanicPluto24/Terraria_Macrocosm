@@ -3061,30 +3061,30 @@ Craterfish: {
 
 DunceCraterfish: {
 	DisplayName: Глупая кратерная рыба
-	Tooltip: ""
-  // AnglerDescription: This’ll take a while, so listen to me. The moon can have an aquatic ecosystem if we—I mean YOU can bring water all the way here. I know fish can be stupid, but there’s one with a crater where its forehead should be. Fetch me that fish, now!
+	// Tooltip: ""
+	AnglerDescription: Рассказывать долго, поэтому слушай внимательно. Если мы- то есть, ТЫ перенесёшь воду с Земли на Луну, в ней может появиться жизнь! Не самая разумная, конечно, но я слышал что-то про рыб с кратером вместо лба. Если это правда, то сейчас же отправляйся за ней!
 	AnglerLocation: Ловится на Луне
 }
 
 HermitCan: {
 	DisplayName: Банка-отшельник
-	Tooltip: ""
-  // AnglerDescription: I’ve been walking by some garbage and I must’ve scared off something, I saw a tin can just scuttle into the polluted water. I never saw it since, and I need you to catch it for me!
+	// Tooltip: ""
+	AnglerDescription: Я тут недавно ходил рядом с местной свалкой и будто бы отпугнул что-то — жестяная банка просто взяла и уползла в загрязнённую воду. Никогда не видел ничего такого, поэтому иди и поймай её для меня!
 	AnglerLocation: Ловится в загрязнении
 }
 
 MutatedGoldfish: {
 	DisplayName: Золотая рыбка-мутант
-	Tooltip: ""
+	// Tooltip: ""
 	// AnglerDescription: ""
 	AnglerLocation: Ловится в загрязнении
 }
 
 SmogWispfish: {
 	DisplayName: Блуждающая рыба-смог
-	Tooltip: ""
-	// AnglerDescription: You know those smog wisps? There’s some of them that adapt to dirty waters and feed on fish…and trash! You know what to do, pollute the waters with your crappy machines and get me one of those evasive wispfish!
-  AnglerLocation: Ловится в загрязнении
+	// Tooltip: ""
+	AnglerDescription: Ты же знаешь про блуждающие облака смога? Я слышал, что они могут приспособиться к загрязнённой воде и питаться рыбой... и мусором! Ты знаешь, что делать — загрязни какое-нибудь озеро своими дурацкими машинами и достань мне эту неуловимую облачную рыбу!
+	AnglerLocation: Ловится в загрязнении
 }
 
 RadioactiveSlimeBannerItem: {
