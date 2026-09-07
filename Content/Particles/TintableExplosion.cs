@@ -45,6 +45,19 @@ public class TintableExplosion : Particle
         }
     }
 
+    public override Rectangle GetDrawBounds()
+    {
+        Rectangle bounds = base.GetDrawBounds();
+        for (int i = 1; i < NumberOfInnerReplicas; i++)
+        {
+            float explosionProgress = (float)currentFrame / FrameCount;
+            float replicaDecrease = 1f - (float)i / NumberOfInnerReplicas;
+            float scale = Scale.X * MathHelper.Lerp(ReplicaScalingFactor + (1f - ReplicaScalingFactor) * replicaDecrease, 1.06f, explosionProgress);
+            bounds = Rectangle.Union(bounds, GetSpriteDrawBounds(Position, Size, new Vector2(scale), Rotation));
+        }
+        return bounds;
+    }
+
     public override void AI()
     {
         Lighting.AddLight(Center, Color.ToVector3());

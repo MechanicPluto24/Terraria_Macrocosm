@@ -1,11 +1,8 @@
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.Localization;
-using Terraria.UI.Chat;
 using System.IO;
 using Terraria.ModLoader.IO;
 
@@ -45,12 +42,7 @@ public abstract class ConsumerTE : MachineTE
     public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
     {
         string power = Language.GetText("Mods.Macrocosm.Machines.Common.PowerInfo.Common").Format($"{InputPower:F2}", $"{PowerDemand:F2}");
-
-        Vector2 textSize = FontAssets.MouseText.Value.MeasureString(power);
-        Vector2 position = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (textSize.X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
-        Color color = DisplayColor;
-
-        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, power, position - new Vector2(power.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+        DrawPowerText(spriteBatch, basePosition, power);
     }
 
     protected virtual void ConsumerNetSend(BinaryWriter writer) { }

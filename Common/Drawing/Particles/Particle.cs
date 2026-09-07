@@ -206,6 +206,51 @@ public abstract partial class Particle : ModTexturedType
     /// <summary> Used for defining the <c>Particle</c>'s behaviour </summary>
     public virtual void AI() { }
 
+    /// <summary> Whether this particle may spawn outside the expanded viewport. This is currently enforced only in single-player. </summary>
+    public virtual bool CanSpawnOffScreen => true;
+
+    /// <summary> Padding around the viewport used for spawn and draw culling. </summary>
+    public virtual int ViewportPadding => 256;
+
+    /// <summary> World bounds used for culling. Override for trails, replicas, or offset effects; keep bounds in sync with drawing to avoid clipping. </summary>
+    public virtual Rectangle GetDrawBounds() => GetSpriteDrawBounds(Position, Size, Scale, Rotation);
+
+    /// <summary> Conservative world bounds of a sprite drawn around its center, including rotation and negative scale. </summary>
+    protected static Rectangle GetSpriteDrawBounds(Vector2 position, Vector2 size, Vector2 scale, float rotation)
+    {
+        Vector2 halfSize = new(MathF.Abs(size.X * scale.X) * 0.5f, MathF.Abs(size.Y * scale.Y) * 0.5f);
+        float cos = MathF.Abs(MathF.Cos(rotation));
+        float sin = MathF.Abs(MathF.Sin(rotation));
+        Vector2 extent = new(halfSize.X * cos + halfSize.Y * sin, halfSize.X * sin + halfSize.Y * cos);
+        int left = (int)MathF.Floor(position.X - extent.X);
+        int top = (int)MathF.Floor(position.Y - extent.Y);
+        int right = (int)MathF.Ceiling(position.X + extent.X);
+        int bottom = (int)MathF.Ceiling(position.Y + extent.Y);
+        return new Rectangle(left, top, Math.Max(1, right - left), Math.Max(1, bottom - top));
+    }
+
+    /// <summary> Whether this particle is inside the expanded viewport. </summary>
+    public virtual bool IsInViewport(Vector2 screenPosition)
+    {
+        if (DrawLayer is ParticleDrawLayer.PostInterface || HasCustomDrawer)
+            return true;
+
+        Rectangle visibleWorldBounds = new(
+            (int)screenPosition.X - ViewportPadding,
+            (int)screenPosition.Y - ViewportPadding,
+            Main.screenWidth + ViewportPadding * 2,
+            Main.screenHeight + ViewportPadding * 2
+        );
+
+        return visibleWorldBounds.Intersects(GetDrawBounds());
+    }
+
+    /// <summary>
+    /// Whether this particle should be drawn for the current camera position.
+    /// Override this to reject off-screen particles before lighting and draw work.
+    /// </summary>
+    public virtual bool ShouldDraw(Vector2 screenPosition) => IsInViewport(screenPosition);
+
     /// <summary> 
     /// Used for special effects when the <c>Particle</c> is killed,
     /// such as when calling <see cref="Kill">Kill()</see>, or when the 
@@ -270,7 +315,8 @@ public abstract partial class Particle : ModTexturedType
     internal bool spawned;
     public void Update()
     {
-        if (!spawned)
+        bool justSpawned = !spawned;
+        if (justSpawned)
         {
             OnSpawn();
 
@@ -300,6 +346,13 @@ public abstract partial class Particle : ModTexturedType
 
         PopulateTrailArrays();
         AI();
+
+        if (justSpawned && Main.netMode == NetmodeID.SinglePlayer && !CanSpawnOffScreen && !IsInViewport(Main.screenPosition))
+        {
+            Kill();
+            return;
+        }
+
         UpdateFrame();
 
         if (TimeLeft-- <= 0)

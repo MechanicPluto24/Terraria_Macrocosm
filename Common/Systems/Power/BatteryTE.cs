@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using Terraria.GameContent;
 using Terraria.Localization;
-using Terraria.UI.Chat;
 using System.IO;
 using Terraria.ModLoader.IO;
 
@@ -45,11 +43,7 @@ public abstract class BatteryTE : MachineTE
     public override void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor)
     {
         string percent = $"{(StoredEnergy / EnergyCapacity * 100):F2}%";
-
-        Vector2 positionPercent = new Vector2(basePosition.X + (MachineTile.Width * 16f / 2f) - (FontAssets.MouseText.Value.MeasureString(percent).X / 2f) + 8f, basePosition.Y - 22f) - Main.screenPosition;
-        Color color = DisplayColor;
-
-        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.DeathText.Value, percent, positionPercent - new Vector2(percent.Length, 0), color, 0f, Vector2.Zero, Vector2.One * 0.4f, spread: 1.5f);
+        DrawPowerText(spriteBatch, basePosition, percent);
     }
 
     protected virtual void BatteryNetSend(BinaryWriter writer) { }

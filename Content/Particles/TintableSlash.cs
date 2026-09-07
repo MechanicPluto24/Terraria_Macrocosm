@@ -45,6 +45,12 @@ public class TintableSlash : Particle
     }
 
     private SpriteBatchState state;
+    public override Rectangle GetDrawBounds()
+    {
+        Rectangle bounds = GetSpriteDrawBounds(Position, Size, Scale * new Vector2(0.7f, 4.2f), Rotation);
+        return Rectangle.Union(bounds, GetSpriteDrawBounds(Position, Size, Scale * 1.4f, Rotation));
+    }
+
     public override void Draw(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
     {
         bool nonDefaultBlendState = BlendState != null;

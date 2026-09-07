@@ -20,6 +20,7 @@ public class CircuitProbe : ModItem
         Item.width = 20;
         Item.height = 20;
         Item.maxStack = 1;
+        Item.accessory = true;
         Item.value = Item.buyPrice(gold: 1);
         Item.useStyle = ItemUseStyleID.RaiseLamp;
         Item.useTurn = true;

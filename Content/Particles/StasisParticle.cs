@@ -35,6 +35,16 @@ public class StasisParticle : Particle
         spriteBatch.Draw(TextureAsset.Value, Center - screenPosition, null, Color.White * FadeFactor, Rotation, Size / 2, Scale, SpriteEffects.None, 0f);
     }
 
+    public override Rectangle GetDrawBounds()
+    {
+        glow ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle6");
+        Rectangle bounds = GetSpriteDrawBounds(Center, Size, Scale, Rotation);
+        bounds = Rectangle.Union(bounds, GetSpriteDrawBounds(Center, glow.Size(), Scale * 0.0425f, 0f));
+        foreach (Vector2 position in OldPositions)
+            bounds = Rectangle.Union(bounds, GetSpriteDrawBounds(position + Size / 2f, new Vector2(8f), Vector2.One, 0f));
+        return bounds;
+    }
+
     public override void AI()
     {
         Lighting.AddLight(Center, new Vector3(0.407f, 1f, 1f) * Scale.X * 0.5f);

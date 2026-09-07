@@ -6,11 +6,13 @@ using System;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.Map;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.ObjectData;
+using Terraria.UI.Chat;
 
 namespace Macrocosm.Common.Systems.Power;
 
@@ -61,8 +63,27 @@ public abstract partial class MachineTE : ModTileEntity, IInventoryOwner
     public virtual string GetPowerInfo() => "";
 
     /// <summary> Draw the power info text above the machine </summary>
-    /// <param name="basePosition"> The top left in world coordinates </param>
+    /// <param name="basePosition"> The center of the machine's top-left tile in world coordinates </param>
     public virtual void DrawMachinePowerInfo(SpriteBatch spriteBatch, Vector2 basePosition, Color lightColor) { }
+
+    protected void DrawPowerText(SpriteBatch spriteBatch, Vector2 basePosition, string text)
+    {
+        const float scale = 0.4f;
+        Vector2 machineCenter = new(basePosition.X + (MachineTile.Width - 1) * 8f, basePosition.Y - 22f);
+        Vector2 textOrigin = new(FontAssets.DeathText.Value.MeasureString(text).X / 2f, 0f);
+
+        ChatManager.DrawColorCodedStringWithShadow(
+            spriteBatch,
+            FontAssets.DeathText.Value,
+            text,
+            machineCenter - Main.screenPosition,
+            DisplayColor,
+            0f,
+            textOrigin,
+            Vector2.One * scale,
+            spread: 1.5f
+        );
+    }
 
     /// <summary>
     /// Used to toggle this machine.

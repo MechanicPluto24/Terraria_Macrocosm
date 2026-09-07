@@ -14,6 +14,7 @@ public class ItemTransferParticle : Particle
 {
     public override string Texture => Macrocosm.EmptyTexPath;
     public override bool ShouldUpdatePosition => false;
+    public override int MaxPoolCount => 256;
 
     public Vector2 StartPosition;
     public Vector2 EndPosition;
