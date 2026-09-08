@@ -13,7 +13,7 @@ public static class SFX
     public static SoundStyle LaserHit { get; } = new(SFXPath + "LaserHit");
 
     // Ranged Weapons
-    public static SoundStyle RailgunShot { get; } = new(SFXPath + "RailgunShot");
+    public static SoundStyle RailgunShot { get; } = new(SFXPath + "Railgun");
     public static SoundStyle AssaultRifle { get; } = new(SFXPath + "AssaultRifle_", 4);
     public static SoundStyle DesertEagleShot { get; } = new(SFXPath + "DesertEagleShot");
     public static SoundStyle Ricochet { get; } = new(SFXPath + "Ricochet_", 6);

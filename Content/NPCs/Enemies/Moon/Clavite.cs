@@ -28,12 +28,11 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
     }
 
     private static Asset<Texture2D> glowmask;
-    private static Asset<Texture2D> glowX4;
     public override void SetStaticDefaults()
     {
         base.SetStaticDefaults();
 
-        Main.npcFrameCount[Type] = 2;
+        Main.npcFrameCount[Type] = 6;
         NPCID.Sets.TrailCacheLength[Type] = 5;
         NPCID.Sets.TrailingMode[Type] = 1;
 
@@ -44,11 +43,13 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
         Redemption.AddElementToNPC(Type, Redemption.ElementID.Celestial);
         Redemption.AddNPCToElementList(Type, Redemption.NPCType.Inorganic);
     }
+    private readonly Range idleFrames = 0..4;
+    private readonly Range dashFrames = 5..6;
 
     public override void SetDefaults2()
     {
-        NPC.width = 56;
-        NPC.height = 56;
+        NPC.width = 92;
+        NPC.height = 74;
         NPC.lifeMax = 1300;
         NPC.damage = 45;
         NPC.defense = 30;
@@ -141,13 +142,8 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
 
     public override void FindFrame(int frameHeight)
     {
-        if (State == AIState.Dash)
-        {
-            NPC.frame.Y = StateTime.Frames < dashWaitFrames + chompFrames ? 0 : frameHeight;
-            return;
-        }
-
-        int frameSpeed = 15;
+        
+        int frameSpeed = 8;
 
         NPC.frameCounter++;
 
@@ -155,10 +151,20 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
         {
             NPC.frameCounter = 0;
             NPC.frame.Y += frameHeight;
-
-            if (NPC.frame.Y >= Main.npcFrameCount[Type] * frameHeight)
+            if (State == AIState.Dash)
             {
-                NPC.frame.Y = 0;
+                if(NPC.frame.Y >= dashFrames.End.Value * frameHeight)
+                {
+                    NPC.frame.Y = dashFrames.Start.Value * frameHeight;
+                }
+                if(NPC.frame.Y < dashFrames.Start.Value * frameHeight)
+                {
+                    NPC.frame.Y = dashFrames.Start.Value * frameHeight;
+                }
+            }
+            else if (NPC.frame.Y >= idleFrames.End.Value * frameHeight)
+            {
+                NPC.frame.Y = idleFrames.Start.Value * frameHeight;
             }
         }
     }
@@ -181,12 +187,12 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
         {
             var entitySource = NPC.GetSource_Death();
 
-            Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreHead1").Type);
-            Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreHead2").Type);
-            Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGoreJaw1").Type);
-            Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGoreJaw2").Type);
-            Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 1.5f, Mod.Find<ModGore>("ClaviteGoreEye1").Type);
-            Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGoreEye2").Type);
+            Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGore1").Type);
+            Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGore2").Type);
+            Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGore3").Type);
+            Gore.NewGore(entitySource, NPC.position, -NPC.velocity, Mod.Find<ModGore>("ClaviteGore4").Type);
+            Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 1.5f, Mod.Find<ModGore>("ClaviteGore5").Type);
+            Gore.NewGore(entitySource, NPC.position, -NPC.velocity * 2, Mod.Find<ModGore>("ClaviteGore6").Type);
 
             for (int i = 0; i < 100; i++)
             {
@@ -202,7 +208,6 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
     public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
     {
         glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
-        glowX4 ??= ModContent.Request<Texture2D>(Texture + "_GlowX4");
 
         if (NPC.IsABestiaryIconDummy)
             NPC.rotation = MathHelper.Pi;
@@ -259,19 +264,7 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
         spriteBatch.End();
         spriteBatch.Begin(BlendState.Additive, state);
 
-        Rectangle glowX4Source = new(NPC.frame.X * 4, NPC.frame.Y * 4, NPC.frame.Width * 4, NPC.frame.Height * 4);
-        spriteBatch.Draw(
-            glowX4.Value,
-            NPC.Center - screenPos,
-            glowX4Source,
-            Color.White * 0.25f,
-            NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
-            glowX4Source.Size() * 0.5f,
-            NPC.scale / 4,
-            NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-            0f
-        );
-
+       
         for (int i = 0; i < NPC.oldPos.Length; i++)
         {
             float factor = 1f - (float)i / (NPC.oldPos.Length + 1);
@@ -288,17 +281,7 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
                 0f
             );
 
-            spriteBatch.Draw(
-                glowX4.Value,
-                NPC.oldPos[i] + NPC.Size * 0.5f - screenPos,
-                glowX4Source,
-                Color.White * 0.15f * factor,
-                NPC.direction == 1 ? NPC.rotation : NPC.rotation + MathHelper.Pi,
-                glowX4Source.Size() * 0.5f,
-                NPC.scale / 4,
-                NPC.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
-                0f
-            );
+            
         }
 
         spriteBatch.End();

@@ -11,11 +11,11 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged;
 
-public class Choronzon : GunHeldProjectileItem
+public class Railgun : GunHeldProjectileItem
 {
     public override GunHeldProjectileData GunHeldProjectileData => new()
     {
-        GunBarrelPosition = new Vector2(28f, 6f),
+        GunBarrelPosition = new Vector2(32f, 7f),
         CenterYOffset = 9f,
         MuzzleOffset = 45f,
         Recoil = (4, 0.01f),
@@ -28,42 +28,27 @@ public class Choronzon : GunHeldProjectileItem
 
     public override void SetDefaultsHeldProjectile()
     {
-        Item.damage = 300;
+        Item.damage = 900;
         Item.DamageType = DamageClass.Ranged;
         Item.width = 70;
         Item.height = 26;
-
-        Item.useTime = 10;
-        Item.useAnimation = 30;
-
+        Item.useTime = 80;
+        Item.useAnimation = 80;
+        Item.useStyle = ItemUseStyleID.Shoot;
         Item.noMelee = true;
         Item.channel = true;
-        Item.knockBack = 8f;
+        Item.knockBack = 16f;
         Item.value = 10000;
-        Item.rare = ModContent.RarityType<MoonRarity2>();
+        Item.rare = ModContent.RarityType<MoonRarity1>();
         Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
         Item.autoReuse = true;
         Item.shootSpeed = 12f;
         Item.useAmmo = ModContent.ItemType<Ammo.RailgunBolt>();
         Item.UseSound = SFX.RailgunShot;
     }
-    int cooldown = 0;
-    public override bool CanUseItemHeldProjectile(Player player)
-    {
-        if(cooldown>0)
-            return false;
-        else{
-            cooldown = 80;
-            return true;
-        }
-    }
-    public override void UpdateInventory(Player player)
-    {
-        if(cooldown>0)
-            cooldown--;
-    }
 
     public override Vector2? HoldoutOffset() => new Vector2(-10, 0);
+
     public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback, GunHeldProjectile heldProjectile)
     {
         return true;
@@ -73,4 +58,26 @@ public class Choronzon : GunHeldProjectileItem
     {
         position += new Vector2(10, 4 * player.direction).RotatedBy(velocity.ToRotation());
     }
+}
+public class RailgunArmourBreakingProjectile : GlobalProjectile
+{
+    public override bool InstancePerEntity => true;
+    int sourceItemType = 0;
+    public override void OnSpawn(Projectile projectile, IEntitySource source)
+    {
+        if (source is EntitySource_ItemUse_WithAmmo source_ItemUse_WithAmmo)
+        {
+            sourceItemType = source_ItemUse_WithAmmo.Item.type;
+        }
+    }
+    public override void OnHitNPC(Projectile projectile, NPC target, NPC.HitInfo hit, int damageDone)
+    {
+        if(sourceItemType == ModContent.ItemType<Railgun>()){
+            if(hit.Crit)
+            {
+                target.AddBuff(BuffID.BrokenArmor, 8 * 60);
+            }
+        }
+    }
+
 }
