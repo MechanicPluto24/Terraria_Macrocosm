@@ -1,4 +1,4 @@
 MachinePowerOverlayBuilderToggle: {
-	OnText: "Machine power: On"
-	OffText: "Machine power: Off"
+	OnText: Электроэнергия: Вкл.
+	OffText: Электроэнергия: Выкл.
 }
