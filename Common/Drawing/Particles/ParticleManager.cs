@@ -128,7 +128,10 @@ public class ParticleManager : ModSystem, IOnPlayerJoining
 
             if (!particle.Active)
             {
-                particle.Kill();
+                // Kill() removes particles immediately. Only remove here when AI merely marked the particle inactive.
+                if (i < Particles.Count && ReferenceEquals(Particles[i], particle))
+                    particle.Kill();
+
                 i--;
             }
         }
@@ -195,7 +198,7 @@ public class ParticleManager : ModSystem, IOnPlayerJoining
 
         foreach (Particle particle in Particles)
         {
-            if (particle.DrawLayer == layer && !particle.HasCustomDrawer)
+            if (particle.DrawLayer == layer && !particle.HasCustomDrawer && particle.ShouldDraw(Main.screenPosition))
             {
                 if (particle.PreDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates())))
                     alphaBlendDrawers.Add(particle);
@@ -219,7 +222,7 @@ public class ParticleManager : ModSystem, IOnPlayerJoining
 
         foreach (Particle particle in Particles)
         {
-            if (particle.DrawLayer == layer && !particle.HasCustomDrawer)
+            if (particle.DrawLayer == layer && !particle.HasCustomDrawer && particle.ShouldDraw(Main.screenPosition))
                 particle.PostDrawAdditive(Main.spriteBatch, Main.screenPosition, Lighting.GetColor(particle.Position.ToTileCoordinates()));
         }
     }

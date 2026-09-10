@@ -2,19 +2,12 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Macrocosm.Content.Items.Bars;
+using Macrocosm.Content.Items.Ores;
 
 namespace Macrocosm.Content.Items.Ammo;
 
-public class RailgunBolt : ModItem
-{
-    public override string Texture => Macrocosm.EmptyTexPath;
-
-    public override void SetDefaults()
-        {
-            Item.ammo = Item.type;
-        }
-}
-public class EMBolt : ModItem
+public class FractureBolt : ModItem
 {
     public override void SetStaticDefaults()
     {
@@ -32,12 +25,18 @@ public class EMBolt : ModItem
         Item.knockBack = 4.5f;
         Item.value = Item.sellPrice(copper: 3);
         Item.rare = ModContent.RarityType<MoonRarity1>();
-        Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Ranged.RailgunBolt>();
+        Item.shoot = ModContent.ProjectileType<Projectiles.Friendly.Ranged.FractureBolt>();
         Item.shootSpeed = 20f;
         Item.ammo = ModContent.ItemType<RailgunBolt>(); // Custom ammo
     }
 
     public override void AddRecipes()
     {
+        CreateRecipe(50)
+            .AddIngredient<RailgunBolt>(50)
+            .AddIngredient<ArtemiteBar>(1)
+            .AddIngredient<QuartzFragment>(5)
+            .AddTile(TileID.LunarCraftingStation)
+            .Register();
     }
 }

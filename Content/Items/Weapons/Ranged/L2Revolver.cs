@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Weapons.Ranged;
 
-public class ProtoRailgun : GunHeldProjectileItem
+public class L2Revolver : GunHeldProjectileItem
 {
     public override GunHeldProjectileData GunHeldProjectileData => new()
     {
@@ -28,18 +28,18 @@ public class ProtoRailgun : GunHeldProjectileItem
 
     public override void SetDefaultsHeldProjectile()
     {
-        Item.damage = 200;
+        Item.damage = 400;
         Item.DamageType = DamageClass.Ranged;
         Item.width = 70;
         Item.height = 26;
-        Item.useTime = 50;
-        Item.useAnimation = 50;
+        Item.useTime = 32;
+        Item.useAnimation = 32;
         Item.useStyle = ItemUseStyleID.Shoot;
         Item.noMelee = true;
         Item.channel = true;
         Item.knockBack = 16f;
         Item.value = 10000;
-        Item.rare = ModContent.RarityType<MoonRarity2>();
+        Item.rare = ModContent.RarityType<MoonRarity1>();
         Item.shoot = Macrocosm.ItemShoot_UsesAmmo;
         Item.autoReuse = true;
         Item.shootSpeed = 12f;

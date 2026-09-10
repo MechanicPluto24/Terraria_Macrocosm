@@ -55,6 +55,30 @@ public class CelestialBulwarkDashParticle : Particle
     }
 
     private SpriteBatchState state;
+    public override Rectangle GetDrawBounds()
+    {
+        circle ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle5");
+        fireball ??= ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Fireball");
+
+        Rectangle bounds = base.GetDrawBounds();
+        for (int i = 0; i < OldPositions.Length; i++)
+        {
+            float trailProgress = MathHelper.Clamp((float)i / TrailCacheLength, 0f, 1f);
+            float scale = defScale - Scale.X * trailProgress * 5f;
+            Vector2 position = scale < 0 ? OldPositions[i] + new Vector2(0, 55).RotatedBy(OldRotations[i]) : OldPositions[i];
+            bounds = Rectangle.Union(bounds, GetSpriteDrawBounds(position, Size, new Vector2(scale), OldRotations[i]));
+        }
+
+        float progress = Utility.QuadraticEaseIn(Progress);
+        bounds = Rectangle.Union(bounds, GetSpriteDrawBounds(Position, circle.Size(), new Vector2(progress * 0.7f), defRotation));
+        if (Player.velocity.LengthSquared() > 1f)
+        {
+            Vector2 position = Position - new Vector2(100 * progress, 0).RotatedBy(Player.velocity.ToRotation());
+            bounds = Rectangle.Union(bounds, GetSpriteDrawBounds(position, fireball.Size(), new Vector2(progress * 4.8f), defRotation));
+        }
+        return bounds;
+    }
+
     public override bool PreDrawAdditive(SpriteBatch spriteBatch, Vector2 screenPosition, Color lightColor)
     {
         bool specialRainbow = false;
