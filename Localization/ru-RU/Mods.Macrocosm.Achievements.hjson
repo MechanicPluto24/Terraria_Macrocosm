@@ -9,13 +9,13 @@ CraftSpaceSuit: {
 }
 
 DefeatCraterDemon: {
-	Description: Победите Демона кратера — неуловимого духа, который преследует жителей Луны.
-	FriendlyName: Столкновение с луной
+	Description: Победите Кратерного демона — неуловимого духа, который преследует жителей Луны.
+	FriendlyName: Столкновение с Луной
 }
 
 SurviveMoon: {
 	Description: Переживите полный суточный цикл на Луне, от восхода до восхода.
-	FriendlyName: С луны свалился
+	FriendlyName: С Луны свалился
 }
 
 SurviveDemonSun: {

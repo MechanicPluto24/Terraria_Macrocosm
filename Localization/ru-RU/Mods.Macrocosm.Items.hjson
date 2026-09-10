@@ -4,7 +4,7 @@ SetBonuses: {
 }
 
 CelestialBulwark: {
-	DisplayName: Небесная твердыня
+	DisplayName: Небесный бастион
 	Tooltip:
 		'''
 		Позволяет делать рывок во врага
@@ -132,7 +132,7 @@ ArtemiteLeggings: {
 }
 
 CraterDemonBossBag: {
-	DisplayName: Мешок с сокровищами (Демон кратера)
+	DisplayName: Мешок с сокровищами (Кратерный демон)
 	Tooltip: "{$CommonItemTooltip.RightClickToOpen}"
 }
 
@@ -140,7 +140,7 @@ CraterDemonSummon: {
 	DisplayName: Демоническая табличка
 	Tooltip:
 		'''
-		Призывает Демона кратера
+		Призывает Кратерного демона
 		Должна быть использована на Луне
 		'''
 }
@@ -173,7 +173,7 @@ Rocket: {
 }
 
 Teleporter: {
-	DisplayName: Телепорт
+	DisplayName: Телепортатор
 	Tooltip: Телепортирует пользователя на Луну и обратно
 }
 
@@ -308,7 +308,7 @@ StardustChunk: {
 }
 
 VortexChunk: {
-	DisplayName: Жеода визря
+	DisplayName: Жеода вихря
 	Tooltip: Нажмите <right>, чтобы расколоть её!
 }
 
@@ -453,7 +453,7 @@ SakuraRuckenfigur: {
 }
 
 CraterDemonRelic: {
-	DisplayName: Реликвия Демона кратера
+	DisplayName: Реликвия Кратерного демона
 	Tooltip: ""
 }
 
@@ -468,7 +468,7 @@ MoonTombstone: {
 }
 
 CraterDemonTrophy: {
-	DisplayName: Трофей Демона кратера
+	DisplayName: Трофей Кратерного демона
 	Tooltip: ""
 }
 
@@ -568,7 +568,7 @@ ArtemitePickaxe: {
 }
 
 CraterDemonMask: {
-	DisplayName: Маска Демона кратера
+	DisplayName: Маска Кратерного демона
 	Tooltip: ""
 }
 
@@ -587,7 +587,7 @@ DianiteTome: {
 }
 
 ImbriumJewel: {
-	DisplayName: Самоцвет Дождей
+	DisplayName: Самоцвет Моря Дождей
 	Tooltip: В нём сокрыта непонятная магия
 }
 
@@ -603,22 +603,22 @@ AluminumShortsword: {
 
 SeleniteGreatsword: {
 	DisplayName: Селенитовый фальшион
-	Tooltip: Зажмите <right>, чтобы нанести заряженный удар
+	Tooltip: Зажмите <right>, чтобы зарядить удар
 }
 
 SeleniteSpear: {
 	DisplayName: Селенитовое копьё
-	Tooltip: <right>, чтобы кинуть копьё
+	Tooltip: Нажмите <right>, чтобы кинуть копьё
 }
 
 SeleniteSword: {
-	DisplayName: Селенитовый прямой меч
+	DisplayName: Селенитовый меч
 	Tooltip: Выпускает ускоряющиеся энергетические волны
 }
 
 ClawWrench: {
 	DisplayName: Гаечный ключ
-	Tooltip: <right>, чтобы кинуть ключ
+	Tooltip: Нажмите <right>, чтобы кинуть ключ
 }
 
 Crucible: {
@@ -634,7 +634,7 @@ MoonSword: {
 	DisplayName: Лунный меч
 	Tooltip:
 		'''
-		Выпускает лунные волны при взмахе меча
+		Выпускает лунные волны при взмахе
 		«Мой путеводный лунный свет»
 		'''
 }
@@ -656,7 +656,7 @@ ArchersLine: {
 
 Copernicus: {
 	DisplayName: Коперник
-	Tooltip: Выпускает ракету на каждый пятый выстрел
+	Tooltip: Выпускает ракету каждый пятый выстрел
 }
 
 Cruithne: {
@@ -672,14 +672,14 @@ LHBMinigun: {
 	DisplayName: LHB-59
 	Tooltip:
 		'''
-		«Что эффективнее, чем пули?
-		Очень МНОГО пуль»
+		«Что может быть эффективнее, чем много пуль?
+		ОЧЕНЬ много пуль»
 		'''
 }
 
 NWARocketLauncher: {
 	DisplayName: NWA-5000
-	Tooltip: <right>, чтобы навестись на врага
+	Tooltip: Нажмите <right>, чтобы навестись на врага
 }
 
 ArtemiteBow: {
@@ -689,12 +689,12 @@ ArtemiteBow: {
 
 ArtemiteMagnum: {
 	DisplayName: Артемитовый магнум
-	Tooltip: <right>, чтобы выпустить веер из шести пуль
+	Tooltip: Нажмите <right>, чтобы выпустить веер из шести пуль
 }
 
 CalcicCane: {
 	DisplayName: Кальциевая трость
-	Tooltip: Призывает беса кратера сражаться за вас
+	Tooltip: Призывает кратерного беса сражаться за вас
 }
 
 CrudePhaser: {
@@ -708,7 +708,7 @@ ChandriumStaff: {
 }
 
 ChandriumWhip: {
-	DisplayName: Чандриевый кнут
+	DisplayName: Чандриевый хлыст
 	Tooltip: Каждый третий удар наносит дополнительный урон
 }
 
@@ -746,7 +746,7 @@ ChampionsBladeBroken: {
 	DisplayName: Клинок чемпиона
 	Tooltip:
 		'''
-		Повторные удары клинком усиливают его
+		Повторяющиеся удары клинком усиливают его
 		Данный эффект спадает, если вы какое-то время не атаковали клинком
 		'''
 }
@@ -816,7 +816,7 @@ SteelPickaxe: {
 
 SteelZweihander: {
 	DisplayName: Стальной цвайхендер
-	Tooltip: Зажмите <right>, чтобы нанести заряженный удар
+	Tooltip: Зажмите <right>, чтобы зарядить удар
 }
 
 SteelCrossbow: {
@@ -1127,7 +1127,7 @@ CraterDemonPet: {
 	DisplayName: Игрушечная ракета
 	Tooltip:
 		'''
-		Призывает беса кратера
+		Призывает кратерного беса
 		«Fly me to the Moon!»
 		'''
 }
@@ -1173,7 +1173,7 @@ MoonNightMusicBox: {
 }
 
 CraterDemonMusicBox: {
-	DisplayName: Музыкальная шкатулка (Демон кратера)
+	DisplayName: Музыкальная шкатулка (Кратерный демон)
 	Tooltip: Проигрывает «Space Invader» от Lincoln Ennis
 }
 
@@ -1207,7 +1207,7 @@ OsmiumBoots: {
 	Tooltip:
 		'''
 		Увеличивает скорость падения игрока
-		Дважды нажмите вниз, чтобы ускорить падение ещё сильнее
+		Дважды нажмите Вниз, чтобы ускорить падение ещё сильнее
 		'''
 }
 
@@ -1473,7 +1473,7 @@ LuminiteToilet: {
 }
 
 WindTurbine: {
-	DisplayName: Ветротурбина
+	DisplayName: Ветрогенератор
 	Tooltip: ""
 }
 
@@ -1503,12 +1503,12 @@ StopSign: {
 }
 
 WindTurbineLarge: {
-	DisplayName: Большая ветротурбина
+	DisplayName: Большой ветрогенератор
 	Tooltip: Преобразует энергию ветра в электроэнергию
 }
 
 WindTurbineSmall: {
-	DisplayName: Средняя ветротурбина
+	DisplayName: Средний ветрогенератор
 	Tooltip: Преобразует энергию ветра в электроэнергию
 }
 
@@ -1545,7 +1545,7 @@ Medkit: {
 
 FrigorianGaze: {
 	DisplayName: Хладный взор
-	Tooltip: Вихрь морозящих осколков поглотит ваших врагов
+	Tooltip: Поглощает ваших врагов в вихре морозящих осколков
 }
 
 StarDestroyer: {
@@ -2017,12 +2017,12 @@ RocheChakram: {
 
 CrescentScripture: {
 	DisplayName: Лунное писание
-	Tooltip: «На нём выгравированы древние символы давно забытых лунных текстов»
+	Tooltip: «На нём выгравированы древние символы давно забытых письмён лунных жителей»
 }
 
 Totality: {
 	DisplayName: Полное затмение
-	Tooltip: Атаки создают разломы теневой магии
+	Tooltip: Создаёт разломы теневой магии
 }
 
 AstraWorkbench: {
@@ -2089,7 +2089,7 @@ ManisolBlades: {
 	DisplayName: Клинки МаниСоль
 	Tooltip:
 		'''
-		Кидает клинки в ваших врагов
+		Бросает клинки в ваших врагов
 		Клинки Соль втыкаются во врагов и взрываются, возвращаясь к вам
 		Клинки Мани пробивают врагов насквозь
 		'''
@@ -2106,11 +2106,11 @@ ArmstrongGauntlets: {
 }
 
 WornLunarianDagger: {
-	DisplayName: Поношенный кинжал лунарианца
+	DisplayName: Изношенный кинжал лунянина
 	Tooltip:
 		'''
-		«Поношенный кинжал, однажды имевший множество применений. 
-		Но сохранились лишь его магические способности»
+		«Старый кинжал, однажды имевший множество применений. 
+		На сей день сохранились лишь его магические способности»
 		'''
 }
 
@@ -2147,7 +2147,7 @@ ArcaneBarnacle: {
 
 MomentumLash: {
 	DisplayName: Импульсная плеть
-	Tooltip: При непрерывном нанесении урона кнутом увеличивает призывательный урон и скорость атаки хлыстов вплоть до +18%
+	Tooltip: При непрерывном нанесении урона хлыстом увеличивает призывательный урон и скорость атаки хлыстов вплоть до +18%
 }
 
 Ilmenite: {
@@ -2171,7 +2171,7 @@ ThaumaturgicWard: {
 		Когда ваше здоровье падает ниже 30%, 50% получаемого урона вычитается из маны
 		Переизбыток урона по мане накладывается на ваше здоровье
 		Вы не наносите никакой тип урона кроме магического
-		Не может быть экипировано вместе с магическими наручниками
+		Не может быть экипирован вместе с магическими наручниками
 		'''
 }
 
@@ -2186,12 +2186,12 @@ HummingbirdDroneRemote: {
 
 GreatstaffOfHorus: {
 	DisplayName: Посох Гора
-	Tooltip: Призывает меньшую гранулу сражаться за вас
+	Tooltip: Призывает малую гранулу сражаться за вас
 }
 
 LuminiteTorch: {
 	DisplayName: Люминитовый факел
-	Tooltip: Может быть использован в безвоздушных пространствах
+	Tooltip: Можно поместить в безвоздушных пространствах
 }
 
 RyuguStaff: {
@@ -2251,7 +2251,7 @@ SolarCell: {
 
 LaserSight: {
 	DisplayName: Лазерный прицел
-	Tooltip: Снижает разброс дальнего оружия на 30%
+	Tooltip: Снижает разброс стрелкового оружия на 30%
 }
 
 ProtolithBrick: {
@@ -2933,7 +2933,7 @@ Rubber: {
 
 PhantasmalSkullTome: {
 	DisplayName: Призрачный череп
-	Tooltip: Выпускает призрачные черепа вокруг вас
+	Tooltip: Выпускает призрачные черепа
 }
 
 ConveyorInlet: {
@@ -3061,30 +3061,30 @@ Craterfish: {
 
 DunceCraterfish: {
 	DisplayName: Глупая кратерная рыба
-	Tooltip: ""
-	AnglerDescription: This’ll take a while, so listen to me. The moon can have an aquatic ecosystem if we—I mean YOU can bring water all the way here. I know fish can be stupid, but there’s one with a crater where its forehead should be. Fetch me that fish, now!
-	AnglerLocation: Caught on the Moon
+	// Tooltip: ""
+	AnglerDescription: Рассказывать долго, поэтому слушай внимательно. Если мы- то есть, ТЫ перенесёшь воду с Земли на Луну, в ней может появиться жизнь! Не самая разумная, конечно, но я слышал что-то про рыб с кратером вместо лба. Если это правда, то сейчас же отправляйся за ней!
+	AnglerLocation: Ловится на Луне
 }
 
 HermitCan: {
 	DisplayName: Банка-отшельник
-	Tooltip: ""
-	AnglerDescription: I’ve been walking by some garbage and I must’ve scared off something, I saw a tin can just scuttle into the polluted water. I never saw it since, and I need you to catch it for me!
-	AnglerLocation: Caught in the Pollution
+	// Tooltip: ""
+	AnglerDescription: Я тут недавно ходил рядом с местной свалкой и будто бы отпугнул что-то — жестяная банка просто взяла и уползла в загрязнённую воду. Никогда не видел ничего такого, поэтому иди и поймай её для меня!
+	AnglerLocation: Ловится в загрязнении
 }
 
 MutatedGoldfish: {
 	DisplayName: Золотая рыбка-мутант
-	Tooltip: ""
-	AnglerDescription: ""
-	AnglerLocation: Caught in the Pollution
+	// Tooltip: ""
+	// AnglerDescription: ""
+	AnglerLocation: Ловится в загрязнении
 }
 
 SmogWispfish: {
 	DisplayName: Блуждающая рыба-смог
-	Tooltip: ""
-	AnglerDescription: You know those smog wisps? There’s some of them that adapt to dirty waters and feed on fish…and trash! You know what to do, pollute the waters with your crappy machines and get me one of those evasive wispfish!
-	AnglerLocation: Caught in the Pollution
+	// Tooltip: ""
+	AnglerDescription: Ты же знаешь про блуждающие облака смога? Я слышал, что они могут приспособиться к загрязнённой воде и питаться рыбой... и мусором! Ты знаешь, что делать — загрязни какое-нибудь озеро своими дурацкими машинами и достань мне эту неуловимую облачную рыбу!
+	AnglerLocation: Ловится в загрязнении
 }
 
 RadioactiveSlimeBannerItem: {
@@ -3238,7 +3238,7 @@ BLPAsterix: {
 }
 
 StasisGrenade: {
-	DisplayName: Граната стазиса
+	DisplayName: Стазисная граната
 	Tooltip: Значительно замедляет врагов, попавших под взрыв
 }
 
@@ -3256,7 +3256,7 @@ AutocrafterT2Mythril: {
 	Tooltip:
 		'''
 		Автоматически создаёт предметы
-		Может создавать большинство предметов на мифриловой наковальне
+		Может создавать большинство предметов уровня мифриловой наковальни
 		'''
 }
 
@@ -3265,7 +3265,7 @@ AutocrafterT2Orichalcum: {
 	Tooltip:
 		'''
 		Автоматически создаёт предметы
-		Может создавать большинство предметов на мифриловой наковальне
+		Может создавать большинство предметов уровня мифриловой наковальни
 		'''
 }
 
@@ -3274,7 +3274,7 @@ AutocrafterT3: {
 	Tooltip:
 		'''
 		Автоматически создаёт предметы
-		Может создавать большинство предметов на древнем манипуляторе
+		Может создавать большинство предметов уровня древнего манипулятора
 		'''
 }
 
@@ -3371,7 +3371,7 @@ LockOnStaff: {
 	DisplayName: Посох наведения
 	Tooltip:
 		'''
-		Нацеливается на до 4 врагов, прежде чем выстрелить взрывным лучом
+		Нацеливается на нескольких врагов, вплоть до 4, прежде чем выстрелить взрывным лучом
 		«Пора вдарить по ним со всей силы и заставить их пожалеть!»
 		'''
 }
@@ -3407,7 +3407,7 @@ DensityPotion: {
 
 LifelinePotion: {
 	DisplayName: Зелье жизнеобеспечения
-	Tooltip: С врагов с небольшим шансом выпадают сердца при попадании
+	Tooltip: При попадании по врагам с небольшим шансом выпадают лечащие сердца
 }
 
 ManiaPotion: {
@@ -3417,17 +3417,17 @@ ManiaPotion: {
 
 PointBlankPotion: {
 	DisplayName: Зелье выстрелов в упор
-	Tooltip: Увеличивает стрелковый урон по врагам вблизи, уменьшает по врагам вдали
+	Tooltip: Увеличивает стрелковый урон по врагам вблизи, но уменьшает по врагам вдали
 }
 
 SafeguardPotion: {
 	DisplayName: Зелье защитного барьера
-	Tooltip: Защищает от следующего удара, после чего требует перезарядки
+	Tooltip: Защищает от следующего полученного удара, после чего требует перезарядки
 }
 
 ZoningPotion: {
 	DisplayName: Зелье расфокусировки
-	Tooltip: Увеличивает стрелковый урон по врагам вдали, уменьшает по врагам вблизи
+	Tooltip: Увеличивает стрелковый урон по врагам вдали, но уменьшает по врагам вблизи
 }
 
 RegolithToilet: {
@@ -3460,7 +3460,7 @@ AutosmelterT1: {
 	Tooltip:
 		'''
 		Автоматически переплавляет руды
-		Может создавать предметы на каменной печи
+		Может создавать предметы уровня каменной печи
 		'''
 }
 
@@ -3469,7 +3469,7 @@ AutosmelterT2Adamantite: {
 	Tooltip:
 		'''
 		Автоматически переплавляет руды
-		Может создавать предметы на адамантиевой печи
+		Может создавать предметы уровня адамантиевой печи
 		'''
 }
 
@@ -3478,7 +3478,7 @@ AutosmelterT2Titanium: {
 	Tooltip:
 		'''
 		Автоматически переплавляет руды
-		Может создавать предметы на титановой печи
+		Может создавать предметы уровня титановой печи
 		'''
 }
 
@@ -3599,7 +3599,7 @@ ProtoRailgun: {
 	DisplayName: Прото-рельсотрон
 	Tooltip:
 		'''
-		Стреляет болтом с огромным прошиванием
+		Стреляет снарядом с огромным прошиванием
 		«Небольшой взгляд на будущее оружестроения!»
 		'''
 }
@@ -3624,7 +3624,7 @@ IndustrialBatteryLarge: {
 }
 
 WindTurbineTiny: {
-	DisplayName: Маленькая ветротурбина
+	DisplayName: Маленький ветрогенератор
 	Tooltip: Преобразует энергию ветра в электроэнергию
 }
 
