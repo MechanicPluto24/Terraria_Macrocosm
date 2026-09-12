@@ -133,13 +133,13 @@ public class LHBMinigunProjectile : ChargedHeldProjectile
             Lighting.AddLight(Projectile.position + Utility.PolarVector(80f, Projectile.rotation), TorchID.Torch);
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Projectile.DrawAnimated(lightColor, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
         return false;
     }
 
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
         glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
         Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == -1 ? SpriteEffects.FlipVertically : SpriteEffects.None, new Vector2(5, 10));
@@ -167,7 +167,7 @@ public class LHBMinigunProjectile : ChargedHeldProjectile
             {
                 sound.Position = Projectile.position;
                 if (AI_Windup >= windupTime) return false;
-                return Main.hasFocus && tracker.IsActiveAndInGame();
+                return FocusHelper.AllowGameplayInputs && tracker.IsActiveAndInGame();
             });
         }
 
@@ -184,7 +184,7 @@ public class LHBMinigunProjectile : ChargedHeldProjectile
             Projectile.position, updateCallback: (sound) =>
             {
                 sound.Position = Projectile.position;
-                return Main.hasFocus && tracker.IsActiveAndInGame();
+                return FocusHelper.AllowGameplayInputs && tracker.IsActiveAndInGame();
             });
         }
     }

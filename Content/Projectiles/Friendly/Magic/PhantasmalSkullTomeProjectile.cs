@@ -131,7 +131,7 @@ public class PhantasmalSkullTomeProjectile : ModProjectile
             );
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         SpriteEffects effects = Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
         int length = Projectile.oldPos.Length;

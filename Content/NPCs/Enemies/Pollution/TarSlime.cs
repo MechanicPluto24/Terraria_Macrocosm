@@ -53,7 +53,7 @@ public class TarSlime : ModNPC
     {
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<PollutionBiome>()||spawnInfo.Player.InModBiome<UndergroundPollutionBiome>()  ? 1f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => spawner.Player.InModBiome<PollutionBiome>()||spawner.Player.InModBiome<UndergroundPollutionBiome>()  ? 1f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

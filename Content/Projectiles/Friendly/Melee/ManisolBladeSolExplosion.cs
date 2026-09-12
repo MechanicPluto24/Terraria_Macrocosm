@@ -54,7 +54,7 @@ public class ManisolBladeSolExplosion : ModProjectile
 
     public override void OnHitPlayer(Player target, Player.HurtInfo info)
     {
-        target.AddBuff(ModContent.BuffType<Melting>(), (int)(180 * Strength), false);
+        target.AddBuff(ModContent.BuffType<Melting>(), (int)(180 * Strength));
     }
 
     public override void OnKill(int timeLeft)

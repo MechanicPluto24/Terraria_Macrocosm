@@ -24,7 +24,7 @@ public class RegolithClock : ModItem
     {
         CreateRecipe()
             .AddIngredient<RegolithBrick>(16)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 3)
+            .AddRecipeGroup(RecipeGroups.IronBar, 3)
             .AddTile(TileID.WorkBenches)
             .Register();
     }

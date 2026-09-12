@@ -31,7 +31,7 @@ public class Moonstone : ModItem
             {
                 tooltips.Add(new TooltipLine(Mod, "Name", "ForTheChamp")
                 {
-                    OverrideColor = Color.White,
+                    Color = Color.White,
                     Text = Language.GetText("Mods.Macrocosm.Items.Moonstone.TooltipChampion").Format(Main.npc[champ].GivenName)
                 });
                 return;
@@ -40,7 +40,7 @@ public class Moonstone : ModItem
             {
                 tooltips.Add(new TooltipLine(Mod, "Name", "ForTheChamp")
                 {
-                    OverrideColor = Color.DarkGray,
+                    Color = Color.DarkGray,
                     Text = Language.GetTextValue("Mods.Macrocosm.Items.Moonstone.TooltipNoChampion")
                 });
                 return;

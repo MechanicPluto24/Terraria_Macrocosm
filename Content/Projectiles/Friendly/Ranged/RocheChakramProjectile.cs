@@ -144,7 +144,7 @@ public class RocheChakramProjectile : ModProjectile
         Projectile.Kill();
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         for (int i = 0; i < Projectile.oldPos.Length; i++)
         {

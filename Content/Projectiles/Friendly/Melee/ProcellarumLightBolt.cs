@@ -64,7 +64,7 @@ public class ProcellarumLightBolt : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         int length = Projectile.oldPos.Length;
 

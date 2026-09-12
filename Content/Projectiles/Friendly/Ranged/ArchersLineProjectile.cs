@@ -46,7 +46,7 @@ public class ArchersLineProjectile : RicochetBullet
             SoundEngine.PlaySound(SFX.Ricochet with { Volume = 0.3f }, Projectile.position);
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Projectile.DrawMagicPixelTrail(Vector2.Zero, 2f, 0.5f, new Color(254, 121, 2) * lightColor.GetBrightness(), new Color(184, 58, 24, 0) * lightColor.GetBrightness());
         return true;

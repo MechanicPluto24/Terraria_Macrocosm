@@ -22,7 +22,7 @@ public class LuminitePlatform : ModTile
         TileID.Sets.Platforms[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+        TileID.Sets.RoomNeeds.CountsAsDoor[Type] = true;
 
         foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
             AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style));

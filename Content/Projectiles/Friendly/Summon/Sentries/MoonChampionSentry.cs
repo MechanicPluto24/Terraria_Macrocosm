@@ -139,7 +139,7 @@ public class MoonChampionSentry : ModProjectile
             }
         }
     }
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         backTexture ??= ModContent.Request<Texture2D>(Texture + "_Back");
         turretTexture ??= ModContent.Request<Texture2D>(Texture + "_Turret");

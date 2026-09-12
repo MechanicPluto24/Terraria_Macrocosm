@@ -25,7 +25,7 @@ public class LuminiteChair : ModTile
         TileID.Sets.CanBeSatOnForNPCs[Type] = true;
         TileID.Sets.CanBeSatOnForPlayers[Type] = true;
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
         AdjTiles = [TileID.Chairs];
 
         DustType = DustID.LunarOre;

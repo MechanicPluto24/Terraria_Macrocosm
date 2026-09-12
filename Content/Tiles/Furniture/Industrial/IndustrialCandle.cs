@@ -25,7 +25,7 @@ public class IndustrialCandle : ModTile, IToggleableTile
         TileObjectData.addTile(Type);
 
         AdjTiles = [TileID.Candles];
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
 
         DustType = ModContent.DustType<IndustrialPlatingDust>();
 

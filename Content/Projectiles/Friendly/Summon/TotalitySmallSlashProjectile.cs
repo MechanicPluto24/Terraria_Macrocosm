@@ -84,7 +84,7 @@ public class TotalitySmallSlashProjectile : ModProjectile
         }
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
         int frame = TextureAssets.Projectile[Projectile.type].Height() / Main.projFrames[Type];

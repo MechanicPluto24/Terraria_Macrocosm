@@ -209,7 +209,7 @@ public class UIInventorySlot : UIElement
             if (!inventory.CanExtractItem(itemIndex, InventoryExtractionSource.Player))
                 return;
 
-            item = Main.player[Main.myPlayer].GetItem(Main.myPlayer, item, GetItemSettings.InventoryEntityToPlayerInventorySettings);
+            item = Main.player[Main.myPlayer].GetItem(item, GetItemSettings.InventoryEntityToPlayerInventorySettings);
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 shouldNetsync = true;

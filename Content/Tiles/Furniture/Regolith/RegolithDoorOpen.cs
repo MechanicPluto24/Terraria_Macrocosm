@@ -25,7 +25,7 @@ public class RegolithDoorOpen : ModTile
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.CloseDoorID[Type] = ModContent.TileType<RegolithDoorClosed>();
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+        TileID.Sets.RoomNeeds.CountsAsDoor[Type] = true;
 
         DustType = ModContent.DustType<RegolithDust>();
         AdjTiles = [TileID.OpenDoor];

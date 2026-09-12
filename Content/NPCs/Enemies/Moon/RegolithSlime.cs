@@ -66,7 +66,7 @@ public class RegolithSlime : ModNPC
         }
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() && Main.dayTime ? 0.1f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => spawner.SpawnTileType == ModContent.TileType<Regolith>() && Main.dayTime ? 0.1f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

@@ -26,7 +26,7 @@ public class UnusableGlobalItem : GlobalItem
             if (ItemSets.UnusableItem[item.type])
                 tooltips.Add(new TooltipLine(Macrocosm.Instance, "Unusable", Language.GetText("Mods.Macrocosm.Common.Unusable").Format(MacrocosmSubworld.Current.DisplayName.Value))
                 {
-                    OverrideColor = Color.Orange
+                    Color = Color.Orange
                 });
         }
     }

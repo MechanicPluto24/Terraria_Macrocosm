@@ -1,5 +1,6 @@
 ﻿using Macrocosm.Content.Biomes;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
@@ -15,7 +16,7 @@ public abstract class PollutionCloud : ModCloud
     public override void OnSpawn(Cloud cloud) { }
 
     private float opacity = 0.8f;
-    public override bool Draw(SpriteBatch spriteBatch, Cloud cloud, int cloudIndex, ref DrawData drawData)
+    public override bool Draw(List<DrawData> drawDataCache, Cloud cloud, int cloudIndex, ref DrawData drawData)
     {
         if (!Main.LocalPlayer.InModBiome<PollutionBiome>())
         {

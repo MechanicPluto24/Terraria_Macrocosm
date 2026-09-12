@@ -41,7 +41,7 @@ public abstract class BaseRelic : ModTile
     {
         Main.tileShine[Type] = 400;
         Main.tileFrameImportant[Type] = true;
-        TileID.Sets.InteractibleByNPCs[Type] = true;
+        TileID.Sets.InteractableByNPCs[Type] = true;
 
         TileObjectData.newTile.CopyFrom(TileObjectData.Style3x4);
         TileObjectData.newTile.LavaDeath = false;

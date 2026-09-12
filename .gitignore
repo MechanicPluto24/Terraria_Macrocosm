@@ -356,3 +356,6 @@ MigrationBackup/
 
 
 .github/copilot-instructions.md
+
+# tModPorter treats linked worktrees as non-Git folders and creates numbered backups.
+*.bak[0-9]*

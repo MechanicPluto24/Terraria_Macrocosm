@@ -23,7 +23,7 @@ public class CryocoreClock : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CryocoreBrick, 20)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 3)
+            .AddRecipeGroup(RecipeGroups.IronBar, 3)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }

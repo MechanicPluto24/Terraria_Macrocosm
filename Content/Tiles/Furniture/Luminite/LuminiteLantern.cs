@@ -40,7 +40,7 @@ public class LuminiteLantern : ModTile, IToggleableTile
         TileObjectData.addTile(Type);
 
         AdjTiles = [TileID.HangingLanterns];
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         DustType = DustID.LunarOre;
 
         foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))

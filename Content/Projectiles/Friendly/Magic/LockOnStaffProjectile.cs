@@ -49,7 +49,7 @@ public class LockOnStaffProjectile : ChargedHeldProjectile
             Lighting.AddLight(Projectile.position + Utility.PolarVector(80f, Projectile.rotation), TorchID.Torch);
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         float xX = 5 * Projectile.spriteDirection;
         float yY = Projectile.spriteDirection == 1 ? 0 : 5;
@@ -140,7 +140,7 @@ public class LockOnStaffProjectile : ChargedHeldProjectile
         Projectile.position, updateCallback: (sound) =>
         {
             sound.Position = Projectile.position;
-            return Main.hasFocus && tracker.IsActiveAndInGame();
+            return FocusHelper.AllowGameplayInputs && tracker.IsActiveAndInGame();
         });
 
         if (!OwnerHasMana)
@@ -156,7 +156,7 @@ public class LockOnStaffProjectile : ChargedHeldProjectile
             Projectile.position, updateCallback: (sound) =>
             {
                 sound.Position = Projectile.position;
-                return Main.hasFocus && tracker.IsActiveAndInGame();
+                return FocusHelper.AllowGameplayInputs && tracker.IsActiveAndInGame();
             });
         }
     }

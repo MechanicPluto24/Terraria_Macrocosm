@@ -46,7 +46,7 @@ public class MineralizedProtolith : ModTile
         WorldGen.TileMergeAttemptFrametest(i, j, Type, TileMerge, ref up, ref down, ref left, ref right, ref upLeft, ref upRight, ref downLeft, ref downRight);
     }
 
-    public override void RandomUpdate(int i, int j)
+    public override void RandomUpdate(int i, int j, bool underground)
     {
         if (!SubworldSystem.IsActive<Moon>())
             return;

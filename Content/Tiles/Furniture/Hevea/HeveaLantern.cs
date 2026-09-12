@@ -40,7 +40,7 @@ public class HeveaLantern : ModTile, IToggleableTile
         TileObjectData.addTile(Type);
 
         AdjTiles = [TileID.HangingLanterns];
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         DustType = ModContent.DustType<HeveaDust>();
 
         AddMapEntry(HeveaFurnitureUtils.MapColor, Language.GetText("ItemName.Lantern"));

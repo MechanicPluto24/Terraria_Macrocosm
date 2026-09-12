@@ -137,7 +137,7 @@ public class MoonChampion : ModNPC
         button2 = Language.GetTextValue(chatPath + "Advice");
     }
 
-    public override void OnChatButtonClicked(bool firstButton, ref string shopName)
+    public override void OnChatButtonClicked(NPCInteraction interaction)
     {
         if (firstButton)
         {

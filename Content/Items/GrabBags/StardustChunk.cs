@@ -31,7 +31,7 @@ public class StardustChunk : ModItem
 
     }
 
-    public override void Update(ref float gravity, ref float maxFallSpeed)
+    public override void Update(WorldItem item, ref float gravity, ref float maxFallSpeed)
     {
         if (Main.rand.NextBool(3))
         {
@@ -51,7 +51,7 @@ public class StardustChunk : ModItem
         //}
     }
 
-    public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+    public override void PostDrawInWorld(WorldItem item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
     {
 
     }

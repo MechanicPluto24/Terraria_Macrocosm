@@ -183,7 +183,7 @@ public abstract class HeldProjectile : ModProjectile
 
     public virtual void Draw(Color lightColor) { }
 
-    public sealed override bool PreDraw(ref Color lightColor)
+    public sealed override bool PreDraw(Player player, ref Color lightColor)
     {
         Draw(lightColor);
         return false;

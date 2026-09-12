@@ -35,7 +35,7 @@ public class IndustrialBulkheadClosed : ModTile, IDoorTile
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.OpenDoorID[Type] = ModContent.TileType<IndustrialBulkheadOpen>();
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+        TileID.Sets.RoomNeeds.CountsAsDoor[Type] = true;
 
         DustType = ModContent.DustType<IndustrialPlatingDust>();
         AdjTiles = [TileID.ClosedDoor];

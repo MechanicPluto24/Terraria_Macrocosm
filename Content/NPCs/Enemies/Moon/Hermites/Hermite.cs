@@ -280,7 +280,7 @@ public class Hermite : ModNPC
     }
 
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Blocks.Terrain.Regolith>() && Main.dayTime ? 0.08f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => spawner.SpawnTileType == ModContent.TileType<Tiles.Blocks.Terrain.Regolith>() && Main.dayTime ? 0.08f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

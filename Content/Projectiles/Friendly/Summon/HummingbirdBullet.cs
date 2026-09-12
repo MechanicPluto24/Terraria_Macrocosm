@@ -48,7 +48,7 @@ public class HummingbirdBullet : ModProjectile
 
     public override Color? GetAlpha(Color lightColor) => Color.White * Projectile.Opacity;
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(255, 100, 100) * Projectile.Opacity, new Color(255, 201, 84, 0) * Projectile.Opacity);
         return true;

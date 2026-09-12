@@ -61,7 +61,7 @@ public class Clavite : ComplexAINPC<Clavite.AIState>
         NPC.noTileCollide = false;
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 ? 0.1f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => Main.dayTime && spawner.SpawnTileY <= Main.worldSurface + 100 ? 0.1f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

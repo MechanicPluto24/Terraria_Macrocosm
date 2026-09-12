@@ -16,7 +16,7 @@ public class LuminiteSlimeVolatile : LuminiteSlime
         NPC.defense = 40;
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? 0.04f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => spawner.SpawnTileY > Main.rockLayer && spawner.SpawnTileType == ModContent.TileType<Protolith>() ? 0.04f : 0f;
 
     public override void HitEffect(NPC.HitInfo hit)
     {

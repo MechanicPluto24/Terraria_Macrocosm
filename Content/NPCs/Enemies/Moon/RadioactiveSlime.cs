@@ -62,9 +62,9 @@ public class RadioactiveSlime : ModNPC
         //player.AddBuff(ModContent.BuffType<Irradiated>(), 600, true);
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo)
+    public override float SpawnChance(NPC.Spawner spawner)
     {
-        return spawnInfo.SpawnTileType == ModContent.TileType<Tiles.Blocks.Terrain.IrradiatedRock>() ? 0.1f : 0f;
+        return spawner.SpawnTileType == ModContent.TileType<Tiles.Blocks.Terrain.IrradiatedRock>() ? 0.1f : 0f;
     }
 
     public override void ModifyNPCLoot(NPCLoot loot)

@@ -38,7 +38,7 @@ public class LuminiteExplosion : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Flare3").Value;
         float progress = Utility.BounceEaseInOut(MathHelper.Clamp(AI_Timer / 10f, 0f, 1f));

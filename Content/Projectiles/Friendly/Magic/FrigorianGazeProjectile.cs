@@ -247,7 +247,7 @@ public class FrigorianGazeProjectile : ModProjectile
 
     private SpriteBatchState state;
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         int length = Projectile.oldPos.Length;
         Rectangle frame = TextureAssets.Projectile[Type].Frame(verticalFrames: Main.projFrames[Type], frameY: Projectile.frame);
@@ -270,8 +270,8 @@ public class FrigorianGazeProjectile : ModProjectile
         return false;
     }
 
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
-        base.PostDraw(lightColor);
+        base.PostDraw(player, lightColor);
     }
 }

@@ -78,7 +78,7 @@ public class PhantasmalBolt : ModProjectile
         return;
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
 
         float count = 28 * (1f - Projectile.alpha / 255f);

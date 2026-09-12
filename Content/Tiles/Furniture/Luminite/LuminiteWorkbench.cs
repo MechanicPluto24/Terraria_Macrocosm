@@ -30,7 +30,7 @@ public class LuminiteWorkbench : ModTile
         TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
 
         foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
             AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.WorkBench"));

@@ -126,7 +126,7 @@ public class PhantasmalPortal : ModProjectile
         => Color.White * (1f - Projectile.alpha / 255f);
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
         Color color = Color.White;

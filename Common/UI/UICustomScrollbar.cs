@@ -121,7 +121,7 @@ public class UICustomScrollbar : UIElement
         Vector2 mousePosition = UserInterface.ActiveInstance.MousePosition;
         bool isHoveringOverHandle = this.isHoveringOverHandle;
         this.isHoveringOverHandle = handleRectangle.Contains(new Point((int)mousePosition.X, (int)mousePosition.Y));
-        if (!isHoveringOverHandle && this.isHoveringOverHandle && Main.hasFocus)
+        if (!isHoveringOverHandle && this.isHoveringOverHandle && FocusHelper.AllowGameplayInputs)
             SoundEngine.PlaySound(SoundID.MenuTick);
 
         DrawBar(spriteBatch, fill1Texture.Value, dimensions.ToRectangle(), Fill1Color);

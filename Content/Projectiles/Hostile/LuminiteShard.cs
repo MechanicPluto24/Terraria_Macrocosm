@@ -48,7 +48,7 @@ public class LuminiteShard : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Projectile.DrawMagicPixelTrail(Vector2.Zero, 5f, 1f, LuminiteSlime.EffectColor, LuminiteSlime.EffectColor * 0f);
 

@@ -103,7 +103,7 @@ public class InvarBullet : RicochetBullet
         return true;
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Projectile.DrawMagicPixelTrail(new Vector2(0, 68), 2, 2,  new Color(121, 92, 18, 0) * Projectile.Opacity, new Color(121, 92, 18, 255) * Projectile.Opacity);
         return true;

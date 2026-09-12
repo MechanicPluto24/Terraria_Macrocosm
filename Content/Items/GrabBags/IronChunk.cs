@@ -34,7 +34,7 @@ public class IronChunk : ModItem
         Item.rare = ItemRarityID.Purple;
     }
 
-    public override void OnSpawn(IEntitySource source)
+    public override void OnSpawn(WorldItem item, IEntitySource source)
     {
         frameY = Main.rand.Next(3);
         flip = Main.rand.NextBool();
@@ -65,7 +65,7 @@ public class IronChunk : ModItem
         );
     }
 
-    public override void Update(ref float gravity, ref float maxFallSpeed)
+    public override void Update(WorldItem item, ref float gravity, ref float maxFallSpeed)
     {
         if (Main.rand.NextBool(8))
         {
@@ -77,7 +77,7 @@ public class IronChunk : ModItem
     }
 
     /// <summary> Draw with a random frame and flipping in the world </summary>
-    public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+    public override bool PreDrawInWorld(WorldItem item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
     {
         sheet ??= ModContent.Request<Texture2D>(Texture + "_Sheet");
         SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;

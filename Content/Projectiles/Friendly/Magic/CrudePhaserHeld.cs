@@ -61,7 +61,7 @@ public class CrudePhaserHeld : ChargedHeldProjectile
         timer++;
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D texture = TextureAssets.Projectile[Type].Value;
         Vector2 direction = Projectile.velocity.SafeNormalize(Vector2.UnitX * Projectile.spriteDirection);

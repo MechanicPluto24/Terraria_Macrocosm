@@ -38,7 +38,7 @@ public class KyaniteNest : ModTile
         AddMapEntry(new Color(59, 63, 59), CreateMapEntryName());
     }
 
-    public override void RandomUpdate(int i, int j)
+    public override void RandomUpdate(int i, int j, bool underground)
     {
         int bugs = 0;
         bugs += Utility.CountNPCs(ModContent.NPCType<KyaniteScarabSmall>());

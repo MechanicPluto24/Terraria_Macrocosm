@@ -19,7 +19,7 @@ public class CalcicCaneMinion : ModProjectile
     public override void SetStaticDefaults()
     {
         Main.projFrames[Type] = 10;
-        ProjectileID.Sets.MinionTargettingFeature[Type] = true;
+        ProjectileID.Sets.MinionTargetingFeature[Type] = true;
 
         ProjectileID.Sets.TrailCacheLength[Type] = 6;
         ProjectileID.Sets.TrailingMode[Type] = 2;
@@ -63,7 +63,7 @@ public class CalcicCaneMinion : ModProjectile
     public override Color? GetAlpha(Color lightColor)
         => lightColor * (1f - Projectile.alpha / 255f);
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D texture = TextureAssets.Projectile[Type].Value;
         glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
@@ -82,7 +82,7 @@ public class CalcicCaneMinion : ModProjectile
         return true;
     }
 
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
         glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
         Projectile.DrawAnimatedExtra(glowmask.Value, Color.White, Projectile.spriteDirection == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, new Vector2(0, Projectile.spriteDirection == 1 ? 5 : -1));

@@ -19,7 +19,7 @@ public class HeveaChest : ModItem
     {
         CreateRecipe()
             .AddIngredient<HeveaWood>(8)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 2)
+            .AddRecipeGroup(RecipeGroups.IronBar, 2)
             .AddTile(TileID.WorkBenches)
             .Register();
     }

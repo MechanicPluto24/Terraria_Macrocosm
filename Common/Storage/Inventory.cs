@@ -482,7 +482,7 @@ public partial class Inventory : IEnumerable<Item>
                     continue;
 
                 items[i].position = player.Center;
-                items[i] = player.GetItem(Main.myPlayer, items[i], GetItemSettings.LootAllSettingsRegularChest);
+                items[i] = player.GetItem(items[i], GetItemSettings.LootAllSettingsRegularChest);
                 uiItemSlots[i].ClearGlow();
 
                 if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -522,14 +522,14 @@ public partial class Inventory : IEnumerable<Item>
         {
             Item existingItem = items[i];
             if (!existingItem.IsAir && !Utility.IsCoin(i) && CanAcceptItem(i, existingItem, InventoryPlacementSource.Player))
-                eligibleTypes.Add(existingItem.netID);
+                eligibleTypes.Add(existingItem.type);
         }
 
         bool transferredAny = false;
         for (int slot = 10; slot < 50; slot++)
         {
             Item playerItem = player.inventory[slot];
-            if (playerItem.IsAir || playerItem.favorited || !eligibleTypes.Contains(playerItem.netID))
+            if (playerItem.IsAir || playerItem.favorited || !eligibleTypes.Contains(playerItem.type))
                 continue;
 
             Item transferVisual = playerItem.Clone();
@@ -565,11 +565,11 @@ public partial class Inventory : IEnumerable<Item>
             {
                 if (playerInventory[slot].stack > 0 && playerInventory[slot].maxStack > 1)
                 {
-                    foundItemIds.Add(playerInventory[slot].netID);
+                    foundItemIds.Add(playerInventory[slot].type);
                     if (playerInventory[slot].stack < playerInventory[slot].maxStack)
                         playerSlotsToRestock.Add(slot);
                 }
-                else if (playerInventory[slot].stack == 0 || playerInventory[slot].netID == 0 || playerInventory[slot].type == ItemID.None)
+                else if (playerInventory[slot].stack == 0 || playerInventory[slot].type == 0 || playerInventory[slot].type == ItemID.None)
                 {
                     emptyItemSlots.Add(slot);
                 }
@@ -582,7 +582,7 @@ public partial class Inventory : IEnumerable<Item>
             if (!CanExtractItem(i, InventoryExtractionSource.Player))
                 continue;
 
-            if (items[i].stack < 1 || !foundItemIds.Contains(items[i].netID))
+            if (items[i].stack < 1 || !foundItemIds.Contains(items[i].type))
                 continue;
 
             bool startNewStack = false;
@@ -594,7 +594,7 @@ public partial class Inventory : IEnumerable<Item>
                 if (slot >= 50)
                     context = ItemSlot.Context.InventoryAmmo;
 
-                if (playerInventory[slot].netID != items[i].netID)
+                if (playerInventory[slot].type != items[i].type)
                     continue;
 
                 if (ItemSlot.PickItemMovementAction(playerInventory, context, slot, items[i]) == -1)
@@ -661,14 +661,14 @@ public partial class Inventory : IEnumerable<Item>
 
         for (int i = 0; i < Size; i++)
         {
-            preSort[i] = (items[i].netID, items[i].stack, items[i].prefix);
+            preSort[i] = (items[i].type, items[i].stack, items[i].prefix);
         }
 
         SortItems(items);
 
         for (int i = 0; i < Size; i++)
         {
-            postSort[i] = (items[i].netID, items[i].stack, items[i].prefix);
+            postSort[i] = (items[i].type, items[i].stack, items[i].prefix);
         }
 
         if (Main.netMode != NetmodeID.MultiplayerClient)

@@ -30,7 +30,7 @@ public class CheeseSofa : ModTile
 
         AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Sofa"));
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
         AdjTiles = [TileID.Benches];
         DustType = ModContent.DustType<CheeseDust>();
     }

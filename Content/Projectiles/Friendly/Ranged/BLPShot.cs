@@ -99,7 +99,7 @@ public class BLPShot : ModProjectile
     public override Color? GetAlpha(Color lightColor) => color * Projectile.Opacity;
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         state.SaveState(Main.spriteBatch);
 

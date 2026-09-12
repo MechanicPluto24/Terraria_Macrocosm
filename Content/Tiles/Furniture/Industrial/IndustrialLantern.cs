@@ -39,7 +39,7 @@ public class IndustrialLantern : ModTile, IToggleableTile
         TileObjectData.addTile(Type);
 
         AdjTiles = [TileID.HangingLanterns];
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         DustType = ModContent.DustType<IndustrialPlatingDust>();
 
         AddMapEntry(new Color(200, 200, 200), Language.GetText("ItemName.Lantern"));

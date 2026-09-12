@@ -440,7 +440,7 @@ public class Dweller : ModNPC
         InitializeLegs();
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY > Main.maxTilesY / 2 && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.006f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => spawner.SpawnTileY > Main.maxTilesY / 2 && !spawner.noWorms && !spawner.spawnFriendly ? 0.006f : 0f;
 
     private void InitializeLegs()
     {

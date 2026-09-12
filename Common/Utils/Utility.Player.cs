@@ -26,7 +26,7 @@ public static partial class Utility
 
     public static void AddBuff<T>(this Player player, int time, bool quiet = false) where T : ModBuff
     {
-        player.AddBuff(ModContent.BuffType<T>(), time, quiet);
+        player.AddBuff(ModContent.BuffType<T>(), time);
     }
 
     public static void RemoveBuff<T>(this Player player) where T : ModBuff

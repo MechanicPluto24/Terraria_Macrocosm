@@ -34,7 +34,7 @@ public class RegolithChandelier : ModTile, IToggleableTile
         TileObjectData.addTile(Type);
 
         AdjTiles = [TileID.Chandeliers];
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         DustType = ModContent.DustType<RegolithDust>();
         AddMapEntry(new(201, 201, 204), Language.GetText("MapObject.Chandelier"));
     }

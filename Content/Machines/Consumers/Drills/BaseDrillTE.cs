@@ -222,7 +222,7 @@ public abstract class BaseDrillTE : ConsumerTE
 
     protected float ActiveSoundPowerProgress => RatedPowerProgress > 0f ? RatedPowerProgress : 1f;
 
-    protected bool ShouldPlayActiveSound => !Main.dedServ && Main.hasFocus && IsRunning;
+    protected bool ShouldPlayActiveSound => !Main.dedServ && FocusHelper.AllowGameplayInputs && IsRunning;
 
     protected virtual void UpdateActiveSounds()
     {

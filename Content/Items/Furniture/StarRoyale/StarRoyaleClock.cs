@@ -23,7 +23,7 @@ public class StarRoyaleClock : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.StarRoyaleBrick, 20)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 3)
+            .AddRecipeGroup(RecipeGroups.IronBar, 3)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }

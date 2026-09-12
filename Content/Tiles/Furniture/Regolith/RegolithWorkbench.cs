@@ -28,7 +28,7 @@ public class RegolithWorkbench : ModTile
         TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
         DustType = ModContent.DustType<RegolithDust>();
         AdjTiles = [TileID.WorkBenches];
         AddMapEntry(new(201, 201, 204), Language.GetText("ItemName.WorkBench"));

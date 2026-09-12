@@ -255,7 +255,7 @@ public abstract partial class CustomTree : ModTile
             return false;
 
         byte color = 0;
-        if (Main.tenthAnniversaryWorld && !WorldGen.gen && TenthAniversaryRandomColor)
+        if (Main.tenthAnniversaryWorld && !WorldGen.isGeneratingOrLoadingWorld && TenthAniversaryRandomColor)
             color = (byte)WorldGen.genRand.Next(1, 13);
 
         int height = WorldGen.genRand.Next(TreeHeightMin, TreeHeightMax + 1);
@@ -338,7 +338,7 @@ public abstract partial class CustomTree : ModTile
             return false;
 
         TileColorCache cache = Main.tile[x, groundY].BlockColorAndCoating();
-        if (Main.tenthAnniversaryWorld && !WorldGen.gen && TenthAniversaryRandomColor)
+        if (Main.tenthAnniversaryWorld && !WorldGen.isGeneratingOrLoadingWorld && TenthAniversaryRandomColor)
             cache.Color = (byte)WorldGen.genRand.Next(1, 13);
 
         bool branchFrameLeft = false;

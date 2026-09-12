@@ -23,9 +23,9 @@ public class WeaponBalanceGlobalItem : GlobalItem
         {
             float adjustment = ItemSets.DamageAdjustment[item.type];
             if (adjustment < 1f)
-                tooltips.Add(new TooltipLine(Macrocosm.Instance, "WeaponNerf", Language.GetTextValue("Mods.Macrocosm.Tooltips.WeaponNerf")) { OverrideColor = Color.GreenYellow });
+                tooltips.Add(new TooltipLine(Macrocosm.Instance, "WeaponNerf", Language.GetTextValue("Mods.Macrocosm.Tooltips.WeaponNerf")) { Color = Color.GreenYellow });
             else if (adjustment > 1f)
-                tooltips.Add(new TooltipLine(Macrocosm.Instance, "WeaponBuff", Language.GetTextValue("Mods.Macrocosm.Tooltips.WeaponBuff")) { OverrideColor = Color.GreenYellow });
+                tooltips.Add(new TooltipLine(Macrocosm.Instance, "WeaponBuff", Language.GetTextValue("Mods.Macrocosm.Tooltips.WeaponBuff")) { Color = Color.GreenYellow });
         }
     }
 

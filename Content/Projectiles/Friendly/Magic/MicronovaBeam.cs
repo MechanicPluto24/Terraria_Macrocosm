@@ -87,7 +87,7 @@ public class MicronovaBeam : ModProjectile
 
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         if (Projectile.velocity == Vector2.Zero)
             return false;

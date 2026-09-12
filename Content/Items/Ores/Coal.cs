@@ -40,7 +40,7 @@ public class Coal : ModItem
     {
         Recipe.Create(ItemID.Torch, 5)
         .AddIngredient(Type, 1)
-        .AddRecipeGroup(RecipeGroupID.Wood, 1)
+        .AddRecipeGroup(RecipeGroups.Wood, 1)
         .Register();
     }
 }

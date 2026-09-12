@@ -361,7 +361,7 @@ public abstract class HalberdProjectile : ModProjectile
         else
             return true;
     }
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
         //Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(angleHitbox.X - (int)Main.screenPosition.X, angleHitbox.Y - (int)Main.screenPosition.Y, angleHitbox.Width, angleHitbox.Height), Color.Red);
     }

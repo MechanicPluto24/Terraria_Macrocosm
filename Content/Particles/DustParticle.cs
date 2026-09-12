@@ -49,7 +49,7 @@ public class DustParticle : Particle
         dust.fadeIn = FadeIn;
         dust.noGravity = NoGravity;
         dust.noLight = NoLight;
-        dust.noLightEmittence = NoLightEmittence;
+        dust.noLightEmittance = NoLightEmittence;
         dust.customData = CustomData;
     }
 
@@ -73,7 +73,7 @@ public class DustParticle : Particle
             dust.fadeIn = FadeIn;
             dust.noGravity = NoGravity;
             dust.noLight = NoLight;
-            dust.noLightEmittence = NoLightEmittence;
+            dust.noLightEmittance = NoLightEmittence;
             dust.customData = CustomData;
         }
 

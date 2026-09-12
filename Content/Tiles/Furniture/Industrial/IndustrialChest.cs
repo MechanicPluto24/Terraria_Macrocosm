@@ -60,7 +60,7 @@ public class IndustrialChest : ModTile
         TileID.Sets.HasOutlines[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.AvoidedByNPCs[Type] = true;
-        TileID.Sets.InteractibleByNPCs[Type] = true;
+        TileID.Sets.InteractableByNPCs[Type] = true;
         TileID.Sets.IsAContainer[Type] = true;
         TileID.Sets.BasicChest[Type] = true;
 

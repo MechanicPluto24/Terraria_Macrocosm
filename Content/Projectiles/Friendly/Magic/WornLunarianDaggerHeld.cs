@@ -128,7 +128,7 @@ public class WornLunarianDaggerHeld : ChargedHeldProjectile
     }
 
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         var spriteBatch = Main.spriteBatch;
         Texture2D texture = TextureAssets.Projectile[Type].Value;
@@ -142,7 +142,7 @@ public class WornLunarianDaggerHeld : ChargedHeldProjectile
     private ref float EffectTimer => ref Projectile.localAI[0];
     private ref float Opacity => ref Projectile.localAI[1];
 
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
         var spriteBatch = Main.spriteBatch;
         glow ??= ModContent.Request<Texture2D>(Texture + "_Glow");

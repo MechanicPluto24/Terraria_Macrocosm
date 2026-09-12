@@ -26,7 +26,7 @@ public class CheeseDresser : ModTile
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.BasicDresser[Type] = true;
         TileID.Sets.AvoidedByNPCs[Type] = true;
-        TileID.Sets.InteractibleByNPCs[Type] = true;
+        TileID.Sets.InteractableByNPCs[Type] = true;
         TileID.Sets.IsAContainer[Type] = true;
 
         TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
@@ -42,7 +42,7 @@ public class CheeseDresser : ModTile
         ];
         TileObjectData.newTile.LavaDeath = false;
         TileObjectData.addTile(Type);
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
 
         AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Dresser"));
         AdjTiles = [TileID.Dressers];

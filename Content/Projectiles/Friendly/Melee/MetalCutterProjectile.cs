@@ -141,7 +141,7 @@ public class MetalCutterProjectile : ModProjectile
             Projectile.position, updateCallback: (sound) =>
             {
                 sound.Position = Projectile.position;
-                return Main.hasFocus && tracker.IsActiveAndInGame();
+                return FocusHelper.AllowGameplayInputs && tracker.IsActiveAndInGame();
             });
         }
     }
@@ -155,7 +155,7 @@ public class MetalCutterProjectile : ModProjectile
     {
         behindNPCsAndTiles.Add(index);
     }
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         var rotation = Projectile.rotation;
         var origin = Projectile.Size / 2;

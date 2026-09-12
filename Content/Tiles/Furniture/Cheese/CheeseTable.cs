@@ -29,7 +29,7 @@ public class CheeseTable : ModTile
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
 
         AddMapEntry(new Color(220, 216, 121), Language.GetText("MapObject.Table"));
     }

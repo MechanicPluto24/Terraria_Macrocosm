@@ -38,7 +38,7 @@ public class MoonSwordProjectile : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D texture = TextureAssets.Projectile[Type].Value;
         Rectangle frame = texture.Frame(1, 6, frameY: Projectile.frame);

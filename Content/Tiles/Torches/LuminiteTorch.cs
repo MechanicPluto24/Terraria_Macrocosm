@@ -29,12 +29,12 @@ public class LuminiteTorch : ModTile
         TileID.Sets.FramesOnKillWall[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.DisableSmartInteract[Type] = true;
-        TileID.Sets.Torch[Type] = true;
+        TileID.Sets.Torches[Type] = true;
 
         DustType = ModContent.DustType<LuminiteBrightDust>();
         AdjTiles = [TileID.Torches];
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
 
         // Placement
         TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Torches, 0));

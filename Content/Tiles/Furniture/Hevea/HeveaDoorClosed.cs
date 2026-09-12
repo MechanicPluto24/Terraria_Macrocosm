@@ -26,7 +26,7 @@ public class HeveaDoorClosed : ModTile
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.OpenDoorID[Type] = ModContent.TileType<HeveaDoorOpen>();
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+        TileID.Sets.RoomNeeds.CountsAsDoor[Type] = true;
 
         DustType = ModContent.DustType<HeveaDust>();
         AdjTiles = [TileID.ClosedDoor];

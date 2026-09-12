@@ -1087,7 +1087,7 @@ public static partial class Utility
             for (int m = 0; m < Main.chest[num2].item.Length; m++)
             {
                 if (stackIDs == null || stackIDs.Length <= m) break;
-                Main.chest[num2].item[m].SetDefaults(stackIDs[m], false);
+                Main.chest[num2].item[m].SetDefaults(stackIDs[m]);
                 Main.chest[num2].item[m].stack = stackAmounts[m];
                 if (stackPrefixes[m] != -10) { Main.chest[num2].item[m].Prefix(stackPrefixes[m]); }
             }

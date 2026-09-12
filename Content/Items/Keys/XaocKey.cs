@@ -40,7 +40,7 @@ public class XaocKey : ModItem
         Item.consumable = false;
     }
 
-    public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+    public override bool PreDrawInWorld(WorldItem item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
     {
         Texture2D texture = TextureAssets.Item[Item.type].Value;
         Rectangle frame = texture.Frame();

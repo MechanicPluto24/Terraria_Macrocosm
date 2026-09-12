@@ -68,7 +68,7 @@ class EarthWorldGen : ModSystem
     private static readonly Range OilPuddleStrength = 3..6;
     private static readonly Range OilPuddleSteps = 3..15;
 
-    public override void ModifyWorldGenTasks(List<GenPass> tasks, ref double totalWeight)
+    public override void ModifyWorldGenTasks(List<GenPass> tasks)
     {
         int shiniesIndex = tasks.FindIndex(genpass => genpass.Name.Equals("Shinies"));
         if (shiniesIndex != -1)

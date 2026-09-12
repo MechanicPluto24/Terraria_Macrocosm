@@ -28,7 +28,7 @@ public class IndustrialTable : ModTile
         TileObjectData.newTile.CoordinateHeights = [16, 16];
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
 
         AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.Table"));
 

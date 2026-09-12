@@ -41,7 +41,7 @@ public class RegolithLantern : ModTile, IToggleableTile
         TileObjectData.addAlternate(0);
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         AdjTiles = [TileID.HangingLanterns];
         DustType = ModContent.DustType<RegolithDust>();
         AddMapEntry(new(201, 201, 204), Language.GetText("ItemName.Lantern"));

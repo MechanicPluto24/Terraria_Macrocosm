@@ -37,7 +37,7 @@ public class NebulaRemnantProjectile : ModProjectile
             Projectile.Opacity -= 0.02f;
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D texture = TextureAssets.Projectile[Type].Value;
 

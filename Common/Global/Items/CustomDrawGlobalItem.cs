@@ -16,7 +16,7 @@ public class CustomDrawGlobalItem : GlobalItem
     [CloneByReference] public Asset<Texture2D> Glowmask { get; set; } = null;
     public Color? GlowmaskColor { get; set; } = new(250, 250, 250);
 
-    public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+    public override void PostDrawInWorld(WorldItem item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
     {
         if (Glowmask != null)
         {

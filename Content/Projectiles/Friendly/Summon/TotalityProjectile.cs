@@ -115,7 +115,7 @@ public class TotalityProjectile : ModProjectile
     private int[] animFrames;
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         List<Vector2> list = new();
         Projectile.FillWhipControlPoints(Projectile, list);

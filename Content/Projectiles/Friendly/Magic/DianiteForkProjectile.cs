@@ -268,7 +268,7 @@ public class DianiteForkProjectile : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D tex = TextureAssets.Projectile[Type].Value;
         Texture2D glow = ModContent.Request<Texture2D>(Macrocosm.FancyTexturesPath + "Circle6").Value;

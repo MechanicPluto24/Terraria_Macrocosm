@@ -25,7 +25,7 @@ public class MercuryChest : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.MercuryBrick, 8)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 2)
+            .AddRecipeGroup(RecipeGroups.IronBar, 2)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }

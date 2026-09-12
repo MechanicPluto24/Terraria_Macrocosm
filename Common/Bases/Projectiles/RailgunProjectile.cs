@@ -114,7 +114,7 @@ public abstract class RailgunProjectile : ModProjectile
     public override Color? GetAlpha(Color lightColor) => lightColor * Projectile.Opacity;
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         state.SaveState(Main.spriteBatch);
         Main.spriteBatch.End();

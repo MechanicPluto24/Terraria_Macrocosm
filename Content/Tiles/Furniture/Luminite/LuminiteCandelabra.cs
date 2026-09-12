@@ -38,7 +38,7 @@ public class LuminiteCandelabra : ModTile, IToggleableTile
 
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         AdjTiles = [TileID.Candelabras];
 
         DustType = DustID.LunarOre;

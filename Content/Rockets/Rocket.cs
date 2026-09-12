@@ -982,7 +982,7 @@ public partial class Rocket : IInventoryOwner
             Center, updateCallback: (sound) =>
             {
                 sound.Position = Center;
-                return Main.hasFocus && ActiveInCurrentWorld;
+                return FocusHelper.AllowGameplayInputs && ActiveInCurrentWorld;
             });
         }
 
@@ -1291,7 +1291,7 @@ public partial class Rocket : IInventoryOwner
                 sound.Pitch = MathHelper.Lerp(-1f, 0, StaticFireProgress);
                 sound.Volume = intensity;
                 sound.Position = Center;
-                return Main.hasFocus && FlightTime < StaticFireDuration && ActiveInCurrentWorld;
+                return FocusHelper.AllowGameplayInputs && FlightTime < StaticFireDuration && ActiveInCurrentWorld;
             });
         }
 
@@ -1310,7 +1310,7 @@ public partial class Rocket : IInventoryOwner
             {
                 sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                 sound.Position = Center;
-                return Main.hasFocus && State == ActionState.Flight && ActiveInCurrentWorld;
+                return FocusHelper.AllowGameplayInputs && State == ActionState.Flight && ActiveInCurrentWorld;
             });
         }
 
@@ -1330,7 +1330,7 @@ public partial class Rocket : IInventoryOwner
                 sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                 sound.Volume = LandingProgress < 0.8f ? 1f : (1f - LandingProgress) * 5f;
                 sound.Position = Center;
-                return Main.hasFocus && State == ActionState.Landing && ActiveInCurrentWorld;
+                return FocusHelper.AllowGameplayInputs && State == ActionState.Landing && ActiveInCurrentWorld;
             });
         }
 
@@ -1350,7 +1350,7 @@ public partial class Rocket : IInventoryOwner
                 sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                 sound.Volume = DockingProgress < 0.8f ? 1f : (DockingProgress) * 5f;
                 sound.Position = Center;
-                return Main.hasFocus && State == ActionState.Docking && ActiveInCurrentWorld;
+                return FocusHelper.AllowGameplayInputs && State == ActionState.Docking && ActiveInCurrentWorld;
             });
         }
 
@@ -1370,7 +1370,7 @@ public partial class Rocket : IInventoryOwner
                 sound.Pitch = Main.rand.NextFloat(-0.1f, 0.1f);
                 sound.Volume = UndockingProgress < 0.8f ? 1f : (1f - UndockingProgress) * 5f;
                 sound.Position = Center;
-                return Main.hasFocus && State == ActionState.Undocking && ActiveInCurrentWorld;
+                return FocusHelper.AllowGameplayInputs && State == ActionState.Undocking && ActiveInCurrentWorld;
             });
         }
     }

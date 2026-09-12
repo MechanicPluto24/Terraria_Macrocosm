@@ -163,7 +163,7 @@ public class ArmstrongGauntletProjectile : ModProjectile
             return Collision.CheckAABBvLineCollision(targetHitbox.TopLeft(), targetHitbox.Size(), Projectile.Center, Projectile.Center + dirVec * 20f, 5f * Projectile.scale, ref _);
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         float prog = Utils.GetLerpValue(0, MaxTime, timer);
         Vector2 offset = Vector2.SmoothStep(-Projectile.velocity, Projectile.velocity * 0.5f, prog) + new Vector2(0f, Projectile.gfxOffY);

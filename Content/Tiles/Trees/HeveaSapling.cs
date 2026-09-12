@@ -53,7 +53,7 @@ public class HeveaSapling : ModTile
 
     public override void NumDust(int i, int j, bool fail, ref int num) => num = fail ? 1 : 3;
 
-    public override void RandomUpdate(int i, int j)
+    public override void RandomUpdate(int i, int j, bool underground)
     {
         if (WorldGen.genRand.NextBool(20))
             WorldGen.AttemptToGrowTreeFromSapling(i, j, j > (int)Main.worldSurface - 1);

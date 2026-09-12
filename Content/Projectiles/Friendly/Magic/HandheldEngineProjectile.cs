@@ -214,7 +214,7 @@ public class HandheldEngineProjectile : ChargedHeldProjectile
     private SpriteBatchState state1, state2;
     private MiscShaderData trailShader;
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         state1.SaveState(Main.spriteBatch);
 
@@ -269,7 +269,7 @@ public class HandheldEngineProjectile : ChargedHeldProjectile
         return false;
     }
 
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
         glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
         flame ??= ModContent.Request<Texture2D>(Texture + "_Flame");
@@ -320,7 +320,7 @@ public class HandheldEngineProjectile : ChargedHeldProjectile
         Projectile.position, updateCallback: (sound) =>
         {
             sound.Position = Projectile.position;
-            return Main.hasFocus && tracker.IsActiveAndInGame();
+            return FocusHelper.AllowGameplayInputs && tracker.IsActiveAndInGame();
         });
 
         if (!OwnerHasMana)
@@ -336,7 +336,7 @@ public class HandheldEngineProjectile : ChargedHeldProjectile
             Projectile.position, updateCallback: (sound) =>
             {
                 sound.Position = Projectile.position;
-                return Main.hasFocus && tracker.IsActiveAndInGame();
+                return FocusHelper.AllowGameplayInputs && tracker.IsActiveAndInGame();
             });
         }
     }

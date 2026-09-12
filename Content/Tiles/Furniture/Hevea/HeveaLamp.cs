@@ -28,7 +28,7 @@ public class HeveaLamp : ModTile, IToggleableTile
         TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Lamps, 0));
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         AdjTiles = [TileID.Lamps];
         DustType = ModContent.DustType<HeveaDust>();
 

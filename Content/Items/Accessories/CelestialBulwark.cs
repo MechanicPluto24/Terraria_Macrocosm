@@ -164,7 +164,7 @@ public class CelestialBulwark : ModItem
         DrawMask(spriteBatch, position, origin, scale);
     }
 
-    public override void PostDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
+    public override void PostDrawInWorld(WorldItem item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
     {
         DrawMask(spriteBatch, Item.Center - Main.screenPosition, Item.Size / 2f, scale, rotation);
         Lighting.AddLight(Item.Center, CelestialDisco.CelestialColor.ToVector3());

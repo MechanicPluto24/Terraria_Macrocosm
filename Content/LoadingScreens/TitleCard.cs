@@ -38,7 +38,7 @@ public class TitleCard : ModSystem
     {
         if (currentState != TitleState.Inactive)
         {
-            if ((Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient) && currentState != TitleState.Inactive)
+            if ((FocusHelper.AllowGameplayInputs || Main.netMode == NetmodeID.MultiplayerClient) && currentState != TitleState.Inactive)
                 Update();
 
             Draw(spriteBatch);

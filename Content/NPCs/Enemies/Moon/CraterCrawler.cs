@@ -59,7 +59,7 @@ public class CraterCrawlerHead : WormHead
         NPC.aiStyle = -1;
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => !Main.dayTime && spawnInfo.SpawnTileY <= Main.worldSurface + 100 && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.1f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => !Main.dayTime && spawner.SpawnTileY <= Main.worldSurface + 100 && !spawner.noWorms && !spawner.spawnFriendly ? 0.1f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

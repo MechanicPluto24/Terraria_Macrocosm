@@ -140,7 +140,7 @@ public class IlmeniteHeld : ChargedHeldProjectile
         }
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         var spriteBatch = Main.spriteBatch;
         Texture2D texture = TextureAssets.Projectile[Type].Value;
@@ -153,7 +153,7 @@ public class IlmeniteHeld : ChargedHeldProjectile
     private ref float Opacity => ref Projectile.localAI[1];
 
     SpriteBatchState state;
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
         var spriteBatch = Main.spriteBatch;
 

@@ -173,7 +173,7 @@ public class MoonSwordSwing : ModProjectile
 
     // Taken from Main.DrawProj_Excalibur()
     // Look at the source code for the other sword types.
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Vector2 position = Projectile.Center - Main.screenPosition;
         Texture2D texture = TextureAssets.Projectile[Type].Value;

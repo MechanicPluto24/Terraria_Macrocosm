@@ -30,7 +30,7 @@ public class IndustrialGurney : ModTile
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
 
         AddMapEntry(new Color(200, 200, 200), CreateMapEntryName());
 

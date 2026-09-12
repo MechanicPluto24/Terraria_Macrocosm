@@ -84,7 +84,7 @@ public class InvarArrow : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         state = Main.spriteBatch.SaveState();
 
@@ -107,7 +107,7 @@ public class InvarArrow : ModProjectile
         return true;
     }
 
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     { 
     }
 

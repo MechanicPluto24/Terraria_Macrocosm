@@ -22,10 +22,10 @@ public class DianiteMeteorSmall : DianiteMeteor
         Projectile.height = 16;
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         trailOffset = 4;
-        return base.PreDraw(ref lightColor);
+        return base.PreDraw(player, ref lightColor);
     }
 
     public override void OnKill(int timeLeft)

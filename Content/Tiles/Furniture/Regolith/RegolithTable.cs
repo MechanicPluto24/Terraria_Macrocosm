@@ -27,7 +27,7 @@ public class RegolithTable : ModTile
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
         DustType = ModContent.DustType<RegolithDust>();
         AdjTiles = [TileID.Tables];
         AddMapEntry(new(201, 201, 204), Language.GetText("MapObject.Table"));

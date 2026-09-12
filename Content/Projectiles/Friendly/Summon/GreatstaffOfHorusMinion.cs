@@ -22,7 +22,7 @@ public class GreatstaffOfHorusMinion : ModProjectile
     public override void SetStaticDefaults()
     {
         Main.projFrames[Type] = 4;
-        ProjectileID.Sets.MinionTargettingFeature[Type] = true;
+        ProjectileID.Sets.MinionTargetingFeature[Type] = true;
 
         Main.projPet[Projectile.type] = true; 
 
@@ -289,7 +289,7 @@ public class GreatstaffOfHorusMinion : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbit.X, -(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbit.Y);
 
@@ -307,7 +307,7 @@ public class GreatstaffOfHorusMinion : ModProjectile
         return true;
     }
 
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
         state.SaveState(Main.spriteBatch);
         Vector2 orbit = new((float)Math.Cos(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbit.X, -(float)Math.Sin(MathHelper.ToRadians(shineOrbitTimer * 2)) * shineOrbit.Y);

@@ -35,7 +35,7 @@ public class LuminiteSofa : ModTile
         foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
             AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("ItemName.Sofa"));
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
         AdjTiles = [TileID.Benches];
         DustType = DustID.LunarOre;
     }

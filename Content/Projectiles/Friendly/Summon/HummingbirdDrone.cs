@@ -20,7 +20,7 @@ public class HummingbirdDrone : ModProjectile
     public override void SetStaticDefaults()
     {
         Main.projFrames[Type] = 2;
-        ProjectileID.Sets.MinionTargettingFeature[Type] = true;
+        ProjectileID.Sets.MinionTargetingFeature[Type] = true;
 
         ProjectileID.Sets.TrailCacheLength[Type] = 6;
         ProjectileID.Sets.TrailingMode[Type] = 2;
@@ -455,7 +455,7 @@ public class HummingbirdDrone : ModProjectile
         spriteBatch.Draw(beam.Value, beamStart, null, new Color(255, 0, 0, 0), rotation, origin, scale, SpriteEffects.None, 0f);
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D tex = TextureAssets.Projectile[Type].Value;
         Vector2 pos = Projectile.position + Projectile.Size / 2 - Main.screenPosition;
@@ -467,7 +467,7 @@ public class HummingbirdDrone : ModProjectile
         return false;
     }
 
-    public override void PostDraw(Color lightColor)
+    public override void PostDraw(Player player, Color lightColor)
     {
         glowmask ??= ModContent.Request<Texture2D>(Texture + "_Glow");
         Vector2 pos = Projectile.position + Projectile.Size / 2 - Main.screenPosition;

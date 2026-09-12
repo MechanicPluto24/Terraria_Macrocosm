@@ -14,7 +14,7 @@ public class LuminiteSink : ModTile
 {
     public override void SetStaticDefaults()
     {
-        TileID.Sets.CountsAsWaterSource[Type] = true;
+        TileID.Sets.CountsAsWaterForCrafting[Type] = true;
         Main.tileFrameImportant[Type] = true;
         Main.tileNoAttach[Type] = true;
         Main.tileLavaDeath[Type] = true;

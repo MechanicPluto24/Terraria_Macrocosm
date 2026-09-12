@@ -25,7 +25,7 @@ public class IndustrialChair : ModTile
         TileID.Sets.CanBeSatOnForNPCs[Type] = true;
         TileID.Sets.CanBeSatOnForPlayers[Type] = true;
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
 
         DustType = ModContent.DustType<IndustrialPlatingDust>();
         AdjTiles = [TileID.Chairs];

@@ -61,9 +61,9 @@ public partial class Trashnado : ModNPC
         SpawnModBiomes = [ModContent.GetInstance<PollutionBiome>().Type];
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo)
+    public override float SpawnChance(NPC.Spawner spawner)
     {
-        return spawnInfo.Player.InModBiome<PollutionBiome>() && Main.hardMode ? 1f : 0f;
+        return spawner.Player.InModBiome<PollutionBiome>() && Main.hardMode ? 1f : 0f;
     }
 
     public override void ModifyNPCLoot(NPCLoot loot)

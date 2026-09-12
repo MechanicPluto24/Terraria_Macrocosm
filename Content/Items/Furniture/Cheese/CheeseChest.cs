@@ -25,7 +25,7 @@ public class CheeseChest : ModItem
     {
         CreateRecipe()
             .AddIngredient<CheeseBlock>(8)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 2)
+            .AddRecipeGroup(RecipeGroups.IronBar, 2)
             .AddTile(TileID.WorkBenches)
             .Register();
     }

@@ -48,7 +48,7 @@ public class CruithneGreenSlug : ModProjectile
         return false;
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Projectile.DrawMagicPixelTrail(new Vector2(0, 0), 4f, 0f, new Color(0, 244, 71), new Color(0, 244, 71, 0));
         return true;

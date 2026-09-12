@@ -63,7 +63,7 @@ public class FrigorianIceCrystal : ModProjectile
 
         return false;
     }
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         ProjectileID.Sets.TrailCacheLength[Type] = 20;
         ProjectileID.Sets.TrailingMode[Type] = 3;

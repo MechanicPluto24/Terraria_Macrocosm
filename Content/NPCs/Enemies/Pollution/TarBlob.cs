@@ -69,7 +69,7 @@ public class TarBlob : ModNPC
     {
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

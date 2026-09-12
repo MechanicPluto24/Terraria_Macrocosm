@@ -177,8 +177,8 @@ public class Shade : ModNPC
             NPC.velocity =(direction).SafeNormalize(Vector2.UnitX) * AI_Speed;
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.05f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner)
+        => spawner.SpawnTileY > Main.rockLayer && spawner.SpawnTileType == ModContent.TileType<Protolith>() && !spawner.noWorms && !spawner.spawnFriendly ? 0.05f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

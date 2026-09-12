@@ -34,7 +34,7 @@ public class HeveaCandelabra : ModTile, IToggleableTile
 
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         AdjTiles = [TileID.Candelabras];
 
         DustType = ModContent.DustType<HeveaDust>();

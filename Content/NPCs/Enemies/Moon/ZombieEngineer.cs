@@ -81,9 +81,9 @@ public class ZombieEngineer : ModNPC
         SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo)
+    public override float SpawnChance(NPC.Spawner spawner)
     {
-        if (spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>())
+        if (spawner.SpawnTileY > Main.rockLayer && spawner.SpawnTileType == ModContent.TileType<Protolith>())
         {
             return 0.02f;
         }

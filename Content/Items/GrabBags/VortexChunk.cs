@@ -31,7 +31,7 @@ public class VortexChunk : ModItem
 
     }
 
-    public override void Update(ref float gravity, ref float maxFallSpeed)
+    public override void Update(WorldItem item, ref float gravity, ref float maxFallSpeed)
     {
         if (Main.rand.NextBool(3))
         {

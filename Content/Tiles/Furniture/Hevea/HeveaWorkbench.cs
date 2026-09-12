@@ -27,7 +27,7 @@ public class HeveaWorkbench : ModTile
         TileObjectData.newTile.CoordinateHeights = [16];
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
 
         AddMapEntry(HeveaFurnitureUtils.MapColor, Language.GetText("ItemName.WorkBench"));
     }

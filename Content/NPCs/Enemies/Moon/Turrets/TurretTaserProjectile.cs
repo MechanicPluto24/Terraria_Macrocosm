@@ -84,7 +84,7 @@ public class TurretTaserProjectile : ModProjectile
         target.AddBuff(ModContent.BuffType<Paralysis>(), 60);
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         NPC owner = Main.npc[Owner];
         TaserTurret turret = owner.ModNPC as TaserTurret;

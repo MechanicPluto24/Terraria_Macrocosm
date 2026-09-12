@@ -23,7 +23,7 @@ public class LuminiteClock : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.LunarBrick, 20)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 3)
+            .AddRecipeGroup(RecipeGroups.IronBar, 3)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }

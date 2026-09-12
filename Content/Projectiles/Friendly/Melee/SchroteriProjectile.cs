@@ -153,7 +153,7 @@ public class SchroteriProjectile : ModProjectile
 
         hitbox = Utils.CenteredRectangle(hitbox.Center.ToVector2() + (Utility.PolarVector(10 * hitStacks, Projectile.velocity.ToRotation())) * (float)((float)Timer / (float)TotalDuration), new Vector2(hitbox.Width, hitbox.Height));
     }
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Player player = Main.player[Projectile.owner];
 

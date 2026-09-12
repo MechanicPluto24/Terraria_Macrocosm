@@ -34,7 +34,7 @@ public class LuminiteChandelier : ModTile, IToggleableTile
         TileObjectData.addTile(Type);
 
         AdjTiles = [TileID.Chandeliers];
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
 
         DustType = DustID.LunarOre;
 

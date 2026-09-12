@@ -23,7 +23,7 @@ public class CosmicEmberClock : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.CosmicEmberBrick, 20)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 3)
+            .AddRecipeGroup(RecipeGroups.IronBar, 3)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }

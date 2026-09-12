@@ -48,7 +48,7 @@ public class Crucible : ModItem
             int dust = Dust.NewDust(new Vector2(hitbox.X, hitbox.Y), hitbox.Width, hitbox.Height, ModContent.DustType<CrucibleDust>());
         }
     }
-    public override void PostUpdate()
+    public override void PostUpdate(WorldItem item)
     {
         Lighting.AddLight(Item.Center, Color.Red.ToVector3() * 0.85f * Main.essScale);
     }

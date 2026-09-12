@@ -97,7 +97,7 @@ public class GunTurret : ModNPC
         spriteBatch.Draw(gunTexture.Value, NPC.Center + TurretHeight - Main.screenPosition + new Vector2(NPC.direction * 5, 0), null, drawColor, TurretRotation, gunTexture.Size() / 2, NPC.scale, NPC.direction > 0 ? SpriteEffects.None : SpriteEffects.FlipVertically, 0f);
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

@@ -83,7 +83,7 @@ public class ZombieSecurity : ModNPC
         SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? 0.02f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => spawner.Player.InModBiome<MoonBiome>() && spawner.SpawnTileY < Main.rockLayer && !Main.dayTime ? 0.02f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

@@ -38,7 +38,7 @@ public class HeveaChair : ModTile
         TileObjectData.addAlternate(1);
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
         AdjTiles = [TileID.Chairs];
         DustType = ModContent.DustType<HeveaDust>();
         AddMapEntry(HeveaFurnitureUtils.MapColor, Language.GetText("MapObject.Chair"));

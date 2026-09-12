@@ -25,7 +25,7 @@ public class HeavenforgeChest : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 8)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 2)
+            .AddRecipeGroup(RecipeGroups.IronBar, 2)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }

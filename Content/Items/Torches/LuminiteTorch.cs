@@ -47,7 +47,7 @@ public class LuminiteTorch : ModItem
         Lighting.AddLight(position, new Color(105, 255, 145).ToVector3());
     }
 
-    public override void PostUpdate()
+    public override void PostUpdate(WorldItem item)
     {
         Lighting.AddLight(Item.Center, new Color(105, 255, 145).ToVector3());
     }

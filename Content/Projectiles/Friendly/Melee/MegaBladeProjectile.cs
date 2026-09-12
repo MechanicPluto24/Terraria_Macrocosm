@@ -105,7 +105,7 @@ public class MegaBladeProjectile : ModProjectile
         Redemption.Decapitation(target, ref damageDone, ref hit.Crit);
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         var rotation = Projectile.rotation + (Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.Pi * 0.75f);
         float rotation2 = rotation + (SwingDirection > 0 ? (Player.direction == 1 ? -((MathHelper.PiOver4 / 2) + (MathHelper.PiOver4)) : MathHelper.Pi) : (Player.direction == 1 ? 0 : ((MathHelper.PiOver4 / 2) + (MathHelper.PiOver4)) + MathHelper.Pi));

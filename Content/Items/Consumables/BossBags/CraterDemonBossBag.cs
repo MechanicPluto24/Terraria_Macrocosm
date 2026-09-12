@@ -58,12 +58,12 @@ public class CraterDemonBossBag : ModItem
     public override Color? GetAlpha(Color lightColor)
         => Color.Lerp(lightColor, Color.White, 0.4f);
 
-    public override void PostUpdate()
+    public override void PostUpdate(WorldItem item)
     {
-        Lighting.AddLight(Item.Center, Color.White.ToVector3() * 0.4f);
+        Lighting.AddLight(item.Center, Color.White.ToVector3() * 0.4f);
     }
 
-    public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
+    public override bool PreDrawInWorld(WorldItem item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, ref float rotation, ref float scale, int whoAmI)
     {
         Color colorFront = new(31, 255, 106, 15);
         Color colorBack = new(158, 255, 157, 20);

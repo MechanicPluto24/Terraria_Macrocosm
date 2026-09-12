@@ -26,7 +26,7 @@ public class CheeseDoorClosed : ModTile
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.OpenDoorID[Type] = ModContent.TileType<CheeseDoorOpen>();
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+        TileID.Sets.RoomNeeds.CountsAsDoor[Type] = true;
 
         DustType = ModContent.DustType<CheeseDust>();
         AdjTiles = [TileID.ClosedDoor];

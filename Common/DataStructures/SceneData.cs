@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
@@ -183,7 +184,7 @@ public class SceneData
                         bannerID += 21;
                     }
 
-                    int bannerItemType = Item.BannerToItem(bannerID);
+                    int bannerItemType = BannerSystem.BannerToItem(bannerID);
                     if (ItemID.Sets.BannerStrength.IndexInRange(bannerItemType) && ItemID.Sets.BannerStrength[bannerItemType].Enabled)
                     {
                         NPCBannerBuff[bannerID] = true;

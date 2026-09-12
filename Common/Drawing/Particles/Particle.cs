@@ -278,7 +278,7 @@ public abstract partial class Particle : ModTexturedType
         if (FrameCount <= 1 || SetRandomFrameOnSpawn)
             return;
 
-        if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
+        if (FocusHelper.AllowGameplayInputs || Main.netMode == NetmodeID.MultiplayerClient)
         {
             frameCounter++;
             if (frameCounter >= FrameSpeed)

@@ -123,7 +123,7 @@ public class LaserTurret : ModNPC
         spriteBatch.Draw(beamTexture.Value, beamStart, null, new Color(170, 0, 0, 0), rotation, origin, scale, SpriteEffects.None, 0f);
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

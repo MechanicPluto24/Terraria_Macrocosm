@@ -268,7 +268,7 @@ public class NWAMissile : ModProjectile
         }
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         trail.Opacity = Projectile.localAI[1];
 

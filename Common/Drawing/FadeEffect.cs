@@ -24,7 +24,7 @@ public class FadeEffect : ModSystem
 
     public static void Draw()
     {
-        if (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient)
+        if (FocusHelper.AllowGameplayInputs || Main.netMode == NetmodeID.MultiplayerClient)
             UpdateFadeEffect();
 
         DrawBlack(1f - fadeAlpha / 255f);
@@ -32,7 +32,7 @@ public class FadeEffect : ModSystem
 
     public override void PostDrawInterface(SpriteBatch spriteBatch)
     {
-        if (interfaceSelfDraw && (Main.hasFocus || Main.netMode == NetmodeID.MultiplayerClient))
+        if (interfaceSelfDraw && (FocusHelper.AllowGameplayInputs || Main.netMode == NetmodeID.MultiplayerClient))
         {
             if (isFading)
             {

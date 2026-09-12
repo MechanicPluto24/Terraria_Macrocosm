@@ -100,8 +100,8 @@ public class LuminiteElemental : ModNPC
         SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.025f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner)
+        => spawner.SpawnTileY > Main.rockLayer && spawner.SpawnTileType == ModContent.TileType<Protolith>() && !spawner.noWorms && !spawner.spawnFriendly ? 0.025f : 0f;
 
     public override void ModifyNPCLoot(NPCLoot loot)
     {

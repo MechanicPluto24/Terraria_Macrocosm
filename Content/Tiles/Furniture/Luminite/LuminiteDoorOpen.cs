@@ -24,7 +24,7 @@ public class LuminiteDoorOpen : ModTile
         TileID.Sets.DisableSmartCursor[Type] = true;
         TileID.Sets.CloseDoorID[Type] = ModContent.TileType<LuminiteDoorClosed>();
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+        TileID.Sets.RoomNeeds.CountsAsDoor[Type] = true;
 
         DustType = DustID.LunarOre;
         AdjTiles = [TileID.OpenDoor];

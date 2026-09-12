@@ -40,7 +40,7 @@ public class CheeseLantern : ModTile, IToggleableTile
         TileObjectData.addTile(Type);
 
         AdjTiles = [TileID.HangingLanterns];
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         DustType = ModContent.DustType<CheeseDust>();
 
         AddMapEntry(new Color(220, 216, 121), Language.GetText("ItemName.Lantern"));

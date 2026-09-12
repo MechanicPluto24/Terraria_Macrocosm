@@ -1,0 +1,20 @@
+<Project>
+  <PropertyGroup>
+    <MacrocosmPortRoot Condition="'$(MacrocosmPortRoot)' == ''">$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../..'))</MacrocosmPortRoot>
+    <MacrocosmTmlRuntimePath Condition="'$(MacrocosmTmlRuntimePath)' == ''">$(MacrocosmPortRoot)/Runtime</MacrocosmTmlRuntimePath>
+  </PropertyGroup>
+
+  <!-- This branch must resolve the isolated 1.4.5 runtime, never the stable ModSources targets. -->
+  <Import Project="$(MacrocosmTmlRuntimePath)/tMLMod.targets" />
+
+  <PropertyGroup>
+    <!-- Keep these set even for compile-only checks with BuildMod=false. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <ExtraBuildModFlags>$(ExtraBuildModFlags) -nosteam -tmlsavedirectory &quot;$(MacrocosmPortRoot)&quot; -steamworkshopfolder &quot;$(MacrocosmPortRoot)/Workshop&quot;</ExtraBuildModFlags>
+    <MacrocosmDevArgs>-nosteam -tmlsavedirectory &quot;$(MacrocosmPortRoot)&quot; -steamworkshopfolder &quot;$(MacrocosmPortRoot)/Workshop&quot;</MacrocosmDevArgs>
+  </PropertyGroup>
+
+  <Target Name="PrepareMacrocosmDevelopmentFolders" BeforeTargets="BuildMod">
+    <MakeDir Directories="$(MacrocosmPortRoot)/Workshop;$(MacrocosmPortRoot)/Mods" />
+  </Target>
+</Project>

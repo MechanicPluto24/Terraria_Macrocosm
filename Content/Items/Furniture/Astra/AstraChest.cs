@@ -25,7 +25,7 @@ public class AstraChest : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.AstraBrick, 8)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 2)
+            .AddRecipeGroup(RecipeGroups.IronBar, 2)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }

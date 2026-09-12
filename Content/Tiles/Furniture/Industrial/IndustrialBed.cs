@@ -21,11 +21,11 @@ public class IndustrialBed : ModTile
         Main.tileLavaDeath[Type] = true;
         TileID.Sets.HasOutlines[Type] = true;
         TileID.Sets.CanBeSleptIn[Type] = true; // Facilitates calling ModifySleepingTargetInfo
-        TileID.Sets.InteractibleByNPCs[Type] = true;
+        TileID.Sets.InteractableByNPCs[Type] = true;
         TileID.Sets.IsValidSpawnPoint[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
 
         DustType = ModContent.DustType<IndustrialPlatingDust>();
         AdjTiles = [TileID.Beds];

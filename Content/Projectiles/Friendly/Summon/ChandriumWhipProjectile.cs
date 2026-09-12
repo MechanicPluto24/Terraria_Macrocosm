@@ -179,7 +179,7 @@ public class ChandriumWhipProjectile : ModProjectile
     private readonly int frameWidth = 14;
     private readonly int frameHeight = 26;
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         List<Vector2> list = new();
         Projectile.FillWhipControlPoints(Projectile, list);

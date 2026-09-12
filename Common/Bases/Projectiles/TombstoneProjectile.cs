@@ -96,7 +96,7 @@ public abstract class TombstoneProjectile : ModProjectile
             if (signId >= 0)
             {
                 Sign.TextSign(signId, Projectile.miscText);
-                NetMessage.SendData(MessageID.ReadSign, -1, -1, null, signId, 0f, (byte)new BitsByte(b1: true));
+                NetMessage.SendData(MessageID.OpenSignResponse, -1, -1, null, signId, 0f, (byte)new BitsByte(b1: true));
             }
 
             if (onTargetRock && ImpactDustType > 0)

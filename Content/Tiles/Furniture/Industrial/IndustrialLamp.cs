@@ -24,7 +24,7 @@ public class IndustrialLamp : ModTile, IToggleableTile
         TileObjectData.newTile.CopyFrom(TileObjectData.GetTileData(TileID.Lamps, 0));
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         DustType = ModContent.DustType<IndustrialPlatingDust>();
 
         AddMapEntry(new Color(200, 200, 200), Language.GetText("MapObject.FloorLamp"));

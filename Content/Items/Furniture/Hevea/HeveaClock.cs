@@ -19,7 +19,7 @@ public class HeveaClock : ModItem
     {
         CreateRecipe()
             .AddIngredient<HeveaWood>(16)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 3)
+            .AddRecipeGroup(RecipeGroups.IronBar, 3)
             .AddTile(TileID.WorkBenches)
             .Register();
     }

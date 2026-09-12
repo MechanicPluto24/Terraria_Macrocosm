@@ -40,7 +40,7 @@ public class MoonZombie : ModNPC
         SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? 0.1f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => spawner.SpawnTileY < Main.rockLayer && !Main.dayTime ? 0.1f : 0f;
 
     public override bool PreAI()
     {

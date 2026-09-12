@@ -80,7 +80,7 @@ public class Leaper : ModNPC
     }
 
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY > Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Protolith>() ? 0.1f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => spawner.SpawnTileY > Main.rockLayer && spawner.SpawnTileType == ModContent.TileType<Protolith>() ? 0.1f : 0f;
 
     public override void AI()
     {

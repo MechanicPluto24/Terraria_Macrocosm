@@ -123,8 +123,8 @@ public class MoonWormHead : WormHead
 			});
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo)
-        => !Main.dayTime && spawnInfo.SpawnTileY < Main.rockLayer && spawnInfo.SpawnTileType == ModContent.TileType<Regolith>() && !spawnInfo.PlayerSafe && !spawnInfo.PlayerInTown ? 0.01f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner)
+        => !Main.dayTime && spawner.SpawnTileY < Main.rockLayer && spawner.SpawnTileType == ModContent.TileType<Regolith>() && !spawner.noWorms && !spawner.spawnFriendly ? 0.01f : 0f;
 
     public override void Init()
     {

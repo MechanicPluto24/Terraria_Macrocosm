@@ -32,7 +32,7 @@ public class RegolithSofa : ModTile
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
         AdjTiles = [TileID.Benches];
         DustType = ModContent.DustType<RegolithDust>();
         AddMapEntry(new(201, 201, 204), Language.GetText("ItemName.Sofa"));

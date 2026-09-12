@@ -100,7 +100,7 @@ internal class ChampionsBladeBoltProjectile : ModProjectile
         Lighting.AddLight(Projectile.Center, new Color(30, 255, 105).ToVector3() * 1.5f);
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         var state = Main.spriteBatch.SaveState();
 

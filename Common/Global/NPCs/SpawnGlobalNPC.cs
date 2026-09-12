@@ -13,7 +13,7 @@ namespace Macrocosm.Common.Global.NPCs;
 /// <summary> Global NPC for general NPC modifications (loot, spawn pools) </summary>
 public class SpawnGlobalNPC : GlobalNPC
 {
-    public override void EditSpawnPool(IDictionary<int, float> pool, NPCSpawnInfo spawnInfo)
+    public override void EditSpawnPool(IDictionary<int, float> pool, NPC.Spawner spawner)
     {
         if (SubworldSystem.AnyActive<Macrocosm>())
         {

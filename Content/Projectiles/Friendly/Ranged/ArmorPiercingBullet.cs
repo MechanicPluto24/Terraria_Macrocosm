@@ -55,7 +55,7 @@ public class ArmorPiercingBullet : ModProjectile
         return true;
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         //Projectile.DrawMagicPixelTrail(Vector2.Zero, 4f, 1f, new Color(255, 162, 141) * lightColor.GetBrightness() * Projectile.Opacity, new Color(184, 58, 24, 0) * lightColor.GetBrightness() * Projectile.Opacity);
         return true;

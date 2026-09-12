@@ -29,7 +29,7 @@ public class CheeseLamp : ModTile, IToggleableTile
         TileObjectData.newTile.StyleWrapLimit = 2;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTorch);
+        TileID.Sets.RoomNeeds.CountsAsTorch[Type] = true;
         DustType = ModContent.DustType<CheeseDust>();
 
         AddMapEntry(new Color(220, 216, 121), Language.GetText("MapObject.FloorLamp"));

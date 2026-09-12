@@ -133,7 +133,7 @@ public class SeleniteSwordSlash : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         ProjectileID.Sets.TrailCacheLength[Type] = 30;
         ProjectileID.Sets.TrailingMode[Type] = 3;

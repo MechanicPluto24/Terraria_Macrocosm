@@ -18,7 +18,7 @@ public class IndustrialSink : ModTile
         Main.tileNoAttach[Type] = true;
         Main.tileLavaDeath[Type] = true;
 
-        TileID.Sets.CountsAsWaterSource[Type] = true;
+        TileID.Sets.CountsAsWaterForCrafting[Type] = true;
 
         TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
         TileObjectData.newTile.CoordinateHeights = [16, 18];

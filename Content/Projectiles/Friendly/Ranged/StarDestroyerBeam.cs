@@ -67,7 +67,7 @@ public class StarDestroyerBeam : ModProjectile
     }
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Texture2D tex = TextureAssets.Extra[ExtrasID.SharpTears].Value;
         Rectangle sourceRect = tex.Frame(1, Main.projFrames[base.Type], frameY: Projectile.frame);

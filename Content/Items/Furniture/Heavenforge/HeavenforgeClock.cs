@@ -23,7 +23,7 @@ public class HeavenforgeClock : ModItem
     {
         CreateRecipe()
             .AddIngredient(ItemID.HeavenforgeBrick, 20)
-            .AddRecipeGroup(RecipeGroupID.IronBar, 3)
+            .AddRecipeGroup(RecipeGroups.IronBar, 3)
             .AddTile(TileID.LunarCraftingStation)
             .Register();
     }

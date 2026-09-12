@@ -78,7 +78,7 @@ public class LaserTurretProjectile : ModProjectile
     public override Color? GetAlpha(Color lightColor)  => Color.White * (1f - Projectile.alpha / 255f);
 
     private SpriteBatchState state;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         // If the beam doesn't have a defined direction, don't draw anything.
         if (Projectile.velocity == Vector2.Zero)

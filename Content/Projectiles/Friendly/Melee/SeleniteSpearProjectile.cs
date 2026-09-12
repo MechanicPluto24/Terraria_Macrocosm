@@ -107,7 +107,7 @@ public class SeleniteSpearProjectile : ModProjectile
         );
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Player player = Main.player[Projectile.owner];
         Texture2D texture = TextureAssets.Extra[ExtrasID.SharpTears].Value;

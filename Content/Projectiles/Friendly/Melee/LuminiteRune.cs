@@ -110,7 +110,7 @@ public class LuminiteRune : ModProjectile
 
     public override Color? GetAlpha(Color lightColor) => new Color(255, 255, 255, 255) * Projectile.Opacity;
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         //Projectile.DrawMagicPixelTrail(Vector2.Zero,4f, 0.1f, colour * Projectile.Opacity, Color.Transparent);
 

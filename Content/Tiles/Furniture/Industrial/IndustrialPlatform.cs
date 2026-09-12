@@ -21,7 +21,7 @@ public class IndustrialPlatform : ModTile
         TileID.Sets.Platforms[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsDoor);
+        TileID.Sets.RoomNeeds.CountsAsDoor[Type] = true;
         AddMapEntry(new Color(200, 200, 200));
 
         DustType = ModContent.DustType<IndustrialPlatingDust>();

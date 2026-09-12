@@ -29,14 +29,14 @@ public static partial class Utility
         float brightness = (tileR + tileG + tileB) / 3f;
         if (tile.HasTile && TileID.Sets.AllowLightInWater[tile.TileType])
         {
-            if (lightColor.X < brightness && (Main.wallLight[tile.WallType] || tile.WallType == WallID.Cloud || tile.WallType == WallID.SnowFall || (tile.IsWallInvisible && !Main.ShouldShowInvisibleWalls())))
+            if (lightColor.X < brightness && (Main.wallLight[tile.WallType] || tile.WallType == WallID.Cloud || tile.WallType == WallID.SnowFall || (tile.IsWallInvisible && !Main.ShouldShowInvisibleBlocksAndWalls())))
             {
                 R = tileR;
                 G = tileG;
                 B = tileB;
             }
         }
-        else if ((!tile.HasTile || !Main.tileNoSunLight[tile.TileType] || ((tile.Slope != 0 || tile.IsHalfBlock || (tile.IsTileInvisible && !Main.ShouldShowInvisibleWalls())) && Main.tile[x, y - 1].LiquidAmount == 0 && Main.tile[x, y + 1].LiquidAmount == 0 && Main.tile[x - 1, y].LiquidAmount == 0 && Main.tile[x + 1, y].LiquidAmount == 0)) && lightColor.X < brightness && (Main.wallLight[tile.WallType] || tile.WallType == WallID.Cloud || tile.WallType == WallID.SnowFall || (tile.IsWallInvisible && !Main.ShouldShowInvisibleWalls())))
+        else if ((!tile.HasTile || !Main.tileNoSunLight[tile.TileType] || ((tile.Slope != 0 || tile.IsHalfBlock || (tile.IsTileInvisible && !Main.ShouldShowInvisibleBlocksAndWalls())) && Main.tile[x, y - 1].LiquidAmount == 0 && Main.tile[x, y + 1].LiquidAmount == 0 && Main.tile[x - 1, y].LiquidAmount == 0 && Main.tile[x + 1, y].LiquidAmount == 0)) && lightColor.X < brightness && (Main.wallLight[tile.WallType] || tile.WallType == WallID.Cloud || tile.WallType == WallID.SnowFall || (tile.IsWallInvisible && !Main.ShouldShowInvisibleBlocksAndWalls())))
         {
             if (tile.LiquidAmount < 200)
             {

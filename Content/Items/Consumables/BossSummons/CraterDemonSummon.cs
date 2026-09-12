@@ -24,7 +24,7 @@ public class CraterDemonSummon : ModItem
 
     public override void SetStaticDefaults()
     {
-        ItemID.Sets.SortingPriorityBossSpawns[Item.type] = 13;
+        ItemID.Sets.SortingPriorityMiscImportants[Item.type] = 13;
         Item.ResearchUnlockCount = 3;
     }
 

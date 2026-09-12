@@ -30,7 +30,7 @@ public class LuminiteTable : ModTile
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsTable);
+        TileID.Sets.RoomNeeds.CountsAsTable[Type] = true;
 
         foreach (LuminiteStyle style in Enum.GetValues(typeof(LuminiteStyle)))
             AddMapEntry(Utility.GetTileColorFromLuminiteStyle(style), Language.GetText("MapObject.Table"));

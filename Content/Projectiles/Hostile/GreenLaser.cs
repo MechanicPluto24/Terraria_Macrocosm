@@ -34,7 +34,7 @@ public class GreenLaser : ModProjectile
 
         return true;
     }
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Projectile.DrawMagicPixelTrail(Vector2.Zero, 2.8f, 0.5f, colour * lightColor.GetBrightness(), colour * lightColor.GetBrightness());
         return true;

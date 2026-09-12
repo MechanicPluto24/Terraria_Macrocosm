@@ -106,7 +106,7 @@ public class WaveGunDualHeld : ChargedHeldProjectile
         }
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         var spriteBatch = Main.spriteBatch;
         Texture2D redTexture = TextureAssets.Item[ModContent.GetInstance<WaveGunBlue>().Type].Value;

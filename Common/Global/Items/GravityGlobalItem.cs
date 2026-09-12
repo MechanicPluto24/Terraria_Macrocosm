@@ -8,7 +8,7 @@ namespace Macrocosm.Common.Global.Items;
 
 public class GravityGlobalItem : GlobalItem
 {
-    public override void Update(Item item, ref float gravity, ref float maxFallSpeed)
+    public override void Update(WorldItem item, ref float gravity, ref float maxFallSpeed)
     {
         // - doubled them so it feels closer to the gravity of the rest of entities
         // - used constants because gravity and maxFallSpeed are not reset to default values

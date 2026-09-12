@@ -49,7 +49,7 @@ public class TrashnadoProjectile : ModProjectile
         }
     }
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         Main.EntitySpriteDraw(trashData.Texture.Value, Projectile.Center - Main.screenPosition, null, Projectile.GetAlpha(Color.Lerp(lightColor, Color.White, 1f - Projectile.alpha / 255f)), Projectile.rotation, trashData.Texture.Size() / 2f, Projectile.scale, SpriteEffects.None, 0f);
         return false;

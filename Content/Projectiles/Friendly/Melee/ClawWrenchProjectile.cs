@@ -114,7 +114,7 @@ public class ClawWrenchProjectile : ModProjectile
 
 
 
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         SpriteEffects effect = Projectile.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
         Texture2D texture = TextureAssets.Projectile[Type].Value;

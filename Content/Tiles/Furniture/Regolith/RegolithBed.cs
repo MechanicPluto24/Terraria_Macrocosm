@@ -20,7 +20,7 @@ public class RegolithBed : ModTile
         Main.tileLavaDeath[Type] = true;
         TileID.Sets.HasOutlines[Type] = true;
         TileID.Sets.CanBeSleptIn[Type] = true;
-        TileID.Sets.InteractibleByNPCs[Type] = true;
+        TileID.Sets.InteractableByNPCs[Type] = true;
         TileID.Sets.IsValidSpawnPoint[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
 
@@ -29,7 +29,7 @@ public class RegolithBed : ModTile
         TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.addTile(Type);
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
         AdjTiles = [TileID.Beds];
         DustType = ModContent.DustType<RegolithDust>();
         AddMapEntry(new(201, 201, 204), Language.GetText("ItemName.Bed"));

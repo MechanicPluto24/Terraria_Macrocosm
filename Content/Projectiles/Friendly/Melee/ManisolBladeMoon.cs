@@ -102,7 +102,7 @@ public class ManisolBladeMoon : ManisolBladeBase
     }
 
     private int length;
-    public override bool PreDraw(ref Color lightColor)
+    public override bool PreDraw(Player player, ref Color lightColor)
     {
         length = (int)MathHelper.Lerp(length, AI_State == ActionState.Stick ? 0 : Projectile.oldPos.Length, 0.1f);
         for (int i = 1; i < length; i++)
@@ -113,6 +113,6 @@ public class ManisolBladeMoon : ManisolBladeBase
             Main.EntitySpriteDraw(TextureAssets.Extra[ExtrasID.SharpTears].Value, drawPos, null, trailColor, Projectile.oldRot[i] + MathHelper.PiOver2, TextureAssets.Extra[ExtrasID.SharpTears].Size() / 2f, Projectile.scale, Projectile.oldSpriteDirection[i] == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally, 0f);
         }
 
-        return base.PreDraw(ref lightColor);
+        return base.PreDraw(player, ref lightColor);
     }
 }

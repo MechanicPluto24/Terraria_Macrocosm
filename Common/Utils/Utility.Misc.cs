@@ -305,7 +305,7 @@ public static partial class Utility
                 {
                     player.chest = chest;
                     Main.playerInventory = true;
-                    Main.recBigList = false;
+                    Main.PipsUseGrid = false;
                     player.chestX = left;
                     player.chestY = top;
                     _ = SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);

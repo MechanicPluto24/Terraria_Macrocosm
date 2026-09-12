@@ -77,7 +77,7 @@ public class Bruiser : ModNPC
         });
     }
 
-    public override float SpawnChance(NPCSpawnInfo spawnInfo) => Main.bloodMoon ? 0.1f : 0f;
+    public override float SpawnChance(NPC.Spawner spawner) => Main.bloodMoon ? 0.1f : 0f;
 
     public override void AI()
     {

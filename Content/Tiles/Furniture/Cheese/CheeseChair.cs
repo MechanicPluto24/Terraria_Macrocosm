@@ -24,7 +24,7 @@ public class CheeseChair : ModTile
         TileID.Sets.CanBeSatOnForNPCs[Type] = true;
         TileID.Sets.CanBeSatOnForPlayers[Type] = true;
 
-        AddToArray(ref TileID.Sets.RoomNeeds.CountsAsChair);
+        TileID.Sets.RoomNeeds.CountsAsChair[Type] = true;
 
         DustType = ModContent.DustType<CheeseDust>();
         AdjTiles = [TileID.Chairs];
