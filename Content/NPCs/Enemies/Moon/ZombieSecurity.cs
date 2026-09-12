@@ -81,8 +81,6 @@ public class ZombieSecurity : ModNPC
         NPC.knockBackResist = 0.5f;
         NPC.aiStyle = -1;
         SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
-        Banner = Item.NPCtoBanner(NPCID.Zombie);
-        BannerItem = Item.BannerToItem(Banner);
     }
 
     public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.Player.InModBiome<MoonBiome>() && spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? 0.02f : 0f;

@@ -38,8 +38,6 @@ public class MoonZombie : ModNPC
         NPC.aiStyle = NPCAIStyleID.Fighter;
         AIType = NPCID.ZombieMushroom;
         SpawnModBiomes = [ModContent.GetInstance<MoonNightBiome>().Type];
-        Banner = Item.NPCtoBanner(NPCID.Zombie);
-        BannerItem = Item.BannerToItem(Banner);
     }
 
     public override float SpawnChance(NPCSpawnInfo spawnInfo) => spawnInfo.SpawnTileY < Main.rockLayer && !Main.dayTime ? 0.1f : 0f;

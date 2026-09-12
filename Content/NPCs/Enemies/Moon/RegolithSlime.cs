@@ -46,8 +46,6 @@ public class RegolithSlime : ModNPC
         NPC.knockBackResist = 0.5f;
         NPC.aiStyle = NPCAIStyleID.Slime;
         AIType = NPCID.BlueSlime;
-        Banner = Item.NPCtoBanner(NPCID.BlueSlime);
-        BannerItem = Item.BannerToItem(Banner);
     }
 
     public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
