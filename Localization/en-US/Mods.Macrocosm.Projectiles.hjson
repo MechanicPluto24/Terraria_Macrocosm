@@ -207,3 +207,5 @@ CrudePhaserBolt.DisplayName: Crude Phaser Bolt
 CrudePhaserHeld.DisplayName: Crude Phaser Held
 FractureBolt.DisplayName: Fracture Bolt
 FractureBoltFracture.DisplayName: Fracture Bolt Fracture
+HaemoBall.DisplayName: Haemo Ball
+HaemoTear.DisplayName: Haemo Tear

@@ -23,8 +23,8 @@ public class Haemolacria : ModItem
         Item.mana = 20;
         Item.width = 28;
         Item.height = 26;
-        Item.useTime = 120;
-        Item.useAnimation = 120;
+        Item.useTime = 60;
+        Item.useAnimation = 60;
         Item.useStyle = ItemUseStyleID.Shoot;
         Item.noMelee = true;
         Item.knockBack = 8;
@@ -32,8 +32,8 @@ public class Haemolacria : ModItem
         Item.rare = ModContent.RarityType<MoonRarity1>();
         Item.UseSound = SoundID.Item20;
         Item.autoReuse = true;
-        Item.shoot = ProjectileID.BoneArrow;
-        Item.shootSpeed = 5f;
+        Item.shoot = ModContent.ProjectileType<HaemoBall>();
+        Item.shootSpeed = 11f;
         Item.tileBoost = 50;
     }
 
