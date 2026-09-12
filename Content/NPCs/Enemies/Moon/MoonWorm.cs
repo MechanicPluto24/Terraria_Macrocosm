@@ -247,6 +247,8 @@ public class MoonWormHead : WormHead
 }
 public class MoonWormBody : WormBody
 {
+    public override int HeadType => ModContent.NPCType<MoonWormHead>();
+
     public override void SetStaticDefaults()
     {
         Main.npcFrameCount[Type] = 2;
@@ -384,6 +386,8 @@ public class MoonWormBody : WormBody
 
 public class MoonWormTail : WormTail
 {
+    public override int HeadType => ModContent.NPCType<MoonWormHead>();
+
     public override void SetStaticDefaults()
     {
         NPC.ApplyBuffImmunity

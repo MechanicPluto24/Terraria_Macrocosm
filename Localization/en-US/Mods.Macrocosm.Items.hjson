@@ -3115,12 +3115,12 @@ SmogWispfish: {
 	AnglerLocation: Caught in the Pollution
 }
 
-RadioactiveSlimeBannerItem: {
+RadioactiveSlimeBanner_Item: {
 	DisplayName: Radioactive Slime Banner Item
 	Tooltip: ""
 }
 
-RegolithSlimeBannerItem: {
+RegolithSlimeBanner_Item: {
 	DisplayName: Regolith Slime Banner Item
 	Tooltip: ""
 }

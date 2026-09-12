@@ -1,4 +1,5 @@
-﻿using Terraria;
+﻿using Macrocosm.Common.Bases.NPCs;
+using Terraria;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.Global.NPCs;
@@ -9,10 +10,16 @@ public class BannerGlobalNPC : GlobalNPC
     {
         if (npc.ModNPC is ModNPC modNPC && modNPC.Mod == Mod)
         {
-            int customBanner = Mod.TryFind(modNPC.Name + "BannerItem", out ModItem modItem) ? modItem.Type : -1;
+            ModNPC bannerNPC = modNPC;
+
+            if (modNPC is Worm worm)
+                bannerNPC = ModContent.GetModNPC(worm.HeadType);
+
+
+            int customBanner = Mod.TryFind(bannerNPC.Name + "Banner_Item", out ModItem modItem) ? modItem.Type : -1;
             if (customBanner > 0)
             {
-                modNPC.Banner = modNPC.Type;
+                modNPC.Banner = bannerNPC.Type;
                 modNPC.BannerItem = customBanner;
             }
         }

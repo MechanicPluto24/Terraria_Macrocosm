@@ -37,6 +37,9 @@ public abstract class Worm : ModNPC
     /// <summary> Which type of segment this NPC is considered to be </summary>
     public abstract WormSegmentType SegmentType { get; }
 
+    /// <summary> The head NPC type shared by all segments, including custom body segments. </summary>
+    public abstract int HeadType { get; }
+
     /// <summary> The maximum velocity for the NPC </summary>
     public float MoveSpeed { get; set; }
 
@@ -179,6 +182,8 @@ public abstract class Worm : ModNPC
 /// </summary>
 public abstract class WormHead : Worm
 {
+    public sealed override int HeadType => Type;
+
     public sealed override WormSegmentType SegmentType => WormSegmentType.Head;
 
     public virtual bool UseSmoothening { get; set; }

@@ -45,8 +45,6 @@ public class TarSlime : ModNPC
         NPC.aiStyle = -1;
         NPC.alpha = 10;
         AIType = -1;
-        Banner = Item.NPCtoBanner(NPCID.BlueSlime);
-        BannerItem = Item.BannerToItem(Banner);
         SpawnModBiomes = [ModContent.GetInstance<PollutionBiome>().Type];
     }
 

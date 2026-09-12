@@ -45,8 +45,6 @@ public class Leaper : ModNPC
         NPC.knockBackResist = 0.03f;
         NPC.aiStyle = -1;
         AIType = NPCID.ZombieMushroom;
-        Banner = Item.NPCtoBanner(NPCID.Zombie);
-        BannerItem = Item.BannerToItem(Banner);
 
         SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
     }

@@ -3087,12 +3087,12 @@ SmogWispfish: {
 	AnglerLocation: Caught in the Pollution
 }
 
-RadioactiveSlimeBannerItem: {
+RadioactiveSlimeBanner_Item: {
 	DisplayName: Знамя радиоактивного слизня
 	Tooltip: ""
 }
 
-RegolithSlimeBannerItem: {
+RegolithSlimeBanner_Item: {
 	DisplayName: Знамя реголитового слизня
 	Tooltip: ""
 }
