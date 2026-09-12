@@ -3445,6 +3445,11 @@ RailgunBolt: {
 	Tooltip: ""
 }
 
+Railgun: {
+	// DisplayName: Railgun
+	// Tooltip: ""
+}
+
 ShredderBullet: {
 	DisplayName: Пуля-резак
 	Tooltip: ""
@@ -3755,5 +3760,25 @@ QuartzWallUnsafe: {
 
 Sunclot: {
 	// DisplayName: Sunclot
+	// Tooltip: ""
+}
+
+EMBolt: {
+	// DisplayName: E M Bolt
+	// Tooltip: ""
+}
+
+FractureBolt: {
+	// DisplayName: Fracture Bolt
+	// Tooltip: ""
+}
+
+Haemolacria: {
+	// DisplayName: Haemolacria
+	// Tooltip: ""
+}
+
+L2Revolver: {
+	// DisplayName: L2 Revolver
 	// Tooltip: ""
 }

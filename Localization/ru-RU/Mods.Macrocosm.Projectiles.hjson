@@ -205,3 +205,5 @@ LightningSpearProjectile.DisplayName: Копьё молний
 MetalCutterProjectile.DisplayName: Металлический резак
 CrudePhaserBolt.DisplayName: Фазовый выстрел
 CrudePhaserHeld.DisplayName: Грубый фазовик
+// FractureBolt.DisplayName: Fracture Bolt
+// FractureBoltFracture.DisplayName: Fracture Bolt Fracture
