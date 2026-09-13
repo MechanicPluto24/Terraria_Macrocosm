@@ -143,7 +143,7 @@ public class WaveGunDual : ModItem
     {
         if (RifleMode)
         {
-            spriteBatch.Draw(rifleTexture.Value, Item.position - Main.screenPosition, null, lightColor, rotation, rifleTexture.Size() / 2f, scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(rifleTexture.Value, item.position - Main.screenPosition, null, lightColor, rotation, rifleTexture.Size() / 2f, scale, SpriteEffects.None, 0);
             return false;
         }
 

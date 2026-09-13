@@ -30,7 +30,7 @@ public class SceneData
     public Vector2 Position => scanCenterWorldCoordinates;
     public Point TilePosition => scanCenterWorldCoordinates.ToTileCoordinates();
 
-    public Rectangle ScanArea => WorldUtils.ClampToWorld(new Rectangle(TilePosition.X - Main.buffScanAreaWidth / 2, TilePosition.Y - Main.buffScanAreaHeight / 2, Main.buffScanAreaWidth, Main.buffScanAreaHeight));
+    public Rectangle ScanArea => WorldUtils.ClampToWorld(new Rectangle(TilePosition.X - SceneMetrics.ZoneScanSize.X / 2, TilePosition.Y - SceneMetrics.ZoneScanSize.Y / 2, SceneMetrics.ZoneScanSize.X, SceneMetrics.ZoneScanSize.Y));
 
     public bool ZoneUnderworldHeight => Utility.InUnderworldHeight(TilePosition.Y);
     public bool ZoneRockLayerHeight => Utility.InRockLayerHeight(TilePosition.Y);

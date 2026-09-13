@@ -14,12 +14,12 @@ public class ShimmerSystem : ModSystem
 
     public override void Load()
     {
-        On_Item.GetShimmered += On_Item_GetShimmered;
+        On_WorldItem.GetShimmered += On_Item_GetShimmered;
     }
 
     public override void Unload()
     {
-        On_Item.GetShimmered -= On_Item_GetShimmered;
+        On_WorldItem.GetShimmered -= On_Item_GetShimmered;
     }
 
     public override void PostSetupContent()
@@ -39,7 +39,7 @@ public class ShimmerSystem : ModSystem
         itemShimmerOverrides[itemType].Add(new ShimmerOverride(condition, resultType));
     }
 
-    private void On_Item_GetShimmered(On_Item.orig_GetShimmered orig, Item self)
+    private void On_Item_GetShimmered(On_WorldItem.orig_GetShimmered orig, WorldItem self)
     {
         if (itemShimmerOverrides.TryGetValue(self.type, out List<ShimmerOverride> shimmerOverrides))
         {

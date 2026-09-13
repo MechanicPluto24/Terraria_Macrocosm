@@ -29,6 +29,7 @@ public class MetalCutterProjectile : ModProjectile
 
     public override void SetDefaults()
     {
+        Projectile.drawLayer = ProjectileDrawLayerID.BehindNPCsAndTiles;
         Projectile.width = 0;
         Projectile.height = 0;
 
@@ -151,16 +152,11 @@ public class MetalCutterProjectile : ModProjectile
         if(NPCSets.Material[target.type]==NPCMaterial.Metal || NPCSets.Material[target.type]==NPCMaterial.Machine)
             target.AddBuff(ModContent.BuffType<Melting>(), 240);
     }
-    public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-    {
-        behindNPCsAndTiles.Add(index);
-    }
     public override bool PreDraw(Player player, ref Color lightColor)
     {
         var rotation = Projectile.rotation;
         var origin = Projectile.Size / 2;
 
-        Player player = Main.player[Projectile.owner];
         Vector2 position = player.Center - Main.screenPosition;
         Texture2D texture = TextureAssets.Projectile[Type].Value;
         Texture2D glowtexture = ModContent.Request<Texture2D>(Texture + "_glow").Value;

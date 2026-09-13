@@ -23,9 +23,9 @@ internal class SubworldTravelSystem : ModSystem, IOnPlayerJoining
         On_UIWorldListItem.ctor -= UIWorldListItem_ctor_AddWorldIcons;
     }
 
-    private void UIWorldListItem_ctor_AddWorldIcons(On_UIWorldListItem.orig_ctor orig, UIWorldListItem self, Terraria.IO.WorldFileData data, int orderInList, bool canBePlayed)
+    private void UIWorldListItem_ctor_AddWorldIcons(On_UIWorldListItem.orig_ctor orig, UIWorldListItem self, Terraria.IO.WorldFileData data, int orderInList, bool canBePlayed, bool hasBeenPlayedByActivePlayer, bool isNewlyGenerated)
     {
-        orig(self, data, orderInList, canBePlayed);
+        orig(self, data, orderInList, canBePlayed, hasBeenPlayedByActivePlayer, isNewlyGenerated);
 
         UIText buttonLabel = typeof(UIWorldListItem).GetFieldValue<UIText>("_buttonLabel", self);
 

@@ -1,3 +1,4 @@
+using WorldSize = Macrocosm.Common.DataStructures.WorldSize;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Drawing.Sky;
 using Macrocosm.Common.Enums;

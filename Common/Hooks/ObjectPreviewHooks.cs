@@ -26,7 +26,7 @@ internal class ObjectPreviewHooks : ILoadable
         //On_TileObject.DrawPreview -= On_TileObject_DrawPreview;
     }
 
-    private void On_TileObject_DrawPreview(On_TileObject.orig_DrawPreview orig, SpriteBatch sb, TileObjectPreviewData op, Vector2 position)
+    private void On_TileObject_DrawPreview(On_TileObject.orig_DrawPreview orig, SpriteBatch sb, TileObjectPreviewData op, Vector2 position, float opacity)
     {
         if (TileLoader.GetTile(op.Type) is IPreviewDrawTile preview)
         {
@@ -46,7 +46,7 @@ internal class ObjectPreviewHooks : ILoadable
                 }
             }
 
-            orig(sb, op, position);
+            orig(sb, op, position, opacity);
 
             for (int i = 0; i < op.Size.X; i++)
             {
@@ -68,7 +68,7 @@ internal class ObjectPreviewHooks : ILoadable
         }
         else
         {
-            orig(sb, op, position);
+            orig(sb, op, position, opacity);
         }
     }
 

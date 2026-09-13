@@ -68,7 +68,7 @@ public class CraterDemonBossBag : ModItem
         Color colorFront = new(31, 255, 106, 15);
         Color colorBack = new(158, 255, 157, 20);
 
-        Item.DrawBossBagEffect(spriteBatch, colorFront, colorBack, rotation, scale);
+        item.DrawBossBagEffect(spriteBatch, colorFront, colorBack, rotation, scale);
 
         return true;
     }

@@ -154,7 +154,7 @@ public static partial class Utility
         FlexibleTileWand.RubblePlacementLarge.AddVariations(itemType, tileType, tileStyles);
     }
 
-    public static void Shimmer(this Item item, int targetType)
+    public static void Shimmer(this WorldItem item, int targetType)
     {
         int originalStack = item.stack;
 
@@ -168,7 +168,7 @@ public static partial class Utility
 
         if (Main.netMode == NetmodeID.SinglePlayer)
         {
-            Item.ShimmerEffect(item.Center);
+            WorldItem.ShimmerEffect(item.Center);
         }
         else
         {
@@ -180,13 +180,12 @@ public static partial class Utility
 
         if (item.stack == 0)
         {
-            item.makeNPC = -1;
-            item.active = false;
+            item.TurnToAir();
         }
     }
 
 
-    public static void DrawBossBagEffect(this Item item, SpriteBatch spriteBatch, Color colorFront, Color colorBack, float rotation, float scale)
+    public static void DrawBossBagEffect(this WorldItem item, SpriteBatch spriteBatch, Color colorFront, Color colorBack, float rotation, float scale)
     {
         Texture2D texture = TextureAssets.Item[item.type].Value;
         Rectangle frame = texture.Frame();
@@ -269,7 +268,7 @@ public static partial class Utility
 
     public static void SimulateGuideVoodooDollBurn(Vector2 position)
     {
-        int index = Item.NewItem(Item.GetSource_None(), new Rectangle((int)position.X, (int)position.Y, 1, 1), ItemID.GuideVoodooDoll, Stack: 1, noBroadcast: true);
-        typeof(Item).InvokeMethod("CheckLavaDeath", Main.item[index], parameters: [index]);
+        int index = Item.NewItem(new Terraria.DataStructures.EntitySource_Misc("Macrocosm:GuideVoodooDoll"), new Rectangle((int)position.X, (int)position.Y, 1, 1), ItemID.GuideVoodooDoll, Stack: 1, noBroadcast: true);
+        typeof(WorldItem).InvokeMethod("CheckLavaDeath", Main.item[index], parameters: [index]);
     }
 }

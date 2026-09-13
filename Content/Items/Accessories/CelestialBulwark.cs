@@ -166,8 +166,8 @@ public class CelestialBulwark : ModItem
 
     public override void PostDrawInWorld(WorldItem item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
     {
-        DrawMask(spriteBatch, Item.Center - Main.screenPosition, Item.Size / 2f, scale, rotation);
-        Lighting.AddLight(Item.Center, CelestialDisco.CelestialColor.ToVector3());
+        DrawMask(spriteBatch, item.Center - Main.screenPosition, Item.Size / 2f, scale, rotation);
+        Lighting.AddLight(item.Center, CelestialDisco.CelestialColor.ToVector3());
     }
 
     private static readonly Asset<Texture2D>[] celestialTextures =

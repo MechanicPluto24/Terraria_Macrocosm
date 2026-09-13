@@ -41,7 +41,7 @@ public class LunarRustShrine : Structure
                 j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
                 strength: WorldGen.genRand.Next(3, 6),
                 steps: WorldGen.genRand.Next(8, 12),
-                type: (ushort)ModContent.TileType<ArtemiteOre>()
+                tileType: (ushort)ModContent.TileType<ArtemiteOre>()
             );
 
             WorldGen.OreRunner(
@@ -49,7 +49,7 @@ public class LunarRustShrine : Structure
                 j: origin.Y - (int)(Size.Y * WorldGen.genRand.NextFloat(0.3f)) + (int)(Size.Y * WorldGen.genRand.NextFloat(1.3f)),
                 strength: WorldGen.genRand.Next(3, 6),
                 steps: WorldGen.genRand.Next(8, 12),
-                type: TileID.LunarBlockVortex
+                tileType: TileID.LunarBlockVortex
             );
         }
     }

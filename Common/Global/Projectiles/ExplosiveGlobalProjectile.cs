@@ -39,7 +39,7 @@ public class ExplosiveGlobalProjectile : GlobalProjectile
         }
     }
 
-    private void On_Projectile_BombsHurtPlayers(On_Projectile.orig_BombsHurtPlayers orig, Projectile self, Rectangle projRectangle, int j)
+    private void On_Projectile_BombsHurtPlayers(On_Projectile.orig_BombsHurtPlayers orig, Projectile self, Rectangle projRectangle)
     {
         if (self.TryGetGlobalProjectile(out ExplosiveGlobalProjectile global))
         {
@@ -57,6 +57,6 @@ public class ExplosiveGlobalProjectile : GlobalProjectile
             }
         }
 
-        orig(self, projRectangle, j);
+        orig(self, projRectangle);
     }
 }

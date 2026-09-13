@@ -212,7 +212,7 @@ public class GunHeldProjectile : HeldProjectile
         }
     }
 
-    public override void Draw(Color lightColor)
+    public override void Draw(Player player, Color lightColor)
     {
         float recoil = ClientConfig.Instance.GunRecoilEffects ? currentRecoil.X : 0f;
         // 19 here is for the arm length.
@@ -222,10 +222,10 @@ public class GunHeldProjectile : HeldProjectile
             Projectile.Center - Main.screenPosition,
             null,
             lightColor,
-            Projectile.rotation + (Player.direction == -1 ? MathHelper.Pi : 0),
-            Player.direction == -1 ? new Vector2(GunTexture.Width - normOrigin.X, normOrigin.Y) : normOrigin,
+            Projectile.rotation + (player.direction == -1 ? MathHelper.Pi : 0),
+            player.direction == -1 ? new Vector2(GunTexture.Width - normOrigin.X, normOrigin.Y) : normOrigin,
             Projectile.scale,
-            Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+            player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
             0
         );
     }

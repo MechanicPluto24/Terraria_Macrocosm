@@ -124,7 +124,7 @@ public class UISnippetText : UIElement
         Color baseColor = shadowColor * (color.A / 255f);
         Vector2 origin = new Vector2(0f, 0f) * size;
         Vector2 baseScale = new(scale);
-        TextSnippet[] snippets = ChatManager.ParseMessage(visibleText, color).ToArray();
+        var snippets = ChatManager.ParseMessage(visibleText, color);
 
         if (!AllowSnippets)
             ChatManager.ConvertNormalSnippets(snippets);
@@ -148,7 +148,7 @@ public class UISnippetText : UIElement
         lastTextReference = text.ToString();
 
         if (IsWrapped)
-            visibleText = dynamicSpriteFont.CreateWrappedText(lastTextReference, GetInnerDimensions().Width / textScale);
+            visibleText = dynamicSpriteFont.CreateWrappedText(lastTextReference, GetInnerDimensions().Width / textScale, Terraria.Localization.Language.ActiveCulture.CultureInfo);
         else
             visibleText = lastTextReference;
 

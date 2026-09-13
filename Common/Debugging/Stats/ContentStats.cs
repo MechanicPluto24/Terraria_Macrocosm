@@ -77,10 +77,10 @@ public class ContentStats : ModSystem
                     writer.WriteLine($"\t\t{component.Name} x {component.stack}");
                 }
 
-                if (recipe.requiredTile.Count > 0)
+                if (recipe.requiredTile >= 0)
                     writer.WriteLine("\t\tat");
 
-                foreach (int tileId in recipe.requiredTile)
+                foreach (int tileId in recipe.requiredTile >= 0 ? new[] { recipe.requiredTile } : System.Array.Empty<int>())
                 {
                     string tileName = Lang.GetMapObjectName(MapHelper.TileToLookup(tileId, 0));
                     writer.WriteLine($"\t\t{tileName}");

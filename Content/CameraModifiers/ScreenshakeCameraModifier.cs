@@ -8,6 +8,8 @@ namespace Macrocosm.Content.CameraModifiers;
 public class ScreenshakeCameraModifier : ICameraModifier
 {
     public string UniqueIdentity { get; private set; }
+    public bool IsAScreenShake => true;
+
     public bool Finished { get; private set; }
 
     private float intensity = 0f;

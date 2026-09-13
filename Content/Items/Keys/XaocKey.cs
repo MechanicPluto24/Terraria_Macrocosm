@@ -47,13 +47,13 @@ public class XaocKey : ModItem
 
         Vector2 frameOrigin = frame.Size() / 2f;
         Vector2 offset = new Vector2(Item.width / 2 - frameOrigin.X, Item.height - frame.Height);
-        Vector2 drawPos = Item.position - Main.screenPosition + frameOrigin + offset;
+        Vector2 drawPos = item.position - Main.screenPosition + frameOrigin + offset;
 
         Color colorFront = new(95, 152, 140, 15);
         Color colorBack = new(158, 255, 157, 20);
 
         float time = Main.GlobalTimeWrappedHourly;
-        float timer = Item.timeSinceItemSpawned / 240f + time * 0.04f;
+        float timer = item.timeSinceItemSpawned / 240f + time * 0.04f;
         time %= 4f;
         time /= 2f;
         if (time >= 1f)

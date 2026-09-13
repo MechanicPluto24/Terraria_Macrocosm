@@ -37,12 +37,12 @@ public class VortexChunk : ModItem
         {
             int type = DustID.Vortex;
             Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * MathF.Abs(MathF.Sin((float)Main.timeForVisualEffects)) * 1.1f;
-            Dust lightDust = Main.dust[Dust.NewDustPerfect(Item.Center - rotVector1, type).dustIndex];
+            Dust lightDust = Main.dust[Dust.NewDustPerfect(item.Center - rotVector1, type).dustIndex];
             lightDust.noGravity = true;
-            lightDust.position = Item.Center - rotVector1 * Main.rand.Next(10, 21);
+            lightDust.position = item.Center - rotVector1 * Main.rand.Next(10, 21);
             lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 7f;
             lightDust.scale = 1.2f;
-            lightDust.customData = Item.Center;
+            lightDust.customData = item.Center;
         }
     }
 }

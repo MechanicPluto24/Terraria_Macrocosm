@@ -1268,7 +1268,7 @@ public static partial class Utility
                 ai[0] = -1f;
             }
         }
-        if (playerYoyo && powner.dead || !playerYoyo && !owner.active) { p.Kill(); return; }
+        if (playerYoyo && powner.dead || !playerYoyo && !(owner switch { NPC npcOwner => npcOwner.active, Projectile projectileOwner => projectileOwner.active, Player playerOwner => playerOwner.active, WorldItem itemOwner => itemOwner.active, _ => false })) { p.Kill(); return; }
         if (playerYoyo && !dontChannel && !yoyoFound)
         {
             powner.heldProj = p.whoAmI;
@@ -6432,7 +6432,7 @@ public static partial class Utility
         {
             if ((float)Main.rand.NextDouble() <= chance)
             {
-                _ = player.QuickSpawnItem(codable.GetSource_Death(), type, amt);
+                player.QuickSpawnItem(codable.GetSource_Death(), type, amt);
             }
 
             return -2;

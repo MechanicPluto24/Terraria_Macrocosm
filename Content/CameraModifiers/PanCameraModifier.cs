@@ -12,6 +12,8 @@ public class PanCameraModifier : ICameraModifier
     public string UniqueIdentity { get; private set; }
 
     /// <summary> Whether this camera modifier has concluded </summary>
+    public bool IsAScreenShake => false;
+
     public bool Finished { get; private set; }
 
     /// <summary> Smoothly return to the regular camera position </summary>

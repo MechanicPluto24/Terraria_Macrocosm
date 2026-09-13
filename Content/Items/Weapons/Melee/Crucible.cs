@@ -50,7 +50,7 @@ public class Crucible : ModItem
     }
     public override void PostUpdate(WorldItem item)
     {
-        Lighting.AddLight(Item.Center, Color.Red.ToVector3() * 0.85f * Main.essScale);
+        Lighting.AddLight(item.Center, Color.Red.ToVector3() * 0.85f * Main.essScale);
     }
 
     public override void AddRecipes()

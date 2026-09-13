@@ -37,12 +37,12 @@ public class NebulaChunk : ModItem
         {
             int type = Main.rand.NextFromList<int>(71, 260);
             Vector2 rotVector1 = Vector2.UnitY.RotatedByRandom(MathHelper.TwoPi) * MathF.Abs(MathF.Sin((float)Main.timeForVisualEffects)) * 1.1f;
-            Dust lightDust = Main.dust[Dust.NewDustPerfect(Item.Center - rotVector1, type).dustIndex];
+            Dust lightDust = Main.dust[Dust.NewDustPerfect(item.Center - rotVector1, type).dustIndex];
             lightDust.noGravity = false;
-            lightDust.position = Item.Center - rotVector1 * Main.rand.Next(10, 11);
+            lightDust.position = item.Center - rotVector1 * Main.rand.Next(10, 11);
             lightDust.velocity = rotVector1.RotatedBy(MathHelper.PiOver2) * 1.2f;
             lightDust.scale = .8f;
-            lightDust.customData = Item.Center;
+            lightDust.customData = item.Center;
         }
     }
 }

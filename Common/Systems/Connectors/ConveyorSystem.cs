@@ -342,7 +342,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
         if (Main.drawToScreen)
             zero2 = Vector2.Zero;
 
-        Point screenOverdrawOffset = Main.GetScreenOverdrawOffset();
+        Point screenOverdrawOffset = (Main.Camera.ScaledPosition - Main.Camera.UnscaledPosition).ToTileCoordinates();
 
         int startX = (int)((Main.screenPosition.X - zero2.X) / 16f - 1f);
         int endX = (int)((Main.screenPosition.X + Main.screenWidth + zero2.X) / 16f) + 2;
@@ -475,7 +475,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
 
         using (MemoryStream memoryStream = new())
         {
-            using (BinaryWriter writer = new(new Ionic.Zlib.DeflateStream(memoryStream, Ionic.Zlib.CompressionMode.Compress, true)))
+            using (BinaryWriter writer = new(new System.IO.Compression.DeflateStream(memoryStream, System.IO.Compression.CompressionMode.Compress, true)))
             {
                 for (int x = startX; x < startX + width; x++)
                 {
@@ -504,7 +504,7 @@ public partial class ConveyorSystem : ModSystem, IOnPlayerJoining
         byte[] compressedData = reader.ReadBytes(compressedLength);
 
         using (MemoryStream memoryStream = new(compressedData))
-        using (BinaryReader compressedReader = new(new Ionic.Zlib.DeflateStream(memoryStream, Ionic.Zlib.CompressionMode.Decompress)))
+        using (BinaryReader compressedReader = new(new System.IO.Compression.DeflateStream(memoryStream, System.IO.Compression.CompressionMode.Decompress)))
         {
             for (int x = startX; x < startX + width; x++)
             {

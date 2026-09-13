@@ -116,7 +116,7 @@ public class CustomContainerGlobalTile : GlobalTile
         if (!Main.editChest && player.chest > -1)
         {
             if (Main.chest[player.chest] == null)
-                Main.chest[player.chest] = new Chest();
+                Chest.CreateWorldChest(player.chest, player.chestX, player.chestY);
             Chest chest = Main.chest[player.chest];
             Tile tile = Main.tile[player.chestX, player.chestY];
 

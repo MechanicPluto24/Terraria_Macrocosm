@@ -653,7 +653,6 @@ public static partial class Utility
 
     public static void GenOre(int tileType, int amountInWorld = -1, float oreStrength = 5, int oreSteps = 5, int heightLimit = -1, bool mapDebug = false)
     {
-        if (noTileActions) return;
         if (heightLimit == -1) heightLimit = (int)Main.worldSurface;
         if (amountInWorld == -1)
         {

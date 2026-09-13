@@ -17,7 +17,7 @@ public class LuminiteShrine : Structure
                 j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(1f)),
                 strength: WorldGen.genRand.Next(2, 5),
                 steps: WorldGen.genRand.Next(4, 8),
-                type: TileID.LunarOre
+                tileType: TileID.LunarOre
             );
         }
         return true;

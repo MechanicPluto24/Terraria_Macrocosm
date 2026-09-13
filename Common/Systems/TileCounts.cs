@@ -16,12 +16,12 @@ public class TileCounts : ModSystem
 
     public override void Load()
     {
-        On_SceneMetrics.ExportTileCountsToMain += On_SceneMetrics_ExportTileCountsToMain;
+        On_SceneMetrics.AggregateTileCounts += On_SceneMetrics_AggregateTileCounts;
     }
 
     public override void Unload()
     {
-        On_SceneMetrics.ExportTileCountsToMain -= On_SceneMetrics_ExportTileCountsToMain;
+        On_SceneMetrics.AggregateTileCounts -= On_SceneMetrics_AggregateTileCounts;
     }
 
     public int IrradiatedRockCount { get; private set; } = 0;
@@ -62,6 +62,7 @@ public class TileCounts : ModSystem
         MonolithCount = tileCounts[ModContent.TileType<Monolith>()];
         ApolloLanderCount = tileCounts[ModContent.TileType<ApolloLander>()];
 
+        GraveyardExtraTileCount = 0;
         for (int type = 0; type < TileLoader.TileCount; type++)
         {
             if (TileSets.CountsForGraveyard[type])
@@ -78,9 +79,15 @@ public class TileCounts : ModSystem
         return graveyardTileCount + GraveyardExtraTileCount;
     }
 
-    private void On_SceneMetrics_ExportTileCountsToMain(On_SceneMetrics.orig_ExportTileCountsToMain orig, SceneMetrics self)
+    private void On_SceneMetrics_AggregateTileCounts(On_SceneMetrics.orig_AggregateTileCounts orig, SceneMetrics self)
     {
         orig(self);
+        GraveyardExtraTileCount = 0;
+        for (int type = 0; type < TileLoader.TileCount; type++)
+        {
+            if (TileSets.CountsForGraveyard[type])
+                GraveyardExtraTileCount += self.GetTileCount((ushort)type);
+        }
         self.GraveyardTileCount = GetModifiedGraveyardTileCount(self.GraveyardTileCount);
     }
 }

@@ -155,7 +155,6 @@ public class SchroteriProjectile : ModProjectile
     }
     public override bool PreDraw(Player player, ref Color lightColor)
     {
-        Player player = Main.player[Projectile.owner];
 
         Texture2D texture = TextureAssets.Extra[ExtrasID.SharpTears].Value;
         Color effectColor = new Color(130, 220, 199, 0) * (float)((float)hitStacks / (float)Schroteri.MaxStacks);

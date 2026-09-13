@@ -47,7 +47,7 @@ public abstract class CrudeWireWrench : ModItem
             player.inventory[slot].stack--;
 
         if (player.inventory[slot].stack <= 0)
-            player.inventory[slot].SetDefaults();
+            player.inventory[slot].SetDefaults(0);
 
         NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, NetAction, Player.tileTargetX, Player.tileTargetY); // NetAction = WireActionID.*
         return true;

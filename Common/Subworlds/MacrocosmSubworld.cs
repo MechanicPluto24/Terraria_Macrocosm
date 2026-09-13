@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.Customization;
+﻿using WorldSize = Macrocosm.Common.DataStructures.WorldSize;
+using Macrocosm.Common.Customization;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Events;
@@ -231,12 +232,7 @@ public abstract partial class MacrocosmSubworld : Subworld
 
     private void UpdateTileEntities()
     {
-        TileEntity.UpdateStart();
-        foreach (TileEntity te in TileEntity.ByID.Values)
-        {
-            te.Update();
-        }
-        TileEntity.UpdateEnd();
+        TileEntity.PerformUpdates();
     }
 
     private void UpdateLiquids()

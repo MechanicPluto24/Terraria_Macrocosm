@@ -281,7 +281,6 @@ public static partial class Utility
             if (left == player.chestX && top == player.chestY && player.chest >= 0)
             {
                 player.chest = -1;
-                Recipe.FindRecipes();
                 _ = SoundEngine.PlaySound(SoundID.MenuClose);
             }
             else
@@ -310,7 +309,6 @@ public static partial class Utility
                     player.chestY = top;
                     _ = SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
                 }
-                Recipe.FindRecipes();
             }
         }
     }

@@ -116,12 +116,12 @@ public class LaunchPadGlobalTile : GlobalTile
     }
 
     // Disable sandfall for launch pads and tiles below them
-    private bool On_WorldGen_SpawnFallingBlockProjectile(On_WorldGen.orig_SpawnFallingBlockProjectile orig, int i, int j, Tile tileCache, Tile tileTopCache, Tile tileBottomCache, int type)
+    private bool On_WorldGen_SpawnFallingBlockProjectile(On_WorldGen.orig_SpawnFallingBlockProjectile orig, int i, int j, int type, Tile tileCache)
     {
         if (!CanTileBeAltered(i, j))
             return false;
 
-        return orig(i, j, tileCache, tileTopCache, tileBottomCache, type);
+        return orig(i, j, type, tileCache);
     }
 
     // Disable sloping for launch pads and tiles below them

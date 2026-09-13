@@ -484,7 +484,7 @@ public class HummingbirdDrone : ModProjectile
             Main.EntitySpriteDraw(flash.Value, flashPos, frame, (Color.White * (Projectile.alpha / 255f)), Projectile.rotation, frame.Size() / 2, Projectile.scale, effects, 0f);
         }
 
-        if (ShouldProtect(Main.player[Projectile.owner]))
+        if (ShouldProtect(player))
             DrawBeam(Main.spriteBatch);
     }
 }

@@ -90,8 +90,8 @@ public class RandomUpdateGlobalTile : GlobalTile
             }
             else
             {
-                TileLoader.RandomUpdate(i, j, Main.tile[i, j].TileType);
-                WallLoader.RandomUpdate(i, j, Main.tile[i, j].TileType);
+                TileLoader.RandomUpdate(i, j, Main.tile[i, j].TileType, underground: false);
+                WallLoader.RandomUpdate(i, j, Main.tile[i, j].WallType, underground: false);
             }
         }
         else
@@ -111,8 +111,8 @@ public class RandomUpdateGlobalTile : GlobalTile
             }
             else
             {
-                TileLoader.RandomUpdate(i, j, Main.tile[i, j].TileType);
-                WallLoader.RandomUpdate(i, j, Main.tile[i, j].TileType);
+                TileLoader.RandomUpdate(i, j, Main.tile[i, j].TileType, underground: true);
+                WallLoader.RandomUpdate(i, j, Main.tile[i, j].WallType, underground: true);
             }
         }
         else

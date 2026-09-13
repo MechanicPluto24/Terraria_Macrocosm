@@ -257,7 +257,6 @@ public class LuminiteChest : ModTile
             if (left == player.chestX && top == player.chestY && player.chest != -1)
             {
                 player.chest = -1;
-                Recipe.FindRecipes();
                 SoundEngine.PlaySound(SoundID.MenuClose);
             }
             else
@@ -295,7 +294,6 @@ public class LuminiteChest : ModTile
                         player.OpenChest(left, top, chest);
                     }
 
-                    Recipe.FindRecipes();
                 }
             }
         }

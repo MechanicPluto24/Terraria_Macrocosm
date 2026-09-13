@@ -41,6 +41,8 @@ public class MicronovaPortal : ModProjectile
 
     public override void SetDefaults()
     {
+        Projectile.drawLayer = ProjectileDrawLayerID.BehindProjectiles;
+        Projectile.usesOwnerLight = true;
         defWidth = defHeight = Projectile.width = Projectile.height = 68;
         Projectile.height = 68;
         Projectile.friendly = true;
@@ -48,7 +50,6 @@ public class MicronovaPortal : ModProjectile
         Projectile.penetrate = -1;
         Projectile.tileCollide = false;
         Projectile.alpha = 255;
-        Projectile.hide = true;
     }
 
     public override void AI()
@@ -158,8 +159,4 @@ public class MicronovaPortal : ModProjectile
         return false;
     }
 
-    public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-    {
-        behindProjectiles.Add(index);
-    }
 }

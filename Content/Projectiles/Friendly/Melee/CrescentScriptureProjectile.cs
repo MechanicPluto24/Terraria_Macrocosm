@@ -120,11 +120,10 @@ public class CrescentScriptureProjectile : ModProjectile
 
     public override bool PreDraw(Player player, ref Color lightColor)
     {
-        var rotation = Projectile.rotation + (Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.Pi * 0.75f);
-        float rotation2 = rotation + (SwingDirection > 0 ? (Player.direction == 1 ? -((MathHelper.PiOver4 / 2) + (MathHelper.PiOver4)) : MathHelper.Pi) : (Player.direction == 1 ? 0 : ((MathHelper.PiOver4 / 2) + (MathHelper.PiOver4)) + MathHelper.Pi));
-        var origin = new Vector2(Player.direction == 1 ? 10 : 67, 67);
+        var rotation = Projectile.rotation + (player.direction == 1 ? MathHelper.PiOver4 : MathHelper.Pi * 0.75f);
+        float rotation2 = rotation + (SwingDirection > 0 ? (player.direction == 1 ? -((MathHelper.PiOver4 / 2) + (MathHelper.PiOver4)) : MathHelper.Pi) : (player.direction == 1 ? 0 : ((MathHelper.PiOver4 / 2) + (MathHelper.PiOver4)) + MathHelper.Pi));
+        var origin = new Vector2(player.direction == 1 ? 10 : 67, 67);
 
-        Player player = Main.player[Projectile.owner];
         Vector2 position = player.Center - Main.screenPosition;
         Texture2D texture = ModContent.Request<Texture2D>(Macrocosm.TexturesPath + "Swing", ReLogic.Content.AssetRequestMode.ImmediateLoad).Value;
         Vector2 Origin = texture.Frame(1, 4).Size() / 2f;
@@ -184,7 +183,7 @@ public class CrescentScriptureProjectile : ModProjectile
            rotation,
            origin,
            Projectile.scale,
-           Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+           player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
            0
        );
 

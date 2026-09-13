@@ -87,17 +87,17 @@ public class SeleniteGreatsword : GreatswordHeldProjectileItem
         }
     }
 
-    public override bool PreDrawSword(GreatswordHeldProjectile greatsword, Color lightColor, ref Color? drawColor)
+    public override bool PreDrawSword(GreatswordHeldProjectile greatsword, Player player, Color lightColor, ref Color? drawColor)
     {
         drawColor = Color.Lerp(lightColor, new Color(130, 220, 199).WithOpacity(0.5f), Utility.QuadraticEaseIn(greatsword.Charge));
         return true;
     }
 
-    public override void PostDrawSword(GreatswordHeldProjectile proj, Color lightColor)
+    public override void PostDrawSword(GreatswordHeldProjectile proj, Player player, Color lightColor)
     {
         if (proj.State == GreatswordHeldProjectile.GreatswordState.Charge)
         {
-            Vector2 starPosition = proj.Projectile.Center + ((proj.Projectile.rotation - MathHelper.PiOver4) * proj.Player.direction + (proj.Player.direction == -1 ? MathHelper.Pi : 0f)).ToRotationVector2() * proj.Sword.SwordLength * 0.9f + new Vector2(proj.Sword.SwordWidth, 0) * proj.Player.direction;
+            Vector2 starPosition = proj.Projectile.Center + ((proj.Projectile.rotation - MathHelper.PiOver4) * player.direction + (player.direction == -1 ? MathHelper.Pi : 0f)).ToRotationVector2() * proj.Sword.SwordLength * 0.9f + new Vector2(proj.Sword.SwordWidth, 0) * player.direction;
             Utility.DrawStar(starPosition + Main.rand.NextVector2Circular(1, 1) - Main.screenPosition, 2, new Color(130, 220, 199).WithOpacity(1f - proj.Charge), new Vector2(1f, 3.2f) * Utility.QuadraticEaseIn(proj.Charge) * 0.4f, 0f, entity: true);
 
         }

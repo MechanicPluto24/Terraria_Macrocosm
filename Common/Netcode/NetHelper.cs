@@ -168,8 +168,6 @@ public static class NetHelper
         if (!npc.active)
             life = 0;
 
-        if (!npc.active || npc.life <= 0)
-            npc.netSkip = 0;
 
         short netID = (short)npc.netID;
         bool[] array = new bool[4];
@@ -186,7 +184,7 @@ public static class NetHelper
         BitsByte bb2 = new();
         bb2[0] = npc.statsAreScaledForThisManyPlayers > 1;
         bb2[1] = npc.SpawnedFromStatue;
-        bb2[2] = npc.strengthMultiplier != 1f;
+        bb2[2] = npc.difficulty != 1f;
         packet.Write(bb2);
         for (int i = 0; i < Terraria.NPC.maxAI; i++)
         {
@@ -199,7 +197,7 @@ public static class NetHelper
             packet.Write((byte)npc.statsAreScaledForThisManyPlayers);
 
         if (bb2[2])
-            packet.Write(npc.strengthMultiplier);
+            packet.Write(npc.difficulty);
 
         if (!bb1[7])
         {
@@ -258,9 +256,9 @@ public static class NetHelper
             if (bb2[0])
                 playerCountForMultiplayerDifficultyOverride = reader.ReadByte();
 
-            float strengthMultiplierOverride = 1f;
+            float difficultyOverride = 1f;
             if (bb2[2])
-                strengthMultiplierOverride = reader.ReadSingle();
+                difficultyOverride = reader.ReadSingle();
 
             int life = 0;
             if (!bb1[7])
@@ -288,7 +286,7 @@ public static class NetHelper
                 npc.SetDefaults(netID, new NPCSpawnParams
                 {
                     playerCountForMultiplayerDifficultyOverride = playerCountForMultiplayerDifficultyOverride,
-                    strengthMultiplierOverride = strengthMultiplierOverride
+                    difficultyOverride = difficultyOverride
                 });
             }
 
@@ -360,9 +358,8 @@ public static class NetHelper
         {
             if (TileEntity.ByID.TryGetValue(id, out var tileEntity))
             {
-                TileEntity.ByID.Remove(id);
                 Point16 position = tileEntity.Position;
-                TileEntity.ByPosition.Remove(position);
+                TileEntity.Remove(tileEntity);
 
                 // Sync removal to the other clients
                 NetMessage.SendData(MessageID.TileEntitySharing, ignoreClient: sender, number: id, number2: position.X, number3: position.Y);
@@ -370,10 +367,14 @@ public static class NetHelper
         }
         else
         {
-            TileEntity tileEntity = TileEntity.Read(reader, networkSend: true, lightSend: true);
+            TileEntity tileEntity = TileEntity.Read(reader, Main.curRelease, networkSend: true, lightSend: true);
             tileEntity.ID = id;
-            TileEntity.ByID[tileEntity.ID] = tileEntity;
-            TileEntity.ByPosition[tileEntity.Position] = tileEntity;
+            if (TileEntity.ByID.TryGetValue(id, out var previous))
+            {
+                TileEntity.UpdateEntities.Remove(previous);
+                TileEntity.ByPosition.Remove(previous.Position);
+            }
+            TileEntity.Add(tileEntity);
 
             // Sync state to the other clients
             NetMessage.SendData(MessageID.TileEntitySharing, ignoreClient: sender, number: tileEntity.ID, number2: tileEntity.Position.X, number3: tileEntity.Position.Y);

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Drawing.Particles;
+using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Global.Projectiles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Buffs.Weapons;
@@ -74,7 +74,7 @@ public class HorusExplosion : ModProjectile
             Vector2 position = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
             float distFactor = (Vector2.DistanceSquared(Projectile.Center, position) / (dist * dist));
             Vector2 velocity = (Projectile.Center - position).SafeNormalize(default) * -140f;
-            Particle.Create(ParticleOrchestraType.AshTreeShake, position, velocity);
+            AshTreeShake.Spawn(position);
         }
 
         Particle.Create<TintableFlash>((p) =>

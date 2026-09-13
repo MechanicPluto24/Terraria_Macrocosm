@@ -110,7 +110,7 @@ public class CrescentGhoul : ModNPC
         float dashRadius = 60f;
 
         if (Main.expertMode)
-            kbResist *= Main.GameModeInfo.KnockbackToEnemiesMultiplier;
+            kbResist = NPC.GetKnockbackMultiplier_ScaledByDifficulty(kbResist);
 
         if (AI_State == ActionState.Chase)
             NPC.damage = NPC.defDamage;

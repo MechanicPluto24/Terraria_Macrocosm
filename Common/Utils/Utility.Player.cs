@@ -193,7 +193,7 @@ public static partial class Utility
             return;
 
         selecteditem.DecreaseStack();
-        player.PutItemInInventoryFromItemUsage(targetType, player.selectedItem);
+        player.PutItemInInventoryFromItemUsage(targetType);
     }
 
     public static bool CanHurtCritterAroundPosition(Vector2 position, float radius)

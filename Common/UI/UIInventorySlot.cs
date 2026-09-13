@@ -209,7 +209,7 @@ public class UIInventorySlot : UIElement
             if (!inventory.CanExtractItem(itemIndex, InventoryExtractionSource.Player))
                 return;
 
-            item = Main.player[Main.myPlayer].GetItem(item, GetItemSettings.InventoryEntityToPlayerInventorySettings);
+            item = Main.player[Main.myPlayer].GetItem(item, GetItemSettings.QuickTransferFromSlot);
 
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 shouldNetsync = true;
@@ -254,7 +254,6 @@ public class UIInventorySlot : UIElement
 
         if (Main.mouseItem.type > ItemID.None || item.type > ItemID.None)
         {
-            Recipe.FindRecipes();
             SoundEngine.PlaySound(SoundID.Grab);
         }
 
@@ -324,7 +323,6 @@ public class UIInventorySlot : UIElement
                 if (item.stack <= 0)
                     item = new Item();
 
-                Recipe.FindRecipes();
 
                 if (Main.netMode == NetmodeID.MultiplayerClient)
                     shouldNetsync = true;

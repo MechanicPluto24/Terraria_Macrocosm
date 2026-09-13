@@ -239,7 +239,6 @@ public class UIItemBrowser : UIElement
         searchBar.OnContentsChanged += OnSearchContentsChanged;
         searchBar.OnStartTakingInput += OnStartTakingInput;
         searchBar.OnEndTakingInput += OnEndTakingInput;
-        searchBar.OnCanceledTakingInput += OnCanceledInput;
         searchBoxPanel.Append(searchBar);
 
         // Cancel/clear button (right side, inside the panel)
@@ -284,11 +283,6 @@ public class UIItemBrowser : UIElement
     private void OnEndTakingInput()
     {
         searchBoxPanel.BorderColor = UITheme.Current.PanelStyle.BorderColor;
-    }
-
-    private void OnCanceledInput()
-    {
-        searchBar.ToggleTakingText();
     }
 
     public override void LeftClick(UIMouseEvent evt)

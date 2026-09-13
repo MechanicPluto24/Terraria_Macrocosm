@@ -18,10 +18,10 @@ public class DustGlobalTile : ModSystem
         On_Player.MakeFloorDust -= DustAway;
     }
     //Though the explosion global tile works well for tiles, it doesn't work for walls :(
-    private void DustAway(On_Player.orig_MakeFloorDust orig,Player player, bool Falling, int type, int paintColor)
+    private void DustAway(On_Player.orig_MakeFloorDust orig,Player player, bool Falling, int type, int frameX, int frameY, int paintColor)
     {
         if (MacrocosmSubworld.GetGravityMultiplier() == 0f)
             return;
-        orig(player,Falling, type, paintColor);
+        orig(player, Falling, type, frameX, frameY, paintColor);
     }
 }

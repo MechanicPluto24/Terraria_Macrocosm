@@ -1,3 +1,4 @@
+using Terraria.ID;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
@@ -30,9 +31,10 @@ public class MicronovaBeam : ModProjectile
     float Transparency = 0f;
     public override void SetDefaults()
     {
+        Projectile.drawLayer = ProjectileDrawLayerID.OverPlayers;
+        Projectile.usesOwnerLight = true;
         Projectile.width = 28;
         Projectile.height = 22;
-        Projectile.hide = true;
         Projectile.friendly = true;
         Projectile.hostile = false;
         Projectile.DamageType = DamageClass.Magic;
@@ -77,10 +79,6 @@ public class MicronovaBeam : ModProjectile
         return !npc.friendly;
     }
 
-    public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-    {
-        overPlayers.Add(index);
-    }
 
     public override Color? GetAlpha(Color lightColor)
         => Color.White * (1f - Projectile.alpha / 255f);

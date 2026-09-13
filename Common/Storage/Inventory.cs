@@ -149,7 +149,7 @@ public partial class Inventory : IEnumerable<Item>
         {
             if (Main.netMode != NetmodeID.Server)
             {
-                Main.LocalPlayer.QuickSpawnItem(items[index].GetSource_Misc("Macrocosm:Inventory"), items[index], items[index].stack);
+                Main.LocalPlayer.QuickSpawnItem(new EntitySource_Misc("Macrocosm:Inventory"), items[index].Clone());
                 items[index].TurnToAir();
 
                 if (sync)
@@ -160,7 +160,7 @@ public partial class Inventory : IEnumerable<Item>
         {
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Item.NewItem(items[index].GetSource_Misc("Macrocosm:Inventory"), worldPosition, items[index]);
+                Item.NewItem(new EntitySource_Misc("Macrocosm:Inventory"), worldPosition, items[index]);
                 items[index].TurnToAir();
 
                 if (sync)
@@ -412,7 +412,7 @@ public partial class Inventory : IEnumerable<Item>
 
                 if (item.stack <= 0)
                 {
-                    item.SetDefaults();
+                    item.SetDefaults(0);
                     uiItemSlots[i].ClearGlow();
 
                     if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -424,7 +424,7 @@ public partial class Inventory : IEnumerable<Item>
                 if (items[i].type == ItemID.None)
                 {
                     items[i] = item.Clone();
-                    item.SetDefaults();
+                    item.SetDefaults(0);
                     uiItemSlots[i].ClearGlow();
                 }
 
@@ -453,7 +453,7 @@ public partial class Inventory : IEnumerable<Item>
                     SoundEngine.PlaySound(SoundID.Grab);
 
                 items[j] = item.Clone();
-                item.SetDefaults();
+                item.SetDefaults(0);
                 uiItemSlots[j].ClearGlow();
                 ItemSlot.AnnounceTransfer(new ItemSlot.ItemTransferInfo(items[j], 0, 3));
 
@@ -481,8 +481,7 @@ public partial class Inventory : IEnumerable<Item>
                 if (!CanExtractItem(i, InventoryExtractionSource.Player))
                     continue;
 
-                items[i].position = player.Center;
-                items[i] = player.GetItem(items[i], GetItemSettings.LootAllSettingsRegularChest);
+                items[i] = player.GetItem(items[i], GetItemSettings.LootAllFromChest);
                 uiItemSlots[i].ClearGlow();
 
                 if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -492,8 +491,7 @@ public partial class Inventory : IEnumerable<Item>
     }
 
     /// <summary> Deposit all items from the player's inventory to this inventory </summary>
-    /// <param name="context"> The transfer context, used for visual transfers </param>
-    public void DepositAll(ContainerTransferContext context)
+    public void DepositAll()
     {
         Player player = Main.LocalPlayer;
         bool transferredAny = false;
@@ -513,7 +511,8 @@ public partial class Inventory : IEnumerable<Item>
             SoundEngine.PlaySound(SoundID.Grab);
     }
 
-    public void QuickStack(ContainerTransferContext context)
+    // TODO (1.4.5): Integrate custom inventories with vanilla QuickStacking while retaining placement/extraction rules.
+    public void QuickStack(Vector2? transferDestination = null)
     {
         Player player = Main.LocalPlayer;
         HashSet<int> eligibleTypes = new();
@@ -542,8 +541,8 @@ public partial class Inventory : IEnumerable<Item>
                 continue;
 
             transferredAny = true;
-            if (context.CanVisualizeTransfers)
-                Chest.VisualizeChestTransfer(player.Center, context.GetContainerWorldPosition(), transferVisual, transferred);
+            if (transferDestination.HasValue)
+                Chest.VisualizeChestTransfer(player.Center, transferDestination.Value, transferVisual.type, Chest.ItemTransferVisualizationSettings.PlayerToChest);
         }
 
         if (transferredAny)

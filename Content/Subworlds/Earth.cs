@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using WorldSize = Macrocosm.Common.DataStructures.WorldSize;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.UI.Rockets.Navigation.Checklist;
 using Macrocosm.Common.Utils;

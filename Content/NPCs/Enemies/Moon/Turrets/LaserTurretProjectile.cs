@@ -1,3 +1,4 @@
+using Terraria.ID;
 using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
@@ -29,9 +30,10 @@ public class LaserTurretProjectile : ModProjectile
 
     public override void SetDefaults()
     {
+        Projectile.drawLayer = ProjectileDrawLayerID.BehindNPCs;
+        Projectile.usesOwnerLight = true;
         Projectile.width = 28;
         Projectile.height = 22;
-        Projectile.hide = true;
         Projectile.friendly = false;
         Projectile.hostile = true;
         Projectile.penetrate = -1;
@@ -70,10 +72,6 @@ public class LaserTurretProjectile : ModProjectile
             transparency -= 0.2f;
     }
 
-    public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-    {
-        behindNPCs.Add(index);
-    }
 
     public override Color? GetAlpha(Color lightColor)  => Color.White * (1f - Projectile.alpha / 255f);
 

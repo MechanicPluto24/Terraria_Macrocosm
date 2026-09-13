@@ -191,7 +191,7 @@ public class ChandriumWhipProjectile : ModProjectile
         Main.instance.LoadProjectile(Type);
         Texture2D texture = TextureAssets.Projectile[Type].Value;
 
-        bool empowered = Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>());
+        bool empowered = player.HasBuff(ModContent.BuffType<ChandriumWhipBuff>());
 
         Vector2 pos = list[0];
 
@@ -262,7 +262,7 @@ public class ChandriumWhipProjectile : ModProjectile
                 frame.Y = 0;
             }
 
-            if (Main.player[Projectile.owner].HasBuff(ModContent.BuffType<ChandriumWhipBuff>()) && !tip)
+            if (player.HasBuff(ModContent.BuffType<ChandriumWhipBuff>()) && !tip)
                 Utility.DrawStar(pos - Main.screenPosition, 1, new Color(177, 107, 219, 20), scale * 0.4f, rotation, flip, entity: true);
 
             Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, flip, 0);

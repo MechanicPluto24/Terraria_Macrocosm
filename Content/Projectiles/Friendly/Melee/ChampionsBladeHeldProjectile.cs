@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.CrossMod;
+using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.Weapons.Melee;
@@ -147,11 +147,11 @@ internal class ChampionsBladeHeldProjectile : ModProjectile
 
     public override bool PreDraw(Player player, ref Color lightColor)
     {
-        DrawSwingEmpowered();
-        DrawSwing();
+        DrawSwingEmpowered(player);
+        DrawSwing(player);
 
-        var rotation = Projectile.rotation + (Player.direction == 1 ? MathHelper.PiOver4 : MathHelper.Pi * 0.75f);
-        var origin = new Vector2(Player.direction == 1 ? 10 : 67, 67);
+        var rotation = Projectile.rotation + (player.direction == 1 ? MathHelper.PiOver4 : MathHelper.Pi * 0.75f);
+        var origin = new Vector2(player.direction == 1 ? 10 : 67, 67);
 
         itemTexture ??= ModContent.Request<Texture2D>("Macrocosm/Content/Items/Weapons/Melee/ChampionsBlade", AssetRequestMode.ImmediateLoad);
 
@@ -165,7 +165,7 @@ internal class ChampionsBladeHeldProjectile : ModProjectile
             rotation,
             origin,
             Projectile.scale,
-            Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+            player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
             0
         );
 
@@ -177,14 +177,14 @@ internal class ChampionsBladeHeldProjectile : ModProjectile
             rotation,
             origin,
             Projectile.scale,
-            Player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+            player.direction == 1 ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
             0
         );
 
         return false;
     }
 
-    private void DrawSwing()
+    private void DrawSwing(Player player)
     {
         float stacksMultiplier = ((float)hitStacks / ChampionsBlade.MaxStacks);
 
@@ -193,7 +193,7 @@ internal class ChampionsBladeHeldProjectile : ModProjectile
         Vector2 swingOrigin = swing.Frame(1, 4).Size() / 2f;
         float scale = Projectile.scale * 1.4f;
         SpriteEffects spriteEffects = ((!(SwingDirection >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
-        float progress = Timer / (MaxTime * 4);
+        float progress = Timer / (Math.Max(1, player.itemTimeMax) * 4f);
         float lerpTime = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
         float progressScale = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f);
 
@@ -231,7 +231,7 @@ internal class ChampionsBladeHeldProjectile : ModProjectile
         Utility.DrawPrettyStarSparkle(Projectile.Opacity, SpriteEffects.None, drawPos2, new Color(255, 255, 255, 0) * lerpTime * 0.5f, middleMediumColor * (1f - stacksMultiplier), progress, 0f, 0.5f, 0.5f, 1f, 0f, new Vector2(2f, Utils.Remap(progress, 0f, 1f, 4f, 1f)) * scale, Vector2.One * scale);
     }
 
-    private void DrawSwingEmpowered()
+    private void DrawSwingEmpowered(Player player)
     {
         float stacksMultiplier = ((float)hitStacks / ChampionsBlade.MaxStacks);
 
@@ -240,7 +240,7 @@ internal class ChampionsBladeHeldProjectile : ModProjectile
         Vector2 swingOrigin = swing.Frame(1, 4).Size() / 2f;
         float scale = Projectile.scale + (Projectile.scale * stacksMultiplier * 0.8f);
         SpriteEffects spriteEffects = ((!(SwingDirection >= 0f)) ? SpriteEffects.FlipVertically : SpriteEffects.None); // Flip the sprite based on the direction it is facing.
-        float progress = Timer / (MaxTime * 4);
+        float progress = Timer / (Math.Max(1, player.itemTimeMax) * 4f);
         float lerpTime = Utils.Remap(progress, 0f, 0.6f, 0f, 1f) * Utils.Remap(progress, 0.6f, 1f, 1f, 0f) * stacksMultiplier;
         float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
         lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);

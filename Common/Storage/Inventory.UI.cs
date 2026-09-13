@@ -139,7 +139,7 @@ public partial class Inventory
             CheckInteractible = () => CanInteract,
             GrayscaleIconIfNotInteractible = true
         };
-        depositAllButton.OnLeftClick += (_, _) => DepositAll(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
+        depositAllButton.OnLeftClick += (_, _) => DepositAll();
         inventoryPanel.Append(depositAllButton);
 
         quickStackButton = new
@@ -157,7 +157,7 @@ public partial class Inventory
             CheckInteractible = () => CanInteract,
             GrayscaleIconIfNotInteractible = true
         };
-        quickStackButton.OnLeftClick += (_, _) => QuickStack(ContainerTransferContext.FromUnknown(Main.LocalPlayer));
+        quickStackButton.OnLeftClick += (_, _) => QuickStack();
         inventoryPanel.Append(quickStackButton);
 
         restockInventoryButton = new

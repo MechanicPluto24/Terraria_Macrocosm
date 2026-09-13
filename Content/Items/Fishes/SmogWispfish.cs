@@ -8,6 +8,7 @@ public class SmogWispfish : ModItem
 {
     public override void SetStaticDefaults()
     {
+        ItemID.Sets.IsQuestFish[Type] = true;
         Item.ResearchUnlockCount = 2;
         ItemID.Sets.CanBePlacedOnWeaponRacks[Type] = true;
     }
@@ -17,7 +18,6 @@ public class SmogWispfish : ModItem
         Item.DefaultToQuestFish();
     }
 
-    public override bool IsQuestFish() => true;
     public override bool IsAnglerQuestAvailable() => true;
     public override void AnglerQuestChat(ref string description, ref string catchLocation)
     {

@@ -1,4 +1,5 @@
-﻿using Macrocosm.Common.DataStructures;
+﻿using WorldSize = Macrocosm.Common.DataStructures.WorldSize;
+using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Enums;
 using Macrocosm.Common.Subworlds;
 using Macrocosm.Common.Systems.Flags;

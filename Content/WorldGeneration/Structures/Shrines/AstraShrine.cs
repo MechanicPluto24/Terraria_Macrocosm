@@ -43,7 +43,7 @@ public class AstraShrine : Structure
                 j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(2f)),
                 strength: WorldGen.genRand.Next(3, 6),
                 steps: WorldGen.genRand.Next(8, 12),
-                type: (ushort)ModContent.TileType<DianiteOre>()
+                tileType: (ushort)ModContent.TileType<DianiteOre>()
             );
 
             WorldGen.OreRunner(
@@ -51,7 +51,7 @@ public class AstraShrine : Structure
                 j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(2f)),
                 strength: WorldGen.genRand.Next(3, 6),
                 steps: WorldGen.genRand.Next(8, 12),
-                type: TileID.LunarBlockNebula
+                tileType: TileID.LunarBlockNebula
             );
         }
     }

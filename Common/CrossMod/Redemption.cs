@@ -1,5 +1,6 @@
 ﻿
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Common.CrossMod;
@@ -57,7 +58,7 @@ public class Redemption
         Mod.Call("addItemToBluntSwing", itemType);
 	}
 
-	public static void AddElement(Entity entity, int elementID, bool projsInheritElements = false)
+	public static void AddElement(IEntitySourceTarget entity, int elementID, bool projsInheritElements = false)
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
@@ -104,7 +105,7 @@ public class Redemption
 	// ------------------------------------------------------------------------------------------------------
 	// These are dynamic, so they can go in SetDefaults or wherever you want to update them
 	// Keep in mind they don't get reset, so not required to put in an Update method that happens every frame
-	public static void OverrideElement(Entity entity, int elementID, int overrideID = 1)
+	public static void OverrideElement(IEntitySourceTarget entity, int elementID, int overrideID = 1)
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return;
@@ -199,7 +200,7 @@ public class Redemption
 	}
 
 	// ------------------------------------------------------------------------------------------------------
-	public static bool HasElement(Entity entity, int elementID)
+	public static bool HasElement(IEntitySourceTarget entity, int elementID)
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return false;
@@ -214,7 +215,7 @@ public class Redemption
 		return false;
 	}
 
-	public static int GetFirstElement(Entity entity, bool ignoreExplosive = false)
+	public static int GetFirstElement(IEntitySourceTarget entity, bool ignoreExplosive = false)
 	{
 		if (!CrossMod.Redemption.Enabled)
 			return 0;

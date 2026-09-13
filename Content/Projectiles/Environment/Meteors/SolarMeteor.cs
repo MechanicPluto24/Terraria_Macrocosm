@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Bases.Projectiles;
+using Macrocosm.Common.Bases.Projectiles;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Utils;
 using Macrocosm.Content.Items.GrabBags;
@@ -75,7 +75,7 @@ public class SolarMeteor : BaseMeteor
             Vector2 position = Projectile.Center + Main.rand.NextVector2Circular(dist, dist);
             float distFactor = (Vector2.DistanceSquared(Projectile.Center, position) / (dist * dist));
             Vector2 velocity = (Projectile.Center - position).SafeNormalize(default) * -140f;
-            Particle.Create(ParticleOrchestraType.AshTreeShake, position, velocity);
+            AshTreeShake.Spawn(position);
         }
 
         Particle.Create<TintableFlash>((p) =>

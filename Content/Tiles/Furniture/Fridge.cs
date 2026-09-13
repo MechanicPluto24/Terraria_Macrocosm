@@ -101,7 +101,6 @@ public class Fridge : ModTile
             if (left == player.chestX && top == player.chestY && player.chest != -1)
             {
                 player.chest = -1;
-                Recipe.FindRecipes();
                 SoundEngine.PlaySound(SoundID.MenuClose);
             }
             else
@@ -126,7 +125,6 @@ public class Fridge : ModTile
                     SoundEngine.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
                     player.OpenChest(left, top, chest);
                 }
-                Recipe.FindRecipes();
             }
         }
         return true;

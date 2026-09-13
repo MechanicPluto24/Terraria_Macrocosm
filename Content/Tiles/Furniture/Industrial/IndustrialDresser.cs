@@ -97,7 +97,6 @@ public class IndustrialDresser : ModTile
                 if (left == player.chestX && top == player.chestY && player.chest != -1)
                 {
                     player.chest = -1;
-                    Recipe.FindRecipes();
                     SoundEngine.PlaySound(SoundID.MenuClose);
                 }
                 else
@@ -117,7 +116,6 @@ public class IndustrialDresser : ModTile
                     if (chestIndex == player.chest)
                     {
                         player.chest = -1;
-                        Recipe.FindRecipes();
                         SoundEngine.PlaySound(SoundID.MenuClose);
                     }
                     else if (chestIndex != player.chest && player.chest == -1)
@@ -130,7 +128,6 @@ public class IndustrialDresser : ModTile
                         player.OpenChest(left, top, chestIndex);
                         SoundEngine.PlaySound(SoundID.MenuTick);
                     }
-                    Recipe.FindRecipes();
                 }
             }
         }
@@ -138,7 +135,6 @@ public class IndustrialDresser : ModTile
         {
             Main.playerInventory = false;
             player.chest = -1;
-            Recipe.FindRecipes();
             player.SetTalkNPC(-1);
             Main.npcChatCornerItem = 0;
             Main.npcChatText = "";

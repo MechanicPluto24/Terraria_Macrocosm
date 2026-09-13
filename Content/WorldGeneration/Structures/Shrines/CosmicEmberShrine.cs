@@ -36,7 +36,7 @@ public class CosmicEmberShrine : Structure
                 j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(1f)),
                 strength: WorldGen.genRand.Next(2, 5),
                 steps: WorldGen.genRand.Next(4, 8),
-                type: (ushort)ModContent.TileType<ChandriumOre>()
+                tileType: (ushort)ModContent.TileType<ChandriumOre>()
             );
 
             WorldGen.OreRunner(
@@ -44,7 +44,7 @@ public class CosmicEmberShrine : Structure
                 j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(1f)),
                 strength: WorldGen.genRand.Next(2, 5),
                 steps: WorldGen.genRand.Next(4, 8),
-                type: TileID.LunarBlockStardust
+                tileType: TileID.LunarBlockStardust
             );
         }
     }

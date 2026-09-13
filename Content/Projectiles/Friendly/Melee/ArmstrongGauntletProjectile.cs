@@ -24,6 +24,8 @@ public class ArmstrongGauntletProjectile : ModProjectile
 
     public override void SetDefaults()
     {
+        Projectile.drawLayer = ProjectileDrawLayerID.OverPlayers;
+        Projectile.usesOwnerLight = true;
         Projectile.width = 32;
         Projectile.height = 32;
         Projectile.scale = 0.5f;
@@ -37,7 +39,6 @@ public class ArmstrongGauntletProjectile : ModProjectile
         Projectile.ignoreWater = true;
         Projectile.usesOwnerMeleeHitCD = true;
         Projectile.gfxOffY = -3f;
-        Projectile.hide = true;
     }
 
     public ref float MaxTime => ref Projectile.ai[1];
@@ -145,10 +146,6 @@ public class ArmstrongGauntletProjectile : ModProjectile
         Player.AddImmuneTime(ImmunityCooldownID.General, 30);
     }
 
-    public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-    {
-        overPlayers.Add(index);
-    }
 
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
     {

@@ -72,6 +72,7 @@ public abstract class HalberdProjectile : ModProjectile
         RotDiag = Utility.SquareDiagonal(RotationOffset);
         Projectile.Size = new Vector2(2 * RotDiag);
 
+        Projectile.usesOwnerLight = true;
         Projectile.timeLeft = 120;
         Projectile.tileCollide = false;
         Projectile.penetrate = -1;
@@ -366,6 +367,6 @@ public abstract class HalberdProjectile : ModProjectile
         //Main.spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(angleHitbox.X - (int)Main.screenPosition.X, angleHitbox.Y - (int)Main.screenPosition.Y, angleHitbox.Width, angleHitbox.Height), Color.Red);
     }
 
-    public override Color? GetAlpha(Color lightColor) => Lighting.GetColor(Main.player[Projectile.owner].Center.ToTileCoordinates()).WithAlpha((byte)Projectile.alpha);
+    public override Color? GetAlpha(Color lightColor) => lightColor.WithAlpha((byte)Projectile.alpha);
 
 }

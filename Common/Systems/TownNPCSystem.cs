@@ -125,13 +125,13 @@ public class TownNPCSystem : ModSystem
 
     public static void UpdateTownNPCSpawns()
     {
-        WorldGen.spawnDelay++;
+        WorldGen.npcSpawnDelay++;
         if (Main.invasionType > 0 || Main.eclipse)
-            WorldGen.spawnDelay = 0;
+            WorldGen.npcSpawnDelay = 0;
 
-        if (WorldGen.spawnDelay >= 20)
+        if (WorldGen.npcSpawnDelay >= 20)
         {
-            WorldGen.spawnDelay = 0;
+            WorldGen.npcSpawnDelay = 0;
             PrioritizeHomelessNPCs();
         }
     }

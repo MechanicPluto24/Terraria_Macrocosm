@@ -35,7 +35,7 @@ public class StardustChunk : ModItem
     {
         if (Main.rand.NextBool(3))
         {
-            Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height, Main.rand.NextFromList(DustID.YellowStarDust, DustID.DungeonWater));
+            Dust dust = Dust.NewDustDirect(item.position, Item.width, Item.height, Main.rand.NextFromList(DustID.YellowStarDust, DustID.DungeonWater));
             dust.velocity.X = Main.rand.NextFloat(-0.2f, 0.2f);
             dust.velocity.Y = -0.8f;
             dust.scale = 1.1f;
@@ -44,7 +44,7 @@ public class StardustChunk : ModItem
 
         //if (Main.rand.NextBool(16))
         //{
-        //	Vector2 position = Item.Center + new Vector2(Item.width, Item.height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
+        //	Vector2 position = item.Center + new Vector2(Item.width, Item.height).RotatedByRandom(MathHelper.TwoPi) * Main.rand.NextFloat();
         //	Vector2 velocity = Vector2.One.RotatedByRandom(MathHelper.TwoPi) * 1.2f;
         //
         //	Particle.CreateParticle(ParticleOrchestraType.StardustPunch, position, velocity);

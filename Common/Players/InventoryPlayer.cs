@@ -61,7 +61,9 @@ public class InventoryPlayer : ModPlayer
     {
         orig(player);
 
-        TileReachCheckSettings settings = TileReachCheckSettings.QuickStackToNearbyChests;
+        // TODO (1.4.5): Replace this legacy reach adapter with QuickStacking/NearbyChests.
+        // Match vanilla's 600-pixel chest range, Smart Stack, void-bag sourcing, and server-side transfers.
+        TileReachCheckSettings settings = new TileReachCheckSettings { OverrideXReach = 39, OverrideYReach = 39 };
 
         if (player.whoAmI == Main.myPlayer && !player.HasLockedInventory())
         {
@@ -75,8 +77,7 @@ public class InventoryPlayer : ModPlayer
                     !player.GetModPlayer<RocketPlayer>().InRocket
                 )
                 {
-                    ContainerTransferContext transferContext = new(rocket.Center);
-                    rocket.Inventory.QuickStack(transferContext);
+                    rocket.Inventory.QuickStack(rocket.Center);
                 }
             }
 
@@ -89,9 +90,8 @@ public class InventoryPlayer : ModPlayer
                      Main.LocalPlayer.IsInTileInteractionRange(tileCoordinates.X, tileCoordinates.Y, settings)
                 )
                 {
-                    ContainerTransferContext transferContext = new(inventoryOwner.InventoryPosition);
                     foreach (Inventory inventory in inventoryOwner.GetInventories())
-                        inventory.QuickStack(transferContext);
+                        inventory.QuickStack(inventoryOwner.InventoryPosition);
                 }
             }
         }
@@ -99,7 +99,7 @@ public class InventoryPlayer : ModPlayer
 
 
     // Avoid sorting player's inventory if a custom inventory is displaying
-    private void On_ItemSorting_Sort(On_ItemSorting.orig_Sort orig, Item[] inv, int[] ignoreSlots)
+    private void On_ItemSorting_Sort(On_ItemSorting.orig_Sort orig, bool withFeedback, Item[] inv, int[] ignoreSlots)
     {
         // Detect whether the sorting has been run on the player's inventory (which ignores the hotbar, indexes 0-9)
         bool sortRanOnPlayerInventory = ignoreSlots.Distinct().OrderBy(n => n).Take(10).SequenceEqual(Enumerable.Range(0, 10));
@@ -108,7 +108,7 @@ public class InventoryPlayer : ModPlayer
         if (Inventory.CustomInventoriesActive && sortRanOnPlayerInventory)
             return;
 
-        orig(inv, ignoreSlots);
+        orig(withFeedback, inv, ignoreSlots);
     }
 
     // If a custom inventory is currently active, apply the on-sort glow on the custom inventory instead

@@ -61,8 +61,8 @@ public abstract class GreatswordHeldProjectileItem : HeldProjectileItem<Greatswo
         return true;
     }
 
-    public virtual bool PreDrawSword(GreatswordHeldProjectile greatswordProjectile, Color lightColor, ref Color? drawColor) { return true; }
-    public virtual void PostDrawSword(GreatswordHeldProjectile greatswordProjectile, Color lightColor) { }
+    public virtual bool PreDrawSword(GreatswordHeldProjectile greatswordProjectile, Player player, Color lightColor, ref Color? drawColor) { return true; }
+    public virtual void PostDrawSword(GreatswordHeldProjectile greatswordProjectile, Player player, Color lightColor) { }
 }
 
 public class GreatswordHeldProjectile : HeldProjectile
@@ -218,24 +218,24 @@ public class GreatswordHeldProjectile : HeldProjectile
     public override void OnHitPlayer(Player target, Player.HurtInfo info) => Sword.OnHitPvp(Player, target, info);
     public override bool CanHitPvp(Player target) => State == GreatswordState.Swing;
 
-    public override void Draw(Color lightColor)
+    public override void Draw(Player player, Color lightColor)
     {
         Color? drawColor = null;
-        if (Sword.PreDrawSword(this, lightColor, ref drawColor))
+        if (Sword.PreDrawSword(this, player, lightColor, ref drawColor))
         {
             Main.EntitySpriteDraw(
                 Sword.HeldProjectileTexture,
                 Projectile.Center - Main.screenPosition,
                 null,
                 drawColor is null ? lightColor : drawColor.Value,
-                Projectile.rotation * Player.direction,
-                Player.direction == -1 ? new Vector2(Sword.HeldProjectileTexture.Width - Sword.SpriteHandlePosition.X, Sword.SpriteHandlePosition.Y) : Sword.SpriteHandlePosition,
+                Projectile.rotation * player.direction,
+                player.direction == -1 ? new Vector2(Sword.HeldProjectileTexture.Width - Sword.SpriteHandlePosition.X, Sword.SpriteHandlePosition.Y) : Sword.SpriteHandlePosition,
                 Projectile.scale,
-                Player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
+                player.direction == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
                 0f
             );
         }
 
-        Sword.PostDrawSword(this, lightColor);
+        Sword.PostDrawSword(this, player, lightColor);
     }
 }

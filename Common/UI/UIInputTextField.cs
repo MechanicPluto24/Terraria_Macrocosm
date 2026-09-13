@@ -112,7 +112,7 @@ public class UIInputTextField : UIElement
                 visibleText += "|";
         }
 
-        TextSnippet[] snippets = ChatManager.ParseMessage(visibleText, drawColor).ToArray();
+        var snippets = ChatManager.ParseMessage(visibleText, drawColor);
 
         if (!AllowSnippets)
             ChatManager.ConvertNormalSnippets(snippets);

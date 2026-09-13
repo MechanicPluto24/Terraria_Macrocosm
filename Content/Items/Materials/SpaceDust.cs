@@ -25,7 +25,7 @@ public class SpaceDust : ModItem
     public override void Update(WorldItem item, ref float gravity, ref float maxFallSpeed)
     {
         if (Main.timeForVisualEffects % 15 == 0)
-            Dust.NewDustPerfect(Item.Center + Main.rand.NextVector2Circular(Item.width * 0.6f, Item.height * 0.6f), DustID.SilverCoin, new Microsoft.Xna.Framework.Vector2(0f, -0.25f), Scale: Main.rand.NextFloat(0.05f, 0.1f));
+            Dust.NewDustPerfect(item.Center + Main.rand.NextVector2Circular(Item.width * 0.6f, Item.height * 0.6f), DustID.SilverCoin, new Microsoft.Xna.Framework.Vector2(0f, -0.25f), Scale: Main.rand.NextFloat(0.05f, 0.1f));
     }
 
     public override void AddRecipes()

@@ -14,7 +14,6 @@ public class TurretTaserProjectile : ModProjectile
 {
     public override void SetStaticDefaults()
     {
-        ProjectileID.Sets.DontAttachHideToAlpha[Type] = true;
 
         Redemption.AddElementToProjectile(Type, Redemption.ElementID.Thunder);
     }
@@ -22,6 +21,7 @@ public class TurretTaserProjectile : ModProjectile
     private static Asset<Texture2D> chainTexture;
     public override void SetDefaults()
     {
+        Projectile.drawLayer = ProjectileDrawLayerID.BehindNPCs;
         Projectile.width = 10;
         Projectile.height = 10;
         Projectile.hostile = true;
@@ -29,7 +29,6 @@ public class TurretTaserProjectile : ModProjectile
         Projectile.tileCollide = false;
         Projectile.timeLeft = 600;
         Projectile.penetrate = -1;
-        Projectile.hide = true;
     }
 
     public int AI_Timer
@@ -44,10 +43,6 @@ public class TurretTaserProjectile : ModProjectile
         set => Projectile.ai[1] = value;
     }
 
-    public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
-    {
-        behindNPCs.Add(index);
-    }
 
     public override void AI()
     {

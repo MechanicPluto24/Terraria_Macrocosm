@@ -36,7 +36,7 @@ public class CryocoreShrine : Structure
                 j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(2f)),
                 strength: WorldGen.genRand.Next(2, 5),
                 steps: WorldGen.genRand.Next(4, 8),
-                type: (ushort)ModContent.TileType<DianiteOre>()
+                tileType: (ushort)ModContent.TileType<DianiteOre>()
             );
 
             WorldGen.OreRunner(
@@ -44,7 +44,7 @@ public class CryocoreShrine : Structure
                 j: origin.Y + (int)(Size.Y * WorldGen.genRand.NextFloat(2f)),
                 strength: WorldGen.genRand.Next(2, 5),
                 steps: WorldGen.genRand.Next(4, 8),
-                type: TileID.LunarBlockNebula
+                tileType: TileID.LunarBlockNebula
             );
         }
     }

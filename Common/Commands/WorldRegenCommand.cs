@@ -1,4 +1,5 @@
 ﻿using Macrocosm.Common.Utils;
+using Macrocosm.Common.WorldGeneration;
 using SubworldLibrary;
 using System;
 using System.Diagnostics;
@@ -32,18 +33,30 @@ public class WorldRegenCommand : ModCommand
             Utility.LogChatMessage($"Started world regeneration at {DateTime.Now}");
             var stopwatch = Stopwatch.StartNew();
 
-            Main.gameMenu = true;
-            if (!SubworldSystem.AnyActive())
+            bool previousGameMenu = Main.gameMenu;
+            var previousRandom = Main.rand;
+            var previousProgress = WorldGenerator.CurrentGenerationProgress;
+            try
             {
-                WorldUtils.DebugRegen();
+                Main.gameMenu = true;
+                if (!SubworldSystem.AnyActive())
+                {
+                    WorldUtils.DebugRegen();
+                }
+                else
+                {
+                    int seed = Main.ActiveWorldFileData.Seed;
+                    Main.rand = new UnifiedRandom(seed);
+                    WorldGen.clearWorld();
+                    GenerationPassRunner.Run(SubworldSystem.Current.Tasks, seed, SubworldSystem.Current.Config);
+                }
             }
-            else
+            finally
             {
-                WorldGen.clearWorld();
-                WorldGen._genRand = new UnifiedRandom(Main.ActiveWorldFileData.Seed);
-                SubworldSystem.Current.Tasks.ForEach(t => t.Apply(WorldGenerator.CurrentGenerationProgress = new(), SubworldSystem.Current.Config?.GetPassConfiguration(t.Name)));
+                Main.rand = previousRandom;
+                WorldGenerator.CurrentGenerationProgress = previousProgress;
+                Main.gameMenu = previousGameMenu;
             }
-            Main.gameMenu = false;
 
             stopwatch.Stop();
             Utility.LogChatMessage($"World regeneration complete in {stopwatch.Elapsed}");

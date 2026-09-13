@@ -64,7 +64,7 @@ public class MeteoricChunk : ModItem
     {
         if (Main.rand.NextBool(8))
         {
-            Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height / 2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 180));
+            Dust dust = Dust.NewDustDirect(item.position, Item.width, Item.height / 2, ModContent.DustType<SmokeDust>(), newColor: new Color(160, 160, 160, 180));
             dust.velocity.X = Main.rand.NextFloat(-0.2f, 0.2f);
             dust.velocity.Y = -0.4f;
             dust.noGravity = true;
@@ -77,7 +77,7 @@ public class MeteoricChunk : ModItem
         sheet ??= ModContent.Request<Texture2D>(Texture + "_Sheet");
         SpriteEffects effects = flip ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
         Rectangle sourceRect = sheet.Frame(1, 4, frameY: frameY);
-        spriteBatch.Draw(sheet.Value, Item.Center - Main.screenPosition, sourceRect, Utility.Colorize(alphaColor, lightColor), rotation, sourceRect.Size() / 2f, scale, effects, 0f);
+        spriteBatch.Draw(sheet.Value, item.Center - Main.screenPosition, sourceRect, Utility.Colorize(alphaColor, lightColor), rotation, sourceRect.Size() / 2f, scale, effects, 0f);
         return false;
     }
 

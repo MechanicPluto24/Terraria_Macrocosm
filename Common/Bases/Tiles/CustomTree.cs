@@ -191,19 +191,20 @@ public abstract partial class CustomTree : ModTile
     }
 
     /// <summary> Use for growing (<see cref="FramingMode"/> == <see cref="TreeCategory.Custom"/>)</summary>
-    public virtual bool CustomGrowTree(int i, int j) { return false; }
+    public virtual bool CustomGrowTree(int i, int j, int treeHeightAddon = 0, bool ignoreWalls = false) { return false; }
 
     /// <summary>
-    /// Grow a tree of this type. 
-    /// <br/> You can also use <see cref="WorldGen.TryGrowingTreeByType(int, int, int)"/> and <see cref="WorldGen.AttemptToGrowTreeFromSapling(int, int, bool)"/>
+    /// Grow a tree of this type. <paramref name="treeHeightAddon"/> increases trunk height;
+    /// <paramref name="ignoreWalls"/> bypasses wall restrictions without bypassing ground, liquid, or clearance checks.
+    /// <br/> You can also use <see cref="WorldGen.TryGrowingTreeByType(int, int, int, int, bool)"/> and <see cref="WorldGen.AttemptToGrowTreeFromSapling(int, int, bool, int, bool)"/>
     /// </summary>
-    public bool GrowTree(int x, int y)
+    public bool GrowTree(int x, int y, int treeHeightAddon = 0, bool ignoreWalls = false)
     {
         var result = FramingMode switch
         {
-            TreeCategory.Tree => GrowRegularTree(x, y),
-            TreeCategory.Palm => GrowPalmTree(x, y),
-            _ => CustomGrowTree(x, y),
+            TreeCategory.Tree => GrowRegularTree(x, y, treeHeightAddon, ignoreWalls),
+            TreeCategory.Palm => GrowPalmTree(x, y, treeHeightAddon, ignoreWalls),
+            _ => CustomGrowTree(x, y, treeHeightAddon, ignoreWalls),
         };
 
         if (result && WorldGen.PlayerLOS(x, y))
@@ -223,7 +224,7 @@ public abstract partial class CustomTree : ModTile
     }
 
     /// <summary> Adapted clone of the WorldGen.GrowPalmTree method  </summary>
-    protected bool GrowPalmTree(int x, int y)
+    protected bool GrowPalmTree(int x, int y, int treeHeightAddon, bool ignoreWalls)
     {
         if (!WorldGen.InWorld(x, y))
             return false;
@@ -242,7 +243,7 @@ public abstract partial class CustomTree : ModTile
         if (!tile.HasTile || tile.IsHalfBlock || tile.Slope != SlopeType.Solid)
             return false;
 
-        if (tileAbove.WallType != WallID.None || tileAbove.LiquidAmount != 0)
+        if ((!ignoreWalls && !WallTest(tileAbove.WallType)) || tileAbove.LiquidAmount != 0)
             return false;
 
         if (!GroundTest(tile.TileType))
@@ -251,14 +252,21 @@ public abstract partial class CustomTree : ModTile
         if (!WorldGen.EmptyTileCheck(x, x, groundY - 2, groundY - 1, Sapling.Type))
             return false;
 
-        if (!WorldGen.EmptyTileCheck(x - 1, x + 1, groundY - 30, groundY - 3, Sapling.Type))
+        int maximumHeight = TreeHeightMax + treeHeightAddon;
+        if (maximumHeight < 2 || groundY - maximumHeight < 1)
+            return false;
+
+        if (!WorldGen.EmptyTileCheck(x - 1, x + 1, groundY - maximumHeight, groundY - 3, Sapling.Type))
             return false;
 
         byte color = 0;
         if (Main.tenthAnniversaryWorld && !WorldGen.isGeneratingOrLoadingWorld && TenthAniversaryRandomColor)
             color = (byte)WorldGen.genRand.Next(1, 13);
 
-        int height = WorldGen.genRand.Next(TreeHeightMin, TreeHeightMax + 1);
+        int height = WorldGen.genRand.Next(TreeHeightMin, TreeHeightMax + 1) + treeHeightAddon;
+        if (height < 2)
+            return false;
+
         int randomFrameY = WorldGen.genRand.Next(-8, 9) * 2;
         short frameY = 0;
 
@@ -305,7 +313,7 @@ public abstract partial class CustomTree : ModTile
     }
 
     /// <summary> Adapted clone of the WorldGen.GrowTree method </summary>
-    protected bool GrowRegularTree(int x, int y)
+    protected bool GrowRegularTree(int x, int y, int treeHeightAddon, bool ignoreWalls)
     {
         if (!WorldGen.InWorld(x, y))
             return false;
@@ -325,15 +333,17 @@ public abstract partial class CustomTree : ModTile
         if (!groundTile.HasUnactuatedTile || groundTile.IsHalfBlock || groundTile.Slope != 0)
             return false;
 
-        bool wall = WallTest(Main.tile[x, groundY - 1].WallType);
+        bool wall = ignoreWalls || WallTest(Main.tile[x, groundY - 1].WallType);
         if (!GroundTest(groundTile.TileType) || !wall)
             return false;
 
         if ((!Main.tile[x - 1, groundY].HasTile || !GroundTest(Main.tile[x - 1, groundY].TileType)) && (!Main.tile[x + 1, groundY].HasTile || !GroundTest(Main.tile[x + 1, groundY].TileType)))
             return false;
 
-        int treeHeight = WorldGen.genRand.Next(TreeHeightMin, TreeHeightMax + 1);
+        int treeHeight = WorldGen.genRand.Next(TreeHeightMin, TreeHeightMax + 1) + treeHeightAddon;
         int paddedHeight = treeHeight + TreeTopPaddingNeeded;
+        if (treeHeight < 2 || groundY - paddedHeight < 1)
+            return false;
         if (!WorldGen.EmptyTileCheck(x - 2, x + 2, groundY - paddedHeight, groundY - 1, Sapling.Type))
             return false;
 

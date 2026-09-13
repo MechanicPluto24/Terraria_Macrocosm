@@ -229,7 +229,7 @@ public partial class ConveyorSystem
                     // Pick up from world into the container
                     if (TryPickupWorldItem(pos, out int itemIndex))
                     {
-                        Item picked = Main.item[itemIndex];
+                        Item picked = Main.item[itemIndex].inner;
                         if (TryDepositItem(node, ref picked))
                         {
                             SpawnPickupParticle(pos, itemIndex);
@@ -271,7 +271,7 @@ public partial class ConveyorSystem
                         // Hopper as outlet: pick up from world and distribute to inlets
                         if (TryPickupWorldItem(pos, out int itemIndex))
                         {
-                            Item picked = Main.item[itemIndex];
+                            Item picked = Main.item[itemIndex].inner;
                             if (TryDistributeToInlets(connectedNodes, ref picked))
                             {
                                 SpawnPickupParticle(pos, itemIndex);
@@ -551,11 +551,11 @@ public partial class ConveyorSystem
         Rectangle area = new((pos.X - left) * 16, (pos.Y - up) * 16, 16 * (1 + left + right), 16 * (1 + up + down));
         for (int i = 0; i < Main.maxItems; i++)
         {
-            Item it = Main.item[i];
-            if (!it.active || it.IsAir)
+            WorldItem it = Main.item[i];
+            if (!it.active || it.inner.IsAir)
                 continue;
 
-            if (it.getRect().Intersects(area))
+            if (it.Hitbox.Intersects(area))
             {
                 itemIndex = i;
                 return true;
@@ -569,8 +569,8 @@ public partial class ConveyorSystem
         if (itemIndex < 0 || itemIndex >= Main.maxItems)
             return;
 
-        Item it = Main.item[itemIndex];
-        if (!it.active || it.IsAir)
+        WorldItem it = Main.item[itemIndex];
+        if (!it.active || it.inner.IsAir)
             return;
 
         Vector2 start = it.Center;
@@ -591,7 +591,7 @@ public partial class ConveyorSystem
         if (itemIndex < 0 || itemIndex >= Main.maxItems)
             return;
 
-        ref Item worldItem = ref Main.item[itemIndex];
+        WorldItem worldItem = Main.item[itemIndex];
         worldItem.stack--;
         if (worldItem.stack <= 0)
             worldItem.TurnToAir();

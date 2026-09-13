@@ -271,7 +271,7 @@ public class ParticleManager : ModSystem, IOnPlayerJoining
         spriteBatch.End();
     }
 
-    private void DrawParticles_Tiles(On_Main.orig_DrawBlack orig, Main self, bool force)
+    private void DrawParticles_Tiles(On_Main.orig_DrawBlack orig, Main self, bool intoRenderTargets, bool force)
     {
         SpriteBatch spriteBatch = Main.spriteBatch;
 
@@ -284,7 +284,7 @@ public class ParticleManager : ModSystem, IOnPlayerJoining
         Main.spriteBatch.End();
         Main.spriteBatch.Begin(state3);
 
-        orig(self, force);
+        orig(self, intoRenderTargets, force);
     }
 
     public override void PostDrawInterface(SpriteBatch spriteBatch)

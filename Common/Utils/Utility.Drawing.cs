@@ -186,7 +186,7 @@ public static partial class Utility
         if (drawInfo.drawPlayer.JustDroppedAnItem)
             return;
 
-        if (drawInfo.drawPlayer.heldProj >= 0 && drawInfo.shadow == 0f && !drawInfo.heldProjOverHand)
+        if (drawInfo.SelectedDrawnProjectile != null && drawInfo.shadow == 0f && drawInfo.SelectedDrawnProjectile.drawLayer == ProjectileDrawLayerID.HeldProj)
             drawInfo.projectileDrawPosition = drawInfo.DrawDataCache.Count;
 
         float scale = drawInfo.drawPlayer.GetAdjustedItemScale(item);
@@ -358,10 +358,11 @@ public static partial class Utility
 
     public static Vector2 DrawString(SpriteBatch spriteBatch, DynamicSpriteFont font, string text, Vector2 position, Color baseColor, float rotation, Vector2 origin, Vector2 baseScale, float maxWidth = -1f, float spread = 2f)
     {
-        TextSnippet[] snippets = ChatManager.ParseMessage(text, baseColor).ToArray();
+        var snippets = ChatManager.ParseMessage(text, baseColor);
         ChatManager.ConvertNormalSnippets(snippets);
         ChatManager.DrawColorCodedStringShadow(spriteBatch, font, snippets, position, Color.Black.WithAlpha(baseColor.A), rotation, origin, baseScale, maxWidth, spread);
-        return ChatManager.DrawColorCodedString(spriteBatch, font, snippets, position, Color.White.WithAlpha(baseColor.A), rotation, origin, baseScale, out _, maxWidth);
+        ChatManager.DrawColorCodedString(spriteBatch, font, snippets, position, Color.White.WithAlpha(baseColor.A), rotation, origin, baseScale, out _, maxWidth);
+        return ChatManager.GetStringSize(font, snippets, baseScale, maxWidth);
     }
 
 
@@ -1490,12 +1491,12 @@ public static partial class Utility
      */
     public static void DrawTexture(object sb, Texture2D texture, int shader, Entity codable, int framecountX, Color? overrideColor = null, bool drawCentered = false, Vector2 overrideOrigin = default)
     {
-        Color lightColor = overrideColor != null ? (Color)overrideColor : codable is Item ? ((Item)codable).GetAlpha(GetLightColor(codable.Center)) : codable is NPC ? GetLightColor(codable.Center) : codable is Projectile ? ((Projectile)codable).GetAlpha(GetLightColor(codable.Center)) : GetLightColor(codable.Center);
-        int frameCount = codable is Item ? 1 : codable is NPC ? Main.npcFrameCount[((NPC)codable).type] : 1;
+        Color lightColor = overrideColor != null ? (Color)overrideColor : codable is WorldItem ? ((WorldItem)codable).inner.GetAlpha(GetLightColor(codable.Center)) : codable is NPC ? GetLightColor(codable.Center) : codable is Projectile ? ((Projectile)codable).GetAlpha(GetLightColor(codable.Center)) : GetLightColor(codable.Center);
+        int frameCount = codable is WorldItem ? 1 : codable is NPC ? Main.npcFrameCount[((NPC)codable).type] : 1;
         Rectangle frame = codable is NPC ? ((NPC)codable).frame : new Rectangle(0, 0, texture.Width, texture.Height);
-        float scale = codable is Item ? ((Item)codable).scale : codable is NPC ? ((NPC)codable).scale : ((Projectile)codable).scale;
-        float rotation = codable is Item ? 0 : codable is NPC ? ((NPC)codable).rotation : ((Projectile)codable).rotation;
-        int spriteDirection = codable is Item ? 1 : codable is NPC ? ((NPC)codable).spriteDirection : ((Projectile)codable).spriteDirection;
+        float scale = codable is WorldItem ? ((WorldItem)codable).inner.scale : codable is NPC ? ((NPC)codable).scale : ((Projectile)codable).scale;
+        float rotation = codable is WorldItem ? 0 : codable is NPC ? ((NPC)codable).rotation : ((Projectile)codable).rotation;
+        int spriteDirection = codable is WorldItem ? 1 : codable is NPC ? ((NPC)codable).spriteDirection : ((Projectile)codable).spriteDirection;
         float offsetY = codable is NPC ? ((NPC)codable).gfxOffY : 0f;
         DrawTexture(sb, texture, shader, codable.position + new Vector2(0f, offsetY), codable.width, codable.height, scale, rotation, spriteDirection, frameCount, framecountX, frame, lightColor, drawCentered, overrideOrigin);
     }

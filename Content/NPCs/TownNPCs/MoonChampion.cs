@@ -131,21 +131,19 @@ public class MoonChampion : ModNPC
         return chatBag[Main.rand.Next(chatBag.Count)];
     }
 
-    public override void SetChatButtons(ref string button, ref string button2)
+    public override void RegisterChatButtons(NPCInteractionList interactions)
     {
-        button = Language.GetTextValue(chatPath + "Shop");
-        button2 = Language.GetTextValue(chatPath + "Advice");
+        interactions.InsertBefore(NPCInteractions.Shop("Shop", chatPath + "Shop"), NPCInteractionDatabase.CloseButton);
+        interactions.InsertBefore(new AdviceInteraction(), NPCInteractionDatabase.CloseButton);
     }
 
-    public override void OnChatButtonClicked(NPCInteraction interaction)
+    private sealed class AdviceInteraction : NPCInteraction
     {
-        if (firstButton)
+        public override bool Condition() => true;
+        public override string GetText() => Language.GetTextValue(chatPath + "Advice");
+        public override void Interact()
         {
-            shopName = Language.GetTextValue(chatPath + "ShopName");
-        }
-        else
-        {
-            Main.npcChatText = Language.GetTextValue(chatPath + $"Advice{Main.rand.Next(1, 5 + 1)}");
+            Main.npcChatText = Language.GetTextValue(chatPath + $"Advice{Main.rand.Next(1, 6)}");
         }
     }
 

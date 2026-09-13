@@ -49,7 +49,7 @@ public class ScrapshotBow : ModItem
                 Vector2 shrapnelVelocity = velocity.RotatedByRandom(MathHelper.ToRadians(15f)) * Main.rand.NextFloat(0.8f, 1.2f);
                 float velocityMultiplier = Main.rand.NextFloat(0.3f, 0.5f);
 
-                Projectile.NewProjectile(Item.GetSource_FromThis(), position, shrapnelVelocity * velocityMultiplier, type, damage, knockback, player.whoAmI);
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), position, shrapnelVelocity * velocityMultiplier, type, damage, knockback, player.whoAmI);
             }
 
             // SFX

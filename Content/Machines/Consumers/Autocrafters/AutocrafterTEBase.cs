@@ -90,7 +90,7 @@ public abstract class AutocrafterTEBase : ConsumerTE, IMultiInventoryOwner, IInv
     {
         if (AutocrafterLane.GetRequirements(recipe).Count() > InputSlotsPerOutput)
             return false;
-        int[] requiredTiles = recipe.requiredTile.Where(tile => tile != -1).ToArray();
+        int[] requiredTiles = (recipe.requiredTile >= 0 ? new[] { recipe.requiredTile } : Array.Empty<int>()).ToArray();
         return requiredTiles.Length == 0 ? AllowHandCrafting : requiredTiles.All(tile => AvailableCraftingStations.Contains(tile));
     }
 
@@ -335,7 +335,7 @@ public abstract class AutocrafterTEBase : ConsumerTE, IMultiInventoryOwner, IInv
         var requirements = NormalizedRequirements(recipe).ToArray();
         writer.Write(requirements.Length);
         foreach (var item in requirements) { writer.Write(item.Type); writer.Write(item.Stack); }
-        int[] tiles = recipe.requiredTile.Where(tile => tile != -1).OrderBy(tile => tile).ToArray();
+        int[] tiles = (recipe.requiredTile >= 0 ? new[] { recipe.requiredTile } : Array.Empty<int>()).OrderBy(tile => tile).ToArray();
         writer.Write(tiles.Length);
         foreach (int tile in tiles) writer.Write(tile);
     }
@@ -351,7 +351,7 @@ public abstract class AutocrafterTEBase : ConsumerTE, IMultiInventoryOwner, IInv
         for (int i = 0; i < tiles.Length; i++) tiles[i] = reader.ReadInt32();
         return Main.recipe.FirstOrDefault(recipe => RecipeAllowed(recipe) && recipe.createItem.type == resultType && recipe.createItem.stack == resultStack
             && NormalizedRequirements(recipe).SequenceEqual(requirements.OrderBy(item => item.Type))
-            && recipe.requiredTile.Where(tile => tile != -1).OrderBy(tile => tile).SequenceEqual(tiles));
+            && (recipe.requiredTile >= 0 ? new[] { recipe.requiredTile } : Array.Empty<int>()).OrderBy(tile => tile).SequenceEqual(tiles));
     }
 
     private static IEnumerable<(int Type, int Stack)> NormalizedRequirements(Recipe recipe)

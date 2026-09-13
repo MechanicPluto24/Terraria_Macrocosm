@@ -395,7 +395,7 @@ public partial class LaunchPad : IInventoryOwner
 
                 bool addedToInventory = Inventory.TryPlacingItem(ref item, InventoryPlacementSource.Internal, sound: true);
                 if (!addedToInventory)
-                    Main.LocalPlayer.QuickSpawnItem(item.GetSource_DropAsItem("Launchpad"), item.type, item.stack);
+                    Main.LocalPlayer.QuickSpawnItem(new EntitySource_Misc("Launchpad"), item.type, item.stack);
 
                 if (addedToInventory)
                 {

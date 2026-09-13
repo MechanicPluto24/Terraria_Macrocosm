@@ -54,7 +54,7 @@ public class Noxsaber : ModItem
     }
     public override void PostUpdate(WorldItem item)
     {
-        Lighting.AddLight(Item.Center, Color.White.ToVector3() * 0.85f * Main.essScale);
+        Lighting.AddLight(item.Center, Color.White.ToVector3() * 0.85f * Main.essScale);
     }
 
     public override void AddRecipes()

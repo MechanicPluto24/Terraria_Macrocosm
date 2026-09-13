@@ -56,7 +56,7 @@
 
 	<!-- Effect File Compilation 
 		(TODO: Find ways of implementing this to work on other operating systems (e.g. linux), or create a BuildTask impl similar to that of DAYBREAK) -->
-	<Target Name="BuildEffects" BeforeTargets="BuildMod" Condition="$([MSBuild]::IsOSPlatform('Windows'))" Inputs="@(EffectFiles->'%(RecursiveDir)%(FileName)%(Extension)')" Outputs="@(EffectFiles->'%(RecursiveDir)%(FileName).fxc')">
+	<Target Name="BuildEffects" BeforeTargets="BuildMod" Condition="'$(BuildMod)' == 'true' and $([MSBuild]::IsOSPlatform('Windows'))" Inputs="@(EffectFiles->'%(RecursiveDir)%(FileName)%(Extension)')" Outputs="@(EffectFiles->'%(RecursiveDir)%(FileName).fxc')">
 		<!-- Echo here so it logs which file is being compiled -->
 		<Exec Command="@(EffectFiles->'echo ----- Compiling effect: %(RecursiveDir)%(FileName)%(Extension) ----- &amp;&amp; &quot;$(FxcCompilerPath)&quot; &quot;%(RecursiveDir)%(FileName)%(Extension)&quot; /T fx_2_0 /nologo /O2 /Fo &quot;%(RecursiveDir)%(FileName).fxc&quot; &#xA;&#xD;')" IgnoreExitCode="true" />
 	</Target>

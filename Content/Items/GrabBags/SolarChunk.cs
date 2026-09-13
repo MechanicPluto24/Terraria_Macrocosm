@@ -35,7 +35,7 @@ public class SolarChunk : ModItem
         {
             int dustType = Main.rand.NextFromList<int>(DustID.Flare, DustID.SolarFlare, DustID.Torch);
 
-            Dust dust = Dust.NewDustDirect(Item.position, Item.width, Item.height, dustType);
+            Dust dust = Dust.NewDustDirect(item.position, Item.width, Item.height, dustType);
             dust.velocity.X = Main.rand.NextFloat(-1.2f, 1.2f);
             dust.velocity.Y = -0.8f;
             dust.scale = 1.4f;
