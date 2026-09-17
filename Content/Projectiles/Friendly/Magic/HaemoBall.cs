@@ -20,8 +20,8 @@ public class HaemoBall : ModProjectile
         Projectile.ignoreWater = true;
         Projectile.hostile = false;
 
-        Projectile.width = 32;
-        Projectile.height = 32;
+        Projectile.width = 27;
+        Projectile.height = 24;
 
         Projectile.timeLeft = 600;
         Projectile.penetrate = 1;
