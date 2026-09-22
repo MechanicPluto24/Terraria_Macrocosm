@@ -1,0 +1,94 @@
+name: Build Macrocosm
+
+on:
+  pull_request:
+    branches: [master]
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
+      - 'LICENSE'
+  push:
+    branches: [master]
+    paths-ignore:
+      - '**/*.md'
+      - '.gitignore'
+      - 'LICENSE'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  TML_VERSION: v2026.07.3.0
+  TML_SHA256: 6f51610f4b0f167d1620d0e8c83264ba14e047421e97d9f8053eb40e3d764e1a
+  DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+  DOTNET_NOLOGO: '1'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          path: src/Macrocosm
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: 8.0.425
+
+      - name: Cache pinned tModLoader archive
+        id: tml-cache
+        uses: actions/cache@v6.1.0
+        with:
+          path: ${{ runner.temp }}/tml-download/tModLoader.zip
+          key: tml-${{ runner.os }}-${{ env.TML_VERSION }}-${{ env.TML_SHA256 }}
+
+      - name: Download and verify tModLoader
+        run: |
+          $download = Join-Path $env:RUNNER_TEMP 'tml-download'
+          New-Item -ItemType Directory -Force $download | Out-Null
+          $archive = Join-Path $download 'tModLoader.zip'
+          if (!(Test-Path -LiteralPath $archive)) {
+            Invoke-WebRequest "https://github.com/tModLoader/tModLoader/releases/download/$env:TML_VERSION/tModLoader.zip" -OutFile $archive
+          }
+          if ((Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash -ne $env:TML_SHA256) {
+            throw 'tModLoader archive SHA256 mismatch'
+          }
+          Expand-Archive -LiteralPath $archive -DestinationPath (Join-Path $env:RUNNER_TEMP 'tModLoader')
+
+      - name: Compile shaders and build mod
+        run: |
+          & ./src/Macrocosm/.github/scripts/build.ps1 `
+            -TmlPath (Join-Path $env:RUNNER_TEMP 'tModLoader') `
+            -SavePath (Join-Path $env:RUNNER_TEMP 'tml-save') `
+            -ArtifactPath (Join-Path $env:RUNNER_TEMP 'macrocosm-artifacts')
+
+      - name: Upload test build
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: Macrocosm-${{ github.sha }}
+          path: ${{ runner.temp }}/macrocosm-artifacts/Macrocosm.tmod
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+
+      - name: Upload failure logs
+        if: failure()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: Macrocosm-logs-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/macrocosm-artifacts/*.log
+            ${{ runner.temp }}/macrocosm-artifacts/*.binlog
+            ${{ runner.temp }}/tml-save/Logs/**
+          if-no-files-found: ignore
+          retention-days: 7

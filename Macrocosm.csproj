@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	
 	<Import Project="..\tModLoader.targets" />
+
+	<ItemGroup>
+		<None Include=".github\**\*" />
+	</ItemGroup>
 	
 	<PropertyGroup>
 		<AssemblyName>Macrocosm</AssemblyName>
