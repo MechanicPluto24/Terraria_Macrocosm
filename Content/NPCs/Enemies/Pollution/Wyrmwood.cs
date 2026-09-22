@@ -301,6 +301,8 @@ public class WyrmwoodHead : WormHead
 
 public class WyrmwoodBody : WormBody
 {
+    public override int HeadType => ModContent.NPCType<WyrmwoodHead>();
+
     public WyrmwoodSizeTier SizeTier
     {
         get => WyrmwoodHead.GetSizeTier(NPC);
@@ -417,6 +419,8 @@ public class WyrmwoodWings : WyrmwoodBody
 
 public class WyrmwoodTail : WormTail
 {
+    public override int HeadType => ModContent.NPCType<WyrmwoodHead>();
+
     public override void SetStaticDefaults()
     {
         NPC.ApplyBuffImmunity

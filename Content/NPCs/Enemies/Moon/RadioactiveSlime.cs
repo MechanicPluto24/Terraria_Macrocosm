@@ -54,8 +54,6 @@ public class RadioactiveSlime : ModNPC
         NPC.aiStyle = NPCAIStyleID.Slime;
         AIType = NPCID.BlueSlime;
         AnimationType = NPCID.BlueSlime;
-        Banner = Item.NPCtoBanner(NPCID.BlueSlime);
-        BannerItem = Item.BannerToItem(Banner);
         SpawnModBiomes = [ModContent.GetInstance<IrradiationBiome>().Type];
     }
 

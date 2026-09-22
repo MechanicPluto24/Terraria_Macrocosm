@@ -145,6 +145,8 @@ public class CraterCrawlerHead : WormHead
 
 public class CraterCrawlerBody : WormBody
 {
+    public override int HeadType => ModContent.NPCType<CraterCrawlerHead>();
+
     public override void SetStaticDefaults()
     {
         NPC.ApplyBuffImmunity
@@ -210,6 +212,8 @@ public class CraterCrawlerBody : WormBody
 
 public class CraterCrawlerTail : WormTail
 {
+    public override int HeadType => ModContent.NPCType<CraterCrawlerHead>();
+
     public override void SetStaticDefaults()
     {
         NPC.ApplyBuffImmunity

@@ -79,8 +79,6 @@ public class ZombieEngineer : ModNPC
         NPC.aiStyle = -1;
 
         SpawnModBiomes = [ModContent.GetInstance<MoonUndergroundBiome>().Type];
-        Banner = Item.NPCtoBanner(NPCID.Zombie);
-        BannerItem = Item.BannerToItem(Banner);
     }
 
     public override float SpawnChance(NPCSpawnInfo spawnInfo)

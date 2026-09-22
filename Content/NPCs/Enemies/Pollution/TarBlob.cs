@@ -45,8 +45,6 @@ public class TarBlob : ModNPC
         NPC.aiStyle = NPCAIStyleID.Slime;
         NPC.alpha = 10;
         AIType = NPCID.BlueSlime;
-        Banner = Item.NPCtoBanner(NPCID.BlueSlime);
-        BannerItem = Item.BannerToItem(Banner);
         SpawnModBiomes = [ModContent.GetInstance<PollutionBiome>().Type];
     }
     public override void FindFrame(int frameHeight)

@@ -3115,13 +3115,13 @@ SmogWispfish: {
 	AnglerLocation: Caught in the Pollution
 }
 
-RadioactiveSlimeBannerItem: {
-	DisplayName: Radioactive Slime Banner Item
+RadioactiveSlimeBanner: {
+	DisplayName: Radioactive Slime Banner
 	Tooltip: ""
 }
 
-RegolithSlimeBannerItem: {
-	DisplayName: Regolith Slime Banner Item
+RegolithSlimeBanner: {
+	DisplayName: Regolith Slime Banner
 	Tooltip: ""
 }
 
@@ -3473,6 +3473,11 @@ RailgunBolt: {
 	Tooltip: ""
 }
 
+Railgun: {
+	DisplayName: Railgun
+	Tooltip: ""
+}
+
 ShredderBullet: {
 	DisplayName: Shredder Bullet
 	Tooltip: ""
@@ -3783,5 +3788,135 @@ QuartzWallUnsafe: {
 
 Sunclot: {
 	DisplayName: Sunclot
+	Tooltip: ""
+}
+
+BloodStriderBanner: {
+	DisplayName: Blood Strider Banner
+	Tooltip: ""
+}
+
+ClaviteBanner: {
+	DisplayName: Clavite Banner
+	Tooltip: ""
+}
+
+CraterCrawlerHeadBanner: {
+	DisplayName: Crater Crawler Banner
+	Tooltip: ""
+}
+
+CrescentGhoulBanner: {
+	DisplayName: Crescent Ghoul Banner
+	Tooltip: ""
+}
+
+DwellerBanner: {
+	DisplayName: Dweller Banner
+	Tooltip: ""
+}
+
+KyaniteScarabSmallBanner: {
+	DisplayName: Kyanite Scarab Small Banner
+	Tooltip: ""
+}
+
+LeaperBanner: {
+	DisplayName: Leaper Banner
+	Tooltip: ""
+}
+
+LuminiteElementalBanner: {
+	DisplayName: Luminite Elemental Banner
+	Tooltip: ""
+}
+
+LuminiteSlimeBanner: {
+	DisplayName: Luminite Slime Banner
+	Tooltip: ""
+}
+
+LuminiteSlimeVolatileBanner: {
+	DisplayName: Volatile Luminite Slime Banner
+	Tooltip: ""
+}
+
+MoonWormHeadBanner: {
+	DisplayName: Moon Worm Banner
+	Tooltip: ""
+}
+
+MoonZombieBanner: {
+	DisplayName: Moon Zombie Banner
+	Tooltip: ""
+}
+
+MyeloidBanner: {
+	DisplayName: Myeloid Banner
+	Tooltip: ""
+}
+
+PenanggalanBanner: {
+	DisplayName: Penanggalan Banner
+	Tooltip: ""
+}
+
+ShadeBanner: {
+	DisplayName: Shade Banner
+	Tooltip: ""
+}
+
+ShriekingGhoulBanner: {
+	DisplayName: Shrieking Ghoul Banner
+	Tooltip: ""
+}
+
+SmogWispBanner: {
+	DisplayName: Smog Wisp Banner
+	Tooltip: ""
+}
+
+TarBlobBanner: {
+	DisplayName: Tar Blob Banner
+	Tooltip: ""
+}
+
+TarSlimeBanner: {
+	DisplayName: Tar Slime Banner
+	Tooltip: ""
+}
+
+TrashnadoBanner: {
+	DisplayName: Trashnado Banner
+	Tooltip: ""
+}
+
+WyrmwoodHeadBanner: {
+	DisplayName: Wyrmwood Banner
+	Tooltip: ""
+}
+
+ZombieEngineerBanner: {
+	DisplayName: Zombie Engineer Banner
+	Tooltip: ""
+}
+
+ZombieSecurityBanner: {
+	DisplayName: Zombie Security Banner
+	Tooltip: ""
+}
+
+EMBolt: {
+	DisplayName: EM Bolt
+	Tooltip: ""
+}
+
+FractureBolt: {
+	DisplayName: Fracture Bolt
+	Tooltip: ""
+}
+
+L2Revolver: {
+	DisplayName: L2 Revolver
 	Tooltip: ""
 }
