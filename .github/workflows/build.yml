@@ -4,12 +4,14 @@ on:
   pull_request:
     branches: [master]
     paths-ignore:
+      - 'Localization/**'
       - '**/*.md'
       - '.gitignore'
       - 'LICENSE'
   push:
     branches: [master]
     paths-ignore:
+      - 'Localization/**'
       - '**/*.md'
       - '.gitignore'
       - 'LICENSE'
