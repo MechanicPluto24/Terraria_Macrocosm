@@ -1,0 +1,10 @@
+Inlet: Conveyor inlet
+Outlet: Conveyor outlet
+Hopper: Hopper
+Dropper: Dropper
+Red: Red conveyor pipe
+Green: Green conveyor pipe
+Blue: Blue conveyor pipe
+Yellow: Yellow conveyor pipe
+Place: "Placement mode — select to cut"
+Cut: "Cutting mode — select to place"

@@ -1,4 +1,4 @@
-﻿using Macrocosm.Common.Config;
+using Macrocosm.Common.Config;
 using Macrocosm.Common.Drawing.Particles;
 using Macrocosm.Common.Players;
 using Macrocosm.Common.Storage;
@@ -35,7 +35,9 @@ public enum MessageType : byte
 
     SyncTEFromClient,
     SyncConveyor,
-    SyncConveyorRectangle
+    SyncConveyorRectangle,
+    ConveyorToolOperation,
+    ConveyorToolInventory
 }
 
 public class PacketHandler
@@ -107,6 +109,14 @@ public class PacketHandler
 
             case MessageType.SyncConveyorRectangle:
                 ConveyorSystem.ReceiveSyncConveyorRectangle(reader, whoAmI);
+                break;
+
+            case MessageType.ConveyorToolOperation:
+                ConveyorSystem.ReceiveToolOperation(reader, whoAmI);
+                break;
+
+            case MessageType.ConveyorToolInventory:
+                ConveyorSystem.ReceiveToolInventory(reader);
                 break;
 
             default:

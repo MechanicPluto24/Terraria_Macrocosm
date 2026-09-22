@@ -3920,3 +3920,21 @@ L2Revolver: {
 	DisplayName: L2 Revolver
 	Tooltip: ""
 }
+
+MulticoloredPipeWrench: {
+ DisplayName: Multicolored Pipe Wrench
+ Tooltip: '''
+ Places or cuts selected conveyor pipe colors
+ Right click to configure
+ '''
+}
+
+PipeGrandDesign: {
+ DisplayName: The Pipe Dream
+ Tooltip: '''
+ Places and cuts conveyor pipes anywhere on screen
+ Drag to preview a pipe route; release to build; right click to cancel
+ Right click to configure pipe colors, endpoints and attachments
+ Click a matching hopper or dropper to rotate it
+ '''
+}
