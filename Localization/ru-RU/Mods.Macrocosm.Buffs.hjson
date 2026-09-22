@@ -44,7 +44,7 @@ HandheldEngineOverheat: {
 }
 
 CraterDemonPet: {
-	DisplayName: Демонёнок кратера
+	DisplayName: Кратерный демонёнок
 	Description: Он что-то задумал...
 }
 
