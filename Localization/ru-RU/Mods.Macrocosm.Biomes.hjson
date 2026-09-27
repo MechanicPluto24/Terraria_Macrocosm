@@ -34,8 +34,8 @@ MoonNightBiome: {
 }
 
 MoonUndergroundBiome: {
-	DisplayName: Лунное подземелье
-	TownNPCDialogueName: Лунное подземелье
+	DisplayName: Подземелье Луны
+	TownNPCDialogueName: Подземелье Луны
 }
 
 PollutionBiome: {

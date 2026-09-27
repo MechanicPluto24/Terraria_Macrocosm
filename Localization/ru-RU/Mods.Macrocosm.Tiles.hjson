@@ -3,8 +3,8 @@ LuminiteChest: {
 	MapEntry1: Запертый сундук из люминитового кирпича
 	MapEntry2: Сундук из кирпича небесной кузницы
 	MapEntry3: Запертый сундук из кирпича небесной кузницы
-	MapEntry4: Сундук из кирпича лунной пыли
-	MapEntry5: Запертый сундук из кирпича лунной пыли
+	MapEntry4: Сундук из кирпича лунной ржавчины
+	MapEntry5: Запертый сундук из кирпича лунной ржавчины
 	MapEntry6: Сундук из кирпича астры
 	MapEntry7: Запертый сундук из кирпича астры
 	MapEntry8: Сундук из тёмного небесного кирпича
@@ -83,8 +83,8 @@ IndustrialCeilingMonitor.MapEntry: Потолочный монитор
 IndustrialDeskMonitor.MapEntry: Настольный монитор
 IndustrialWallMonitor.MapEntry: Настенный монитор
 Boombox.MapEntry: Бумбокс
-WindTurbineLarge.MapEntry: Ветротурбина
-WindTurbineSmall.MapEntry: Ветротурбина
+WindTurbineLarge.MapEntry: Ветрогенератор
+WindTurbineSmall.MapEntry: Ветрогенератор
 IndustrialControlPanel.MapEntry: Панель управления
 IndustrialControlStation.MapEntry: Станция управления
 IndustrialDeskClock.MapEntry: Настольные часы
@@ -120,7 +120,7 @@ SolarPanelExtraLarge.MapEntry: Солнечная панель
 OilBarrel.MapEntry: Бочка нефти
 SteelPipe.MapEntry: Стальная труба
 IndustrialBatteryLarge.MapEntry: Индустриальная батарея
-WindTurbineTiny.MapEntry: Ветротурбина
+WindTurbineTiny.MapEntry: Ветрогенератор
 NickelOre.MapEntry: Никелевая руда
 LuminiteCrystalFake.MapEntry: Люминитовый кристалл
 LuminiteCrystalNatural.MapEntry: Люминитовый кристалл
