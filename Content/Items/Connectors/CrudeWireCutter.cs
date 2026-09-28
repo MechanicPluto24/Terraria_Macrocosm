@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Connectors;
 
-/// <summary> Cuts wires (all four colors) but does not remove actuators or conveyor pipes. </summary>
+/// <summary> Cuts wires (all four colors) but does not remove actuators or pipes. </summary>
 public class CrudeWireCutter : ModItem
 {
     public override void SetDefaults()
@@ -32,7 +32,7 @@ public class CrudeWireCutter : ModItem
         int x = Player.tileTargetX;
         int y = Player.tileTargetY;
 
-        // Priority order mirrors vanilla WireCutter, skips actuators and conveyor pipes
+        // Priority order mirrors vanilla WireCutter, skips actuators and pipes
         if (WorldGen.KillWire4(x, y)) { NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, WireActionID.KillWireYellow, x, y); return true; }
         if (WorldGen.KillWire3(x, y)) { NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, WireActionID.KillWireGreen,  x, y); return true; }
         if (WorldGen.KillWire2(x, y)) { NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, WireActionID.KillWireBlue,   x, y); return true; }

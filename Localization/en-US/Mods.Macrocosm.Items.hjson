@@ -2804,8 +2804,8 @@ Schroteri: {
 		'''
 }
 
-Conveyor: {
-	DisplayName: Conveyor
+Pipe: {
+	DisplayName: Pipe
 	Tooltip: Connects containers, taking items from one place to another
 }
 
@@ -2964,18 +2964,18 @@ PhantasmalSkullTome: {
 	Tooltip: Fires phantasmal skulls around you
 }
 
-ConveyorInlet: {
-	DisplayName: Conveyor Inlet
-	Tooltip: Connects to a conveyor and puts items into chests and machines
+PipeInlet: {
+	DisplayName: Pipe Inlet
+	Tooltip: Connects to a pipe and puts items into chests and machines
 }
 
-ConveyorOutlet: {
-	DisplayName: Conveyor Outlet
-	Tooltip: Connects to a conveyor and takes items from chests and machines
+PipeOutlet: {
+	DisplayName: Pipe Outlet
+	Tooltip: Connects to a pipe and takes items from chests and machines
 }
 
-ConveyorAttachmentTool: {
-	DisplayName: Conveyor Attachment Tool
+PipeAttachmentTool: {
+	DisplayName: Pipe Attachment Tool
 	Tooltip:
 		'''
 		Uses hoppers and droppers from your inventory
@@ -2983,29 +2983,29 @@ ConveyorAttachmentTool: {
 		'''
 }
 
-ConveyorWrenchRed: {
-	DisplayName: Conveyor Wrench
-	Tooltip: Places red conveyor pipes from your inventory
+PipeWrenchRed: {
+	DisplayName: Pipe Wrench
+	Tooltip: Places red pipes from your inventory
 }
 
-ConveyorWrenchGreen: {
-	DisplayName: Green Conveyor Wrench
-	Tooltip: Places green conveyor pipes from your inventory
+PipeWrenchGreen: {
+	DisplayName: Green Pipe Wrench
+	Tooltip: Places green pipes from your inventory
 }
 
-ConveyorWrenchBlue: {
-	DisplayName: Blue Conveyor Wrench
-	Tooltip: Places blue conveyor pipes from your inventory
+PipeWrenchBlue: {
+	DisplayName: Blue Pipe Wrench
+	Tooltip: Places blue pipes from your inventory
 }
 
-ConveyorWrenchYellow: {
-	DisplayName: Yellow Conveyor Wrench
-	Tooltip: Places yellow conveyor pipes from your inventory
+PipeWrenchYellow: {
+	DisplayName: Yellow Pipe Wrench
+	Tooltip: Places yellow pipes from your inventory
 }
 
 PipeCutter: {
 	DisplayName: Pipe Cutter
-	Tooltip: Removes conveyor pipes and attachments
+	Tooltip: Removes pipes and attachments
 }
 
 CrudeWireCutter: {
@@ -3922,19 +3922,21 @@ L2Revolver: {
 }
 
 MulticoloredPipeWrench: {
- DisplayName: Multicolored Pipe Wrench
- Tooltip: '''
- Places or cuts selected conveyor pipe colors
- Right click to configure
- '''
+	DisplayName: Multicolored Pipe Wrench
+	Tooltip:
+		'''
+		Places or cuts selected pipe colors
+		Right click to configure
+		'''
 }
 
 PipeGrandDesign: {
- DisplayName: The Pipe Dream
- Tooltip: '''
- Places and cuts conveyor pipes anywhere on screen
- Drag to preview a pipe route; release to build; right click to cancel
- Right click to configure pipe colors, endpoints and attachments
- Click a matching hopper or dropper to rotate it
- '''
+	DisplayName: The Pipe Dream
+	Tooltip:
+		'''
+		Places and cuts pipes anywhere on screen
+		Drag to preview a pipe route; release to build; right click to cancel
+		Right click to configure pipe colors, endpoints and attachments
+		Click a matching hopper or dropper to rotate it
+		'''
 }

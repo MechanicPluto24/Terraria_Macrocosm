@@ -2772,8 +2772,8 @@ Schroteri: {
 		'''
 }
 
-Conveyor: {
-	DisplayName: Конвейер
+Pipe: {
+	DisplayName: Pipe
 	Tooltip: Соединяет контейнеры, перемещая предметы из одного в другой
 }
 
@@ -2936,18 +2936,18 @@ PhantasmalSkullTome: {
 	Tooltip: Выпускает призрачные черепа вокруг вас
 }
 
-ConveyorInlet: {
-	DisplayName: Ввод конвейера
+PipeInlet: {
+	DisplayName: Pipe Inlet
 	Tooltip: Подключается к конвейеру и кладёт предметы в сундуки и машины
 }
 
-ConveyorOutlet: {
-	DisplayName: Вывод конвейера
+PipeOutlet: {
+	DisplayName: Pipe Outlet
 	Tooltip: Подключается к конвейеру и берёт предметы из сундуков и машин
 }
 
-ConveyorAttachmentTool: {
-	DisplayName: Инструмент для конвейерных креплений
+PipeAttachmentTool: {
+	DisplayName: Pipe Attachment Tool
 	Tooltip:
 		'''
 		Использует загрузчики и разгрузчики из вашего инвентаря
@@ -2955,28 +2955,28 @@ ConveyorAttachmentTool: {
 		'''
 }
 
-ConveyorWrenchRed: {
-	DisplayName: Конвейерный ключ
+PipeWrenchRed: {
+	DisplayName: Pipe Wrench
 	Tooltip: Ставит красные конвейеры из вашего инвентаря
 }
 
-ConveyorWrenchGreen: {
-	DisplayName: Зелёный конвейерный ключ
+PipeWrenchGreen: {
+	DisplayName: Green Pipe Wrench
 	Tooltip: Ставит зелёные конвейеры из вашего инвентаря
 }
 
-ConveyorWrenchBlue: {
-	DisplayName: Синий конвейерный ключ
+PipeWrenchBlue: {
+	DisplayName: Blue Pipe Wrench
 	Tooltip: Ставит синие конвейеры из вашего инвентаря
 }
 
-ConveyorWrenchYellow: {
-	DisplayName: Жёлтый конвейерный ключ
+PipeWrenchYellow: {
+	DisplayName: Yellow Pipe Wrench
 	Tooltip: Ставит жёлтые конвейеры из вашего инвентаря
 }
 
 PipeCutter: {
-	DisplayName: Конвейерный лобзик
+	DisplayName: Pipe Cutter
 	Tooltip: Убирает поставленные конвейеры и крепления
 }
 
@@ -3879,7 +3879,7 @@ ZombieSecurityBanner: {
 }
 
 EMBolt: {
-	// DisplayName: E M Bolt
+	// DisplayName: EM Bolt
 	// Tooltip: ""
 }
 
@@ -3891,4 +3891,24 @@ FractureBolt: {
 L2Revolver: {
 	// DisplayName: L2 Revolver
 	// Tooltip: ""
+}
+
+MulticoloredPipeWrench: {
+	// DisplayName: Multicolored Pipe Wrench
+	/* Tooltip:
+		'''
+		Places or cuts selected pipe colors
+		Right click to configure
+		''' */
+}
+
+PipeGrandDesign: {
+	// DisplayName: The Pipe Dream
+	/* Tooltip:
+		'''
+		Places and cuts pipes anywhere on screen
+		Drag to preview a pipe route; release to build; right click to cancel
+		Right click to configure pipe colors, endpoints and attachments
+		Click a matching hopper or dropper to rotate it
+		''' */
 }

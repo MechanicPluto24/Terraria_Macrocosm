@@ -1,34 +1,40 @@
-using Macrocosm.Common.Systems.Connectors;
+﻿using Macrocosm.Common.Systems.Connectors;
 using Macrocosm.Common.Utils;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace Macrocosm.Content.Items.Connectors;
 
-/// <summary> Dedicated tool for removing pipes and attachments. </summary>
-public class PipeCutter : ModItem
+[LegacyName("ConveyorInlet")]
+public class PipeInlet : ModItem
 {
+    public override void SetStaticDefaults()
+    {
+        Item.ResearchUnlockCount = 100;
+    }
+
     public override void SetDefaults()
     {
         Item.width = 20;
         Item.height = 20;
+        Item.maxStack = Item.CommonMaxStack;
+        Item.value = Item.buyPrice(copper: 10);
         Item.useStyle = ItemUseStyleID.Swing;
         Item.useTurn = true;
         Item.useTime = 10;
         Item.useAnimation = 10;
         Item.autoReuse = true;
+        Item.consumable = true;
         Item.mech = true;
-        Item.value = Item.buyPrice(gold: 1);
     }
-
-    public override bool CanUseItem(Player player) => player.ItemInTileReach(Item) && player.CanDoWireStuffHere(Player.tileTargetX, Player.tileTargetY);
 
     public override bool? UseItem(Player player)
     {
-        if (player.whoAmI != Main.myPlayer)
-            return null;
+        if (player.whoAmI == Main.myPlayer)
+            return PipeSystem.PlaceInlet(player.TargetCoords());
 
-        return PipeSystem.Remove(player.TargetCoords());
+        return null;
     }
 }

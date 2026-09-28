@@ -21,16 +21,16 @@ public class VanillaNPCShop : GlobalNPC
                 break;
 
             case NPCID.Steampunker:
-                shop.Add<ConveyorAttachmentTool>();
-                shop.Add<Conveyor>();
+                shop.Add<PipeAttachmentTool>();
+                shop.Add<Pipe>();
                 shop.Add<Hopper>();
                 shop.Add<Dropper>();
-                shop.Add<ConveyorInlet>();
-                shop.Add<ConveyorOutlet>();
-                shop.Add<ConveyorWrenchRed>();
-                shop.Add<ConveyorWrenchGreen>();
-                shop.Add<ConveyorWrenchBlue>();
-                shop.Add<ConveyorWrenchYellow>();
+                shop.Add<PipeInlet>();
+                shop.Add<PipeOutlet>();
+                shop.Add<PipeWrenchRed>();
+                shop.Add<PipeWrenchGreen>();
+                shop.Add<PipeWrenchBlue>();
+                shop.Add<PipeWrenchYellow>();
                 shop.Add<PipeCutter>();
                 break;
         }

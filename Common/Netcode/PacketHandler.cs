@@ -34,10 +34,10 @@ public enum MessageType : byte
     SyncNPCFromClient,
 
     SyncTEFromClient,
-    SyncConveyor,
-    SyncConveyorRectangle,
-    ConveyorToolOperation,
-    ConveyorToolInventory
+    SyncPipe,
+    SyncPipeRectangle,
+    PipeToolOperation,
+    PipeToolInventory
 }
 
 public class PacketHandler
@@ -103,20 +103,20 @@ public class PacketHandler
                 NetHelper.ReceiveSyncTEFromClient(reader, whoAmI);
                 break;
 
-            case MessageType.SyncConveyor:
-                ConveyorSystem.ReceiveSyncConveyor(reader, whoAmI);
+            case MessageType.SyncPipe:
+                PipeSystem.ReceiveSyncPipe(reader, whoAmI);
                 break;
 
-            case MessageType.SyncConveyorRectangle:
-                ConveyorSystem.ReceiveSyncConveyorRectangle(reader, whoAmI);
+            case MessageType.SyncPipeRectangle:
+                PipeSystem.ReceiveSyncPipeRectangle(reader, whoAmI);
                 break;
 
-            case MessageType.ConveyorToolOperation:
-                ConveyorSystem.ReceiveToolOperation(reader, whoAmI);
+            case MessageType.PipeToolOperation:
+                PipeSystem.ReceiveToolOperation(reader, whoAmI);
                 break;
 
-            case MessageType.ConveyorToolInventory:
-                ConveyorSystem.ReceiveToolInventory(reader);
+            case MessageType.PipeToolInventory:
+                PipeSystem.ReceiveToolInventory(reader);
                 break;
 
             default:

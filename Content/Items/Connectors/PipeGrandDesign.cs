@@ -6,6 +6,6 @@ public class PipeGrandDesign : MulticoloredPipeWrench
 {
     public override bool IsTablet => true;
     public override void AddRecipes()
-        => CreateRecipe().AddIngredient<MulticoloredPipeWrench>().AddIngredient<ConveyorAttachmentTool>()
+        => CreateRecipe().AddIngredient<MulticoloredPipeWrench>().AddIngredient<PipeAttachmentTool>()
             .AddTile(TileID.TinkerersWorkbench).Register();
 }

@@ -8,6 +8,6 @@ public enum InventoryExtractionSource
     /// <summary> Direct or bulk player interaction. </summary>
     Player,
 
-    /// <summary> Conveyors, hoppers, and droppers. </summary>
+    /// <summary> Pipes, hoppers, and droppers. </summary>
     Automation
 }
