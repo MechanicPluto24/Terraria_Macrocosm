@@ -1,24 +1,11 @@
-using Macrocosm.Common.CrossMod;
 using Macrocosm.Common.DataStructures;
 using Macrocosm.Common.Utils;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
+using ReLogic.Content;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
-using System.IO;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Macrocosm.Common.Sets;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-using ReLogic.Content;
-using Macrocosm.Common.Drawing.Particles;
-using Macrocosm.Content.Particles;
 
 namespace Macrocosm.Common.Bases.Projectiles;
 
@@ -27,19 +14,18 @@ namespace Macrocosm.Common.Bases.Projectiles;
 /// </summary>
 public abstract class RailgunProjectile : ModProjectile
 {
-    
+
     public override string Texture => "Macrocosm/Common/Bases/Projectiles/RailgunProjectile";
     public virtual Color beamColor => Color.White;
     public virtual int dustType => -1;
-    public virtual float visualScale=> 1f;
-    public virtual void HitTileBehaviour(){}
+    public virtual float visualScale => 1f;
+    public virtual void HitTileBehaviour() { }
 
-    public Vector2 beamStart = new Vector2();
-    public Vector2 beamEnd = new Vector2();
+    public Vector2 beamStart = new();
+    public Vector2 beamEnd = new();
     private bool killed = false;
-    private int stickTime;
-    private bool hitTile=false;
-    
+    private bool hitTile = false;
+
     public override void SetDefaults()
     {
         Projectile.width = 14;
@@ -52,12 +38,12 @@ public abstract class RailgunProjectile : ModProjectile
 
         Projectile.extraUpdates = 0;
         Projectile.tileCollide = false;
-        stickTime = 60;
+        //stickTime = 60;
         beamStart = Projectile.Center;
     }
 
     public override bool ShouldUpdatePosition() => false;
-    
+
     public override bool? Colliding(Rectangle projHitbox, Rectangle targetHitbox)
     {
         if (Projectile.timeLeft < 18)
@@ -78,27 +64,27 @@ public abstract class RailgunProjectile : ModProjectile
             beamStart = Projectile.Center;
             Vector2 aim = Projectile.velocity.SafeNormalize(Vector2.UnitX);
             beamEnd = beamStart + aim * Utility.CastLength(beamStart, aim, 3000f, false);
-            if((beamEnd-beamStart).Length() < 3000f)
-                hitTile=true;
-            killed=true;
-            if(dustType != -1 && hitTile == true)
+            if ((beamEnd - beamStart).Length() < 3000f)
+                hitTile = true;
+            killed = true;
+            if (dustType != -1 && hitTile == true)
             {
-                for (int i=0; i < Main.rand.Next(15,25); i++)
+                for (int i = 0; i < Main.rand.Next(15, 25); i++)
                 {
-                    Vector2 vector = (-Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedBy(Main.rand.NextFloat(-0.3f,0.3f))*Main.rand.NextFloat(4f,15f);
+                    Vector2 vector = (-Projectile.velocity.SafeNormalize(Vector2.UnitX)).RotatedBy(Main.rand.NextFloat(-0.3f, 0.3f)) * Main.rand.NextFloat(4f, 15f);
                     Dust d = Dust.NewDustDirect(beamEnd, 0, 0, dustType, vector.X, vector.Y, Scale: Main.rand.NextFloat(0.5f, 1.5f));
                     d.noGravity = true;
-                    d.noLight=false;
+                    d.noLight = false;
                 }
             }
-            if(hitTile == true)
+            if (hitTile == true)
             {
                 HitTileBehaviour();
             }
 
         }
-        Projectile.Opacity-=(1f/20f);
-        Lighting.AddLight(beamEnd, (beamColor* Projectile.Opacity).ToVector3() * 0.4f);
+        Projectile.Opacity -= (1f / 20f);
+        Lighting.AddLight(beamEnd, (beamColor * Projectile.Opacity).ToVector3() * 0.4f);
     }
 
     public override bool OnTileCollide(Vector2 oldVelocity)
@@ -130,19 +116,19 @@ public abstract class RailgunProjectile : ModProjectile
         Vector2 beamDrawPosition = beamStart;
         float beamLengthRemainingToDraw = (beamEnd - beamStart).Length() + beamSegmentLength / 2f;
         Vector2 unitVectorToEnd = (beamEnd - beamStart).SafeNormalize(Vector2.Zero);
-        float fadeIn=0f;
+        float fadeIn = 0f;
 
         while (beamLengthRemainingToDraw > 0f)
         {
-            if(fadeIn<1f)
-                fadeIn+=0.1f;
-            Main.spriteBatch.Draw(texture.Value, beamDrawPosition - Main.screenPosition, null, beamColor.WithOpacity(Projectile.Opacity*fadeIn), Projectile.velocity.ToRotation()+MathHelper.PiOver2, beamOrigin, new Vector2(visualScale,1f), SpriteEffects.None, 0f);
+            if (fadeIn < 1f)
+                fadeIn += 0.1f;
+            Main.spriteBatch.Draw(texture.Value, beamDrawPosition - Main.screenPosition, null, beamColor.WithOpacity(Projectile.Opacity * fadeIn), Projectile.velocity.ToRotation() + MathHelper.PiOver2, beamOrigin, new Vector2(visualScale, 1f), SpriteEffects.None, 0f);
 
             beamDrawPosition += unitVectorToEnd * beamSegmentLength;
             beamLengthRemainingToDraw -= beamSegmentLength;
         }
-        if(hitTile == true)
-            Main.spriteBatch.Draw(flashTexture.Value, beamEnd - Main.screenPosition, null, beamColor.WithOpacity(1f), Projectile.velocity.ToRotation()+MathHelper.PiOver2, flashTexture.Size() /2f, Projectile.Opacity*Projectile.Opacity*0.4f*visualScale, SpriteEffects.None, 0f);
+        if (hitTile == true)
+            Main.spriteBatch.Draw(flashTexture.Value, beamEnd - Main.screenPosition, null, beamColor.WithOpacity(1f), Projectile.velocity.ToRotation() + MathHelper.PiOver2, flashTexture.Size() / 2f, Projectile.Opacity * Projectile.Opacity * 0.4f * visualScale, SpriteEffects.None, 0f);
 
         Main.spriteBatch.End();
         Main.spriteBatch.Begin(state);
