@@ -641,7 +641,7 @@ MoonSword: {
 
 Noxsaber: {
 	DisplayName: The Noxsaber
-	Tooltip: An ancient black energy saber, stolen from the temple of a long dead cult
+	Tooltip: An energy blade that manifests darkness from the unknown
 }
 
 AluminumBow: {
@@ -3629,10 +3629,10 @@ HeveaBow: {
 }
 
 ProtoRailgun: {
-	DisplayName: Proto Railgun
+	DisplayName: Railgun
 	Tooltip:
 		'''
-		Fires a high piercing bolt
+		Fires a high piercing electromagnetic bolt
 		'A mere glimpse into the future of firearms!'
 		'''
 }
